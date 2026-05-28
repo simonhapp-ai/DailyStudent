@@ -5,7 +5,7 @@ import { Button } from '../components/ui/Button'
 import { ProModal } from '../components/ui/ProModal'
 import { mockExamResult } from '../data/mockData'
 
-const IS_PRO = true
+const IS_PRO = false
 
 export function ExamResultScreen() {
   const navigate = useNavigate()

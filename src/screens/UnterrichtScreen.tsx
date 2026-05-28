@@ -83,9 +83,37 @@ export function UnterrichtScreen() {
             </button>
           </div>
 
+          {/* Ohne Fach section */}
+          {(() => {
+            const ohneFolder = userFolders.find((f) => f.id === 'folder-no-subject')
+            if (!ohneFolder) return null
+            const ohneCount = userNotes.filter((n) => n.folderId === 'folder-no-subject').length
+            return (
+              <div className="px-4 mb-3">
+                <button
+                  onClick={() => navigate('/unterricht/ohne-fach/ordner/folder-no-subject')}
+                  className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 hover:bg-surface-hover active:scale-95 transition-all duration-150"
+                >
+                  <div className="w-9 h-9 rounded-btn bg-surface-hover flex items-center justify-center shrink-0 text-base">
+                    📁
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className="text-text-primary font-semibold text-sm">Schnellnotizen</p>
+                    <p className="text-text-muted text-xs mt-0.5">
+                      {ohneCount === 0 ? 'Keine Notizen' : `${ohneCount} ${ohneCount === 1 ? 'Notiz' : 'Notizen'}`}
+                    </p>
+                  </div>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
+                    <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+            )
+          })()}
+
           <div className="px-4 space-y-3">
             {profileSubjects.map((subject) => {
-              const subjectFolders = userFolders.filter((f) => f.subjectId === subject.id)
+              const subjectFolders = userFolders.filter((f) => f.subjectId === subject.id && !f.parentFolderId)
               const totalNotes = userNotes.filter((n) => n.subjectId === subject.id).length
               const isExpanded = expandedSubjects.has(subject.id)
 
@@ -194,9 +222,9 @@ export function UnterrichtScreen() {
 
       {/* Add folder modal */}
       {addFolderFor && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end">
+        <div className="fixed inset-0 z-[60] flex flex-col justify-end">
           <div className="absolute inset-0 bg-black/60" onClick={() => setAddFolderFor(null)} />
-          <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 pb-10 z-10">
+          <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 pb-safe z-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}>
             <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
             <h2 className="text-base font-bold text-text-primary mb-4">Neuen Ordner erstellen</h2>
             <input

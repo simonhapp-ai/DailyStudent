@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { BottomNav } from '../components/ui/BottomNav'
 import { UserProvider, useUser } from '../context/UserContext'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
@@ -22,14 +22,20 @@ function Layout() {
     return <OnboardingScreen />
   }
 
-  const hideNav = location.pathname === '/klausurmodus/klausur'
+  const hideNav =
+    location.pathname === '/klausurmodus/klausur' ||
+    location.pathname.endsWith('/neue-notiz')
 
   return (
     <div className="max-w-lg mx-auto relative min-h-screen">
       <Routes>
-        <Route path="/" element={<KalenderScreen />} />
+        <Route path="/" element={<Navigate to="/unterricht" replace />} />
+        <Route path="/kalender" element={<KalenderScreen />} />
         <Route path="/unterricht" element={<UnterrichtScreen />} />
         <Route path="/unterricht/neue-notiz" element={<NoteCreateScreen />} />
+        <Route path="/unterricht/ohne-fach/ordner/:folderId" element={<FolderScreen />} />
+        <Route path="/unterricht/ohne-fach/ordner/:folderId/neue-notiz" element={<NoteCreateScreen />} />
+        <Route path="/unterricht/ohne-fach/:lessonId" element={<SmartNotesScreen />} />
         <Route path="/unterricht/:id" element={<LessonScreen />} />
         <Route path="/unterricht/:id/neue-notiz" element={<NoteCreateScreen />} />
         <Route path="/unterricht/:id/ordner/:folderId" element={<FolderScreen />} />

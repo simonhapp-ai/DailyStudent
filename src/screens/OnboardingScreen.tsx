@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { useUser, generateKcFolders } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
@@ -69,6 +70,7 @@ const DEV_PROFILE: UserProfile = {
 
 export function OnboardingScreen() {
   const { completeOnboarding } = useUser()
+  const navigate = useNavigate()
   const [step, setStep] = useState<Step>(1)
   const [finishing, setFinishing] = useState(false)
 
@@ -121,7 +123,7 @@ export function OnboardingScreen() {
           : [],
       zielnote: zielnote || undefined,
     }
-    setTimeout(() => completeOnboarding(profile), 800)
+    setTimeout(() => { completeOnboarding(profile); navigate('/unterricht') }, 800)
   }
 
   if (finishing) {
@@ -164,7 +166,7 @@ export function OnboardingScreen() {
 
       {/* Step content */}
       <div className="flex-1 px-6 pt-20 pb-10">
-        {step === 1 && <StepWelcome onNext={next} onSkip={() => completeOnboarding(DEV_PROFILE, generateKcFolders(DEV_PROFILE))} />}
+        {step === 1 && <StepWelcome onNext={next} onSkip={() => { completeOnboarding(DEV_PROFILE, generateKcFolders(DEV_PROFILE)); navigate('/unterricht') }} />}
         {step === 2 && (
           <StepPersonal
             name={name} setName={setName}

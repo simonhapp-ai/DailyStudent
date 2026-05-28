@@ -1,7 +1,7 @@
 import type { GeneratedSmartNote } from '../types'
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
-const VISION_MODEL = 'llama-3.2-11b-vision-preview'
+const VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct'
 const TEXT_MODEL = 'llama-3.3-70b-versatile'
 
 async function resizeImage(dataUrl: string, maxWidth = 1280): Promise<{ base64: string; mimeType: 'image/jpeg' }> {
@@ -69,6 +69,97 @@ interface SmartNoteJSON {
   summary: string
   keywords: string[]
   examTopics: string[]
+}
+
+interface SubjectSuggestionJSON {
+  subjectId: string
+  reason: string
+}
+
+export async function suggestNoteSubject(
+  rawText: string,
+  subjects: { id: string; name: string }[],
+): Promise<{ subjectId: string; subjectName: string; reason: string } | null> {
+  if (!rawText.trim() || subjects.length === 0) return null
+  try {
+    const content = await groqFetch({
+      model: TEXT_MODEL,
+      max_tokens: 128,
+      temperature: 0.1,
+      response_format: { type: 'json_object' },
+      messages: [
+        {
+          role: 'system',
+          content: 'Du ordnest Schülernotizen dem richtigen Schulfach zu. Antworte nur mit validem JSON.',
+        },
+        {
+          role: 'user',
+          content: `Ordne diese Notiz dem passenden Fach zu.
+
+Fächer: ${subjects.map((s) => `"${s.id}" = ${s.name}`).join(', ')}
+
+Notiz:
+${rawText.slice(0, 600)}
+
+JSON: {"subjectId": "id", "reason": "Ein-Satz-Begründung auf Deutsch"}`,
+        },
+      ],
+    })
+    const parsed = JSON.parse(content) as SubjectSuggestionJSON
+    const match = subjects.find((s) => s.id === parsed.subjectId)
+    if (!match) return null
+    return { subjectId: match.id, subjectName: match.name, reason: parsed.reason }
+  } catch {
+    return null
+  }
+}
+
+export async function answerQuestion(
+  question: string,
+  subjectName: string,
+  noteContext?: string,
+): Promise<string> {
+  return groqFetch({
+    model: TEXT_MODEL,
+    max_tokens: 250,
+    temperature: 0.3,
+    messages: [
+      {
+        role: 'system',
+        content: 'Du bist ein Nachhilfelehrer für deutsche Gymnasiasten (Klasse 10–13). Antworte direkt auf Deutsch. Keine Einleitung, keine "Also:". Maximal 4 Sätze.',
+      },
+      {
+        role: 'user',
+        content: `Fach: ${subjectName}${noteContext ? `\nKontext aus der Stunde: ${noteContext.slice(0, 400)}` : ''}
+
+Frage / Begriff: "${question}"`,
+      },
+    ],
+  })
+}
+
+export async function explainKeyword(
+  keyword: string,
+  subjectName: string,
+  context?: string,
+): Promise<string> {
+  return groqFetch({
+    model: TEXT_MODEL,
+    max_tokens: 150,
+    temperature: 0.2,
+    messages: [
+      {
+        role: 'system',
+        content: 'Du bist ein Lernassistent für deutsche Gymnasiasten. Antworte immer auf Deutsch. Erkläre Fachbegriffe kurz, präzise und verständlich.',
+      },
+      {
+        role: 'user',
+        content: `Fach: ${subjectName}${context ? `\nKontext: ${context.slice(0, 300)}` : ''}
+
+Erkläre den Begriff "${keyword}" in 2–3 prägnanten Sätzen für einen Gymnasiasten der Klasse 10–13. Nur die Erklärung, ohne Einleitung oder "Also:".`,
+      },
+    ],
+  })
 }
 
 // Step 2: Text → strukturierte Smart Note via Llama 3.3 70B

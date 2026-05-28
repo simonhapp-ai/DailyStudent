@@ -316,9 +316,9 @@ export function KalenderScreen() {
 
       {/* Add Entry Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end">
+        <div className="fixed inset-0 z-[60] flex flex-col justify-end">
           <div className="absolute inset-0 bg-black/60" onClick={() => setModalOpen(false)} />
-          <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 pb-10 z-10">
+          <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 z-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}>
             <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
 
             <h2 className="text-lg font-bold text-text-primary mb-4">Eintrag hinzufügen</h2>

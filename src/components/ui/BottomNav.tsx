@@ -2,18 +2,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 const navItems = [
   {
-    label: 'Kalender',
-    path: '/',
-    icon: (active: boolean) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round" />
-        <line x1="16" y1="2" x2="16" y2="6" strokeLinecap="round" />
-        <line x1="8" y1="2" x2="8" y2="6" strokeLinecap="round" />
-        <line x1="3" y1="10" x2="21" y2="10" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
     label: 'Unterricht',
     path: '/unterricht',
     icon: (active: boolean) => (
@@ -37,6 +25,18 @@ const navItems = [
     ),
   },
   {
+    label: 'Kalender',
+    path: '/kalender',
+    icon: (active: boolean) => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" strokeLinecap="round" strokeLinejoin="round" />
+        <line x1="16" y1="2" x2="16" y2="6" strokeLinecap="round" />
+        <line x1="8" y1="2" x2="8" y2="6" strokeLinecap="round" />
+        <line x1="3" y1="10" x2="21" y2="10" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
     label: 'Profil',
     path: '/profil',
     icon: (active: boolean) => (
@@ -52,10 +52,7 @@ export function BottomNav() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/'
-    return location.pathname.startsWith(path)
-  }
+  const isActive = (path: string) => location.pathname.startsWith(path)
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-surface border-t border-border z-50">

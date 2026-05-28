@@ -45,7 +45,11 @@ interface UserContextValue {
   removeEntry: (id: string) => void
   saveGeneratedNote: (lessonId: string, note: GeneratedSmartNote) => void
   addUserNote: (note: UserNote) => void
+  saveNote: (note: UserNote, generated?: GeneratedSmartNote) => void
+  updateUserNote: (note: UserNote) => void
   addFolder: (folder: UserFolder) => void
+  deleteFolder: (folderId: string) => void
+  saveToOhneFachFolder: (note: UserNote, generated?: GeneratedSmartNote) => void
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -204,10 +208,54 @@ export function UserProvider({ children }: { children: ReactNode }) {
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
   }
 
+  const saveNote = (note: UserNote, generated?: GeneratedSmartNote) => {
+    const updatedNotes = [...userNotes, note]
+    const updatedGenerated = generated
+      ? { ...generatedNotes, [note.id]: generated }
+      : generatedNotes
+    setUserNotes(updatedNotes)
+    if (generated) setGeneratedNotes(updatedGenerated)
+    persist(profile, personalEntries, updatedGenerated, updatedNotes, userFolders)
+  }
+
+  const updateUserNote = (note: UserNote) => {
+    const updated = userNotes.map((n) => (n.id === note.id ? note : n))
+    setUserNotes(updated)
+    persist(profile, personalEntries, generatedNotes, updated, userFolders)
+  }
+
   const addFolder = (folder: UserFolder) => {
     const updated = [...userFolders, folder]
     setUserFolders(updated)
     persist(profile, personalEntries, generatedNotes, userNotes, updated)
+  }
+
+  const saveToOhneFachFolder = (note: UserNote, generated?: GeneratedSmartNote) => {
+    const folderExists = userFolders.some((f) => f.id === 'folder-no-subject')
+    const updatedFolders = folderExists
+      ? userFolders
+      : [...userFolders, {
+          id: 'folder-no-subject',
+          subjectId: 'ohne-fach',
+          name: 'Schnellnotizen',
+          createdAt: new Date().toISOString(),
+        }]
+    const updatedNotes = [...userNotes, note]
+    const updatedGenerated = generated
+      ? { ...generatedNotes, [note.id]: generated }
+      : generatedNotes
+    if (!folderExists) setUserFolders(updatedFolders)
+    setUserNotes(updatedNotes)
+    if (generated) setGeneratedNotes(updatedGenerated)
+    persist(profile, personalEntries, updatedGenerated, updatedNotes, updatedFolders)
+  }
+
+  const deleteFolder = (folderId: string) => {
+    const updatedFolders = userFolders.filter((f) => f.id !== folderId && f.parentFolderId !== folderId)
+    const updatedNotes = userNotes.filter((n) => n.folderId !== folderId)
+    setUserFolders(updatedFolders)
+    setUserNotes(updatedNotes)
+    persist(profile, personalEntries, generatedNotes, updatedNotes, updatedFolders)
   }
 
   return (
@@ -225,7 +273,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
         removeEntry,
         saveGeneratedNote,
         addUserNote,
+        saveNote,
+        updateUserNote,
         addFolder,
+        deleteFolder,
+        saveToOhneFachFolder,
       }}
     >
       {children}
