@@ -81,7 +81,7 @@ export const topics: Topic[] = [
 
 export const subjects: Subject[] = [
   { id: 'deutsch',      name: 'Deutsch',            color: '#4ADE80', lessonCount: 0, nextExam: null, icon: '📖' },
-  { id: 'mathematik',   name: 'Mathematik',         color: '#7C6FFF', lessonCount: 0, nextExam: null, icon: '📐' },
+  { id: 'mathematik',   name: 'Mathematik',         color: '#6366F1', lessonCount: 0, nextExam: null, icon: '📐' },
   { id: 'englisch',     name: 'Englisch',           color: '#38BDF8', lessonCount: 0, nextExam: null, icon: '🌍' },
   { id: 'geschichte',   name: 'Geschichte',         color: '#F87171', lessonCount: 0, nextExam: null, icon: '🏛️' },
   { id: 'biologie',     name: 'Biologie',           color: '#FACC15', lessonCount: 0, nextExam: null, icon: '🧬' },

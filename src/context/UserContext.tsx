@@ -24,12 +24,15 @@ export interface UserProfile {
   zielnote?: string
 }
 
+export type AppTheme = 'light' | 'dark' | 'system'
+
 interface StorageData {
   profile?: UserProfile
   personalEntries?: PersonalEntry[]
   generatedNotes?: Record<string, GeneratedSmartNote>
   userNotes?: UserNote[]
   userFolders?: UserFolder[]
+  theme?: AppTheme
 }
 
 interface UserContextValue {
@@ -39,6 +42,8 @@ interface UserContextValue {
   generatedNotes: Record<string, GeneratedSmartNote>
   userNotes: UserNote[]
   userFolders: UserFolder[]
+  theme: AppTheme
+  setTheme: (t: AppTheme) => void
   completeOnboarding: (profile: UserProfile, prebuiltFolders?: UserFolder[]) => void
   updateProfile: (data: Partial<UserProfile>) => void
   addEntry: (entry: PersonalEntry) => void
@@ -147,6 +152,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const stored = loadStorage()
 
   const [profile, setProfile] = useState<UserProfile | null>(stored.profile ?? null)
+  const [theme, setThemeState] = useState<AppTheme>(stored.theme ?? 'dark')
   const [personalEntries, setPersonalEntries] = useState<PersonalEntry[]>(stored.personalEntries ?? [])
   const [generatedNotes, setGeneratedNotes] = useState<Record<string, GeneratedSmartNote>>(
     stored.generatedNotes ?? {},
@@ -168,7 +174,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
     n: Record<string, GeneratedSmartNote>,
     un: UserNote[],
     uf: UserFolder[],
-  ) => saveStorage({ profile: p ?? undefined, personalEntries: e, generatedNotes: n, userNotes: un, userFolders: uf })
+    t?: AppTheme,
+  ) => saveStorage({ profile: p ?? undefined, personalEntries: e, generatedNotes: n, userNotes: un, userFolders: uf, theme: t ?? theme })
+
+  const setTheme = (t: AppTheme) => {
+    setThemeState(t)
+    persist(profile, personalEntries, generatedNotes, userNotes, userFolders, t)
+  }
 
   const completeOnboarding = (p: UserProfile, prebuiltFolders?: UserFolder[]) => {
     const folders = prebuiltFolders ?? generateDefaultFolders(p)
@@ -267,6 +279,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         generatedNotes,
         userNotes,
         userFolders,
+        theme,
+        setTheme,
         completeOnboarding,
         updateProfile,
         addEntry,

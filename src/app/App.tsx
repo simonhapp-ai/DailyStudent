@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { BottomNav } from '../components/ui/BottomNav'
 import { UserProvider, useUser } from '../context/UserContext'
@@ -13,6 +14,33 @@ import { ExamResultScreen } from '../screens/ExamResultScreen'
 import { NoteCreateScreen } from '../screens/NoteCreateScreen'
 import { FolderScreen } from '../screens/FolderScreen'
 import { ProfilScreen } from '../screens/ProfilScreen'
+
+function ThemeApplier() {
+  const { theme } = useUser()
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (theme === 'dark') {
+      root.classList.add('dark')
+    } else if (theme === 'light') {
+      root.classList.remove('dark')
+    } else {
+      root.classList.toggle('dark', window.matchMedia('(prefers-color-scheme: dark)').matches)
+    }
+  }, [theme])
+
+  useEffect(() => {
+    if (theme !== 'system') return
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = (e: MediaQueryListEvent) => {
+      document.documentElement.classList.toggle('dark', e.matches)
+    }
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [theme])
+
+  return null
+}
 
 function Layout() {
   const { isOnboarded } = useUser()
@@ -55,6 +83,7 @@ function Layout() {
 export function App() {
   return (
     <UserProvider>
+      <ThemeApplier />
       <BrowserRouter>
         <Layout />
       </BrowserRouter>

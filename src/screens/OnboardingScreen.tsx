@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { useUser, generateKcFolders } from '../context/UserContext'
@@ -25,7 +25,7 @@ const BUNDESLAENDER = [
 
 const SUBJECTS: Record<string, { name: string; icon: string; color: string }> = {
   deutsch:      { name: 'Deutsch',          icon: '📖', color: '#4ADE80' },
-  mathematik:   { name: 'Mathematik',       icon: '📐', color: '#7C6FFF' },
+  mathematik:   { name: 'Mathematik',       icon: '📐', color: '#6366F1' },
   englisch:     { name: 'Englisch',         icon: '🌍', color: '#38BDF8' },
   franzoesisch: { name: 'Französisch',      icon: '🗼', color: '#2DD4BF' },
   latein:       { name: 'Latein',           icon: '🏺', color: '#C084FC' },
@@ -56,7 +56,7 @@ const SUBJECT_GROUPS = [
 const KLASSEN = ['10', '11', '12', '13']
 const SCHULFORMEN = ['Gymnasium', 'FOS', 'Gesamtschule']
 
-type Step = 1 | 2 | 3 | 4 | 5
+type Step = 1 | 2 | 3 | 4 | 5 | 6
 
 const DEV_PROFILE: UserProfile = {
   name: 'Simon Happ',
@@ -83,18 +83,19 @@ export function OnboardingScreen() {
   const [klausurSubject, setKlausurSubject] = useState('')
   const [klausurDate, setKlausurDate] = useState('')
 
-  const progress = (step / 5) * 100
+  const progress = (step / 6) * 100
 
   const canNext: Record<Step, boolean> = {
     1: true,
     2: name.trim().length > 0 && klasse !== '' && schulform !== '',
-    3: bundeslandId !== '',
-    4: faecher.length > 0,
-    5: true,
+    3: true,
+    4: bundeslandId !== '',
+    5: faecher.length > 0,
+    6: true,
   }
 
   const next = () => {
-    if (step < 5) setStep((s) => (s + 1) as Step)
+    if (step < 6) setStep((s) => (s + 1) as Step)
   }
 
   const back = () => {
@@ -130,7 +131,7 @@ export function OnboardingScreen() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-background gap-4">
         <div className="w-12 h-12 rounded-btn bg-accent-soft flex items-center justify-center">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7C6FFF" strokeWidth="2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
@@ -172,16 +173,18 @@ export function OnboardingScreen() {
             name={name} setName={setName}
             klasse={klasse} setKlasse={setKlasse}
             schulform={schulform} setSchulform={setSchulform}
-            zielnote={zielnote} setZielnote={setZielnote}
           />
         )}
         {step === 3 && (
-          <StepBundesland selected={bundeslandId} onSelect={setBundeslandId} />
+          <StepZielnote zielnote={zielnote} setZielnote={setZielnote} />
         )}
         {step === 4 && (
-          <StepFaecher selected={faecher} onToggle={toggleFach} />
+          <StepBundesland selected={bundeslandId} onSelect={setBundeslandId} />
         )}
         {step === 5 && (
+          <StepFaecher selected={faecher} onToggle={toggleFach} />
+        )}
+        {step === 6 && (
           <StepKlausur
             faecher={faecher}
             subject={klausurSubject} setSubject={setKlausurSubject}
@@ -193,7 +196,7 @@ export function OnboardingScreen() {
       {/* Footer CTA */}
       {step > 1 && (
         <div className="px-6 pb-10 pt-4">
-          {step < 5 ? (
+          {step < 6 ? (
             <Button variant="primary" fullWidth onClick={next} disabled={!canNext[step]}>
               Weiter
             </Button>
@@ -229,7 +232,7 @@ function StepWelcome({ onNext, onSkip }: { onNext: () => void; onSkip: () => voi
         </div>
         <h1 className="text-4xl font-bold text-text-primary leading-tight mb-4">
           Smarter lernen.<br />
-          <span style={{ color: '#7C6FFF' }}>Besser abschneiden.</span>
+          <span className="text-accent">Besser abschneiden.</span>
         </h1>
         <p className="text-text-secondary text-lg leading-relaxed mb-10">
           Die KI, die deinen echten Unterricht kennt — personalisiert auf deinen Lehrplan.
@@ -266,18 +269,193 @@ function StepWelcome({ onNext, onSkip }: { onNext: () => void; onSkip: () => voi
 
 /* ─── Step 2: Personal info ───────────────────────────────── */
 
-const ZIELNOTEN = ['1,0', '1,5', '2,0', '2,5', '3,0+']
+const ALL_GRADES = Array.from({ length: 21 }, (_, i) =>
+  (1.0 + i * 0.1).toFixed(1).replace('.', ',')
+)
+
+const MAJOR_IDX = new Set([0, 5, 10, 15, 20])
+const MAJOR_LABELS = ['1,0', '1,5', '2,0', '2,5', '3,0']
+
+function getGradeLabel(value: string): string {
+  const n = parseFloat(value.replace(',', '.'))
+  if (n <= 1.0) return 'Spitzenleistung'
+  if (n <= 1.5) return 'Sehr gut'
+  if (n <= 2.0) return 'Gut'
+  if (n <= 2.5) return 'Solides Gut'
+  return 'Entspannt'
+}
+
+function GradeSlider({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [dragging, setDragging] = useState(false)
+
+  const activeIndex = ALL_GRADES.indexOf(value)
+  const hasValue = activeIndex !== -1
+  const thumbPct = hasValue ? (activeIndex / (ALL_GRADES.length - 1)) * 100 : 0
+  const thumbLeft = `calc(14px + ${thumbPct / 100} * (100% - 28px))`
+
+  const getIndexFromX = (clientX: number) => {
+    const rect = trackRef.current?.getBoundingClientRect()
+    if (!rect) return 0
+    const pad = 14
+    const usable = rect.width - pad * 2
+    const x = Math.max(0, Math.min(clientX - rect.left - pad, usable))
+    return Math.round((x / usable) * (ALL_GRADES.length - 1))
+  }
+
+  return (
+    <div className="bg-surface rounded-card border border-border/60 shadow-card-adaptive overflow-hidden">
+
+      {/* ── Grade display ─────────────────────────────── */}
+      <div
+        className="px-5 pt-6 pb-5 text-center"
+        style={{
+          background: hasValue
+            ? 'linear-gradient(180deg, rgba(var(--color-accent), 0.08) 0%, transparent 100%)'
+            : undefined,
+        }}
+      >
+        <div key={value} className="animate-grade-pop">
+          <p
+            className="font-black leading-none mb-2"
+            style={{
+              fontSize: 68,
+              color: hasValue ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {hasValue ? value : '—'}
+          </p>
+          <p
+            className="text-[13px] font-medium tracking-wide"
+            style={{ color: hasValue ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))' }}
+          >
+            {hasValue ? getGradeLabel(value) : 'Regler ziehen zum Auswählen'}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Slider ────────────────────────────────────── */}
+      <div className="px-5 pb-5 pt-1">
+        <div
+          ref={trackRef}
+          className="relative h-11 flex items-center cursor-pointer select-none touch-none"
+          onPointerDown={(e) => {
+            setDragging(true)
+            e.currentTarget.setPointerCapture(e.pointerId)
+            onChange(ALL_GRADES[getIndexFromX(e.clientX)])
+          }}
+          onPointerMove={(e) => {
+            if (!dragging) return
+            onChange(ALL_GRADES[getIndexFromX(e.clientX)])
+          }}
+          onPointerUp={() => setDragging(false)}
+          onPointerCancel={() => setDragging(false)}
+        >
+          {/* Track bg */}
+          <div
+            className="absolute rounded-full"
+            style={{ left: 14, right: 14, height: 3, backgroundColor: 'rgb(var(--color-border))' }}
+          />
+
+          {/* Track fill */}
+          {hasValue && (
+            <div
+              className="absolute rounded-full transition-all duration-100"
+              style={{
+                left: 14,
+                width: `calc(${thumbPct / 100} * (100% - 28px))`,
+                height: 3,
+                backgroundColor: 'rgb(var(--color-accent))',
+              }}
+            />
+          )}
+
+          {/* Ticks — major (5px) and minor (3px) */}
+          {ALL_GRADES.map((g, i) => {
+            const pct = (i / (ALL_GRADES.length - 1)) * 100
+            const isMajor = MAJOR_IDX.has(i)
+            const isActive = i === activeIndex
+            const isPast = hasValue && i < activeIndex
+            return (
+              <div
+                key={g}
+                className="absolute -translate-x-1/2"
+                style={{ left: `calc(14px + ${pct / 100} * (100% - 28px))` }}
+              >
+                <div
+                  className="rounded-full transition-all duration-150"
+                  style={{
+                    width:  isMajor ? (isActive ? 8 : 5) : (isActive ? 5 : 3),
+                    height: isMajor ? (isActive ? 8 : 5) : (isActive ? 5 : 3),
+                    backgroundColor: isActive || isPast
+                      ? 'rgb(var(--color-accent))'
+                      : 'rgb(var(--color-border))',
+                    opacity: isPast ? 0.4 : isMajor ? 1 : 0.5,
+                  }}
+                />
+              </div>
+            )
+          })}
+
+          {/* Thumb */}
+          {hasValue && (
+            <div
+              className="absolute -translate-x-1/2 transition-all duration-150"
+              style={{ left: thumbLeft }}
+            >
+              <div
+                className="rounded-full transition-all duration-200"
+                style={{
+                  width: dragging ? 30 : 24,
+                  height: dragging ? 30 : 24,
+                  backgroundColor: 'rgb(var(--color-accent))',
+                  border: '2.5px solid white',
+                  boxShadow: '0 2px 12px rgba(124,58,237,0.35), 0 1px 3px rgba(0,0,0,0.12)',
+                }}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Major grade labels */}
+        <div className="relative" style={{ height: 16 }}>
+          {MAJOR_LABELS.map((label, i) => {
+            const pct = (i / (MAJOR_LABELS.length - 1)) * 100
+            return (
+              <span
+                key={label}
+                className="absolute -translate-x-1/2 text-[10px] font-semibold text-text-muted"
+                style={{ left: `calc(14px + ${pct / 100} * (100% - 28px))` }}
+              >
+                {label}
+              </span>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Clear */}
+      {hasValue && (
+        <button
+          onClick={() => onChange('')}
+          className="w-full py-3 text-[12px] text-text-muted hover:text-text-secondary border-t border-border/60 transition-colors"
+        >
+          Kein Ziel setzen
+        </button>
+      )}
+    </div>
+  )
+}
 
 function StepPersonal({
   name, setName,
   klasse, setKlasse,
   schulform, setSchulform,
-  zielnote, setZielnote,
 }: {
   name: string; setName: (v: string) => void
   klasse: string; setKlasse: (v: string) => void
   schulform: string; setSchulform: (v: string) => void
-  zielnote: string; setZielnote: (v: string) => void
 }) {
   return (
     <div>
@@ -311,7 +489,7 @@ function StepPersonal({
       </div>
 
       <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Schulform</p>
-      <div className="flex flex-col gap-2 mb-8">
+      <div className="flex flex-col gap-2">
         {SCHULFORMEN.map((sf) => (
           <button
             key={sf}
@@ -326,29 +504,25 @@ function StepPersonal({
           </button>
         ))}
       </div>
-
-      <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-1">Abi-Zielnote</p>
-      <p className="text-xs text-text-muted mb-3">Optional — hilft der KI, deine Lernintensität anzupassen.</p>
-      <div className="grid grid-cols-5 gap-2">
-        {ZIELNOTEN.map((z) => (
-          <button
-            key={z}
-            onClick={() => setZielnote(zielnote === z ? '' : z)}
-            className={`py-2.5 rounded-card text-sm font-bold border transition-all duration-150 ${
-              zielnote === z
-                ? 'bg-accent border-accent text-white'
-                : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
-            }`}
-          >
-            {z}
-          </button>
-        ))}
-      </div>
     </div>
   )
 }
 
-/* ─── Step 3: Bundesland ──────────────────────────────────── */
+/* ─── Step 3: Zielnote ────────────────────────────────────── */
+
+function StepZielnote({ zielnote, setZielnote }: { zielnote: string; setZielnote: (v: string) => void }) {
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-text-primary mb-1">Was ist dein Abi-Ziel?</h2>
+      <p className="text-text-muted text-sm mb-8">
+        Optional — die KI passt deinen Lernplan auf deine Zielnote an.
+      </p>
+      <GradeSlider value={zielnote} onChange={setZielnote} />
+    </div>
+  )
+}
+
+/* ─── Step 4: Bundesland ──────────────────────────────────── */
 
 function StepBundesland({ selected, onSelect }: { selected: string; onSelect: (id: string) => void }) {
   return (
@@ -384,7 +558,7 @@ function StepBundesland({ selected, onSelect }: { selected: string; onSelect: (i
   )
 }
 
-/* ─── Step 4: Fächer ──────────────────────────────────────── */
+/* ─── Step 5: Fächer ──────────────────────────────────────── */
 
 function StepFaecher({ selected, onToggle }: { selected: string[]; onToggle: (id: string) => void }) {
   return (
@@ -439,7 +613,7 @@ function StepFaecher({ selected, onToggle }: { selected: string[]; onToggle: (id
   )
 }
 
-/* ─── Step 5: Erste Klausur ───────────────────────────────── */
+/* ─── Step 6: Erste Klausur ───────────────────────────────── */
 
 function StepKlausur({
   faecher,
@@ -486,8 +660,7 @@ function StepKlausur({
             onChange={(e) => setDate(e.target.value)}
             min={new Date().toISOString().slice(0, 10)}
             className="w-full bg-surface border border-border rounded-card px-4 py-3.5 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
-            style={{ colorScheme: 'dark' }}
-          />
+                     />
         </>
       )}
     </div>

@@ -6,9 +6,9 @@ import { subjects } from '../data/mockData'
 const DAY_LABELS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
 
 const TYPE_CONFIG: Record<EntryType, { label: string; icon: string; color: string }> = {
-  lerneinheit: { label: 'Lerneinheit', icon: '📚', color: '#7C6FFF' },
-  termin:      { label: 'Termin',      icon: '📅', color: '#38BDF8' },
-  erinnerung:  { label: 'Erinnerung',  icon: '🔔', color: '#FACC15' },
+  lerneinheit: { label: 'Lerneinheit', icon: '📚', color: '#34C759' },
+  termin:      { label: 'Termin',      icon: '📅', color: '#007AFF' },
+  erinnerung:  { label: 'Erinnerung',  icon: '🔔', color: '#FF9500' },
 }
 
 function getWeekDays() {
@@ -39,7 +39,7 @@ function toDateStr(d: Date) {
 function getGreeting(name: string) {
   const h = new Date().getHours()
   const greet = h < 12 ? 'Guten Morgen' : h < 17 ? 'Guten Tag' : 'Guten Abend'
-  return `${greet}, ${name} 👋`
+  return `${greet}, ${name}`
 }
 
 export function KalenderScreen() {
@@ -82,33 +82,36 @@ export function KalenderScreen() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-24">
-      {/* Header */}
-      <div className="px-4 pt-14 pb-2">
-        <div className="flex items-center justify-between">
+    <div className="flex flex-col min-h-screen bg-background pb-28">
+
+      {/* ── Header ─────────────────────────────────────────────── */}
+      <div className="px-5" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <div className="flex items-start justify-between">
           <div>
-            <p className="text-text-muted text-sm">
+            <p className="text-[13px] text-text-muted">
               {today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}
             </p>
-            <h1 className="text-2xl font-bold text-text-primary mt-0.5">{getGreeting(profile?.name ?? 'Max')}</h1>
+            <h1 className="text-[28px] font-bold text-text-primary mt-0.5 leading-tight">
+              {getGreeting(profile?.name ?? 'Max')}
+            </h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-2">
             <button
               onClick={() => openModal()}
-              className="w-9 h-9 rounded-btn bg-surface border border-border flex items-center justify-center hover:bg-surface-hover transition-colors"
+              className="w-9 h-9 rounded-full bg-surface shadow-card border border-border/60 flex items-center justify-center press-sm"
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-secondary">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
               </svg>
             </button>
-            <span className="text-sm px-3 py-1.5 rounded-btn bg-warning/10 text-warning font-medium">🔥 12 Tage</span>
+            <span className="text-[13px] px-3 py-1.5 rounded-pill bg-warning/10 text-warning font-semibold">🔥 12</span>
           </div>
         </div>
       </div>
 
-      {/* Week strip */}
-      <div className="px-4 mt-4 mb-2">
-        <div className="flex gap-1">
+      {/* ── Week strip ─────────────────────────────────────────── */}
+      <div className="px-5 mt-5 mb-1">
+        <div className="flex gap-1.5">
           {weekDays.map((d, i) => {
             const isToday = d.getTime() === today.getTime()
             const dayStr = toDateStr(d)
@@ -117,18 +120,20 @@ export function KalenderScreen() {
               <button
                 key={i}
                 onClick={() => openModal(dayStr)}
-                className={`flex-1 flex flex-col items-center py-2 rounded-btn transition-colors relative ${
-                  isToday ? 'bg-accent text-white' : 'text-text-muted hover:bg-surface-hover'
+                className={`flex-1 flex flex-col items-center py-2.5 rounded-[14px] transition-all duration-200 press-sm relative ${
+                  isToday ? 'bg-accent shadow-sm' : 'hover:bg-surface'
                 }`}
               >
-                <span className="text-xs font-medium">{DAY_LABELS[i]}</span>
-                <span className={`text-sm font-bold mt-0.5 ${isToday ? 'text-white' : 'text-text-secondary'}`}>
+                <span className={`text-[10px] font-semibold tracking-wide ${isToday ? 'text-white/80' : 'text-text-muted'}`}>
+                  {DAY_LABELS[i]}
+                </span>
+                <span className={`text-[16px] font-bold mt-0.5 leading-none ${isToday ? 'text-white' : 'text-text-secondary'}`}>
                   {d.getDate()}
                 </span>
                 {hasEntries && (
                   <span
-                    className="absolute bottom-1 w-1 h-1 rounded-full"
-                    style={{ backgroundColor: isToday ? 'rgba(255,255,255,0.8)' : '#7C6FFF' }}
+                    className="absolute bottom-1.5 w-1 h-1 rounded-full"
+                    style={{ backgroundColor: isToday ? 'rgba(255,255,255,0.7)' : 'rgb(var(--color-accent))' }}
                   />
                 )}
               </button>
@@ -137,43 +142,43 @@ export function KalenderScreen() {
         </div>
       </div>
 
-      <div className="px-4 space-y-6 mt-2">
-        {/* Heute */}
+      <div className="px-5 space-y-7 mt-5">
+
+        {/* ── Heute ──────────────────────────────────────────────── */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider">Heute</h2>
+            <h2 className="section-label">Heute</h2>
             <button
               onClick={() => openModal()}
-              className="flex items-center gap-1 text-xs text-accent hover:opacity-80 transition-opacity"
+              className="flex items-center gap-1 text-[13px] text-accent font-medium press-sm"
             >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
               </svg>
               Hinzufügen
             </button>
           </div>
-          <div className="space-y-2">
-            {/* Personal entries for today */}
+          <div className="space-y-2.5">
             {todayEntries.map((entry) => {
               const cfg = TYPE_CONFIG[entry.type]
               return (
                 <div
                   key={entry.id}
-                  className="bg-surface border border-border rounded-card p-4 flex items-center gap-4"
+                  className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 flex items-center gap-4 animate-fade-in"
                 >
                   <div
-                    className="w-10 h-10 rounded-btn flex items-center justify-center text-lg shrink-0"
-                    style={{ backgroundColor: `${cfg.color}22` }}
+                    className="w-10 h-10 rounded-[12px] flex items-center justify-center text-lg shrink-0"
+                    style={{ backgroundColor: `${cfg.color}18` }}
                   >
                     {cfg.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-text-primary font-medium text-sm truncate">{entry.title}</p>
+                    <p className="text-text-primary font-semibold text-[15px] truncate">{entry.title}</p>
                     <div className="flex items-center gap-2 mt-0.5">
-                      {entry.time && <p className="text-text-muted text-xs">{entry.time} Uhr</p>}
+                      {entry.time && <p className="text-text-muted text-[12px]">{entry.time} Uhr</p>}
                       <span
-                        className="text-xs px-1.5 py-0.5 rounded font-medium"
-                        style={{ backgroundColor: `${cfg.color}22`, color: cfg.color }}
+                        className="text-[11px] px-2 py-0.5 rounded-pill font-semibold"
+                        style={{ backgroundColor: `${cfg.color}18`, color: cfg.color }}
                       >
                         {cfg.label}
                       </span>
@@ -181,9 +186,9 @@ export function KalenderScreen() {
                   </div>
                   <button
                     onClick={() => removeEntry(entry.id)}
-                    className="w-7 h-7 rounded-btn flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 transition-colors shrink-0"
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 transition-colors shrink-0 press-sm"
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                       <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                     </svg>
                   </button>
@@ -191,50 +196,49 @@ export function KalenderScreen() {
               )
             })}
 
-            {/* Add entry prompt when nothing custom yet */}
             {todayEntries.length === 0 && (
               <button
                 onClick={() => openModal()}
-                className="w-full border border-dashed border-border rounded-card p-3 flex items-center justify-center gap-2 text-text-muted hover:border-accent hover:text-accent transition-colors"
+                className="w-full border border-dashed border-border rounded-card py-5 flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all duration-200 press-sm"
               >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 5v14M5 12h14" strokeLinecap="round" />
                 </svg>
-                <span className="text-xs font-medium">Persönlichen Eintrag hinzufügen</span>
+                <span className="text-[13px] font-medium">Eintrag hinzufügen</span>
               </button>
             )}
           </div>
         </section>
 
-        {/* Upcoming personal entries */}
+        {/* ── Geplant ────────────────────────────────────────────── */}
         {futureEntries.length > 0 && (
           <section>
-            <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Geplant</h2>
-            <div className="space-y-2">
+            <h2 className="section-label mb-3">Geplant</h2>
+            <div className="space-y-2.5">
               {futureEntries.map((entry) => {
                 const cfg = TYPE_CONFIG[entry.type]
                 const d = new Date(entry.date + 'T00:00:00')
                 return (
                   <div
                     key={entry.id}
-                    className="bg-surface border border-border rounded-card p-4 flex items-center gap-4"
+                    className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 flex items-center gap-4"
                   >
                     <div
-                      className="w-10 h-10 rounded-btn flex items-center justify-center text-lg shrink-0"
-                      style={{ backgroundColor: `${cfg.color}22` }}
+                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-lg shrink-0"
+                      style={{ backgroundColor: `${cfg.color}18` }}
                     >
                       {cfg.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-text-primary font-medium text-sm truncate">{entry.title}</p>
+                      <p className="text-text-primary font-semibold text-[15px] truncate">{entry.title}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <p className="text-text-muted text-xs">
+                        <p className="text-text-muted text-[12px]">
                           {d.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: 'short' })}
                           {entry.time ? `, ${entry.time} Uhr` : ''}
                         </p>
                         <span
-                          className="text-xs px-1.5 py-0.5 rounded font-medium"
-                          style={{ backgroundColor: `${cfg.color}22`, color: cfg.color }}
+                          className="text-[11px] px-2 py-0.5 rounded-pill font-semibold"
+                          style={{ backgroundColor: `${cfg.color}18`, color: cfg.color }}
                         >
                           {cfg.label}
                         </span>
@@ -242,9 +246,9 @@ export function KalenderScreen() {
                     </div>
                     <button
                       onClick={() => removeEntry(entry.id)}
-                      className="w-7 h-7 rounded-btn flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 transition-colors shrink-0"
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 transition-colors shrink-0 press-sm"
                     >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                         <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                       </svg>
                     </button>
@@ -255,31 +259,31 @@ export function KalenderScreen() {
           </section>
         )}
 
-        {/* Klausur-Countdown */}
+        {/* ── Klausuren ──────────────────────────────────────────── */}
         {upcomingExams.length > 0 && (
           <section>
-            <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Nächste Klausuren</h2>
-            <div className="space-y-2">
+            <h2 className="section-label mb-3">Nächste Klausuren</h2>
+            <div className="space-y-2.5">
               {upcomingExams.slice(0, 3).map((exam) => (
                 <div
                   key={exam.subjectId + exam.date}
-                  className="bg-surface border border-border rounded-card p-4 flex items-center gap-4"
+                  className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 flex items-center gap-4"
                 >
                   <div
-                    className="w-10 h-10 rounded-btn flex items-center justify-center text-lg shrink-0"
-                    style={{ backgroundColor: `${exam.subject!.color}22` }}
+                    className="w-10 h-10 rounded-[12px] flex items-center justify-center text-lg shrink-0"
+                    style={{ backgroundColor: `${exam.subject!.color}18` }}
                   >
                     {exam.subject!.icon}
                   </div>
                   <div className="flex-1">
-                    <p className="text-text-primary font-medium text-sm">{exam.subject!.name}</p>
-                    <p className="text-text-muted text-xs mt-0.5">
+                    <p className="text-text-primary font-semibold text-[15px]">{exam.subject!.name}</p>
+                    <p className="text-text-muted text-[12px] mt-0.5">
                       {new Date(exam.date).toLocaleDateString('de-DE', { day: '2-digit', month: 'long' })}
                     </p>
                   </div>
                   <div
-                    className="px-3 py-1.5 rounded-btn text-xs font-bold shrink-0"
-                    style={{ backgroundColor: `${exam.subject!.color}22`, color: exam.subject!.color }}
+                    className="px-3 py-1.5 rounded-pill text-[12px] font-bold shrink-0"
+                    style={{ backgroundColor: `${exam.subject!.color}15`, color: exam.subject!.color }}
                   >
                     {exam.days === 0 ? 'Heute' : exam.days === 1 ? 'Morgen' : `${exam.days} Tage`}
                   </div>
@@ -289,88 +293,86 @@ export function KalenderScreen() {
           </section>
         )}
 
-        {/* KI-Lernvorschlag — Pro teaser */}
+        {/* ── KI-Lernvorschlag — Pro teaser ─────────────────────── */}
         <section>
-          <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">KI-Lernvorschlag</h2>
-          <div className="relative overflow-hidden bg-surface border border-border rounded-card p-4">
+          <h2 className="section-label mb-3">KI-Lernvorschlag</h2>
+          <div className="relative overflow-hidden bg-surface rounded-card shadow-card-adaptive border border-border/60 p-5">
             <div className="filter blur-sm pointer-events-none select-none">
-              <p className="text-text-primary font-medium text-sm mb-1">Heute: Mathematik — 45 Min</p>
-              <p className="text-text-secondary text-sm">Fokus Integralrechnung · 3 Karteikarten · 1 Aufgabe</p>
+              <p className="text-text-primary font-semibold text-[15px] mb-1">Heute: Mathematik — 45 Min</p>
+              <p className="text-text-secondary text-[13px]">Fokus Integralrechnung · 3 Karteikarten · 1 Aufgabe</p>
               <div className="mt-3 flex gap-2">
-                <div className="h-7 w-28 bg-accent-soft rounded-btn" />
-                <div className="h-7 w-20 bg-surface-hover rounded-btn" />
+                <div className="h-8 w-28 bg-accent/10 rounded-btn" />
+                <div className="h-8 w-20 bg-surface-hover rounded-btn" />
               </div>
             </div>
-            <div className="absolute inset-0 flex items-center justify-center bg-background/30">
-              <div className="flex items-center gap-2 bg-surface border border-border rounded-card px-4 py-2.5 shadow-lg">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7C6FFF" strokeWidth="2">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="flex items-center gap-2 bg-surface/95 border border-border rounded-[14px] px-4 py-2.5 shadow-float">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                   <path d="M7 11V7a5 5 0 0110 0v4" strokeLinecap="round" />
                 </svg>
-                <span className="text-accent text-xs font-semibold">Pro freischalten</span>
+                <span className="text-accent text-[13px] font-semibold">Pro freischalten</span>
               </div>
             </div>
           </div>
         </section>
+
       </div>
 
-      {/* Add Entry Modal */}
+      {/* ── Add Entry Modal ─────────────────────────────────────── */}
       {modalOpen && (
         <div className="fixed inset-0 z-[60] flex flex-col justify-end">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setModalOpen(false)} />
-          <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 z-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}>
-            <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
+          <div className="absolute inset-0 bg-black/50" onClick={() => setModalOpen(false)} />
+          <div
+            className="relative max-w-lg mx-auto w-full bg-surface rounded-t-sheet px-5 pt-5 z-10 animate-sheet-up"
+            style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}
+          >
+            <div className="w-10 h-1 bg-border/60 rounded-full mx-auto mb-5" />
+            <h2 className="text-[20px] font-bold text-text-primary mb-5">Eintrag hinzufügen</h2>
 
-            <h2 className="text-lg font-bold text-text-primary mb-4">Eintrag hinzufügen</h2>
-
-            {/* Type chips */}
             <div className="flex gap-2 mb-4">
               {(Object.entries(TYPE_CONFIG) as [EntryType, typeof TYPE_CONFIG['lerneinheit']][]).map(([type, cfg]) => (
                 <button
                   key={type}
                   onClick={() => setForm((f) => ({ ...f, type }))}
-                  className={`flex-1 py-2 rounded-btn text-xs font-medium flex items-center justify-center gap-1.5 border transition-all duration-150 ${
+                  className={`flex-1 py-2.5 rounded-btn text-[12px] font-semibold flex items-center justify-center gap-1.5 border transition-all duration-150 press-sm ${
                     form.type === type
-                      ? 'bg-accent border-accent text-white'
+                      ? 'text-white border-transparent shadow-sm'
                       : 'border-border text-text-secondary hover:bg-surface-hover'
                   }`}
+                  style={form.type === type ? { backgroundColor: cfg.color } : undefined}
                 >
                   {cfg.icon} {cfg.label}
                 </button>
               ))}
             </div>
 
-            {/* Title */}
             <input
               type="text"
               value={form.title}
               onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
               onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
               placeholder={
-                form.type === 'lerneinheit' ? 'z.B. Geschichte Karteikarten wiederholen' :
+                form.type === 'lerneinheit' ? 'z.B. Geschichte Karteikarten' :
                 form.type === 'termin' ? 'z.B. Nachhilfe bei Frau Müller' :
                 'z.B. Lernplan aktualisieren'
               }
-              className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary text-sm placeholder-text-muted mb-3 focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary text-[15px] placeholder-text-muted mb-3 focus:outline-none focus:border-accent transition-colors"
               autoFocus
             />
 
-            {/* Date + Time */}
             <div className="flex gap-3 mb-5">
               <input
                 type="date"
                 value={form.date}
                 onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                className="flex-1 bg-background border border-border rounded-card px-4 py-3 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
-                style={{ colorScheme: 'dark' }}
+                className="flex-1 bg-background border border-border rounded-card px-4 py-3 text-text-primary text-[15px] focus:outline-none focus:border-accent transition-colors"
               />
               <input
                 type="time"
                 value={form.time}
                 onChange={(e) => setForm((f) => ({ ...f, time: e.target.value }))}
-                placeholder="Uhrzeit"
-                className="w-32 bg-background border border-border rounded-card px-4 py-3 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
-                style={{ colorScheme: 'dark' }}
+                className="w-32 bg-background border border-border rounded-card px-4 py-3 text-text-primary text-[15px] focus:outline-none focus:border-accent transition-colors"
               />
             </div>
 

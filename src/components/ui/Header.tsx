@@ -12,24 +12,37 @@ export function Header({ title, subtitle, showBack, right }: HeaderProps) {
   const navigate = useNavigate()
 
   return (
-    <div className="flex items-center justify-between px-4 pt-12 pb-4">
-      <div className="flex items-center gap-3">
+    <div
+      className="flex items-center justify-between px-4 pb-3"
+      style={{
+        paddingTop: 'max(52px, calc(env(safe-area-inset-top, 0px) + 12px))',
+      }}
+    >
+      <div className="flex items-center gap-1 flex-1 min-w-0">
         {showBack && (
           <button
             onClick={() => navigate(-1)}
-            className="w-8 h-8 flex items-center justify-center rounded-btn text-text-secondary hover:text-text-primary hover:bg-surface-hover transition-colors"
+            className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 mr-1 px-2 py-1.5 rounded-btn"
+            style={{ color: 'rgb(var(--color-accent))' }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
+            <span className="text-[15px] font-normal">Zurück</span>
           </button>
         )}
-        <div>
-          <h1 className="text-xl font-semibold text-text-primary leading-tight">{title}</h1>
-          {subtitle && <p className="text-sm text-text-secondary mt-0.5">{subtitle}</p>}
+        <div className="flex-1 min-w-0">
+          <h1 className="text-[17px] font-semibold leading-snug truncate" style={{ color: 'rgb(var(--color-text-primary))' }}>
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="text-[13px] mt-0.5 truncate" style={{ color: 'rgb(var(--color-text-secondary))' }}>
+              {subtitle}
+            </p>
+          )}
         </div>
       </div>
-      {right && <div>{right}</div>}
+      {right && <div className="shrink-0 ml-3">{right}</div>}
     </div>
   )
 }

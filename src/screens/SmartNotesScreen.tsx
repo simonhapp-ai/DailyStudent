@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
+import { MathRenderer } from '../components/ui/MathRenderer'
 import { useUser } from '../context/UserContext'
 import { explainKeyword, extractTextFromImage, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
@@ -14,10 +15,10 @@ function CollapsibleSection({
 }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
-    <div className="bg-surface border border-border rounded-card overflow-hidden">
+    <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-hover transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface-hover transition-colors press-sm"
       >
         <div className="flex items-center gap-2">
           <span className="text-text-primary font-semibold text-sm">{title}</span>
@@ -54,6 +55,8 @@ export function SmartNotesScreen() {
     summary: generatedNote?.summary ?? mockNote?.summary ?? null,
     keywords: generatedNote?.keywords ?? mockNote?.keywords ?? [],
     examTopics: generatedNote?.examTopics ?? mockNote?.examTopics ?? [],
+    solution: generatedNote?.solution,
+    tasks: generatedNote?.tasks,
   }
 
   // ── Edit mode state ──────────────────────────────────────────────────────
@@ -392,11 +395,78 @@ export function SmartNotesScreen() {
           ) : undefined}
         >
           {note.summary ? (
-            <p className="text-text-secondary text-sm leading-relaxed">{note.summary}</p>
+            <p className="text-text-secondary text-sm leading-relaxed"><MathRenderer text={note.summary} /></p>
           ) : (
             <p className="text-text-muted text-sm">Noch nicht analysiert — tippe auf „Bearbeiten" um die KI-Analyse zu starten.</p>
           )}
         </CollapsibleSection>
+
+        {/* Lösung(en) */}
+        {(note.tasks && note.tasks.length > 0) ? (
+          <CollapsibleSection title={`📐 ${note.tasks.length > 1 ? `${note.tasks.length} Aufgaben` : 'Lösung'}`}>
+            <div className="space-y-4">
+              {note.tasks.map((task, ti) => (
+                <div key={ti} className={ti > 0 ? 'pt-4 border-t border-border' : ''}>
+                  {note.tasks!.length > 1 && (
+                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: subject?.color ?? '#007AFF' }}>Aufgabe {ti + 1}</p>
+                  )}
+                  {task.question && (
+                    <p className="text-xs text-text-muted italic mb-2"><MathRenderer text={task.question} /></p>
+                  )}
+                  <ol className="space-y-2 mb-2">
+                    {task.steps.map((step, i) => (
+                      <li key={i} className="flex gap-2 items-start text-sm text-text-secondary">
+                        <span
+                          className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
+                          style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
+                        >
+                          {i + 1}
+                        </span>
+                        <span className="leading-relaxed"><MathRenderer text={step} /></span>
+                      </li>
+                    ))}
+                  </ol>
+                  <div className="px-3 py-2 rounded-btn mb-2" style={{ backgroundColor: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
+                    <p className="text-xs font-bold text-success mb-0.5">Ergebnis</p>
+                    <p className="text-sm text-text-primary font-medium"><MathRenderer text={task.answer} /></p>
+                  </div>
+                  {task.proof && (
+                    <div className="px-3 py-2 rounded-btn bg-surface-hover border border-border">
+                      <p className="text-xs font-bold text-text-muted mb-0.5">Probe</p>
+                      <p className="text-sm text-text-secondary"><MathRenderer text={task.proof} /></p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CollapsibleSection>
+        ) : note.solution ? (
+          <CollapsibleSection title="📐 Lösung">
+            <ol className="space-y-2 mb-3">
+              {note.solution.steps.map((step, i) => (
+                <li key={i} className="flex gap-2 items-start text-sm text-text-secondary">
+                  <span
+                    className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
+                    style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
+                  >
+                    {i + 1}
+                  </span>
+                  <span className="leading-relaxed"><MathRenderer text={step} /></span>
+                </li>
+              ))}
+            </ol>
+            <div className="px-3 py-2 rounded-btn mb-2" style={{ backgroundColor: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
+              <p className="text-xs font-bold text-success mb-0.5">Ergebnis</p>
+              <p className="text-sm text-text-primary font-medium"><MathRenderer text={note.solution.answer} /></p>
+            </div>
+            {note.solution.proof && (
+              <div className="px-3 py-2 rounded-btn bg-surface-hover border border-border">
+                <p className="text-xs font-bold text-text-muted mb-0.5">Probe</p>
+                <p className="text-sm text-text-secondary"><MathRenderer text={note.solution.proof} /></p>
+              </div>
+            )}
+          </CollapsibleSection>
+        ) : null}
 
         {/* Schlüsselbegriffe */}
         <CollapsibleSection title="🔑 Schlüsselbegriffe">
@@ -433,7 +503,7 @@ export function SmartNotesScreen() {
                       <p className="text-text-muted text-xs">KI erklärt…</p>
                     </div>
                   ) : (
-                    <p className="text-text-secondary text-sm leading-relaxed">{explanations[selectedKeyword]}</p>
+                    <p className="text-text-secondary text-sm leading-relaxed"><MathRenderer text={explanations[selectedKeyword]} /></p>
                   )}
                 </div>
               )}
@@ -451,7 +521,7 @@ export function SmartNotesScreen() {
               {userNote.qa.map((item, i) => (
                 <div key={i} className={i < userNote.qa!.length - 1 ? 'pb-3 border-b border-border' : ''}>
                   <p className="text-sm font-semibold text-text-primary mb-1">{item.q}</p>
-                  <p className="text-sm text-text-secondary leading-relaxed">{item.a}</p>
+                  <p className="text-sm text-text-secondary leading-relaxed"><MathRenderer text={item.a} /></p>
                 </div>
               ))}
             </div>
@@ -466,7 +536,7 @@ export function SmartNotesScreen() {
                 <li key={i} className="flex gap-3 items-start">
                   <span
                     className="w-5 h-5 rounded-pill text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ backgroundColor: `${subject?.color ?? '#7C6FFF'}22`, color: subject?.color ?? '#7C6FFF' }}
+                    style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
                   >
                     {i + 1}
                   </span>

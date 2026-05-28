@@ -68,7 +68,7 @@ export function FotoScannerWidget({ lessonId, subjectName = 'Allgemein', onNoteG
       {status === 'idle' && (
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C6FFF" strokeWidth="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent" strokeWidth="2">
               <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
               <circle cx="12" cy="13" r="4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -149,7 +149,7 @@ export function FotoScannerWidget({ lessonId, subjectName = 'Allgemein', onNoteG
       {status === 'ocr' && (
         <div className="flex items-center gap-3 py-1">
           <div className="w-9 h-9 rounded-btn bg-accent-soft flex items-center justify-center shrink-0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C6FFF" strokeWidth="2" className="animate-spin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent" strokeWidth="2" className="animate-spin">
               <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
             </svg>
           </div>
@@ -164,7 +164,7 @@ export function FotoScannerWidget({ lessonId, subjectName = 'Allgemein', onNoteG
       {status === 'generating' && (
         <div className="flex items-center gap-3 py-1">
           <div className="w-9 h-9 rounded-btn bg-accent-soft flex items-center justify-center shrink-0">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C6FFF" strokeWidth="2" className="animate-spin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent" strokeWidth="2" className="animate-spin">
               <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
             </svg>
           </div>

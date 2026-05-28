@@ -4,7 +4,7 @@ const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
 const VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct'
 const TEXT_MODEL = 'llama-3.3-70b-versatile'
 
-async function resizeImage(dataUrl: string, maxWidth = 1280): Promise<{ base64: string; mimeType: 'image/jpeg' }> {
+async function resizeImage(dataUrl: string, maxWidth = 1536): Promise<{ base64: string; mimeType: 'image/jpeg' }> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => {
@@ -15,7 +15,7 @@ async function resizeImage(dataUrl: string, maxWidth = 1280): Promise<{ base64: 
       const ctx = canvas.getContext('2d')
       if (!ctx) { reject(new Error('Canvas nicht verfügbar')); return }
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-      resolve({ base64: canvas.toDataURL('image/jpeg', 0.85).split(',')[1], mimeType: 'image/jpeg' })
+      resolve({ base64: canvas.toDataURL('image/jpeg', 0.88).split(',')[1], mimeType: 'image/jpeg' })
     }
     img.onerror = () => reject(new Error('Bild konnte nicht geladen werden'))
     img.src = dataUrl
@@ -26,19 +26,39 @@ interface GroqResponse {
   choices: { message: { content: string } }[]
 }
 
+interface GroqErrorBody {
+  error?: { message?: string }
+}
+
+function parseRetryAfterMs(errorText: string): number {
+  const match = /try again in ([\d.]+)s/i.exec(errorText)
+  return match ? Math.ceil(parseFloat(match[1]) * 1000) + 500 : 5000
+}
+
 async function groqFetch(body: Record<string, unknown>): Promise<string> {
   const apiKey = import.meta.env.VITE_GROQ_API_KEY as string | undefined
   if (!apiKey) throw new Error('VITE_GROQ_API_KEY fehlt in .env')
 
-  const res = await fetch(GROQ_API_URL, {
+  const attempt = async () => fetch(GROQ_API_URL, {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   })
 
+  let res = await attempt()
+
+  if (res.status === 429) {
+    const text = await res.text()
+    const waitMs = parseRetryAfterMs(text)
+    await new Promise((r) => setTimeout(r, waitMs))
+    res = await attempt()
+  }
+
   if (!res.ok) {
     const text = await res.text()
-    throw new Error(`Groq API Fehler ${res.status}: ${text}`)
+    let msg = `Groq API Fehler ${res.status}`
+    try { msg = (JSON.parse(text) as GroqErrorBody).error?.message ?? msg } catch { /* raw text */ }
+    throw new Error(msg)
   }
 
   return ((await res.json()) as GroqResponse).choices[0].message.content
@@ -50,7 +70,7 @@ export async function extractTextFromImage(dataUrl: string): Promise<string> {
 
   return groqFetch({
     model: VISION_MODEL,
-    max_tokens: 2048,
+    max_tokens: 1024,
     temperature: 0.1,
     messages: [{
       role: 'user',
@@ -66,9 +86,57 @@ export async function extractTextFromImage(dataUrl: string): Promise<string> {
 }
 
 interface SmartNoteJSON {
+  contentType?: 'info' | 'aufgabe' | 'beides'
   summary: string
   keywords: string[]
   examTopics: string[]
+  solution?: { steps: string[]; answer: string; proof?: string }
+}
+
+interface TextBlockJSON {
+  additionalKeywords: string[]
+  suggestExplain: string[]
+  summary: string
+}
+
+export async function analyzeTextBlock(
+  text: string,
+  subjectName: string,
+): Promise<{ additionalKeywords: string[]; suggestExplain: string[]; summary: string }> {
+  const content = await groqFetch({
+    model: TEXT_MODEL,
+    max_tokens: 512,
+    temperature: 0.2,
+    response_format: { type: 'json_object' },
+    messages: [
+      {
+        role: 'system',
+        content: 'Du bist ein Lernassistent für deutsche Gymnasiasten (Klasse 10–13). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.',
+      },
+      {
+        role: 'user',
+        content: `Fach: ${subjectName}
+
+Schülernotizen:
+${text.slice(0, 800)}
+
+JSON:
+{
+  "additionalKeywords": ["Fachbegriff nicht im Text aber relevant"],
+  "suggestExplain": ["Begriff aus dem Text der erklärt werden sollte"],
+  "summary": "2–3 Sätze Kontext-Zusammenfassung"
+}
+additionalKeywords: 3–6 Fachbegriffe die zum Thema gehören aber NICHT im Text stehen.
+suggestExplain: 2–4 Begriffe die IM Text vorkommen und für einen Schüler erklärenswert sind.`,
+      },
+    ],
+  })
+  const parsed = JSON.parse(content) as TextBlockJSON
+  return {
+    additionalKeywords: Array.isArray(parsed.additionalKeywords) ? parsed.additionalKeywords : [],
+    suggestExplain: Array.isArray(parsed.suggestExplain) ? parsed.suggestExplain : [],
+    summary: parsed.summary ?? '',
+  }
 }
 
 interface SubjectSuggestionJSON {
@@ -162,6 +230,111 @@ Erkläre den Begriff "${keyword}" in 2–3 prägnanten Sätzen für einen Gymnas
   })
 }
 
+interface ClassifyJSON {
+  contentType?: 'info' | 'aufgabe' | 'beides'
+  summary?: string
+  keywords?: string[]
+}
+
+export async function classifyContent(
+  transcription: string,
+  subjectName: string,
+): Promise<{ contentType: 'info' | 'aufgabe' | 'beides'; summary: string; keywords: string[] }> {
+  const content = await groqFetch({
+    model: TEXT_MODEL,
+    max_tokens: 512,
+    temperature: 0.1,
+    response_format: { type: 'json_object' },
+    messages: [
+      {
+        role: 'system',
+        content: 'Du klassifizierst Schülernotizen. Antworte ausschließlich mit validem JSON.',
+      },
+      {
+        role: 'user',
+        content: `Fach: ${subjectName}
+
+Text vom Foto:
+${transcription.slice(0, 1500)}
+
+JSON mit exakt diesen 3 Feldern:
+{"contentType":"aufgabe","summary":"","keywords":["Begriff"]}
+contentType: "info" = nur Lernstoff, "aufgabe" = Aufgaben vorhanden, "beides" = beides
+summary: max 2 Sätze Zusammenfassung des Lernstoffs (leer wenn reine Aufgaben)
+keywords: 3-5 Fachbegriffe als einfache Strings ohne Sonderzeichen`,
+      },
+    ],
+  })
+  const parsed = JSON.parse(content) as ClassifyJSON
+  return {
+    contentType: parsed.contentType ?? 'info',
+    summary: parsed.summary ?? '',
+    keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
+  }
+}
+
+export async function solveTasksFromText(
+  transcription: string,
+  subjectName: string,
+): Promise<Array<{ question: string; steps: string[]; answer: string; proof?: string }>> {
+  const raw = await groqFetch({
+    model: TEXT_MODEL,
+    max_tokens: 4096,
+    temperature: 0.1,
+    messages: [
+      {
+        role: 'system',
+        content: 'Du bist ein Fachlehrer für deutsche Gymnasiasten. Löse JEDE Aufgabe vollständig. Antworte NUR mit dem vorgegebenen Textformat — kein JSON, keine Einleitung.',
+      },
+      {
+        role: 'user',
+        content: `Fach: ${subjectName}
+
+Text vom Foto:
+${transcription.slice(0, 2000)}
+
+Löse jede Aufgabe im folgenden Format. Nutze EXAKT diese Marker:
+
+===AUFGABE_1===
+[Aufgabenstellung hier]
+---SCHRITTE---
+2x + 4 = 10 | -4
+2x = 6 | /2
+x = 3
+---ERGEBNIS---
+x = 3
+---PROBE---
+2*3+4=10 (stimmt)
+===AUFGABE_2===
+[nächste Aufgabe]
+---SCHRITTE---
+...
+
+Regeln:
+- Jeden Rechenschritt auf einer eigenen Zeile mit dem Zwischenergebnis
+- ---PROBE--- nur bei Mathe, sonst weglassen
+- Sind keine Aufgaben vorhanden, schreibe nur: KEIN_AUFGABEN`,
+      },
+    ],
+  })
+
+  if (raw.trim().startsWith('KEIN_AUFGABEN') || !raw.includes('===AUFGABE_')) return []
+
+  const blocks = raw.split(/===AUFGABE_\d+===/).filter((b) => b.trim())
+  return blocks.map((block) => {
+    const question = block.split('---SCHRITTE---')[0].trim()
+    const stepsPart = block.split('---SCHRITTE---')[1]?.split('---ERGEBNIS---')[0] ?? ''
+    const ergebnisPart = block.split('---ERGEBNIS---')[1]?.split('---PROBE---')[0]?.split('===')[0] ?? ''
+    const probePart = block.split('---PROBE---')[1]?.split('===')[0] ?? ''
+    return {
+      question,
+      steps: stepsPart.split('\n').map((s) => s.trim()).filter(Boolean),
+      answer: ergebnisPart.trim(),
+      proof: probePart.trim() || undefined,
+    }
+  }).filter((t) => t.steps.length > 0 || t.answer)
+}
+
 // Step 2: Text → strukturierte Smart Note via Llama 3.3 70B
 export async function generateSmartNote(
   rawText: string,
@@ -182,17 +355,35 @@ export async function generateSmartNote(
         role: 'user',
         content: `Fach: ${subjectName}
 
-Tafelbild-Text:
+Text:
 ${rawText}
 
-Erstelle eine Smart Note als JSON mit exakt diesem Format:
+Analysiere den Text und erstelle eine Smart Note als JSON.
+
+SCHRITT 1 — Erkenne den Typ:
+- "info": reiner Lernstoff (Erklärungen, Definitionen, Tafelbilder)
+- "aufgabe": Aufgabe oder Problemstellung die gelöst werden soll
+- "beides": Lernstoff UND Aufgaben gemischt
+
+SCHRITT 2 — JSON mit exakt diesem Format:
 {
-  "summary": "Kernkonzepte in 3-5 prägnanten Sätzen erklärt",
+  "contentType": "info" | "aufgabe" | "beides",
+  "summary": "Kernaussage in 2–4 Sätzen (bei reiner Aufgabe: leerer String)",
   "keywords": ["Fachbegriff1", "Fachbegriff2"],
-  "examTopics": ["Klausurthema 1", "Klausurthema 2"]
+  "examTopics": ["Klausurthema 1"],
+  "solution": {
+    "steps": ["Schritt 1: ...", "Schritt 2: ..."],
+    "answer": "Ergebnis: ..."
+  }
 }
-keywords: 6-10 Fachbegriffe die ein Schüler für die Klausur kennen muss.
-examTopics: 3-5 konkrete Aufgabenstellungen wie sie in einer echten Abiturklausur vorkommen.`,
+
+Regeln:
+- keywords: 4–8 Fachbegriffe die ein Schüler kennen muss
+- examTopics: 2–4 Klausurthemen (bei reiner Aufgabe: leeres Array [])
+- solution: NUR ausfüllen wenn contentType "aufgabe" oder "beides" ist, sonst weglassen
+- solution.steps: 2–6 klare Lösungsschritte mit vollständigem Rechenweg
+- solution.answer: finales Ergebnis als ein prägnanter Satz
+- solution.proof: Probe — Lösung in die Ausgangsformel einsetzen und Gleichheit zeigen (ein Satz, NUR bei mathematischen Aufgaben)`,
       },
     ],
   })
@@ -202,9 +393,13 @@ examTopics: 3-5 konkrete Aufgabenstellungen wie sie in einer echten Abiturklausu
   return {
     lessonId,
     rawText,
-    summary: parsed.summary,
+    contentType: parsed.contentType,
+    summary: parsed.summary ?? '',
     keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
     examTopics: Array.isArray(parsed.examTopics) ? parsed.examTopics : [],
+    solution: parsed.solution && Array.isArray(parsed.solution.steps) && parsed.solution.steps.length > 0
+      ? { steps: parsed.solution.steps, answer: parsed.solution.answer, proof: parsed.solution.proof }
+      : undefined,
     generatedAt: new Date().toISOString(),
     subjectName,
   }

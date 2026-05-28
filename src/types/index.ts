@@ -91,9 +91,12 @@ export interface UserNote {
 export interface GeneratedSmartNote {
   lessonId: string
   rawText: string
+  contentType?: 'info' | 'aufgabe' | 'beides'
   summary: string
   keywords: string[]
   examTopics: string[]
+  solution?: { steps: string[]; answer: string; proof?: string }
+  tasks?: Array<{ question: string; steps: string[]; answer: string; proof?: string }>
   generatedAt: string
   subjectName: string
 }

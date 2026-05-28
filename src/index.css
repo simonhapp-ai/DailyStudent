@@ -2,24 +2,145 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── iOS Design Tokens ───────────────────────────────────────── */
+
+:root {
+  --color-bg:             242 242 247;   /* iOS systemGroupedBackground — clean near-white gray */
+  --color-surface:        255 255 255;
+  --color-surface-hover:  239 239 244;
+  --color-border:         209 209 214;
+  --color-accent:         124  58 237;   /* #7C3AED — violet-600 */
+  --color-accent-soft:    rgba(124, 58, 237, 0.10);
+  --color-success:        52  199  89;
+  --color-warning:        255 149   0;
+  --color-danger:         255  59  48;
+  --color-text-primary:   22   14  40;   /* deep purple-tinted black */
+  --color-text-secondary: 72   60  95;
+  --color-text-muted:     152 140 175;
+
+  /* Subject icon radial gradients — light mode: pastel purple sphere */
+  --si-a-from: 245 243 255;   /* violet-50  */
+  --si-a-to:   196 181 253;   /* violet-300 */
+  --si-b-from: 250 245 255;   /* purple-50  */
+  --si-b-to:   216 180 254;   /* purple-300 */
+  --si-c-from: 237 233 254;   /* violet-100 */
+  --si-c-to:   167 139 250;   /* violet-400 */
+
+  color-scheme: light;
+}
+
+.dark {
+  --color-bg:              0   0   0;    /* true black */
+  --color-surface:        18  18  20;    /* iOS dark gray */
+  --color-surface-hover:  30  30  33;
+  --color-border:         50  50  55;
+  --color-accent:        167 139 250;   /* #A78BFA — violet-400 */
+  --color-accent-soft:   rgba(167, 139, 250, 0.15);
+  --color-success:        48 209  88;
+  --color-warning:       255 159  10;
+  --color-danger:        255  69  58;
+  --color-text-primary:  255 255 255;
+  --color-text-secondary:205 205 210;
+  --color-text-muted:    140 140 150;
+
+  /* Subject icon radial gradients — dark mode: deep purple sphere */
+  --si-a-from:  91  33 182;   /* violet-800 */
+  --si-a-to:    46  16 101;   /* violet-950 */
+  --si-b-from:  88  28 135;   /* purple-900 */
+  --si-b-to:    59   7 100;   /* purple-950 */
+  --si-c-from:  76  29 149;   /* violet-900 */
+  --si-c-to:    30  27  75;   /* indigo-950 */
+
+  color-scheme: dark;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   margin: 0;
-  background-color: #0D0D0F;
-  color: #F0F0F5;
-  font-family: 'Inter', sans-serif;
+  background-color: rgb(var(--color-bg));
+  color: rgb(var(--color-text-primary));
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 #root {
   min-height: 100svh;
 }
 
+/* ── Interaction utilities ──────────────────────────────────── */
+
+.press {
+  transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+.press-sm:active {
+  transform: scale(0.98);
+  transition: transform 0.12s ease-out;
+}
+
+.hover-lift {
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.hover-lift:hover {
+  transform: scale(1.016);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.09), 0 1px 5px rgba(0,0,0,0.06);
+}
+.hover-lift:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease-out;
+}
+
+/* ── Card shadow — light vs dark ─────────────────────────────── */
+
+.shadow-card-adaptive {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 2px 10px rgba(0,0,0,0.04);
+}
+.dark .shadow-card-adaptive {
+  box-shadow: none;
+}
+
+/* ── Typography utilities ───────────────────────────────────── */
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(var(--color-text-muted));
+}
+
+/* ── Input ──────────────────────────────────────────────────── */
+
+input[type="text"],
+input[type="date"],
+input[type="time"],
+textarea {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgb(var(--color-text-muted));
+  opacity: 0.7;
+}
+
+/* ── Flashcard flip ─────────────────────────────────────────── */
+
 .flashcard-inner {
-  transition: transform 0.5s;
+  transition: transform 0.48s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   transform-style: preserve-3d;
   position: relative;
 }
@@ -35,4 +156,59 @@ body {
 
 .flashcard-back {
   transform: rotateY(180deg);
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-border) / 0.5);
+  border-radius: 999px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--color-border) / 0.5) transparent;
+}
+
+/* ── Modal slide-up animation ───────────────────────────────── */
+
+@keyframes sheet-up {
+  from { transform: translateY(100%); opacity: 0.8; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.animate-sheet-up {
+  animation: sheet-up 0.32s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* ── Fade in ────────────────────────────────────────────────── */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out both;
+}
+
+/* ── Grade pop — Zielnoten-Slider ───────────────────────────── */
+
+@keyframes grade-pop {
+  0%   { opacity: 0.3; transform: scale(0.72) translateY(6px); }
+  65%  { opacity: 1;   transform: scale(1.07) translateY(0); }
+  100% { opacity: 1;   transform: scale(1)    translateY(0); }
+}
+
+.animate-grade-pop {
+  animation: grade-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
