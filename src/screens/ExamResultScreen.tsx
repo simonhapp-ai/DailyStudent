@@ -4,11 +4,11 @@ import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { ProModal } from '../components/ui/ProModal'
 import { mockExamResult } from '../data/mockData'
-
-const IS_PRO = false
+import { useUser } from '../context/UserContext'
 
 export function ExamResultScreen() {
   const navigate = useNavigate()
+  const { isPro } = useUser()
   const result = mockExamResult
   const [proOpen, setProOpen] = useState(false)
   const percentage = (result.score / result.maxScore) * 100

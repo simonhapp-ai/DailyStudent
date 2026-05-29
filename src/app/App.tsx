@@ -1,5 +1,28 @@
-import { useEffect } from 'react'
+import { Component, useEffect } from 'react'
+import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+
+class ErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
+  state = { error: null }
+  static getDerivedStateFromError(e: Error) { return { error: e.message } }
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{ padding: 32, fontFamily: 'system-ui', background: '#0f0f13', color: '#fff', minHeight: '100dvh' }}>
+          <p style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>Fehler beim Laden</p>
+          <p style={{ fontSize: 13, color: '#888', marginBottom: 24 }}>{this.state.error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{ background: '#7c3aed', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: 10, fontSize: 14, fontWeight: 600 }}
+          >
+            Neu laden
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
 import { BottomNav } from '../components/ui/BottomNav'
 import { UserProvider, useUser } from '../context/UserContext'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
@@ -82,11 +105,13 @@ function Layout() {
 
 export function App() {
   return (
-    <UserProvider>
-      <ThemeApplier />
-      <BrowserRouter>
-        <Layout />
-      </BrowserRouter>
-    </UserProvider>
+    <ErrorBoundary>
+      <UserProvider>
+        <ThemeApplier />
+        <BrowserRouter>
+          <Layout />
+        </BrowserRouter>
+      </UserProvider>
+    </ErrorBoundary>
   )
 }

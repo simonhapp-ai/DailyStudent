@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button } from '../components/ui/Button'
+import { BottomSheet } from '../components/ui/BottomSheet'
 import { useUser, type EntryType } from '../context/UserContext'
 import { subjects } from '../data/mockData'
 
@@ -320,68 +321,60 @@ export function KalenderScreen() {
       </div>
 
       {/* ── Add Entry Modal ─────────────────────────────────────── */}
-      {modalOpen && (
-        <div className="fixed inset-0 z-[60] flex flex-col justify-end">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setModalOpen(false)} />
-          <div
-            className="relative max-w-lg mx-auto w-full bg-surface rounded-t-sheet px-5 pt-5 z-10 animate-sheet-up"
-            style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}
-          >
-            <div className="w-10 h-1 bg-border/60 rounded-full mx-auto mb-5" />
-            <h2 className="text-[20px] font-bold text-text-primary mb-5">Eintrag hinzufügen</h2>
+      <BottomSheet isOpen={modalOpen} onClose={() => setModalOpen(false)}>
+        <div className="px-5 pb-2">
+          <h2 className="text-[20px] font-bold text-text-primary mb-5">Eintrag hinzufügen</h2>
 
-            <div className="flex gap-2 mb-4">
-              {(Object.entries(TYPE_CONFIG) as [EntryType, typeof TYPE_CONFIG['lerneinheit']][]).map(([type, cfg]) => (
-                <button
-                  key={type}
-                  onClick={() => setForm((f) => ({ ...f, type }))}
-                  className={`flex-1 py-2.5 rounded-btn text-[12px] font-semibold flex items-center justify-center gap-1.5 border transition-all duration-150 press-sm ${
-                    form.type === type
-                      ? 'text-white border-transparent shadow-sm'
-                      : 'border-border text-text-secondary hover:bg-surface-hover'
-                  }`}
-                  style={form.type === type ? { backgroundColor: cfg.color } : undefined}
-                >
-                  {cfg.icon} {cfg.label}
-                </button>
-              ))}
-            </div>
-
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-              onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-              placeholder={
-                form.type === 'lerneinheit' ? 'z.B. Geschichte Karteikarten' :
-                form.type === 'termin' ? 'z.B. Nachhilfe bei Frau Müller' :
-                'z.B. Lernplan aktualisieren'
-              }
-              className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary text-[15px] placeholder-text-muted mb-3 focus:outline-none focus:border-accent transition-colors"
-              autoFocus
-            />
-
-            <div className="flex gap-3 mb-5">
-              <input
-                type="date"
-                value={form.date}
-                onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                className="flex-1 bg-background border border-border rounded-card px-4 py-3 text-text-primary text-[15px] focus:outline-none focus:border-accent transition-colors"
-              />
-              <input
-                type="time"
-                value={form.time}
-                onChange={(e) => setForm((f) => ({ ...f, time: e.target.value }))}
-                className="w-32 bg-background border border-border rounded-card px-4 py-3 text-text-primary text-[15px] focus:outline-none focus:border-accent transition-colors"
-              />
-            </div>
-
-            <Button variant="primary" fullWidth onClick={handleAdd} disabled={!form.title.trim()}>
-              Hinzufügen
-            </Button>
+          <div className="flex gap-2 mb-4">
+            {(Object.entries(TYPE_CONFIG) as [EntryType, typeof TYPE_CONFIG['lerneinheit']][]).map(([type, cfg]) => (
+              <button
+                key={type}
+                onClick={() => setForm((f) => ({ ...f, type }))}
+                className={`flex-1 py-2.5 rounded-btn text-[12px] font-semibold flex items-center justify-center gap-1.5 border transition-all duration-150 press-sm ${
+                  form.type === type
+                    ? 'text-white border-transparent shadow-sm'
+                    : 'border-border text-text-secondary hover:bg-surface-hover'
+                }`}
+                style={form.type === type ? { backgroundColor: cfg.color } : undefined}
+              >
+                {cfg.icon} {cfg.label}
+              </button>
+            ))}
           </div>
+
+          <input
+            type="text"
+            value={form.title}
+            onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+            onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+            placeholder={
+              form.type === 'lerneinheit' ? 'z.B. Geschichte Karteikarten' :
+              form.type === 'termin' ? 'z.B. Nachhilfe bei Frau Müller' :
+              'z.B. Lernplan aktualisieren'
+            }
+            className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary placeholder-text-muted mb-3 focus:outline-none focus:border-accent transition-colors"
+          />
+
+          <div className="flex gap-3 mb-5">
+            <input
+              type="date"
+              value={form.date}
+              onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
+              className="flex-1 bg-background border border-border rounded-card px-4 py-3 text-text-primary focus:outline-none focus:border-accent transition-colors"
+            />
+            <input
+              type="time"
+              value={form.time}
+              onChange={(e) => setForm((f) => ({ ...f, time: e.target.value }))}
+              className="w-32 bg-background border border-border rounded-card px-4 py-3 text-text-primary focus:outline-none focus:border-accent transition-colors"
+            />
+          </div>
+
+          <Button variant="primary" fullWidth onClick={handleAdd} disabled={!form.title.trim()}>
+            Hinzufügen
+          </Button>
         </div>
-      )}
+      </BottomSheet>
     </div>
   )
 }

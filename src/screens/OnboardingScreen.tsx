@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { useUser, generateKcFolders } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
+import { analyzeFileToSmartNote } from '../lib/gemini'
+import type { UserNote } from '../types'
 
 const BUNDESLAENDER = [
   { id: 'by', name: 'Bayern' },
@@ -56,7 +58,7 @@ const SUBJECT_GROUPS = [
 const KLASSEN = ['10', '11', '12', '13']
 const SCHULFORMEN = ['Gymnasium', 'FOS', 'Gesamtschule']
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7
 
 const DEV_PROFILE: UserProfile = {
   name: 'Simon Happ',
@@ -66,6 +68,7 @@ const DEV_PROFILE: UserProfile = {
   bundeslandId: 'ni',
   faecher: ['englisch', 'mathematik', 'biologie', 'physik', 'religion'],
   klausurtermine: [{ subjectId: 'mathematik', date: '2026-06-06' }],
+  isDevMode: true,
 }
 
 export function OnboardingScreen() {
@@ -83,19 +86,20 @@ export function OnboardingScreen() {
   const [klausurSubject, setKlausurSubject] = useState('')
   const [klausurDate, setKlausurDate] = useState('')
 
-  const progress = (step / 6) * 100
+  const progress = (step / 7) * 100
 
   const canNext: Record<Step, boolean> = {
     1: true,
     2: name.trim().length > 0 && klasse !== '' && schulform !== '',
     3: true,
-    4: bundeslandId !== '',
-    5: faecher.length > 0,
-    6: true,
+    4: true, // optional — StepDateiImport manages its own footer
+    5: bundeslandId !== '',
+    6: faecher.length > 0,
+    7: true,
   }
 
   const next = () => {
-    if (step < 6) setStep((s) => (s + 1) as Step)
+    if (step < 7) setStep((s) => (s + 1) as Step)
   }
 
   const back = () => {
@@ -179,12 +183,15 @@ export function OnboardingScreen() {
           <StepZielnote zielnote={zielnote} setZielnote={setZielnote} />
         )}
         {step === 4 && (
-          <StepBundesland selected={bundeslandId} onSelect={setBundeslandId} />
+          <StepDateiImport onNext={next} />
         )}
         {step === 5 && (
-          <StepFaecher selected={faecher} onToggle={toggleFach} />
+          <StepBundesland selected={bundeslandId} onSelect={setBundeslandId} />
         )}
         {step === 6 && (
+          <StepFaecher selected={faecher} onToggle={toggleFach} />
+        )}
+        {step === 7 && (
           <StepKlausur
             faecher={faecher}
             subject={klausurSubject} setSubject={setKlausurSubject}
@@ -193,10 +200,10 @@ export function OnboardingScreen() {
         )}
       </div>
 
-      {/* Footer CTA */}
-      {step > 1 && (
+      {/* Footer CTA — step 4 manages its own footer */}
+      {step > 1 && step !== 4 && (
         <div className="px-6 pb-10 pt-4">
-          {step < 6 ? (
+          {step < 7 ? (
             <Button variant="primary" fullWidth onClick={next} disabled={!canNext[step]}>
               Weiter
             </Button>
@@ -522,7 +529,158 @@ function StepZielnote({ zielnote, setZielnote }: { zielnote: string; setZielnote
   )
 }
 
-/* ─── Step 4: Bundesland ──────────────────────────────────── */
+/* ─── Step 4: Datei-Import ────────────────────────────────── */
+
+function StepDateiImport({ onNext }: { onNext: () => void }) {
+  const { saveToOhneFachFolder } = useUser()
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [files, setFiles] = useState<File[]>([])
+  const [processing, setProcessing] = useState(false)
+  const [processed, setProcessed] = useState(0)
+  const [failCount, setFailCount] = useState(0)
+  const [done, setDone] = useState(false)
+
+  const processAll = async (selected: File[]) => {
+    setProcessing(true)
+    setProcessed(0)
+    setFailCount(0)
+    let fails = 0
+    for (let i = 0; i < selected.length; i++) {
+      const file = selected[i]
+      try {
+        const noteId = `import-onboarding-${Date.now()}-${i}`
+        const { generated, noteTitle } = await analyzeFileToSmartNote(file, noteId)
+        const note: UserNote = {
+          id: noteId,
+          title: noteTitle,
+          content: generated.summary,
+          folderId: 'folder-no-subject',
+          createdAt: new Date().toISOString(),
+        }
+        saveToOhneFachFolder(note, generated)
+      } catch {
+        fails++
+      }
+      setProcessed(i + 1)
+    }
+    setFailCount(fails)
+    setProcessing(false)
+    setDone(true)
+  }
+
+  const handleSelect = (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return
+    const selected = Array.from(fileList).slice(0, 5)
+    setFiles(selected)
+    setDone(false)
+    void processAll(selected)
+  }
+
+  const successCount = files.length - failCount
+
+  return (
+    <div className="flex flex-col justify-between min-h-[calc(100vh-80px)]">
+      <div className="flex-1">
+        <h2 className="text-2xl font-bold text-text-primary mb-1">Starte mit deinen Unterlagen</h2>
+        <p className="text-text-muted text-sm mb-8">
+          Importiere vorhandene Mitschriften, PDFs oder Lernzettel — die KI erstellt daraus sofort Smart Notes.
+        </p>
+
+        {/* Upload zone */}
+        {!done && !processing && (
+          <button
+            onClick={() => fileRef.current?.click()}
+            className="w-full border-2 border-dashed border-border rounded-[20px] p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all mb-6"
+          >
+            <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="1.8" className="text-accent">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div className="text-center">
+              <p className="text-text-primary font-semibold text-base">Dateien hochladen</p>
+              <p className="text-text-muted text-sm mt-1">PDF, JPG, PNG, WebP · bis zu 5 Dateien</p>
+            </div>
+          </button>
+        )}
+
+        {/* Processing */}
+        {processing && (
+          <div className="bg-surface border border-border rounded-[20px] p-5 mb-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-5 h-5 border-2 border-accent/30 border-t-accent rounded-full animate-spin shrink-0" />
+              <p className="text-text-primary font-semibold text-sm">KI analysiert deine {files.length === 1 ? 'Datei' : 'Dateien'}…</p>
+            </div>
+            <p className="text-text-muted text-sm">{processed} von {files.length} verarbeitet</p>
+            <div className="mt-3 h-1.5 bg-border/40 rounded-pill overflow-hidden">
+              <div
+                className="h-full bg-accent rounded-pill transition-all duration-500"
+                style={{ width: `${files.length > 0 ? (processed / files.length) * 100 : 0}%` }}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Done */}
+        {done && (
+          <div className="rounded-[20px] p-5 mb-4" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.2)' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(var(--color-success),0.15)' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success">
+                  <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-text-primary font-bold text-[16px]">
+                  {successCount} Smart {successCount === 1 ? 'Note' : 'Notes'} erstellt ✓
+                </p>
+                <p className="text-text-muted text-[13px] mt-0.5">Du findest sie später in Schnellnotizen</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Step's own footer */}
+      <div className="space-y-3">
+        {done ? (
+          <Button variant="primary" fullWidth size="lg" onClick={onNext}>
+            Weiter
+          </Button>
+        ) : (
+          <>
+            {files.length === 0 && (
+              <Button variant="primary" fullWidth size="lg" onClick={() => fileRef.current?.click()}>
+                Dateien auswählen
+              </Button>
+            )}
+            <button
+              onClick={onNext}
+              disabled={processing}
+              className="w-full py-3 text-sm text-text-muted hover:text-text-secondary transition-colors disabled:opacity-40"
+            >
+              Jetzt überspringen
+            </button>
+          </>
+        )}
+      </div>
+
+      <input
+        ref={fileRef}
+        type="file"
+        multiple
+        accept=".pdf,.jpg,.jpeg,.png,.webp,image/*,application/pdf"
+        className="hidden"
+        onChange={(e) => handleSelect(e.target.files)}
+      />
+    </div>
+  )
+}
+
+/* ─── Step 5: Bundesland ──────────────────────────────────── */
 
 function StepBundesland({ selected, onSelect }: { selected: string; onSelect: (id: string) => void }) {
   return (
@@ -558,7 +716,7 @@ function StepBundesland({ selected, onSelect }: { selected: string; onSelect: (i
   )
 }
 
-/* ─── Step 5: Fächer ──────────────────────────────────────── */
+/* ─── Step 6: Fächer ──────────────────────────────────────── */
 
 function StepFaecher({ selected, onToggle }: { selected: string[]; onToggle: (id: string) => void }) {
   return (
@@ -613,7 +771,7 @@ function StepFaecher({ selected, onToggle }: { selected: string[]; onToggle: (id
   )
 }
 
-/* ─── Step 6: Erste Klausur ───────────────────────────────── */
+/* ─── Step 7: Erste Klausur ───────────────────────────────── */
 
 function StepKlausur({
   faecher,

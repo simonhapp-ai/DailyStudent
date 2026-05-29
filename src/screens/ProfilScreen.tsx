@@ -1,4 +1,5 @@
 import { useUser, type AppTheme } from '../context/UserContext'
+import { useState } from 'react'
 import { Badge } from '../components/ui/Badge'
 
 const STATS_ICONS = ['🔥', '📸', '📝', '⭐']
@@ -10,7 +11,15 @@ const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
 ]
 
 export function ProfilScreen() {
-  const { profile, theme, setTheme } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro } = useUser()
+  const [proToast, setProToast] = useState(false)
+
+  const handleProToggle = () => {
+    const next = !isPro
+    setIsPro(next)
+    setProToast(true)
+    setTimeout(() => setProToast(false), 2000)
+  }
 
   const stats = [
     { label: 'Streak',    value: '12',  unit: 'Tage', icon: STATS_ICONS[0] },
@@ -126,6 +135,35 @@ export function ProfilScreen() {
           </div>
         </div>
 
+        {/* ── Dev: Pro Toggle (nur im Dev-Modus sichtbar) ─────────── */}
+        {profile?.isDevMode && (
+          <div>
+            <h2 className="section-label mb-2">Dev-Tools</h2>
+            <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3.5">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 text-[16px]">
+                    {isPro ? '⭐' : '🔒'}
+                  </div>
+                  <div>
+                    <p className="text-text-primary text-[15px] font-medium">Pro-Status</p>
+                    <p className="text-text-muted text-[12px] mt-0.5">{isPro ? 'Aktiv — alle Features entsperrt' : 'Inaktiv — Paywall sichtbar'}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleProToggle}
+                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 press-sm shrink-0 ${isPro ? 'bg-accent' : 'bg-border'}`}
+                >
+                  <span
+                    className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-200"
+                    style={{ left: isPro ? '26px' : '2px' }}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ── Einstellungen ──────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Einstellungen</h2>
@@ -159,6 +197,15 @@ export function ProfilScreen() {
         </div>
 
       </div>
+
+      {/* Toast */}
+      {proToast && (
+        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-pill bg-surface border border-border shadow-float animate-fade-in">
+          <p className="text-text-primary text-[13px] font-semibold whitespace-nowrap">
+            {isPro ? '⭐ Pro aktiviert' : '🔒 Pro deaktiviert'}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

@@ -75,7 +75,12 @@ export function NoteCreateScreen() {
   const navigate = useNavigate()
   const { profile, saveNote, userFolders, userNotes, saveToOhneFachFolder } = useUser()
 
-  const [noteId] = useState(() => `note-${crypto.randomUUID()}`)
+  const [noteId] = useState(() => {
+    const uid = typeof crypto?.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
+    return `note-${uid}`
+  })
   const subjectFromUrl = id ? subjects.find((s) => s.id === id) : null
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>(id ?? '')
   const [showSaveModal, setShowSaveModal] = useState(false)
@@ -310,9 +315,9 @@ export function NoteCreateScreen() {
   const confirmSave = (finalFolderId: string) => {
     saveNote(buildNote(selectedSubjectId, finalFolderId), buildGeneratedNote())
     setShowSaveModal(false)
-    if (finalFolderId && selectedSubjectId) navigate(`/unterricht/${selectedSubjectId}/ordner/${finalFolderId}`)
-    else if (selectedSubjectId) navigate(`/unterricht/${selectedSubjectId}`)
-    else navigate('/unterricht')
+    if (finalFolderId && selectedSubjectId) navigate(`/unterricht/${selectedSubjectId}/ordner/${finalFolderId}`, { replace: true })
+    else if (selectedSubjectId) navigate(`/unterricht/${selectedSubjectId}`, { replace: true })
+    else navigate('/unterricht', { replace: true })
   }
 
   const openNoSubjectModal = async () => {
@@ -330,14 +335,14 @@ export function NoteCreateScreen() {
     if (!suggestion) return
     saveNote(buildNote(suggestion.subjectId, undefined), buildGeneratedNote())
     setShowNoSubjectModal(false)
-    navigate(`/unterricht/${suggestion.subjectId}`)
+    navigate(`/unterricht/${suggestion.subjectId}`, { replace: true })
   }
 
   const saveToOhneFach = () => {
     const note = buildNote(undefined, 'folder-no-subject')
     saveToOhneFachFolder(note, buildGeneratedNote())
     setShowNoSubjectModal(false)
-    navigate('/unterricht/ohne-fach/ordner/folder-no-subject')
+    navigate('/unterricht/ohne-fach/ordner/folder-no-subject', { replace: true })
   }
 
   const hasUserContent = blocks.some((b) =>
@@ -729,7 +734,7 @@ export function NoteCreateScreen() {
   // ── Main render ──────────────────────────────────────────────────────────
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col bg-background" style={{ height: '100dvh' }}>
 
       {/* HEADER */}
       <div
@@ -961,7 +966,7 @@ export function NoteCreateScreen() {
                 </button>
               )}
               <button
-                onClick={() => { setShowCancelConfirm(false); navigate(-1) }}
+                onClick={() => { setShowCancelConfirm(false); navigate('/unterricht', { replace: true }) }}
                 className="w-full py-3 rounded-card border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
                 style={{ borderColor: 'rgba(248,113,113,0.3)', color: '#F87171' }}
               >

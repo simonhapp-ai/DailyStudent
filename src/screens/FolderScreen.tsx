@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { Badge } from '../components/ui/Badge'
 import { useUser } from '../context/UserContext'
+import { BottomSheet } from '../components/ui/BottomSheet'
 import { subjects } from '../data/mockData'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import type { UserFolder } from '../types'
@@ -232,70 +233,55 @@ export function FolderScreen() {
       </button>
 
       {/* New folder modal */}
-      {showNewFolderModal && (
-        <div className="fixed inset-0 z-[60] flex flex-col justify-end">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowNewFolderModal(false)} />
-          <div
-            className="relative max-w-lg mx-auto w-full bg-surface rounded-t-sheet px-5 pt-5 z-10 animate-sheet-up"
-            style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}
+      <BottomSheet isOpen={showNewFolderModal} onClose={() => setShowNewFolderModal(false)}>
+        <div className="px-5 pb-2">
+          <h2 className="text-[20px] font-bold text-text-primary mb-1">Neuer Unterordner</h2>
+          <p className="text-text-muted text-[13px] mb-4">in: {folderName}</p>
+          <input
+            type="text"
+            value={newFolderName}
+            onChange={(e) => setNewFolderName(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && createFolder()}
+            placeholder="z.B. Integralrechnung, Vektoren…"
+            className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary placeholder-text-muted mb-4 focus:outline-none focus:border-accent transition-colors"
+          />
+          <button
+            onClick={createFolder}
+            disabled={!newFolderName.trim()}
+            className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
+              newFolderName.trim() ? 'bg-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+            }`}
           >
-            <div className="w-10 h-1 bg-border/60 rounded-full mx-auto mb-5" />
-            <h2 className="text-[20px] font-bold text-text-primary mb-1">Neuer Unterordner</h2>
-            <p className="text-text-muted text-[13px] mb-4">in: {folderName}</p>
-            <input
-              type="text"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && createFolder()}
-              placeholder="z.B. Integralrechnung, Vektoren…"
-              autoFocus
-              className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary text-[15px] placeholder-text-muted mb-4 focus:outline-none focus:border-accent transition-colors"
-            />
+            Ordner erstellen
+          </button>
+        </div>
+      </BottomSheet>
+
+      {/* Delete confirmation */}
+      <BottomSheet isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)}>
+        <div className="px-5 pb-2">
+          <h2 className="text-[20px] font-bold text-text-primary mb-2">Ordner löschen</h2>
+          <p className="text-text-secondary text-[14px] mb-6">
+            {folderNotes.length > 0
+              ? `${folderNotes.length} ${folderNotes.length === 1 ? 'Notiz wird' : 'Notizen werden'} dauerhaft gelöscht.`
+              : 'Der Ordner wird dauerhaft gelöscht.'}
+          </p>
+          <div className="flex gap-3">
             <button
-              onClick={createFolder}
-              disabled={!newFolderName.trim()}
-              className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
-                newFolderName.trim() ? 'bg-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
-              }`}
+              onClick={() => setShowDeleteConfirm(false)}
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-surface-hover text-text-secondary hover:bg-border transition-colors press"
             >
-              Ordner erstellen
+              Abbrechen
+            </button>
+            <button
+              onClick={confirmDelete}
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-danger/10 text-danger border border-danger/20 hover:bg-danger/15 transition-colors press"
+            >
+              Löschen
             </button>
           </div>
         </div>
-      )}
-
-      {/* Delete confirmation */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 z-[60] flex items-end justify-center">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setShowDeleteConfirm(false)} />
-          <div
-            className="relative max-w-lg mx-auto w-full bg-surface rounded-t-sheet px-5 pt-5 z-10 animate-sheet-up"
-            style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}
-          >
-            <div className="w-10 h-1 bg-border/60 rounded-full mx-auto mb-5" />
-            <h2 className="text-[20px] font-bold text-text-primary mb-2">Ordner löschen</h2>
-            <p className="text-text-secondary text-[14px] mb-6">
-              {folderNotes.length > 0
-                ? `${folderNotes.length} ${folderNotes.length === 1 ? 'Notiz wird' : 'Notizen werden'} dauerhaft gelöscht.`
-                : 'Der Ordner wird dauerhaft gelöscht.'}
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-surface-hover text-text-secondary hover:bg-border transition-colors press"
-              >
-                Abbrechen
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-danger/10 text-danger border border-danger/20 hover:bg-danger/15 transition-colors press"
-              >
-                Löschen
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      </BottomSheet>
     </div>
   )
 }
