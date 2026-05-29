@@ -1,6 +1,5 @@
 // Polyfill for crypto.randomUUID (not available on iOS < 15.4)
 if (typeof crypto !== 'undefined' && typeof crypto.randomUUID !== 'function') {
-  // @ts-expect-error polyfill
   crypto.randomUUID = () => {
     const b = new Uint8Array(16)
     crypto.getRandomValues(b)

@@ -59,7 +59,7 @@ export function ExamResultScreen() {
         </div>
 
         {/* KI-Analyse — locked for free users */}
-        {IS_PRO ? (
+        {isPro ? (
           <>
             <div className="bg-success/5 border border-success/20 rounded-card p-4 space-y-2">
               <p className="text-success text-sm font-semibold">✓ Stärken</p>

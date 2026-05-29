@@ -1,6 +1,6 @@
 import type { GeneratedSmartNote } from '../types'
 
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent'
 
 interface GeminiJSON {
   title?: string
@@ -33,6 +33,7 @@ export async function analyzeFileToSmartNote(
   file: File,
   noteId: string,
   subjectName = 'Allgemein',
+  signal?: AbortSignal,
 ): Promise<{ generated: GeneratedSmartNote; noteTitle: string }> {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined
   if (!apiKey) throw new Error('VITE_GEMINI_API_KEY fehlt in .env')
@@ -64,14 +65,15 @@ export async function analyzeFileToSmartNote(
   const attempt = () =>
     fetch(`${API_URL}?key=${apiKey}`, {
       method: 'POST',
+      signal,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     })
 
   let res = await attempt()
 
-  // Auto-retry once on rate limit (back off 8 s)
-  if (res.status === 429) {
+  // Auto-retry once on rate limit (back off 8 s) — only if not aborted
+  if (res.status === 429 && !signal?.aborted) {
     await sleep(8000)
     res = await attempt()
   }
@@ -155,6 +157,10 @@ export async function suggestImportDestination(
       }).join('\n')
     : ''
 
+  const folderInstruction = folders.length > 0
+    ? `\n\nWähle auch einen passenden Ordner aus wenn möglich. Antworte mit:\n{"subjectId":"exakte-fach-id","folderId":"exakte-ordner-id","reason":"Begründung"}\nOhne Ordner:\n{"subjectId":"exakte-fach-id","folderId":null,"reason":"Begründung"}`
+    : `\n\nAntworte mit:\n{"subjectId":"exakte-fach-id","folderId":null,"reason":"Begründung"}`
+
   let res: Response
   try {
     res = await fetch(`${API_URL}?key=${apiKey}`, {
@@ -166,11 +172,11 @@ export async function suggestImportDestination(
           parts: [
             { inline_data: { mime_type: mimeType, data: base64 } },
             {
-              text: `Analysiere dieses Dokument und ordne es einem Schulfach zu.\n\nVerfügbare Fächer:\n${subjectList}${folderSection}\n\nAntworte NUR mit validem JSON:\n{"subjectId":"fach-id","folderId":"ordner-id-optional","reason":"Kurze Begründung auf Deutsch (1 Satz)"}\n\nfolderId nur angeben wenn das Dokument eindeutig zu diesem Ordner-Thema passt.`,
+              text: `Analysiere dieses Dokument und ordne es einem Schulfach zu. Verwende NUR die exakten IDs aus der Liste.\n\nVerfügbare Fächer:\n${subjectList}${folderSection}${folderInstruction}`,
             },
           ],
         }],
-        generationConfig: { response_mime_type: 'application/json', temperature: 0.1, maxOutputTokens: 128 },
+        generationConfig: { response_mime_type: 'application/json', temperature: 0.1, maxOutputTokens: 150 },
       }),
     })
   } catch {
@@ -184,13 +190,29 @@ export async function suggestImportDestination(
   if (!text) return null
 
   let parsed: DestinationJSON
-  try { parsed = JSON.parse(text) as DestinationJSON }
-  catch { return null }
+  try {
+    parsed = JSON.parse(text) as DestinationJSON
+  } catch {
+    // Gemini sometimes wraps JSON in markdown fences — extract the raw object
+    const match = text.match(/\{[\s\S]*\}/)
+    if (!match) return null
+    try { parsed = JSON.parse(match[0]) as DestinationJSON }
+    catch { return null }
+  }
 
-  const matchSubject = subjects.find((s) => s.id === parsed.subjectId)
+  // Case-insensitive ID match first, then fall back to name match
+  const rawId = (parsed.subjectId ?? '').trim().toLowerCase()
+  const matchSubject =
+    subjects.find((s) => s.id.toLowerCase() === rawId) ??
+    subjects.find((s) => s.name.toLowerCase() === rawId)
   if (!matchSubject) return null
 
-  const matchFolder = parsed.folderId ? folders.find((f) => f.id === parsed.folderId) : undefined
+  // Folder: exact ID first, then name fallback within the matched subject
+  const rawFolderId = (parsed.folderId ?? '').trim().toLowerCase()
+  const matchFolder = rawFolderId
+    ? (folders.find((f) => f.id.toLowerCase() === rawFolderId && f.subjectId === matchSubject.id) ??
+       folders.find((f) => f.name.toLowerCase() === rawFolderId && f.subjectId === matchSubject.id))
+    : undefined
 
   return {
     subjectId: matchSubject.id,

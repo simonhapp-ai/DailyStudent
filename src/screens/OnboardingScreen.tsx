@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { useUser, generateKcFolders } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
-import { analyzeFileToSmartNote } from '../lib/gemini'
+import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS } from '../lib/gemini'
 import type { UserNote } from '../types'
 
 const BUNDESLAENDER = [
@@ -92,9 +92,9 @@ export function OnboardingScreen() {
     1: true,
     2: name.trim().length > 0 && klasse !== '' && schulform !== '',
     3: true,
-    4: true, // optional — StepDateiImport manages its own footer
-    5: bundeslandId !== '',
-    6: faecher.length > 0,
+    4: bundeslandId !== '',
+    5: faecher.length > 0,
+    6: true, // optional — StepDateiImport manages its own footer
     7: true,
   }
 
@@ -183,13 +183,13 @@ export function OnboardingScreen() {
           <StepZielnote zielnote={zielnote} setZielnote={setZielnote} />
         )}
         {step === 4 && (
-          <StepDateiImport onNext={next} />
-        )}
-        {step === 5 && (
           <StepBundesland selected={bundeslandId} onSelect={setBundeslandId} />
         )}
-        {step === 6 && (
+        {step === 5 && (
           <StepFaecher selected={faecher} onToggle={toggleFach} />
+        )}
+        {step === 6 && (
+          <StepDateiImport onNext={next} faecher={faecher} />
         )}
         {step === 7 && (
           <StepKlausur
@@ -200,8 +200,8 @@ export function OnboardingScreen() {
         )}
       </div>
 
-      {/* Footer CTA — step 4 manages its own footer */}
-      {step > 1 && step !== 4 && (
+      {/* Footer CTA — step 6 manages its own footer */}
+      {step > 1 && step !== 6 && (
         <div className="px-6 pb-10 pt-4">
           {step < 7 ? (
             <Button variant="primary" fullWidth onClick={next} disabled={!canNext[step]}>
@@ -529,72 +529,126 @@ function StepZielnote({ zielnote, setZielnote }: { zielnote: string; setZielnote
   )
 }
 
-/* ─── Step 4: Datei-Import ────────────────────────────────── */
+/* ─── Step 6: Datei-Import ────────────────────────────────── */
 
-function StepDateiImport({ onNext }: { onNext: () => void }) {
-  const { saveToOhneFachFolder } = useUser()
+type ImportPhase = 'idle' | 'suggesting' | 'suggested' | 'manual' | 'processing' | 'done'
+
+function StepDateiImport({ onNext, faecher }: { onNext: () => void; faecher: string[] }) {
+  const { saveNote, saveToOhneFachFolder, addFolder, userFolders } = useUser()
   const fileRef = useRef<HTMLInputElement>(null)
-  const [files, setFiles] = useState<File[]>([])
-  const [processing, setProcessing] = useState(false)
-  const [processed, setProcessed] = useState(0)
-  const [failCount, setFailCount] = useState(0)
-  const [done, setDone] = useState(false)
+  const cancelRef = useRef(false)
+  const suggestionAbortRef = useRef<AbortController | null>(null)
 
-  const processAll = async (selected: File[]) => {
-    setProcessing(true)
-    setProcessed(0)
-    setFailCount(0)
-    let fails = 0
-    for (let i = 0; i < selected.length; i++) {
-      const file = selected[i]
-      try {
-        const noteId = `import-onboarding-${Date.now()}-${i}`
-        const { generated, noteTitle } = await analyzeFileToSmartNote(file, noteId)
-        const note: UserNote = {
-          id: noteId,
-          title: noteTitle,
-          content: generated.summary,
-          folderId: 'folder-no-subject',
-          createdAt: new Date().toISOString(),
-        }
-        saveToOhneFachFolder(note, generated)
-      } catch {
-        fails++
-      }
-      setProcessed(i + 1)
-    }
-    setFailCount(fails)
-    setProcessing(false)
-    setDone(true)
-  }
+  const [phase, setPhase] = useState<ImportPhase>('idle')
+  const [files, setFiles] = useState<File[]>([])
+  const [suggestion, setSuggestion] = useState<{ subjectId: string; subjectName: string; reason: string } | null>(null)
+  const [currentFile, setCurrentFile] = useState(0)
+  const [succeeded, setSucceeded] = useState(0)
+  const [failed, setFailed] = useState(0)
+
+  const profileSubjects = faecher
+    .map((id) => SUBJECTS[id] ? { id, ...SUBJECTS[id] } : null)
+    .filter((s): s is { id: string; name: string; icon: string; color: string } => s !== null)
 
   const handleSelect = (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return
     const selected = Array.from(fileList).slice(0, 5)
     setFiles(selected)
-    setDone(false)
-    void processAll(selected)
+
+    if (selected.length === 1 && profileSubjects.length > 0) {
+      setPhase('suggesting')
+      const controller = new AbortController()
+      suggestionAbortRef.current = controller
+      void suggestImportDestination(selected[0], profileSubjects, [], controller.signal)
+        .then((result) => {
+          if (controller.signal.aborted) return
+          setSuggestion(result ? { subjectId: result.subjectId, subjectName: result.subjectName, reason: result.reason } : null)
+          setPhase('suggested')
+        })
+        .catch(() => {
+          if (!controller.signal.aborted) setPhase('manual')
+        })
+    } else {
+      setPhase('manual')
+    }
   }
 
-  const successCount = files.length - failCount
+  const goManual = () => {
+    if (phase === 'suggesting') suggestionAbortRef.current?.abort()
+    setPhase('manual')
+  }
+
+  const startProcessing = async (subjectId: string) => {
+    setPhase('processing')
+    setCurrentFile(0)
+    setSucceeded(0)
+    setFailed(0)
+    cancelRef.current = false
+
+    // Auto-create "Importiert" folder for the matched subject (survives completeOnboarding since isAutoGenerated: false)
+    let targetFolderId: string | undefined
+    if (subjectId) {
+      const importFolderId = `folder-import-${subjectId}`
+      if (!userFolders.some((f) => f.id === importFolderId)) {
+        addFolder({
+          id: importFolderId,
+          subjectId,
+          name: 'Importiert',
+          createdAt: new Date().toISOString(),
+          isAutoGenerated: false,
+        })
+      }
+      targetFolderId = importFolderId
+    }
+
+    const subjectName = profileSubjects.find((s) => s.id === subjectId)?.name ?? 'Allgemein'
+    let succ = 0
+    let fail = 0
+    for (let i = 0; i < files.length; i++) {
+      if (cancelRef.current) break
+      setCurrentFile(i)
+      try {
+        const noteId = `import-onboarding-${Date.now()}-${i}`
+        const { generated, noteTitle } = await analyzeFileToSmartNote(files[i], noteId, subjectName)
+        const note: UserNote = {
+          id: noteId,
+          subjectId: subjectId || undefined,
+          folderId: targetFolderId ?? 'folder-no-subject',
+          title: noteTitle,
+          content: generated.summary,
+          createdAt: new Date().toISOString(),
+        }
+        if (subjectId) saveNote(note, generated)
+        else saveToOhneFachFolder(note, generated)
+        succ++
+        setSucceeded(succ)
+      } catch {
+        fail++
+        setFailed(fail)
+      }
+      if (i < files.length - 1 && !cancelRef.current) {
+        await new Promise<void>((r) => setTimeout(r, GEMINI_BATCH_DELAY_MS))
+      }
+    }
+    setPhase('done')
+  }
 
   return (
-    <div className="flex flex-col justify-between min-h-[calc(100vh-80px)]">
+    <div className="flex flex-col min-h-[calc(100vh-80px)]">
       <div className="flex-1">
         <h2 className="text-2xl font-bold text-text-primary mb-1">Starte mit deinen Unterlagen</h2>
         <p className="text-text-muted text-sm mb-8">
-          Importiere vorhandene Mitschriften, PDFs oder Lernzettel — die KI erstellt daraus sofort Smart Notes.
+          Importiere Mitschriften, PDFs oder KC-Dokumente — die KI ordnet sie direkt dem richtigen Fach zu.
         </p>
 
-        {/* Upload zone */}
-        {!done && !processing && (
+        {/* IDLE — upload zone */}
+        {phase === 'idle' && (
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-full border-2 border-dashed border-border rounded-[20px] p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all mb-6"
+            className="w-full border-2 border-dashed border-border rounded-[20px] p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
           >
             <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="1.8" className="text-accent">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-accent">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
                 <polyline points="17 8 12 3 7 8" />
                 <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
@@ -602,31 +656,123 @@ function StepDateiImport({ onNext }: { onNext: () => void }) {
             </div>
             <div className="text-center">
               <p className="text-text-primary font-semibold text-base">Dateien hochladen</p>
-              <p className="text-text-muted text-sm mt-1">PDF, JPG, PNG, WebP · bis zu 5 Dateien</p>
+              <p className="text-text-muted text-sm mt-1">PDF, JPG, PNG · bis zu 5 Dateien</p>
             </div>
           </button>
         )}
 
-        {/* Processing */}
-        {processing && (
-          <div className="bg-surface border border-border rounded-[20px] p-5 mb-4">
+        {/* SUGGESTING — KI spinner */}
+        {phase === 'suggesting' && (
+          <div className="space-y-3">
+            <div className="bg-surface border border-border rounded-[20px] px-4 py-4 flex items-center gap-3">
+              <div className="w-8 h-8 border-[3px] border-accent/25 border-t-accent rounded-full animate-spin shrink-0" />
+              <div>
+                <p className="text-text-primary text-[14px] font-medium">KI ermittelt Fach…</p>
+                <p className="text-text-muted text-[12px] mt-0.5 truncate max-w-[220px]">{files[0]?.name}</p>
+              </div>
+            </div>
+            <button
+              onClick={goManual}
+              className="w-full py-3 rounded-card border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors"
+            >
+              Manuell wählen
+            </button>
+          </div>
+        )}
+
+        {/* SUGGESTED — KI recommendation */}
+        {phase === 'suggested' && (
+          <div className="space-y-3">
+            {suggestion ? (
+              <>
+                <div className="bg-accent/5 border border-accent/20 rounded-[20px] px-4 py-4">
+                  <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-3">KI-Vorschlag</p>
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-btn flex items-center justify-center text-xl shrink-0"
+                      style={{ backgroundColor: `${profileSubjects.find(s => s.id === suggestion.subjectId)?.color ?? '#7C3AED'}22` }}
+                    >
+                      {profileSubjects.find(s => s.id === suggestion.subjectId)?.icon ?? '📚'}
+                    </div>
+                    <div>
+                      <p className="text-text-primary font-bold text-[15px]">{suggestion.subjectName}</p>
+                      {suggestion.reason && (
+                        <p className="text-text-muted text-[12px] mt-0.5 italic leading-relaxed">{suggestion.reason}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => void startProcessing(suggestion.subjectId)}
+                  className="w-full py-3.5 rounded-[20px] bg-accent text-white text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                >
+                  Vorschlag annehmen
+                </button>
+              </>
+            ) : (
+              <p className="text-text-muted text-sm mb-2">Kein Fach erkannt — bitte manuell wählen.</p>
+            )}
+            <button
+              onClick={goManual}
+              className="w-full py-3 rounded-card border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors"
+            >
+              Manuell wählen
+            </button>
+          </div>
+        )}
+
+        {/* MANUAL — subject picker */}
+        {phase === 'manual' && (
+          <div className="space-y-2">
+            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">In welches Fach?</p>
+            {profileSubjects.map((s) => (
+              <button
+                key={s.id}
+                onClick={() => void startProcessing(s.id)}
+                className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all"
+              >
+                <div
+                  className="w-9 h-9 rounded-btn flex items-center justify-center text-xl shrink-0"
+                  style={{ backgroundColor: `${s.color}22` }}
+                >
+                  {s.icon}
+                </div>
+                <span className="text-text-primary font-medium text-[15px]">{s.name}</span>
+              </button>
+            ))}
+            <button
+              onClick={() => void startProcessing('')}
+              className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left hover:bg-surface-hover transition-colors"
+            >
+              <div className="w-9 h-9 rounded-btn bg-surface-hover flex items-center justify-center shrink-0 text-lg">📁</div>
+              <span className="text-text-secondary font-medium text-[15px]">Schnellnotizen</span>
+            </button>
+          </div>
+        )}
+
+        {/* PROCESSING */}
+        {phase === 'processing' && (
+          <div className="bg-surface border border-border rounded-[20px] p-5">
             <div className="flex items-center gap-3 mb-3">
               <div className="w-5 h-5 border-2 border-accent/30 border-t-accent rounded-full animate-spin shrink-0" />
-              <p className="text-text-primary font-semibold text-sm">KI analysiert deine {files.length === 1 ? 'Datei' : 'Dateien'}…</p>
+              <p className="text-text-primary font-semibold text-sm">
+                KI analysiert {files.length === 1 ? 'Datei' : 'Dateien'}…
+              </p>
             </div>
-            <p className="text-text-muted text-sm">{processed} von {files.length} verarbeitet</p>
+            <p className="text-text-muted text-sm truncate mb-1">{files[currentFile]?.name}</p>
+            <p className="text-text-muted text-sm">{succeeded + failed} von {files.length} verarbeitet</p>
             <div className="mt-3 h-1.5 bg-border/40 rounded-pill overflow-hidden">
               <div
                 className="h-full bg-accent rounded-pill transition-all duration-500"
-                style={{ width: `${files.length > 0 ? (processed / files.length) * 100 : 0}%` }}
+                style={{ width: `${files.length > 0 ? ((succeeded + failed) / files.length) * 100 : 0}%` }}
               />
             </div>
           </div>
         )}
 
-        {/* Done */}
-        {done && (
-          <div className="rounded-[20px] p-5 mb-4" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.2)' }}>
+        {/* DONE */}
+        {phase === 'done' && (
+          <div className="rounded-[20px] p-5" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.2)' }}>
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(var(--color-success),0.15)' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success">
@@ -635,9 +781,9 @@ function StepDateiImport({ onNext }: { onNext: () => void }) {
               </div>
               <div>
                 <p className="text-text-primary font-bold text-[16px]">
-                  {successCount} Smart {successCount === 1 ? 'Note' : 'Notes'} erstellt ✓
+                  {succeeded} Smart {succeeded === 1 ? 'Note' : 'Notes'} erstellt ✓
                 </p>
-                <p className="text-text-muted text-[13px] mt-0.5">Du findest sie später in Schnellnotizen</p>
+                {failed > 0 && <p className="text-text-muted text-[13px] mt-0.5">{failed} fehlgeschlagen</p>}
               </div>
             </div>
           </div>
@@ -645,26 +791,26 @@ function StepDateiImport({ onNext }: { onNext: () => void }) {
       </div>
 
       {/* Step's own footer */}
-      <div className="space-y-3">
-        {done ? (
+      <div className="space-y-3 pt-6">
+        {phase === 'done' && (
           <Button variant="primary" fullWidth size="lg" onClick={onNext}>
             Weiter
           </Button>
-        ) : (
+        )}
+        {phase === 'idle' && (
           <>
-            {files.length === 0 && (
-              <Button variant="primary" fullWidth size="lg" onClick={() => fileRef.current?.click()}>
-                Dateien auswählen
-              </Button>
-            )}
-            <button
-              onClick={onNext}
-              disabled={processing}
-              className="w-full py-3 text-sm text-text-muted hover:text-text-secondary transition-colors disabled:opacity-40"
-            >
+            <Button variant="primary" fullWidth size="lg" onClick={() => fileRef.current?.click()}>
+              Dateien auswählen
+            </Button>
+            <button onClick={onNext} className="w-full py-3 text-sm text-text-muted hover:text-text-secondary transition-colors">
               Jetzt überspringen
             </button>
           </>
+        )}
+        {(phase === 'suggesting' || phase === 'suggested' || phase === 'manual') && (
+          <button onClick={onNext} className="w-full py-3 text-sm text-text-muted hover:text-text-secondary transition-colors">
+            Jetzt überspringen
+          </button>
         )}
       </div>
 

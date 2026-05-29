@@ -1,9 +1,9 @@
 import { lazy, Suspense, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { classifyContent, solveTasksFromText, analyzeTextBlock, answerQuestion, explainKeyword, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
+import { analyzeFileToSmartNote } from '../lib/gemini'
 import { MathRenderer } from '../components/ui/MathRenderer'
 const DrawingCanvas = lazy(() => import('../components/ui/DrawingCanvas').then(m => ({ default: m.DrawingCanvas })))
-import { pdfToImages } from '../lib/pdf'
 import { useUser } from '../context/UserContext'
 import { subjects, halfYears } from '../data/mockData'
 import type { GeneratedSmartNote, UserNote } from '../types'
@@ -21,6 +21,7 @@ interface PhotoBlockAIResult {
   contentType: 'info' | 'aufgabe' | 'beides'
   summary: string
   keywords: string[]
+  examTopics: string[]
   tasks: Array<{ question: string; steps: string[]; answer: string; proof?: string }>
 }
 
@@ -42,6 +43,7 @@ interface PhotoBlock {
   id: string
   type: 'photo'
   attachments: string[]
+  pdfFile: File | null
   pdfLoading: boolean
   aiStatus: BlockAIStatus
   aiError: string
@@ -62,7 +64,7 @@ function makeTextBlock(id: string): TextBlock {
   return { id, type: 'text', content: '', aiStatus: 'idle', aiError: '', aiResult: null, explainLoading: null, explanations: {}, selectedTerm: null }
 }
 function makePhotoBlock(id: string): PhotoBlock {
-  return { id, type: 'photo', attachments: [], pdfLoading: false, aiStatus: 'idle', aiError: '', aiResult: null, transcriptionOpen: false, aiMessage: '' }
+  return { id, type: 'photo', attachments: [], pdfFile: null, pdfLoading: false, aiStatus: 'idle', aiError: '', aiResult: null, transcriptionOpen: false, aiMessage: '' }
 }
 function makeDrawingBlock(id: string): DrawingBlock {
   return { id, type: 'drawing', dataUrl: null }
@@ -175,6 +177,28 @@ export function NoteCreateScreen() {
   // ── Photo block KI ───────────────────────────────────────────────────────
 
   const analyzePhoto = async (block: PhotoBlock) => {
+    // PDF → Gemini
+    if (block.pdfFile) {
+      updateBlock(block.id, { aiStatus: 'analyzing', aiError: '', aiMessage: 'PDF wird analysiert…' })
+      try {
+        const noteId = typeof crypto?.randomUUID === 'function' ? crypto.randomUUID() : `${Date.now()}`
+        const { generated } = await analyzeFileToSmartNote(block.pdfFile, noteId, subject?.name ?? 'Allgemein')
+        const result: PhotoBlockAIResult = {
+          transcription: generated.rawText,
+          contentType: 'info',
+          summary: generated.summary,
+          keywords: generated.keywords,
+          examTopics: generated.examTopics,
+          tasks: [],
+        }
+        updateBlock(block.id, { aiStatus: 'done', aiResult: result, aiMessage: '' })
+      } catch (e) {
+        updateBlock(block.id, { aiStatus: 'error', aiError: e instanceof Error ? e.message : 'Fehler', aiMessage: '' })
+      }
+      return
+    }
+
+    // Fotos → Groq
     if (block.attachments.length === 0) return
     updateBlock(block.id, { aiStatus: 'analyzing', aiError: '', aiMessage: 'Fotos werden transkribiert…' })
     try {
@@ -199,6 +223,7 @@ export function NoteCreateScreen() {
         contentType: classification.contentType,
         summary: classification.summary,
         keywords: classification.keywords,
+        examTopics: [],
         tasks,
       }
       updateBlock(block.id, { aiStatus: 'done', aiResult: result, aiMessage: '' })
@@ -214,16 +239,8 @@ export function NoteCreateScreen() {
     const block = blocks.find((b) => b.id === blockId) as PhotoBlock | undefined
     if (!block) return
     if (file.type === 'application/pdf') {
-      updateBlock(blockId, { pdfLoading: true } as Partial<PhotoBlock>)
-      pdfToImages(file)
-        .then((pages) => {
-          setBlocks((prev) => prev.map((b) => {
-            if (b.id !== blockId || b.type !== 'photo') return b
-            const slots = PHOTO_LIMIT - b.attachments.length
-            return { ...b, attachments: [...b.attachments, ...pages.slice(0, slots)], pdfLoading: false }
-          }))
-        })
-        .catch(() => updateBlock(blockId, { pdfLoading: false } as Partial<PhotoBlock>))
+      // PDF direkt für Gemini speichern — kein Umweg über pdfToImages
+      updateBlock(blockId, { pdfFile: file, attachments: [], aiStatus: 'idle', aiResult: null, aiError: '' } as Partial<PhotoBlock>)
       return
     }
     if (block.attachments.length >= PHOTO_LIMIT) return
@@ -232,7 +249,7 @@ export function NoteCreateScreen() {
       setBlocks((prev) => prev.map((b) => {
         if (b.id !== blockId || b.type !== 'photo') return b
         if (b.attachments.length >= PHOTO_LIMIT) return b
-        return { ...b, attachments: [...b.attachments, e.target?.result as string] }
+        return { ...b, pdfFile: null, attachments: [...b.attachments, e.target?.result as string] }
       }))
     }
     reader.readAsDataURL(file)
@@ -304,7 +321,7 @@ export function NoteCreateScreen() {
       contentType: r.contentType,
       summary: r.summary,
       keywords: r.keywords,
-      examTopics: [],
+      examTopics: r.examTopics ?? [],
       solution: r.tasks[0] ? { steps: r.tasks[0].steps, answer: r.tasks[0].answer, proof: r.tasks[0].proof } : undefined,
       tasks: r.tasks.length > 0 ? r.tasks : undefined,
       generatedAt: new Date().toISOString(),
@@ -504,7 +521,7 @@ export function NoteCreateScreen() {
   }
 
   const renderPhotoBlock = (block: PhotoBlock, index: number, isDefault: boolean) => {
-    const canAnalyze = block.attachments.length > 0 && block.aiStatus !== 'analyzing' && !block.pdfLoading
+    const canAnalyze = (block.attachments.length > 0 || !!block.pdfFile) && block.aiStatus !== 'analyzing' && !block.pdfLoading
     if (!photoRefs.current[block.id]) photoRefs.current[block.id] = { camera: null, file: null }
     const refs = photoRefs.current[block.id]
 
@@ -526,7 +543,29 @@ export function NoteCreateScreen() {
 
         {/* Photo area */}
         <div className="px-4 pb-2" style={{ minHeight: '120px' }}>
-          {block.attachments.length === 0 && !block.pdfLoading ? (
+          {block.pdfFile ? (
+            <div className="py-2">
+              <div className="flex items-center gap-3 p-3 rounded-card border border-border bg-background">
+                <div className="w-10 h-10 rounded-btn bg-accent/10 flex items-center justify-center shrink-0 text-xl">
+                  📄
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-text-primary text-sm font-medium truncate">{block.pdfFile.name}</p>
+                  <p className="text-text-muted text-xs mt-0.5 flex items-center gap-1">
+                    <span className="text-accent font-medium">Gemini</span> analysiert das PDF
+                  </p>
+                </div>
+                <button
+                  onClick={() => updateBlock(block.id, { pdfFile: null, aiStatus: 'idle', aiResult: null } as Partial<PhotoBlock>)}
+                  className="w-6 h-6 rounded-full bg-background border border-border flex items-center justify-center hover:bg-danger/10 transition-colors shrink-0"
+                >
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          ) : block.attachments.length === 0 && !block.pdfLoading ? (
             <div className="flex gap-3 py-4 justify-center">
               <button
                 onClick={() => refs.camera?.click()}
@@ -622,7 +661,7 @@ export function NoteCreateScreen() {
             ) : block.aiStatus === 'done' ? (
               <><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 4v6h6M23 20v-6h-6" strokeLinecap="round" strokeLinejoin="round" /><path d="M20.49 9A9 9 0 005.64 5.64L1 10M23 14l-4.64 4.36A9 9 0 013.51 15" strokeLinecap="round" strokeLinejoin="round" /></svg>Erneut</>
             ) : (
-              <><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" strokeLinecap="round" strokeLinejoin="round" /></svg>Transkribieren &amp; Lösen</>
+              <><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round" /></svg>{block.pdfFile ? 'PDF analysieren' : 'Analysieren'}</>
             )}
           </button>
         </div>
@@ -843,7 +882,7 @@ export function NoteCreateScreen() {
                   className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-surface-hover transition-colors"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent" strokeWidth="2.5" className="shrink-0">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent shrink-0" strokeWidth="2.5">
                       <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className="text-text-primary text-sm font-medium truncate">{item.q}</span>
