@@ -405,6 +405,52 @@ Regeln:
   }
 }
 
+/* ─── Karteikarten-Generator ─────────────────────────────── */
+
+interface FlashCardJSON {
+  cards: { front: string; back: string; keywords: string[] }[]
+}
+
+export async function generateFlashcards(
+  note: GeneratedSmartNote,
+  count = 7,
+): Promise<{ front: string; back: string; keywords: string[] }[]> {
+  const content = await groqFetch({
+    model: TEXT_MODEL,
+    max_tokens: 1200,
+    temperature: 0.3,
+    response_format: { type: 'json_object' },
+    messages: [
+      {
+        role: 'system',
+        content: 'Du bist ein Lernkarteikarten-Generator für deutsche Gymnasiasten (Abitur). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.',
+      },
+      {
+        role: 'user',
+        content: `Fach: ${note.subjectName}
+Zusammenfassung: ${note.summary}
+Schlüsselbegriffe: ${note.keywords.join(', ')}
+Klausurthemen: ${note.examTopics.join(', ')}
+
+Erstelle ${count} Karteikarten für prüfungsrelevantes Lernen.
+
+Regeln:
+- Fragen (front): konkret, auf AFB I–II Niveau, kein Ja/Nein
+- Antworten (back): präzise, max. 2–3 Sätze, vollständige Fachbegriffe
+- keywords: 2–4 zentrale Begriffe oder Kurzphrasen die in DIESER Antwort den Kern treffen — genau so geschrieben wie sie in der Antwort vorkommen, damit sie markiert werden können
+- Keine Dopplungen, alle Karten thematisch verschieden
+- Nur Deutsch
+
+JSON Format:
+{"cards": [{"front": "Frage", "back": "Antwort", "keywords": ["Begriff1", "Begriff2"]}, ...]}`,
+      },
+    ],
+  })
+
+  const parsed = JSON.parse(content) as FlashCardJSON
+  return Array.isArray(parsed.cards) ? parsed.cards : []
+}
+
 /* ─── Stundenplan-Scanner ────────────────────────────────── */
 
 const SUBJECT_ALIASES: Record<string, string> = {

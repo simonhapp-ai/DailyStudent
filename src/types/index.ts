@@ -44,8 +44,11 @@ export interface SmartNote {
 export interface FlashCard {
   id: string
   subjectId: string
+  noteId?: string
   front: string
   back: string
+  keywords?: string[]
+  createdAt?: string
 }
 
 export interface ExamQuestion {
@@ -101,6 +104,53 @@ export interface Stundenplan {
   slots: StundenplanSlot[]
   createdAt: string
 }
+
+/* ─── Probeklausur ───────────────────────────────────────────── */
+
+export interface ProbeklausurMaterial {
+  id: string           // 'M1', 'M2', 'M3'
+  title: string
+  type: 'tabelle' | 'diagramm' | 'versuchsaufbau' | 'text' | 'sequenz'
+  content: string
+}
+
+export interface ProbeklausurTask {
+  id: string           // 't1', 't2', etc.
+  label: string        // '1', '1.1', 'A1', etc.
+  afb: 'I' | 'II' | 'III'
+  operator: string
+  text: string         // Full task sentence including BE
+  be: number
+  materialRefs: string[]
+}
+
+export interface GeneratedExam {
+  subject: string
+  subjectId: string
+  topic: string
+  mode: 1 | 2 | 3 | 4
+  materials: ProbeklausurMaterial[]
+  tasks: ProbeklausurTask[]
+  totalBE: number
+}
+
+export interface TaskCorrection {
+  taskId: string
+  errors: string[]
+  gaps: string[]
+  formulationHelp: string[]
+  scoreNP: number      // 0–15
+  justification: string
+}
+
+export interface ExamCorrection {
+  taskCorrections: TaskCorrection[]
+  totalNP: number
+  gradeLabel: string   // 'Sehr gut', 'Gut', etc.
+  overallJustification: string
+}
+
+/* ─── SmartNote (generated) ─────────────────────────────────── */
 
 export interface GeneratedSmartNote {
   lessonId: string

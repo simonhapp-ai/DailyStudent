@@ -3,10 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import { useUser } from '../context/UserContext'
-import { explainKeyword, extractTextFromImage, generateSmartNote } from '../lib/groq'
+import { explainKeyword, extractTextFromImage, generateFlashcards, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
 import { lessons, smartNotes, subjects } from '../data/mockData'
-import type { GeneratedSmartNote, UserNote } from '../types'
+import type { FlashCard, GeneratedSmartNote, UserNote } from '../types'
 
 function CollapsibleSection({
   title, children, badge, defaultOpen = true,
@@ -41,7 +41,7 @@ type AnalysisStatus = 'idle' | 'analyzing' | 'done' | 'error'
 export function SmartNotesScreen() {
   const { id, lessonId } = useParams<{ id: string; lessonId: string }>()
   const navigate = useNavigate()
-  const { generatedNotes, userNotes, saveGeneratedNote, updateUserNote } = useUser()
+  const { generatedNotes, userNotes, saveGeneratedNote, updateUserNote, saveFlashCards } = useUser()
 
   const subject = subjects.find((s) => s.id === id)
   const mockLesson = lessons.find((l) => l.id === lessonId)
@@ -68,6 +68,8 @@ export function SmartNotesScreen() {
   const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus>('idle')
   const [analysisError, setAnalysisError] = useState('')
   const [editGeneratedNote, setEditGeneratedNote] = useState<GeneratedSmartNote | null>(null)
+  const [fcStatus, setFcStatus] = useState<'idle' | 'generating' | 'done' | 'error'>('idle')
+  const [fcCount, setFcCount] = useState(0)
   const [lightbox, setLightbox] = useState<string | null>(null)
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null)
   const [explanations, setExplanations] = useState<Record<string, string>>({})
@@ -166,6 +168,30 @@ export function SmartNotesScreen() {
   }
 
   const canReanalyze = (editAttachments.length > 0 || editContent.trim().length > 10) && analysisStatus !== 'analyzing' && !pdfLoading
+
+  const handleCreateFlashCards = async () => {
+    const sourceNote = generatedNote
+    if (!sourceNote) return
+    setFcStatus('generating')
+    try {
+      const pairs = await generateFlashcards(sourceNote)
+      const subjectId = userNote?.subjectId ?? id ?? 'unknown'
+      const cards: FlashCard[] = pairs.map((p, i) => ({
+        id: `fc-${lessonId}-${i}-${Date.now()}`,
+        subjectId,
+        noteId: lessonId ?? '',
+        front: p.front,
+        back: p.back,
+        keywords: p.keywords ?? [],
+        createdAt: new Date().toISOString(),
+      }))
+      saveFlashCards(cards)
+      setFcCount(cards.length)
+      setFcStatus('done')
+    } catch {
+      setFcStatus('error')
+    }
+  }
 
   // ── Guard ────────────────────────────────────────────────────────────────
   if (!mockLesson && !userNote) {
@@ -548,6 +574,70 @@ export function SmartNotesScreen() {
             <p className="text-text-muted text-sm">Werden nach der KI-Analyse generiert.</p>
           )}
         </CollapsibleSection>
+
+        {/* Karteikarten erstellen — nur wenn KI-Analyse vorhanden */}
+        {generatedNote && (
+          <div>
+            {fcStatus === 'done' ? (
+              <div className="bg-surface border border-success/30 rounded-card px-4 py-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20 6L9 17l-5-5" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-text-primary text-sm font-semibold">{fcCount} Karten erstellt</p>
+                    <p className="text-text-muted text-xs">Bereit zum Lernen</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => navigate('/klausurmodus/lernen')}
+                  className="px-3.5 py-2 rounded-pill text-white text-sm font-semibold press-sm"
+                  style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+                >
+                  Jetzt lernen →
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleCreateFlashCards}
+                disabled={fcStatus === 'generating'}
+                className="w-full bg-surface border border-border rounded-card px-4 py-4 flex items-center gap-4 press disabled:opacity-60"
+              >
+                <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}>
+                  {fcStatus === 'generating' ? (
+                    <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                      <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.5" />
+                      <rect x="4" y="9" width="13" height="12" rx="2.5" />
+                      <line x1="7" y1="14" x2="14" y2="14" />
+                      <line x1="7" y1="16.5" x2="14" y2="16.5" />
+                    </svg>
+                  )}
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="text-text-primary text-sm font-semibold">
+                    {fcStatus === 'generating' ? 'Karteikarten werden erstellt…' : 'Karteikarten erstellen'}
+                  </p>
+                  <p className="text-text-muted text-xs mt-0.5">
+                    {fcStatus === 'error' ? 'Fehler — erneut versuchen' : 'KI generiert 6–8 Fragen aus dieser Notiz'}
+                  </p>
+                </div>
+                {fcStatus === 'idle' && (
+                  <span className="text-text-muted">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                )}
+              </button>
+            )}
+          </div>
+        )}
 
       </div>
 

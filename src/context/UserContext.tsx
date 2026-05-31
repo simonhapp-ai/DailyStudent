@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 import { type ReactNode } from 'react'
-import type { GeneratedSmartNote, UserFolder, UserNote, Stundenplan } from '../types'
+import type { FlashCard, GeneratedSmartNote, UserFolder, UserNote, Stundenplan } from '../types'
 import { subjects, topics, halfYears } from '../data/mockData'
 
 export type EntryType = 'lerneinheit' | 'termin' | 'erinnerung'
@@ -36,6 +36,7 @@ interface StorageData {
   userFolders?: UserFolder[]
   theme?: AppTheme
   isPro?: boolean
+  generatedFlashCards?: FlashCard[]
 }
 
 interface UserContextValue {
@@ -45,6 +46,7 @@ interface UserContextValue {
   generatedNotes: Record<string, GeneratedSmartNote>
   userNotes: UserNote[]
   userFolders: UserFolder[]
+  generatedFlashCards: FlashCard[]
   theme: AppTheme
   setTheme: (t: AppTheme) => void
   isPro: boolean
@@ -60,6 +62,7 @@ interface UserContextValue {
   addFolder: (folder: UserFolder) => void
   deleteFolder: (folderId: string) => void
   saveToOhneFachFolder: (note: UserNote, generated?: GeneratedSmartNote) => void
+  saveFlashCards: (newCards: FlashCard[]) => void
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -164,6 +167,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     stored.generatedNotes ?? {},
   )
   const [userNotes, setUserNotes] = useState<UserNote[]>(stored.userNotes ?? [])
+  const [generatedFlashCards, setGeneratedFlashCards] = useState<FlashCard[]>(stored.generatedFlashCards ?? [])
+
   const [userFolders, setUserFolders] = useState<UserFolder[]>(() => {
     if (stored.userFolders && stored.userFolders.length > 0) return stored.userFolders
     if (stored.profile) {
@@ -277,6 +282,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
     persist(profile, personalEntries, updatedGenerated, updatedNotes, updatedFolders)
   }
 
+  const saveFlashCards = (newCards: FlashCard[]) => {
+    const noteIds = [...new Set(newCards.map((c) => c.noteId).filter(Boolean))]
+    const kept = generatedFlashCards.filter((c) => !noteIds.includes(c.noteId))
+    const updated = [...kept, ...newCards]
+    setGeneratedFlashCards(updated)
+    saveStorage({ ...loadStorage(), generatedFlashCards: updated })
+  }
+
   const deleteFolder = (folderId: string) => {
     const updatedFolders = userFolders.filter((f) => f.id !== folderId && f.parentFolderId !== folderId)
     const updatedNotes = userNotes.filter((n) => n.folderId !== folderId)
@@ -294,6 +307,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         generatedNotes,
         userNotes,
         userFolders,
+        generatedFlashCards,
         theme,
         setTheme,
         isPro,
@@ -309,6 +323,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         addFolder,
         deleteFolder,
         saveToOhneFachFolder,
+        saveFlashCards,
       }}
     >
       {children}

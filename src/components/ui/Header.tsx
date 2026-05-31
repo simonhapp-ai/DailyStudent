@@ -5,10 +5,11 @@ interface HeaderProps {
   title: string
   subtitle?: string
   showBack?: boolean
+  onBack?: () => void
   right?: ReactNode
 }
 
-export function Header({ title, subtitle, showBack, right }: HeaderProps) {
+export function Header({ title, subtitle, showBack, onBack, right }: HeaderProps) {
   const navigate = useNavigate()
 
   return (
@@ -19,9 +20,9 @@ export function Header({ title, subtitle, showBack, right }: HeaderProps) {
       }}
     >
       <div className="flex items-center gap-1 flex-1 min-w-0">
-        {showBack && (
+        {(showBack || onBack) && (
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => onBack ? onBack() : navigate(-1)}
             className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 mr-1 px-2 py-1.5 rounded-btn"
             style={{ color: 'rgb(var(--color-accent))' }}
           >

@@ -1,0 +1,355 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
+import { subjects, topics } from '../data/mockData'
+import { generateMode4Exam, correctExam } from '../lib/gemini'
+import type { GeneratedExam, ExamCorrection } from '../types'
+
+const AFB_COLORS: Record<string, string> = {
+  I:   'bg-blue-500/15 text-blue-400',
+  II:  'bg-amber-500/15 text-amber-400',
+  III: 'bg-purple-500/15 text-purple-400',
+}
+const ACCENT = 'linear-gradient(145deg, #DB2777, #9D174D)'
+
+function npColor(np: number): string {
+  if (np >= 13) return '#34D399'
+  if (np >= 10) return '#60A5FA'
+  if (np >= 7)  return '#FACC15'
+  if (np >= 4)  return '#FB923C'
+  return '#F87171'
+}
+
+function TaskAnswerCard({
+  task, answer, onChange,
+}: { task: GeneratedExam['tasks'][0]; answer: string; onChange: (v: string) => void }) {
+  const afbDesc: Record<string, string> = {
+    I: 'Reproduziere dein Fachwissen',
+    II: 'Wende dein Wissen auf den Kontext der Aufgabe an',
+    III: 'Bilde ein eigenständiges Urteil / Erörterung',
+  }
+  return (
+    <div className="bg-background rounded-[14px] border border-border/60 p-4 mb-3">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
+        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+        <span className="ml-auto text-text-muted text-[11px] font-semibold">{task.be} BE</span>
+      </div>
+      {afbDesc[task.afb] && (
+        <p className="text-text-muted text-[11px] italic mb-2">{afbDesc[task.afb]}</p>
+      )}
+      <p className="text-text-primary text-[14px] font-medium leading-relaxed mb-3">{task.text}</p>
+      <textarea
+        value={answer}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Schreibe deine Antwort hier — ganz ohne Hilfsmittel…"
+        rows={task.afb === 'III' ? 8 : 6}
+        className="w-full bg-surface rounded-[12px] border border-border p-3 text-[13px] text-text-primary placeholder-text-muted resize-none focus:outline-none focus:border-accent"
+      />
+    </div>
+  )
+}
+
+function CorrectionCard({
+  task, correction,
+}: { task: GeneratedExam['tasks'][0]; correction: ExamCorrection['taskCorrections'][0] }) {
+  const [open, setOpen] = useState(true)
+  return (
+    <div className="bg-background rounded-[14px] border border-border/60 mb-3 overflow-hidden">
+      <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center justify-between px-4 py-3 press-sm">
+        <div className="flex items-center gap-2">
+          <span className="text-text-muted text-[11px] font-semibold">Aufgabe {task.label}</span>
+          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[14px] font-bold" style={{ color: npColor(correction.scoreNP) }}>
+            {correction.scoreNP}/15 NP
+          </span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+            className={`text-text-muted transition-transform ${open ? 'rotate-180' : ''}`}>
+            <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      </button>
+      {open && (
+        <div className="px-4 pb-4 space-y-3 border-t border-border/40 pt-3">
+          {correction.errors.length > 0 && (
+            <div>
+              <p className="text-[11px] font-bold text-danger mb-1.5 uppercase tracking-wide">Fehler</p>
+              {correction.errors.map((e, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {e}</p>)}
+            </div>
+          )}
+          {correction.gaps.length > 0 && (
+            <div>
+              <p className="text-[11px] font-bold text-warning mb-1.5 uppercase tracking-wide">Lücken</p>
+              {correction.gaps.map((g, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {g}</p>)}
+            </div>
+          )}
+          {correction.formulationHelp.length > 0 && (
+            <div>
+              <p className="text-[11px] font-bold text-accent mb-1.5 uppercase tracking-wide">Formulierungshilfen</p>
+              {correction.formulationHelp.map((f, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {f}</p>)}
+            </div>
+          )}
+          {correction.justification && (
+            <p className="text-[12px] text-text-muted leading-relaxed border-t border-border/40 pt-2">
+              {correction.justification}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+type Phase = 'setup' | 'loading' | 'exam' | 'correcting' | 'result'
+
+export function ProbeklausurMode4Screen() {
+  const navigate = useNavigate()
+  const { profile } = useUser()
+
+  const userSubjects = subjects.filter((s) => profile?.faecher?.includes(s.id))
+  const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
+
+  const [phase, setPhase] = useState<Phase>('setup')
+  const [subjectId, setSubjectId] = useState(displaySubjects[0]?.id ?? '')
+  const [topic, setTopic] = useState('')
+  const [exam, setExam] = useState<GeneratedExam | null>(null)
+  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [correction, setCorrection] = useState<ExamCorrection | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const selectedSubject = subjects.find((s) => s.id === subjectId)
+  const subjectTopics = topics.filter((t) => t.subjectId === subjectId).slice(0, 6)
+
+  async function handleGenerate() {
+    if (!subjectId || !topic.trim()) return
+    setError(null)
+    setPhase('loading')
+    try {
+      const generated = await generateMode4Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim())
+      setExam(generated)
+      setAnswers({})
+      setPhase('exam')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Unbekannter Fehler')
+      setPhase('setup')
+    }
+  }
+
+  async function handleSubmit() {
+    if (!exam) return
+    setPhase('correcting')
+    try {
+      const result = await correctExam(exam, answers)
+      setCorrection(result)
+      setPhase('result')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Unbekannter Fehler')
+      setPhase('exam')
+    }
+  }
+
+  return (
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Header */}
+      <div className="px-4 pt-12 pb-4 border-b border-border/60 bg-surface/80">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => phase === 'setup' || phase === 'loading'
+              ? navigate('/klausurmodus/probeklausur')
+              : setPhase('setup')}
+            className="w-8 h-8 flex items-center justify-center rounded-full bg-background press-sm"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <div className="flex-1">
+            <p className="text-text-primary font-bold text-[17px]">Ohne Material</p>
+            <p className="text-text-muted text-[12px]">
+              {phase === 'setup' && 'Alles aus dem Kopf · Kein Hilfsmittel'}
+              {phase === 'loading' && 'KI generiert Aufgaben…'}
+              {phase === 'exam' && `3 Aufgaben · ${exam?.totalBE} BE gesamt`}
+              {phase === 'correcting' && 'KI korrigiert…'}
+              {phase === 'result' && `Ergebnis · ${correction?.gradeLabel}`}
+            </p>
+          </div>
+          {phase === 'result' && correction && (
+            <div className="px-3 py-1 rounded-pill text-white text-[13px] font-bold"
+              style={{ backgroundColor: npColor(correction.totalNP) }}>
+              {correction.totalNP}/15 NP
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 px-4 py-5 overflow-y-auto">
+
+        {phase === 'setup' && (
+          <div className="space-y-5">
+            <div>
+              <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-2.5">Fach</p>
+              <div className="flex flex-wrap gap-2">
+                {displaySubjects.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => { setSubjectId(s.id); setTopic('') }}
+                    className={`px-4 py-2 rounded-pill text-[13px] font-semibold press-sm ${
+                      subjectId === s.id ? 'text-white' : 'bg-surface border border-border text-text-secondary'
+                    }`}
+                    style={subjectId === s.id ? { background: ACCENT } : undefined}
+                  >
+                    {s.icon} {s.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-2.5">Thema</p>
+              <input
+                type="text"
+                value={topic}
+                onChange={(e) => setTopic(e.target.value)}
+                placeholder="z.B. Synthetische Evolutionstheorie…"
+                className="w-full bg-surface border border-border rounded-[14px] px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent"
+              />
+              {subjectTopics.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2.5">
+                  {subjectTopics.map((t) => (
+                    <button key={t.id} onClick={() => setTopic(t.name)}
+                      className="px-3 py-1.5 rounded-pill text-[11px] font-medium bg-surface border border-border text-text-secondary press-sm">
+                      {t.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* How it works */}
+            <div className="bg-surface rounded-[14px] border border-border/60 p-4 space-y-3">
+              <p className="text-text-secondary text-[12px] font-bold">3 Aufgaben — alles aus dem Kopf:</p>
+              {[
+                { afb: 'AFB I', desc: 'Reproduktion: Du gibst Fachwissen aus dem Gedächtnis wieder.' },
+                { afb: 'AFB II', desc: 'Transfer: Du wendest Wissen auf ein Szenario oder einen Vergleich an.' },
+                { afb: 'AFB III', desc: 'Bewertung: Du bildest ein eigenes Urteil oder Erörterung — rein argumentativ.' },
+              ].map(({ afb, desc }) => (
+                <div key={afb} className="flex items-start gap-3">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold shrink-0 mt-0.5 ${AFB_COLORS[afb.split(' ')[1]]}`}>
+                    {afb}
+                  </span>
+                  <p className="text-text-secondary text-[12px]">{desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {error && (
+              <div className="bg-danger/10 border border-danger/30 rounded-[14px] p-4">
+                <p className="text-danger text-[13px] font-semibold mb-1">Fehler</p>
+                <p className="text-danger/80 text-[12px]">{error}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {(phase === 'loading' || phase === 'correcting') && (
+          <div className="flex flex-col items-center justify-center h-64 gap-4">
+            <div className="w-10 h-10 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
+            <p className="text-text-muted text-[14px]">
+              {phase === 'loading' ? 'KI generiert die Aufgaben…' : 'KI korrigiert deine Antworten…'}
+            </p>
+          </div>
+        )}
+
+        {phase === 'exam' && exam && (
+          <div>
+            {/* "no material" badge */}
+            <div className="bg-surface rounded-[14px] border border-border/60 px-4 py-2.5 mb-4 flex items-center gap-2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
+                <circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+              </svg>
+              <p className="text-text-secondary text-[12px] font-semibold">Kein Material — alles aus dem Gedächtnis</p>
+            </div>
+            {exam.tasks.map((t) => (
+              <TaskAnswerCard
+                key={t.id}
+                task={t}
+                answer={answers[t.id] ?? ''}
+                onChange={(v) => setAnswers((prev) => ({ ...prev, [t.id]: v }))}
+              />
+            ))}
+            {error && (
+              <div className="bg-danger/10 border border-danger/30 rounded-[14px] p-4 mb-3">
+                <p className="text-danger text-[13px]">{error}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {phase === 'result' && exam && correction && (
+          <div>
+            <div className="rounded-[18px] p-5 mb-4 text-center" style={{ background: ACCENT }}>
+              <p className="text-white/70 text-[12px] font-semibold uppercase tracking-wide mb-1">Ergebnis</p>
+              <p className="text-white text-[48px] font-black leading-none">{correction.totalNP}</p>
+              <p className="text-white/80 text-[13px] mt-1">von 15 Notenpunkten · {correction.gradeLabel}</p>
+            </div>
+            {correction.overallJustification && (
+              <div className="bg-surface rounded-[14px] border border-border/60 p-4 mb-4">
+                <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-1.5">Gesamtbewertung</p>
+                <p className="text-text-secondary text-[13px] leading-relaxed">{correction.overallJustification}</p>
+              </div>
+            )}
+            <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-2.5">Details pro Aufgabe</p>
+            {exam.tasks.map((t) => {
+              const c = correction.taskCorrections.find((tc) => tc.taskId === t.id)
+              if (!c) return null
+              return <CorrectionCard key={t.id} task={t} correction={c} />
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="px-4 pb-8 pt-3 border-t border-border/60 bg-surface/80">
+        {phase === 'setup' && (
+          <button
+            onClick={handleGenerate}
+            disabled={!subjectId || !topic.trim()}
+            className="w-full py-4 rounded-[16px] text-white text-[15px] font-bold press disabled:opacity-40"
+            style={{ background: ACCENT }}
+          >
+            Aufgaben generieren
+          </button>
+        )}
+        {phase === 'exam' && (
+          <button
+            onClick={handleSubmit}
+            className="w-full py-4 rounded-[16px] text-white text-[15px] font-bold press"
+            style={{ background: ACCENT }}
+          >
+            Abgeben & korrigieren lassen
+          </button>
+        )}
+        {phase === 'result' && (
+          <div className="flex gap-3">
+            <button
+              onClick={() => { setPhase('setup'); setExam(null); setCorrection(null) }}
+              className="flex-1 py-4 rounded-[16px] text-text-primary text-[15px] font-bold bg-surface border border-border press"
+            >
+              Neue Aufgaben
+            </button>
+            <button
+              onClick={() => navigate('/klausurmodus/probeklausur')}
+              className="flex-1 py-4 rounded-[16px] text-white text-[15px] font-bold press"
+              style={{ background: ACCENT }}
+            >
+              Menü
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

@@ -37,6 +37,12 @@ import { ExamResultScreen } from '../screens/ExamResultScreen'
 import { NoteCreateScreen } from '../screens/NoteCreateScreen'
 import { FolderScreen } from '../screens/FolderScreen'
 import { ProfilScreen } from '../screens/ProfilScreen'
+import { FlashCardGeneratorScreen } from '../screens/FlashCardGeneratorScreen'
+import { ProbeklausurMenuScreen } from '../screens/ProbeklausurMenuScreen'
+import { ProbeklausurMode1Screen } from '../screens/ProbeklausurMode1Screen'
+import { ProbeklausurMode2Screen } from '../screens/ProbeklausurMode2Screen'
+import { ProbeklausurMode3Screen } from '../screens/ProbeklausurMode3Screen'
+import { ProbeklausurMode4Screen } from '../screens/ProbeklausurMode4Screen'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -75,7 +81,9 @@ function Layout() {
 
   const hideNav =
     location.pathname === '/klausurmodus/klausur' ||
-    location.pathname.endsWith('/neue-notiz')
+    location.pathname === '/klausurmodus/karteikarten/neu' ||
+    location.pathname.endsWith('/neue-notiz') ||
+    location.pathname.startsWith('/klausurmodus/probeklausur/')
 
   return (
     <div className="max-w-lg mx-auto relative min-h-screen">
@@ -94,8 +102,14 @@ function Layout() {
         <Route path="/unterricht/:id/:lessonId" element={<SmartNotesScreen />} />
         <Route path="/klausurmodus" element={<KlausurphasenScreen />} />
         <Route path="/klausurmodus/lernen" element={<LearnModeScreen />} />
+        <Route path="/klausurmodus/karteikarten/neu" element={<FlashCardGeneratorScreen />} />
         <Route path="/klausurmodus/klausur" element={<ExamModeScreen />} />
         <Route path="/klausurmodus/klausur/ergebnis" element={<ExamResultScreen />} />
+        <Route path="/klausurmodus/probeklausur" element={<ProbeklausurMenuScreen />} />
+        <Route path="/klausurmodus/probeklausur/afb-trainer" element={<ProbeklausurMode1Screen />} />
+        <Route path="/klausurmodus/probeklausur/vollstaendige-klausur" element={<ProbeklausurMode2Screen />} />
+        <Route path="/klausurmodus/probeklausur/materialklausur" element={<ProbeklausurMode3Screen />} />
+        <Route path="/klausurmodus/probeklausur/ohne-material" element={<ProbeklausurMode4Screen />} />
         <Route path="/profil" element={<ProfilScreen />} />
       </Routes>
       {!hideNav && <BottomNav />}

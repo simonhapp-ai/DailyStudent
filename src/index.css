@@ -158,6 +158,17 @@ textarea::placeholder {
 
 .flashcard-back {
   transform: rotateY(180deg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.keyword-highlight {
+  background: transparent;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 2px;
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */

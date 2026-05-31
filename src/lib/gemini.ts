@@ -1,6 +1,7 @@
-import type { GeneratedSmartNote } from '../types'
+import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, TaskCorrection } from '../types'
 
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent'
+const EXAM_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
 
 interface GeminiJSON {
   title?: string
@@ -121,6 +122,225 @@ export async function analyzeFileToSmartNote(
 
 /** Minimum delay between batch requests to stay under Gemini free-tier rate limit (15 RPM). */
 export const GEMINI_BATCH_DELAY_MS = 4500
+
+// ── Probeklausur: Exam Generation & Correction ───────────────────────────────
+
+async function examFetch(systemPrompt: string, userPrompt: string, temperature = 0.6): Promise<unknown> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined
+  if (!apiKey) throw new Error('VITE_GEMINI_API_KEY fehlt in .env')
+
+  const res = await fetch(`${EXAM_API_URL}?key=${encodeURIComponent(apiKey)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+      generationConfig: {
+        temperature,
+        maxOutputTokens: 8192,
+        responseMimeType: 'application/json',
+      },
+    }),
+  })
+
+  if (!res.ok) {
+    let msg = `Gemini Fehler ${res.status}`
+    try { msg = ((await res.json()) as { error?: { message?: string } }).error?.message ?? msg } catch { /* keep */ }
+    throw new Error(msg)
+  }
+
+  const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] }
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+  const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
+  if (!cleaned) throw new Error('Gemini hat keine Antwort zurückgegeben')
+  return JSON.parse(cleaned)
+}
+
+const GENERATION_SYSTEM = `Du bist ein Abiturklausur-Generator für Niedersachsen. Erstelle exakt dem deutschen Abitur entsprechende Aufgaben.
+
+AUFGABENFORMAT:
+- Genau 1 Satz pro Teilaufgabe (max. 2 bei AFB III). Operator am Satzanfang. Sie-Form.
+- Bewertungseinheiten am Ende: (8 BE)
+- Materialverweise: (M 1), (M 2)
+
+AFB I — Reproduktion (4–8 BE):
+Operatoren: nennen, beschreiben, skizzieren, zusammenfassen, darstellen, angeben
+KEIN Material. Direktes Fachwissen.
+
+AFB II — Transfer (8–12 BE):
+Operatoren: erläutern, erklären, auswerten, vergleichen, ermitteln, bestätigen, herleiten, interpretieren
+MIT Material ODER Transferkontext direkt in der Aufgabe (Szenario, Vergleich, selbstgewähltes Beispiel).
+
+AFB III — Bewertung (8–12 BE):
+Operatoren: beurteilen, bewerten, Stellung nehmen, erörtern, prüfen, entwickeln (Hypothese)
+Optional Material. Eigenständiges Urteil gefordert.
+
+MATERIALREGELN:
+- Datentabelle: ≥6 Messpunkte, realistische Werte mit Einheiten, erkennbarer Trend
+- Diagramm: Als Text beschrieben, Achsenbeschriftung+Einheiten, Zahlenwerte
+- Versuchsaufbau: Bauteile mit Messwerten, klare Schritte
+- Informationstext: 3–6 Sätze, neue Fachinfo die NICHT die Antwort vorwegnimmt
+- Formeln: nur Unicode (x², √, π, ∫, ·, ≈, →, Δ) — KEIN LaTeX
+
+FACHSPEZIFISCH:
+Bio: I=Schemata/Prozesse; II=Materialauswertung+Fachwissen; III=Hypothesen/Ethik
+Physik: I=Begriffe/Schaltpläne; II=Messwerte auswerten/Gleichungen herleiten; III=Hypothesen
+Mathe: I=ohne GTR; II=Sachaufgabe+GTR; III=Begründen ohne Rechnung. Formeln in Unicode.
+Religion: I=Theologenpositionen; II=Vergleiche/biblische Bezüge; III=Ethische Erörterung
+Geschichte: I=Ereignisse/Begriffe; II=Quellen auswerten; III=These erörtern
+Englisch: Aufgaben auf ENGLISCH. I=Comprehension; II=Analysis; III=Comment
+
+Jedes Material in mind. 1 Aufgabe referenziert. Antworte ausschließlich mit validem JSON.`
+
+interface RawExamJSON {
+  materials: { id: string; title: string; type: string; content: string }[]
+  tasks: { id: string; label: string; afb: string; operator: string; text: string; be: number; materialRefs: string[] }[]
+  totalBE: number
+}
+
+function parseExam(raw: unknown, subject: string, subjectId: string, topic: string, mode: 1 | 2 | 3 | 4): GeneratedExam {
+  const j = raw as RawExamJSON
+  const materials: ProbeklausurMaterial[] = (j.materials ?? []).map((m) => ({
+    id: String(m.id),
+    title: String(m.title ?? ''),
+    type: (['tabelle', 'diagramm', 'versuchsaufbau', 'text', 'sequenz'].includes(m.type)
+      ? m.type : 'text') as ProbeklausurMaterial['type'],
+    content: String(m.content ?? ''),
+  }))
+  const tasks: ProbeklausurTask[] = (j.tasks ?? []).map((t) => ({
+    id: String(t.id),
+    label: String(t.label ?? t.id),
+    afb: (['I', 'II', 'III'].includes(String(t.afb)) ? t.afb : 'I') as ProbeklausurTask['afb'],
+    operator: String(t.operator ?? ''),
+    text: String(t.text ?? ''),
+    be: Number(t.be) || 0,
+    materialRefs: Array.isArray(t.materialRefs) ? t.materialRefs.map(String) : [],
+  }))
+  return {
+    subject, subjectId, topic, mode, materials, tasks,
+    totalBE: Number(j.totalBE) || tasks.reduce((s, t) => s + t.be, 0),
+  }
+}
+
+export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III'): Promise<GeneratedExam> {
+  const materialRule = afb === 'I'
+    ? 'Kein Material (leeres Array).'
+    : afb === 'II'
+      ? 'Genau 1 passendes Material (Tabelle oder Text).'
+      : 'Optional 1 Material wenn nötig, sonst leer.'
+  const beRange = afb === 'I' ? '4–8' : '8–12'
+
+  const raw = await examFetch(GENERATION_SYSTEM,
+    `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}
+
+JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":[]}],"totalBE":8}`)
+  return parseExam(raw, subject, subjectId, topic, 1)
+}
+
+export async function generateMode2Exam(subject: string, subjectId: string, topic: string): Promise<GeneratedExam> {
+  const fachHinweis: Record<string, string> = {
+    biologie: '1 Komplex, Teilaufgaben 1.1–1.4, ~35 BE, 2 Materialien (M1+M2).',
+    physik: '1 Komplex, Teilaufgaben 1.1–1.5, ~50 BE, M1=Versuchsaufbau+Messdaten, M2=Diagramm.',
+    mathematik: 'TEIL A: Kurzaufgaben A1–A5 ohne GTR je 4 BE. TEIL B: Sachaufgaben B1.1–B2.x mit GTR. ~60 BE.',
+    religion: '1 Komplex, 4–6 Aufgaben Trichter I→II→III, ~50 BE.',
+  }
+  const hinweis = fachHinweis[subjectId] ?? '1 Komplex, 3–5 Teilaufgaben, AFB I→II→III, 2–3 Materialien, ~45 BE.'
+
+  const raw = await examFetch(GENERATION_SYSTEM,
+    `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}
+
+JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","content":"..."},{"id":"M2","title":"...","type":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
+    0.55)
+  return parseExam(raw, subject, subjectId, topic, 2)
+}
+
+export async function generateMode3Exam(subject: string, subjectId: string, topic: string): Promise<GeneratedExam> {
+  const raw = await examFetch(GENERATION_SYSTEM,
+    `Fach: ${subject} | Thema: ${topic} | Modus: Materialklausur
+Regeln: M1=Kontext (Text/Versuch), M2=Daten (Tabelle/Diagramm), M3=optional.
+Aufg.1 AFB I 6–8 BE: Fachwissen nötig zum Materialverständnis (kein Materialbezug).
+Aufg.2 AFB II 10–12 BE: Material direkt auswerten + Fachwissen verknüpfen.
+Aufg.3 AFB III 8–10 BE: Über Material hinaus (Hypothese, Bewertung, Stellung).
+
+JSON: {"materials":[{"id":"M1","title":"...","type":"text","content":"..."},{"id":"M2","title":"...","type":"tabelle","content":"..."}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1","M2"]},{"id":"t3","label":"3","afb":"III","operator":"Entwickeln","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":28}`)
+  return parseExam(raw, subject, subjectId, topic, 3)
+}
+
+export async function generateMode4Exam(subject: string, subjectId: string, topic: string): Promise<GeneratedExam> {
+  const raw = await examFetch(GENERATION_SYSTEM,
+    `Fach: ${subject} | Thema: ${topic} | Modus: Ohne Material (alles aus dem Kopf)
+Aufg.1 AFB I 4–8 BE: Reproduktion ohne Material.
+Aufg.2 AFB II 8–12 BE: Transfer OHNE Material — Vergleich, Szenario, oder "an einem selbst gewählten Beispiel".
+Aufg.3 AFB III 8–10 BE: Argumentative Beurteilung/Erörterung ohne Material.
+
+JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Erläutern","text":"...","be":10,"materialRefs":[]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":8,"materialRefs":[]}],"totalBE":24}`,
+    0.65)
+  return parseExam(raw, subject, subjectId, topic, 4)
+}
+
+// ── AI Correction ─────────────────────────────────────────────────────────────
+
+const CORRECTION_SYSTEM = `Du bist ein erfahrener Abitur-Korrekteur für Niedersachsen. Korrigiere Schülerantworten konstruktiv und präzise.
+
+KATEGORIEN:
+- errors: Inhaltlich falsche oder ungenaue Aussagen (leer wenn keine Fehler)
+- gaps: Was fehlt, das für volle Punkte nötig wäre (leer wenn vollständig)
+- formulationHelp: Wissenschaftlichere Formulierungen (konkrete Beispiele "Statt '...' besser: '...'")
+
+NOTENPUNKTE 0–15:
+15=herausragend, 13–14=Sehr gut, 10–12=Gut, 7–9=Befriedigend, 4–6=Ausreichend, 1–3=Mangelhaft, 0=Ungenügend/leer
+
+gradeLabel: "Sehr gut" | "Gut" | "Befriedigend" | "Ausreichend" | "Mangelhaft" | "Ungenügend"
+Bei leerer Antwort: scoreNP=0, errors=[], gaps=["Keine Antwort gegeben."], formulationHelp=[].
+Antworte ausschließlich mit validem JSON.`
+
+function npToGradeLabel(np: number): string {
+  if (np >= 13) return 'Sehr gut'
+  if (np >= 10) return 'Gut'
+  if (np >= 7) return 'Befriedigend'
+  if (np >= 4) return 'Ausreichend'
+  if (np >= 1) return 'Mangelhaft'
+  return 'Ungenügend'
+}
+
+export async function correctExam(exam: GeneratedExam, answers: Record<string, string>): Promise<ExamCorrection> {
+  const materialsBlock = exam.materials.map((m) => `${m.id} — ${m.title}:\n${m.content}`).join('\n\n')
+  const tasksBlock = exam.tasks.map((t) => {
+    const answer = (answers[t.id] ?? '').trim()
+    return `Aufgabe ${t.label} (AFB ${t.afb}, ${t.be} BE): ${t.text}\nAntwort: ${answer || '[keine Antwort]'}`
+  }).join('\n\n')
+
+  const userPrompt = `Fach: ${exam.subject} | Thema: ${exam.topic}
+${exam.materials.length > 0 ? `\nMaterialien:\n${materialsBlock}\n` : ''}
+${tasksBlock}
+
+JSON: {"taskCorrections":[{"taskId":"t1","errors":[],"gaps":[],"formulationHelp":[],"scoreNP":11,"justification":"..."}],"totalNP":11,"gradeLabel":"Gut","overallJustification":"..."}`
+
+  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 0.3)) as {
+    taskCorrections?: { taskId?: string; errors?: string[]; gaps?: string[]; formulationHelp?: string[]; scoreNP?: number; justification?: string }[]
+    totalNP?: number
+    gradeLabel?: string
+    overallJustification?: string
+  }
+
+  const taskCorrections: TaskCorrection[] = (raw.taskCorrections ?? []).map((tc) => ({
+    taskId: String(tc.taskId ?? ''),
+    errors: Array.isArray(tc.errors) ? tc.errors.map(String) : [],
+    gaps: Array.isArray(tc.gaps) ? tc.gaps.map(String) : [],
+    formulationHelp: Array.isArray(tc.formulationHelp) ? tc.formulationHelp.map(String) : [],
+    scoreNP: Math.max(0, Math.min(15, Number(tc.scoreNP) || 0)),
+    justification: String(tc.justification ?? ''),
+  }))
+
+  const totalNP = Math.max(0, Math.min(15, Number(raw.totalNP) || 0))
+
+  return {
+    taskCorrections,
+    totalNP,
+    gradeLabel: String(raw.gradeLabel || npToGradeLabel(totalNP)),
+    overallJustification: String(raw.overallJustification ?? ''),
+  }
+}
 
 // ── Destination suggestion ───────────────────────────────────────────────────
 
