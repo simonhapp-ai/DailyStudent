@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useUser, type EntryType, type PersonalEntry, type KlausurTermin } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
-import type { StundenplanSlot, Stundenplan, AbiHalbjahr } from '../types'
+import type { StundenplanSlot, Stundenplan, AbiHalbjahr, UserNote } from '../types'
+import type { StandaloneHomeworkItem } from '../context/UserContext'
 import { totalPunkteAllHalbjahre, pktToNoteAbi, noteColorAbi } from './AbiRechnerScreen'
 import { parseStundenplanFromImage } from '../lib/groq'
 
@@ -20,8 +21,8 @@ const TYPE_CONFIG: Record<EntryType, { label: string; icon: string; color: strin
 }
 
 const PX_PER_HOUR = 56
-const START_H = 6
-const END_H = 22
+const START_H = 0
+const END_H = 24
 const TOTAL_H = END_H - START_H
 
 type RecurFreq = 'daily' | 'weekly' | 'monthly'
@@ -112,7 +113,7 @@ function CloseIcon({ size = 14 }: { size?: number }) {
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export function KalenderScreen() {
-  const { profile, personalEntries, addEntry, removeEntry, updateProfile, addKlausurtermin } = useUser()
+  const { profile, personalEntries, addEntry, removeEntry, updateProfile, addKlausurtermin, userNotes, completedHomeworkIds, standaloneHomework } = useUser()
 
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const todayStr = toDateStr(today)
@@ -199,7 +200,6 @@ export function KalenderScreen() {
     : []
   type CPill = { time: string; label: string; color: string; icon: string }
   const calPills: CPill[] = [
-    ...calTodaySlots.map((s) => ({ time: s.startTime, label: SUBJECT_INFO[s.subjectId]?.name ?? s.subjectId, color: SUBJECT_INFO[s.subjectId]?.color ?? '#6366F1', icon: SUBJECT_INFO[s.subjectId]?.icon ?? '📚' })),
     ...personalEntries.filter((e) => e.date === todayStr).map((e) => ({ time: e.time || '', label: e.title, color: TYPE_CONFIG[e.type].color, icon: TYPE_CONFIG[e.type].icon })),
     ...(profile?.klausurtermine ?? []).filter((k) => k.date === todayStr).map((k) => ({ time: '', label: `Klausur: ${SUBJECT_INFO[k.subjectId]?.name ?? k.subjectId}`, color: '#FF3B30', icon: '📝' })),
   ].sort((a, b) => (a.time || '99:99').localeCompare(b.time || '99:99')).slice(0, 3)
@@ -346,6 +346,7 @@ export function KalenderScreen() {
                     stundenplan={profile?.stundenplan}
                     personalEntries={personalEntries}
                     klausurtermine={profile?.klausurtermine ?? []}
+                    calOpen={calOpen}
                     onSlotPress={(dateStr, time) => openFab(dateStr, time)}
                     onEntryPress={openDetail}
                   />
@@ -393,18 +394,22 @@ export function KalenderScreen() {
           </div>
         </div>
 
-        {/* ── Stundenplan Widget / Setup ───────────────────────── */}
-        {hasStundenplan ? (
-          <StundenplanMiniWidget
-            stundenplan={profile!.stundenplan!}
-            onOpen={() => setSpViewOpen(true)}
+        {/* ── Stundenplan heute + Hausaufgaben (2-col) ─────────── */}
+        <div className="grid grid-cols-2 gap-3">
+          {hasStundenplan ? (
+            <StundenplanTodayWidget
+              stundenplan={profile!.stundenplan!}
+              onOpen={() => setSpViewOpen(true)}
+            />
+          ) : (
+            <StundenplanSetupCard onSetup={() => setSpEditOpen(true)} />
+          )}
+          <HausaufgabenWidget
+            userNotes={userNotes}
+            completedHomeworkIds={completedHomeworkIds}
+            standaloneHomework={standaloneHomework}
           />
-        ) : (
-          <StundenplanSetupWidget
-            faecher={profile?.faecher ?? []}
-            onSave={(slots) => updateProfile({ stundenplan: { slots, createdAt: new Date().toISOString() } })}
-          />
-        )}
+        </div>
 
         {/* ── 2-column widgets: Klausuren + Abi-Schnitt ────────── */}
         <div className="grid grid-cols-2 gap-3">
@@ -413,10 +418,18 @@ export function KalenderScreen() {
         </div>
 
         {/* ── Lernplan Placeholder ─────────────────────────────── */}
-        <div className="bg-surface border border-border/60 rounded-2xl shadow-card-adaptive p-5 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-[14px] bg-accent/10 flex items-center justify-center text-xl shrink-0">📋</div>
+        <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive p-4 flex items-center gap-4">
+          <div
+            className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0"
+            style={{ background: 'linear-gradient(145deg,#FFD060,#C07700)', boxShadow: '0 4px 14px rgba(192,119,0,0.4)' }}
+          >
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+              <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" strokeWidth="2.5" />
+            </svg>
+          </div>
           <div className="flex-1">
-            <p className="text-text-primary font-semibold text-[15px]">Lernplan erstellen</p>
+            <p className="text-text-primary font-bold text-[15px]">Lernplan erstellen</p>
             <p className="text-text-muted text-[12px] mt-0.5">Kommt bald</p>
           </div>
         </div>
@@ -951,24 +964,28 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
 interface TwoDayProps {
   viewDate: Date; todayStr: string; stundenplan: Stundenplan | undefined
   personalEntries: PersonalEntry[]; klausurtermine: { subjectId: string; date: string }[]
+  calOpen: boolean
   onSlotPress: (dateStr: string, time: string) => void
   onEntryPress: (entry: PersonalEntry) => void
 }
 
-function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurtermine, onSlotPress, onEntryPress }: TwoDayProps) {
+function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurtermine, calOpen, onSlotPress, onEntryPress }: TwoDayProps) {
   const days = [viewDate, addDays(viewDate, 1)]
   const gridHeight = TOTAL_H * PX_PER_HOUR
   const hours = Array.from({ length: TOTAL_H }, (_, i) => START_H + i)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (scrollRef.current) {
+    if (!calOpen || !scrollRef.current) return
+    requestAnimationFrame(() => {
+      if (!scrollRef.current) return
       const now = new Date()
-      const h = now.getHours()
-      const target = h >= START_H && h < END_H ? Math.max(0, minToPx(h * 60) - 60) : minToPx(8 * 60)
-      scrollRef.current.scrollTop = target
-    }
-  }, [])
+      const nowMin = now.getHours() * 60 + now.getMinutes()
+      const nowPx = minToPx(nowMin)
+      const viewH = scrollRef.current.clientHeight || 320
+      scrollRef.current.scrollTop = Math.max(0, nowPx - viewH / 2)
+    })
+  }, [calOpen])
 
   const handleColumnClick = (e: React.MouseEvent<HTMLDivElement>, dateStr: string) => {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -1221,6 +1238,168 @@ function YearView({ viewDate, todayStr, personalEntries, klausurtermine, onNavig
   )
 }
 
+// ─── Shared: App Icon Pill ────────────────────────────────────────────────────
+
+function AppIconPill({ gradient, shadow, children }: { gradient: string; shadow: string; children: React.ReactNode }) {
+  return (
+    <div
+      className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0"
+      style={{ background: gradient, boxShadow: shadow }}
+    >
+      {children}
+    </div>
+  )
+}
+
+// ─── Stundenplan Today Widget (half-width) ────────────────────────────────────
+
+function StundenplanTodayWidget({ stundenplan, onOpen }: { stundenplan: Stundenplan; onOpen: () => void }) {
+  const today = new Date()
+  const dow = today.getDay()
+  const isWeekend = dow === 0 || dow === 6
+  const spDayIdx = dow === 0 ? -1 : dow - 1
+  const todaySlots = isWeekend
+    ? []
+    : stundenplan.slots.filter((s) => s.day === spDayIdx).sort((a, b) => a.startTime.localeCompare(b.startTime))
+
+  return (
+    <button
+      onClick={onOpen}
+      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm"
+      style={{ minHeight: 152 }}
+    >
+      {/* Icon + Name */}
+      <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
+        <AppIconPill gradient="linear-gradient(145deg,#5AC8FA,#0080B8)" shadow="0 4px 14px rgba(0,128,184,0.5)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+          </svg>
+        </AppIconPill>
+        <span className="text-[13px] font-bold text-text-primary leading-tight">Stundenplan</span>
+      </div>
+
+      {/* Subject pills — vertical stack, first lesson on top, left-aligned */}
+      <div className="flex-1 px-3.5 pb-3.5 pt-2.5 flex flex-col justify-end gap-1.5">
+        {isWeekend ? (
+          <>
+            <p className="text-[16px] font-black text-text-primary leading-tight">Wochenende</p>
+            <p className="text-[12px] font-bold mt-0.5" style={{ color: '#30D158' }}>🎉 Frei!</p>
+          </>
+        ) : todaySlots.length === 0 ? (
+          <>
+            <p className="text-[16px] font-black text-text-muted">–</p>
+            <p className="text-[11px] text-text-muted mt-0.5">Keine Stunden</p>
+          </>
+        ) : (
+          <>
+            {todaySlots.slice(0, 3).map((slot) => {
+              const subj = SUBJECT_INFO[slot.subjectId]
+              const color = subj?.color ?? '#5AC8FA'
+              return (
+                <div
+                  key={slot.id}
+                  className="inline-flex items-center gap-1.5 self-start px-2 py-1 rounded-[8px] text-[10px] font-bold leading-none"
+                  style={{ background: `${color}20`, border: `1px solid ${color}35` }}
+                >
+                  <span className="shrink-0">{subj?.icon ?? '📚'}</span>
+                  <span style={{ color }}>{(subj?.name ?? slot.subjectId).split(' ')[0]}</span>
+                  <span className="tabular-nums" style={{ color, opacity: 0.65 }}>{slot.startTime}</span>
+                </div>
+              )
+            })}
+            {todaySlots.length > 3 && (
+              <p className="text-[9px] text-text-muted">+{todaySlots.length - 3} mehr</p>
+            )}
+          </>
+        )}
+      </div>
+    </button>
+  )
+}
+
+// ─── Stundenplan Setup Card (half-width, no SP set yet) ───────────────────────
+
+function StundenplanSetupCard({ onSetup }: { onSetup: () => void }) {
+  return (
+    <button
+      onClick={onSetup}
+      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm"
+      style={{ minHeight: 152 }}
+    >
+      <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
+        <AppIconPill gradient="linear-gradient(145deg,#5AC8FA,#0080B8)" shadow="0 4px 14px rgba(0,128,184,0.5)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M12 14v4M10 16h4" strokeWidth="2.5" />
+          </svg>
+        </AppIconPill>
+        <span className="text-[13px] font-bold text-text-primary leading-tight">Stundenplan</span>
+      </div>
+      <div className="flex-1 px-3.5 pb-3.5 pt-2.5 flex flex-col justify-end">
+        <p className="text-[16px] font-black text-text-muted">–</p>
+        <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#5AC8FA' }}>Einrichten →</p>
+      </div>
+    </button>
+  )
+}
+
+// ─── Hausaufgaben Widget (half-width) ─────────────────────────────────────────
+
+function HausaufgabenWidget({ userNotes, completedHomeworkIds, standaloneHomework }: {
+  userNotes: UserNote[]
+  completedHomeworkIds: string[]
+  standaloneHomework: StandaloneHomeworkItem[]
+}) {
+  const navigate = useNavigate()
+
+  const pendingCount = userNotes.reduce((acc, note) => {
+    return acc + (note.homeworkItems ?? []).filter((item, idx) => {
+      const id = item.id ?? `${note.id}-hw-${idx}`
+      return !completedHomeworkIds.includes(id)
+    }).length
+  }, 0) + standaloneHomework.filter((s) => !completedHomeworkIds.includes(s.id)).length
+
+  const allDone = pendingCount === 0
+
+  return (
+    <button
+      onClick={() => navigate('/hausaufgaben')}
+      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm"
+      style={{ minHeight: 152 }}
+    >
+      <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
+        <AppIconPill
+          gradient={allDone ? 'linear-gradient(145deg,#30D158,#1A8C33)' : 'linear-gradient(145deg,#FF9F0A,#C97000)'}
+          shadow={allDone ? '0 4px 14px rgba(48,209,88,0.45)' : '0 4px 14px rgba(255,159,10,0.5)'}
+        >
+          {allDone ? (
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          ) : (
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+            </svg>
+          )}
+        </AppIconPill>
+        <span className="text-[13px] font-bold text-text-primary leading-tight">Hausaufgaben</span>
+      </div>
+      <div className="flex-1 px-3.5 pb-3.5 pt-2.5 flex flex-col justify-end">
+        {allDone ? (
+          <>
+            <p className="text-[18px] font-black leading-tight" style={{ color: '#30D158' }}>Alles</p>
+            <p className="text-[12px] font-bold mt-0.5" style={{ color: '#30D158' }}>erledigt ✓</p>
+          </>
+        ) : (
+          <>
+            <p className="text-[34px] font-black text-text-primary leading-none">{pendingCount}</p>
+            <p className="text-[11px] text-text-muted mt-1">{pendingCount === 1 ? 'Aufgabe offen' : 'Aufgaben offen'}</p>
+          </>
+        )}
+      </div>
+    </button>
+  )
+}
+
 // ─── Stundenplan Mini Widget ──────────────────────────────────────────────────
 
 const SP_DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'] as const
@@ -1406,7 +1585,7 @@ function StundenplanFullView({
   )
 }
 
-// ─── Klausurtermin Widget (compact half-width) ───────────────────────────────
+// ─── Klausurtermin Widget (half-width) ───────────────────────────────────────
 
 function KlausurterminWidget({ klausurtermine }: { klausurtermine: KlausurTermin[] }) {
   const navigate = useNavigate()
@@ -1416,155 +1595,103 @@ function KlausurterminWidget({ klausurtermine }: { klausurtermine: KlausurTermin
     .filter((k) => k.date >= todayStr)
     .sort((a, b) => a.date.localeCompare(b.date))
 
-  const daysLeft = (dateStr: string) =>
-    Math.round((new Date(dateStr + 'T00:00:00').getTime() - today.getTime()) / 86400000)
-
   const next = upcoming[0]
+  const daysLeft = next
+    ? Math.round((new Date(next.date + 'T00:00:00').getTime() - today.getTime()) / 86400000)
+    : null
 
   return (
     <button
       onClick={() => navigate('/klausuren')}
-      className="flex flex-col bg-surface border border-border/60 rounded-2xl shadow-card-adaptive overflow-hidden press-sm active:scale-[0.99] transition-all duration-200 text-left"
+      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm"
       style={{ minHeight: 152 }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between px-3.5 pt-3.5 pb-2 shrink-0">
-        <div className="flex items-center gap-1.5 min-w-0">
-          <div
-            className="w-6 h-6 rounded-[7px] flex items-center justify-center shrink-0"
-            style={{ background: 'linear-gradient(135deg,#FF3B30,#CC2E28)' }}
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
-            </svg>
-          </div>
-          <span className="text-[12px] font-bold text-text-primary">Klausuren</span>
-        </div>
-        <div className="flex items-center gap-1">
-          {upcoming.length > 0 && (
-            <span
-              className="text-[10px] font-bold px-1.5 py-0.5 rounded-pill"
-              style={{ background: 'rgba(255,59,48,0.12)', color: '#FF3B30' }}
-            >
-              {upcoming.length}
-            </span>
-          )}
-          <ChevronRight size={10} />
-        </div>
+      <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
+        <AppIconPill gradient="linear-gradient(145deg,#FF453A,#B01208)" shadow="0 4px 14px rgba(255,69,58,0.5)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18M8 14h8M8 18h5" />
+          </svg>
+        </AppIconPill>
+        <span className="text-[13px] font-bold text-text-primary leading-tight">Klausuren</span>
+        {upcoming.length > 1 && (
+          <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(255,69,58,0.15)', color: '#FF453A' }}>
+            {upcoming.length}
+          </span>
+        )}
       </div>
-
-      {/* Content */}
-      <div className="flex-1 px-3.5 pb-3.5 flex flex-col justify-between">
+      <div className="flex-1 px-3.5 pb-3.5 pt-2.5 flex flex-col justify-end">
         {next ? (
           <>
-            <div>
-              <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-lg leading-none">{SUBJECT_INFO[next.subjectId]?.icon ?? '📝'}</span>
-                <span className="text-[13px] font-bold text-text-primary truncate">
-                  {SUBJECT_INFO[next.subjectId]?.name ?? next.subjectId}
-                </span>
-              </div>
-              {next.topic && (
-                <p className="text-[10px] text-text-muted truncate">{next.topic}</p>
-              )}
-            </div>
+            <p className="text-[14px] font-black text-text-primary leading-tight truncate">
+              {SUBJECT_INFO[next.subjectId]?.name ?? next.subjectId}
+            </p>
             {(() => {
-              const days = daysLeft(next.date)
-              const color = days === 0 || days <= 7 ? '#FF3B30' : days <= 14 ? '#FF9500' : '#94A3B8'
+              const color = daysLeft! <= 0 ? '#FF453A' : daysLeft! <= 7 ? '#FF9F0A' : '#94A3B8'
               return (
-                <span
-                  className="self-start text-[11px] font-bold px-2 py-1 rounded-pill"
-                  style={{ background: `${color}18`, color }}
-                >
-                  {days === 0 ? 'Heute!' : days === 1 ? 'Morgen' : `in ${days}T`}
-                </span>
+                <p className="text-[12px] font-bold mt-0.5" style={{ color }}>
+                  {daysLeft === 0 ? 'Heute!' : daysLeft === 1 ? 'Morgen' : `in ${daysLeft} T`}
+                </p>
               )
             })()}
           </>
         ) : (
-          <div className="flex-1 flex flex-col justify-center">
-            <p className="text-[12px] text-text-muted">Keine Klausuren</p>
-            <p className="text-[11px] text-text-muted/50 mt-0.5">Tippen →</p>
-          </div>
+          <>
+            <p className="text-[18px] font-black text-text-primary">–</p>
+            <p className="text-[11px] text-text-muted mt-0.5">Keine Klausuren</p>
+          </>
         )}
       </div>
     </button>
   )
 }
 
-// ─── Abi-Rechner Widget (compact half-width) ─────────────────────────────────
+// ─── Abi-Rechner Widget (half-width) ─────────────────────────────────────────
 
-function AbiRechnerWidget({
-  abiHalbjahre,
-  zielnote,
-}: {
-  abiHalbjahre?: AbiHalbjahr[]
-  zielnote?: string
-}) {
+function AbiRechnerWidget({ abiHalbjahre, zielnote }: { abiHalbjahre?: AbiHalbjahr[]; zielnote?: string }) {
   const navigate = useNavigate()
   const overall = totalPunkteAllHalbjahre(abiHalbjahre ?? [])
   const noteStr = overall !== null ? pktToNoteAbi(overall) : null
-  const color = noteStr ? noteColorAbi(noteStr) : 'rgb(var(--color-text-muted))'
-
-  const isOnTrack =
-    noteStr && zielnote
-      ? parseFloat(noteStr.replace(',', '.')) <= parseFloat(zielnote.replace(',', '.'))
-      : null
+  const gradeColor = noteStr ? noteColorAbi(noteStr) : 'rgb(var(--color-text-muted))'
+  const isOnTrack = noteStr && zielnote
+    ? parseFloat(noteStr.replace(',', '.')) <= parseFloat(zielnote.replace(',', '.'))
+    : null
 
   return (
     <button
       onClick={() => navigate('/abi-rechner')}
-      className="flex flex-col bg-surface border border-border/60 rounded-2xl shadow-card-adaptive overflow-hidden press-sm active:scale-[0.99] transition-all duration-200 text-left"
+      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm"
       style={{ minHeight: 152 }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between px-3.5 pt-3.5 pb-2 shrink-0">
-        <div className="flex items-center gap-1.5">
-          <div
-            className="w-6 h-6 rounded-[7px] flex items-center justify-center text-sm shrink-0"
-            style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.75))' }}
-          >
-            🎓
-          </div>
-          <span className="text-[12px] font-bold text-text-primary">Abi-Schnitt</span>
-        </div>
-        <ChevronRight size={10} />
+      <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
+        <AppIconPill gradient="linear-gradient(145deg,#BF5AF2,#7C00CC)" shadow="0 4px 14px rgba(191,90,242,0.5)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
+          </svg>
+        </AppIconPill>
+        <span className="text-[13px] font-bold text-text-primary leading-tight">Noten Rechner</span>
       </div>
-
-      {/* Content */}
-      <div className="flex-1 px-3.5 pb-3.5 flex flex-col justify-between">
+      <div className="flex-1 px-3.5 pb-3.5 pt-2.5 flex flex-col justify-end">
         {noteStr ? (
           <>
-            <div>
-              <div className="flex items-end gap-1 leading-none">
-                <span
-                  className="font-black"
-                  style={{ fontSize: 30, color, letterSpacing: '-0.02em' }}
-                >
-                  {overall!.toFixed(1).replace('.', ',')}
-                </span>
-                <span className="text-[10px] text-text-muted mb-0.5">Pkt</span>
-              </div>
-              <p className="text-[13px] font-bold mt-0.5" style={{ color }}>
-                ≈ {noteStr}
-              </p>
+            <div className="flex items-end gap-1 leading-none">
+              <span className="font-black" style={{ fontSize: 28, color: gradeColor, letterSpacing: '-0.03em' }}>
+                {overall!.toFixed(1).replace('.', ',')}
+              </span>
+              <span className="text-[10px] text-text-muted mb-0.5">Pkt</span>
             </div>
-            {zielnote && (
-              <p className="text-[10px] text-text-muted">
-                Ziel {zielnote}{' '}
-                {isOnTrack ? (
-                  <span style={{ color: '#34C759' }}>✓</span>
-                ) : (
-                  <span style={{ color: '#FF9500' }}>↑</span>
-                )}
-              </p>
-            )}
+            <p className="text-[12px] font-bold mt-0.5" style={{ color: gradeColor }}>
+              ≈ {noteStr}{zielnote && isOnTrack !== null && (
+                <span className="ml-1.5 text-[10px]" style={{ color: isOnTrack ? '#30D158' : '#FF9F0A' }}>
+                  {isOnTrack ? '✓ Ziel' : '↑ Ziel'}
+                </span>
+              )}
+            </p>
           </>
         ) : (
-          <div className="flex-1 flex flex-col justify-center">
-            <p className="text-[12px] text-text-muted">Noten eintragen</p>
-            <p className="text-[11px] text-text-muted/50 mt-0.5">Tippen →</p>
-          </div>
+          <>
+            <p className="text-[18px] font-black text-text-primary">–</p>
+            <p className="text-[11px] text-text-muted mt-0.5">Noten eintragen</p>
+          </>
         )}
       </div>
     </button>

@@ -1,8 +1,7 @@
 import { useUser, type AppTheme } from '../context/UserContext'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
-
-const STATS_ICONS = ['🔥', '📸', '📝', '⭐']
 
 const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
   { value: 'light', label: 'Hell' },
@@ -10,8 +9,17 @@ const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
   { value: 'system', label: 'System' },
 ]
 
+function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
+  if (!lastStudyDate) return 0
+  const today = new Date().toISOString().slice(0, 10)
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  return lastStudyDate === today || lastStudyDate === yesterday.toISOString().slice(0, 10) ? streak : 0
+}
+
 export function ProfilScreen() {
-  const { profile, theme, setTheme, isPro, setIsPro } = useUser()
+  const navigate = useNavigate()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes } = useUser()
   const [proToast, setProToast] = useState(false)
 
   const handleProToggle = () => {
@@ -21,11 +29,13 @@ export function ProfilScreen() {
     setTimeout(() => setProToast(false), 2000)
   }
 
+  const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
+
   const stats = [
-    { label: 'Streak',    value: '12',  unit: 'Tage', icon: STATS_ICONS[0] },
-    { label: 'Scans',     value: '0',   unit: '',     icon: STATS_ICONS[1] },
-    { label: 'Klausuren', value: '0',   unit: '',     icon: STATS_ICONS[2] },
-    { label: 'Ø Note',    value: '—',   unit: '',     icon: STATS_ICONS[3] },
+    { label: 'Streak',    value: activeStreak.toString(),              unit: 'Tage', icon: '🔥' },
+    { label: 'Notizen',   value: userNotes.length.toString(),          unit: '',     icon: '📝' },
+    { label: 'Klausuren', value: appStats.examCount.toString(),        unit: '',     icon: '📋' },
+    { label: 'Ø Note',    value: profile?.abiGesamtnote ?? '—',        unit: '',     icon: '⭐' },
   ]
 
   const subtitle = profile
@@ -109,6 +119,28 @@ export function ProfilScreen() {
             ))}
           </div>
         </div>
+
+        {/* ── Statistiken & Insights Button ──────────────────────── */}
+        <button
+          onClick={() => navigate('/insights')}
+          className="w-full bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-4 flex items-center gap-3 press"
+        >
+          <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0"
+            style={{ background: 'linear-gradient(145deg, #6366F1, #4C1D95)' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+          </div>
+          <div className="flex-1 text-left">
+            <p className="text-text-primary font-semibold text-[15px]">Statistiken & Insights</p>
+            <p className="text-text-muted text-[12px] mt-0.5">Notenverlauf, Fächer & Lerntipps</p>
+          </div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+            <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
 
         {/* ── Erscheinungsbild ───────────────────────────────────── */}
         <div>

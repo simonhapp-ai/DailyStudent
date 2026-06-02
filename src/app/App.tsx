@@ -46,6 +46,8 @@ import { ProbeklausurMode4Screen } from '../screens/ProbeklausurMode4Screen'
 import { BlurtingScreen } from '../screens/BlurtingScreen'
 import { KlausurplanScreen } from '../screens/KlausurplanScreen'
 import { AbiRechnerScreen } from '../screens/AbiRechnerScreen'
+import { HausaufgabenheftScreen } from '../screens/HausaufgabenheftScreen'
+import { InsightsScreen } from '../screens/InsightsScreen'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -94,6 +96,7 @@ function Layout() {
       <Routes>
         <Route path="/" element={<Navigate to="/unterricht" replace />} />
         <Route path="/kalender" element={<KalenderScreen />} />
+        <Route path="/hausaufgaben" element={<HausaufgabenheftScreen />} />
         <Route path="/klausuren" element={<KlausurplanScreen />} />
         <Route path="/abi-rechner" element={<AbiRechnerScreen />} />
         <Route path="/unterricht" element={<UnterrichtScreen />} />
@@ -118,6 +121,7 @@ function Layout() {
         <Route path="/klausurmodus/probeklausur/ohne-material" element={<ProbeklausurMode4Screen />} />
         <Route path="/klausurmodus/blurting" element={<BlurtingScreen />} />
         <Route path="/profil" element={<ProfilScreen />} />
+        <Route path="/insights" element={<InsightsScreen />} />
       </Routes>
       {!hideNav && <BottomNav />}
     </div>

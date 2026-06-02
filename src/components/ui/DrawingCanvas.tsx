@@ -177,71 +177,82 @@ export function DrawingCanvas({ onChange }: { onChange: (dataUrl: string | null)
     <div className="flex flex-col">
 
       {/* ── Toolbar ── */}
-      <div className="flex items-center gap-1.5 px-3 py-2 border-t border-border">
+      <div className="flex items-center gap-2 px-3 py-2.5 border-t border-border bg-surface">
 
-        {/* Tool buttons */}
-        <div className="flex items-center gap-0.5">
+        {/* Tool pills — icon + label, colored active state */}
+        <div className="flex items-center gap-1.5">
+
           {/* Pen */}
           <button
             onClick={() => setTool('pen')}
-            title="Stift"
-            className={`w-7 h-7 rounded-btn flex items-center justify-center transition-colors ${
-              tool === 'pen' ? 'bg-surface-hover border border-border' : 'hover:bg-surface-hover'
-            }`}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
+            style={
+              tool === 'pen'
+                ? { background: 'rgba(var(--color-accent),0.15)', border: '1px solid rgba(var(--color-accent),0.5)', color: 'rgb(var(--color-accent))' }
+                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
+            }
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              className={tool === 'pen' ? 'text-text-primary' : 'text-text-muted'}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
+            Stift
           </button>
 
           {/* Highlighter */}
           <button
             onClick={() => setTool('highlighter')}
-            title="Textmarker"
-            className={`w-7 h-7 rounded-btn flex items-center justify-center transition-colors ${
-              tool === 'highlighter' ? 'bg-surface-hover border border-border' : 'hover:bg-surface-hover'
-            }`}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
+            style={
+              tool === 'highlighter'
+                ? { background: 'rgba(250,204,21,0.15)', border: '1px solid rgba(250,204,21,0.55)', color: '#FACC15' }
+                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
+            }
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
-              stroke={tool === 'highlighter' ? '#FACC15' : undefined}
-              strokeWidth="2"
-              className={tool === 'highlighter' ? '' : 'text-text-muted'}>
-              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M2 22l4-4" strokeLinecap="round" />
             </svg>
+            Marker
           </button>
 
           {/* Eraser */}
           <button
             onClick={() => setTool('eraser')}
-            title="Radiergummi"
-            className={`w-7 h-7 rounded-btn flex items-center justify-center transition-colors ${
-              tool === 'eraser' ? 'bg-surface-hover border border-border' : 'hover:bg-surface-hover'
-            }`}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
+            style={
+              tool === 'eraser'
+                ? { background: 'rgba(255,59,48,0.12)', border: '1px solid rgba(255,59,48,0.45)', color: '#FF3B30' }
+                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
+            }
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              className={tool === 'eraser' ? 'text-text-primary' : 'text-text-muted'}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M20 20H7L3 16l9-9 5 5-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M6.5 17.5L3 14l4.5-4.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
+            Radier
           </button>
         </div>
 
         {/* Divider */}
-        <div className="w-px h-4 bg-border mx-0.5" />
+        <div className="w-px h-4 bg-border/60 shrink-0" />
 
         {/* Color dots — pen only */}
         {tool === 'pen' && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             {COLORS.map((c) => (
               <button
                 key={c.id}
                 onClick={() => setColor(c.id)}
-                className={`w-4 h-4 rounded-full border-2 transition-all ${
-                  color === c.id ? 'border-text-primary scale-125' : 'border-transparent opacity-50 hover:opacity-90'
-                }`}
-                style={{ backgroundColor: c.hex }}
+                className="transition-all press-sm shrink-0"
+                style={{
+                  width: color === c.id ? 20 : 14,
+                  height: color === c.id ? 20 : 14,
+                  borderRadius: '50%',
+                  backgroundColor: c.hex,
+                  border: color === c.id ? '2.5px solid white' : '2px solid transparent',
+                  boxShadow: color === c.id ? `0 0 0 2px ${c.hex}80` : 'none',
+                  opacity: color === c.id ? 1 : 0.5,
+                }}
               />
             ))}
           </div>
@@ -249,23 +260,22 @@ export function DrawingCanvas({ onChange }: { onChange: (dataUrl: string | null)
 
         <div className="flex-1" />
 
-        {/* Active color pip + clear */}
-        <div className="flex items-center gap-2">
-          {tool === 'pen' && (
-            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: colorHex }} />
-          )}
-          <button
-            onClick={handleClear}
-            disabled={!hasContent}
-            className={`text-[11px] font-medium px-2 py-1 rounded-btn transition-colors ${
-              hasContent
-                ? 'text-text-muted hover:text-danger hover:bg-danger/10'
-                : 'text-text-muted/30 cursor-not-allowed'
-            }`}
-          >
-            Löschen
-          </button>
-        </div>
+        {/* Clear */}
+        <button
+          onClick={handleClear}
+          disabled={!hasContent}
+          className="flex items-center gap-1 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
+          style={
+            hasContent
+              ? { background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.35)', color: '#FF3B30' }
+              : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', opacity: 0.4, cursor: 'not-allowed' }
+          }
+        >
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
+          </svg>
+          Löschen
+        </button>
       </div>
 
       {/* ── Canvas area ── */}

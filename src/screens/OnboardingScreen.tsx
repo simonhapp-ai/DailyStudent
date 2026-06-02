@@ -28,7 +28,6 @@ const BUNDESLAENDER = [
   { id: 'th', name: 'Thüringen' },
 ]
 
-const KLASSEN = ['10', '11', '12', '13']
 const SCHULFORMEN = ['Gymnasium', 'FOS', 'Gesamtschule']
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
@@ -42,6 +41,7 @@ const DEV_PROFILE: UserProfile = {
   faecher: ['englisch', 'mathematik', 'biologie', 'physik', 'religion'],
   klausurtermine: [{ subjectId: 'mathematik', date: '2026-06-06' }],
   folderSortMode: 'halbjahr',
+  schultyp: 'g9',
   isDevMode: true,
   stundenplan: {
     createdAt: new Date().toISOString(),
@@ -67,6 +67,7 @@ export function OnboardingScreen() {
   const [name, setName] = useState('')
   const [klasse, setKlasse] = useState('')
   const [schulform, setSchulform] = useState('')
+  const [schultyp, setSchultyp] = useState<'g8' | 'g9' | ''>('')
   const [zielnote, setZielnote] = useState('')
   const [bundeslandId, setBundeslandId] = useState('')
   const [faecher, setFaecher] = useState<string[]>([])
@@ -80,7 +81,7 @@ export function OnboardingScreen() {
 
   const canNext: Record<Step, boolean> = {
     1: true,
-    2: name.trim().length > 0 && klasse !== '' && schulform !== '',
+    2: name.trim().length > 0 && klasse !== '' && schulform !== '' && schultyp !== '',
     3: true,
     4: bundeslandId !== '',
     5: faecher.length > 0,
@@ -120,6 +121,7 @@ export function OnboardingScreen() {
           : [],
       zielnote: zielnote || undefined,
       folderSortMode,
+      schultyp: (schultyp || undefined) as 'g8' | 'g9' | undefined,
       stundenplan: stundenplanSlots.length > 0
         ? { slots: stundenplanSlots, createdAt: new Date().toISOString() }
         : undefined,
@@ -173,6 +175,7 @@ export function OnboardingScreen() {
             name={name} setName={setName}
             klasse={klasse} setKlasse={setKlasse}
             schulform={schulform} setSchulform={setSchulform}
+            schultyp={schultyp} setSchultyp={(v) => setSchultyp(v)}
           />
         )}
         {step === 3 && (
@@ -185,7 +188,7 @@ export function OnboardingScreen() {
           <StepFaecher selected={faecher} onToggle={toggleFach} />
         )}
         {step === 6 && (
-          <StepFolderSort sortMode={folderSortMode} setSortMode={setFolderSortMode} klasse={klasse} />
+          <StepFolderSort sortMode={folderSortMode} setSortMode={setFolderSortMode} klasse={klasse} schultyp={schultyp} />
         )}
         {step === 7 && (
           <StepStundenplan
@@ -468,11 +471,30 @@ function StepPersonal({
   name, setName,
   klasse, setKlasse,
   schulform, setSchulform,
+  schultyp, setSchultyp,
 }: {
   name: string; setName: (v: string) => void
   klasse: string; setKlasse: (v: string) => void
   schulform: string; setSchulform: (v: string) => void
+  schultyp: 'g8' | 'g9' | ''; setSchultyp: (v: 'g8' | 'g9') => void
 }) {
+  const [showMittelstufePicker, setShowMittelstufePicker] = useState(
+    klasse !== '' && !['11', '12', '13'].includes(klasse),
+  )
+
+  const mittelstufeRange = schultyp === 'g8'
+    ? ['5', '6', '7', '8', '9', '10']
+    : ['5', '6', '7', '8', '9', '10', '11']
+
+  const oberstufeKlassen = schultyp === 'g8' ? ['11', '12'] : ['12', '13']
+
+  const mittelstufeSelected = klasse !== '' && !['11', '12', '13'].includes(klasse)
+
+  const oberstufeSubLabel = (k: string) => {
+    if (schultyp === 'g8') return k === '11' ? 'Q1 · Q2' : 'Q3 · Q4'
+    return k === '12' ? 'Q1 · Q2' : 'Q3 · Q4'
+  }
+
   return (
     <div>
       <h2 className="text-2xl font-bold text-text-primary mb-1">Hallo! Wie heißt du?</h2>
@@ -487,23 +509,110 @@ function StepPersonal({
         className="w-full bg-surface border border-border rounded-card px-4 py-4 text-text-primary text-lg placeholder-text-muted mb-8 focus:outline-none focus:border-accent transition-colors"
       />
 
-      <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Klasse</p>
-      <div className="grid grid-cols-4 gap-2 mb-8">
-        {KLASSEN.map((k) => (
+      {/* G8 / G9 */}
+      <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">
+        Gymnasialsystem
+      </p>
+      <div className="grid grid-cols-2 gap-2 mb-8">
+        {([
+          { id: 'g8' as const, label: 'G8', desc: '8 Jahre — Oberstufe ab Kl. 11' },
+          { id: 'g9' as const, label: 'G9', desc: '9 Jahre — Oberstufe ab Kl. 12' },
+        ]).map(({ id, label, desc }) => (
           <button
-            key={k}
-            onClick={() => setKlasse(k)}
-            className={`py-3 rounded-card text-sm font-bold border transition-all duration-150 ${
-              klasse === k
-                ? 'grad-accent border-transparent text-white'
-                : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
+            key={id}
+            onClick={() => { setSchultyp(id); setKlasse(''); setShowMittelstufePicker(false) }}
+            className={`py-4 px-4 rounded-card border text-left transition-all duration-150 ${
+              schultyp === id
+                ? 'grad-accent border-transparent'
+                : 'bg-surface border-border hover:bg-surface-hover'
             }`}
           >
-            {k}.
+            <p className={`text-xl font-black ${schultyp === id ? 'text-white' : 'text-text-primary'}`}>{label}</p>
+            <p className={`text-[11px] mt-0.5 ${schultyp === id ? 'text-white/80' : 'text-text-muted'}`}>{desc}</p>
           </button>
         ))}
       </div>
 
+      {/* Class picker — shown after G8/G9 selected */}
+      {schultyp !== '' && (
+        <>
+          <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Klasse</p>
+
+          {/* Mittelstufe collapsible */}
+          <div className="mb-2">
+            <button
+              onClick={() => { setShowMittelstufePicker(true); if (!mittelstufeSelected) setKlasse('') }}
+              className={`w-full py-3.5 px-4 rounded-card border text-left transition-all duration-150 ${
+                mittelstufeSelected
+                  ? 'grad-accent border-transparent'
+                  : 'bg-surface border-border hover:bg-surface-hover'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className={`font-semibold text-[15px] ${mittelstufeSelected ? 'text-white' : 'text-text-primary'}`}>
+                    Mittelstufe{mittelstufeSelected ? ` · ${klasse}. Klasse` : ''}
+                  </p>
+                  <p className={`text-[12px] mt-0.5 ${mittelstufeSelected ? 'text-white/80' : 'text-text-muted'}`}>
+                    Klasse {schultyp === 'g8' ? '5 – 10' : '5 – 11'}
+                  </p>
+                </div>
+                <svg
+                  className={`transition-transform duration-200 shrink-0 ${showMittelstufePicker ? 'rotate-180' : ''} ${mittelstufeSelected ? 'text-white/80' : 'text-text-muted'}`}
+                  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                >
+                  <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            </button>
+
+            {showMittelstufePicker && (
+              <div className="mt-2 grid grid-cols-4 gap-2 px-1 animate-fade-in">
+                {mittelstufeRange.map((k) => (
+                  <button
+                    key={k}
+                    onClick={() => setKlasse(k)}
+                    className={`py-3 rounded-card text-sm font-bold border transition-all duration-150 ${
+                      klasse === k
+                        ? 'grad-accent border-transparent text-white'
+                        : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
+                    }`}
+                  >
+                    {k}.
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Oberstufe */}
+          <div className="mb-8">
+            <p className="text-[11px] font-semibold text-text-muted mb-2">Oberstufe</p>
+            <div className="grid grid-cols-2 gap-2">
+              {oberstufeKlassen.map((k) => (
+                <button
+                  key={k}
+                  onClick={() => { setKlasse(k); setShowMittelstufePicker(false) }}
+                  className={`py-3.5 px-4 rounded-card border text-left transition-all duration-150 ${
+                    klasse === k
+                      ? 'grad-accent border-transparent'
+                      : 'bg-surface border-border hover:bg-surface-hover'
+                  }`}
+                >
+                  <p className={`font-semibold text-[14px] ${klasse === k ? 'text-white' : 'text-text-primary'}`}>
+                    {k}. Klasse
+                  </p>
+                  <p className={`text-[11px] mt-0.5 ${klasse === k ? 'text-white/80' : 'text-text-muted'}`}>
+                    {oberstufeSubLabel(k)}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Schulform */}
       <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Schulform</p>
       <div className="flex flex-col gap-2">
         {SCHULFORMEN.map((sf) => (
@@ -635,12 +744,14 @@ function StepFolderSort({
   sortMode,
   setSortMode,
   klasse,
+  schultyp,
 }: {
   sortMode: 'manual' | 'halbjahr' | 'themen'
   setSortMode: (v: 'manual' | 'halbjahr' | 'themen') => void
   klasse: string
+  schultyp?: 'g8' | 'g9' | ''
 }) {
-  const isQPhase = klasse === '12' || klasse === '13'
+  const isQPhase = schultyp === 'g8' ? parseInt(klasse) >= 11 : parseInt(klasse) >= 12
 
   const options: { id: 'manual' | 'halbjahr' | 'themen'; icon: string; title: string; desc: string; comingSoon?: boolean }[] = [
     {

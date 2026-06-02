@@ -81,6 +81,8 @@ export interface UserFolder {
 }
 
 export interface HomeworkItem {
+  id?: string
+  subjectId?: string
   description: string
   dueDate?: string
   aiHelp?: string
@@ -117,8 +119,11 @@ export interface AbiGradeEntry {
   subjectId: string
   schriftlich: number | null
   muendlich: number | null
+  schriftlichGrades?: (number | null)[]  // multiple grades; avg used for S/M calculation
+  muendlichGrades?: (number | null)[]    // multiple grades; avg used for S/M calculation
   isLK: boolean
-  smRatio?: number  // schriftlich share: 0.5 = 50/50, 0.6 = 60/40 … default 0.5
+  smRatio?: number           // schriftlich share: 0.5 = 50/50, 0.6 = 60/40 … default 0.5
+  endnoteOverride?: number | null  // manual override of the rounded Endnote (1–15)
 }
 
 export interface AbiHalbjahr {
@@ -170,6 +175,26 @@ export interface ExamCorrection {
   totalNP: number
   gradeLabel: string   // 'Sehr gut', 'Gut', etc.
   overallJustification: string
+}
+
+/* ─── App Statistics ────────────────────────────────────────── */
+
+export interface ExamScoreRecord {
+  id: string
+  date: string            // ISO date string
+  subjectId: string
+  gradeLabel: string      // e.g. 'Sehr gut', '1+'
+  totalNP: number         // 0–15 Notenpunkte
+  source: 'probeklausur' | 'exam'
+}
+
+export interface AppStats {
+  scanCount: number
+  examCount: number
+  streak: number
+  lastStudyDate: string | null  // 'YYYY-MM-DD'
+  studiedDays: string[]         // 'YYYY-MM-DD', last 90 days max
+  examScores: ExamScoreRecord[]
 }
 
 /* ─── SmartNote (generated) ─────────────────────────────────── */

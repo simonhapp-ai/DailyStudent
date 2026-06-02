@@ -62,6 +62,7 @@ interface DrawingBlock {
 interface HomeworkBlock {
   id: string
   type: 'homework'
+  subjectId: string
   description: string
   dueDate: string
   aiHelp: string | null
@@ -80,7 +81,29 @@ function makeDrawingBlock(id: string): DrawingBlock {
   return { id, type: 'drawing', dataUrl: null }
 }
 function makeHomeworkBlock(id: string): HomeworkBlock {
-  return { id, type: 'homework', description: '', dueDate: '', aiHelp: null, aiLoading: false }
+  return { id, type: 'homework', subjectId: '', description: '', dueDate: '', aiHelp: null, aiLoading: false }
+}
+
+function toDateStr(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
+
+function getNextLessonDate(subjectId: string, stundenplan: { slots: { day: number; subjectId: string }[] } | undefined): string | null {
+  if (!stundenplan || !subjectId) return null
+  const slotsForSubject = stundenplan.slots.filter((s) => s.subjectId === subjectId)
+  if (slotsForSubject.length === 0) return null
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const todayDow = today.getDay()
+  const todayMon0 = todayDow === 0 ? 6 : todayDow - 1
+  const lessonDays = new Set(slotsForSubject.map((s) => s.day))
+  for (let offset = 1; offset <= 7; offset++) {
+    const nextMon0 = (todayMon0 + offset) % 7
+    if (nextMon0 <= 4 && lessonDays.has(nextMon0)) {
+      const d = new Date(today); d.setDate(today.getDate() + offset)
+      return toDateStr(d)
+    }
+  }
+  return null
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
@@ -323,7 +346,9 @@ export function NoteCreateScreen() {
     const homeworkBlocks = blocks
       .filter((b): b is HomeworkBlock => b.type === 'homework')
       .filter(b => b.description.trim())
-      .map<HomeworkItem>(b => ({
+      .map<HomeworkItem>((b, idx) => ({
+        id: `hw-${noteId}-${idx}-${Date.now()}`,
+        subjectId: (subjectId || b.subjectId) || undefined,
         description: b.description.trim(),
         dueDate: b.dueDate || undefined,
         aiHelp: b.aiHelp || undefined,
@@ -851,7 +876,11 @@ export function NoteCreateScreen() {
     </div>
   )
 
-  const renderHomeworkBlock = (block: HomeworkBlock) => (
+  const renderHomeworkBlock = (block: HomeworkBlock) => {
+    const effectiveSubjectId = selectedSubjectId || block.subjectId
+    const nextLesson = effectiveSubjectId ? getNextLessonDate(effectiveSubjectId, profile?.stundenplan) : null
+
+    return (
     <div key={block.id} className="mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-3 pb-1">
@@ -862,6 +891,30 @@ export function NoteCreateScreen() {
           </svg>
         </button>
       </div>
+
+      {/* Subject pills — only when no note-level subject */}
+      {!selectedSubjectId && (
+        <div className="px-4 pb-2">
+          <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
+          <div className="flex flex-wrap gap-1.5">
+            {profileSubjects.map((s) => (
+              <button
+                key={s.id}
+                onClick={() => updateBlock(block.id, { subjectId: s.id === block.subjectId ? '' : s.id } as Partial<HomeworkBlock>)}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-[11px] font-semibold border transition-all press-sm"
+                style={block.subjectId === s.id
+                  ? { backgroundColor: s.color, borderColor: 'transparent', color: 'white' }
+                  : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
+              >
+                {s.icon} {s.name}
+              </button>
+            ))}
+          </div>
+          {!block.subjectId && (
+            <p className="text-[10px] text-warning mt-1.5">Wähle ein Fach, damit die HA im Hausaufgabenheft erscheint</p>
+          )}
+        </div>
+      )}
 
       <div className="px-4 pb-3 space-y-3">
         {/* Description */}
@@ -877,16 +930,37 @@ export function NoteCreateScreen() {
           style={{ minHeight: '72px', overflow: 'hidden' }}
         />
 
-        {/* Due date */}
-        <div className="flex items-center gap-3">
-          <label className="text-[11px] font-bold text-text-muted uppercase tracking-wider shrink-0 w-16">Abgabe</label>
-          <input
-            type="date"
-            value={block.dueDate}
-            onChange={(e) => updateBlock(block.id, { dueDate: e.target.value })}
-            min={new Date().toISOString().slice(0, 10)}
-            className="flex-1 bg-background border border-border rounded-card px-3 py-2 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
-          />
+        {/* Due date + next lesson button */}
+        <div>
+          <div className="flex items-center gap-2">
+            <label className="text-[11px] font-bold text-text-muted uppercase tracking-wider shrink-0 w-16">Abgabe</label>
+            <input
+              type="date"
+              value={block.dueDate}
+              onChange={(e) => updateBlock(block.id, { dueDate: e.target.value })}
+              min={new Date().toISOString().slice(0, 10)}
+              className="flex-1 bg-background border border-border rounded-card px-3 py-2 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
+            />
+            {nextLesson && (
+              <button
+                onClick={() => updateBlock(block.id, { dueDate: nextLesson })}
+                className="flex items-center gap-1 px-2.5 py-2 rounded-card text-[11px] font-semibold border transition-all press-sm whitespace-nowrap shrink-0"
+                style={block.dueDate === nextLesson
+                  ? { background: 'rgb(var(--color-accent))', borderColor: 'transparent', color: 'white' }
+                  : { borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+              >
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round" />
+                </svg>
+                Nächste Std.
+              </button>
+            )}
+          </div>
+          {nextLesson && block.dueDate === nextLesson && (
+            <p className="text-[10px] text-accent mt-1 pl-[72px]">
+              → {new Date(nextLesson + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'short' })}
+            </p>
+          )}
         </div>
 
         {/* Separator */}
@@ -942,6 +1016,7 @@ export function NoteCreateScreen() {
       </div>
     </div>
   )
+  }
 
   // ── Main render ──────────────────────────────────────────────────────────
 

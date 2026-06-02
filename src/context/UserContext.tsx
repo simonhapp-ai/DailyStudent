@@ -1,7 +1,15 @@
 import { createContext, useContext, useState } from 'react'
 import { type ReactNode } from 'react'
-import type { FlashCard, GeneratedSmartNote, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr } from '../types'
+import type { FlashCard, GeneratedSmartNote, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AppStats, ExamScoreRecord } from '../types'
 import { subjects, topics, halfYears } from '../data/mockData'
+
+export interface StandaloneHomeworkItem {
+  id: string
+  subjectId?: string
+  description: string
+  dueDate?: string
+  createdAt: string
+}
 
 export type EntryType = 'lerneinheit' | 'termin' | 'erinnerung'
 
@@ -34,9 +42,21 @@ export interface UserProfile {
   isDevMode?: boolean
   abiNoten?: AbiGradeEntry[]      // legacy — kept for migration
   abiHalbjahre?: AbiHalbjahr[]
+  schultyp?: 'g8' | 'g9'
+  abiGesamtpunkte?: number | null  // computed Abi score — synced from AbiRechnerScreen for stats
+  abiGesamtnote?: string            // computed Abi grade string — synced from AbiRechnerScreen for stats
 }
 
 export type AppTheme = 'light' | 'dark' | 'system'
+
+const DEFAULT_APP_STATS: AppStats = {
+  scanCount: 0,
+  examCount: 0,
+  streak: 0,
+  lastStudyDate: null,
+  studiedDays: [],
+  examScores: [],
+}
 
 interface StorageData {
   profile?: UserProfile
@@ -47,6 +67,9 @@ interface StorageData {
   theme?: AppTheme
   isPro?: boolean
   generatedFlashCards?: FlashCard[]
+  completedHomeworkIds?: string[]
+  standaloneHomework?: StandaloneHomeworkItem[]
+  appStats?: AppStats
 }
 
 interface UserContextValue {
@@ -75,6 +98,14 @@ interface UserContextValue {
   saveFlashCards: (newCards: FlashCard[]) => void
   addKlausurtermin: (termin: KlausurTermin) => void
   removeKlausurtermin: (subjectId: string, date: string) => void
+  completedHomeworkIds: string[]
+  standaloneHomework: StandaloneHomeworkItem[]
+  completeHomework: (id: string) => void
+  addStandaloneHomework: (item: Omit<StandaloneHomeworkItem, 'id' | 'createdAt'>) => void
+  appStats: AppStats
+  recordStudyDay: () => void
+  recordExam: (score: ExamScoreRecord) => void
+  incrementScanCount: () => void
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -108,9 +139,10 @@ function generateDefaultFolders(profile: UserProfile): UserFolder[] {
   const folders: UserFolder[] = []
   const now = new Date().toISOString()
   const klasse = parseInt(profile.klasse, 10)
+  const isOberstufe = profile.schultyp === 'g8' ? klasse >= 11 : klasse >= 12
 
   for (const subjectId of profile.faecher) {
-    if (klasse >= 12) {
+    if (isOberstufe) {
       // Qualifikationsphase: Q1 (Kl.12 HJ1), Q2 (Kl.12 HJ2), Q3 (Kl.13 HJ1), Q4 (Kl.13 HJ2)
       const quarters = [
         { id: `folder-${subjectId}-q1`, halfYearId: 'kl12-hj1', name: 'Q1' },
@@ -204,6 +236,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
   )
   const [userNotes, setUserNotes] = useState<UserNote[]>(stored.userNotes ?? [])
   const [generatedFlashCards, setGeneratedFlashCards] = useState<FlashCard[]>(stored.generatedFlashCards ?? [])
+  const [completedHomeworkIds, setCompletedHomeworkIds] = useState<string[]>(stored.completedHomeworkIds ?? [])
+  const [standaloneHomework, setStandaloneHomework] = useState<StandaloneHomeworkItem[]>(stored.standaloneHomework ?? [])
+  const [appStats, setAppStats] = useState<AppStats>(stored.appStats ?? DEFAULT_APP_STATS)
 
   const [userFolders, setUserFolders] = useState<UserFolder[]>(() => {
     if (stored.userFolders && stored.userFolders.length > 0) return stored.userFolders
@@ -274,6 +309,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated = [...userNotes, note]
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
+    recordStudyDay()
   }
 
   const saveNote = (note: UserNote, generated?: GeneratedSmartNote) => {
@@ -284,6 +320,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserNotes(updatedNotes)
     if (generated) setGeneratedNotes(updatedGenerated)
     persist(profile, personalEntries, updatedGenerated, updatedNotes, userFolders)
+    recordStudyDay()
   }
 
   const updateUserNote = (note: UserNote) => {
@@ -338,6 +375,54 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated = [...kept, ...newCards]
     setGeneratedFlashCards(updated)
     saveStorage({ ...loadStorage(), generatedFlashCards: updated })
+    recordStudyDay()
+  }
+
+  const completeHomework = (id: string) => {
+    const updated = [...completedHomeworkIds, id]
+    setCompletedHomeworkIds(updated)
+    saveStorage({ ...loadStorage(), completedHomeworkIds: updated })
+  }
+
+  const recordStudyDay = () => {
+    const today = new Date().toISOString().slice(0, 10)
+    if (appStats.lastStudyDate === today) return
+    const yesterday = new Date()
+    yesterday.setDate(yesterday.getDate() - 1)
+    const yesterdayStr = yesterday.toISOString().slice(0, 10)
+    const newStreak = appStats.lastStudyDate === yesterdayStr ? appStats.streak + 1 : 1
+    const studiedDays = [...new Set([...appStats.studiedDays, today])].slice(-90)
+    const updated: AppStats = { ...appStats, streak: newStreak, lastStudyDate: today, studiedDays }
+    setAppStats(updated)
+    saveStorage({ ...loadStorage(), appStats: updated })
+  }
+
+  const recordExam = (score: ExamScoreRecord) => {
+    const updated: AppStats = {
+      ...appStats,
+      examCount: appStats.examCount + 1,
+      examScores: [...appStats.examScores, score],
+    }
+    setAppStats(updated)
+    saveStorage({ ...loadStorage(), appStats: updated })
+    recordStudyDay()
+  }
+
+  const incrementScanCount = () => {
+    const updated: AppStats = { ...appStats, scanCount: appStats.scanCount + 1 }
+    setAppStats(updated)
+    saveStorage({ ...loadStorage(), appStats: updated })
+  }
+
+  const addStandaloneHomework = (item: Omit<StandaloneHomeworkItem, 'id' | 'createdAt'>) => {
+    const newItem: StandaloneHomeworkItem = {
+      ...item,
+      id: `standalone-hw-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      createdAt: new Date().toISOString(),
+    }
+    const updated = [...standaloneHomework, newItem]
+    setStandaloneHomework(updated)
+    saveStorage({ ...loadStorage(), standaloneHomework: updated })
   }
 
   const deleteFolder = (folderId: string) => {
@@ -376,6 +461,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
         saveFlashCards,
         addKlausurtermin,
         removeKlausurtermin,
+        completedHomeworkIds,
+        standaloneHomework,
+        completeHomework,
+        addStandaloneHomework,
+        appStats,
+        recordStudyDay,
+        recordExam,
+        incrementScanCount,
       }}
     >
       {children}

@@ -1,10 +1,28 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { useUser } from '../context/UserContext'
+import { SUBJECT_INFO } from '../data/subjectInfo'
+import { endnoteForEntry } from './AbiRechnerScreen'
 
-const SUBJECT_NAME = 'Mathematik'
-const DAYS_UNTIL   = 12
+function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
+  if (!lastStudyDate) return 0
+  const today = new Date().toISOString().slice(0, 10)
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  return lastStudyDate === today || lastStudyDate === yesterday.toISOString().slice(0, 10) ? streak : 0
+}
+
+function daysUntil(dateStr: string): number {
+  const target = new Date(dateStr)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  return Math.ceil((target.getTime() - today.getTime()) / 86400000)
+}
+
+function zielnoteToNP(z: string): number {
+  return 17 - parseFloat(z.replace(',', '.')) * 3
+}
 
 const LERNPLAN_DAYS = [
   { label: 'Mo', date: '2. Jun', topic: 'Integralrechnung', done: true },
@@ -51,11 +69,58 @@ function Chevron() {
 
 export function KlausurphasenScreen() {
   const navigate = useNavigate()
-  const { generatedFlashCards } = useUser()
+  const { generatedFlashCards, profile, appStats } = useUser()
   const [hasLernplan, setHasLernplan] = useState(false)
   const [showLernplanModal, setShowLernplanModal] = useState(false)
 
   const totalCards = generatedFlashCards.length
+  const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
+
+  // Next upcoming exam
+  const nextExam = useMemo(() => {
+    const upcoming = (profile?.klausurtermine ?? [])
+      .map((k) => ({ ...k, days: daysUntil(k.date), info: SUBJECT_INFO[k.subjectId] }))
+      .filter((k) => k.days > 0 && k.info)
+      .sort((a, b) => a.days - b.days)
+    return upcoming[0] ?? null
+  }, [profile?.klausurtermine])
+
+  const subjectName = nextExam?.info?.name ?? 'Nächste Klausur'
+  const daysUntilExam = nextExam?.days ?? null
+
+  // Weakest subject from abiHalbjahre
+  const weakestSubject = useMemo(() => {
+    const halbjahre = profile?.abiHalbjahre ?? []
+    const faecher = profile?.faecher ?? []
+    let weakest: { name: string; np: number } | null = null
+    for (const subjectId of faecher) {
+      const info = SUBJECT_INFO[subjectId]
+      if (!info) continue
+      for (const q of ['Q4', 'Q3', 'Q2', 'Q1']) {
+        const hj = halbjahre.find((h) => h.label === q)
+        if (!hj) continue
+        const entry = hj.entries.find((e) => e.subjectId === subjectId)
+        if (!entry) continue
+        const np = endnoteForEntry(entry)
+        if (np !== null && (weakest === null || np < weakest.np)) {
+          weakest = { name: info.name, np }
+        }
+        break
+      }
+    }
+    return weakest
+  }, [profile?.abiHalbjahre, profile?.faecher])
+
+  // Progress toward zielnote (for the "Vorbereitung" bar)
+  const prepPct = useMemo(() => {
+    const note = profile?.abiGesamtnote
+    const ziel = profile?.zielnote
+    if (!note || !ziel) return null
+    const current = parseFloat(note.replace(',', '.'))
+    const target = parseFloat(ziel.replace(',', '.'))
+    if (isNaN(current) || isNaN(target) || target >= 6.0) return null
+    return Math.round(Math.max(0, Math.min(100, ((6.0 - current) / (6.0 - target)) * 100)))
+  }, [profile?.abiGesamtnote, profile?.zielnote])
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-28">
@@ -64,7 +129,9 @@ export function KlausurphasenScreen() {
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <h1 className="text-[28px] font-bold text-text-primary">Klausurenmodus</h1>
         <p className="text-[13px] text-text-muted mt-0.5">
-          {SUBJECT_NAME} · Klausur in {DAYS_UNTIL} Tagen
+          {nextExam
+            ? `${subjectName} · Klausur in ${daysUntilExam} Tagen`
+            : 'Bereite dich auf deine Klausuren vor'}
         </p>
       </div>
 
@@ -122,7 +189,7 @@ export function KlausurphasenScreen() {
               <div className="flex-1 text-left">
                 <p className="text-text-primary font-bold text-[16px]">Lernplan erstellen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">
-                  {DAYS_UNTIL} Tage bis zur Klausur — KI plant für dich
+                  {daysUntilExam ? `${daysUntilExam} Tage bis zur Klausur` : 'KI plant deinen Lernweg'} — KI plant für dich
                 </p>
               </div>
               <span
@@ -250,7 +317,7 @@ export function KlausurphasenScreen() {
         <div>
           <p className="section-label px-1 mb-2.5">Statistik & Insights</p>
           <button
-            onClick={() => console.log('statistik')}
+            onClick={() => navigate('/insights')}
             className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 text-left press"
           >
             <div className="flex gap-2.5 mb-5">
@@ -260,7 +327,7 @@ export function KlausurphasenScreen() {
                     <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                   </svg>
                 </div>
-                <p className="text-text-primary font-bold text-[18px] leading-none">12</p>
+                <p className="text-text-primary font-bold text-[18px] leading-none">{activeStreak}</p>
                 <p className="text-text-muted text-[11px] mt-1">Streak</p>
               </div>
               <div className="flex-1 bg-background rounded-[14px] p-3 text-center">
@@ -271,8 +338,17 @@ export function KlausurphasenScreen() {
                     <line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="3" />
                   </svg>
                 </div>
-                <p className="text-text-primary font-bold text-[13px] leading-tight">Trigono-<br/>metrie</p>
-                <p className="text-text-muted text-[11px] mt-1">Schwäche</p>
+                {weakestSubject ? (
+                  <>
+                    <p className="text-text-primary font-bold text-[11px] leading-tight line-clamp-2">{weakestSubject.name}</p>
+                    <p className="text-text-muted text-[11px] mt-1">Schwäche</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-text-primary font-bold text-[11px] leading-tight">—</p>
+                    <p className="text-text-muted text-[11px] mt-1">Schwäche</p>
+                  </>
+                )}
               </div>
               <div className="flex-1 bg-background rounded-[14px] p-3 text-center">
                 <div className="w-8 h-8 rounded-[10px] mx-auto mb-2 flex items-center justify-center" style={{ background: G.lernplan }}>
@@ -280,7 +356,7 @@ export function KlausurphasenScreen() {
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
                 </div>
-                <p className="text-text-primary font-bold text-[18px] leading-none">2+</p>
+                <p className="text-text-primary font-bold text-[18px] leading-none">{profile?.abiGesamtnote ?? '—'}</p>
                 <p className="text-text-muted text-[11px] mt-1">Ø Note</p>
               </div>
             </div>
@@ -288,12 +364,12 @@ export function KlausurphasenScreen() {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <p className="text-text-secondary text-[12px] font-medium">Vorbereitung</p>
-                <p className="text-text-muted text-[12px]">60 %</p>
+                <p className="text-text-muted text-[12px]">{prepPct !== null ? `${prepPct} %` : '—'}</p>
               </div>
               <div className="h-2 bg-border/40 rounded-pill overflow-hidden">
                 <div
                   className="h-full rounded-pill"
-                  style={{ width: '60%', background: G.blurting }}
+                  style={{ width: `${prepPct ?? 0}%`, background: G.blurting }}
                 />
               </div>
               <p className="text-text-muted text-[11px] mt-1.5">Alle Details →</p>
@@ -308,12 +384,12 @@ export function KlausurphasenScreen() {
         <div className="px-5 pb-4">
           <p className="text-[20px] font-bold text-text-primary mb-1">Lernplan erstellen</p>
           <p className="text-text-muted text-[13px] mb-6">
-            Die KI berechnet automatisch einen Lernplan für {SUBJECT_NAME} — basierend auf deinen Smart Notes und dem Klausurdatum.
+            Die KI berechnet automatisch einen Lernplan für {nextExam?.info?.name ?? 'deine Klausur'} — basierend auf deinen Smart Notes und dem Klausurdatum.
           </p>
           <div className="space-y-2.5 mb-6">
             {[
-              { icon: '📅', label: 'Klausurdatum', value: '14. Juni 2026' },
-              { icon: '📚', label: 'Lernmaterial', value: '6 Smart Notes' },
+              { icon: '📅', label: 'Klausurdatum', value: nextExam ? new Date(nextExam.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Noch kein Termin' },
+              { icon: '📚', label: 'Lernmaterial', value: 'Aus deinen Smart Notes' },
               { icon: '⏱', label: 'Täglich', value: '~30 Min geplant' },
             ].map((item) => (
               <div key={item.label} className="flex items-center justify-between bg-background rounded-card px-4 py-3">
