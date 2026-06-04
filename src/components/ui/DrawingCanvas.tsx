@@ -85,17 +85,26 @@ function exportPNG(canvas: HTMLCanvasElement): string {
   return exp.toDataURL('image/png')
 }
 
-export function DrawingCanvas({ onChange }: { onChange: (dataUrl: string | null) => void }) {
+export function DrawingCanvas({ onChange, isFullscreen = false }: { onChange: (dataUrl: string | null) => void; isFullscreen?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const bgRef = useRef<HTMLCanvasElement>(null)
   const fgRef = useRef<HTMLCanvasElement>(null)
   const activeRef = useRef<StrokeRecord | null>(null)
   // strokesRef is used by the resize observer (stable ref, doesn't trigger re-renders)
   const strokesRef = useRef<StrokeRecord[]>([])
+  const redoStackRef = useRef<StrokeRecord[]>([])
 
   const [tool, setTool] = useState<Tool>('pen')
   const [color, setColor] = useState<ColorId>('white')
   const [hasContent, setHasContent] = useState(false)
+  const [canUndo, setCanUndo] = useState(false)
+  const [canRedo, setCanRedo] = useState(false)
+
+  const updateHistoryState = useCallback(() => {
+    setCanUndo(strokesRef.current.length > 0)
+    setCanRedo(redoStackRef.current.length > 0)
+    setHasContent(strokesRef.current.length > 0)
+  }, [])
 
   const redrawBg = useCallback((strokes: StrokeRecord[]) => {
     const bg = bgRef.current
@@ -157,27 +166,59 @@ export function DrawingCanvas({ onChange }: { onChange: (dataUrl: string | null)
 
     // Persist for resize replay
     strokesRef.current = [...strokesRef.current, stroke]
-    setHasContent(true)
+    redoStackRef.current = []
+    updateHistoryState()
 
     // Export PNG to parent
     if (bgRef.current) onChange(exportPNG(bgRef.current))
   }
 
+  const handleUndo = () => {
+    if (strokesRef.current.length === 0) return
+    const popped = strokesRef.current[strokesRef.current.length - 1]
+    strokesRef.current = strokesRef.current.slice(0, -1)
+    redoStackRef.current = [...redoStackRef.current, popped]
+    
+    redrawBg(strokesRef.current)
+    updateHistoryState()
+    
+    if (bgRef.current) {
+      if (strokesRef.current.length > 0) {
+        onChange(exportPNG(bgRef.current))
+      } else {
+        onChange(null)
+      }
+    }
+  }
+
+  const handleRedo = () => {
+    if (redoStackRef.current.length === 0) return
+    const popped = redoStackRef.current[redoStackRef.current.length - 1]
+    redoStackRef.current = redoStackRef.current.slice(0, -1)
+    strokesRef.current = [...strokesRef.current, popped]
+    
+    redrawBg(strokesRef.current)
+    updateHistoryState()
+    
+    if (bgRef.current) {
+      onChange(exportPNG(bgRef.current))
+    }
+  }
+
   const handleClear = () => {
+    redoStackRef.current = [...strokesRef.current]
     strokesRef.current = []
     if (bgRef.current) clearCanvas(bgRef.current)
     if (fgRef.current) clearCanvas(fgRef.current)
-    setHasContent(false)
+    updateHistoryState()
     onChange(null)
   }
 
-  const colorHex = COLORS.find((c) => c.id === color)!.hex
-
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col ${isFullscreen ? 'h-full w-full' : ''}`}>
 
       {/* ── Toolbar ── */}
-      <div className="flex items-center gap-2 px-3 py-2.5 border-t border-border bg-surface">
+      <div className="flex items-center gap-2 px-3 py-2.5 border-t border-border bg-surface shrink-0">
 
         {/* Tool pills — icon + label, colored active state */}
         <div className="flex items-center gap-1.5">
@@ -233,61 +274,97 @@ export function DrawingCanvas({ onChange }: { onChange: (dataUrl: string | null)
           </button>
         </div>
 
-        {/* Divider */}
+        {/* Divider 1 */}
         <div className="w-px h-4 bg-border/60 shrink-0" />
 
-        {/* Color dots — pen only */}
-        {tool === 'pen' && (
-          <div className="flex items-center gap-2">
-            {COLORS.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => setColor(c.id)}
-                className="transition-all press-sm shrink-0"
-                style={{
-                  width: color === c.id ? 20 : 14,
-                  height: color === c.id ? 20 : 14,
-                  borderRadius: '50%',
-                  backgroundColor: c.hex,
-                  border: color === c.id ? '2.5px solid white' : '2px solid transparent',
-                  boxShadow: color === c.id ? `0 0 0 2px ${c.hex}80` : 'none',
-                  opacity: color === c.id ? 1 : 0.5,
-                }}
-              />
-            ))}
-          </div>
+        {/* Color dots — pen only & only in fullscreen */}
+        {isFullscreen && tool === 'pen' && (
+          <>
+            <div className="flex items-center gap-2">
+              {COLORS.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => setColor(c.id)}
+                  className="transition-all press-sm shrink-0"
+                  style={{
+                    width: color === c.id ? 20 : 14,
+                    height: color === c.id ? 20 : 14,
+                    borderRadius: '50%',
+                    backgroundColor: c.hex,
+                    border: color === c.id ? '2.5px solid white' : '2px solid transparent',
+                    boxShadow: color === c.id ? `0 0 0 2px ${c.hex}80` : 'none',
+                    opacity: color === c.id ? 1 : 0.5,
+                  }}
+                />
+              ))}
+            </div>
+            {/* Divider 2 */}
+            <div className="w-px h-4 bg-border/60 shrink-0" />
+          </>
         )}
+
+        {/* Undo / Redo */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={handleUndo}
+            disabled={!canUndo}
+            className={`p-1.5 rounded-pill border border-border/60 hover:bg-surface-hover transition-all press-sm shrink-0 ${
+              !canUndo ? 'opacity-30 cursor-not-allowed text-text-muted' : 'text-text-secondary'
+            }`}
+            title="Zurück"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M3 7v6h6" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+          <button
+            onClick={handleRedo}
+            disabled={!canRedo}
+            className={`p-1.5 rounded-pill border border-border/60 hover:bg-surface-hover transition-all press-sm shrink-0 ${
+              !canRedo ? 'opacity-30 cursor-not-allowed text-text-muted' : 'text-text-secondary'
+            }`}
+            title="Wiederholen"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M21 7v6h-6" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
 
         <div className="flex-1" />
 
-        {/* Clear */}
-        <button
-          onClick={handleClear}
-          disabled={!hasContent}
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
-          style={
-            hasContent
-              ? { background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.35)', color: '#FF3B30' }
-              : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', opacity: 0.4, cursor: 'not-allowed' }
-          }
-        >
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
-          </svg>
-          Löschen
-        </button>
+        {/* Clear — only in fullscreen */}
+        {isFullscreen && (
+          <button
+            onClick={handleClear}
+            disabled={!hasContent}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
+            style={
+              hasContent
+                ? { background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.35)', color: '#FF3B30' }
+                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', opacity: 0.4, cursor: 'not-allowed' }
+            }
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
+            </svg>
+            Löschen
+          </button>
+        )}
       </div>
 
       {/* ── Canvas area ── */}
       <div
         ref={containerRef}
-        className="relative"
-        style={{ height: '220px', touchAction: 'none', backgroundColor: '#0D0D0F' }}
+        className={`relative w-full ${isFullscreen ? 'flex-1' : ''}`}
+        style={{ height: isFullscreen ? '100%' : '220px', touchAction: 'none', backgroundColor: '#0D0D0F' }}
       >
-        <canvas ref={bgRef} className="absolute inset-0" />
+        <canvas ref={bgRef} className="absolute inset-0 w-full h-full" />
         <canvas
           ref={fgRef}
-          className="absolute inset-0"
+          className="absolute inset-0 w-full h-full"
           style={{ cursor: tool === 'eraser' ? 'cell' : 'crosshair' }}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
