@@ -1,10 +1,10 @@
-import { lazy, Suspense, useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { classifyContent, solveTasksFromText, analyzeTextBlock, answerQuestion, explainKeyword, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
 import type { HomeworkItem } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
 import { MathRenderer } from '../components/ui/MathRenderer'
-const DrawingCanvas = lazy(() => import('../components/ui/DrawingCanvas').then(m => ({ default: m.DrawingCanvas })))
+import { DrawingCanvas } from '../components/ui/DrawingCanvas'
 import { useUser } from '../context/UserContext'
 import { subjects, halfYears } from '../data/mockData'
 import type { GeneratedSmartNote, UserNote } from '../types'
@@ -130,6 +130,7 @@ export function NoteCreateScreen() {
   const [blocks, setBlocks] = useState<NoteBlock[]>(() => [
     makeTextBlock('text-0'),
     makePhotoBlock('photo-0'),
+    makeDrawingBlock('drawing-0'),
   ])
 
   // Quick Ask
@@ -151,6 +152,28 @@ export function NoteCreateScreen() {
 
   // Per-photo-block file refs (keyed by block id)
   const photoRefs = useRef<Record<string, { camera: HTMLInputElement | null; file: HTMLInputElement | null }>>({})
+
+  // Fullscreen block state for DrawingBlock
+  const [fullscreenBlockId, setFullscreenBlockId] = useState<string | null>(null)
+  const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    const handleFsChange = () => {
+      if (!document.fullscreenElement) {
+        setFullscreenBlockId(null)
+      }
+    }
+    document.addEventListener('fullscreenchange', handleFsChange)
+    return () => document.removeEventListener('fullscreenchange', handleFsChange)
+  }, [])
 
   const profileSubjects = (profile?.faecher ?? [])
     .map((sid) => subjects.find((s) => s.id === sid))
@@ -855,26 +878,108 @@ export function NoteCreateScreen() {
     )
   }
 
-  const renderDrawingBlock = (block: DrawingBlock, isDefault: boolean) => (
-    <div key={block.id} className="mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-3 pb-2">
-        <span className="section-label">✏️ Schreibblock</span>
-        {!isDefault && (
-          <button onClick={() => removeBlock(block.id)} className="p-1 rounded-btn hover:bg-danger/10 transition-colors press-sm">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger">
-              <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-            </svg>
-          </button>
-        )}
-      </div>
-      <Suspense fallback={<div className="h-[220px] bg-background animate-pulse" />}>
+  const toggleDrawingFullscreen = (blockId: string) => {
+    if (fullscreenBlockId === blockId) {
+      setFullscreenBlockId(null)
+      try {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+        }
+        if (screen.orientation && screen.orientation.unlock) {
+          screen.orientation.unlock();
+        }
+      } catch {}
+    } else {
+      setFullscreenBlockId(blockId)
+      const element = document.getElementById(`drawing-container-${blockId}`)
+      if (element && element.requestFullscreen) {
+        element.requestFullscreen().then(() => {
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch(() => {});
+          }
+        }).catch(() => {});
+      }
+    }
+  }
+
+  const renderDrawingBlock = (block: DrawingBlock, isDefault: boolean) => {
+    const isFullscreen = fullscreenBlockId === block.id
+
+    // Style configuration to handle vertical screens when rotated landscape is forced
+    const fsContainerStyle: React.CSSProperties = isFullscreen && !isLandscape
+      ? {
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          width: '100vh',
+          height: '100vw',
+          transform: 'translate(-50%, -50%) rotate(90deg)',
+          transformOrigin: 'center',
+          zIndex: 9999,
+        }
+      : {}
+
+    const containerClass = isFullscreen
+      ? isLandscape
+        ? "fixed inset-0 z-[60] bg-[#0D0D0F] flex flex-col w-full h-full"
+        : "fixed z-[60] bg-[#0D0D0F] flex flex-col"
+      : "mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden"
+
+    return (
+      <div
+        key={block.id}
+        id={`drawing-container-${block.id}`}
+        className={containerClass}
+        style={fsContainerStyle}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border bg-surface shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="section-label">✏️ Schreibblock {isFullscreen && '(Vollbild)'}</span>
+            {isFullscreen && !isLandscape && (
+              <span className="text-[9px] bg-accent/15 text-accent px-1.5 py-0.5 rounded font-semibold whitespace-nowrap">Querformat erzwungen</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {isFullscreen ? (
+              <button
+                onClick={() => toggleDrawingFullscreen(block.id)}
+                className="p-1 rounded-btn hover:bg-surface-hover transition-colors press-sm"
+                title="Vollbild beenden"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-text-secondary">
+                  <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={() => toggleDrawingFullscreen(block.id)}
+                  className="p-1 rounded-btn hover:bg-surface-hover transition-colors press-sm"
+                  title="Vollbild"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-text-secondary">
+                    <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+                {!isDefault && (
+                  <button onClick={() => removeBlock(block.id)} className="p-1 rounded-btn hover:bg-danger/10 transition-colors press-sm">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger">
+                      <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </div>
         <DrawingCanvas
+          isFullscreen={isFullscreen}
           onChange={(dataUrl) => updateBlock(block.id, { dataUrl } as Partial<NoteBlock>)}
         />
-      </Suspense>
-    </div>
-  )
+      </div>
+    )
+  }
 
   const renderHomeworkBlock = (block: HomeworkBlock) => {
     const effectiveSubjectId = selectedSubjectId || block.subjectId
