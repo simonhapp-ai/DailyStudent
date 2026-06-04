@@ -1,0 +1,244 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Der Bildungsplan 2016 für das Fach Ethik am Gymnasium in Baden-Württemberg zielt darauf ab, Schülerinnen und Schüler zur ethisch-moralischen Urteilsbildung in praktischer Absicht zu befähigen. Dies bedeutet, sie sollen ein selbstbestimmtes und verantwortungsbewusstes Leben gestalten können, orientiert an den Idealen der Aufklärung wie universellen Menschenrechten, Rechtsstaatlichkeit und dem Diskursprinzip. Das Fach unterscheidet zwischen Ethik als Reflexion und Begründung der Moral und Moral als Inbegriff gesellschaftlicher Werte und Normen. Es adressiert die philosophischen Kernfragen nach dem guten und glücklichen Leben sowie dem moralisch richtigen Handeln.\n\nAusgehend von den konkreten moralischen Fragen und Problemen der Lebenswelt der Schülerinnen und Schüler, fördert der Unterricht eine kritische Auseinandersetzung mit kulturspezifischen und universellen ethischen Prinzipien. Das Ziel ist nicht die Vermittlung einer bestimmten Gesinnung, sondern die Stärkung der Selbstbestimmung und der Fähigkeit, in ethisch relevanten Situationen begründet und reflektiert zu entscheiden und zu handeln. Dabei bilden Wissen um Werte und Normen eine wichtige Grundlage.\n\nDie zentralen Leitbegriffe des Faches sind Freiheit, Gerechtigkeit und Verantwortung. Diese Werte dienen als Richtschnur für die Entwicklung prozess- und inhaltsbezogener Kompetenzen. Freiheit im Sinne von Autonomie ermöglicht es, sich selbst verallgemeinerbare Regeln zu setzen. Gerechtigkeit, basierend auf Menschenrechten, Menschenwürde und Solidarität, setzt Maßstäbe für ein gutes Zusammenleben. Verantwortung, eng verknüpft mit Einstellungen und Werten, motiviert zum Handeln und ist Ausdruck einer moralisch mündigen Persönlichkeit.\n\nDer Kompetenzerwerb ist progressiv über die Jahrgangsstufen angelegt. Er umfasst vier prozessbezogene Kompetenzbereiche: \"Wahrnehmen und sich hineinversetzen\", \"Analysieren und interpretieren\", \"Argumentieren und reflektieren\" sowie \"Beurteilen und (sich) entscheiden\". Diese werden in Verbindung mit inhaltsbezogenen Kompetenzen erworben, die sich an den Leitbegriffen und der Lebenswelt der Schülerinnen und Schüler orientieren.\n\nDidaktisch wird ein stufenspezifisches Vorgehen verfolgt: In den Klassen 5/6 werden ethisch-moralische Fragestellungen behutsam und konkret aus der Lebenswelt der Schülerinnen und Schüler erschlossen. In den Klassen 7/8 werden die Themenfelder erweitert und die Leitbegriffe explizit behandelt, oft im Kontext der Angewandten Ethik. Die Klassen 9/10 führen erstmals explizit moralphilosophische Denkansätze ein und bereiten auf die Kursstufe vor. In der Kursstufe (Klassen 11/12) werden Freiheit, Gerechtigkeit und Verantwortung im Kontext moralphilosophischer Begründungszusammenhänge vertieft und Bereiche der Angewandten Ethik auf einer abstrakteren Ebene differenziert.\n\nDer Ethikunterricht berücksichtigt die weltanschauliche Heterogenität der Schülerschaft und fördert den Austausch über Wertvorstellungen in einer pluralistischen Gesellschaft. Er ist problemorientiert, nutzt induktive Verfahren und vielfältige Methoden wie Fallanalysen, Gedankenexperimente und Dilemmadiskussionen. Das Fach leistet zudem Beiträge zu den Leitperspektiven wie Bildung für nachhaltige Entwicklung, Toleranz und Akzeptanz von Vielfalt, Prävention und Gesundheitsförderung, berufliche Orientierung, Medienbildung und Verbraucherbildung. Insgesamt fördert der Ethikunterricht die Persönlichkeitsbildung, Selbstvergewisserung und Mündigkeit der Schülerinnen und Schüler durch die systematische Einübung ethisch-moralischer Urteilsbildung in praktischer Absicht.",
+  "hauptthemen": [
+    {
+      "thema": "Ich und Andere",
+      "relevante_unterthemen": [
+        "Ich und mein Leben (Klassen 5/6)",
+        "Ich und meine Freundschaften (Klassen 5/6)",
+        "Ich und die Anderen (Klassen 5/6)",
+        "Identität, Individualität und Rolle (Klassen 7/8)",
+        "Freiheit und Verantwortung (Klassen 7/8)",
+        "Gerechtigkeit (Klassen 7/8)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können sich selbst und ihre Selbstwahrnehmung im Lebensumfeld beschreiben und mit der anderer vergleichen.",
+        "Sie können Merkmale der eigenen Person identifizieren und den Einfluss verschiedener Faktoren auf das Selbst diskutieren.",
+        "Sie können verschiedene Handlungsmöglichkeiten zur Zielerreichung entwickeln und im Kontext eines gerechten und verantwortlichen Zusammenlebens diskutieren.",
+        "Sie können Auffassungen von Freundschaft unterscheiden, deren Merkmale und Grenzen bestimmen und Lösungsansätze für Konflikte entwickeln, in denen Freundschaft mit Werten kollidiert.",
+        "Sie können den Menschen als soziales Wesen erfassen, Formen des Zusammenlebens beschreiben und eigene Erfahrungen mit Gruppen bewerten.",
+        "Sie können Erfahrungen mit Andersheit und Fremdheit, einschließlich der Rolle von Vorurteilen, aufzeigen und Grundlagen eines friedlichen Miteinanders begründen.",
+        "Sie können Aspekte von Identität, Individualität und Rolle in sozialen Beziehungen darstellen, Spielräume und Abhängigkeiten untersuchen und bewerten.",
+        "Sie können den Prozess des Erwachsenwerdens im Spannungsfeld von Freiheit, Abhängigkeit und Verantwortung analysieren und Ansätze eines verantwortlichen und selbstbestimmten Lebens entwickeln.",
+        "Sie können Aspekte von Gerechtigkeit beschreiben, differenzieren, Ungerechtigkeiten erkennen und Handlungsalternativen für ein gerechtes Leben entwickeln."
+      ]
+    },
+    {
+      "thema": "Ethik und Moral",
+      "relevante_unterthemen": [
+        "Glückliches und gutes Leben (Klassen 5/6)",
+        "Regeln und Regelkonflikte (Klassen 5/6)",
+        "Wahrhaftigkeit und Lüge (Klassen 5/6)",
+        "Ethisch-moralische Grundlagen des Handelns (Klassen 7/8)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können Glücksvorstellungen untersuchen, unterschiedliche Werte erschließen und bewerten.",
+        "Sie können sich mit ihren Vorstellungen eines glücklichen und guten Lebens im Kontext von Freiheit, Gerechtigkeit und Verantwortung auseinandersetzen.",
+        "Sie können die Bedeutung von Regeln erklären, Gründe und Konsequenzen bei Regelverstößen darlegen und Konfliktsituationen mithilfe ethisch-moralischer Maßstäbe bewerten.",
+        "Sie können die Goldene Regel als moralische Regel erkennen und anwenden.",
+        "Sie können die Begriffe Wahrhaftigkeit und Lüge bestimmen, Motive identifizieren, Auswirkungen problematisieren und zu Konfliktsituationen Stellung nehmen.",
+        "Sie können zentrale Grundbegriffe der Ethik erläutern, leitende Werte und Normen für ihr persönliches Leben und die Gesellschaft identifizieren.",
+        "Sie können die Rolle von Vernunft, Gewissen und Gefühl für ethisch reflektiertes Handeln untersuchen und Problemfälle diskutieren."
+      ]
+    },
+    {
+      "thema": "Medien und Wirklichkeiten",
+      "relevante_unterthemen": [
+        "(Selbst-)Darstellung in Medien (Klassen 5/6)",
+        "Handeln in der medial vermittelten Welt (Klassen 7/8)",
+        "Werte und Normen in der medial vermittelten Welt (Klassen 9/10)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können am Beispiel medialer (Selbst-)Darstellungen deren Wirkungen aufzeigen, zugrundeliegende Wünsche und Interessen diskutieren.",
+        "Sie können zu medialen (Selbst-)Darstellungen im Hinblick auf einen selbstbestimmten und verantwortungsvollen Umgang Stellung nehmen.",
+        "Sie können ihren Umgang mit Medien beschreiben und beurteilen, Auswirkungen der Mediennutzung im Kontext von Freiheit und Verantwortung aufzeigen und bewerten.",
+        "Sie können Handlungsoptionen für den eigenen verantwortungsvollen Umgang mit Medien entwerfen.",
+        "Sie können medial vermittelte Zugänge zur Welt untersuchen, Auswirkungen der digital geprägten Welt auf Individuum und Gesellschaft erläutern und diskutieren.",
+        "Sie können die ethisch-moralische Dimension medialer Formate herausarbeiten und unter Berücksichtigung von Freiheit, Gerechtigkeit und Verantwortung beurteilen."
+      ]
+    },
+    {
+      "thema": "Mensch und Natur",
+      "relevante_unterthemen": [
+        "Natur und Umwelt (Klassen 5/6)",
+        "Verantwortung für Tiere (Klassen 7/8)",
+        "Mensch, Natur, Technik (Klassen 7/8)",
+        "Mensch und Umwelt (Klassen 9/10)",
+        "Mensch als Kulturwesen (*) (Klassen 9/10)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können die Natur als Lebensraum erfassen, unterschiedliche Formen des Umgangs des Menschen mit der Natur darstellen und deren Folgen abschätzen.",
+        "Sie können Gründe für dieses Verhalten erläutern, bewerten und Perspektiven eines verantwortungsvollen Umgangs aufzeigen.",
+        "Sie können verschiedene Arten von Beziehungen zwischen Mensch und Tier erfassen, Gesetze zum Tierschutz wiedergeben und anthropozentrische sowie pathozentrische Argumente beurteilen.",
+        "Sie können Handlungsmöglichkeiten für einen verantwortungsbewussten Umgang mit Tieren entwickeln.",
+        "Sie können den Stellenwert von Natur und Technik für das Leben erkennen, Auswirkungen zunehmender Technisierung auf Mensch und Natur darlegen und unter Aspekten von Freiheit und Verantwortung bewerten.",
+        "Sie können Möglichkeiten eines nachhaltigen und verantwortungsvollen Umgangs mit Natur und Technik darstellen und diskutieren.",
+        "Sie können verschiedene Einstellungen des Menschen zu Natur und Technik herausarbeiten, unterschiedliche Ansätze der Naturethik darlegen und sich dazu positionieren.",
+        "Sie können Chancen und Risiken moderner Technologien analysieren und erörtern.",
+        "Sie können die Bedeutung von Natur und Technik für das Selbstverständnis des Menschen als Kulturwesen erläutern und den Einfluss des jeweiligen Selbstverständnisses auf den Umgang mit Natur und Umwelt untersuchen.",
+        "Sie können verschiedene Zukunfts- und Fortschrittsvorstellungen im Spannungsfeld von Freiheit, Gerechtigkeit und Verantwortung diskutieren."
+      ]
+    },
+    {
+      "thema": "Glauben und Ethos",
+      "relevante_unterthemen": [
+        "Mythologische, religiöse und wissenschaftliche Erklärungen von Mensch und Welt (Klassen 5/6)",
+        "Glaubensgrundsätze und Achtung des Religiösen (Klassen 7/8)",
+        "Ethisch-moralische Werte und Glaubensgrundsätze (Klassen 9/10)",
+        "Erscheinungsformen und Bedeutung des Religiösen (*) (Klassen 9/10)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können verschiedene Entstehungsmythen und -geschichten erläutern, mit wissenschaftlichen Erklärungen vergleichen und deren Bedeutung für das Verständnis von Mensch und Welt diskutieren.",
+        "Sie können verschiedene Erscheinungs- und Ausdrucksformen des Religiösen sowie deren kulturelle Bedeutung darstellen und die drei monotheistischen Weltreligionen in Grundzügen vergleichen.",
+        "Sie können Toleranz gegenüber religiösen oder weltanschaulichen Überzeugungen und ihre Grenzen im Kontext von Freiheit, Gerechtigkeit und Verantwortung erörtern.",
+        "Sie können den ethischen Gehalt von Religionen herausarbeiten, vergleichen und diskutieren.",
+        "Sie können die Bedeutung der Goldenen Regel erläutern und zu religiös bedingten Konflikten im Alltag Stellung nehmen.",
+        "Sie können Merkmale des Religiösen darstellen, unterschiedliche Definitionsversuche von Religion vergleichen und sich mit Auswirkungen von Religion auf Individuum und Gesellschaft auseinandersetzen.",
+        "Sie können religiöse mit anderen Menschen- und Weltbildern vergleichen."
+      ]
+    },
+    {
+      "thema": "Konflikte und Gewalt",
+      "relevante_unterthemen": [
+        "Friedliches Zusammenleben und die Bedeutung von Konflikten (Klassen 7/8)",
+        "Verantwortung im Umgang mit Konflikten und Gewalt (Klassen 7/8)",
+        "Konfliktregelung und Friedensbildung (Klassen 9/10)",
+        "Pluralismus und Toleranz (*) (Klassen 9/10)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können moralische Werte und Normen als Grundlagen eines friedlichen Zusammenlebens erfassen und diskutieren.",
+        "Sie können Ursachen von Konflikten und Gewalt sowie deren Auswirkungen überprüfen und erläutern.",
+        "Sie können verschiedene Strategien für einen verantwortungsvollen Umgang mit Konflikten und Gewalt darstellen und bewerten.",
+        "Sie können die Bedeutung gewaltfreier Konfliktlösungen erläutern.",
+        "Sie können die Begriffe Gewalt und Aggression voneinander abgrenzen, sich mit Erklärungsansätzen und Formen von Aggression auseinandersetzen.",
+        "Sie können verschiedene Möglichkeiten der Konfliktregelung und Friedensbildung unter Berücksichtigung von Werten und Normen untersuchen und beurteilen.",
+        "Sie können die moderne Lebenswelt in ihrer Vielfalt erfassen, die Bedeutung von Toleranz in einer pluralistischen Gesellschaft beschreiben und Orientierungshilfen für das Zusammenleben benennen.",
+        "Sie können Problemfälle unter ethisch-moralischen Gesichtspunkten erörtern und Handlungsoptionen für das Leben in einer pluralistischen Gesellschaft entwerfen."
+      ]
+    },
+    {
+      "thema": "Armut und Reichtum",
+      "relevante_unterthemen": [
+        "Menschenwürdiges Leben in Armut und Reichtum (Klassen 7/8)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können Armut und Reichtum im Hinblick auf die Möglichkeiten eines selbstbestimmten Lebens analysieren.",
+        "Sie können die Bedeutung der Einhaltung der Menschenrechte für ein menschenwürdiges Leben erklären.",
+        "Sie können verschiedene Möglichkeiten aufzeigen, sich für gerechte und menschenwürdige Lebensverhältnisse einzusetzen."
+      ]
+    },
+    {
+      "thema": "Lebensaufgaben und Selbstbestimmung",
+      "relevante_unterthemen": [
+        "Liebe und Sexualität (Klassen 9/10)",
+        "Arbeit und Selbstbestimmung (Klassen 9/10)",
+        "Umgang mit Endlichkeit (Klassen 9/10)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können die Bedeutung von Liebe und Sexualität für ihre eigene Lebensgestaltung und die anderer erfassen und darlegen.",
+        "Sie können verschiedene Vorstellungen von Liebe und Sexualität im Spannungsfeld von Selbstbestimmung, Verantwortung und gesellschaftlichen Erwartungen untersuchen und diskutieren.",
+        "Sie können grundlegende Voraussetzungen für gelingende Beziehungen erarbeiten.",
+        "Sie können Arbeit in ihren unterschiedlichen Formen für das Leben des Einzelnen erfassen und erläutern.",
+        "Sie können die Arbeitswelt unter Bezugnahme auf Werte analysieren und im Spannungsfeld von Selbstbestimmung, Gerechtigkeit und Verantwortung problematisieren.",
+        "Sie können die Bedeutung der Arbeit für die Lebensgestaltung darstellen und bewerten.",
+        "Sie können Formen der Lebensgestaltung und Lebensführung in verschiedenen Lebensphasen unter dem Aspekt der Lebensqualität und der Selbstbestimmung erfassen und vergleichen.",
+        "Sie können sich mit der Bedeutung der Menschenwürde in Bezug auf Sterben und Tod auseinandersetzen.",
+        "Sie können Spielräume der Selbstbestimmung und Verantwortung im Umgang mit Leben, Sterben und Tod diskutieren und auftretende Konflikte analysieren."
+      ]
+    },
+    {
+      "thema": "Zugänge zu philosophischen Begründungen von Moral",
+      "relevante_unterthemen": [
+        "Glück und Moral (Klassen 9/10)",
+        "Vernunft, Vertrag, Gefühl, Nutzen (*) (Klassen 9/10)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können Aspekte und Vorstellungen von Glück beschreiben und den Stellenwert von Werten und Normen für das Zusammenleben darlegen.",
+        "Sie können Spannungsfelder zwischen individuellem Glücksstreben und Werten sowie gesellschaftlichen Vorgaben erfassen und sich dazu positionieren.",
+        "Sie können die Beziehungen zwischen Glück und Moral erörtern und Vorstellungen von gelingendem Leben bewerten.",
+        "Sie können unterschiedliche Zugänge zur Begründung von Moral (Vernunft, Vertrag, Gefühl, Nutzen) in Grundzügen darstellen und zur Überzeugungskraft dieser Moralbegründungen vergleichend Stellung nehmen."
+      ]
+    },
+    {
+      "thema": "Freiheit und Selbstverständnis des Menschen (Kursstufe)",
+      "relevante_unterthemen": [
+        "Freiheit und Naturalismus (Basisfach & Leistungsfach)",
+        "Freiheit und Anthropologie (Basisfach & Leistungsfach)",
+        "Freiheit und digitale Welt (Leistungsfach)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können die Bedeutung unterschiedlicher Auffassungen von Freiheit und deren Kritik erarbeiten, analysieren und erörtern.",
+        "Sie können Zusammenhänge zwischen Freiheit, Moralität und Verantwortung diskutieren und die Relevanz von Freiheit im biographischen und gesellschaftlichen Kontext untersuchen.",
+        "Sie können Aspekte philosophischer Anthropologie darstellen und im Kontext von Freiheit diskutieren.",
+        "Sie können die Funktion von Erziehung, Bildung und Sozialisation kritisch hinterfragen und das Selbstverständnis des Menschen in der Moderne erörtern.",
+        "Im Leistungsfach können sie zusätzlich in der Willensfreiheitsdebatte eine begründete Stellungnahme formulieren und unterschiedliche Zugänge zum Menschen und zur Welt vergleichen und beurteilen.",
+        "Im Leistungsfach können sie zudem die digitale Welt in Grundzügen beschreiben, ethische Probleme der Digitalisierung erfassen und reflektiert darlegen sowie Freiheit und digitale Technologien im Hinblick auf das Selbstverständnis des Menschen der Moderne analysieren und erörtern."
+      ]
+    },
+    {
+      "thema": "Gerechtigkeit, Recht und Zusammenleben (Kursstufe)",
+      "relevante_unterthemen": [
+        "Grundlagen des Zusammenlebens (Basisfach & Leistungsfach)",
+        "Gerechtigkeit und Recht (Basisfach & Leistungsfach)",
+        "Gerechtigkeit und globalisierte Welt (Leistungsfach)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können Grundlagen des Zusammenlebens in einer pluralistischen Gesellschaft darstellen.",
+        "Sie können ethisch-moralische Konflikte analysieren und den Beitrag verschiedener Toleranzkonzeptionen zu ihrer Lösung beurteilen.",
+        "Sie können die Bedeutung der Menschenrechte und der Achtung der Menschenwürde für das Zusammenleben darstellen und sich mit deren Geltungsanspruch und Begründungsansätzen auseinandersetzen.",
+        "Sie können Lösungsansätze für Konflikte in einer pluralistischen und globalen Welt bewerten.",
+        "Sie können das Spannungsfeld von Recht und Moral, Legalität und Legitimität beschreiben und die Bedeutung des Rechtspositivismus kritisch erörtern.",
+        "Sie können die Gerechtigkeitstheorie von John Rawls sowie weitere Theorien darstellen und hinsichtlich ihrer Tragfähigkeit bewerten.",
+        "Sie können die Rechtfertigung unterschiedlicher Strafzwecktheorien vergleichen und erörtern.",
+        "Im Leistungsfach können sie zusätzlich Positionen zum Umgang mit Interkulturalität erarbeiten und diskutieren sowie Lösungsansätze für Gerechtigkeitsprobleme einer globalisierten Welt untersuchen."
+      ]
+    },
+    {
+      "thema": "Moralphilosophie (Kursstufe)",
+      "relevante_unterthemen": [
+        "Tugendethik (Basisfach & Leistungsfach)",
+        "Utilitarismus (Basisfach & Leistungsfach)",
+        "Pflichtethik (Basisfach & Leistungsfach)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können die Tugendethik von Aristoteles in Grundzügen erfassen und beurteilen, zentrale Begriffe bestimmen und deren Reichweite für ethisch begründetes Handeln analysieren und bewerten.",
+        "Sie können Varianten des Utilitarismus in Grundzügen erfassen und beurteilen, zentrale Begriffe bestimmen und deren Reichweite für ethisch begründetes Handeln analysieren und bewerten.",
+        "Sie können die Pflichtethik von Kant in Grundzügen erfassen und beurteilen, zentrale Begriffe bestimmen und deren Reichweite für ethisch begründetes Handeln analysieren und bewerten.",
+        "Im Leistungsfach wird eine vertiefte Auseinandersetzung mit spezifischeren Aspekten und Vergleichen innerhalb dieser moralphilosophischen Theorien erwartet."
+      ]
+    },
+    {
+      "thema": "Verantwortung und Angewandte Ethik (Kursstufe)",
+      "relevante_unterthemen": [
+        "Verantwortungsethik (Basisfach & Leistungsfach)",
+        "Angewandte Ethik (Basisfach & Leistungsfach)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können den Begriff der Verantwortung in seinen Dimensionen bestimmen und darlegen.",
+        "Sie können eine verantwortungsethische Position (z.B. Jonas) in Grundzügen erfassen, mit weiteren Konzeptionen vergleichen und deren Reichweite für ethisch begründetes Handeln analysieren und bewerten.",
+        "Sie können bei der Auseinandersetzung mit Problemfällen der Angewandten Ethik verantwortungsethische Überlegungen berücksichtigen.",
+        "Sie können verschiedene Bereiche der Angewandten Ethik (z.B. Naturethik, Technikethik, Medizinethik, Medienethik, Wissenschaftsethik, Wirtschaftsethik) in Grundzügen charakterisieren.",
+        "Sie können Chancen und Risiken in diesen Bereichen darlegen, ethisch-moralische Probleme identifizieren und Wertekonflikte herausarbeiten.",
+        "Sie können zu Problemfällen der Angewandten Ethik begründet Stellung nehmen und bei der Urteilsfindung moralphilosophische und verantwortungsethische Begründungsansätze einbeziehen.",
+        "Sie können Entscheidungs- oder Handlungsmöglichkeiten erarbeiten, diskutieren und begründet beurteilen.",
+        "Im Leistungsfach wird eine vertiefte Auseinandersetzung mit spezifischeren Vergleichen innerhalb der Verantwortungsethik erwartet."
+      ]
+    },
+    {
+      "thema": "Moral, Religion und Kritik (Kursstufe)",
+      "relevante_unterthemen": [
+        "Grundlagen philosophischer Ethik (Basisfach & Leistungsfach)",
+        "Religion und Religionskritik (Basisfach & Leistungsfach)"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler können Aufgaben von Ethik in einer pluralistischen Gesellschaft benennen, analysieren und hinsichtlich ihrer Möglichkeiten und Grenzen erörtern.",
+        "Sie können eine Position der Moralkritik darlegen und beurteilen.",
+        "Sie können Funktionen von Religion in einer säkularisierten Welt darlegen und erörtern.",
+        "Sie können sich mit dem Spannungsverhältnis von Glauben und Wissen, Vernunft und Religion auseinandersetzen und eine Position der Religionskritik darlegen und beurteilen.",
+        "Sie können sich mit möglichen Formen der Instrumentalisierung von Religion auseinandersetzen."
+      ]
+    }
+  ]
+}

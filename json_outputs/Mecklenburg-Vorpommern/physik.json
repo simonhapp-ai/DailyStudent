@@ -1,0 +1,71 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Physik",
+  "zusammenfassung": "Der Rahmenplan für die Qualifikationsphase der gymnasialen Oberstufe in Mecklenburg-Vorpommern zielt darauf ab, Schülerinnen und Schüler zu einem wissenschaftlich fundierten Weltbild zu befähigen und sie auf ein Hochschulstudium oder eine berufliche Ausbildung vorzubereiten. Der Unterricht ist kompetenzorientiert und wissenschaftspropädeutisch gestaltet, wobei das Experiment als zentrales Element der Erkenntnisgewinnung fungiert. Neben der Vermittlung von Fachwissen (Sachkompetenz) stehen die Entwicklung von Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenzen im Fokus. Der Plan integriert moderne Anforderungen wie digitale Bildung, nachhaltige Entwicklung (BNE), Inklusion und interkulturelle Bildung. Die Inhalte sind in vier Hauptthemenfelder gegliedert, wobei für den Leistungskurs eine höhere mathematische Durchdringung und Komplexität vorgesehen ist. Die Leistungsbewertung erfolgt transparent und kriteriengeleitet über alle Anforderungsbereiche hinweg, wobei ein besonderer Schwerpunkt auf der experimentellen Arbeit liegt.",
+  "hauptthemen": [
+    {
+      "thema": "System – Erhaltungssätze",
+      "relevante_unterthemen": [
+        "Energieformen der Mechanik",
+        "Energiebilanzen",
+        "Energieerhaltungssatz",
+        "Impuls und Impulserhaltungssatz",
+        "Mechanische Arbeit (LK)",
+        "Zentrale Stöße (LK)"
+      ],
+      "kernkompetenzen": [
+        "Aufstellen von Energiebilanzen zur Berechnung physikalischer Größen",
+        "Anwendung des Impulserhaltungssatzes in verschiedenen Kontexten",
+        "Diskussion der Bedeutung von Erhaltungssätzen in Sport und Technik"
+      ]
+    },
+    {
+      "thema": "Elektrische und magnetische Felder",
+      "relevante_unterthemen": [
+        "Elektrisches Feld (Coulomb-Gesetz, Feldstärke)",
+        "Kondensator (Ladungs- und Energiespeicher)",
+        "Magnetische Felder und Induktion",
+        "Bewegung geladener Teilchen in Feldern",
+        "Auf- und Entladevorgänge (LK)",
+        "Selbstinduktion (LK)"
+      ],
+      "kernkompetenzen": [
+        "Modellierung elektrischer und magnetischer Felder",
+        "Analyse von Bewegungen geladener Teilchen in Feldern",
+        "Bewertung technischer Anwendungen wie Kondensatoren oder Magnetschwebebahnen"
+      ]
+    },
+    {
+      "thema": "Schwingungen und Wellen",
+      "relevante_unterthemen": [
+        "Mechanische Schwingungen (harmonisch)",
+        "Elektromagnetische Schwingungen",
+        "Mechanische und elektromagnetische Wellen",
+        "Phänomene bei Wellenausbreitung (Reflexion, Brechung, Beugung)",
+        "Interferenz",
+        "Gedämpfte Schwingungen und Resonanz (LK)"
+      ],
+      "kernkompetenzen": [
+        "Mathematische Beschreibung von Schwingungen und Wellen",
+        "Experimentelle Bestimmung von Wellenlängen und Frequenzen",
+        "Reflexion über die Bedeutung von Wellenphänomenen in Natur und Technik"
+      ]
+    },
+    {
+      "thema": "Quantenphysik und Materie",
+      "relevante_unterthemen": [
+        "Äußerer lichtelektrischer Effekt",
+        "Grundvorstellungen der Quantentheorie (Welle-Teilchen-Dualismus)",
+        "Struktur des Atoms (Energieniveaus)",
+        "Wechselwirkung von Atomen mit Photonen",
+        "Heisenberg’sche Unbestimmtheitsrelation (LK)",
+        "Röntgenstrahlung"
+      ],
+      "kernkompetenzen": [
+        "Erklärung von Quantenphänomenen mittels Welle-Teilchen-Dualismus",
+        "Interpretation von Linienspektren und Energieniveauschemata",
+        "Reflexion über die Grenzen klassischer physikalischer Vorstellungen"
+      ]
+    }
+  ]
+}

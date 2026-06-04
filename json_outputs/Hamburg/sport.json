@@ -1,0 +1,52 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Sport",
+  "zusammenfassung": "Der Bildungsplan für das Fach Sport in der Studienstufe in Hamburg verfolgt einen erziehenden Sportunterricht, der den Doppelauftrag von bewegungsbezogener Fachkompetenz und überfachlicher Allgemeinbildung (Persönlichkeitsentwicklung) verfolgt. Im Zentrum steht die Handlungsfähigkeit in einer sich wandelnden Sportkultur. Der Unterricht verknüpft Theorie und Praxis eng miteinander, um Einsichten in Bedingungen, Methoden und Wirkungen sportlichen Handelns zu vermitteln. Dabei werden fünf zentrale Kompetenzbereiche (Leisten und Üben, Gestalten und Darstellen, Erkunden und Wagen, Wettkämpfen und Kooperieren, Wahrnehmen und Erfahren) in verschiedenen Bewegungsfeldern (z.B. Leichtathletik, Schwimmen, Spielen, Fitness) entwickelt. Ein besonderer Fokus liegt auf der Förderung von Selbstregulation, sozialer Kompetenz, Inklusion, Geschlechtersensibilität und der Integration digitaler Medien zur Bewegungsanalyse. Die Studienstufe differenziert dabei zwischen grundlegendem und erhöhtem Anforderungsniveau, wobei letzteres eine stärkere wissenschaftspropädeutische Auseinandersetzung mit sportwissenschaftlichen Theorien (Bewegungs-, Trainings-, Sozialwissenschaften) erfordert.",
+  "hauptthemen": [
+    {
+      "thema": "Bewegungsfelder",
+      "relevante_unterthemen": [
+        "Laufen, Springen und Werfen",
+        "Gleiten, Fahren und Rollen",
+        "Bewegen im Wasser",
+        "Kämpfen und Verteidigen",
+        "Spielen",
+        "Bewegen an und von Geräten",
+        "Rhythmisches und tänzerisches Bewegen",
+        "Fitness und achtsames Bewegen"
+      ],
+      "kernkompetenzen": [
+        "Weiterentwicklung sportmotorischer Fertigkeiten und Fähigkeiten in variablen Situationen",
+        "Anwendung funktionaler Bewegungsabläufe unter Berücksichtigung von Sicherheitsaspekten",
+        "Selbstständige Planung und Durchführung von Übungs- und Trainingssequenzen"
+      ]
+    },
+    {
+      "thema": "Sporttheorie",
+      "relevante_unterthemen": [
+        "Bereich I: Realisierung des eigenen sportlichen Handelns (Bewegungs- und Trainingswissenschaft)",
+        "Bereich II: Individuelles Handeln im sozialen Kontext (Psychologie, Ethik)",
+        "Bereich III: Sport im gesellschaftlichen Kontext (Soziologie, Geschichte, Politik)"
+      ],
+      "kernkompetenzen": [
+        "Wissenschaftspropädeutische Analyse von Bewegungsphänomenen und sportlichen Problemen",
+        "Reflexion der eigenen Praxis auf Basis sportwissenschaftlicher Erkenntnisse",
+        "Erörterung sporttheoretischer Fragestellungen und begründete Stellungnahme"
+      ]
+    },
+    {
+      "thema": "Überfachliche Kompetenzen",
+      "relevante_unterthemen": [
+        "Personale Kompetenzen",
+        "Motivationale Einstellungen",
+        "Lernmethodische Kompetenzen",
+        "Soziale Kompetenzen"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung von Selbstwirksamkeit und realistischer Selbsteinschätzung",
+        "Kooperationsfähigkeit und konstruktiver Umgang mit Konflikten und Vielfalt",
+        "Selbstgesteuertes Lernen und effektive Nutzung von Lernstrategien"
+      ]
+    }
+  ]
+}

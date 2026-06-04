@@ -1,0 +1,48 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Lehrplan für das Fach Geschichte in Rheinland-Pfalz ist Teil eines fächerübergreifenden Konzepts für die gesellschaftswissenschaftlichen Fächer (Erdkunde, Geschichte, Sozialkunde). Das übergeordnete Ziel ist die Förderung der Mündigkeit und Demokratiekompetenz junger Menschen. Der Geschichtsunterricht dient der Orientierung in der Zeit von der Altsteinzeit bis zur Gegenwart. Er ist kompetenzorientiert aufgebaut und zielt darauf ab, dass Schülerinnen und Schüler historische Sachverhalte analysieren, bewerten und in einen zeitlichen sowie strukturellen Kontext einordnen können. Ein besonderer Fokus liegt auf der Verzahnung mit den anderen gesellschaftswissenschaftlichen Fächern, der Förderung von Methoden-, Kommunikations- und Urteilskompetenz sowie der Bildung für nachhaltige Entwicklung. Der Lehrplan ist in Lernfelder gegliedert, die verbindliche Basisinhalte mit Differenzierungsangeboten (Erweiterung/Vertiefung) kombinieren, um individuelles Lernen zu ermöglichen.",
+  "hauptthemen": [
+    {
+      "thema": "Epochale Schwerpunkte",
+      "relevante_unterthemen": [
+        "Altsteinzeit bis Gegenwart",
+        "Deutsche Nachkriegsgeschichte",
+        "Wiedervereinigung"
+      ],
+      "kernkompetenzen": [
+        "Orientierung in der Zeit von der Altsteinzeit bis zur Gegenwart",
+        "Einordnung von Sachverhalten in zeitliche, räumliche und strukturelle Zusammenhänge",
+        "Reflexion und Beurteilung von historischen Darstellungen und Quellen"
+      ]
+    },
+    {
+      "thema": "Demokratiebildung und Partizipation",
+      "relevante_unterthemen": [
+        "Demokratiekompetenz",
+        "Grundrechte und Verfassungsprinzipien",
+        "Fächerübergreifende Projekte",
+        "Verbindlicher Demokratietag"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung von Haltungen und Einstellungen für eine demokratische Ordnung",
+        "Reflexion eigener und fremder Wertvorstellungen",
+        "Verantwortliches Handeln in der Gesellschaft"
+      ]
+    },
+    {
+      "thema": "Methoden- und Urteilskompetenz",
+      "relevante_unterthemen": [
+        "Quellenkritik",
+        "Unterscheidung von Sachaussage und Meinung",
+        "Multiperspektivität",
+        "Reflexion von Geschichtskonstruktionen"
+      ],
+      "kernkompetenzen": [
+        "Kriteriengeleitetes Vergleichen und Interpretieren von historischen Entwicklungen",
+        "Begründung eigener Sach- und Werturteile",
+        "Reflexion der Subjektivität von Wahrnehmungen und Weltbildern"
+      ]
+    }
+  ]
+}

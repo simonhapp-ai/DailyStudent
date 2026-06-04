@@ -1,0 +1,58 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Sport",
+  "zusammenfassung": "Das Kerncurriculum Sport für die gymnasiale Oberstufe in Hessen verfolgt einen ganzheitlichen Bildungsansatz, der sportliche Handlungskompetenz als Ziel definiert. Diese Kompetenz umfasst die Fähigkeit zur selbstbestimmten und verantwortungsbewussten Teilhabe an der Bewegungs-, Spiel- und Sportkultur. Der Unterricht ist durch eine enge Verzahnung von Theorie und Praxis geprägt, wobei sportwissenschaftliche Modelle und Methoden zur Reflexion und Optimierung des eigenen Bewegungshandelns genutzt werden. Die Struktur basiert auf Leitideen (Soziale Interaktion, Körperwahrnehmung, Leisten, Gesundheit, Ausdruck, Wagnis) und verbindlichen Inhaltsfeldern. Die Lernenden sollen nicht nur sportliche Fertigkeiten erwerben, sondern auch Urteils- und Entscheidungskompetenz sowie Teamfähigkeit entwickeln, um lebenslanges Sporttreiben zu fördern und wissenschaftspropädeutisch zu arbeiten.",
+  "hauptthemen": [
+    {
+      "thema": "Bewegungskompetenz",
+      "relevante_unterthemen": [
+        "Sportartspezifische Techniken",
+        "Konditionelle und koordinative Leistungsvoraussetzungen",
+        "Bewegungsgestaltung und -präsentation",
+        "Spielfähigkeit und Taktik"
+      ],
+      "kernkompetenzen": [
+        "Sportartspezifische Techniken zielgerichtet anwenden und steuern",
+        "Trainingsprozesse zur Leistungssteigerung und -stabilisierung theoriegestützt initiieren und gestalten"
+      ]
+    },
+    {
+      "thema": "Urteils- und Entscheidungskompetenz",
+      "relevante_unterthemen": [
+        "Gesundheitskonzepte und Fitness",
+        "Risikoeinschätzung und Wagnis",
+        "Leistungsbewertung und Gütemaßstäbe",
+        "Sport im gesellschaftlichen Kontext (Politik, Wirtschaft, Medien)"
+      ],
+      "kernkompetenzen": [
+        "Den Stellenwert von Fitness- und Gesundheitstraining kritisch beurteilen",
+        "Sportliche Handlungen und gesellschaftliche Einflüsse reflektiert bewerten"
+      ]
+    },
+    {
+      "thema": "Teamkompetenz",
+      "relevante_unterthemen": [
+        "Soziale Interaktion und Kooperation",
+        "Fair-Play und Konfliktlösung",
+        "Rollenübernahme in Gruppen",
+        "Kommunikation im Sport"
+      ],
+      "kernkompetenzen": [
+        "In Gruppen sozial verantwortlich agieren und konstruktiv kooperieren",
+        "Konflikte austragen und tragfähige Lösungen im sportlichen Miteinander finden"
+      ]
+    },
+    {
+      "thema": "Sporttheoretische Inhaltsfelder",
+      "relevante_unterthemen": [
+        "Sportliches Handeln im personalen Kontext",
+        "Sportliches Handeln im sozialen Kontext",
+        "Sportliches Handeln im gesellschaftlichen Kontext"
+      ],
+      "kernkompetenzen": [
+        "Sportwissenschaftliche Theorien und Modelle auf die eigene Praxis anwenden",
+        "Wechselwirkungen zwischen Sport, Politik, Wirtschaft und Medien analysieren"
+      ]
+    }
+  ]
+}

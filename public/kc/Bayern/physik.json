@@ -1,0 +1,62 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Physik",
+  "zusammenfassung": "Der Lehrplan für Physik in der Jahrgangsstufe 12 am Gymnasium (erhöhtes Anforderungsniveau) zielt auf eine vertiefte naturwissenschaftliche Allgemeinbildung ab, die auf fundamentalen Prinzipien, mathematischer Modellierung und modernen physikalischen Modellen basiert. Die Schülerinnen und Schüler entwickeln ein Verständnis für die Bedeutung der Physik in Alltag und Technik, indem sie komplexe Phänomene durch den Zyklus der Erkenntnisgewinnung – von der Hypothesenbildung über die Modellierung und experimentelle Überprüfung bis zur Reflexion – erschließen. Ein besonderer Fokus liegt auf der mathematischen Durchdringung (inklusive Differentialgleichungen und Zeigerdarstellungen) sowie der reflektierten Nutzung digitaler Werkzeuge zur Messwerterfassung und Simulation. Die Qualifikationsphase fördert zudem die Kommunikations- und Bewertungskompetenz, um gesellschaftlich relevante Diskurse fundiert mitzugestalten. Das eigenverantwortliche Arbeiten und die Integration experimenteller Methoden sind dabei zentrale Säulen, um die Schülerinnen und Schüler auf ein lebenslanges Lernen und die Anforderungen der Hochschulreife vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Statische elektrische und magnetische Felder",
+      "relevante_unterthemen": [
+        "Elektrische Feldstärke und Coulombkraft",
+        "Kondensatoren und Dielektrika",
+        "Potential und Spannung",
+        "Bewegung geladener Teilchen in Feldern",
+        "Magnetische Flussdichte und Hall-Effekt"
+      ],
+      "kernkompetenzen": [
+        "Anwendung des Feldkonzepts zur Erklärung von Alltagsphänomenen und technischen Anwendungen",
+        "Mathematische Modellierung von Feldwirkungen und Teilchenbewegungen unter Einbeziehung relativistischer Effekte"
+      ]
+    },
+    {
+      "thema": "Elektromagnetische Induktion und Schwingungen",
+      "relevante_unterthemen": [
+        "Induktionsgesetz und Selbstinduktion",
+        "Schaltvorgänge in RL- und RC-Gliedern",
+        "Elektromagnetische Schwingkreise",
+        "Gedämpfte und erzwungene Schwingungen",
+        "Wechselstromkreise und Zeigerdiagramme"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Induktionsvorgängen mittels Energiekonzept und Differentialgleichungen",
+        "Übertragung mechanischer Schwingungsmodelle auf elektromagnetische Systeme"
+      ]
+    },
+    {
+      "thema": "Elektromagnetische Wellen",
+      "relevante_unterthemen": [
+        "Maxwellgleichungen und Dipolstrahlung",
+        "Ausbreitung und Polarisation von Wellen",
+        "Interferenz und Beugung",
+        "Optische Gitter und Spektroskopie",
+        "Röntgenstrahlung und Photonenmodell"
+      ],
+      "kernkompetenzen": [
+        "Mathematische Beschreibung der Wellenausbreitung und Interferenzphänomene",
+        "Bewertung technischer Anwendungen (z.B. Mobilfunk) auf Basis physikalischer Kriterien"
+      ]
+    },
+    {
+      "thema": "Experimentelles Arbeiten",
+      "relevante_unterthemen": [
+        "Systematische Fehleranalyse und Messunsicherheiten",
+        "Computergestützte Messwerterfassung",
+        "Regression und Datenvisualisierung",
+        "Versuchsplanung und Dokumentation"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige Planung und Durchführung physikalischer Experimente",
+        "Kritische Reflexion der Güte von Messergebnissen und deren Abweichung von theoretischen Modellen"
+      ]
+    }
+  ]
+}

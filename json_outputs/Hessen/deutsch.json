@@ -1,0 +1,39 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Deutsch",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen (Ausgabe 2024) zielt auf den Erwerb der Allgemeinen Hochschulreife durch eine vertiefte wissenschaftspropädeutische Bildung. Der Unterricht ist kompetenzorientiert und basiert auf den KMK-Bildungsstandards. Er fördert die Sprach-, Literatur- und Medienkompetenz sowie die Fähigkeit zur kritischen Reflexion und gesellschaftlichen Teilhabe. Das Curriculum ist in fünf Kompetenzbereiche gegliedert: Sprechen und Zuhören, Schreiben, Lesen, Sich mit Texten und Medien auseinandersetzen sowie Sprache und Sprachgebrauch reflektieren. Die Inhalte sind in thematische Kurshalbjahre (E-Phase und Q1-Q4) unterteilt, die durch Leitperspektiven (Form und Gestaltung, Verständigung und Auseinandersetzung, Norm und Wandel, Funktion und Wirkung) vernetzt werden. Ein besonderer Fokus liegt auf der Verbindung von fachlichem Lernen mit überfachlichen Kompetenzen wie Demokratiebildung, Nachhaltigkeit und Medienkompetenz, um Lernende auf Studium und Beruf vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Einführungsphase (E1 & E2)",
+      "relevante_unterthemen": [
+        "Sprache als Medium",
+        "Moderne Epik",
+        "Positionen und Argumente",
+        "Drama und Theater",
+        "Liebeslyrik",
+        "Schreibstrategien"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Texten unter Berücksichtigung von Norm und Abweichung",
+        "Sicheres Anwenden von Schreibstrategien und Argumentationsformen",
+        "Grundlegende Interpretation von Dramatik und Lyrik",
+        "Reflexion über eigenes Sprachhandeln und Kommunikationsmodelle"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase (Q1-Q4)",
+      "relevante_unterthemen": [
+        "Fiktion und Wirklichkeit (Epochenumbruch 18./19. Jh.)",
+        "Sprache und Literatur in politisch-gesellschaftlichen Spannungsfeldern",
+        "Zäsuren, Umbrüche und Neuanfänge (Moderne, 1945, 1989/90)",
+        "Literatur und Rezeption (Gegenwartsliteratur, Film)"
+      ],
+      "kernkompetenzen": [
+        "Wissenschaftspropädeutische Analyse komplexer literarischer und pragmatischer Texte",
+        "Theoriegestützte Reflexion von Sprache, Sprachwandel und Medien",
+        "Vergleichende Interpretation von Epochen und Gattungen",
+        "Kritische Bewertung von Wirkungsabsichten und ästhetischen Qualitäten"
+      ]
+    }
+  ]
+}

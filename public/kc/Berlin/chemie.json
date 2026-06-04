@@ -1,0 +1,59 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Berlin (Chemie) zielt auf die Entwicklung einer fundierten naturwissenschaftlichen Kompetenz ab, die über reines Fachwissen hinausgeht. Die Schülerinnen und Schüler sollen befähigt werden, Phänomene der stofflichen Welt auf der Stoff- und Teilchenebene zu erklären, zu bewerten und adressatengerecht zu kommunizieren. Das Kompetenzmodell gliedert sich in die vier Bereiche Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Diese werden durch drei zentrale Basiskonzepte strukturiert: 'Aufbau und Eigenschaften der Stoffe und ihrer Teilchen', 'Chemische Reaktion' (insbesondere Donator-Akzeptor-Prinzip) und 'Energiekonzept'. Der Unterricht ist stark experimentell orientiert und fördert die Fähigkeit zur Modellbildung, zur mathematischen Beschreibung chemischer Sachverhalte sowie zur kritischen Reflexion gesellschaftlicher, ökologischer und ökonomischer Folgen chemischer Entwicklungen. In der Einführungsphase (Jahrgangsstufe 11) liegt der Fokus auf der Vertiefung und Vernetzung der Grundlagen, während in der Qualifikationsphase (Q1-Q4) komplexe Themenfelder wie Makromoleküle, Thermodynamik, Reaktionskinetik, Gleichgewichte, Säure-Base-Reaktionen und Elektrochemie behandelt werden, wobei zwischen Grund- und Leistungskurs hinsichtlich Komplexität, Mathematisierung und Selbststeuerung differenziert wird.",
+  "hauptthemen": [
+    {
+      "thema": "Natürliche und synthetische makromolekulare Stoffe",
+      "relevante_unterthemen": [
+        "Proteine",
+        "Kunststoffe"
+      ],
+      "kernkompetenzen": [
+        "Struktur-Eigenschafts-Beziehungen von Biopolymeren und Kunststoffen analysieren",
+        "Reaktionsmechanismen der Polymerisation und Polykondensation verstehen und anwenden",
+        "Ökologische und ökonomische Aspekte der Kunststoffherstellung und -entsorgung bewerten"
+      ]
+    },
+    {
+      "thema": "Verlauf chemischer Reaktionen",
+      "relevante_unterthemen": [
+        "Chemische Thermodynamik",
+        "Reaktionsgeschwindigkeit und Katalyse",
+        "Chemisches Gleichgewicht"
+      ],
+      "kernkompetenzen": [
+        "Energieumsätze bei chemischen Reaktionen berechnen und interpretieren",
+        "Einflussfaktoren auf die Reaktionsgeschwindigkeit und Gleichgewichtslage analysieren",
+        "Katalytische Prozesse auf Teilchenebene erklären"
+      ]
+    },
+    {
+      "thema": "Das Donator-Akzeptor-Prinzip",
+      "relevante_unterthemen": [
+        "Säure-Base-Reaktionen",
+        "Indikatorfarbstoffe",
+        "Redoxreaktionen"
+      ],
+      "kernkompetenzen": [
+        "Protonen- und Elektronenübergänge als Donator-Akzeptor-Reaktionen identifizieren",
+        "pH-Werte berechnen und Titrationskurven interpretieren",
+        "Zusammenhang zwischen Molekülstruktur und Farbigkeit bei Indikatoren erklären"
+      ]
+    },
+    {
+      "thema": "Elektrische Energie aus chemischen Reaktionen",
+      "relevante_unterthemen": [
+        "Elektrochemie",
+        "Galvanische Zellen",
+        "Elektrolyse",
+        "Korrosion"
+      ],
+      "kernkompetenzen": [
+        "Elektrochemische Spannungsquellen und Elektrolyseprozesse beschreiben",
+        "Standardelektrodenpotenziale und Zellspannungen berechnen",
+        "Korrosionsvorgänge und Schutzmaßnahmen bewerten"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Chemie",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen (Ausgabe 2024) zielt auf den Erwerb einer fundierten naturwissenschaftlichen Bildung, die als Voraussetzung für die Allgemeine Hochschulreife dient. Der Unterricht ist kompetenzorientiert und wissenschaftspropädeutisch gestaltet, wobei er die Lernenden befähigt, chemische Phänomene auf Stoff- und Teilchenebene zu verstehen, zu modellieren und zu bewerten. Das Curriculum basiert auf drei zentralen Basiskonzepten: dem Konzept vom Aufbau und den Eigenschaften der Stoffe und ihrer Teilchen, dem Konzept der chemischen Reaktion sowie dem Energiekonzept. Diese dienen als strukturierende Klammer für die fachlichen Inhalte. Die Kompetenzbereiche Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz bilden das Fundament, wobei ein besonderer Fokus auf der Vernetzung von Wissen, der Anwendung in realitätsnahen Kontexten und der Reflexion über gesellschaftliche sowie ökologische Auswirkungen chemischer Prozesse liegt. Die Qualifikationsphase ist in vier Kurshalbjahre gegliedert, die von Stoffgruppen über Naturstoffe und Synthesechemie bis hin zu chemischen Gleichgewichten und energetischen Aspekten reichen, wobei eine klare Differenzierung zwischen Grund- und Leistungskursen hinsichtlich Komplexität und Abstraktionsniveau besteht.",
+  "hauptthemen": [
+    {
+      "thema": "Einführungsphase (E1/E2): Redoxreaktionen, Protolysereaktionen und organische Verbindungen",
+      "relevante_unterthemen": [
+        "Redoxreaktionen (Elektronenübergänge, Spannungsreihe, Elektrolyse)",
+        "Protolysereaktionen (Säure-Base-Theorie nach Brönsted, pH-Wert, Titration)",
+        "Einführung in die organische Chemie (Alkane, Alkene, funktionelle Gruppen)",
+        "Erdöl und Erdgas",
+        "Mobile Energiewandler (Brennstoffzellen, Akkumulatoren)"
+      ],
+      "kernkompetenzen": [
+        "Anwendung des Donator-Akzeptor-Prinzips auf Redox- und Protolysereaktionen",
+        "Verknüpfung von Molekülstruktur und Stoffeigenschaften bei organischen Verbindungen"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase Q1: Stoffgruppen",
+      "relevante_unterthemen": [
+        "Chemische Bindung und Strukturen",
+        "Alkanole und Carbonylverbindungen",
+        "Alkansäuren und Derivate",
+        "Seifen und Waschvorgang",
+        "Konservierungsstoffe"
+      ],
+      "kernkompetenzen": [
+        "Identifizierung und Einordnung von Stoffklassen über funktionelle Gruppen",
+        "Anwendung von Reaktionsmechanismen (nucleophile Substitution, elektrophile Addition)"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase Q2: Naturstoffe und Synthesechemie",
+      "relevante_unterthemen": [
+        "Naturstoffe (Aminosäuren, Proteine, Kohlenhydrate, Fette)",
+        "Grundlagen der Kunststoffchemie (Polymerisation, Polykondensation)",
+        "Chemie der Aromaten",
+        "Organische Werkstoffe"
+      ],
+      "kernkompetenzen": [
+        "Analyse komplexer Makromoleküle und deren Struktur-Eigenschafts-Beziehungen",
+        "Bewertung von Synthesewegen und Recyclingstrategien unter Nachhaltigkeitsaspekten"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase Q3: Das chemische Gleichgewicht",
+      "relevante_unterthemen": [
+        "Chemische Gleichgewichte und Massenwirkungsgesetz",
+        "Protolysegleichgewichte",
+        "Redoxgleichgewichte",
+        "Puffersysteme",
+        "Reaktionsgeschwindigkeit"
+      ],
+      "kernkompetenzen": [
+        "Quantitative Beschreibung von Gleichgewichtszuständen",
+        "Anwendung des Prinzips von Le Chatelier zur Steuerung chemischer Prozesse"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase Q4: Energie und Nachhaltigkeit",
+      "relevante_unterthemen": [
+        "Energetische und kinetische Aspekte (Thermodynamik, Enthalpie, Entropie)",
+        "Nachhaltige Chemie und Energieumwandlung",
+        "Moderne Waschmittel"
+      ],
+      "kernkompetenzen": [
+        "Bewertung chemischer Prozesse hinsichtlich ökologischer und ökonomischer Nachhaltigkeit",
+        "Anwendung thermodynamischer Prinzipien auf technische und biologische Systeme"
+      ]
+    }
+  ]
+}

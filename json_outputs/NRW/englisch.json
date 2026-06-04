@@ -1,0 +1,57 @@
+{
+  "bundesland": "NRW",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Kernlehrplan für die gymnasiale Oberstufe in NRW (gültig ab 2023) definiert den Englischunterricht als Beitrag zur individuellen Mehrsprachigkeit und interkulturellen Handlungsfähigkeit. Ziel ist die Vorbereitung auf die allgemeine Hochschulreife durch einen wissenschaftspropädeutischen Unterricht, der funktionale kommunikative Kompetenzen (Hören, Lesen, Sprechen, Schreiben, Sprachmittlung) mit interkultureller Kompetenz, Text- und Medienkompetenz, Sprachlernkompetenz und Sprachbewusstheit verknüpft. Der Unterricht ist kompetenzorientiert, obligatorisch und bereitet auf die Abiturprüfung vor, wobei er Freiräume für schuleigene Schwerpunktsetzungen lässt. Die Leistungsbewertung erfolgt durch Klausuren und sonstige Mitarbeit, wobei die sprachliche Leistung bei Textproduktionen ein höheres Gewicht hat als die inhaltliche.",
+  "hauptthemen": [
+    {
+      "thema": "Funktionale kommunikative Kompetenz",
+      "relevante_unterthemen": [
+        "Hör-/Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (an Gesprächen teilnehmen / zusammenhängendes Sprechen)",
+        "Schreiben",
+        "Sprachmittlung"
+      ],
+      "kernkompetenzen": [
+        "Sichere Verwendung der englischen Sprache als Arbeits- und Kommunikationssprache",
+        "Gelingende Kommunikation durch funktionalen Einsatz sprachlicher Mittel (Wortschatz, Grammatik, Aussprache, Orthografie)"
+      ]
+    },
+    {
+      "thema": "Interkulturelle kommunikative Kompetenz",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen",
+        "Interkulturelle Einstellungen und Bewusstheit",
+        "Interkulturelles Verstehen und Handeln"
+      ],
+      "kernkompetenzen": [
+        "Reflektierter Umgang mit kulturellen Besonderheiten und Lebenswirklichkeiten anglophoner Länder",
+        "Diversitätssensibles Handeln und Fähigkeit zur Perspektivübernahme"
+      ]
+    },
+    {
+      "thema": "Text- und Medienkompetenz",
+      "relevante_unterthemen": [
+        "Analyse kontinuierlicher, diskontinuierlicher und multimodaler Texte",
+        "Produktion eigener Texte",
+        "Kritische Auseinandersetzung mit Medien und KI-Systemen"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige und zielbezogene Deutung von Texten in historischem und sozialem Kontext",
+        "Begründete Interpretation und Nutzung von Textmerkmalen für eigene Produktionen"
+      ]
+    },
+    {
+      "thema": "Sprachlernkompetenz und Sprachbewusstheit",
+      "relevante_unterthemen": [
+        "Reflexives Sprachenlernen",
+        "Strategien zur Wortschatzerweiterung und Textverarbeitung",
+        "Bewusstsein für Sprachvarietäten (World Standard English)"
+      ],
+      "kernkompetenzen": [
+        "Eigenverantwortliche Planung und Evaluierung des individuellen Lernprozesses",
+        "Bewusste Nutzung von Sprachstrukturen und Reflexion über Sprachgebrauch"
+      ]
+    }
+  ]
+}

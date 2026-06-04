@@ -1,0 +1,70 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Biologie",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen (Ausgabe 2024) verfolgt einen kompetenzorientierten Ansatz, der die Schülerinnen und Schüler auf die Allgemeine Hochschulreife vorbereitet. Es integriert fachliches Wissen mit überfachlichen Kompetenzen (personal, sozial, methodisch) und orientiert sich an den KMK-Bildungsstandards für die Naturwissenschaften. Der Unterricht basiert auf fünf zentralen Basiskonzepten (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, Individuelle und evolutive Entwicklung), die eine Vernetzung der Inhalte über die gesamte Oberstufenzeit ermöglichen. Die Kompetenzbereiche Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz bilden das Gerüst für den Unterricht. Das Curriculum ist in eine Einführungsphase (E) und eine Qualifikationsphase (Q1-Q4) gegliedert, wobei die Q4-Inhalte nun explizit abiturrelevant sind. Ein besonderer Fokus liegt auf dem wissenschaftspropädeutischen Arbeiten, der Förderung der Urteilsfähigkeit in ethischen Fragen sowie der Anwendung digitaler Werkzeuge.",
+  "hauptthemen": [
+    {
+      "thema": "Zellbiologie (Einführungsphase)",
+      "relevante_unterthemen": [
+        "Struktur und Funktion von Zellen",
+        "Struktur und Funktion von Proteinen und Enzymen",
+        "Humanbiologische Aspekte der Zellbiologie",
+        "Entwicklungsbiologie (Tier/Pflanze)"
+      ],
+      "kernkompetenzen": [
+        "Verständnis der zellulären Organisation und biochemischer Grundlagen",
+        "Anwendung zellbiologischer Kenntnisse auf medizinische und ernährungsphysiologische Kontexte"
+      ]
+    },
+    {
+      "thema": "Genetik und Gentechnik (Q1)",
+      "relevante_unterthemen": [
+        "Speicherung und Realisierung genetischer Information",
+        "Gene und Gentechnik",
+        "Humangenetik",
+        "Modelle zur Steuerung der Genaktivität"
+      ],
+      "kernkompetenzen": [
+        "Analyse molekulargenetischer Zusammenhänge",
+        "Ethische Reflexion von gentechnischen Anwendungen und deren gesellschaftlichen Herausforderungen"
+      ]
+    },
+    {
+      "thema": "Evolution und Neurobiologie (Q2)",
+      "relevante_unterthemen": [
+        "Synthetische Evolutionstheorie",
+        "Evolution des Menschen",
+        "Neurobiologie (Erregungsleitung, Synapsen)",
+        "Sinnesorgane und Gehirn"
+      ],
+      "kernkompetenzen": [
+        "Erklärung von Evolutionsprozessen und Belegen",
+        "Verständnis neuronaler Informationsverarbeitung und deren Beeinflussung"
+      ]
+    },
+    {
+      "thema": "Ökologie und Stoffwechselphysiologie (Q3)",
+      "relevante_unterthemen": [
+        "Strukturen und Zusammenhänge in Ökosystemen",
+        "Fotosynthese und Zellatmung",
+        "Adaptationen von Pflanzen und Tieren"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Stoffkreisläufen und Energieflüssen",
+        "Hypothesengeleitetes Experimentieren zu Stoffwechselprozessen"
+      ]
+    },
+    {
+      "thema": "Mensch und Umwelt (Q4)",
+      "relevante_unterthemen": [
+        "Einfluss des Menschen auf Ökosysteme",
+        "Nachhaltigkeit und Biodiversität",
+        "Dynamik von Lebensgemeinschaften"
+      ],
+      "kernkompetenzen": [
+        "Bewertung menschlicher Eingriffe in Ökosysteme",
+        "Entwicklung von Handlungsoptionen für eine nachhaltige Entwicklung"
+      ]
+    }
+  ]
+}

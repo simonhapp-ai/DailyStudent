@@ -1,0 +1,85 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe im Saarland ist kompetenzorientiert und basiert auf den KMK-Bildungsstandards für die Allgemeine Hochschulreife. Im Zentrum steht nicht die reine Wissensvermittlung, sondern der Erwerb von Fähigkeiten in den vier Kompetenzbereichen Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Diese werden durch ein Spiralcurriculum vertieft, wobei ein besonderer Fokus auf der molekularen Systemebene liegt. Der Unterricht folgt einem hypothetisch-deduktiven Vorgehen, bei dem Experimentieren und Modellieren eine zentrale Rolle einnehmen. Basiskonzepte (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, Individuelle und evolutive Entwicklung) dienen als verbindendes Element zur Vernetzung der Inhalte. Der Lehrplan umfasst die Themenfelder Genetik, Stoffwechsel, Ökologie, Evolution und Informationsverarbeitung, wobei Querschnittsthemen wie Medienkompetenz, berufliche Orientierung und Bildung für nachhaltige Entwicklung (BNE) integriert sind.",
+  "hauptthemen": [
+    {
+      "thema": "Genetik",
+      "relevante_unterthemen": [
+        "Struktur des Erbmaterials",
+        "Proteinbiosynthese",
+        "Steuerung der Genaktivität",
+        "Mutationen",
+        "Gendiagnostik und Gentherapie"
+      ],
+      "kernkompetenzen": [
+        "Bau und Funktion der DNA sowie semikonservative Replikation erläutern",
+        "Proteinbiosynthese und den genetischen Code beschreiben",
+        "Genregulation bei Eukaryoten erklären",
+        "Folgen von Mutationen beurteilen",
+        "Möglichkeiten und Grenzen von Gentests und Gentherapien diskutieren"
+      ]
+    },
+    {
+      "thema": "Stoffwechsel",
+      "relevante_unterthemen": [
+        "Enzymatik",
+        "Dissimilation (Zellatmung)",
+        "Assimilation (Fotosynthese)",
+        "Kohlenstoffkreislauf"
+      ],
+      "kernkompetenzen": [
+        "Wirkungsweise von Enzymen als Biokatalysatoren erklären",
+        "Zellatmung und Fotosynthese als Stoff- und Energieumwandlungsprozesse darstellen",
+        "Struktur-Funktions-Zusammenhänge bei Mitochondrien und Chloroplasten erläutern",
+        "Experimente zur Enzymaktivität und Fotosyntheserate planen und auswerten"
+      ]
+    },
+    {
+      "thema": "Ökologie",
+      "relevante_unterthemen": [
+        "Ökosysteme und ihre Modellierung",
+        "Abiotische und biotische Faktoren",
+        "Wechselbeziehungen",
+        "Menschlicher Einfluss und Ökosystemmanagement"
+      ],
+      "kernkompetenzen": [
+        "Trophische Gliederung und Energiefluss in Ökosystemen beschreiben",
+        "Wechselwirkungen zwischen Populationen analysieren",
+        "Anthropogene Einflüsse auf Ökosysteme bewerten",
+        "Maßnahmen der Renaturierung und Nachhaltigkeit diskutieren"
+      ]
+    },
+    {
+      "thema": "Evolution",
+      "relevante_unterthemen": [
+        "Synthetische Evolutionstheorie",
+        "Evolutionsfaktoren",
+        "Stammesgeschichte und Verwandtschaft",
+        "Verhaltensbiologie"
+      ],
+      "kernkompetenzen": [
+        "Veränderung der Allelhäufigkeit im Genpool begründen",
+        "Evolutionsfaktoren (Mutation, Rekombination, Selektion, Gendrift) erläutern",
+        "Stammbäume auf Basis molekularbiologischer und morphologischer Daten analysieren",
+        "Verhalten aus proximater und ultimater Perspektive erklären"
+      ]
+    },
+    {
+      "thema": "Informationsverarbeitung",
+      "relevante_unterthemen": [
+        "Reiz-Reaktions-Ketten",
+        "Ruhe- und Aktionspotenzial",
+        "Synaptische Übertragung",
+        "Neuroaktive Stoffe und Sucht",
+        "Vegetatives Nervensystem"
+      ],
+      "kernkompetenzen": [
+        "Entstehung von Ruhe- und Aktionspotenzialen erklären",
+        "Erregungsleitung und synaptische Übertragung beschreiben",
+        "Wirkung von Synapsengiften auf zellulärer Ebene erläutern",
+        "Antagonistische Wirkung von Sympathikus und Parasympathikus erläutern"
+      ]
+    }
+  ]
+}

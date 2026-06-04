@@ -1,0 +1,56 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Politik",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen zielt auf die Vertiefung der Urteils- und Handlungskompetenz ab. Ziel ist es, Schülerinnen und Schüler zu befähigen, komplexe politische, gesellschaftliche und wirtschaftliche Zusammenhänge zu analysieren, zu beurteilen und sich aktiv am demokratischen Leben zu beteiligen. Der Unterricht ist in vier zentrale Themenbereiche gegliedert: Gesellschaft, Staat, Wirtschaft und Internationale Politik. Dabei wird ein theoretisch fundierter Ansatz verfolgt, der über reine Informationsvermittlung hinausgeht und die Schüler zur demokratischen Teilhabe qualifiziert. Ein besonderer Fokus liegt auf der Multiperspektivität, der Reflexion eigener Standpunkte sowie der Anwendung von Fachwissen auf aktuelle Probleme. Die Leistungsbewertung umfasst sowohl schriftliche Arbeiten als auch die laufende Unterrichtsarbeit, wobei der Prozess des Lernens und die fachliche Auseinandersetzung zentral sind. Der Plan bietet Schulen Freiräume zur Profilbildung, während er gleichzeitig durch verbindliche Standards die Vergleichbarkeit und die Vorbereitung auf das Abitur sicherstellt.",
+  "hauptthemen": [
+    {
+      "thema": "Gesellschaft",
+      "relevante_unterthemen": [
+        "Gesellschaftliches System",
+        "Entwicklungstendenzen",
+        "Konflikte der gesellschaftlichen Gestaltung"
+      ],
+      "kernkompetenzen": [
+        "Kernstrukturen des gesellschaftlichen Systems erläutern",
+        "Gesellschaftliche Problemlagen theoriegeleitet analysieren und eine eigene Position begründen"
+      ]
+    },
+    {
+      "thema": "Staat",
+      "relevante_unterthemen": [
+        "Grundgesetz und politisches System der BRD",
+        "Demokratietheorien",
+        "Herrschaftssysteme"
+      ],
+      "kernkompetenzen": [
+        "Verfassungsgrundsätze und Demokratietheorien vergleichen",
+        "Strukturen politischer Willensbildung und Entscheidungsprozesse bewerten"
+      ]
+    },
+    {
+      "thema": "Wirtschaft",
+      "relevante_unterthemen": [
+        "Wirtschaftstheoretische Ansätze",
+        "Marktwirtschaft",
+        "Globalisierung",
+        "Staatliche Wirtschaftspolitik"
+      ],
+      "kernkompetenzen": [
+        "Dynamik der Marktwirtschaft und ökologische Folgen erläutern",
+        "Gestaltungsmöglichkeiten und Grenzen nationaler und internationaler Wirtschaftspolitik erörtern"
+      ]
+    },
+    {
+      "thema": "Internationale Politik",
+      "relevante_unterthemen": [
+        "Analyse internationaler Konflikte",
+        "Frieden und Stabilität",
+        "Globale Akteure und supranationale Organisationen"
+      ],
+      "kernkompetenzen": [
+        "Akteure internationaler Politik und deren Interessenlagen analysieren",
+        "Lösungsmöglichkeiten für internationale Konflikte entwickeln und globale Herausforderungen erörtern"
+      ]
+    }
+  ]
+}

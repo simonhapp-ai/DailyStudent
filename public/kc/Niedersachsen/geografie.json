@@ -1,0 +1,57 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Geografie",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Erdkunde in der gymnasialen Oberstufe in Niedersachsen verfolgt das Leitziel, Schülerinnen und Schüler zu raumverantwortlichem Handeln zu befähigen. Dies geschieht durch die Analyse der komplexen Wechselwirkungen zwischen natürlichen Gegebenheiten und menschlichen Aktivitäten. Das Fach fungiert als Brückenfach zwischen Natur- und Gesellschaftswissenschaften und nutzt vier zentrale Raumkonzepte (Realraum, System von Lagebeziehungen, wahrgenommener Raum, Raum als Konstruktion). Der Unterricht ist kompetenzorientiert und gliedert sich in inhaltsbezogene Kompetenzen (Fachwissen in Fach- und Raummodulen) sowie prozessbezogene Kompetenzen (Räumliche Orientierung, Erkenntnisgewinnung durch Methoden, Kommunikation, Beurteilung und Bewertung). Ein besonderer Fokus liegt auf der Bildung für nachhaltige Entwicklung, Globalem Lernen und der Vorbereitung auf die Abiturprüfung durch kumulatives und problemorientiertes Lernen. Die Leistungsbewertung erfolgt transparent und umfasst sowohl mündliche als auch schriftliche Leistungen, wobei die Anwendung fachspezifischer Operatoren eine zentrale Rolle spielt.",
+  "hauptthemen": [
+    {
+      "thema": "Fachmodule (Inhaltliche Schwerpunkte)",
+      "relevante_unterthemen": [
+        "Raumprägende Faktoren und raumverändernde Prozesse",
+        "Bedeutungswandel von Räumen",
+        "Ressourcennutzung und nachhaltige Entwicklung",
+        "Siedlungsentwicklung und Raumordnung"
+      ],
+      "kernkompetenzen": [
+        "Fähigkeit, Räume als physisch- und anthropogeografische Systeme zu erfassen",
+        "Analyse von Wechselbeziehungen zwischen Mensch und Umwelt",
+        "Anwendung von Nachhaltigkeitskriterien auf Raumnutzungsprozesse"
+      ]
+    },
+    {
+      "thema": "Raummodule (Regionale Konkretisierung)",
+      "relevante_unterthemen": [
+        "Deutschland in Europa",
+        "Nordafrika und Vorderasien (Orient)",
+        "Afrika südlich der Sahara",
+        "Lateinamerika",
+        "Angloamerika",
+        "Russland und asiatische Nachfolgestaaten",
+        "Südasien",
+        "Ostasien",
+        "Südostasien",
+        "Australien und Ozeanien",
+        "Weltmeere als Zukunftsraum"
+      ],
+      "kernkompetenzen": [
+        "Lokalisierung geografischer Gegebenheiten auf verschiedenen Maßstabsebenen",
+        "Einordnung geografischer Objekte in Orientierungsraster",
+        "Vergleich regionaler Entwicklungsstände und Disparitäten"
+      ]
+    },
+    {
+      "thema": "Prozessbezogene Kompetenzen",
+      "relevante_unterthemen": [
+        "Räumliche Orientierung",
+        "Erkenntnisgewinnung durch Methoden",
+        "Kommunikation",
+        "Beurteilung und Bewertung"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung geografischer Fragestellungen und Hypothesen",
+        "Reflektierter Umgang mit analogen und digitalen Medien",
+        "Kriterienorientierte Beurteilung raumbezogener Sachverhalte und Probleme",
+        "Fachsprachlich korrekte Präsentation komplexer Sachzusammenhänge"
+      ]
+    }
+  ]
+}

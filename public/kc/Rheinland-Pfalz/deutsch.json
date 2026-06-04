@@ -1,0 +1,71 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe (Mainzer Studienstufe) in Rheinland-Pfalz zielt auf die Vermittlung einer allgemeinen Hochschulreife und Studierfähigkeit ab. Er betont die ganzheitliche Entfaltung der Schülerpersönlichkeit durch die Förderung von Handlungsfähigkeit, Selbst- und Sozialkompetenz sowie Problemlösungskompetenz. Der Unterricht ist in vier Lernbereiche gegliedert: Literatur, Reflexion über Sprache, Sprechen und Schreiben sowie Arbeits- und Lerntechniken. Ein besonderer Fokus liegt auf der Integration dieser Bereiche, der Förderung vernetzten Denkens und der Einbeziehung neuer Medien. Der Lehrplan räumt den Lehrkräften erhebliche Freiräume bei der Stoffauswahl und -abfolge ein, wobei die Oberstufe als inhaltliche Einheit betrachtet wird. Fachübergreifendes Arbeiten ist ein verbindliches Element, um komplexe, lebensnahe Problemstellungen zu bearbeiten. Die Kursfolgeprogramme für Grund- und Leistungskurse definieren verbindliche Schwerpunkte und Orientierungswissen, lassen jedoch Raum für lerngruppenspezifische Schwerpunktbildungen.",
+  "hauptthemen": [
+    {
+      "thema": "Literatur",
+      "relevante_unterthemen": [
+        "Literarische Epochen von der Antike bis zur Gegenwart",
+        "Gattungen (Epik, Lyrik, Drama)",
+        "Textanalyse und Interpretation",
+        "Vergleichende Textbetrachtung",
+        "Kreative Verfahren der Textaneignung"
+      ],
+      "kernkompetenzen": [
+        "Texte unter Einbeziehung geistiger Kräfte und Methoden nachvollziehen, verstehen und kritisch reflektieren",
+        "Literarische Werke als Ausdrucksmittel menschlicher Kommunikation und Weltsicht begreifen",
+        "Fähigkeit zur ästhetischen Sensibilisierung und zum differenzierten Selbstverständnis entwickeln",
+        "Methoden der Texterschließung (textzentriert, textüberschreitend, kreativ) selbstständig anwenden"
+      ]
+    },
+    {
+      "thema": "Reflexion über Sprache",
+      "relevante_unterthemen": [
+        "Sprache als Kommunikationsmittel",
+        "Sprache als System",
+        "Sprache und Sozialisation",
+        "Historische Dimension von Sprache",
+        "Sprache und Wahrnehmung/Erkenntnis"
+      ],
+      "kernkompetenzen": [
+        "Sprache in ihren sozialen, situativen und mediengeprägten Gebrauchsbedingungen erfassen",
+        "Sprachstrukturen und -theorien verstehen und in der Praxis anwenden",
+        "Strategien sprachlicher Beeinflussung und Manipulation kritisch analysieren",
+        "Sprache als Bedingung für Denken und Wirklichkeitskonstruktion reflektieren"
+      ]
+    },
+    {
+      "thema": "Sprechen und Schreiben",
+      "relevante_unterthemen": [
+        "Gesprächsführung und Rhetorik",
+        "Informieren (Protokoll, Referat, Facharbeit)",
+        "Erörtern und Argumentieren",
+        "Interpretieren",
+        "Kreatives und persönliches Schreiben"
+      ],
+      "kernkompetenzen": [
+        "Sprache zweckmäßig, adressatengerecht und intentionsorientiert verwenden",
+        "Komplexe Problemstellungen selbstständig analysieren und schriftlich/mündlich darstellen",
+        "Verantwortungsbewusstes und kooperatives Gesprächsverhalten zeigen",
+        "Methoden der Ergebnispräsentation unter Nutzung moderner Medien beherrschen"
+      ]
+    },
+    {
+      "thema": "Arbeits- und Lerntechniken sowie Methoden",
+      "relevante_unterthemen": [
+        "Fachspezifische Methoden",
+        "Fachunabhängige Lerntechniken",
+        "Informationsbeschaffung und -verarbeitung",
+        "Empirisches Arbeiten",
+        "Projektmanagement"
+      ],
+      "kernkompetenzen": [
+        "Wissen selbstständig aus verschiedenen Quellen erwerben und kritisch überprüfen",
+        "Methodische Fähigkeiten in komplexen Arbeitsprozessen effektiv einsetzen",
+        "Ergebnisse strukturieren und zielgruppengerecht präsentieren",
+        "Soziale Handlungsstrategien in kooperativen Lernprozessen anwenden"
+      ]
+    }
+  ]
+}

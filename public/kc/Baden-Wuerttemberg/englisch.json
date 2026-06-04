@@ -1,0 +1,222 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Bildungsplan für Englisch als erste Fremdsprache am Gymnasium in Baden-Württemberg zielt darauf ab, Schülerinnen und Schüler umfassend auf die interkulturelle Handlungsfähigkeit in einer globalisierten und mehrsprachigen Welt vorzubereiten. Das übergeordnete Ziel ist der Erwerb interkultureller kommunikativer Kompetenz, die sich an den Niveaustufen des Gemeinsamen Europäischen Referenzrahmens für Sprachen (GER) und den Bildungsstandards der KMK orientiert (Abitur: B2, teilweise C1; Ende Klasse 10: B1, teilweise B2). Englisch wird dabei als Lingua Franca und als Zugang zu vielfältigen anglophonen Kulturräumen verstanden, was die Entwicklung von Toleranz, interkultureller Sensibilität und kritischem Denken fördert.\n\nDer Lehrplan ist in prozessbezogene und inhaltsbezogene Kompetenzen gegliedert. Die prozessbezogenen Kompetenzen umfassen Sprachbewusstheit, Sprachlernkompetenz und fremdsprachenspezifische digitale Kompetenz. Sie unterstützen den Spracherwerb durch Reflexion über Sprache, fördern das selbstständige und zielgerichtete Lernen sowie den kritischen und effektiven Umgang mit digitalen Medien in Kommunikations- und Lernprozessen. Diese Kompetenzen sind integrativ und nicht isoliert prüfungsrelevant, sondern beschreiben das angestrebte Niveau am Ende der Kursstufe.\n\nDie inhaltsbezogenen Kompetenzen beinhalten die zentrale interkulturelle kommunikative Kompetenz, die funktionale kommunikative Kompetenz und die Text- und Medienkompetenz. Der Kompetenzerwerb erfolgt stets in der Auseinandersetzung mit altersgerechten und zunehmend komplexeren, gesellschaftsorientierten Themenfeldern, die ein vertieftes kulturelles Verständnis ermöglichen. Das Fach Englisch leistet dabei wichtige Beiträge zu den Leitperspektiven wie Bildung für nachhaltige Entwicklung, Toleranz und Akzeptanz von Vielfalt, Prävention und Gesundheitsförderung, Berufliche Orientierung, Medienbildung und Verbraucherbildung.\n\nDie funktionale kommunikative Kompetenz umfasst alle sprachlichen Fertigkeiten: Hör-/Hörsehverstehen, Leseverstehen, Sprechen (an Gesprächen teilnehmen und monologisches Sprechen), Schreiben und Mediation. Dabei wird großer Wert auf das systematische Verfügen über sprachliche Mittel (Lexik, Grammatik, Aussprache) gelegt, die als Grundlage für erfolgreiches Sprachhandeln dienen. Die Lexik beinhaltet thematischen und themenunabhängigen Wortschatz, Kollokationen und Redemittel. Die Grammatikprogression ist bewusst entschleunigt, um eine nachhaltige Festigung zu gewährleisten. Bei der Aussprache werden verschiedene englische Standardsprachen (British, American, Australian, Irish, Indian English) berücksichtigt.\n\nDie Text- und Medienkompetenz erfordert einen komplexen und produktiven Umgang mit einem erweiterten Textbegriff, der mündliche, schriftliche, visuelle und multimodale Produkte in ihrem kulturellen und medialen Kontext umfasst. Die Beschäftigung mit fiktionalen und literarischen Texten aus unterschiedlichen englischsprachigen Ländern ist dabei von besonderer Bedeutung, um analytische, ästhetische und kreative Fähigkeiten zu entwickeln und andere Perspektiven einzunehmen. Mediation wird als integrative Kompetenz verstanden, die über die reine Sprachmittlung hinaus auch soziokulturelle Aspekte berücksichtigt.\n\nDidaktisch wird ein kommunikativer, aufgabenorientierter Unterricht mit funktionaler Einsprachigkeit angestrebt. Der Übergang von der Grundschule wird als Kontinuum gestaltet, wobei vorhandene Englischkenntnisse systematisch ausgebaut werden. Der Umgang mit Fehlern ist auf die Förderung der Kommunikationsfähigkeit ausgerichtet, nicht auf die Messung am Muttersprachler. Der Einsatz authentischer Materialien und digitaler Hilfsmittel wird aktiv gefördert, um die Schülerinnen und Schüler optimal auf eine englischsprachige, multikulturelle und digitale Lebens- und Berufswelt vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Prozessbezogene Kompetenzen (Übergreifend)",
+      "relevante_unterthemen": [
+        "Sprachbewusstheit",
+        "Sprachlernkompetenz",
+        "Fremdsprachenspezifische digitale Kompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schüler reflektieren spezifische Ausprägungen des Englischen im Vergleich zu anderen Sprachen und gestalten interkulturelle Kommunikationssituationen verantwortungsbewusst.",
+        "Sie erkennen sprachliche Kommunikationsprobleme, wenden Kompensationsstrategien an und korrigieren Normverstöße.",
+        "Sie nehmen sprachliche Varietäten wahr, reflektieren die Rolle von Sprachen in der Welt und analysieren/bewerten Beeinflussungsstrategien.",
+        "Sie erfahren Sprache in ihrer ästhetischen Dimension und als Mittel schöpferischen Ausdrucks.",
+        "Schüler analysieren und gestalten das eigene Sprachenlernen weitgehend selbstständig und nutzen plurilinguale Kompetenz sowie Sprachvergleich als Lernstrategie.",
+        "Sie nutzen vielfältige Begegnungen mit der Fremdsprache (medial, außerschulisch) und verfügen über ein Repertoire an Lernmethoden, Strategien und digitalen Hilfsmitteln.",
+        "Sie reflektieren Sprachlernprozesse und -ergebnisse und ziehen Konsequenzen für ihr sprachliches Handeln.",
+        "Schüler nutzen digitale Möglichkeiten für den Sprachlernprozess und zur Erweiterung ihrer sprachlichen Fähigkeiten.",
+        "Sie erwerben Kompetenzen zur rezeptiven, produktiven und interaktiven Teilhabe an multimodalen digitalen Kommunikationsformen, achten auf Adressaten-, Situations- und Zweckangemessenheit.",
+        "Sie schätzen Leistungsfähigkeit, Potenzial, Grenzen und Risiken digitaler Medien kritisch ein."
+      ]
+    },
+    {
+      "thema": "Interkulturelle Kommunikation und Alltagskultur (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Alltagskultur und Lebensbedingungen junger Menschen (Familie, Schule, Tiere, Essen, Hobbys, Einkaufen, Wohnen, Bräuche, Feste)",
+        "Besonderheiten zweier Städte und Regionen (Geografie, Geschichte)",
+        "Elementares soziokulturelles Orientierungswissen"
+      ],
+      "kernkompetenzen": [
+        "Schüler verfügen über soziokulturelles Orientierungswissen zu altersgerechten Themen, vorwiegend Großbritannien.",
+        "Sie äußern und tauschen sich zu diesen Themen aus, vergleichen Aspekte des Alltags in eigener und Zielkultur und äußern ihre Meinung.",
+        "Sie erkennen, reflektieren und beachten einfache kulturspezifische Verhaltensweisen (z.B. Restaurantbesuch, Höflichkeitskonventionen) und agieren angeleitet als kultureller Mittler.",
+        "Sie nutzen angeleitet Kenntnisse und Strategien für Sprachhandlungen in interkulturellen Alltagssituationen."
+      ]
+    },
+    {
+      "thema": "Funktionale Sprachfertigkeiten und Medienkompetenz (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Hör-/Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (an Gesprächen teilnehmen, monologisches Sprechen)",
+        "Schreiben",
+        "Mediation",
+        "Verfügen über sprachliche Mittel (Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schüler folgen einsprachigem Unterricht, verstehen didaktisierte Hör-/Hörsehtexte (Hauptaussagen, Details, Beziehungen) und nutzen Verstehensstrategien sowie digitale Hilfsmittel.",
+        "Sie verstehen schriftliche Arbeitsanweisungen, einfache authentische/didaktisierte Texte (Hauptaussagen, Details, Struktur, Beziehungen, Ganzschrift) und wenden Lese-/Worterschließungstechniken an.",
+        "Sie nehmen in einfachen Standardsituationen an Gesprächen teil (beginnen, fortführen, beenden, Informationen/Meinungen austauschen, Wünsche/Bitten formulieren) und sprechen verständlich über altersgerechte Themen (eigene Person, Textinhalte, Vorlieben/Abneigungen, Präsentationen).",
+        "Sie verfassen kurze, einfache Texte (persönliche Korrespondenz, Beschreibungen/Berichte, Meinungsäußerung, Geschichten) und nutzen Methoden zur Ideenfindung und Hilfsmittel.",
+        "Sie übertragen in einfachen Mediationssituationen Informationen sinngemäß und adressatengerecht (gehörte/gelesene Infos, Höflichkeitskonventionen, kulturspezifische Unterschiede) und wenden Kompensationsstrategien an.",
+        "Sie verfügen über ein Repertoire an einfachen lexikalischen Einheiten (Themen, Zahlen, Präpositionen, Pronomen, Modalverben) und themenunabhängigen Redemitteln (Sinnzusammenhänge, Gesprächsführung, Meinungsäußerung, Beschreibungen, Textwiedergabe).",
+        "Sie bilden und wenden einfache grammatische Strukturen an (Nomen, Artikel, Genitiv, Quantoren, Satzbau, Zeiten: simple present, present progressive, simple past, present perfect simple, going to/will-future, Adverbien, Komparativ, reported speech without backshift).",
+        "Sie beherrschen Aussprache und Intonation klar genug, um verstanden zu werden (Laute, Wortbetonungen, Intonationsmuster).",
+        "Sie verfassen angeleitet Notizen, geben Texte/Medieninhalte wieder, beschreiben persönliche Reaktionen, versprachlichen diskontinuierliche Vorlagen und identifizieren/gestalten Textsorten."
+      ]
+    },
+    {
+      "thema": "Interkulturelle Kommunikation und Lebenswelt Jugendlicher (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Rolle des Individuums in der Gruppe (Familie, Freunde, Schulleben, peer groups, gender relations, Identitätsfindung, Freizeit, soziale Netzwerke, Sport/Musik, role models, mental well-being)",
+        "Rolle des Individuums in seinem Lebensraum (Lebensformen, Stadt/Land, Konsumverhalten, Umgang mit Natur, historische Entwicklungen)",
+        "Aktuelle Themen und Ereignisse",
+        "Soziokulturelles Orientierungswissen zu Themen der Lebenswelt Jugendlicher in USA, Großbritannien und weiteren englischsprachigen Ländern"
+      ],
+      "kernkompetenzen": [
+        "Schüler verfügen über soziokulturelles Orientierungswissen zu Themen ihrer Lebenswelt und ihres persönlichen Interesses in verschiedenen Zielkulturen.",
+        "Sie beschreiben Gemeinsamkeiten/Unterschiede zur eigenen Kultur, verstehen Ursachen und tauschen sich darüber aus.",
+        "Sie erkennen, reflektieren und beachten kulturspezifische Verhaltensweisen und Kommunikationskonventionen (z.B. Umgang mit Einladungen, E-Mail-Konventionen) und agieren angeleitet als kultureller Mittler.",
+        "Sie nutzen selbstständig Kenntnisse und Strategien für Sprachhandlungen in interkulturellen Alltagssituationen."
+      ]
+    },
+    {
+      "thema": "Erweiterte Funktionale Sprachfertigkeiten und Medienkompetenz (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Hör-/Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (an Gesprächen teilnehmen, monologisches Sprechen)",
+        "Schreiben",
+        "Mediation",
+        "Verfügen über sprachliche Mittel (Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schüler verstehen Äußerungen in direkter Kommunikation und didaktisierte/einfache authentische Hör-/Hörsehtexte (Hauptaussagen, Details, Haltungen/Beziehungen) und nutzen Verstehensstrategien sowie individuelle Hilfsmittel.",
+        "Sie verstehen didaktisierte/einfache authentische Texte (Hauptaussagen, Details, Struktur, Haltungen/Beziehungen, Ganzschrift) und wenden Lese-/Worterschließungstechniken weitgehend selbstständig an.",
+        "Sie nehmen aktiv an Gesprächen und (in-)formellen Diskussionen teil (beginnen, fortführen, beenden, Informationen/Sachverhalte austauschen, Kompromisse aushandeln) und stellen persönliche Erfahrungen/Themen zusammenhängend dar (beschreiben, Text-/Unterrichtsinhalte, Argumente/Meinung, Präsentationen).",
+        "Sie verfassen einfache, strukturierte Texte (persönliche Korrespondenz, Beschreibungen/Berichte, Argumente/Meinung, Geschichten) und nutzen Methoden zur Ideenfindung und Hilfsmittel.",
+        "Sie übertragen in alltagsbezogenen Mediationssituationen Informationen kultursensitiv, adressatengerecht, situations- und zweckangemessen (relevante/irrelevante Infos, Höflichkeitskonventionen, interkulturelle Schwierigkeiten) und wenden Kompensationsstrategien an.",
+        "Sie verfügen über ein angemessenes Repertoire an lexikalischen Einheiten (Themen, Possessiv-/Reflexivpronomen, Adjektive, Satzadverbien, Modalverben, Verbkonstruktionen) und erweiterten Redemitteln (Sinnzusammenhänge, Gesprächsführung, Meinungsäußerung, Charakterisierung, Textzusammenfassung, Versprachlichung diskontinuierlicher Texte).",
+        "Sie verwenden erworbene grammatische Strukturen korrekt und wenden neue Strukturen intentionsangemessen an (Artikel, Konditionalsätze I/II, Adverbialsätze, Relativsätze, Zeiten: present perfect/simple past Kontrastierung, present perfect progressive, past progressive, past perfect, past perfect progressive, conditional forms, active/passive voice, reported speech).",
+        "Sie beherrschen Aussprache und Intonation klar genug, um verstanden zu werden (bekannte/unbekannte Wörter, Wortbetonungen, Intonationsmuster).",
+        "Sie verfassen Notizen, fassen Texte/Medieninhalte zusammen, charakterisieren Figuren, versprachlichen/erklären/kommentieren diskontinuierliche Vorlagen, erschließen Texte im Kontext und identifizieren/gestalten Textsorten."
+      ]
+    },
+    {
+      "thema": "Interkulturelle Kommunikation und Gesellschaftliche Themen (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Rolle des Individuums in der Gemeinschaft (Schule, charities, volunteering, gap year, inclusion, LGBTQIA+, making a difference)",
+        "Beziehung des Individuums zu seinem Lebensraum (Ressourcen, technischer Wandel, consumer citizenship)",
+        "Übergang in die Erwachsenenwelt (Rechte, Pflichten, Verantwortung, Generationenbeziehungen, soziale Mobilität)",
+        "Kulturelle Prägung durch regionale Identität (Geografie, Sprache, Geschichte)",
+        "Rolle der Medien (Privatsphäre, digital detox)",
+        "Aktuelle Themen und Ereignisse",
+        "Soziokulturelles Orientierungswissen zu gesellschaftlich relevanten Themen in Großbritannien, USA und weiteren englischsprachigen Ländern"
+      ],
+      "kernkompetenzen": [
+        "Schüler verfügen über soziokulturelles Orientierungswissen zu gesellschaftlich relevanten Themen verschiedener Zielkulturen und reflektieren diese im historischen Kontext.",
+        "Sie identifizieren kulturspezifische Phänomene in Texten, erklären gesellschaftliche/historische Bezüge, beschreiben Gemeinsamkeiten/Unterschiede und nehmen detailliert Stellung.",
+        "Sie reflektieren und beachten kulturspezifische Verhaltensweisen/Kommunikationskonventionen (z.B. small talk, sprachliche Signalisierung von Nähe/Distanz, Kritik) und agieren als kultureller Mittler.",
+        "Sie nehmen mithilfe von Informationen eine fremdkulturelle Perspektive ein und analysieren diese.",
+        "Sie nutzen selbstständig Kenntnisse und Strategien für Sprachhandlungen in interkulturellen Alltagssituationen."
+      ]
+    },
+    {
+      "thema": "Vertiefte Funktionale Sprachfertigkeiten und Medienkompetenz (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Hör-/Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (an Gesprächen teilnehmen, monologisches Sprechen)",
+        "Schreiben",
+        "Mediation",
+        "Verfügen über sprachliche Mittel (Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schüler verstehen Äußerungen in direkter Kommunikation und längere, komplexere authentische Hör-/Hörsehtexte (Hauptaussagen, Details, Haltungen/Standpunkte/Beziehungen) und nutzen Verstehensstrategien sowie individuelle Hilfsmittel.",
+        "Sie verstehen längere authentische Texte (Hauptaussagen/Intention, Details, Struktur, Haltungen/Beziehungen, Ganzschrift, Kurzgeschichten, Lyrik) und wenden Lese-/Worterschließungstechniken selbstständig an.",
+        "Sie nehmen aktiv an Gesprächen und Diskussionen teil (beginnen, mitgestalten, beenden, Informationen/Sachverhalte austauschen, Standpunkte/Argumente darlegen, Lösungsmöglichkeiten erörtern, sich in formellen Situationen äußern) und sprechen spontan/zusammenhängend über komplexe Themen (Sachverhalte, Text-/Unterrichtsinhalte, Argumente/Gegenargumente, Präsentationen).",
+        "Sie verfassen strukturierte, logisch aufgebaute, detaillierte Texte (ausführlichere Korrespondenz, Argumente/Positionen, fiktionale Texte) und nutzen Methoden zur Texterstellung und Hilfsmittel selbstständig.",
+        "Sie übertragen in Mediationssituationen Texte zu gesellschaftlichen Themen zusammenfassend (relevante/irrelevante Aussagen, interkulturell sensible Sprechintentionen, interkulturelle Unterschiede/Verständnisschwierigkeiten) und wenden Kompensationsstrategien an.",
+        "Sie verfügen über einen umfangreichen Wortschatz (Themen, frequente Verbkonstruktionen) und ein differenziertes Repertoire an Redemitteln (Sinnzusammenhänge, Diskussionsgestaltung, Lösungsmöglichkeiten, Argumente, Korrespondenz, Charakterisierung, Beschreibungen, Textanalyse/Kommentar, Versprachlichung diskontinuierlicher Texte).",
+        "Sie verwenden erworbene grammatische Strukturen korrekt und wenden neue Strukturen intentionsangemessen an (Artikel, Konditionalsätze III, Adverbialsätze, Infinitiv-/Partizipial-/Gerundium-Konstruktionen, Zeit/Aspektnuancen, passive voice).",
+        "Sie beherrschen Aussprache und Intonation weitgehend sicher, verständlich und korrekt (unbekannte Wörter, Wortbetonungen, Intonation situationsgemäß).",
+        "Sie verfassen selbstständig Notizen, fassen Texte/Medieninhalte aspektbezogen zusammen, analysieren/kommentieren Texte (Intention, Gestaltungsmittel, Personen), versprachlichen/analysieren diskontinuierliche Vorlagen und gestalten Texte interpretierend um."
+      ]
+    },
+    {
+      "thema": "Interkulturelle Kommunikation und Globale Themen (Klassen 11/12 Leistungsfach)",
+      "relevante_unterthemen": [
+        "USA: Politics, culture, society – American ideals and realities, current issues",
+        "Vereinigtes Königreich: Politics, culture, society – Elizabethan Age, British Empire, postcolonial Britain, current issues",
+        "Ein weiteres englischsprachiges Land: Politics, culture, society – way to independence, legacy of British rule, current issues",
+        "Globalisierung: Chances and challenges – social, environmental and economic sustainability, international relations, changes in the world of work, global job market"
+      ],
+      "kernkompetenzen": [
+        "Schüler verfügen über differenziertes soziokulturelles Orientierungswissen zu gesellschaftlichen/politischen Themen der USA, des Vereinigten Königreichs, eines weiteren englischsprachigen Landes und zur Globalisierung.",
+        "Sie identifizieren zentrale kulturspezifische Phänomene in Texten, interpretieren diese in gesellschaftlichen/historischen Bezügen und nehmen differenziert Stellung zu Gemeinsamkeiten/Unterschieden zur eigenen Kultur.",
+        "Sie diskutieren Standpunkte in formellen Kommunikationssituationen respektvoll, agieren als kultureller Mittler und analysieren kulturspezifische Denkmuster/Verhaltensweisen.",
+        "Sie nutzen selbstständig Kenntnisse und Strategien für Sprachhandlungen in interkulturellen Kommunikationssituationen."
+      ]
+    },
+    {
+      "thema": "Differenzierte Funktionale Sprachfertigkeiten und Medienkompetenz (Klassen 11/12 Leistungsfach)",
+      "relevante_unterthemen": [
+        "Hör-/Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (an Gesprächen teilnehmen, monologisches Sprechen)",
+        "Schreiben",
+        "Mediation",
+        "Verfügen über sprachliche Mittel (Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schüler verstehen Äußerungen in direkter Kommunikation und längere, komplexe authentische Hör-/Hörsehtexte (Hauptaussagen, Details, Haltungen/Standpunkte/Stimmungen/Beziehungen) und wenden Verstehensstrategien selbstständig an.",
+        "Sie verstehen längere authentische Sachtexte, kommentierende/literarisch-ästhetische Texte (Hauptaussagen/Intention, Details, Struktur, Haltungen/Beziehungen, zwei Ganzschriften, Lyrik) und nutzen Lese-/Worterschließungstechniken gezielt.",
+        "Sie gestalten den Verlauf von Gesprächen/Diskussionen aktiv, tauschen sich über Informationen/Argumente/Standpunkte aus, erörtern kontroverse Themen und äußern sich in formellen Situationen überzeugend.",
+        "Sie stellen abstraktere gesellschaftliche/politische Themen zusammenhängend/strukturiert dar (Sachverhalte, Text-/Unterrichtsinhalte, Argumente/Gegenargumente, Präsentationen) und wenden Kompensations-/Korrekturstrategien an.",
+        "Sie verfassen strukturierte, logisch aufgebaute, differenzierte Texte (formelle Korrespondenz, Argumente/Stellungnahmen, literarisch-ästhetische Texte) und nutzen Methoden zur Texterstellung und ein breites Spektrum an Hilfsmitteln selbstständig.",
+        "Sie übertragen in Mediationssituationen Texte zu gesellschaftlichen/politischen Themen zusammenfassend (relevante/irrelevante Aussagen, interkulturell sensible Sprechintentionen, interkulturelle Unterschiede/Verständnisschwierigkeiten) und wenden Kompensationsstrategien flexibel an.",
+        "Sie verfügen über einen differenzierten Wortschatz (Themen, Gradadverbien) und ein differenziertes Repertoire an Redemitteln (Sinnzusammenhänge, Diskussionsgestaltung, Lösungsmöglichkeiten, Argumente, Darstellung anderer, formelle Korrespondenz, Charakterisierung, Beschreibungen, Textanalyse/Interpretation, Versprachlichung diskontinuierlicher Texte).",
+        "Sie bilden und verwenden komplexere syntaktische Strukturen intentionsangemessen und korrekt (Inversion [rezeptiv], do-emphasis, question tags, Zeit/Aspekt klar strukturiert).",
+        "Sie beherrschen Aussprache und Intonation sicher, verständlich und korrekt (unbekannte Wörter, Wortbetonungen, Intonation variieren).",
+        "Sie verfassen Notizen/Mitschriften, fassen Texte/Medieninhalte zusammen, analysieren/kommentieren Sachtexte/literarische Texte (Inhalt, Argumentation, Gestaltungsmittel, Charaktere), versprachlichen/analysieren diskontinuierliche Vorlagen und gestalten Texte interpretierend um."
+      ]
+    },
+    {
+      "thema": "Interkulturelle Kommunikation und Globale Themen (Klassen 11/12 Basisfach)",
+      "relevante_unterthemen": [
+        "USA: Politics, culture, society – American ideals and realities, current issues",
+        "Vereinigtes Königreich: Politics, culture, society – British Empire, postcolonial Britain, current issues",
+        "Ein weiteres englischsprachiges Land: Politics, culture, society – legacy of British rule, current issues",
+        "Globalisierung: Chances and challenges – mindestens zwei der vier Unterthemen (sustainability, international relations, changes in the world of work, global job market)"
+      ],
+      "kernkompetenzen": [
+        "Schüler verfügen über soziokulturelles Orientierungswissen zu gesellschaftlichen/politischen Themen der USA, des Vereinigten Königreichs, eines weiteren englischsprachigen Landes und zur Globalisierung.",
+        "Sie identifizieren zentrale kulturspezifische Phänomene in Texten, interpretieren diese in gesellschaftlichen/historischen Bezügen und nehmen überwiegend differenziert Stellung zu Gemeinsamkeiten/Unterschieden zur eigenen Kultur.",
+        "Sie diskutieren Standpunkte in formellen Kommunikationssituationen respektvoll, agieren als kultureller Mittler und analysieren kulturspezifische Denkmuster/Verhaltensweisen.",
+        "Sie nutzen selbstständig Kenntnisse und Strategien für Sprachhandlungen in interkulturellen Kommunikationssituationen."
+      ]
+    },
+    {
+      "thema": "Fortgeschrittene Funktionale Sprachfertigkeiten und Medienkompetenz (Klassen 11/12 Basisfach)",
+      "relevante_unterthemen": [
+        "Hör-/Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (an Gesprächen teilnehmen, monologisches Sprechen)",
+        "Schreiben",
+        "Mediation",
+        "Verfügen über sprachliche Mittel (Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schüler verstehen Äußerungen in direkter Kommunikation und längere, komplexere authentische Hör-/Hörsehtexte zu gesellschaftlichen, politischen und populärwissenschaftlichen Themen (Hauptaussagen, Details, Haltungen/Standpunkte/Stimmungen/Beziehungen) und wenden Verstehensstrategien selbstständig an.",
+        "Sie verstehen längere authentische Sachtexte, kommentierende/literarisch-ästhetische Texte (Hauptaussagen/Intention, Details, Struktur, Haltungen/Beziehungen, Ganzschrift, Lyrik/Kurzgeschichten) und nutzen Lese-/Worterschließungstechniken gezielt.",
+        "Sie gestalten den Verlauf von Gesprächen/Diskussionen aktiv, tauschen sich über Informationen/Argumente/Standpunkte aus, erörtern kontroverse Themen und äußern sich in formellen Situationen überzeugend.",
+        "Sie stellen gesellschaftliche/politische Themen zusammenhängend/strukturiert dar (Sachverhalte, Text-/Unterrichtsinhalte, Argumente/Gegenargumente, Präsentationen) und wenden Kompensations-/Korrekturstrategien an.",
+        "Sie verfassen strukturierte, logisch aufgebaute, überwiegend differenzierte Texte (informelle/formelle Korrespondenz, Argumente/Stellungnahmen, fiktionale Texte) und nutzen Methoden zur Texterstellung und ein breites Spektrum an Hilfsmitteln selbstständig.",
+        "Sie übertragen in Mediationssituationen Texte zu gesellschaftlichen/politischen Themen zusammenfassend (relevante/irrelevante Aussagen, interkulturell sensible Sprechintentionen, interkulturelle Unterschiede/Verständnisschwierigkeiten) und wenden Kompensationsstrategien weitgehend flexibel an.",
+        "Sie verfügen über einen überwiegend differenzierten Wortschatz (Themen, Gradadverbien) und ein überwiegend differenziertes Repertoire an Redemitteln (Sinnzusammenhänge, Diskussionsgestaltung, Lösungsmöglichkeiten, Argumente, Darstellung anderer, formelle Korrespondenz, Charakterisierung, Beschreibungen, Textanalyse/Interpretation, Versprachlichung diskontinuierlicher Texte).",
+        "Sie bilden und verwenden komplexere syntaktische Strukturen intentionsangemessen und korrekt (Inversion [rezeptiv], do-emphasis [rezeptiv], question tags [rezeptiv], Zeit/Aspekt klar strukturiert).",
+        "Sie beherrschen Aussprache und Intonation sicher, verständlich und korrekt (unbekannte Wörter, Wortbetonungen, Intonation variieren).",
+        "Sie verfassen Notizen/Mitschriften, fassen Texte/Medieninhalte zusammen, analysieren/kommentieren Sachtexte/literarische Texte (Inhalt, Argumentation, Gestaltungsmittel, Charaktere), versprachlichen/analysieren diskontinuierliche Vorlagen und gestalten Texte interpretierend um."
+      ]
+    }
+  ]
+}

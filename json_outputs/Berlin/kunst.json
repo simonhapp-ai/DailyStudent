@@ -1,0 +1,60 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Rahmenlehrplan für das Fach Kunst in der gymnasialen Oberstufe in Berlin zielt auf die Entwicklung einer umfassenden Bildkompetenz ab. Diese wird durch die fünf Handlungsfelder 'Bilder imaginieren', 'Bilder machen', 'Bilder wahrnehmen', 'Bilder verstehen' und 'Über Bilder kommunizieren' strukturiert. Der Unterricht ist in drei Kompetenzbereiche unterteilt: Produktion, Rezeption und Reflexion, die in ständiger Wechselwirkung stehen. Ziel ist es, Schülerinnen und Schüler zu befähigen, sich in einer zunehmend visuell geprägten Welt kritisch zu orientieren, eigene Identität durch künstlerische Gestaltung zu bilden und am kulturellen Leben teilzuhaben. Die Qualifikationsphase umfasst vier verbindliche Themenhalbjahre, die von Kommunikation in medialen Welten über Lebensräume und Alltagskultur bis hin zur Präsentation im öffentlichen Kontext reichen. Dabei wird ein wissenschaftspropädeutischer Ansatz verfolgt, der sowohl individuelle Ausdrucksfähigkeit als auch die Analyse gesellschaftlicher und kunsthistorischer Kontexte fördert.",
+  "hauptthemen": [
+    {
+      "thema": "Kommunikation in künstlerischen und medialen Welten",
+      "relevante_unterthemen": [
+        "Fotografie",
+        "Film/Video/Animation",
+        "Webdesign",
+        "Mensch und Medium",
+        "Abbild und Inszenierung"
+      ],
+      "kernkompetenzen": [
+        "Künstlerische und mediale Gestaltungsmittel erproben und vergleichen",
+        "Eigene Ausdrucks- und Urteilsfähigkeit in kommunikativen Prozessen entwickeln"
+      ]
+    },
+    {
+      "thema": "Lebensräume und Alltagskultur",
+      "relevante_unterthemen": [
+        "Baukonzeptionen und Architektur",
+        "Siedlung und Wohnen",
+        "Produktgestaltung und Design",
+        "Gestalteter Naturraum"
+      ],
+      "kernkompetenzen": [
+        "Grundprinzipien des Gestaltens und Problemlösens in Architektur und Design verstehen",
+        "Zusammenhänge zwischen Kultur, Gesellschaft und Formgebung analysieren"
+      ]
+    },
+    {
+      "thema": "Bilder und Bildwelten als Ausdrucksmittel des Menschen",
+      "relevante_unterthemen": [
+        "Malerei und Grafik",
+        "Plastik/Objekt/Installation",
+        "Performance und Konzeptkunst",
+        "Kunstgeschichte und zeitgenössische Kunst"
+      ],
+      "kernkompetenzen": [
+        "Individuelle Ausdrucksformen durch Experiment und Imagination entwickeln",
+        "Begründete Positionen zu künstlerischen Konzepten im Spannungsfeld von Tradition und Moderne beziehen"
+      ]
+    },
+    {
+      "thema": "Gestaltung und Präsentation im öffentlichen Kontext",
+      "relevante_unterthemen": [
+        "Dokumentation",
+        "Ausstellungsgestaltung",
+        "Veranstaltungskonzept",
+        "Kampagne und Werbung"
+      ],
+      "kernkompetenzen": [
+        "Konzepte zur Vermittlung von Bildern und Prozessen für eine Öffentlichkeit entwickeln",
+        "Wirkungszusammenhänge von Präsentationsformen reflektieren und kritisch bewerten"
+      ]
+    }
+  ]
+}

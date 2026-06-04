@@ -1,0 +1,120 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Sport",
+  "zusammenfassung": "Der Fachlehrplan Sport für das Gymnasium in Sachsen-Anhalt verfolgt einen pädagogischen Doppelauftrag: Erziehung durch Sport (Entwicklungsförderung durch Bewegung, Spiel und Sport) und Erziehung zum Sport (Erschließung der Sportkultur und Befähigung zur Teilhabe). Das Kernziel ist die Entwicklung einer umfassenden Handlungskompetenz, die motorisches Können, Wissen, Wollen und soziale Verantwortung integriert. Der Unterricht ist kompetenzorientiert und stützt sich auf drei Bereiche: sportlich-spielerische Bewegungskompetenz, sportbezogene soziale Kompetenz und sportbezogene internal-personale Kompetenz. Ein zentrales Element ist die Mehrperspektivität (Leistung, Gesundheit, Miteinander, Wagnis, Eindruck, Ausdruck), die den Schülern hilft, Sinn im Sporttreiben zu finden. Der Lehrplan ist in Bewegungsfelder strukturiert (Spielen; Laufen, Springen, Werfen; Turnerisches Bewegen; Fitness fördern; Rhythmisches Bewegen, Tanzen, Gestalten; Kämpfen; Fahren, Rollen, Gleiten; Bewegen im Wasser), die kumulativ über die Schuljahrgänge 5 bis 12 hinweg entwickelt werden. Besonderer Wert wird auf die Vernetzung von Theorie und Praxis, die Förderung der Medienkompetenz in der digitalen Welt sowie die Bildung für nachhaltige Entwicklung gelegt. In der gymnasialen Oberstufe rückt zudem das wissenschaftspropädeutische Arbeiten in den Fokus, um die Schüler auf die Anforderungen der Allgemeinen Hochschulreife vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Spielen",
+      "relevante_unterthemen": [
+        "Kleine Spiele",
+        "Große Sportspiele (z.B. Basketball, Volleyball, Handball, Fußball)",
+        "Rückschlagspiele",
+        "Spielanalyse und -taktik"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung einer vielseitigen und variabel einsetzbaren Spielfähigkeit",
+        "Reflexion von Spielsituationen und Anwendung taktischer Handlungsmuster",
+        "Fairness, Kooperation und Übernahme von Verantwortung im Spiel"
+      ]
+    },
+    {
+      "thema": "Laufen, Springen, Werfen (Leichtathletik)",
+      "relevante_unterthemen": [
+        "Sprint, Ausdauerlauf",
+        "Hoch- und Weitsprung",
+        "Wurf- und Stoßdisziplinen",
+        "Leichtathletischer Mehrkampf"
+      ],
+      "kernkompetenzen": [
+        "Ausführung leichtathletischer Disziplinen auf erweitertem technisch-koordinativen Niveau",
+        "Trainingsmethodische Begründung von Ausdauerleistungen",
+        "Anwendung von Maßnahmen der Verletzungsprophylaxe"
+      ]
+    },
+    {
+      "thema": "Turnerisches Bewegen",
+      "relevante_unterthemen": [
+        "Gerätturnen",
+        "Akrobatik",
+        "Parkour/Free Running",
+        "Bewegungslandschaften"
+      ],
+      "kernkompetenzen": [
+        "Beherrschung turnerischer Fertigkeiten unter Beachtung von Bewegungspräzision und -dynamik",
+        "Selbstständige Konzeption von Übungsverbindungen",
+        "Sicheres Helfen und Sichern"
+      ]
+    },
+    {
+      "thema": "Fitness fördern",
+      "relevante_unterthemen": [
+        "Konditionstraining (Kraft, Ausdauer, Schnelligkeit)",
+        "Koordinationstraining",
+        "Fitnesstrends",
+        "Gesundheitsorientierte Lebensführung"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige Planung und Durchführung von Fitnesstraining",
+        "Anwendung von Methoden zur Belastungssteuerung",
+        "Reflexion der Wechselwirkungen zwischen Fitness, Gesundheit und Lebensqualität"
+      ]
+    },
+    {
+      "thema": "Rhythmisches Bewegen, Tanzen, Gestalten",
+      "relevante_unterthemen": [
+        "Gymnastik",
+        "Tanz",
+        "Bewegungskompositionen",
+        "Ausdrucksgestaltung"
+      ],
+      "kernkompetenzen": [
+        "Ästhetische Umsetzung von Musik in Bewegung",
+        "Kreative Entwicklung und Präsentation von Kompositionen",
+        "Einsatz des Körpers als gestalterisches Mittel zur Darstellung von Emotionen"
+      ]
+    },
+    {
+      "thema": "Kämpfen",
+      "relevante_unterthemen": [
+        "Kampfsportliche Rituale",
+        "Falltechniken",
+        "Stand- und Bodentechniken",
+        "Selbstverteidigung"
+      ],
+      "kernkompetenzen": [
+        "Kontrollierter und verantwortungsvoller Einsatz eigener Kräfte",
+        "Einhaltung von Sicherheitsmaßnahmen und Respekt gegenüber dem Partner",
+        "Unterscheidung zwischen spielerischem Raufen und sportlichem Wettstreit"
+      ]
+    },
+    {
+      "thema": "Fahren, Rollen, Gleiten",
+      "relevante_unterthemen": [
+        "Radfahren/Skaten",
+        "Skifahren/Snowboarden",
+        "Wassersport (Boote)",
+        "Gleichgewichtsschulung"
+      ],
+      "kernkompetenzen": [
+        "Sichere Handhabung von Sportgeräten in verschiedenen Medien",
+        "Situationsadäquater Einsatz von Techniken",
+        "Verantwortungsbewusster Umgang mit Umweltressourcen und Sicherheitsvorschriften"
+      ]
+    },
+    {
+      "thema": "Bewegen im Wasser",
+      "relevante_unterthemen": [
+        "Schwimmstile",
+        "Tauchen",
+        "Springen",
+        "Rettungsschwimmen",
+        "Aquafitness"
+      ],
+      "kernkompetenzen": [
+        "Sicheres Schwimmen über längere Distanzen",
+        "Anwendung von Techniken der Selbst- und Fremdrettung",
+        "Verständnis der physikalischen Eigenschaften des Wassers"
+      ]
+    }
+  ]
+}

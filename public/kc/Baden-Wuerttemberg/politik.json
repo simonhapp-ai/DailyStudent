@@ -1,0 +1,381 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Politik",
+  "zusammenfassung": "Der Bildungsplan 2016 für das Gymnasium im Fach Gemeinschaftskunde in Baden-Württemberg, aktualisiert im Februar 2023, zielt darauf ab, Schülerinnen und Schüler zu politisch mündigen Bürgern zu erziehen. Dies geschieht auf der Grundlage solider Fachkenntnisse und der Entwicklung einer demokratischen Grundeinstellung, die zu selbstständigem Denken, rationalem Urteilen und sozial verantwortlichem Handeln befähigt. Das Fach leistet einen wesentlichen Beitrag zur Wertebildung, indem es Toleranz, Gewaltfreiheit, Zivilcourage sowie die Einsicht in die konstitutiven Elemente von Freiheit und Verantwortung in einer freiheitlich-demokratischen Grundordnung fördert.\n\nDer Lehrplan integriert sechs zentrale Leitperspektiven: Bildung für nachhaltige Entwicklung (BNE), Bildung für Toleranz und Akzeptanz von Vielfalt (BTV), Prävention und Gesundheitsförderung (PG), Berufliche Orientierung (BO), Medienbildung (MB) und Verbraucherbildung (VB). Diese Perspektiven werden durch vielfältige Inhalte und didaktische Ansätze im Unterricht verankert.\n\nDer Kompetenzerwerb ist in prozessbezogene und inhaltsbezogene Kompetenzen gegliedert. Die prozessbezogenen Kompetenzen umfassen vier Kernbereiche: Analysekompetenz (systematische Untersuchung gesellschaftlicher, politischer und wirtschaftlicher Prozesse), Urteilskompetenz (Entwicklung kritischer, reflektierter Urteile und Lösungsvorschläge), Handlungskompetenz (Vertreten von Interessen, Führen von Aushandlungsprozessen, demokratische Entscheidungsfindung) und Methodenkompetenz (selbstständige Informationsbeschaffung, kritischer Umgang mit Medien, Anwendung fachspezifischer Methoden). Diese Kompetenzen werden durch die Erweiterung der Perspektiven (individuell, öffentlich, systemisch) progressiv vertieft.\n\nDie inhaltsbezogenen Kompetenzen sind spiralcurricular aufgebaut und gliedern sich in die Bereiche Gesellschaft, Recht, Politisches System und Internationale Beziehungen. Sie sind nach dem Prinzip „vom Nahen zum Fernen“ strukturiert, beginnend mit Demokratie als Lebensform (Schule, Familie), über Demokratie als Gesellschaftsform (Zivilgesellschaft, Konfliktlösung) bis hin zu Demokratie als Herrschaftsform (Institutionen, Prinzipien). Sechs Basiskonzepte – Macht und Entscheidung, Ordnung und Struktur, Regeln und Recht, Interessen und Gemeinwohl, Privatheit und Öffentlichkeit, Knappheit und Verteilung – dienen als Strukturierungshilfe und Leitfragen für den Unterricht. Didaktische Prinzipien wie Schülerorientierung, Problemorientierung, Kontroversität, exemplarisches Lernen, Aktualität und Handlungsorientierung sind grundlegend für die Unterrichtsgestaltung. Der Bildungsplan unterscheidet zwischen Basisfach- und Leistungsfachinhalten für die Klassen 11/12, wobei das Leistungsfach eine vertiefte Auseinandersetzung mit komplexeren Fragestellungen ermöglicht.",
+  "hauptthemen": [
+    {
+      "thema": "Gesellschaft (Klassen 8/9/10)",
+      "relevante_unterthemen": [
+        "Familie und Gesellschaft",
+        "Zuwanderung nach Deutschland",
+        "Aufgaben und Probleme des Sozialstaats"
+      ],
+      "kernkompetenzen": [
+        "unterschiedliche Lebensformen charakterisieren",
+        "Aufgaben der Familie erläutern",
+        "Aufgabenverteilungen in Familien bewerten",
+        "die besondere Stellung der Familie beschreiben und staatliche Fördermaßnahmen erläutern",
+        "Maßnahmen zur Überwindung geschlechtsspezifischer Benachteiligungen erörtern",
+        "Ursachen von Zuwanderung nach Deutschland erläutern",
+        "die Zusammensetzung der Bevölkerung in Deutschland analysieren",
+        "Folgen von Zuwanderung für Deutschland erläutern",
+        "Anforderungen an die Aufnahmegesellschaft und an die Zuwanderer im Integrationsprozess erläutern",
+        "die Zuwanderungspolitik Deutschlands und der EU erörtern",
+        "das Sozialstaatsgebot des Grundgesetzes beschreiben",
+        "Aufgaben des Sozialstaats erläutern",
+        "Gestaltungsprinzipien der sozialen Sicherung charakterisieren",
+        "die Renten- und Krankenversicherung vergleichen",
+        "unterschiedliche Formen von Gerechtigkeit charakterisieren",
+        "die Konzepte der absoluten und der relativen Armut vergleichen",
+        "Einflussfaktoren auf das Armutsrisiko analysieren sowie politische, gesellschaftliche und wirtschaftliche Folgen von Armut erläutern",
+        "das Fürsorgeprinzip am Beispiel der Grundsicherung beschreiben und die Ausgestaltung bewerten"
+      ]
+    },
+    {
+      "thema": "Recht (Klassen 8/9/10)",
+      "relevante_unterthemen": [
+        "Rechtliche Stellung des Jugendlichen und Rechtsordnung",
+        "Grundrechte"
+      ],
+      "kernkompetenzen": [
+        "die besondere Rechtsstellung von Kindern und Jugendlichen erklären",
+        "Formen von Jugendkriminalität beschreiben und ihre Ursachen erklären",
+        "Zwecke von Strafen erklären und jugendstrafrechtliche Sanktionen bewerten",
+        "Prinzipien des Rechtsstaats charakterisieren",
+        "Öffentliches Recht und Privatrecht vergleichen",
+        "Straf- und Zivilprozess vergleichen",
+        "die Bedeutung des Rechts für eine Gesellschaft erläutern",
+        "unterschiedliche Arten von Grundrechten erläutern",
+        "die besondere Stellung der Grundrechte beschreiben",
+        "die Ausgestaltung des Minderheitenschutzes am Beispiel der Sinti und Roma beschreiben",
+        "an einem vorgegebenen Fallbeispiel einen Grundrechtskonflikt analysieren"
+      ]
+    },
+    {
+      "thema": "Politisches System (Klassen 8/9/10)",
+      "relevante_unterthemen": [
+        "Mitwirkung in der Schule",
+        "Politik in der Gemeinde",
+        "Politischer Willensbildungsprozess in Deutschland",
+        "Politischer Entscheidungsprozess in Deutschland",
+        "Kontrolle politischer Herrschaft in Deutschland",
+        "Problemlösefähigkeit des politischen Systems – eine Fallstudie"
+      ],
+      "kernkompetenzen": [
+        "Kennzeichen demokratischer Wahlen beschreiben",
+        "die Einhaltung der Vorgaben einer Klassensprecherwahl überprüfen",
+        "Konfliktursachen erläutern und Möglichkeiten der Konfliktbewältigung bewerten",
+        "Mitwirkungsrechte der Schülerinnen und Schüler beschreiben",
+        "Aufgaben der Schülervertreter erläutern",
+        "den Entscheidungsprozess in der Schule analysieren und die Mitwirkungsrechte der Schülerinnen und Schüler bewerten",
+        "Partizipationsmöglichkeiten Jugendlicher beschreiben und die Akzeptanz überprüfen",
+        "Partizipationsmöglichkeiten der Bürger beschreiben",
+        "die Modelle der plebiszitären und der repräsentativen Demokratie vergleichen",
+        "die Organe einer Gemeinde darstellen und ihre Legitimation beschreiben",
+        "einen kommunalen Konflikt analysieren und Möglichkeiten der Einflussnahme von Bürgern bewerten",
+        "Partizipationsmöglichkeiten beschreiben",
+        "Auswirkungen digitaler Medien auf die politische Willensbildung erläutern",
+        "Parteien, Verbände und Bürgerinitiativen vergleichen",
+        "das Wahlsystem zum Bundestag erklären",
+        "Aufgaben der Parteien erläutern",
+        "die von Parteien vertretenen Positionen in einem Politikfeld vergleichen",
+        "die Aufgaben der Medien in einer demokratischen Gesellschaft erläutern",
+        "die Bedeutung der Pressefreiheit für die Demokratie erläutern",
+        "Kennzeichen von politischem Extremismus erläutern",
+        "die Bedeutung von Zivilcourage und zivilgesellschaftlichem Engagement erläutern",
+        "Möglichkeiten der Bürger, ihre Interessen in den politischen Entscheidungsprozess einzubringen, bewerten",
+        "Aufgaben des Bundestags beschreiben",
+        "die Arbeitsweise des Bundestags beschreiben",
+        "Formen von Gewaltenverschränkung erklären",
+        "die Stellung des Abgeordneten erläutern",
+        "Aufgaben der Bundesregierung erläutern",
+        "die Richtlinienkompetenz des Bundeskanzlers erläutern",
+        "den Gang der Gesetzgebung darstellen",
+        "den Entscheidungsprozess und das Zusammenwirken der Verfassungsorgane bei der Gesetzgebung analysieren",
+        "Erweiterungen des repräsentativen Systems Deutschlands durch plebiszitäre Elemente erörtern",
+        "die Kontrolle politischer Herrschaft durch Medien erläutern",
+        "verfassungsrechtliche Stellung und Aufgaben des Bundesverfassungsgerichts beschreiben",
+        "die Legitimation von Bundesverfassungsgericht und Bundestag vergleichen",
+        "die Kontrollfunktion des Bundesverfassungsgerichts erläutern und den Einfluss auf die Gesetzgebung überprüfen",
+        "anhand eines aktuellen politischen Konflikts eine Fallstudie erstellen"
+      ]
+    },
+    {
+      "thema": "Internationale Beziehungen (Klassen 8/9/10)",
+      "relevante_unterthemen": [
+        "Frieden und Menschenrechte",
+        "Die Europäische Union"
+      ],
+      "kernkompetenzen": [
+        "einen kriegerischen Konflikt analysieren",
+        "die Konzepte des negativen und des positiven Friedens vergleichen",
+        "Hauptziele und Grundsätze der UNO beschreiben",
+        "die Organe der UNO beschreiben und ihre Aufgaben erläutern",
+        "Zusammensetzung und Entscheidungsfindung des Sicherheitsrats beschreiben",
+        "Maßnahmen der UNO zur Konfliktbeilegung erläutern",
+        "Maßnahmen der UNO zur Bewahrung, Schaffung und Sicherung des Friedens bewerten",
+        "die Einhaltung von Menschenrechten überprüfen",
+        "Möglichkeiten zum Schutz der Menschenrechte durch internationale Organisationen und NGOs erläutern",
+        "erläutern, wie Entscheidungen der EU das tägliche Leben der EU-Bürger beeinflussen",
+        "Partizipationsmöglichkeiten der EU-Bürger beschreiben",
+        "die Organe der EU darstellen und ihre Legitimation beschreiben",
+        "die Organe der EU mit den Verfassungsorganen Deutschlands vergleichen",
+        "eine länderübergreifende Herausforderung innerhalb der EU analysieren und Lösungsmöglichkeiten erörtern",
+        "die EU-Beitrittskriterien beschreiben",
+        "den möglichen Beitritt eines Staates erörtern"
+      ]
+    },
+    {
+      "thema": "Internationale Beziehungen (Basisfach)",
+      "relevante_unterthemen": [
+        "Grundlagen des internationalen Systems",
+        "Frieden und Sicherheit",
+        "Deutsche Außenpolitik",
+        "Globales Regieren"
+      ],
+      "kernkompetenzen": [
+        "die Struktur des internationalen Systems beschreiben",
+        "Akteure der internationalen Beziehungen beschreiben und ihre Handlungsmotive charakterisieren",
+        "Rahmenbedingungen der Politik im Nationalstaat mit denen der internationalen Politik vergleichen",
+        "Bedrohungen für die internationale Sicherheit erläutern",
+        "den erweiterten Sicherheitsbegriff beschreiben",
+        "den Wandel von klassischen Kriegen zu „Neuen Kriegen“ charakterisieren",
+        "die Weiterentwicklung der UN-Mandate erläutern",
+        "die NATO als System der kollektiven Verteidigung beschreiben und die Strategie erörtern",
+        "das Konzept der Schutzverantwortung der Staaten im humanitären Völkerrecht beschreiben",
+        "das Spannungsverhältnis zwischen staatlicher Souveränität und Schutzverantwortung darstellen",
+        "Möglichkeiten zum Schutz der Menschenrechte durch internationale Organisationen und NGOs erläutern",
+        "Maßnahmen von UNO, NATO und NGOs zur Bewahrung, Schaffung und Sicherung des Friedens bewerten",
+        "Grundlagen der deutschen Sicherheitspolitik beschreiben",
+        "die Mitwirkung Deutschlands in NATO und UNO beschreiben",
+        "überprüfen, inwieweit die deutsche Außenpolitik dem Zivilmachtskonzept entspricht",
+        "Anti-Terror-Gesetze im Spannungsfeld von Freiheit und Sicherheit bewerten",
+        "unterschiedliche Formen des Regierens in den internationalen Beziehungen erläutern",
+        "die UNO als Akteur in den internationalen Beziehungen bewerten"
+      ]
+    },
+    {
+      "thema": "Politisches System (Basisfach)",
+      "relevante_unterthemen": [
+        "Grundlagen des politischen Systems",
+        "Politische Teilhabe",
+        "Gesetzgebung und Regieren"
+      ],
+      "kernkompetenzen": [
+        "demokratische, autoritäre und totalitäre Typen politischer Systeme vergleichen",
+        "Staatsstrukturprinzipien erläutern",
+        "das Wahlsystem zum Bundestag mit reinen Mehrheits- und Verhältniswahlsystemen in anderen Staaten vergleichen",
+        "das Wahlsystem zum Bundestag bewerten",
+        "Ursachen des Nichtwählens beschreiben und mögliche Folgen erläutern",
+        "den Zusammenhang von sozialem Status und der Partizipation der Bürger erklären sowie die Folgen für die Demokratie bewerten",
+        "die Bedeutung der Medien für die politische Teilhabe erläutern",
+        "die Erweiterung der Partizipationsmöglichkeiten um dialogorientierte Partizipationsformen und Bürgerbeteiligung erörtern",
+        "Möglichkeiten der Bürger, ihre Interessen in der repräsentativen Demokratie Deutschlands in den politischen Entscheidungsprozess einzubringen, bewerten",
+        "die Bedeutung der Exekutive für den Gesetzgebungsprozess erläutern",
+        "die Mitwirkung des Bundesrats an der Gesetzgebung erläutern",
+        "die Europäisierung der Gesetzgebung erläutern",
+        "die Entscheidungsfindung im föderalen System Deutschlands bewerten"
+      ]
+    },
+    {
+      "thema": "Gesellschaft (Basisfach, fakultativ)",
+      "relevante_unterthemen": [
+        "Gesellschaftsstruktur und gesellschaftlicher Wandel",
+        "Politik der Chancengleichheit"
+      ],
+      "kernkompetenzen": [
+        "ein Modell der sozialen Differenzierung charakterisieren",
+        "die Konzepte von Rawls und Nozick zu sozialer Gerechtigkeit, Gleichheit und Freiheit vergleichen",
+        "politische, gesellschaftliche und wirtschaftliche Folgen ungleicher Einkommens- und Vermögensverteilung erläutern",
+        "Maßnahmen der Umverteilung durch den Staat erläutern",
+        "erörtern, ob durch staatliche Maßnahmen die Vermögensunterschiede in einer Gesellschaft reduziert werden sollen",
+        "überprüfen, inwieweit durch Umverteilungspolitik gleiche Chancen zur politischen, gesellschaftlichen und wirtschaftlichen Teilhabe gewährleistet werden",
+        "die Entwicklung der Teilnahme an Bildung und die Entwicklung der Bildungsabschlüsse sowie die Einflussfaktoren darauf analysieren",
+        "politische, gesellschaftliche und wirtschaftliche Folgen von ungleichen Bildungschancen erläutern",
+        "Maßnahmen staatlicher Bildungspolitik und gesellschaftliche Initiativen zur Bildungsförderung erläutern",
+        "überprüfen, inwieweit durch Bildungspolitik gleiche Bildungschancen gewährleistet werden"
+      ]
+    },
+    {
+      "thema": "Wirtschaftspolitik (Basisfach, fakultativ)",
+      "relevante_unterthemen": [
+        "Grundlagen der Wirtschaftspolitik",
+        "Wohlstand und Wirtschaftswachstum",
+        "Aufgaben nationaler Wirtschaftspolitik: Beschäftigungspolitik"
+      ],
+      "kernkompetenzen": [
+        "die Konzepte des Ordoliberalismus, Neoliberalismus, Keynesianismus vergleichen",
+        "Formen des Marktversagens und die Forderung nach wirtschaftspolitischem Handlungsbedarf erklären",
+        "die Ziele der deutschen Wirtschaftspolitik erläutern",
+        "Konzepte zur Messung von Wachstum und Wohlstand erörtern",
+        "die Konzepte der Angebots- und der Nachfrageorientierung zur Wachstumsförderung vergleichen",
+        "Maßnahmen der Wachstumspolitik auf nationaler Ebene bewerten",
+        "die Entwicklung des Arbeitsmarkts analysieren",
+        "strukturelle und konjunkturelle Arbeitslosigkeit erklären",
+        "individuelle, gesellschaftliche und volkswirtschaftliche Folgen von Arbeitslosigkeit erläutern",
+        "Entwicklungen auf dem Arbeitsmarkt in Deutschland analysieren",
+        "die Konzepte der Angebots- und der Nachfrageorientierung zur Bekämpfung von Arbeitslosigkeit vergleichen",
+        "Maßnahmen zur Regulierung des Arbeitsmarkts bewerten",
+        "politische, gesellschaftliche und wirtschaftliche Folgen des globalisierten Arbeitsmarkts für Deutschland erläutern",
+        "Maßnahmen der Beschäftigungspolitik auf nationaler Ebene bewerten"
+      ]
+    },
+    {
+      "thema": "Gesellschaft (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Gesellschaftsstruktur und gesellschaftlicher Wandel",
+        "Ausgestaltung des Sozialstaats",
+        "Politik der Chancengleichheit"
+      ],
+      "kernkompetenzen": [
+        "Modelle der sozialen Differenzierung charakterisieren",
+        "die Konzepte von Rawls und Nozick zu sozialer Gerechtigkeit, Gleichheit und Freiheit vergleichen",
+        "den gesellschaftlichen Wandel analysieren",
+        "Aufgaben des Sozialstaats erläutern",
+        "die Ausgestaltung des Sozialstaats nach dem Versicherungs-, Fürsorge- und Versorgungsprinzip charakterisieren",
+        "das im Grundgesetz verankerte Spannungsverhältnis von individueller Freiheit und Sozialstaatsgebot erklären",
+        "Modelle des Wohlfahrtsstaats nach Esping-Andersen vergleichen",
+        "neue soziale Risiken als Herausforderungen für den Sozialstaat erläutern",
+        "eine sozialstaatliche Reformmaßnahme bewerten",
+        "die Entwicklung der vertikalen Ungleichheit bei Einkommen und Vermögen analysieren",
+        "politische, gesellschaftliche und wirtschaftliche Folgen ungleicher Einkommens- und Vermögensverteilung erläutern",
+        "Maßnahmen der Umverteilung durch den Staat erläutern",
+        "die Einkommensbesteuerung beschreiben und deren Ausgestaltung bewerten",
+        "erörtern, ob durch staatliche Maßnahmen die Vermögensunterschiede in einer Gesellschaft reduziert werden sollen",
+        "überprüfen, inwieweit durch Umverteilungspolitik gleiche Chancen zur politischen, gesellschaftlichen und wirtschaftlichen Teilhabe gewährleistet werden",
+        "Migrationsbewegungen innerhalb der EU und die Zusammensetzung der Bevölkerung in Deutschland und der EU analysieren",
+        "politische, gesellschaftliche und wirtschaftliche Folgen von Zuwanderung erläutern",
+        "Maßnahmen staatlicher Migrations- und Integrationspolitik und zivilgesellschaftliche Initiativen zur Integrationsförderung erläutern",
+        "überprüfen, inwieweit durch Integrationspolitik gleiche Chancen zur politischen, gesellschaftlichen und wirtschaftlichen Teilhabe gewährleistet werden",
+        "die Entwicklung der Teilnahme an Bildung und die Entwicklung der Bildungsabschlüsse sowie die Einflussfaktoren darauf analysieren",
+        "politische, gesellschaftliche und wirtschaftliche Folgen von ungleichen Bildungschancen erläutern",
+        "Maßnahmen staatlicher Bildungspolitik und gesellschaftliche Initiativen zur Bildungsförderung erläutern",
+        "überprüfen, inwieweit durch Bildungspolitik gleiche Bildungschancen gewährleistet werden"
+      ]
+    },
+    {
+      "thema": "Politisches System (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Grundlagen des politischen Systems",
+        "Politische Teilhabe",
+        "Gesetzgebung und Regieren",
+        "Kontrolle politischer Herrschaft"
+      ],
+      "kernkompetenzen": [
+        "neuzeitliche Vertragstheorien zur Legitimation politischer Herrschaft vergleichen",
+        "neuere Demokratietheorien in Bezug auf die Input- und Output-Legitimation vergleichen",
+        "demokratische, autoritäre und totalitäre Typen politischer Systeme vergleichen",
+        "Wechselwirkungen zwischen politischer Ordnung und Wirtschaftsordnung erläutern",
+        "Modelle der Demokratie charakterisieren",
+        "Staatsstrukturprinzipien erläutern",
+        "das Wahlsystem zum Bundestag mit reinen Mehrheits- und Verhältniswahlsystemen in anderen Staaten vergleichen",
+        "das Wahlsystem zum Bundestag bewerten",
+        "Wahlverhalten anhand von Theorien erklären",
+        "Ursachen des Nichtwählens beschreiben und mögliche Folgen erläutern",
+        "den Zusammenhang von sozialem Status und Partizipation der Bürger erklären sowie die Folgen für die Demokratie bewerten",
+        "die Bedeutung der Medien für die politische Teilhabe erläutern",
+        "die Entstehung von Parteien und die Struktur des Parteiensystems anhand eines Modells erklären",
+        "Kritik am Einfluss der Parteien auf Staat und Gesellschaft erörtern",
+        "die Erweiterung der Partizipationsmöglichkeiten um dialogorientierte Partizipationsformen und Bürgerbeteiligung erörtern",
+        "das politische System der Schweiz als halbdirekte Demokratie charakterisieren und eine Erweiterung des repräsentativen Systems Deutschlands durch plebiszitäre Elemente bewerten",
+        "Möglichkeiten der Bürger, ihre Interessen in der repräsentativen Demokratie Deutschlands in den politischen Entscheidungsprozess einzubringen, bewerten",
+        "die Pluralismustheorie Fraenkels charakterisieren",
+        "den Einfluss von Interessenverbänden auf Parlament und Regierung erörtern",
+        "den Einfluss der Medien auf Gesetzgebung und Regieren erläutern",
+        "die Bedeutung der Exekutive für die Gesetzgebung erläutern",
+        "die Mitwirkung des Bundesrats an der Gesetzgebung erläutern",
+        "die Europäisierung der Gesetzgebung erläutern",
+        "die Entscheidungsfindung im föderalen System Deutschlands bewerten",
+        "parlamentarische Kontrollrechte beschreiben",
+        "Formen von Gewaltenverschränkung in der parlamentarischen Demokratie Deutschlands erklären",
+        "überprüfen, inwieweit Mehrheits- und Minderheitsfraktionen ihre Kontrollfunktion wahrnehmen",
+        "die Kontrollmöglichkeiten auf EU-Ebene durch das Europäische Parlament beschreiben",
+        "Kontrollmöglichkeiten des Europäischen Parlaments mit denen des Deutschen Bundestags vergleichen",
+        "die Aufgaben des EuGH beschreiben und die Kontrollfunktion bewerten",
+        "erörtern, ob Medien ihre Kontrollfunktion wahrnehmen"
+      ]
+    },
+    {
+      "thema": "Wirtschaftspolitik (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Grundlagen der Wirtschaftspolitik",
+        "Wohlstand und Wirtschaftswachstum",
+        "Aufgaben nationaler und europäischer Wirtschaftspolitik"
+      ],
+      "kernkompetenzen": [
+        "die Konzepte des Ordoliberalismus, Neoliberalismus, Keynesianismus und des Marxismus vergleichen",
+        "Formen des Marktversagens und die Forderung nach wirtschaftspolitischem Handlungsbedarf erklären",
+        "Markt, Hierarchien und Kooperation als Koordinationsmechanismen erläutern",
+        "die Ziele der deutschen Wirtschaftspolitik erläutern und mit den Grundzügen der Wirtschaftspolitik in der EU vergleichen",
+        "die Bedeutung von Wachstum erklären",
+        "Einflussfaktoren auf das Wachstum erläutern",
+        "Konzepte zur Messung von Wachstum und Wohlstand erörtern",
+        "die Konzepte der Angebots- und der Nachfrageorientierung zur Wachstumsförderung vergleichen",
+        "Maßnahmen der Wachstumspolitik auf nationaler oder europäischer Ebene bewerten",
+        "die Entwicklung des Arbeitsmarkts analysieren",
+        "strukturelle und konjunkturelle Arbeitslosigkeit erklären",
+        "individuelle, gesellschaftliche und volkswirtschaftliche Folgen von Arbeitslosigkeit erläutern",
+        "das Prinzip der Tarifautonomie erläutern",
+        "Entwicklungen auf dem Arbeitsmarkt in Deutschland sowie die Entwicklung der Lohnstückkosten im europäischen Vergleich analysieren",
+        "die Konzepte der Angebots- und der Nachfrageorientierung zur Bekämpfung von Arbeitslosigkeit vergleichen",
+        "Maßnahmen zur Regulierung des Arbeitsmarkts bewerten",
+        "politische, gesellschaftliche und wirtschaftliche Folgen des globalisierten Arbeitsmarkts für Deutschland erläutern",
+        "Maßnahmen der Beschäftigungspolitik auf nationaler oder europäischer Ebene bewerten",
+        "reale und monetäre Ursachen von Inflation erklären",
+        "das Prinzip der Unabhängigkeit der EZB, ihre Ziele, ihre Instrumente und ihre Legitimation beschreiben",
+        "die Konzepte der restriktiven und der expansiven Geldpolitik vergleichen",
+        "die Geldpolitik der EZB bewerten",
+        "Funktionen des Staatshaushalts erläutern",
+        "die Konzepte der kontraktiven und der expansiven Fiskalpolitik vergleichen",
+        "Maßnahmen der Fiskalpolitik auf nationaler oder europäischer Ebene bewerten",
+        "mögliche Wechselwirkungen zwischen den unterschiedlichen Politikfeldern darstellen"
+      ]
+    },
+    {
+      "thema": "Internationale Beziehungen (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Grundlagen des internationalen Systems",
+        "Frieden und Sicherheit",
+        "Wohlstand und Wohlstandsverteilung",
+        "Deutsche Außenpolitik",
+        "Globales Regieren"
+      ],
+      "kernkompetenzen": [
+        "die Struktur des internationalen Systems beschreiben",
+        "systemische Rahmenbedingungen erläutern",
+        "internationale Konfliktkonstellationen spieltheoretisch erklären",
+        "Akteure der internationalen Beziehungen beschreiben und ihre Handlungsmotive charakterisieren",
+        "Rahmenbedingungen der Politik im Nationalstaat mit denen der internationalen Politik vergleichen",
+        "unterschiedliche Konstellationen in den internationalen Beziehungen erläutern",
+        "Bedrohungen für die internationale Sicherheit erläutern",
+        "den erweiterten Sicherheitsbegriff beschreiben",
+        "den Wandel von klassischen Kriegen zu „Neuen Kriegen“ charakterisieren",
+        "die Weiterentwicklung der UN-Mandate erläutern",
+        "Möglichkeiten erörtern, Staaten beim Aufbau zivilgesellschaftlicher Strukturen zu unterstützen",
+        "die NATO als System der kollektiven Verteidigung beschreiben und die Strategie erörtern",
+        "das Konzept der Schutzverantwortung der Staaten im humanitären Völkerrecht beschreiben",
+        "das Spannungsverhältnis zwischen staatlicher Souveränität und Schutzverantwortung darstellen",
+        "Möglichkeiten zum Schutz der Menschenrechte durch internationale Organisationen und NGOs erläutern",
+        "Funktionen internationaler Strafgerichtshöfe erläutern",
+        "Maßnahmen von UNO, NATO und NGOs zur Bewahrung, Schaffung und Sicherung des Friedens bewerten",
+        "die Entwicklung des globalen Wohlstands und die globale Verteilung des Wohlstands analysieren",
+        "das UN-Zielsystem zur nachhaltigen Entwicklung beschreiben und überprüfen",
+        "Ursachen der Globalisierung erklären und die Dimensionen der Globalisierung charakterisieren",
+        "die Konzepte des Freihandels und des Protektionismus vergleichen",
+        "Ziele und Grundsätze der WTO beschreiben",
+        "gesundheits-, umwelt- und entwicklungspolitische sowie arbeitsrechtliche Regelungen im WTO-Vertragswerk erläutern und ihren jeweiligen Stellenwert charakterisieren",
+        "das Entscheidungsverfahren in der WTO charakterisieren",
+        "den Streitbeilegungsmechanismus der WTO charakterisieren",
+        "die Ausgestaltung der Welthandelsordnung durch die WTO bewerten",
+        "den Einfluss von NGOs auf die Gestaltung des Welthandels bewerten",
+        "Grundlagen der deutschen Sicherheitspolitik beschreiben",
+        "die Mitwirkung Deutschlands in NATO und UNO beschreiben",
+        "überprüfen, inwieweit die deutsche Außenpolitik dem Zivilmachtskonzept entspricht",
+        "Anti-Terror-Gesetze im Spannungsfeld von Freiheit und Sicherheit bewerten",
+        "unterschiedliche Formen des Regierens in den internationalen Beziehungen erläutern",
+        "Tendenzen der Weltpolitik erläutern",
+        "die UNO als Akteur in den internationalen Beziehungen bewerten"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Physik",
+  "zusammenfassung": "Die Fachanforderungen Physik für Schleswig-Holstein (2022) definieren einen kompetenzorientierten Unterricht für die Sekundarstufen I und II. Das zentrale Ziel ist der Aufbau einer physikalischen Grundbildung, die durch einen kumulativen Kompetenzaufbau in den vier Bereichen Fachwissen (in der Sek I) bzw. Sachkompetenz (in der Sek II), Erkenntnisgewinnung, Kommunikation und Bewertung erreicht wird. In der Sekundarstufe I liegt der Fokus auf der Systematik der Physik und der Anwendung von Basiskonzepten (Energie, Materie, System, Wechselwirkung) in verschiedenen Kontexten. In der Sekundarstufe II wird dieser Ansatz durch eine stärkere Mathematisierung, Wissenschaftspropädeutik und die Vertiefung in moderne physikalische Themen (Quantenphysik, Felder) erweitert. Der Unterricht soll dabei nicht nur Fachwissen vermitteln, sondern auch überfachliche Kompetenzen wie Selbst-, Sozial- und Methodenkompetenz fördern. Die Leistungsbewertung erfolgt durch Unterrichtsbeiträge und Leistungsnachweise, wobei die Transparenz der Kriterien und die individuelle Lernentwicklung im Vordergrund stehen.",
+  "hauptthemen": [
+    {
+      "thema": "Mechanik",
+      "relevante_unterthemen": [
+        "Geschwindigkeit",
+        "Statische Kräfte",
+        "Dichte und Druck",
+        "Beschleunigte Bewegungen"
+      ],
+      "kernkompetenzen": [
+        "Bewegungsabläufe anhand von Daten in verschiedenen Darstellungsformen analysieren",
+        "Kräfte als gerichtete Größen verstehen und das Wechselwirkungsprinzip anwenden",
+        "Zusammenhang zwischen Masse, Dichte und Volumen beschreiben und berechnen"
+      ]
+    },
+    {
+      "thema": "Energie",
+      "relevante_unterthemen": [
+        "Qualitativer und quantitativer Energiebegriff",
+        "Energieumwandlung und -transport",
+        "Herausforderungen der Energieversorgung",
+        "Treibhauseffekt"
+      ],
+      "kernkompetenzen": [
+        "Energieformen identifizieren und Umwandlungsprozesse analysieren",
+        "Energieerhaltungssatz und Wirkungsgrad bei Prozessen berücksichtigen",
+        "Chancen und Risiken verschiedener Energieversorgungsarten bewerten"
+      ]
+    },
+    {
+      "thema": "Elektrizitätslehre und Magnetismus",
+      "relevante_unterthemen": [
+        "Elektrische Stromkreise",
+        "Stromstärke, Spannung und Widerstand",
+        "Magnetfelder",
+        "Elektromagnetismus (Induktion, Motor, Generator)"
+      ],
+      "kernkompetenzen": [
+        "Schaltpläne lesen und elektrische Schaltungen aufbauen",
+        "Knoten- und Maschenregel sowie das Ohm'sche Gesetz anwenden",
+        "Funktionsweise technischer Geräte wie Motoren oder Transformatoren erklären"
+      ]
+    },
+    {
+      "thema": "Optik",
+      "relevante_unterthemen": [
+        "Lichtausbreitung",
+        "Reflexion",
+        "Lichtbrechung",
+        "Optische Abbildungen (Linsen, Auge)",
+        "Farben"
+      ],
+      "kernkompetenzen": [
+        "Lichtstrahlen als Modell zur Erklärung von Schatten und Abbildungen nutzen",
+        "Strahlengänge an Linsen konstruieren",
+        "Farbigkeit von Gegenständen durch Absorption und Reflexion deuten"
+      ]
+    },
+    {
+      "thema": "Atom- und Kernphysik",
+      "relevante_unterthemen": [
+        "Elementarteilchen",
+        "Radioaktiver Zerfall",
+        "Kernenergie"
+      ],
+      "kernkompetenzen": [
+        "Aufbau von Atomkernen beschreiben",
+        "Zerfallsprozesse und Halbwertszeiten berechnen und interpretieren",
+        "Chancen und Risiken der Kernenergie sowie medizinische Anwendungen bewerten"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Musik",
+  "zusammenfassung": "Der Lehrplan für den Grundkurs Musik in der gymnasialen Oberstufe des Saarlandes verfolgt einen kompetenzorientierten Ansatz, der auf die drei Säulen 'Musik machen', 'Musik hören und reflektieren' sowie 'Musik verstehen' aufbaut. Ziel ist es, den Schülern eine ganzheitliche Wahrnehmung von Musik zu ermöglichen, kulturelle Orientierung zu bieten und die Teilhabe am Musikleben zu fördern. Der Unterricht verbindet musikpraktische Tätigkeiten (Singen, Instrumentalspiel, Improvisation) mit kognitiven Analysen musikalischer Gestaltungsmittel und historischer Kontexte. Die Hauptphase gliedert sich in einen epochengeschichtlichen Abriss (Barock bis Musik nach 1900) und themengebundene Sequenzen (z.B. Musik und Tanz, Musik und Programm, Musik und Politik, Original und Bearbeitung). Dabei wird Wert auf die Vernetzung von musiktheoretischem Wissen mit soziokulturellen Hintergründen gelegt, um die Schüler zu einem reflektierten, toleranten und fachsprachlich versierten Umgang mit Musik zu befähigen.",
+  "hauptthemen": [
+    {
+      "thema": "Musikepochen (Barock bis Musik nach 1900)",
+      "relevante_unterthemen": [
+        "Barock (Rezitativ, Arie, Concerto Grosso, Invention)",
+        "Klassik (Sonatenhauptsatzform, Sinfonie, Rondo)",
+        "Romantik (Kunstlied, Charakterstück, Sinfonik)",
+        "Impressionismus (Klangfarbe, neue Skalen)",
+        "Musik nach 1900 (Expressionismus, Dodekaphonie, Musique concrète, Minimal Music)"
+      ],
+      "kernkompetenzen": [
+        "Typisierende Kompositionsmerkmale und Gattungen unter Verwendung der Fachterminologie benennen",
+        "Zusammenhang zwischen soziokulturellen Entwicklungen und musikalischen Gestaltungsmerkmalen herstellen",
+        "Hör- und Notationsanalyse zur Erschließung musikalischer Strukturen anwenden",
+        "Eigene musikalische Gestaltungsversuche (z.B. Spiegelungen, Cluster) durchführen"
+      ]
+    },
+    {
+      "thema": "Themengebundene Sequenzen",
+      "relevante_unterthemen": [
+        "Musik und Tanz",
+        "Musik und Programm",
+        "Musik und Politik",
+        "Original und Bearbeitung (Coverversion)"
+      ],
+      "kernkompetenzen": [
+        "Beziehungen zwischen musikalischen Gestaltungsmitteln und außermusikalischen Inhalten/Intentionen erläutern",
+        "Funktionen von Musik in gesellschaftlichen und politischen Kontexten analysieren",
+        "Veränderungen durch Bearbeitungen (Instrumentation, Rhythmik, Harmonik) durch Vergleichsanalyse identifizieren",
+        "Begründete Beurteilung der Qualität und Funktion von Musikstücken vornehmen"
+      ]
+    }
+  ]
+}

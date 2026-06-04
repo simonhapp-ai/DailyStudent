@@ -1,0 +1,63 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen zielt darauf ab, Schülerinnen und Schüler zu einer kritischen und produktiven Auseinandersetzung mit der Welt der Bilder zu befähigen. Im Zentrum steht die Entwicklung der 'Bildkompetenz', die sowohl rezeptive (Wahrnehmen und Verstehen) als auch produktive (Imaginieren und Herstellen) Fähigkeiten umfasst. Der Unterricht soll die Lernenden dazu befähigen, sich in einer zunehmend visuell geprägten Medienwelt zu orientieren, eigene künstlerische Ausdrucksformen zu finden und die gestaltete Umwelt reflektiert mitzugestalten. Dabei werden fachwissenschaftliche Strategien mit künstlerischer Praxis verknüpft. Die Qualifikationsphase ist in vier verbindliche Themenbereiche gegliedert, die durch schulinterne Curricula konkretisiert werden. Ein besonderer Fokus liegt auf der Verbindung von Theorie und Praxis, der historischen Einordnung sowie der Präsentation eigener Arbeitsergebnisse im öffentlichen Kontext. Die Leistungsbewertung berücksichtigt dabei sowohl die Endprodukte als auch den gesamten Arbeitsprozess.",
+  "hauptthemen": [
+    {
+      "thema": "Bildende Kunst",
+      "relevante_unterthemen": [
+        "Malerei",
+        "Grafik",
+        "Plastik/Objekt/Installation",
+        "Performance/Konzeptkunst"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Interpretation historischer und aktueller Kunstwerke",
+        "Anwendung künstlerischer Konzepte in eigenen Gestaltungsaufgaben",
+        "Verständnis ästhetischer Wirkungsweisen und kunstgeschichtlicher Zusammenhänge"
+      ]
+    },
+    {
+      "thema": "Gestaltete Umwelt",
+      "relevante_unterthemen": [
+        "Baukonzeption und Architektur",
+        "Siedlung und Wohnen",
+        "Design (Produktgestaltung/Mode)",
+        "Gestalteter Naturraum"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung und Planung von Gestaltungskonzepten für den Lebensraum",
+        "Reflexion über Funktionen von Architektur und Design im Kulturraum",
+        "Modellhafte Realisierung eigener Entwürfe zur Umweltgestaltung"
+      ]
+    },
+    {
+      "thema": "Künstlerische und mediale Welten",
+      "relevante_unterthemen": [
+        "Fotografie",
+        "Film/Video/Fernsehen",
+        "Digitale Bildbearbeitung",
+        "Printmedien und Typografie"
+      ],
+      "kernkompetenzen": [
+        "Untersuchung der Machart und Wirkung digitaler Bildwelten",
+        "Gestaltung virtueller Räume und interaktiver Elemente",
+        "Reflexion der Schnittstellen zwischen Mensch, Technik und Medium"
+      ]
+    },
+    {
+      "thema": "Gestaltung und Präsentation im öffentlichen Kontext",
+      "relevante_unterthemen": [
+        "Ausstellungsgestaltung",
+        "Veranstaltungskonzept",
+        "Kampagne/Werbung",
+        "Mediale Dokumentation"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung von Präsentationsstrategien für eigene künstlerische Arbeiten",
+        "Veröffentlichung bildnerischer Prozesse im (schul-)öffentlichen Raum",
+        "Diskursfähigkeit über visuelle Kommunikation und gesellschaftliche Interessen"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Bildungsplan 2016 für das Fach Chemie am Gymnasium in Baden-Württemberg, überarbeitet im März 2022, zielt darauf ab, eine umfassende naturwissenschaftliche Grundbildung zu vermitteln. Diese Bildung befähigt Schülerinnen und Schüler, chemische Phänomene im Alltag zu erkennen, einzuordnen und kritisch zu reflektieren, um aktiv am Leben in einer sich wandelnden Welt teilzuhaben. Das Fach Chemie untersucht den Zusammenhang zwischen Aufbau und Eigenschaften von Stoffen sowie chemische Reaktionen und deren Nutzung zur Produktentwicklung. Dabei wird auch die ethisch-moralische Dimension chemischer Forschung beleuchtet.\n\nDer Lehrplan ist kompetenzorientiert und bereitet auf zukünftige Fragestellungen vor, indem er grundlegende chemische Konzepte, Modelle und Zusammenhänge vermittelt. Er baut spiralcurricular auf den chemischen Aspekten des Fächerverbunds Biologie, Naturphänomene und Technik (BNT) auf. Es werden zwei Hauptkategorien von Kompetenzen unterschieden: prozessbezogene und inhaltsbezogene Kompetenzen.\n\nDie prozessbezogenen Kompetenzen umfassen die Erkenntnisgewinnung (chemische Fragestellungen erkennen, Experimente planen/durchführen/auswerten, Modelle einsetzen), Kommunikation (Informationen beschaffen/aufbereiten/weitergeben/austauschen) und Bewertung (naturwissenschaftliche Aussagen treffen, persönliche/gesellschaftliche Bedeutung beschreiben, Nachhaltigkeit/Sicherheit einschätzen). Diese Kompetenzen sind fächerübergreifend relevant und legen im Leistungsfach die Grundlagen für ein naturwissenschaftliches Studium.\n\nDie inhaltsbezogenen Kompetenzen der Sekundarstufe I basieren auf den Basiskonzepten der KMK und sind in die Bereiche \"Stoff – Teilchen – Struktur – Eigenschaften\" und \"Chemische Reaktion\" gegliedert. In der Kursstufe (Klassen 11/12) werden diese Kompetenzen vertieft und erweitert, wobei die Gliederung nach fachwissenschaftlichen Themenbereichen erfolgt. Hier wird zwischen Basisfach und Leistungsfach differenziert: Das Basisfach konzentriert sich auf die Weiterentwicklung chemischen Überblickswissens und die Relevanz für die Lebenswelt, während das Leistungsfach ein vertieftes und erweitertes Verständnis durch anspruchsvollere experimentelle Zugänge, höhere Abstraktionsniveaus und verstärkte Mathematisierung anstrebt, um auf ein Studium vorzubereiten.\n\nDidaktisch wird ein spiralcurricularer Unterrichtsgang empfohlen, der fachsystematische und lebensweltbezogene Aspekte verbindet, Vorerfahrungen der Schülerinnen und Schüler einbezieht und eine Experimentalkultur pflegt. Das Denken auf Stoff- und Teilchenebene sowie der Einsatz von Modellen sind charakteristisch. Der Lehrplan integriert zudem wichtige Leitperspektiven wie Bildung für nachhaltige Entwicklung, Prävention und Gesundheitsförderung, berufliche Orientierung, Medienbildung und Verbraucherbildung, um die Schülerinnen und Schüler zu mündigen und verantwortungsbewussten Bürgern zu erziehen.",
+  "hauptthemen": [
+    {
+      "thema": "Einführung in die Chemie (BNT)",
+      "relevante_unterthemen": [
+        "Grundlegende naturwissenschaftliche Denk- und Arbeitsweisen",
+        "Propädeutischer Zugang zur chemischen Reaktion (Verbrennung)",
+        "Grundlagen zur Ermittlung von Stoffeigenschaften",
+        "Trennung von Gemischen"
+      ],
+      "kernkompetenzen": [
+        "Der Erwerb chemiespezifischer Kompetenzen beginnt in Klasse 5 mit den integrativen Themenbereichen im Fächerverbund Biologie, Naturphänomene und Technik (BNT). Diese beinhalten grundlegende naturwissenschaftliche Denk- und Arbeitsweisen, einen propädeutischen Zugang zur chemischen Reaktion über den Vorgang der Verbrennung sowie Grundlagen zur Ermittlung von Stoffeigenschaften und zur Trennung von Gemischen."
+      ]
+    },
+    {
+      "thema": "Stoff – Teilchen – Struktur – Eigenschaften (Sekundarstufe I)",
+      "relevante_unterthemen": [
+        "Stoffe und ihre Eigenschaften",
+        "Stoffe und ihre Teilchen",
+        "Bindungs- und Wechselwirkungsmodelle"
+      ],
+      "kernkompetenzen": [
+        "Stoffeigenschaften experimentell untersuchen und beschreiben (Farbe, Geruch, Verformbarkeit, Dichte, Magnetisierbarkeit, elektrische Leitfähigkeit, Schmelztemperatur, Siedetemperatur, Löslichkeit)",
+        "Kombinationen charakteristischer Eigenschaften ausgewählter Stoffe nennen (Luft, Stickstoff, Sauerstoff, Kohlenstoffdioxid, Wasser, Wasserstoff, Chlor, Eisen, Kupfer, Silber, Magnesium, Natrium, Natriumchlorid, Natriumhydroxid, Magnesiumoxid, Salzsäure)",
+        "die Bedeutung der Gefahrenpiktogramme nennen und daraus das Gefahrenpotenzial eines Stoffes für Mensch und Umwelt ableiten",
+        "ein Experiment zur Trennung eines Gemisches planen und durchführen",
+        "an einem ausgewählten Stoff den Weg von der industriellen Gewinnung aus Rohstoffen bis zur Verwendung darstellen (zum Beispiel Kochsalz, Eisen, Kupfer, Benzin)",
+        "ein sinnvolles Ordnungsprinzip zur Einteilung der Stoffe darstellen und anwenden (Element, Verbindung, Metall, Nichtmetall, Salz, flüchtiger/molekularer Stoff, Reinstoff, homogenes und heterogenes Gemisch, Lösung, Legierung, Suspension, Emulsion, Rauch, Nebel)",
+        "die Änderung der Stoffeigenschaften in Abhängigkeit von der Partikelgröße an einem Beispiel beschreiben (Nanopartikel, Verhältnis Oberfläche zu Volumen)",
+        "die Eigenschaften wässriger Lösungen (elektrische Leitfähigkeit, sauer, alkalisch, neutral) untersuchen und die Fachbegriffe sauer, alkalisch und neutral der pH-Skala zuordnen",
+        "Beispiele für alkalische und saure Lösungen nennen und deren Verwendung im Alltag beschreiben (Natronlauge, Ammoniak-Lösung, Salzsäure, kohlensaure Lösung, verdünnte Essigsäure)",
+        "die Zusammensetzung der Luft nennen und die Veränderungen des Kohlenstoffdioxidanteils hinsichtlich ihrer globalen Auswirkungen bewerten (Volumenanteile von Stickstoff, Sauerstoff, Edelgasen und Kohlenstoffdioxid)",
+        "organische Stoffe mithilfe typischer Eigenschaften beschreiben (Methan, Heptan, Ethen, Ethanol, Propanal, Propanon, Ethansäure, Ethansäureethylester)",
+        "die Verwendung ausgewählter organischer Stoffe aufgrund ihrer Eigenschaften in Alltag und Technik erläutern (Methan, Ethen, Benzin, Ethanol, Propanon/Aceton, Ethansäure/Essigsäure)",
+        "die Gefahren und den Nutzen von Ethanol beschreiben (Alkoholkonsum, Desinfektionsmittel)",
+        "Änderungen von Stoffeigenschaften innerhalb einer homologen Reihe beschreiben (homologe Reihe der Alkane und Alkanole)",
+        "ausgewählte organische Stoffklassen bezüglich ihrer Stoffeigenschaften vergleichen (Siedetemperatur und Wasserlöslichkeit von Alkanen, Alkanolen, Alkansäuren und Estern)",
+        "Atome, Moleküle und Ionengruppen als Stoffteilchen beschreiben und entsprechenden Reinstoffen zuordnen",
+        "Stoffe anhand ihrer Stoffteilchen ordnen (Metalle, Edelgase, flüchtige/molekulare Stoffe, Salze)",
+        "mithilfe eines geeigneten Teilchenmodells (Stoffteilchen) Aggregatzustände, Lösungsvorgänge, Diffusion und Brown‘sche Bewegung beschreiben",
+        "die Größenordnungen von Teilchen (Atome, Moleküle, Makromoleküle), Teilchengruppen (Nanopartikel) und makroskopischen Objekten vergleichen",
+        "mit Atommodellen den Aufbau von Atomen und Ionen erläutern (Proton, Elektron, Neutron, Kern-Hülle-Modell, Schalenmodell/Energiestufenmodell, Außenelektron, Ionenbildung, Ionisierungsenergie, Edelgaskonfiguration)",
+        "den Rutherford‘schen Streuversuch beschreiben und die Versuchsergebnisse im Hinblick auf die Entwicklung des Kern-Hülle-Modells erläutern",
+        "den Zusammenhang zwischen Atombau und Stellung der Atome im Periodensystem der Elemente erklären (Atomsymbole, Ordnungszahl, Protonenanzahl, Elektronenanzahl, Neutronenanzahl, Massenzahl, Außenelektronen, Hauptgruppe, Periode, Vorhersagen von Mendelejew)",
+        "sauren und alkalischen Lösungen die entsprechenden Teilchen zuordnen (Oxonium-Ionen und Hydroxid-Ionen)",
+        "das Aufbauprinzip von Polymeren an einem Beispiel erläutern",
+        "organische Kohlenstoffverbindungen mithilfe von Strukturelementen und funktionellen Gruppen ordnen (Einfachbindungen und Mehrfachbindungen zwischen Kohlenstoff-Atomen, Hydroxygruppe, Aldehydgruppe, Ketogruppe, Carboxygruppe und Estergruppe)",
+        "die Nomenklaturregeln nach IUPAC nutzen, um organische Moleküle zu benennen (Alkane, Alkanole, Alkanale, Alkanone, Carbonsäuren)",
+        "die Ionenbindung erklären und typische Eigenschaften der Salze und Salzlösungen begründen (Ionengitter, Sprödigkeit, hohe Schmelztemperatur, elektrische Leitfähigkeit)",
+        "die Metallbindung erklären und damit typische Eigenschaften der Metalle begründen (Elektronengasmodell, Duktilität, elektrische Leitfähigkeit)",
+        "die Molekülbildung durch Elektronenpaarbindung unter Anwendung der Edelgasregel erläutern (bindende und nichtbindende Elektronenpaare, Lewis-Schreibweise, Einfach- und Mehrfach-Bindungen)",
+        "polare und unpolare Elektronenpaarbindungen vergleichen (Elektronegativität)",
+        "den räumlichen Bau von Molekülen mithilfe eines Modells erklären (Elektronenpaarabstoßungsmodell)",
+        "den Zusammenhang zwischen Bindungstyp, räumlichem Bau und Dipol-Eigenschaft bei Molekülen darstellen (H2, HCl, CO2, H2O, NH3)",
+        "Reinstoffen aufgrund ihrer Stoffeigenschaften Stoffteilchen und Bindungstypen zuordnen (Elektronenpaarbindung, Ionenbindung, Metallbindung)",
+        "zwischenmolekulare Wechselwirkungen erklären (Wechselwirkungen zwischen temporären Dipolen, Wechselwirkungen zwischen permanenten Dipolen, Wasserstoffbrücken)",
+        "aus der Struktur zweier Moleküle mögliche zwischenmolekulare Wechselwirkungen ableiten",
+        "die besonderen Eigenschaften von Wasser erklären (Dichteanomalie, hohe Siedetemperatur, räumlicher Bau des Wassermoleküls, Wasserstoffbrücken)",
+        "ausgehend von den zwischenmolekularen Wechselwirkungen ausgewählte Eigenschaften von Stoffen erklären (Siedetemperatur, Löslichkeit)",
+        "den Lösungsvorgang von Salzen auf der Teilchenebene beschreiben (Hydratation, Wechselwirkung zwischen Ionen und Dipol-Molekülen)"
+      ]
+    },
+    {
+      "thema": "Chemische Reaktion (Sekundarstufe I)",
+      "relevante_unterthemen": [
+        "Qualitative Aspekte chemischer Reaktionen",
+        "Quantitative Aspekte chemischer Reaktionen",
+        "Energetische Aspekte chemischer Reaktionen"
+      ],
+      "kernkompetenzen": [
+        "beobachtbare Merkmale chemischer Reaktionen beschreiben",
+        "ausgewählte Experimente zu chemischen Reaktionen unter Beteiligung von Sauerstoff, Schwefel, Wasserstoff, Kohlenstoff und ausgewählten Metallen planen, durchführen, im Protokoll darstellen und in Fach- und Alltagskontexte einordnen",
+        "die chemische Reaktion als Veränderung von Atomen, Molekülen und Ionen beziehungsweise als Neuanordnung von Atomen oder Ionen durch das Lösen und Knüpfen von Bindungen erklären",
+        "die Umkehrbarkeit von chemischen Reaktionen beispielhaft beschreiben (Synthese und Analyse)",
+        "das Donator-Akzeptor-Prinzip erklären und auf Redoxreaktionen (Oxidation, Reduktion, Elektronenübergang) und Säure-Base-Reaktionen (Protonenübergang, Neutralisation) anwenden",
+        "Nachweise für ausgewählte Stoffe, Ionen, Strukturelemente und funktionelle Gruppen durchführen und beschreiben (Sauerstoff, Kohlenstoffdioxid, Wasserstoff, Wasser, Oxonium-Ionen und Hydroxid-Ionen, Bromid-Ionen und Chlorid-Ionen, Mehrfachbindungen zwischen Kohlenstoff-Atomen, Aldehydgruppe)",
+        "den Zerteilungsgrad als Möglichkeit zur Steuerung chemischer Reaktionen beschreiben",
+        "Indikatoren zur Identifizierung neutraler, saurer und alkalischer Lösungen nutzen (ein Pflanzenfarbstoff, Universalindikator, Thymolphthalein-Lösung)",
+        "ausgewählte chemische Reaktionen dem jeweiligen organischen Reaktionstyp zuordnen (Substitution an einem Alkan, Addition an ein Alken, Kondensation am Beispiel der Veresterung)",
+        "den Mechanismus der radikalischen Substitution am Beispiel der Reaktion von Alkanen mit Halogenen beschreiben",
+        "die Oxidation organischer Moleküle mithilfe von Strukturformeln und Reaktionsgleichungen darstellen (Alkanol über Alkanal zur Alkansäure und Alkanol zu Alkanon, Oxidationszahlen)",
+        "einen Kohlenstoffatomkreislauf in der belebten Natur als System chemischer Reaktionen beschreiben und Auswirkungen durch Eingriffe des Menschen bewerten",
+        "den Zusammenhang zwischen Massenerhaltung und Atomanzahlerhaltung bei chemischen Reaktionen erläutern",
+        "Experimente zur Massenerhaltung bei chemischen Reaktionen und zur Ermittlung eines Massenverhältnisses durchführen und unter Anleitung auswerten (Gesetz von der Erhaltung der Masse, Verhältnisformel)",
+        "Reaktionsgleichungen aufstellen (Formelschreibweise)",
+        "Verhältnisformeln und Molekülformeln mithilfe der Edelgasregel aufstellen",
+        "den Informationsgehalt einer chemischen Formel erläutern (Verhältnisformel, Molekülformel, Strukturformel, räumliche Darstellung)",
+        "eine Säure-Base-Titration durchführen und auswerten (Neutralisation)",
+        "Berechnungen durchführen und dabei Größen und Einheiten korrekt nutzen (Atommasse, Teilchenzahl, Masse, Dichte, Stoffmenge, molare Masse, molares Volumen, Massenanteil, Stoffmengenkonzentration)",
+        "energetische Erscheinungen bei chemischen Reaktionen mit der Umwandlung eines Teils der in Stoffen gespeicherten Energie in andere Energieformen erklären (Lichtenergie, thermische Energie, Schallenergie)",
+        "die Begriffe exotherm und endotherm erklären und entsprechenden Phänomenen zuordnen",
+        "energetische Zustände der Edukte und Produkte exothermer und endothermer Reaktionen vergleichen",
+        "ein Experiment zur Elektrolyse einer Metallsalz-Lösung durchführen und auswerten (Prinzip eines elektrochemischen Energiespeichers)",
+        "die Zufuhr von Energie als Voraussetzung zum Start chemischer Reaktionen erklären (Aktivierungsenergie) und mit der Energiezufuhr bei endothermen Reaktionen vergleichen",
+        "den Einfluss von Katalysatoren auf die Aktivierungsenergie beschreiben",
+        "Modellexperimente zur Brandbekämpfung durchführen und Maßnahmen zum Brandschutz begründen",
+        "die Kohlenstoffdioxidbilanz und die Reaktionsenergie bei der Verbrennung verschiedener Brennstoffe vergleichen, um die Verwendung verschiedener Energieträger zu bewerten (Wasserstoff, Methan, Benzin)"
+      ]
+    },
+    {
+      "thema": "Chemische Energetik (Basisfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "chemische Reaktionen unter stofflichen und energetischen Aspekten (exotherm, endotherm, Brennwert, Heizwert) erläutern",
+        "eine kalorimetrische Messung planen, durchführen und auswerten (Reaktionsenthalpie)",
+        "den Satz von der Erhaltung der Energie (1. Hauptsatz der Thermodynamik) bei der Berechnung von Reaktionsenthalpien und Bildungsenthalpien anwenden (Satz von Hess)",
+        "die energetische Betrachtungsweise auf ausgewählte chemische Reaktionen aus dem Bereich Naturstoffe (Stoffwechsel, alternative Energieträger) oder Kunststoffe (thermische Verwertung) oder elektrische Energie und Chemie anwenden (Brennstoffzelle, alternative Energieträger)"
+      ]
+    },
+    {
+      "thema": "Chemische Gleichgewichte (Basisfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "die Umkehrbarkeit einer Reaktion als Voraussetzung für die Einstellung eines Gleichgewichts nennen",
+        "die Reaktionsgeschwindigkeit und ihre Abhängigkeit von der Konzentration und der Temperatur beschreiben und auf der Teilchenebene erklären (RGT-Regel, Stoßtheorie)",
+        "den Einfluss eines Katalysators auf die Reaktionsgeschwindigkeit erläutern (Katalyse)",
+        "am Beispiel eines Ester-Gleichgewichts die Einstellung und den Zustand eines chemischen Gleichgewichts erläutern",
+        "ein Modellexperiment zur Gleichgewichtseinstellung auswerten",
+        "die Lage homogener Gleichgewichte mit dem Massenwirkungsgesetz beschreiben (Gleichgewichtskonstante Kc)",
+        "die Beeinflussung chemischer Gleichgewichte experimentell untersuchen und mithilfe des Prinzips von Le Chatelier erklären",
+        "die Wahl der Reaktionsbedingungen (Temperatur, Druck, Konzentration, Katalysator) bei der großtechnischen Ammoniaksynthese unter dem Aspekt der Erhöhung der Ammoniakausbeute begründen",
+        "die Leistungen von Haber und Bosch darstellen und die gesellschaftliche Bedeutung der Ammoniaksynthese erläutern",
+        "Säure-Base-Reaktionen mithilfe der Theorie von Brønsted beschreiben (Donator-Akzeptor-Prinzip)",
+        "das Konzept der Säure-Base-Reaktionen auf Nachweisreaktionen anwenden (Carbonat-Ion, Ammonium-Ion, Carboxygruppe, Oxonium-Ion, Hydroxid-Ion)",
+        "die Säurekonstante KS aus dem Massenwirkungsgesetz ableiten",
+        "Säuren mithilfe der pKS-Werte (Säurestärke) klassifizieren",
+        "die Definition des pH-Werts nennen und den Zusammenhang zwischen pH-Wert und Autoprotolyse des Wassers erklären",
+        "pH-Werte von Lösungen einprotoniger starker Säuren, starker Basen und von Hydroxidlösungen rechnerisch ermitteln"
+      ]
+    },
+    {
+      "thema": "Naturstoffe (Basisfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "die Struktur von Fettmolekülen beschreiben (gesättigte und ungesättigte Fettsäuren, Glycerin, Ester)",
+        "den Nachweis ungesättigter Fettsäurereste durchführen und erklären (elektrophile Addition)",
+        "die Molekülstruktur von Monosacchariden und Aminosäuren erklären (Chiralität, Fischer-Projektionsformeln und Haworth-Projektionsformeln, Carbonylgruppe und Aminogruppe)",
+        "die Verknüpfung von Monomeren zu einem Disaccharid beziehungsweise einem Dipeptid sowie zu den entsprechenden Makromolekülen erklären",
+        "Kohlenhydrate und Proteine mit Nachweismethoden untersuchen (GOD-Test, Benedict-Probe, Biuret-Reaktion)",
+        "Biomoleküle anhand ihrer Struktur den Stoffklassen der Fette, Kohlenhydrate, Proteine und Nukleinsäuren zuordnen",
+        "Funktionen der Fette, Kohlenhydrate, Proteine und Nukleinsäuren für den menschlichen Organismus beschreiben"
+      ]
+    },
+    {
+      "thema": "Kunststoffe (Basisfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "Kunststoffe anhand ihrer thermischen und mechanischen Eigenschaften in Gruppen klassifizieren (Thermoplaste, Duromere, Elastomere) und den Gruppen entsprechende Molekülstrukturen zuordnen (lineare, engmaschig und weitmaschig vernetzte Makromoleküle)",
+        "die Prinzipien wichtiger Kunststoffsynthesen darstellen (Polymerisation, Polykondensation)",
+        "ein Experiment zur Herstellung eines Kunststoffs planen und durchführen",
+        "die Verwendung von Massenkunststoffen aus wirtschaftlicher, ökologischer und gesundheitlicher Sicht bewerten",
+        "Trends bei der Entwicklung moderner Kunststoffe beschreiben",
+        "die unterschiedlichen Verwertungsmöglichkeiten für Kunststoffabfälle bewerten (Werkstoffrecycling, Rohstoffrecycling, energetische Verwertung, Kompostierung)"
+      ]
+    },
+    {
+      "thema": "Elektrische Energie und Chemie (Basisfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "Elektrolysen als erzwungene Redoxreaktionen erklären (Elektronenübergang, Donator-Akzeptor-Prinzip)",
+        "den Aufbau einer galvanischen Zelle am Beispiel des Daniell-Elements beschreiben",
+        "die wesentlichen Prozesse in galvanischen Zellen darstellen (Elektrodenreaktionen)",
+        "Zellspannungen mithilfe von Standardpotenzialen rechnerisch ermitteln",
+        "Redoxreaktionen beschreiben, die der Umwandlung von chemischer Energie in elektrische Energie dienen (eine Batterie, ein Akkumulator, Brennstoffzelle)",
+        "die Bedeutung einer Brennstoffzelle für die zukünftige Energiebereitstellung erläutern",
+        "die Korrosion von Metallen als elektrochemische Reaktion beschreiben und Methoden des Korrosionsschutzes erklären"
+      ]
+    },
+    {
+      "thema": "Chemische Energetik (Leistungsfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "Merkmale offener, geschlossener und isolierter Systeme beschreiben",
+        "chemische Reaktionen unter stofflichen und energetischen Aspekten (exotherm, endotherm, Brennwert, Heizwert) erläutern",
+        "eine kalorimetrische Messung planen, durchführen und auswerten (Reaktionsenthalpie)",
+        "den Satz von der Erhaltung der Energie (1. Hauptsatz der Thermodynamik) bei der Berechnung von Reaktionsenthalpien und Bildungsenthalpien anwenden (Satz von Hess)",
+        "die Entropie als Maß für die Anzahl von Realisierungsmöglichkeiten eines Zustands beschreiben",
+        "Änderungen der Entropie bei chemischen Reaktionen erläutern (2. Hauptsatz der Thermodynamik)",
+        "Berechnungen mithilfe der Gibbs-Helmholtz-Gleichung durchführen, um chemische Reaktionen energetisch zu klassifizieren (freie Reaktionsenthalpie, exergonische und endergonische Reaktionen, Einfluss der Temperatur)",
+        "an Beispielen die Grenzen der energetischen Betrachtungsweise diskutieren (metastabiler Zustand, homogene und heterogene Katalyse, unvollständig ablaufende Reaktionen)"
+      ]
+    },
+    {
+      "thema": "Chemisches Gleichgewicht (Leistungsfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "die Umkehrbarkeit einer Reaktion als Voraussetzung für die Einstellung eines Gleichgewichts nennen",
+        "die Reaktionsgeschwindigkeit und ihre Abhängigkeit von der Konzentration und der Temperatur beschreiben und auf der Teilchenebene erklären (RGT-Regel, Stoßtheorie, Reaktionsrate)",
+        "die Veresterung als umkehrbare Reaktion erläutern (Reaktionsmechanismus, Carbokation, nucleophiler Angriff)",
+        "die Einstellung des chemischen Gleichgewichts aufgrund der Angleichung der Reaktionsraten der Hin- und Rückreaktion erklären",
+        "Gleichgewichtskonzentrationen experimentell ermitteln (Estergleichgewicht)",
+        "ein Modellexperiment zur Gleichgewichtseinstellung durchführen und auswerten",
+        "mithilfe des Massenwirkungsgesetzes Berechnungen zur Lage von homogenen Gleichgewichten durchführen (Gleichgewichtskonstante Kc, Gleichgewichtskonzentration)",
+        "das Massenwirkungsgesetz auf Löslichkeitsgleichgewichte anwenden (Lösungsvorgang, Wechselwirkung zwischen Ionen und Dipolmolekülen, heterogenes Gleichgewicht, Löslichkeitsprodukt KL)",
+        "Möglichkeiten zur Beeinflussung von chemischen Gleichgewichten mit dem Prinzip von Le Chatelier erklären (Konzentrationsänderung, Druckänderung und Temperaturänderung)",
+        "die Reaktionsbedingungen (Temperatur, Druck, Konzentration, Katalysator) bei der großtechnischen Ammoniaksynthese unter dem Aspekt der Erhöhung der Ammoniakausbeute diskutieren und die Leistungen von Haber und Bosch darstellen",
+        "die gesellschaftliche Bedeutung der Ammoniaksynthese erläutern"
+      ]
+    },
+    {
+      "thema": "Säure-Base-Gleichgewichte (Leistungsfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "Säure-Base-Reaktionen mithilfe der Theorie von Brønsted beschreiben (Donator-Akzeptor-Prinzip)",
+        "das Konzept des chemischen Gleichgewichts auf Säure-Base-Reaktionen mit Wasser anwenden (HCl, HNO3, H2SO4, H2CO3, H3PO4, NH3, O2-, CH3COOH, konjugierte Säure-Base-Paare, Wasser-Molekül als amphoteres Teilchen)",
+        "Nachweise für Ammonium-Ionen und Carbonat-Ionen durchführen und erklären",
+        "die Säurekonstante KS aus dem Massenwirkungsgesetz ableiten",
+        "Säuren und Basen mithilfe der pKS-Werte (Säurestärke) beziehungsweise pKB-Werte (Basenstärke) klassifizieren",
+        "die Definition des pH-Werts nennen",
+        "die Autoprotolyse des Wassers und ihren Zusammenhang mit dem pH-Wert des Wassers erläutern",
+        "pH-Werte von Lösungen starker einprotoniger Säuren, starker Basen und von Hydroxidlösungen rechnerisch ermitteln",
+        "im Näherungsverfahren pH-Werte für Lösungen schwacher Säuren und Basen rechnerisch ermitteln",
+        "Säure-Base-Titrationen zur Konzentrationsbestimmung planen, durchführen und auswerten",
+        "die Titration von Salzsäure und verdünnter Essigsäure mit Natronlauge durchführen, die Veränderung des pH-Werts während der Titration erklären sowie den pH-Wert charakteristischer Punkte einer Titrationskurve ermitteln (Äquivalenzpunkt, Halbäquivalenzpunkt)",
+        "die Titrationskurven mehrprotoniger Säuren erklären",
+        "eine konduktometrische Messung durchführen und auswerten",
+        "das Konzept des Säure-Base-Gleichgewichts auf Indikatoren anwenden",
+        "eine Dünnschichtchromatografie zur Ermittlung von Bestandteilen des Universalindikators durchführen und erklären (Rf-Wert, stationäre Phase, mobile Phase)",
+        "die Wirkungsweise von Puffersystemen und deren Bedeutung an Beispielen erklären und den pH-Wert von Pufferlösungen berechnen (Henderson-Hasselbalch-Gleichung)"
+      ]
+    },
+    {
+      "thema": "Naturstoffe (Leistungsfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "die Chiralität eines Moleküls mit dem Vorhandensein eines asymmetrisch substituierten Kohlenstoff-Atoms erklären",
+        "die räumliche Struktur geeigneter Moleküle in der Fischer-Projektion darstellen und benennen (D-Form und L-Form)",
+        "die Struktur eines Aldose-Moleküls und eines Ketose-Moleküls in der Fischer-Projektion vergleichen (Carbonylgruppe)",
+        "den Ringschluss bei Monosacchariden als Halbacetalbildung erläutern (nucleophiler Angriff) und den Zusammenhang zwischen Fischer-Projektionsformeln und Haworth-Projektionsformeln darstellen (D-Glucose, D-Fructose, α-Form, β-Form)",
+        "D-Glucose, Maltose und Saccharose auf ihre reduzierende Wirkung untersuchen (Benedict-Probe oder Tollens-Probe) und die Untersuchungsergebnisse erklären",
+        "den Glucosenachweis durchführen und beschreiben (GOD-Test)",
+        "die Bildung von Disacchariden, Oligosacchariden und Polysacchariden erläutern (Acetalbildung, glycosidische Verknüpfung)",
+        "die räumliche Struktur von Disacchariden und Polysacchariden beschreiben (Saccharose, Maltose, Stärke, Cellulose)",
+        "Vorkommen von Monosacchariden, Disacchariden und Polysacchariden nennen und ihre Eigenschaften erklären",
+        "die Verwendung von Kohlenhydraten als nachwachsende Rohstoffe bewerten",
+        "die Struktur von Fettmolekülen beschreiben (gesättigte und ungesättigte Fettsäuren, Glycerin, Ester)",
+        "die Eigenschaften von Fetten erklären (hydrophob, lipophil, Konsistenz, Addition von Halogenen)",
+        "Fette und Kohlenhydrate als Energieträger in Lebewesen vergleichen",
+        "die Struktur von L- α-Aminosäuren beschreiben (Aminogruppe)",
+        "die Bildung und Hydrolyse einer Peptidbindung beschreiben",
+        "Nachweise für Aminosäuren und Proteine durchführen und beschreiben (Ninhydrin-Reaktion und Biuret-Reaktion)",
+        "die koordinative Bindung am Beispiel von Nachweisreaktionen in der Naturstoffchemie als Wechselwirkung zwischen Metall-Kationen und Teilchen mit freien Elektronenpaaren beschreiben (Tollens-Probe oder Benedict-Probe, Biuret-Reaktion)",
+        "die Primär-, Sekundär-, Tertiär- und Quartärstruktur von Proteinen erläutern",
+        "Versuche zur Denaturierung von Proteinen durchführen und auswerten"
+      ]
+    },
+    {
+      "thema": "Aromaten und Reaktionsmechanismen (Leistungsfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "Eigenschaften, Vorkommen und Verwendung von Benzen/Benzol beschreiben",
+        "am Beispiel aromatischer Verbindungen die mögliche Gesundheitsgefährdung durch einen Stoff beschreiben (Expositions-Risiko-Beziehung)",
+        "Grenzen bisher erarbeiteter Bindungsmodelle und unerwartete Eigenschaften des Benzens/Benzols aus der besonderen Molekülstruktur erklären (Kekulé, delokalisiertes Elektronenringsystem, Mesomeriestabilisierung, Substitution statt Addition)",
+        "die Mechanismen der elektrophilen Addition an Alkene und der elektrophilen Substitution an Benzen/Benzol (Erstsubstitution, Arenium-Ion) beschreiben",
+        "Substitutionsreaktionen (SE, SN, SR) anhand der strukturellen Voraussetzungen des Eduktmoleküls und des angreifenden Teilchens (Elektrophil, Nucleophil, Radikal) vergleichen"
+      ]
+    },
+    {
+      "thema": "Kunststoffe (Leistungsfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "den Zusammenhang zwischen den Eigenschaften von Kunststoffen und ihrer Struktur erläutern (Thermoplaste, Duromere, Elastomere, Vernetzungsgrad, kristalline und amorphe Bereiche)",
+        "die Prinzipien wichtiger Kunststoffsynthesen mithilfe chemischer Formeln darstellen (Polymerisation, Polykondensation, Polyaddition)",
+        "Strukturformeln der Monomere und sinnvolle Strukturformelausschnitte der Polymere darstellen und benennen (Polyethen, Polypropen, Polyvinylchlorid, Polystyrol, Polyethylenterephthalat, Polymilchsäure, Polyamide, Polyurethane)",
+        "den Reaktionsmechanismus der radikalischen Polymerisation beschreiben (Radikalbildung, Kettenstart, Kettenwachstum, Kettenabbruch)",
+        "einen Versuch zur Herstellung eines Polymerisats und eines Polykondensats planen und durchführen",
+        "Möglichkeiten zur Beeinflussung der Eigenschaften eines Kunststoffs begründen (Wahl der Monomere, Weichmacher, Reaktionsbedingungen)",
+        "die Verarbeitungsmöglichkeiten von Kunststoffen beschreiben (Spritzgießen, Tiefziehen, Kalandrieren, Extrudieren)",
+        "die unterschiedlichen Verwertungsmöglichkeiten für Kunststoffabfälle bewerten (Werkstoffrecycling, Rohstoffrecycling, energetische Verwertung, Kompostierung)",
+        "die Nutzung nachwachsender Rohstoffe zur Herstellung von Kunststoffen erläutern"
+      ]
+    },
+    {
+      "thema": "Elektrochemie (Leistungsfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "das Donator-Akzeptor-Prinzip auf Reaktionen mit Elektronenübergang anwenden (Oxidation, Reduktion, Redoxpaare)",
+        "Reaktionen zwischen Metallen und Metallsalzlösungen durchführen und das Reduktions- beziehungsweise das Oxidationsvermögen der Teilchen vergleichen",
+        "Oxidationszahlen zur Identifizierung von Redoxreaktionen und zur Formulierung von Reaktionsgleichungen von Redoxreaktionen anwenden",
+        "eine Iodometrie durchführen und daran das Prinzip der Redoxtitration erläutern",
+        "den Aufbau einer galvanischen Zelle (Daniell-Element) und einer Elektrolysezelle beschreiben",
+        "Zellspannungen galvanischer Zellen experimentell ermitteln",
+        "die wesentlichen Prozesse in galvanischen Zellen und Elektrolysezellen darstellen und vergleichen (Elektrodenreaktionen, Anode, Kathode, Zellspannung, Zersetzungsspannung, Faraday-Gesetz)",
+        "die Zellspannung mithilfe von Gleichgewichtsbetrachtungen an den elektrochemischen Doppelschichten erklären",
+        "den Aufbau und die Funktion der Standard-Wasserstoff-Halbzelle erläutern",
+        "Standardpotenziale zur Vorhersage von elektrochemischen Reaktionen und zur Berechnung von Zellspannungen unter Standardbedingungen anwenden",
+        "die Abhängigkeit der Zellspannung von der Ionen-Konzentration in galvanischen Zellen erläutern und Zellspannungen bei verschiedenen Ionenkonzentrationen rechnerisch ermitteln (Nernst-Gleichung)",
+        "die Korrosion von Metallen als elektrochemische Reaktion erklären (Sauerstoffkorrosion und Säurekorrosion) und Methoden des Korrosionsschutzes erläutern (Opferanode)",
+        "das Phänomen der Überspannung beschreiben",
+        "Möglichkeiten und Probleme der elektrochemischen Speicherung von Energie in Batterien und Akkumulatoren (Bleiakkumulator) erläutern",
+        "aktuelle Entwicklungen bei elektrochemischen Stromquellen unter dem Aspekt der Nachhaltigkeit diskutieren (Brennstoffzellen)"
+      ]
+    },
+    {
+      "thema": "Chemie in Wissenschaft, Forschung und Anwendung (Leistungsfach)",
+      "relevante_unterthemen": [],
+      "kernkompetenzen": [
+        "den energetischen Zustand der Elektronen in der Atomhülle mithilfe des Orbitalmodells beschreiben und dieses Modell auf die chemische Bindung in einfachen Molekülen anwenden",
+        "die Eigenschaften von Nanopartikeln und nanostrukturierten Oberflächen erklären (Nanodimension, superhydrophob, Lotos-Effekt)",
+        "Anwendungsmöglichkeiten von Nanomaterialien beschreiben sowie Chancen und Risiken bewerten",
+        "anwendungsorientierte Forschung und Entwicklung am Beispiel einer weiteren ausgewählten Stoffgruppe aus wissenschaftshistorischer, aktueller und zukunftsorientierter Perspektive erläutern (zum Beispiel Farbstoffe, Waschmittel, Pharmazeutika, Komplexverbindungen, Silikone)"
+      ]
+    }
+  ]
+}

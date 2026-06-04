@@ -1,0 +1,43 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen (Qualifikationsphase) zielt darauf ab, Schülerinnen und Schüler zu einer kompetenten und selbstständigen Teilnahme am kulturellen und gesellschaftlichen Leben zu befähigen. Der Unterricht basiert auf einem erweiterten Textbegriff, der neben literarischen Texten auch Medien und diskursive Formate umfasst. Im Zentrum steht die reflektierte Auseinandersetzung mit ästhetisch gestalteten Produkten, um Fremdheitserfahrungen zu ermöglichen, Urteilskraft zu stärken und wissenschaftspropädeutische Fähigkeiten zu fördern. Der Plan ist in drei verbindliche Themenbereiche gegliedert, die durch vier Kompetenzbereiche (Lesen/Erschließen/Bewerten, Schreiben/Darstellen/Gestalten, Sprechen/Präsentieren/Zuhören, Reflektieren über Sprache) strukturiert werden. Dabei wird ein Spiralcurriculum verfolgt, das die in der Sekundarstufe I erworbenen Fähigkeiten vertieft. Die Schulen erhalten Freiräume zur inhaltlichen Profilbildung, müssen jedoch die Standards des Zentralabiturs erfüllen. Die Leistungsbewertung erfolgt prozess- und produktorientiert, wobei sowohl schriftliche Arbeiten als auch die laufende Unterrichtsarbeit (inkl. mündlicher Beiträge und Projekte) einbezogen werden.",
+  "hauptthemen": [
+    {
+      "thema": "Texte und Medien – Produkt und Rezeption",
+      "relevante_unterthemen": [
+        "Werkimmanente Interpretation",
+        "Wirkungsgeschichte und Intertextualität",
+        "Rezeptionsästhetik"
+      ],
+      "kernkompetenzen": [
+        "Strukturelle Elemente und ästhetische Ausdrucksformen eines Werkes analysieren und interpretieren",
+        "Eigene Lesarten begründen und die Subjektivität der Wahrnehmung reflektieren"
+      ]
+    },
+    {
+      "thema": "Texte und Medien – Kulturelle, gesellschaftliche und historische Zusammenhänge",
+      "relevante_unterthemen": [
+        "Literatur im Kontext anderer Künste und Medien",
+        "Literatur, Film und gesellschaftliches Engagement",
+        "Mediengeschichte und Epochenumbrüche"
+      ],
+      "kernkompetenzen": [
+        "Texte als kulturelle Objektivationen in ihrem historischen und gesellschaftlichen Kontext verstehen",
+        "Ein Bewusstsein für ästhetische Traditionen und die Historizität eigener Erkenntnisgewinnung entwickeln"
+      ]
+    },
+    {
+      "thema": "Texte und Medien – Kommunikative Prozesse und Urteilsbildung",
+      "relevante_unterthemen": [
+        "Sprache, Denken und Wirklichkeit",
+        "Mediale Bedeutungskonstitution",
+        "Reflektierte Mediennutzung"
+      ],
+      "kernkompetenzen": [
+        "Kommunikationsangebote in Texten und Medien kritisch bewerten und sich positionieren",
+        "Medientheoretische Grundkenntnisse anwenden und die Bedingungen des Verstehensprozesses reflektieren"
+      ]
+    }
+  ]
+}

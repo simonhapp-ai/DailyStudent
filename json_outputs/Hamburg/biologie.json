@@ -1,0 +1,63 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Bildungsplan für die Studienstufe in Hamburg zielt auf den Erwerb einer fundierten naturwissenschaftlichen Grundbildung (Scientific Literacy) ab. Im Zentrum steht die Befähigung der Schülerinnen und Schüler, biologische Phänomene auf verschiedenen Systemebenen (von der Molekular- bis zur Biosphärenebene) zu verstehen, zu analysieren und zu bewerten. Der Unterricht ist kompetenzorientiert und gliedert sich in die vier Bereiche Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Ein wesentliches didaktisches Prinzip ist die Strukturierung durch Basiskonzepte (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, individuelle und evolutive Entwicklung), die kumulatives Lernen fördern. Neben fachlichen Inhalten werden überfachliche Kompetenzen (personale, motivationale, lernmethodische und soziale Kompetenzen) sowie Leitperspektiven wie Bildung für nachhaltige Entwicklung (BNE), Werteorientierung und digitale Bildung integriert. Der Unterricht bereitet wissenschaftspropädeutisch auf ein Studium oder eine Berufsausbildung vor, wobei zwischen grundlegendem und erhöhtem Anforderungsniveau differenziert wird.",
+  "hauptthemen": [
+    {
+      "thema": "Leben und Energie",
+      "relevante_unterthemen": [
+        "Stoffwechselwege",
+        "Aufbauender Stoffwechsel (Fotosynthese)",
+        "Abbauender Stoffwechsel (Zellatmung, Gärung)",
+        "Enzymatik",
+        "Stofftransport"
+      ],
+      "kernkompetenzen": [
+        "Stoffwechselprozesse auf Enzymebene und energetische Kopplung erläutern",
+        "Zusammenhänge zwischen Stoffwechselwegen und Energieumwandlung in lebenden Systemen analysieren"
+      ]
+    },
+    {
+      "thema": "Informationsverarbeitung in Lebewesen",
+      "relevante_unterthemen": [
+        "Grundlagen der Informationsverarbeitung",
+        "Nervenzellen und Erregungsleitung",
+        "Synaptische Übertragung",
+        "Neuronale Plastizität",
+        "Hormonelle Steuerung"
+      ],
+      "kernkompetenzen": [
+        "Mechanismen der Erregungsleitung und synaptischen Übertragung erklären",
+        "Neurobiologische Vorgänge und deren Beeinflussung durch Stoffe oder Störungen bewerten"
+      ]
+    },
+    {
+      "thema": "Lebewesen in ihrer Umwelt",
+      "relevante_unterthemen": [
+        "Ökosystemstrukturen",
+        "Biotische und abiotische Faktoren",
+        "Stoffkreisläufe und Energiefluss",
+        "Einfluss des Menschen und Nachhaltigkeit",
+        "Biodiversität"
+      ],
+      "kernkompetenzen": [
+        "Wechselwirkungen in Ökosystemen unter Nutzung von Basiskonzepten analysieren",
+        "Menschliche Eingriffe in Ökosysteme aus ökologischer, ökonomischer und sozialer Perspektive bewerten"
+      ]
+    },
+    {
+      "thema": "Vielfalt des Lebens",
+      "relevante_unterthemen": [
+        "Molekulargenetik",
+        "Gentechnik",
+        "Evolutionstheorie",
+        "Artbildung und Biodiversität",
+        "Kulturelle Evolution"
+      ],
+      "kernkompetenzen": [
+        "Genetische Regulationsmechanismen und gentechnische Verfahren erläutern",
+        "Evolutionsprozesse als Ursache der Biodiversität theoriegeleitet erklären und ethisch reflektieren"
+      ]
+    }
+  ]
+}

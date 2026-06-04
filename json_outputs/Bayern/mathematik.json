@@ -1,0 +1,79 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Vertiefungskurs Mathematik 12 am bayerischen Gymnasium bietet eine modular aufgebaute Vertiefung mathematischer Konzepte, aus denen die Lehrkraft drei von fünf Modulen auswählt. Die Inhalte zielen darauf ab, das mathematische Verständnis über das Standardniveau hinaus zu erweitern und die Anwendung auf komplexe, teils informatisch geprägte oder gesellschaftsrelevante Problemstellungen zu fördern. Die Module decken ein breites Spektrum ab: Komplexe Zahlen führen in die Erweiterung des Zahlbereichs und die Gauß'sche Zahlenebene ein. Folgen und Reihen behandeln Konvergenz, Taylorpolynome und Beweisverfahren wie die vollständige Induktion. Das Modul Matrizen fokussiert auf lineare Prozesse, Gleichungssysteme und deren Anwendung in der Modellierung. Zahlentheorie und Kryptologie vermitteln die mathematischen Grundlagen moderner Verschlüsselungsverfahren (RSA) und modulare Arithmetik. Schließlich bietet das Modul Statistik eine Einführung in die Datenanalyse, Regressionsrechnung und Hypothesentests, wobei ein besonderer Fokus auf der kritischen Reflexion medialer Datendarstellungen liegt. Ziel ist die Befähigung zu abstraktem Denken, algorithmischem Verständnis und der kritischen Einordnung mathematischer Modelle in der modernen Gesellschaft.",
+  "hauptthemen": [
+    {
+      "thema": "Komplexe Zahlen",
+      "relevante_unterthemen": [
+        "Algebraische Form",
+        "Polarform",
+        "Gauß'sche Zahlenebene",
+        "Kreisteilungsgleichungen",
+        "Mandelbrot-Menge"
+      ],
+      "kernkompetenzen": [
+        "Sicherer Wechsel zwischen algebraischer und Polarform",
+        "Lösen quadratischer Gleichungen im komplexen Bereich",
+        "Geometrische Deutung von Operationen"
+      ]
+    },
+    {
+      "thema": "Folgen und Reihen",
+      "relevante_unterthemen": [
+        "Vollständige Induktion",
+        "Konvergenzuntersuchungen",
+        "Geometrische Reihen",
+        "Taylorpolynome"
+      ],
+      "kernkompetenzen": [
+        "Beweisführung mittels vollständiger Induktion",
+        "Bestimmung von Grenzwerten",
+        "Anwendung von Taylorpolynomen zur Funktionsannäherung"
+      ]
+    },
+    {
+      "thema": "Matrizen",
+      "relevante_unterthemen": [
+        "Lineare Gleichungssysteme",
+        "Übergangsprozesse",
+        "Matrizenmultiplikation",
+        "Invertierbarkeit",
+        "Absorptionswahrscheinlichkeiten"
+      ],
+      "kernkompetenzen": [
+        "Modellierung von Übergangsprozessen",
+        "Lösen von LGS mittels Gauß-Algorithmus",
+        "Interpretation von Fixvektoren und Inversen"
+      ]
+    },
+    {
+      "thema": "Zahlentheorie und Kryptologie",
+      "relevante_unterthemen": [
+        "Euklidischer Algorithmus",
+        "Modulare Arithmetik",
+        "Satz von Fermat",
+        "RSA-Verfahren"
+      ],
+      "kernkompetenzen": [
+        "Effiziente Berechnung großer Potenzen modulo n",
+        "Verständnis asymmetrischer Verschlüsselung",
+        "Anwendung des erweiterten euklidischen Algorithmus"
+      ]
+    },
+    {
+      "thema": "Statistik",
+      "relevante_unterthemen": [
+        "Skalenniveaus",
+        "Lineare Regression",
+        "Korrelationskoeffizienten",
+        "Hypothesentests (Chi-Quadrat/t-Test)"
+      ],
+      "kernkompetenzen": [
+        "Durchführung und Interpretation statistischer Tests",
+        "Kritische Analyse medialer Datendarstellungen",
+        "Berechnung und Deutung von Korrelationen"
+      ]
+    }
+  ]
+}

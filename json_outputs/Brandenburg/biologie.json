@@ -1,0 +1,59 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Brandenburg (Biologie) zielt auf die Entwicklung einer vertieften naturwissenschaftlichen Kompetenz ab, die über reines Fachwissen hinausgeht. Das Kompetenzmodell gliedert sich in Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz. Ein zentrales Element sind die fünf Basiskonzepte (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, Individuelle und evolutive Entwicklung), die als kognitive Anker für vernetztes Lernen dienen. Die Einführungsphase (Jahrgangsstufe 11) dient der Vorbereitung und Vertiefung, während die Qualifikationsphase (Q1-Q4) in vier verbindlichen Themenfeldern (Stoffwechsel/Zellbiologie, Ökologie, Genetik, Evolution) die wissenschaftspropädeutische Bildung festigt. Dabei wird zwischen Grund- und Leistungskursen durch unterschiedliche Komplexitätsgrade und Anforderungen an die Selbststeuerung differenziert. Ziel ist die Befähigung der Lernenden zu verantwortungsvollem Handeln, zur Teilhabe am gesellschaftlichen Diskurs über biologische Themen sowie zur Reflexion über ethische und ökologische Konsequenzen wissenschaftlicher Erkenntnisse.",
+  "hauptthemen": [
+    {
+      "thema": "Stoffwechsel und Informationsverarbeitung auf zellulärer Ebene",
+      "relevante_unterthemen": [
+        "Zellulärer Stoffwechsel (Dissimilation, ATP-Bildung)",
+        "Enzymatik",
+        "Neurobiologie (Potenziale, Synapsen)",
+        "Hormonelle Steuerung"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge zwischen Struktur und Funktion auf zellulärer Ebene erläutern",
+        "Neurophysiologische Prozesse und deren Störungen analysieren und bewerten"
+      ]
+    },
+    {
+      "thema": "Lebewesen in ihrer Umwelt (Ökologie)",
+      "relevante_unterthemen": [
+        "Abiotische und biotische Faktoren",
+        "Populationsdynamik (Lotka-Volterra-Regeln)",
+        "Stoffkreisläufe und Energiefluss",
+        "Anthropogene Einflüsse und Nachhaltigkeit"
+      ],
+      "kernkompetenzen": [
+        "Ökosysteme als komplexe Systeme strukturieren und analysieren",
+        "Folgen menschlichen Handelns für die Biodiversität kriteriengeleitet bewerten"
+      ]
+    },
+    {
+      "thema": "Molekulargenetische Grundlagen des Lebens",
+      "relevante_unterthemen": [
+        "DNA-Struktur und Replikation",
+        "Genexpression (Transkription, Translation)",
+        "Epigenetik",
+        "Gentechnische Verfahren und ethische Aspekte"
+      ],
+      "kernkompetenzen": [
+        "Molekularbiologische Mechanismen der Informationsspeicherung und -realisierung erklären",
+        "Gentechnische Verfahren und deren gesellschaftliche Auswirkungen ethisch reflektieren"
+      ]
+    },
+    {
+      "thema": "Vielfalt und Entwicklung des Lebens (Evolution)",
+      "relevante_unterthemen": [
+        "Synthetische Evolutionstheorie",
+        "Evolutionsfaktoren",
+        "Belege für Evolution",
+        "Evolution des Menschen"
+      ],
+      "kernkompetenzen": [
+        "Evolutionsprozesse theoriegeleitet erklären und von nicht-wissenschaftlichen Vorstellungen abgrenzen",
+        "Stammesgeschichtliche Verwandtschaftsverhältnisse anhand von Belegen analysieren"
+      ]
+    }
+  ]
+}

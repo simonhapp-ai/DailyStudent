@@ -1,0 +1,52 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Politik",
+  "zusammenfassung": "Der Lehrplan für das Fach Gemeinschaftskunde (Geschichte, Sozialkunde, Erdkunde) in der gymnasialen Oberstufe (MSS) zielt auf die Vermittlung einer allgemeinen Studierfähigkeit und Hochschulreife ab. Er verfolgt einen wissenschaftspropädeutischen Ansatz, der vernetztes Denken, selbstständiges Lernen und die Fähigkeit zur politischen Urteilsbildung fördert. Die drei Fächer kooperieren im gesellschaftswissenschaftlichen Aufgabenfeld, wobei sie jeweils fachspezifische Perspektiven einbringen: Geschichte betrachtet die zeitliche Bedingtheit, Sozialkunde das Politische (Konflikte, Institutionen, Normen) und Erdkunde die Wechselwirkung zwischen Raum und gesellschaftlichem Handeln. Der Lehrplan ist als inhaltliche Einheit für die Jahrgangsstufen 11 bis 13 konzipiert, bietet Lehrkräften Spielräume für Schwerpunktsetzungen und betont handlungsorientierte Arbeitsformen wie Projekte und Erkundungen. Ein zentrales Ziel ist die Befähigung der Schülerinnen und Schüler, aktuelle gesellschaftliche Probleme kategorial zu erschließen, historische Zusammenhänge zu verstehen und verantwortungsbewusstes, demokratisches Handeln zu entwickeln.",
+  "hauptthemen": [
+    {
+      "thema": "Geschichte: Grundlagen und Moderne",
+      "relevante_unterthemen": [
+        "Grundlagen europäischer Geschichte (Antike/Mittelalter)",
+        "Entstehen der modernen Welt (Revolutionen, Industrialisierung)",
+        "Deutschlands Weg zur Demokratie (1815-1990)",
+        "Internationale Beziehungen im 20. Jahrhundert"
+      ],
+      "kernkompetenzen": [
+        "Historische Ereignisse multikausal und interdependent erklären",
+        "Gegenwartsprobleme aus ihrer historischen Bedingtheit analysieren",
+        "Methoden der Quelleninterpretation und Sekundärliteraturanalyse anwenden",
+        "Historisches Bewusstsein als Grundlage für politisches Urteilsvermögen nutzen"
+      ]
+    },
+    {
+      "thema": "Sozialkunde: Gesellschaft, Wirtschaft und Politik",
+      "relevante_unterthemen": [
+        "Sozialstrukturanalyse und Wertewandel",
+        "Soziale Marktwirtschaft und Wirtschaftspolitik",
+        "Regierungssystem der Bundesrepublik Deutschland",
+        "Internationale Politik und globale Verantwortung"
+      ],
+      "kernkompetenzen": [
+        "Politische Probleme kategorial analysieren (Interessen, Macht, Institutionen)",
+        "Wirtschaftspolitische Zusammenhänge und Ordnungsstrukturen bewerten",
+        "Politische Urteilsbildung auf Basis von Werten wie Freiheit und Gerechtigkeit vollziehen",
+        "Sozial-kommunikative Kompetenzen durch Rollen- und Planspiele erwerben"
+      ]
+    },
+    {
+      "thema": "Erdkunde: Raum und globale Verantwortung",
+      "relevante_unterthemen": [
+        "Geozonen als Ökosysteme",
+        "Wirtschaftsräume (USA, Europa, Entwicklungsländer)",
+        "Weltbevölkerung und Verstädterung",
+        "Ressourcenmanagement und globale Risiken"
+      ],
+      "kernkompetenzen": [
+        "Raumverhaltenskompetenz für die eigene Umwelt entwickeln",
+        "Wechselwirkungen zwischen Naturraum und menschlichem Handeln analysieren",
+        "Globale ökologische und ökonomische Probleme vernetzt beurteilen",
+        "Verantwortungsbewusstsein für nachhaltige Raumnutzung und globale Gerechtigkeit zeigen"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Bildungsplan für die Studienstufe in Hamburg zielt auf die Entwicklung einer fundierten naturwissenschaftlichen Grundbildung (Scientific Literacy) ab. Im Zentrum steht die Befähigung der Schülerinnen und Schüler, chemische Konzepte, Theorien und Verfahren zu verstehen und anzuwenden, um komplexe Phänomene der Lebenswelt sowie globale Herausforderungen (z. B. Klimawandel, Ressourcenmanagement) zu analysieren. Der Unterricht ist kompetenzorientiert und strukturiert sich um drei Basiskonzepte: Aufbau und Eigenschaften von Stoffen/Teilchen, chemische Reaktion und Energie. Ein besonderer Fokus liegt auf der Verknüpfung von Fachwissen mit Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenzen. Dabei werden digitale Werkzeuge zur Modellierung und Analyse genutzt. Der Lehrplan integriert Leitperspektiven wie Bildung für nachhaltige Entwicklung (BNE), Werteorientierung und digitale Bildung, um die Schülerinnen und Schüler auf eine verantwortungsvolle gesellschaftliche Teilhabe sowie auf ein Studium oder eine Berufsausbildung vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Moleküle des Lebens",
+      "relevante_unterthemen": [
+        "Grundwissen der Organik",
+        "Natürliche Makromoleküle – Fette",
+        "Natürliche Makromoleküle – Proteine"
+      ],
+      "kernkompetenzen": [
+        "Struktur-Eigenschafts-Beziehungen organischer Verbindungen analysieren",
+        "Reaktionsmechanismen (Substitution, Addition, Veresterung) auf Teilchenebene deuten",
+        "Bedeutung von Makromolekülen für Ernährung und Gesundheit bewerten"
+      ]
+    },
+    {
+      "thema": "Chemie beeinflusst unsere Umwelt",
+      "relevante_unterthemen": [
+        "Energie chemischer Reaktionen",
+        "Geschwindigkeit chemischer Reaktionen",
+        "Gleichgewicht chemischer Reaktionen",
+        "Protonenübergänge bei chemischen Reaktionen"
+      ],
+      "kernkompetenzen": [
+        "Thermodynamische und kinetische Prinzipien zur Steuerung von Reaktionen anwenden",
+        "Das dynamische Gleichgewicht und das Massenwirkungsgesetz quantitativ beschreiben",
+        "Säure-Base-Reaktionen nach Brønsted analysieren und pH-Werte berechnen"
+      ]
+    },
+    {
+      "thema": "Chemische Energiespeicher und Mobilität",
+      "relevante_unterthemen": [
+        "Elektronenübergänge und elektrochemische Spannungsquellen",
+        "Elektrolyse und Korrosion",
+        "Alternative Energieträger"
+      ],
+      "kernkompetenzen": [
+        "Redoxreaktionen als Elektronenübergänge verstehen und elektrochemische Zellen analysieren",
+        "Technologische Anwendungen wie Akkumulatoren und Brennstoffzellen bewerten",
+        "Ökologische und ökonomische Aspekte der Rohstoffgewinnung und Energieträger diskutieren"
+      ]
+    },
+    {
+      "thema": "Moderne Werkstoffe und chemische Produkte",
+      "relevante_unterthemen": [
+        "Synthetische Makromoleküle – Kunststoffe",
+        "Nanomaterialien"
+      ],
+      "kernkompetenzen": [
+        "Syntheseprinzipien von Kunststoffen (Polymerisation, Polykondensation, Polyaddition) erläutern",
+        "Recyclingverfahren und Nachhaltigkeit von Kunststoffen kritisch beurteilen",
+        "Potenziale und Risiken von Nanomaterialien auf Basis ihrer Oberflächeneigenschaften diskutieren"
+      ]
+    }
+  ]
+}

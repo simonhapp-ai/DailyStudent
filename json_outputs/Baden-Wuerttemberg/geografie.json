@@ -1,0 +1,296 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Bildungsplan 2016 für das Fach Geographie am Gymnasium in Baden-Württemberg, in der Fassung vom 22. Februar 2023, legt den Fokus auf die raumwirksamen Mensch-Umwelt-Beziehungen im dynamischen System Erde. Das Fach zielt darauf ab, Schülerinnen und Schüler zu befähigen, die Erde als Lebensraum des Menschen in ihren komplexen naturräumlichen und gesellschaftlichen Prozessen zu verstehen, zu analysieren und zukunfts- sowie handlungsorientiert zu bewerten. Ein zentrales Anliegen ist die Entwicklung raumbezogenen systemischen Denkens und des Umgangs mit Komplexität, wobei der \"Geofaktor Mensch\" als wirkmächtigste Größe im Anthropozän hervorgehoben wird.\n\nDer Unterricht beginnt mit phänomenologischen Zugängen und entwickelt sich hin zu problemlösungsorientierten Ansätzen, um interdependente Wirkungszusammenhänge zwischen Natur und menschlichem Handeln zu erkennen. Aufbauend auf einem soliden räumlichen Orientierungswissen und Kenntnissen der allgemeinen sowie regionalen Geographie, setzen sich die Lernenden mit globalen Herausforderungen wie Klimawandel, Boden degradation, Ressourcenverknappung, Bevölkerungswachstum, globaler Ungleichheit, Urbanisierung und Migration auseinander. Dabei steht das Nachhaltigkeitsprinzip im Vordergrund, das den Erhalt der Natur, die Leistungsfähigkeit der Wirtschaft und die gesellschaftlichen Bedürfnisse zukünftiger Generationen berücksichtigt.\n\nDer Bildungswert des Faches liegt in der systemischen Analyse natur- und gesellschaftswissenschaftlicher Phänomene, der fragengeleiteten Untersuchung von Räumen auf allen Maßstabsebenen (lokal, regional, global) sowie der problem- und handlungsorientierten Auseinandersetzung mit gegenwarts- und zukunftsgestaltenden Prozessen im Sinne einer nachhaltigen Entwicklung. Dies fördert die Fähigkeit der Schülerinnen und Schüler, aktuelle Entwicklungen zu analysieren, zu bewerten und adäquat zu handeln, wodurch ein wichtiger Beitrag zur Bildung in einer globalisierten Welt geleistet wird.\n\nDie Kompetenzentwicklung erfolgt integriert über inhaltsbezogene und prozessbezogene Kompetenzen. Letztere umfassen Orientierungs-, Analyse-, Urteils-, Handlungs- und Methodenkompetenz, die spiralcurricular und altersgerecht aufgebaut werden. Dazu gehören die kritische Analyse geographischer Informationsmaterialien (analog und digital), der Umgang mit Modellen, die Durchführung von Versuchen und Erkundungen sowie die Anwendung physisch- und humangeographischer Untersuchungsmethoden. In der Oberstufe werden wissenschaftspropädeutische Ansätze vertieft, um Studierfähigkeit zu erreichen und innovative, zukunftsfähige Lösungsansätze für existenzielle Probleme zu entwickeln.\n\nInhaltsbezogen gliedert sich der Lehrplan in die Teilsysteme Erdoberfläche, Wetter und Klima, Gesellschaft und Wirtschaft sowie die Analyse von Natur- und Kulturräumen. Diese Teilsysteme werden über die Jahrgangsstufen hinweg vertieft und vernetzt betrachtet, um ein umfassendes Verständnis der komplexen Raumstrukturen und ihrer dynamischen Entwicklung zu ermöglichen. Das Fach leistet zudem Beiträge zu den Leitperspektiven wie Bildung für nachhaltige Entwicklung, Bildung für Toleranz und Akzeptanz von Vielfalt, Prävention und Gesundheitsförderung, Berufliche Orientierung, Medienbildung und Verbraucherbildung.",
+  "hauptthemen": [
+    {
+      "thema": "Teilsystem Erdoberfläche (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Grundlagen der Orientierung",
+        "Gestaltung der Erdoberfläche durch naturräumliche Prozesse in Deutschland und Europa"
+      ],
+      "kernkompetenzen": [
+        "die Bewegungen von Erde und Mond charakterisieren sowie die Entstehung von Tag und Nacht erklären",
+        "Lage, Größe und Form der Kontinente und Ozeane darstellen",
+        "die politische Gliederung Deutschlands und Europas beschreiben",
+        "die Nutzung analoger und digitaler Hilfsmittel zur Orientierung darstellen",
+        "erläutern, wie die Erdoberfläche durch naturräumliche Prozesse geformt wird",
+        "charakteristische Oberflächenformen in Europa an Raumbeispielen erläutern (z.B. Baden-Württemberg, deutsche Küstenlandschaft, Alpen)",
+        "Talbildung als charakteristischen Prozess der Landschaftsgestaltung in Europa erläutern",
+        "Boden als eine natürliche Lebensgrundlage darstellen",
+        "mindestens zwei Naturereignisse, daraus resultierende Bedrohungen und geeignete Schutzmaßnahmen darstellen"
+      ]
+    },
+    {
+      "thema": "Teilsystem Wetter und Klima (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Grundlagen von Wetter und Klima",
+        "Klimazonen Europas"
+      ],
+      "kernkompetenzen": [
+        "das Wetter anhand von Wetterelementen charakterisieren",
+        "anhand von einfachen Versuchen zwei Wetterelemente analysieren",
+        "den Unterschied zwischen Wetter und Klima beschreiben",
+        "typische Wetter- und Klimaphänomene charakterisieren",
+        "die Klimazonen Europas anhand von Temperatur, Niederschlag und Vegetation im Überblick charakterisieren",
+        "Zusammenhänge zwischen Klima, Vegetation und land- oder forstwirtschaftlicher Nutzung für Nordeuropa, Mitteleuropa und Südeuropa erklären"
+      ]
+    },
+    {
+      "thema": "Teilsystem Gesellschaft (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Lebensraum Stadt"
+      ],
+      "kernkompetenzen": [
+        "den Lebensraum Stadt in seiner Ausstattung und Funktion im Vergleich zum ländlichen Raum analysieren"
+      ]
+    },
+    {
+      "thema": "Teilsystem Wirtschaft (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Wechselwirkungen zwischen wirtschaftlichem Handeln und Naturraum"
+      ],
+      "kernkompetenzen": [
+        "anhand eines Betriebsbeispiels den Zusammenhang von landwirtschaftlicher Produktion, naturräumlicher Ausstattung und Markt erläutern",
+        "anhand eines Industriestandorts Voraussetzungen und Auswirkungen industrieller Produktion erläutern",
+        "anhand eines ausgewählten Wirtschaftsstandortes oder einer ausgewählten Region Europas die Wirkung des Dienstleistungsbereichs auf den Raum altersgemäß erörtern und Möglichkeiten einer nachhaltigen Nutzung darstellen"
+      ]
+    },
+    {
+      "thema": "Natur- und Kulturräume (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Analyse ausgewählter Räume in Deutschland und Europa"
+      ],
+      "kernkompetenzen": [
+        "die naturräumliche Gliederung Baden-Württembergs, Deutschlands und Europas beschreiben",
+        "Zusammenhänge zwischen naturräumlicher Ausstattung und menschlicher Nutzung an Raumbeispielen erklären sowie Vorteile einer nachhaltigen Nutzung altersgemäß beurteilen"
+      ]
+    },
+    {
+      "thema": "Teilsystem Erdoberfläche (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Grundlegende exogene Prozesse"
+      ],
+      "kernkompetenzen": [
+        "Verwitterung, Abtragung, Transport und Ablagerung als grundlegende exogene Prozesse an einem Raumbeispiel erklären"
+      ]
+    },
+    {
+      "thema": "Teilsystem Wetter und Klima (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Globale Wetter- und Klimaphänomene",
+        "Klimazonen der Erde",
+        "Phänomene des Klimawandels"
+      ],
+      "kernkompetenzen": [
+        "typische Wetterabläufe der immerfeuchten Tropen im Vergleich zu Mitteleuropa beschreiben",
+        "ein ausgewähltes Wetterextrem sowie daraus resultierende Bedrohungen darstellen",
+        "typische Merkmale der Klimazonen der Erde als Ergebnis der solaren Einstrahlung erläutern",
+        "die tropische Zirkulation erklären",
+        "den Zusammenhang zwischen Klima und natürlicher Vegetation im globalen Überblick erklären",
+        "den natürlichen und den anthropogen verstärkten Treibhauseffekt in Grundzügen darstellen",
+        "Auswirkungen des Klimawandels in den Polarräumen darstellen",
+        "globale Auswirkungen des Klimawandels im Überblick erläutern",
+        "Möglichkeiten zur Reduktion von Treibhausgasen als zentrale Maßnahme gegen die Erderwärmung darstellen"
+      ]
+    },
+    {
+      "thema": "Teilsystem Gesellschaft (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Phänomene der globalen Verstädterung",
+        "Phänomene globaler Disparitäten"
+      ],
+      "kernkompetenzen": [
+        "das weltweite Phänomen der Verstädterung darstellen",
+        "anhand eines Beispiels Ursachen und Folgen der Verstädterung darstellen",
+        "Entwicklung und räumliche Verteilung der Weltbevölkerung darstellen",
+        "Disparitäten in der Einen Welt am Beispiel von Ernährung, Gesundheit, Bildung oder Einkommen analysieren",
+        "wirtschaftliche, politische, religiöse oder ökologische Ursachen und Folgen der Migration an einem Raumbeispiel darstellen",
+        "ein (Schul-)Projekt der Entwicklungszusammenarbeit hinsichtlich der Verbesserung der Lebensverhältnisse anhand ausgewählter nachhaltiger Entwicklungsziele (SDG) beurteilen"
+      ]
+    },
+    {
+      "thema": "Teilsystem Wirtschaft (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Raumwirksamkeit wirtschaftlichen Handelns"
+      ],
+      "kernkompetenzen": [
+        "die Produktion und den Handel eines Welthandelsguts hinsichtlich der Raumwirksamkeit unter dem Aspekt der Nachhaltigkeit darstellen und die eigene Position als Konsument überprüfen"
+      ]
+    },
+    {
+      "thema": "Natur- und Kulturräume (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Analyse ausgewählter Räume in unterschiedlichen Geozonen"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge zwischen naturräumlicher Ausstattung und menschlicher Nutzung sowie Vorteile einer nachhaltigen Nutzung an mindestens einem Raumbeispiel aus den Tropen oder den Trockenräumen oder den Polarräumen darstellen"
+      ]
+    },
+    {
+      "thema": "Teilsystem Erdoberfläche (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Digitale Orientierung",
+        "Endogene und exogene Prozesse"
+      ],
+      "kernkompetenzen": [
+        "mithilfe von Informationen aus der Fernerkundung und aus Web-GIS Räume analysieren",
+        "die innere Struktur der Erde darstellen",
+        "plattentektonische Prozesse und deren Auswirkungen erklären",
+        "den Kreislauf der Gesteine ausgehend von regionalen Beispielen erläutern"
+      ]
+    },
+    {
+      "thema": "Teilsystem Gesellschaft (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Zukunftsfähige Gestaltung von Räumen"
+      ],
+      "kernkompetenzen": [
+        "die Entwicklung eines ländlichen Raumes unter dem Aspekt der Zukunftsfähigkeit beurteilen"
+      ]
+    },
+    {
+      "thema": "Teilsystem Wirtschaft (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Globale Herausforderung: Ressourcenverfügbarkeit und Ressourcenmanagement (*)"
+      ],
+      "kernkompetenzen": [
+        "Verfügbarkeit von Süßwasser, agrarisch nutzbarer Böden sowie eines ausgewählten Rohstoffs oder Energierohstoffs im weltweiten Überblick erläutern",
+        "an einem Raumbeispiel für eine Ressource ökologische, ökonomische, soziale und politische Auswirkungen von Gewinnung und Nutzung erörtern sowie eine Strategie nachhaltigen Ressourcenmanagements beurteilen"
+      ]
+    },
+    {
+      "thema": "Natur- und Kulturräume (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Analyse ausgewählter Meeresräume",
+        "Analyse von Weltwirtschaftsregionen (*)"
+      ],
+      "kernkompetenzen": [
+        "das submarine Relief in Grundzügen beschreiben",
+        "Eigenschaften und dynamische Prozesse des Systems Meer erläutern",
+        "die Veränderungen der Ozeane in Folge des Klimawandels sowie Gegen- und Schutzmaßnahmen erläutern",
+        "ausgehend von Gefährdungen des Meeres durch den Menschen Möglichkeiten einer nachhaltigen Nutzung erörtern",
+        "die räumliche Verflechtung der Weltwirtschaftsregionen durch den Welthandel beschreiben",
+        "die Bedeutung der Ressourcenausstattung für zwei Weltwirtschaftsregionen (USA, ein BRICS-Staat) analysieren"
+      ]
+    },
+    {
+      "thema": "Das System Erde (Basisfach)",
+      "relevante_unterthemen": [
+        "Das System Erde"
+      ],
+      "kernkompetenzen": [
+        "die Geosphären des Systems Erde charakterisieren und in ihrer Vernetzung beschreiben",
+        "das Anthropozän-Konzept darstellen"
+      ]
+    },
+    {
+      "thema": "Globale Herausforderungen (Basisfach)",
+      "relevante_unterthemen": [
+        "Globale Herausforderungen und Zukunftssicherung",
+        "Globale Herausforderung: Klimawandel",
+        "Globale Herausforderung: Städte unter dem Einfluss gesellschaftlicher und naturräumlicher Veränderungen",
+        "Globale Herausforderung: Disparitäre Entwicklungen"
+      ],
+      "kernkompetenzen": [
+        "„Globale Herausforderungen“ charakterisieren",
+        "die Leitidee „Nachhaltige Entwicklung“ erläutern",
+        "Ursachen und Dimensionen des Klimawandels auf der Grundlage aktueller wissenschaftlicher Erkenntnisse erläutern",
+        "aktuelle Maßnahmen gegen und Anpassungsstrategien an den Klimawandel unter dem Aspekt einer nachhaltigen Entwicklung bewerten",
+        "klimaneutrale Lebens- und Arbeitsweisen auf der lokalen Ebene beschreiben und eigene Handlungsansätze dazu entwickeln",
+        "den urbanen Lebensraum mithilfe von räumlichen, funktionalen und sozialen Merkmalen charakterisieren",
+        "Veränderungen von Städten in einer globalisierten Welt erläutern",
+        "die Besonderheiten des Stadtklimas und die Vulnerabilität von städtischen Lebensräumen im Klimawandel darstellen",
+        "ein Konzept der nachhaltigen Stadtentwicklung an einem Beispiel erörtern",
+        "unterschiedliche Entwicklungsstände von Räumen analysieren",
+        "Ursachen und Folgen disparitärer Entwicklungen in der Einen Welt und daraus abgeleitete Entwicklungsstrategien erläutern",
+        "eigene Handlungsmöglichkeiten im Rahmen der Entwicklungszusammenarbeit anhand eines Projekts überprüfen"
+      ]
+    },
+    {
+      "thema": "Globale Herausforderungen (fakultativ, Basisfach)",
+      "relevante_unterthemen": [
+        "Globale Herausforderung: Bevölkerungsentwicklung und ihre räumlichen Auswirkungen",
+        "Globale Herausforderung: Vulnerabilität und Resilienz von Mensch und Raum"
+      ],
+      "kernkompetenzen": [
+        "die raum-zeitliche Entwicklung der Weltbevölkerung sowie ihre alters- und geschlechtsspezifische Struktur erläutern",
+        "die Veränderung von Raumstrukturen als Ergebnis wirtschaftlichen Handelns der wachsenden Weltbevölkerung erklären",
+        "an mindestens einem Raumbeispiel die Folgen menschlicher Eingriffe in die Hydrosphäre in ihren Wirkungszusammenhängen darstellen und Konzepte einer nachhaltigen Nutzung erörtern",
+        "an mindestens einem Raumbeispiel die Folgen menschlicher Eingriffe in die Biosphäre in ihren Wirkungszusammenhängen darstellen und Konzepte einer nachhaltigen Nutzung erörtern",
+        "Oberflächenformen von zwei ausgewählten Landschaften charakterisieren und als Ergebnis endogener und/oder exogener Prozesse erklären",
+        "an mindestens einer dieser ausgewählten Landschaften die Verwundbarkeit dieses Raumes und der dort lebenden Gesellschaft durch Naturgefahren erläutern sowie mögliche Maßnahmen zur Stärkung der Resilienz im Rahmen einer nachhaltigen Entwicklung beurteilen"
+      ]
+    },
+    {
+      "thema": "Das System Erde (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Das System Erde"
+      ],
+      "kernkompetenzen": [
+        "die Geosphären des Systems Erde charakterisieren und in ihrer Vernetzung beschreiben",
+        "das Anthropozän-Konzept darstellen"
+      ]
+    },
+    {
+      "thema": "Sphären im System Erde (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Formen und Prozesse der Reliefsphäre",
+        "Prozesse in der Atmosphäre",
+        "Prozesse in der Hydrosphäre",
+        "Wirkungszusammenhänge in der Biosphäre",
+        "Prozesse in der Pedosphäre",
+        "Entwicklungen in der Anthroposphäre"
+      ],
+      "kernkompetenzen": [
+        "Theorien zur Entstehung und Verteilung der Kontinente und Ozeane vergleichen",
+        "seismische Prozesse erklären",
+        "physikalische, chemische und biogene Verwitterung darstellen und deren Bedeutung für die Oberflächenformen charakterisieren",
+        "die Landschaftsgenese Südwestdeutschlands in Grundzügen darstellen",
+        "charakteristische Oberflächenformen von zwei ausgewählten Landschaften als Ergebnis endogener und/oder exogener Prozesse erklären",
+        "die Bildung unterschiedlicher Lagerstätten als Folge von endogenen und/oder exogenen Prozessen erklären",
+        "die Verwundbarkeit von Räumen durch Naturgefahren erläutern",
+        "lokale Wetterereignisse und Wetterlagen anhand von Wetterkarten und Satellitenbildern erklären und Wetterprognosen erstellen",
+        "die Vielfalt der Klimate als Folge solarer Einstrahlung und atmosphärischer Prozesse erklären",
+        "anhand einer Klimaklassifikation das Klima in seiner räumlichen Differenzierung darstellen",
+        "ein großräumig oszillierendes ozeanographisch-meteorologisches System erklären und dessen Auswirkungen darstellen",
+        "das spezifische Klima eines ausgewählten Lebensraumes (Hochgebirge oder Wüste) erklären",
+        "den Wasserkreislauf und seine grundlegenden Prozesse charakterisieren",
+        "das lokal, regional und global unterschiedliche Wasserdargebot erklären",
+        "die Verbreitung der Ökosysteme in Abhängigkeit von Klima, Relief und Höhenlage charakterisieren",
+        "die Folgen menschlicher Eingriffe in Ökosysteme in ihren Wirkungszusammenhängen darstellen und Konzepte einer nachhaltigen Nutzung an einem der folgenden Räume erörtern: Mittelmeerraum oder Sahelzone",
+        "grundlegende Bodenbildungsprozesse darstellen und den Boden als dynamisches Ökosystem erläutern",
+        "an drei verschiedenen Bodentypen die Ausbildung charakteristischer Bodenhorizonte in Abhängigkeit von den Bodenbildungsfaktoren erklären sowie deren räumliche Verbreitung erläutern",
+        "an drei verschiedenen Bodentypen die Bodeneigenschaften charakterisieren und ihre landwirtschaftliche Nutzbarkeit unter dem Aspekt der Nachhaltigkeit beurteilen",
+        "die raum-zeitliche Entwicklung der Weltbevölkerung sowie ihre alters- und geschlechtsspezifische Struktur erläutern und daraus resultierende Herausforderungen darstellen",
+        "die Veränderung der Raumstrukturen in ausgewählten Wirtschaftsregionen als Ergebnis wirtschaftlichen Handelns im Globalisierungsprozess erklären"
+      ]
+    },
+    {
+      "thema": "Globale Herausforderungen (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Globale Herausforderungen und Zukunftssicherung",
+        "Globale Herausforderung: Klimawandel",
+        "Globale Herausforderung: Städte unter dem Einfluss gesellschaftlicher und naturräumlicher Veränderungen",
+        "Globale Herausforderungen: Disparitäre Entwicklungen"
+      ],
+      "kernkompetenzen": [
+        "„Globale Herausforderungen“ charakterisieren",
+        "die Leitidee „Nachhaltige Entwicklung“ erläutern",
+        "Ursachen und Dimensionen des Klimawandels auf der Grundlage aktueller wissenschaftlicher Erkenntnisse erläutern",
+        "Auswirkungen des Klimawandels und zu erwartende Szenarien anhand von zwei Raumbeispielen aus unterschiedlichen Klimaregionen darlegen",
+        "aktuelle Maßnahmen gegen und Anpassungsstrategien an den Klimawandel unter dem Aspekt einer nachhaltigen Entwicklung auf unterschiedlichen Maßstabsebenen bewerten",
+        "klimaneutrale Lebens- und Arbeitsweisen auf der lokalen Ebene beschreiben und eigene Handlungsansätze dazu entwickeln",
+        "den urbanen Lebensraum mithilfe von räumlichen, funktionalen und sozialen Merkmalen charakterisieren",
+        "Ursachen und Dimensionen weltweiter Verstädterung anhand unterschiedlicher Erklärungsansätze überprüfen",
+        "Veränderung städtischer Strukturen in einer globalisierten Welt erläutern",
+        "die Besonderheiten des Stadtklimas analysieren und die Vulnerabilität von städtischen Lebensräumen im Klimawandel darstellen",
+        "Strategien einer nachhaltigen Stadtentwicklung erörtern",
+        "Räume unterschiedlichen Entwicklungsstandes im Globalisierungsprozess von Wirtschaft und Gesellschaft in ihren Grundzügen analysieren",
+        "Ursachen und Folgen disparitärer Entwicklungen in der Einen Welt und daraus abgeleitete Entwicklungstheorien und Entwicklungsstrategien erläutern",
+        "zwei Projekte der Entwicklungszusammenarbeit vor dem Hintergrund von Entwicklungsstrategien bewerten",
+        "eigene Handlungsmöglichkeiten im Rahmen der Entwicklungszusammenarbeit überprüfen"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Geschichte",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Geschichte in der gymnasialen Oberstufe in Niedersachsen verfolgt einen kompetenzorientierten Ansatz, der darauf abzielt, ein reflektiertes Geschichtsbewusstsein zu entwickeln. Anstatt eines rein chronologischen Durchgangs steht die kategoriale Erschließung von Geschichte im Vordergrund. Die Schülerinnen und Schüler sollen befähigt werden, historische Phänomene zu untersuchen, zu deuten und in einen Zusammenhang mit Gegenwart und Zukunft zu bringen. Das Curriculum basiert auf einem Modul-Konzept, das Kernmodule (theoretische Grundlagen) mit exemplarischen Wahlmodulen verzahnt. Zentrale strukturierende Aspekte wie 'Kontinuität und Wandel', 'Freiheit und Herrschaft' oder 'Transkulturalität' dienen als Ordnungsmuster. Die Kompetenzentwicklung gliedert sich in Sach-, Methoden- und Urteilskompetenz, wobei die Wissenschaftspropädeutik und die Vorbereitung auf das Abitur zentrale Ziele sind. Das Curriculum betont zudem die Bedeutung von Multiperspektivität, Kontroversität und die kritische Reflexion von Geschichtskultur.",
+  "hauptthemen": [
+    {
+      "thema": "Einführungsphase: Die Welt im 15. und 16. Jahrhundert",
+      "relevante_unterthemen": [
+        "Beginn der Europäisierung der Welt",
+        "Handelshäuser und Handelsmächte",
+        "Geistiger Umbruch (Humanismus, Renaissance, Medienrevolution)"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Umbruchsituationen und deren Auswirkungen auf gesellschaftliche Strukturen",
+        "Reflexion historischer Prozesse des Wandels und deren Deutungen"
+      ]
+    },
+    {
+      "thema": "Einführungsphase: Vom 20. ins 21. Jahrhundert",
+      "relevante_unterthemen": [
+        "Transformationsgesellschaften in Osteuropa",
+        "Afghanistan in der globalen Interessenpolitik",
+        "Der 11. September 2001 als Zäsur",
+        "Friedliche Revolution in der DDR",
+        "Europäische Einigung"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Krisen- und Umbruchsituationen an der Wende zum 21. Jahrhundert",
+        "Verständnis der Folgen gelungener und gescheiterter Transformationsprozesse"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase: Krisen, Umbrüche und Revolutionen",
+      "relevante_unterthemen": [
+        "Theorien zu Krisen, Revolutionen und Modernisierung",
+        "Römische Republik",
+        "Große Pest",
+        "Reformation",
+        "Amerikanische Revolution",
+        "Französische Revolution",
+        "Revolution 1848/49",
+        "Russische Revolutionen",
+        "Weltwirtschaftskrise",
+        "Kommunistisches China unter Mao"
+      ],
+      "kernkompetenzen": [
+        "Erklärung von Wendepunkten und beschleunigten Veränderungsprozessen",
+        "Analyse und Überprüfung zeitgenössischer und moderner Deutungsansätze"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase: Wechselwirkungen und Anpassungsprozesse",
+      "relevante_unterthemen": [
+        "Hellenismus",
+        "Romanisierung",
+        "Völkerwanderung",
+        "Kreuzzüge",
+        "Spanischer Kolonialismus",
+        "Industrialisierung",
+        "Jüdisches Leben im 19. Jahrhundert",
+        "Deutsche Auswanderung in die USA",
+        "China und der Imperialismus",
+        "Flucht und Vertreibung im Umfeld des Zweiten Weltkriegs",
+        "Nahostkonflikt"
+      ],
+      "kernkompetenzen": [
+        "Untersuchung von Begegnungen zwischen Kulturen sowie Inklusions-/Exklusionsprozessen",
+        "Analyse länger andauernder Transformationsprozesse"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase: Wurzeln unserer Identität",
+      "relevante_unterthemen": [
+        "Deutsch-polnisches Verhältnis",
+        "Deutsch-französisches Verhältnis",
+        "Weg zur Demokratie in Deutschland",
+        "Erster Weltkrieg",
+        "Geschlechterbeziehungen im 20. Jahrhundert",
+        "Weimarer Republik",
+        "Nationalsozialismus",
+        "Selbstverständnis nach 1945",
+        "DDR-Geschichte",
+        "Heimat und Fremde",
+        "Umweltbewegung"
+      ],
+      "kernkompetenzen": [
+        "Analyse der Grundlagen deutscher Identität und deren Voraussetzungen",
+        "Reflexion von Erscheinungsformen nationalen Denkens und deren Auswirkungen"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase: Geschichts- und Erinnerungskultur",
+      "relevante_unterthemen": [
+        "Mythen",
+        "Nationale Gedenk- und Feiertage",
+        "Epochenbilder",
+        "Erinnerung an NS-Opfer",
+        "Geschichte in Comics/Graphic Novels",
+        "Geschichte im Film"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Geschichtsdarstellungen und deren Konstruktcharakter",
+        "Reflexion des gesellschaftlichen Umgangs mit Geschichte und Erinnerung"
+      ]
+    }
+  ]
+}

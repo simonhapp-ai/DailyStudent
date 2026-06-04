@@ -1,0 +1,58 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen fokussiert auf die Entwicklung und Herausforderungen der Moderne im 19. und 20. Jahrhundert. Ziel ist die Ausbildung eines reflektierten Geschichtsbewusstseins, das Schüler befähigt, historische Prozesse in ihrer Genese zu verstehen, kritisch zu hinterfragen und auf die Gegenwart zu beziehen. Der Unterricht ist problemorientiert, multiperspektivisch und multikausal angelegt. Er fördert wissenschaftspropädeutische Fähigkeiten, indem er historisches Denken, Urteilen und wertorientiertes Handeln schult. Die Schüler sollen lernen, Geschichte als Deutungskonstrukt zu begreifen, Zusammenhänge zwischen Individuum und Gesellschaft zu erkennen und mündig an der demokratischen Gesellschaft teilzuhaben. Die Standards gliedern sich in Sach-, Deutungs-, Reflexions- und Methodenkompetenz, wobei der Leistungskurs durch höhere Komplexität und vertiefte theoretische Durchdringung gekennzeichnet ist.",
+  "hauptthemen": [
+    {
+      "thema": "Zwischen alter und moderner Welt – Revolutionen, Industrialisierung, Nation, Expansion",
+      "relevante_unterthemen": [
+        "Politische und industrielle Revolutionen",
+        "Entstehung moderner Nationalstaaten",
+        "Imperialismus und Expansion",
+        "Erster Weltkrieg"
+      ],
+      "kernkompetenzen": [
+        "Definition und Analyse des Begriffs Moderne anhand politischer und ökonomischer Umbrüche",
+        "Beurteilung der Ursachen des Ersten Weltkriegs und der internationalen Krisen"
+      ]
+    },
+    {
+      "thema": "Das Zeitalter der Extreme – Totalitarismus und Demokratie",
+      "relevante_unterthemen": [
+        "Zweite Modernisierung",
+        "Scheitern und Gelingen von Demokratie in der Zwischenkriegszeit",
+        "Faschismus, Nationalsozialismus, Antisemitismus und Rassismus",
+        "Singularität der NS-Verbrechen"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Entstehung, Struktur und Funktionsweise diktatorischer Regime",
+        "Erörterung der Bedeutung der NS-Vergangenheit für die heutige Gegenwart"
+      ]
+    },
+    {
+      "thema": "Der Aufbau der modernen Welt nach 1945",
+      "relevante_unterthemen": [
+        "Kalter Krieg und bipolare Weltordnung",
+        "Westeuropäische Einigung",
+        "Dekolonialisierung und Globalisierung",
+        "Politische Entwicklung Deutschlands nach 1945"
+      ],
+      "kernkompetenzen": [
+        "Verknüpfung weltpolitischer, europäischer und deutscher Entwicklungen",
+        "Beurteilung von Ansätzen zur Friedenssicherung und deren Konsequenzen"
+      ]
+    },
+    {
+      "thema": "Herausforderungen der Moderne – Gegenwartsprobleme in historischer Perspektive",
+      "relevante_unterthemen": [
+        "Umbrüche nach 1989/90",
+        "Wandel und Kontinuität im 20. Jahrhundert",
+        "Schlüsselprobleme der Gegenwart"
+      ],
+      "kernkompetenzen": [
+        "Einordnung aktueller Herausforderungen in historische Entwicklungslinien",
+        "Erörterung des Problems von Wandel und Kontinuität nach 1989"
+      ]
+    }
+  ]
+}

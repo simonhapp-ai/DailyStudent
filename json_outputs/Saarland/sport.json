@@ -1,0 +1,121 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Sport",
+  "zusammenfassung": "Der Lehrplan für den Leistungskurs Sport in der gymnasialen Oberstufe des Saarlandes zielt auf eine wissenschaftspropädeutische Ausbildung ab, die durch eine enge Theorie-Praxis-Verknüpfung geprägt ist. Im Zentrum steht die Entwicklung einer lebensbegleitenden, eigenständigen sportlichen Handlungskompetenz, die Sach-, Methoden-, Sozial- und Selbstkompetenz umfasst. Der Unterricht orientiert sich an sechs pädagogischen Perspektiven (z. B. Leistung, Gesundheit, Kooperation) und integriert verbindliche Bewegungsfelder wie Leichtathletik, Sportspiele und Gerätturnen. Ein wesentliches Merkmal ist die themenorientierte Strukturierung in acht zentralen Gebieten, die von Trainingslehre und Bewegungsanalyse bis hin zu Mannschaftspsychologie und gesellschaftlichen Aspekten des Sports reichen. Die Leistungsbewertung ist prozess- und produktorientiert und integriert sowohl sportpraktische Prüfungen als auch schriftliche Kursarbeiten, wobei die Schüler zur selbstständigen Planung und Reflexion von Lernprozessen befähigt werden sollen.",
+  "hauptthemen": [
+    {
+      "thema": "Trainieren im Sportspiel",
+      "relevante_unterthemen": [
+        "Handlungsstruktur und -bedingungen",
+        "Grundtechniken",
+        "Individual- und Gruppentaktik",
+        "Trainingsgrundlagen",
+        "Koordinative Fähigkeiten",
+        "Technik- und Taktiktraining"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Verbesserung von Spielhandlungen",
+        "Anwendung von Trainingsprinzipien im Sportspiel",
+        "Entwicklung von Teamfähigkeit und taktischem Verständnis"
+      ]
+    },
+    {
+      "thema": "Bewegungsanalyse und Gerätturnen",
+      "relevante_unterthemen": [
+        "Strukturmerkmale turnerischer Bewegungen",
+        "Phasen- und Funktionsanalyse",
+        "Biomechanische Prinzipien",
+        "Kürübungen an Geräten"
+      ],
+      "kernkompetenzen": [
+        "Beobachtung, Beschreibung und Beurteilung turnerischer Bewegungen",
+        "Anwendung biomechanischer Prinzipien auf Bewegungsabläufe",
+        "Sicheres Turnen an verschiedenen Geräten"
+      ]
+    },
+    {
+      "thema": "Kraft- und Beweglichkeitstraining",
+      "relevante_unterthemen": [
+        "Aufbau und Funktion des Bewegungsapparates",
+        "Kraftfähigkeiten und Trainingsmethoden",
+        "Beweglichkeitstraining",
+        "Trainingssteuerung"
+      ],
+      "kernkompetenzen": [
+        "Planung und Durchführung von Kraft- und Beweglichkeitstraining",
+        "Verständnis physiologischer Grundlagen der Muskulatur",
+        "Eigenverantwortliche Gestaltung von Trainingsprogrammen"
+      ]
+    },
+    {
+      "thema": "Mannschaftspsychologie",
+      "relevante_unterthemen": [
+        "Teamentwicklung",
+        "Phasenmodell nach Tuckman",
+        "Aggression im Sport",
+        "Gruppendynamik"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Gruppenprozessen",
+        "Anwendung von Strategien zur Teamentwicklung",
+        "Reflexion von aggressivem Verhalten im Sport"
+      ]
+    },
+    {
+      "thema": "Ausdauertraining (Laufen, Springen, Werfen)",
+      "relevante_unterthemen": [
+        "Biologische Grundlagen der Ausdauer",
+        "Methoden des Ausdauertrainings",
+        "Diagnostik der Ausdauerleistungsfähigkeit",
+        "Leichtathletische Techniken"
+      ],
+      "kernkompetenzen": [
+        "Erstellung individueller Trainingspläne",
+        "Verständnis der Wirkungsweise von Ausdauertraining",
+        "Beherrschung leichtathletischer Disziplinen"
+      ]
+    },
+    {
+      "thema": "Leistungsmotivation und Schnelligkeit",
+      "relevante_unterthemen": [
+        "Motive und Motivation im Sport",
+        "Dopingproblematik",
+        "Schnelligkeitstraining",
+        "Leistungsdiagnostik"
+      ],
+      "kernkompetenzen": [
+        "Reflexion der eigenen Leistungsmotivation",
+        "Kritische Auseinandersetzung mit Doping",
+        "Anwendung von Methoden des Schnelligkeitstrainings"
+      ]
+    },
+    {
+      "thema": "Motorisches Lernen",
+      "relevante_unterthemen": [
+        "Bewegungssteuerung",
+        "Lernphasen",
+        "Stress- und Angstbewältigung",
+        "Bewegungskomposition (fakultativ)"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Lernprozessen",
+        "Anwendung von Strategien zur Stressbewältigung",
+        "Gestaltung von Bewegungsabläufen"
+      ]
+    },
+    {
+      "thema": "Stellung des Leistungs- und Breitensports",
+      "relevante_unterthemen": [
+        "Olympische und Paralympische Spiele",
+        "Sport und Gesellschaft",
+        "Gesundheit und Umwelt",
+        "Sozialisation und Inklusion"
+      ],
+      "kernkompetenzen": [
+        "Kritische Reflexion der Rolle des Sports in Politik und Wirtschaft",
+        "Bewertung von Sport unter Gesundheits- und Umweltaspekten",
+        "Verständnis für gesellschaftliche Funktionen des Sports"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Lehrplan für Chemie in der 12. Jahrgangsstufe des Gymnasiums in Bayern auf erhöhtem Anforderungsniveau zielt darauf ab, eine umfassende chemische Fachkompetenz zu vermitteln, die sich aus vier eng miteinander verknüpften Kompetenzbereichen zusammensetzt: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Die Schülerinnen und Schüler sollen nicht nur spezifisches Fachwissen erwerben, sondern dieses auch aktiv anwenden, kritisch hinterfragen und in größere Kontexte einordnen können.\n\nIm Bereich der **Sachkompetenz** steht die Fähigkeit im Vordergrund, chemische Konzepte und Theorien zur Klassifizierung, Strukturierung, Systematisierung und Interpretation von Stoffen und Reaktionen zu nutzen. Dies beinhaltet das qualitative und modellhafte Erklären chemischer Zusammenhänge, die quantitative Beschreibung mittels mathematischer Verfahren, das Verständnis von Reaktionsmechanismen, dynamischen Gleichgewichten und Energieumwandlungen sowie die Anwendung von Modellen zur chemischen Bindung und Wechselwirkungen. Ein konsequenter Wechsel zwischen Stoff- und Teilchenebene ist dabei essenziell.\n\nDie **Erkenntnisgewinnungskompetenz** befähigt die Lernenden, naturwissenschaftliche Fragestellungen zu identifizieren, theoriegeleitete Hypothesen aufzustellen, qualitative und quantitative Untersuchungen zu planen und durchzuführen. Der Einsatz digitaler Werkzeuge und Medien zur Datenerfassung, -darstellung und -auswertung sowie zur Modellierung und Simulation ist hierbei ebenso wichtig wie die kritische Reflexion von Erkenntnisprozessen, Ergebnissen und den Grenzen wissenschaftlicher Methoden und Modelle.\n\nDie **Kommunikationskompetenz** konzentriert sich auf das Erschließen, Aufbereiten und Austauschen von Informationen. Die Schülerinnen und Schüler lernen, zielgerichtet in analogen und digitalen Medien zu recherchieren, relevante Informationen auszuwählen, deren Validität zu beurteilen und chemische Sachverhalte sach-, adressaten- und situationsgerecht zu präsentieren. Dies umfasst die korrekte Verwendung von Fachsprache, das Strukturieren von Argumenten und das konstruktive Diskutieren eigener und fremder Standpunkte.\n\nDie **Bewertungskompetenz** schult die Fähigkeit, Sachverhalte und Informationen multiperspektivisch zu beurteilen. Die Lernenden sollen Meinungen kriteriengeleitet bilden und Entscheidungen treffen, indem sie Aussagen, Modelle und Verfahren aus unterschiedlichen Blickwinkeln betrachten. Dies beinhaltet die Analyse von Quellen hinsichtlich Relevanz und Vertrauenswürdigkeit, die Bewertung von Chancen und Risiken ausgewählter Technologien und Produkte sowie die kritische Einschätzung der gesellschaftlichen Relevanz und ökologischen Bedeutung der Chemie im Sinne einer nachhaltigen Entwicklung. Auch die Reflexion des eigenen Handelns und die Beurteilung von Gefahren und Sicherheit im Labor und Alltag sind zentrale Aspekte.\n\nZusätzlich zu diesen übergreifenden Kompetenzen werden spezifische Inhalte in Lernbereichen wie Atombau und koordinative Bindung, Analytik, chemische Bindung, Kohlenwasserstoffe als Energieträger und Reaktionspartner, Reaktionsgeschwindigkeit, chemisches Gleichgewicht und Redoxgleichgewichte behandelt. Dabei wird stets ein Bezug zu Alltag, Technik und gesellschaftlichen Fragestellungen hergestellt, um die Berufs- und Studienorientierung zu fördern und die Relevanz der Chemie für eine nachhaltige Zukunft zu verdeutlichen.",
+  "hauptthemen": [
+    {
+      "thema": "Wissenschaftliches Arbeiten und Denken in der Chemie",
+      "relevante_unterthemen": [
+        "Sachkompetenz",
+        "Erkenntnisgewinnungskompetenz",
+        "Kommunikationskompetenz",
+        "Bewertungskompetenz"
+      ],
+      "kernkompetenzen": [
+        "Ordnungsprinzipien für Stoffe beschreiben, begründen und anwenden, um die Vielfalt der Stoffe und ihrer Eigenschaften zu erklären oder auf der Basis chemischer Strukturen und Gesetzmäßigkeiten vorauszusagen, dabei konsequent zwischen Stoff- und Teilchenebene unterscheiden.",
+        "Ausgewählte Reaktionsmechanismen, die Umkehrbarkeit chemischer Reaktionen sowie das Donator-Akzeptor-Prinzip nutzen, um verschiedene Reaktionstypen zu bestimmen und zu erklären.",
+        "Verschiedene Typen chemischer Reaktionen und physikalischer Vorgänge nutzen, um Stoffkreisläufe in Natur oder Technik zu beschreiben.",
+        "Modelle und Simulationen nutzen, um das dynamische Gleichgewicht zu beschreiben, dabei den statischen Zustand auf Stoffebene vom dynamischen Zustand auf Teilchenebene abgrenzen und Einflussfaktoren auf chemische Reaktionen auf Stoff- und Teilchenebene erklären.",
+        "Phänomene der Stoff- und Energieumwandlungen bei chemischen Reaktionen interpretieren, unterschiedliche Reaktivitäten und Reaktionsverläufe durch die Veränderung von Teilchen sowie den Umbau chemischer Bindungen erklären und die zugehörigen Reaktionsgleichungen entwickeln.",
+        "Modelle zur chemischen Bindung und zu intra- und intermolekularen Wechselwirkungen anwenden und chemische Konzepte und Theorien zur Vernetzung von Sachverhalten innerhalb der Chemie sowie mit anderen Unterrichtsfächern nutzen.",
+        "Mathematische Verfahren nutzen, um erhobene oder recherchierte Daten quantitativ auszuwerten.",
+        "Ausgehend von Alltagssituationen mit naturwissenschaftlichen Methoden Fragestellungen identifizieren, um theoriegeleitet Hypothesen aufzustellen.",
+        "Hypothesengeleitete qualitative und quantitative Untersuchungen planen, durchführen und protokollieren bzw. modellbasiert vorgehen, um Hypothesen, Aussagen oder Theorien zu prüfen.",
+        "Digitale Werkzeuge und Medien nutzen, um Messwerte aufzunehmen, darzustellen und auszuwerten sowie Berechnungen, Modellierungen und Simulationen durchzuführen.",
+        "Geeignete Real- oder Denkmodelle auswählen und nutzen, um chemische Fragestellungen zu bearbeiten.",
+        "Erhobene oder recherchierte Daten aufbereiten, Trends, Strukturen sowie Beziehungen finden und interpretieren, um damit Hypothesen zu stützen bzw. zu falsifizieren und dabei auch fachübergreifende Bezüge herstellen.",
+        "Möglichkeiten und Grenzen von Modellen diskutieren.",
+        "Eigene Ergebnisse und den eigenen Prozess der Erkenntnisgewinnung reflektieren.",
+        "Möglichkeiten und Grenzen des Erkenntnisgewinnungsprozesses sowie die Gültigkeit der gewonnenen Erkenntnisse reflektieren.",
+        "Zu chemischen Sachverhalten in analogen und digitalen Medien recherchieren und Quellen zielgerichtet auswählen.",
+        "Relevante und aussagekräftige Informationen und Daten zu chemischen Sachverhalten und anwendungsbezogenen Fragestellungen auswählen und Informationen aus Quellen mit verschiedenen, auch komplexen Darstellungsformen erschließen.",
+        "Verschiedene Quellen oder Darstellungsformen im Hinblick auf deren Aussagen sowie ihre Vertrauenswürdigkeit vergleichen, um deren Validität zu beurteilen.",
+        "Chemische Sachverhalte und Informationen sach-, adressaten- und situationsgerecht aufbereiten, indem eine geeignete Auswahl getroffen, diese in geeignete Darstellungsformen überführt und die Verwendung der jeweiligen Darstellungsform reflektiert wird, dabei zwischen Alltags- und Fachsprache unterscheiden und Fachbegriffe und Fachsprache korrekt verwenden.",
+        "Ausgewählte Informationen strukturieren und interpretieren und Schlussfolgerungen ableiten.",
+        "Chemische Sachverhalte erklären und fachlich schlüssig argumentieren.",
+        "Geeignete analoge und digitale Medien nutzen, um chemische Sachverhalte sowie Lern- und Arbeitsergebnisse sach-, adressaten- und situationsgerecht zu präsentieren.",
+        "Urheberschaft prüfen, verwendete Quellen belegen und Zitate kennzeichnen.",
+        "Sich mit anderen konstruktiv über chemische Sachverhalte austauschen, vertreten, reflektieren und gegebenenfalls den eigenen Standpunkt korrigieren.",
+        "Aussagen, Modelle und Verfahren aus unterschiedlichen Perspektiven betrachten und sachgerecht auf der Grundlage chemischer Kenntnisse beurteilen.",
+        "Inhalte von selbständig beschafften Quellen und Medien hinsichtlich fachlicher Relevanz, Vertrauenswürdigkeit sowie Intention des Autors/der Autorin analysieren, um ihre Eignung für den ausgewählten Sachverhalt zu beurteilen.",
+        "Informationen und Daten hinsichtlich ihrer Angemessenheit, Grenzen und Tragweite beurteilen.",
+        "Anhand relevanter Bewertungskriterien Handlungsoptionen in gesellschaftlich oder alltagsrelevanten Entscheidungssituationen mit fachlichem Bezug entwickeln und gegeneinander abwägen.",
+        "Chancen und Risiken sowie die Bedeutung ausgewählter Technologien, Produkte und Verhaltensweisen beurteilen, um mit Hilfe fachlicher Kriterien begründete Handlungsoptionen in Alltagssituationen und Berufsfeldern abzuleiten.",
+        "Möglichkeiten und Grenzen chemischer Sichtweisen beurteilen.",
+        "Gesellschaftliche Relevanz und ökologische Bedeutung der angewandten Chemie bewerten.",
+        "Grundlegende Aspekte zu Gefahren und Sicherheit in Labor und Alltag beurteilen und daraus begründet Handlungsoptionen ableiten.",
+        "Auswirkungen chemischer Produkte, Methoden, Verfahren und Erkenntnisse in historischen und aktuellen gesellschaftlichen Zusammenhängen bewerten, um diese im Sinne einer nachhaltigen Entwicklung aus ökologischer, ökonomischer und sozialer Perspektive zu bewerten, dabei auch Auswirkungen des eigenen Handelns reflektieren.",
+        "Kriterien und Strategien für Entscheidungen aus chemischer Perspektive reflektieren."
+      ]
+    },
+    {
+      "thema": "Atombau und koordinative Bindung",
+      "relevante_unterthemen": [
+        "Experimentelle Hinweise auf den Feinbau der Elektronenhülle (Emissionsspektren, Flammenfärbung, Natrium-Doppellinie)",
+        "Bau der Atomhülle (Quantenzahlen: Haupt-, Neben-, magnetische, Spinquantenzahl)",
+        "Elektronenkonfiguration von Atomen und Atom-Ionen (Aufbauprinzip, Pauli-Prinzip, Hundsche Regel, Kästchenschreibweise, Orbitalenergien)",
+        "Aufbau des vollständigen Periodensystems (s-, p-, d-, f-Block, Haupt-/Nebengruppen, Lanthanoide, Actinoide)",
+        "Bau von Komplexen (koordinative Bindung, Zentralatom/-ion, Ligand, Koordinationspolyeder, Koordinationszahl, Komplexstabilität, Chelateffekt, Ligandenaustausch)",
+        "Komplexverbindungen in Natur, Alltag und Technik (biologische/medizinische Komplexe, farbige Komplexverbindungen, Wasserenthärtung)"
+      ],
+      "kernkompetenzen": [
+        "Anhand von ausgewählten experimentellen Ergebnissen (z. B. Emissionsspektren und Flammenfarbe, erste Ionisierungsenergien von Hauptgruppen-Atomen) die Existenz von Unterenergiestufen (Haupt- und Nebenquantenzahl) ableiten.",
+        "Aus der Existenz der Natrium-Doppellinie die Notwendigkeit zur Erweiterung der Quantenzahlen ableiten, um die Anordnung der Atome im vollständigen Periodensystem durch das Aufbauprinzip, das Pauli-Prinzip und die Hundsche Regel zu beschreiben.",
+        "Das Aufbauprinzip, das Pauli-Prinzip und die Hundsche Regel nutzen, um die Elektronenverteilung in Atomen und Atom-Ionen zu erklären.",
+        "Häufig beobachtbare und abweichende Ionenladungszahlen bei den Atom-Ionen der Nebengruppenelemente durch die energetisch begünstigten Elektronenkonfigurationen in halb- oder vollbesetzten d-Orbitalen begründen.",
+        "Die Ausbildung von koordinativen Bindungen zwischen Zentralatom/-ion und Liganden mit der Existenz von unbesetzten Orbitalen im Zentralatom/-ion und freien Elektronenpaaren am Liganden erläutern."
+      ]
+    },
+    {
+      "thema": "Analytik",
+      "relevante_unterthemen": [
+        "Hinweise und Nachweise auf Ionen (Gasentwicklung, Fällungsreaktionen, Farbreaktionen)",
+        "Nachweisreaktionen für Mehrfachbindungen (Bromwasser-Probe)",
+        "Nachweisreaktionen für funktionelle Gruppen (Cer(IV)-ammoniumnitrat-Test, Dinitrophenylhydrazin-Test, Fehling-Probe, Tollens-Probe, Schiffsche Probe, Bromthymolblau-Test, Rojahn-Test)",
+        "Qualitätssicherung in der Analytik (positive/negative Blindprobe, Unterscheidung von Hinweis und Nachweis)",
+        "Chromatographische Analysemethoden (Dünnschichtchromatographie, HPLC, GC, stationäre/mobile Phase, Fließmittelwahl)",
+        "Auswertung von Chromatogrammen (Sichtbarmachen, Identifikation, Retentionszeit, Rf-Wert, Quantifizierung)",
+        "Redox-Titration (Manganometrie)",
+        "Komplexometrische Titration (Wasserhärtebestimmung)",
+        "Quantitative Fotometrie (Absorptionsmaximum, Lambert-Beersches Gesetz, Kalibriergerade, Konzentrationsbestimmung)"
+      ],
+      "kernkompetenzen": [
+        "Ionen experimentell nachweisen, um die Zusammensetzung von Salzen und Salzgemischen sowie von sauren und basischen Lösungen qualitativ zu ermitteln und Informationen zur Zusammensetzung von Alltagsprodukten zu überprüfen.",
+        "Mithilfe geeigneter qualitativer Nachweisreaktionen charakteristische funktionelle Gruppen bzw. Strukturelemente ausgewählter organischer Verbindungsklassen identifizieren.",
+        "Die Validität von naturwissenschaftlichen Untersuchungen unter Einbezug geeigneter Quellen beurteilen, um Testergebnisse bezüglich ihres Erkenntniswertes einzuordnen.",
+        "Chromatographische Analysemethoden anwenden und Chromatogramme auswerten, um enthaltene Reinstoffe in einem Stoffgemisch zu identifizieren.",
+        "Redox-Titrationen durchführen, um Konzentrationen von Elektronenakzeptoren oder -donatoren in wässrigen Lösungen zu bestimmen.",
+        "Komplexometrische Titrationen mit EDTA-Lösung durchführen, um Konzentrationen von Metall-Kationen in wässrigen Lösungen zu bestimmen.",
+        "Absorptionsmaxima geeigneter Lösungen bestimmen und fotometrisch eine Kalibriergerade erstellen, um die Konzentration eines Reinstoffes in einer Lösung zu bestimmen, und die Exaktheit einer quantitativen Gehaltsbestimmung beurteilen."
+      ]
+    },
+    {
+      "thema": "Chemische Bindung",
+      "relevante_unterthemen": [
+        "Bindungstypen (Metallbindung, Elektronenpaarbindung, koordinative Bindung, Ionenbindung)",
+        "Wechselwirkungstypen (London-Dispersions-Wechselwirkungen, Dipol-Dipol-Wechselwirkungen, Wasserstoffbrücken, Ion-Dipol-Wechselwirkungen)",
+        "Doppelspaltexperiment mit Elektronen (Interferenzmuster, Welle-Teilchen-Dualismus, Heisenbergsche Unbestimmtheitsrelation)",
+        "Orbitale (Wellenfunktion, Betragsquadrate der Wellenfunktionen, Aufenthaltswahrscheinlichkeiten, dreidimensional bildhafte Darstellungen)",
+        "Molekülorbitale durch Linearkombination von Atomorbitalen (LCAO-Modell, Orbitalerhalt, bindende und antibindende Molekülorbitale)",
+        "Bildung von σ- und π-Molekülorbitalen (end-on-Überlagerung, side-on-Überlagerung, Bindungsverhältnisse in zweiatomigen Element-Molekülen)",
+        "Energieniveau-Schema der Bildung der σ- und π-Molekül-Orbitale (HOMO/LUMO)",
+        "Molecular Modelling (dreidimensionale Darstellung der bindenden und antibindenden Molekülorbitale)",
+        "Hybridisierung (sp³-, sp²- und sp-Hybridorbitale, isolierte, kumulierte und konjugierte π-Bindungen, Mesomerie)",
+        "Stoffklassen (Metalle, Nichtmetalle, molekulare Verbindungen, Salze) und ihre Eigenschaften (elektrische Leitfähigkeit, Schmelz- und Siedetemperaturen, Metall- und Ionengitter)"
+      ],
+      "kernkompetenzen": [
+        "Die Antreffwahrscheinlichkeit für Elektronen mit der Heisenbergschen Unbestimmtheitsrelation begründen und das Ergebnis des Doppelspaltexperiments mit Hilfe des Welle-Teilchen-Dualismus der Elektronen vor dem Hintergrund des historischen Erkenntniswegs erläutern.",
+        "Orbitale als mögliche Lösungen der Wellenfunktion von Elektronen und als Betragsquadrate der Wellenfunktion und somit als Bereiche, in denen sich Elektronen mit einer gewissen Wahrscheinlichkeit aufhalten, beschreiben.",
+        "Den Zusammenhang zwischen den zweidimensionalen Darstellungen der Wellenfunktionen ψ bei Wasserstoff-Atomen und beim Wasserstoff-Molekül sowie den Darstellungen der Wahrscheinlichkeitsdichte |ψ|² in räumlichen Orbitaldarstellungen beschreiben, um aus den zugehörigen Energieniveauschemata die Existenz von zweiatomigen Molekülen oder Molekül-Ionen aus Atomen der zweiten Periode abzuleiten.",
+        "Das Zustandekommen der Energieniveauschemata für einfache zweiatomige Element-Moleküle durch Linearkombination von Atomorbitalen vergleichbarer Energie und Symmetrie erläutern.",
+        "Die Hybridisierung als Näherungsverfahren zur Linearkombination von Atomorbitalen am selben Atom beschreiben und Hybridorbitale zur modellhaften Vorhersage der Bindungsverhältnisse in einfachen organischen Molekülen nutzen.",
+        "Einfache organische Moleküle mit dem Hybridisierungsmodell sowie durch Molecular Modelling am Computer darstellen und die Ergebnisse vergleichen, um die Vor- und Nachteile der verschiedenen Modelle herauszuarbeiten.",
+        "Abweichende Bindungslängen und Molekülgeometrien in einfachen organischen Molekülen auf Basis des EPA-Modells und des Hybridisierungsmodells begründen.",
+        "Die Eigenschaften von Stoffen aus den Stoffklassen Metalle, Nichtmetalle, molekulare Verbindungen und Salze vergleichen und die unterschiedlichen Eigenschaften über die Art und Anordnung der Teilchen begründen, indem die Bindungs- und Wechselwirkungstypen näher betrachtet werden."
+      ]
+    },
+    {
+      "thema": "Kohlenwasserstoffe – Energieträger und Reaktionspartner",
+      "relevante_unterthemen": [
+        "Erdöl, Erdgas und Kohle, nachwachsende Rohstoffe, Power-to-Gas-Technologie (Grundstofflieferanten und Energieträger, Treibhauseffekt)",
+        "Thermodynamische Systeme (offen, geschlossen, isoliert, Temperatur- und Volumenänderungen)",
+        "Quantitative Betrachtung der Energie- und Enthalpieänderung bei chemischen Reaktionen (Reaktionswärme bei konstantem Volumen (Reaktionsenergie) und konstantem Druck (Reaktionsenthalpie))",
+        "Prinzip der Kalorimetrie, Zusammenhang zwischen Molekülbau und Verbrennungswärme, Brennwert, Vergleich fossiler und nachwachsender Energieträger",
+        "Standard-Reaktionsenthalpien (Berechnungen, Satz von Hess)",
+        "Bindungsverhältnisse und Elektronenverteilung im Benzol-Molekül (Mesomerie-Energie, Grenzstrukturen, Elektronendichteoberfläche, Delokalisierung)",
+        "Induktive und mesomere Effekte (Vergleich der Acidität von aliphatischen Alkoholen, Phenol und Carbonsäuren und der Basizität von aliphatischen Aminen und Anilin, Aufstellen mesomerer Grenzstrukturen)",
+        "Reaktivität bei Alkanen, Alkenen und Aromaten (Homolyse, Heterolyse, Radikal, Nukleophil, Elektrophil, Halogenierung durch radikalische Substitution, elektrophile Addition, elektrophile aromatische Substitution, SSS- und KKK-Regel)",
+        "Nukleophile Substitution (u. a. an Halogenalkanen)",
+        "Bedeutung, Umwelt- und Gesundheitsaspekte wichtiger aromatischer Verbindungen (u. a. Benzol, Benzoesäure, Styrol)",
+        "Halogenkohlenwasserstoffe in Alltag und Technik (Persistenz, Verwendung, Umwelt- und Gesundheitsaspekt)"
+      ],
+      "kernkompetenzen": [
+        "Die Bedeutung fossiler und nachwachsender Rohstoffe als Energieträger und Grundstoffe im Sinn einer nachhaltigen Entwicklung recherchieren und bewerten.",
+        "Angesichts der Abhängigkeit unserer Zivilisation von einigen wenigen, nur begrenzt zur Verfügung stehenden organischen Rohstoffen Maßnahmen zur Einsparung sowie zur Erschließung alternativer Rohstoff- und Energiequellen ableiten, dabei die Vertrauenswürdigkeit der verwendeten Quellen überprüfen.",
+        "Verschiedene Systeme, in denen chemische Reaktionen ablaufen, unterscheiden und beschreiben, dass die bei einer chemischen Reaktion im geschlossenen System auftretende Energieänderung in Form von Wärme und Arbeit auftreten kann, um die Änderung der inneren Energie (Reaktionsenergie) von der Änderung der Enthalpie (Reaktionsenthalpie) abzugrenzen.",
+        "Die Unterschiede von experimentell bestimmten oder vorgegebenen Reaktionsenthalpien auf der Grundlage der Bindungsverhältnisse begründen und Systeme als energiereich oder energiearm einstufen.",
+        "Reaktionen als exo- oder endotherm charakterisieren, indem die Formel zur Berechnung von Standard-Reaktionsenthalpien aus tabellierten molaren Standard-Bildungsenthalpien angewendet wird.",
+        "Die Reaktivität aromatischer Systeme begründen, indem, auch anhand energetischer Aspekte, deren Bindungsverhältnisse mit Hilfe des Mesomeriemodells und des erweiterten Orbitalmodells beschrieben werden.",
+        "Mesomere Grenzstrukturen verwenden, um die Elektronenverteilung in aromatischen Kohlenwasserstoff-Molekülen darzustellen, und die Modellhaftigkeit dieser Darstellungsform bewerten.",
+        "Die wahrscheinlichsten Grenzstrukturformeln identifizieren, indem der energetische Zustand von hypothetischen Grenzstrukturen bewertet wird.",
+        "Induktive und mesomere Effekte anwenden, um Acidität und Basizität ausgewählter Teilchen vergleichend zu begründen.",
+        "Typische Reaktionen von gesättigten, ungesättigten und aromatischen Kohlenwasserstoff-Molekülen mit Halogen-Molekülen vergleichen, indem die Änderung der Bindungsverhältnisse während des Reaktionsverlaufs als Reaktionsmechanismus dargestellt wird.",
+        "Die nukleophile Substitution als Reaktion eines Elektronenpaardonators (Nukleophil) mit einem Elektronenpaarakzeptor (Elektrophil) beschreiben.",
+        "Die Bedeutung aromatischer Verbindungen in Alltag und Industrie sowie die ggf. mit ihnen verbundene besondere Gesundheitsproblematik bewerten.",
+        "Den Einsatz von Halogenkohlenwasserstoffen in Alltag und Technik recherchieren und bewerten, indem Auswirkungen auf Mensch und Umwelt bei deren Freisetzung abgewägt werden, dabei die Vertrauenswürdigkeit der verwendeten Informationen prüfen, diese durch Quellen belegen und Zitate kennzeichnen."
+      ]
+    },
+    {
+      "thema": "Reaktionsgeschwindigkeit – Ermittlung und Deutung auf Teilchenebene",
+      "relevante_unterthemen": [
+        "Zeitlicher Verlauf chemischer Reaktionen (Ermittlung über Volumen-, Massen- oder Konzentrationsänderung)",
+        "Mittlere und momentane Reaktionsgeschwindigkeit",
+        "Abhängigkeit der Reaktionsgeschwindigkeit von den Reaktionsbedingungen (Einfluss von Konzentration, Druck, Temperatur (RGT-Regel), Zerteilungsgrad, Katalysator)",
+        "Stoßtheorie (Orientierung, Geschwindigkeit und Anzahl der Teilchen, Maxwell-Boltzmann-Verteilung, Mindestenergie, Aktivierungsenergie)",
+        "Katalyse (Einfluss auf Mindestenergie und Aktivierungsenergie, heterogene und homogene Katalyse, Autoabgaskatalysator, Verminderung von Emissionen)"
+      ],
+      "kernkompetenzen": [
+        "Die Reaktionsgeschwindigkeit als Änderung der Stoffmenge pro Zeiteinheit beschreiben und mittlere und momentane Reaktionsgeschwindigkeiten aus Diagrammen bestimmen.",
+        "Die Geschwindigkeit chemischer Reaktionen durch Wahl der Reaktionsbedingungen beeinflussen, hierzu hypothesengeleitet Experimente planen und durchführen.",
+        "Auf Teilchenebene mithilfe der Stoßtheorie die Abhängigkeit der Reaktionsgeschwindigkeit von den Reaktionsbedingungen begründen.",
+        "Den Einfluss eines Katalysators auf eine chemische Reaktion auf Stoff- und Teilchenebene erläutern, um den Katalysatoreinsatz in technischen Prozessen aus ökologischer Sicht zu bewerten."
+      ]
+    },
+    {
+      "thema": "Chemisches Gleichgewicht – Reversible Reaktion und dynamisches Gleichgewicht",
+      "relevante_unterthemen": [
+        "Modelle zur Einstellung eines chemischen Gleichgewichts (z. B. Computersimulationen)",
+        "Reversible Reaktion, chemisches Gleichgewicht als dynamisches Gleichgewicht (geschlossenes System, Reaktionsgeschwindigkeit v = 0, gleiche Reaktionsraten der Hin- und Rückreaktion)",
+        "Störung und Neueinstellung von dynamischen Gleichgewichten (Prinzip von Le Chatelier, Beeinflussung von Gleichgewichtslage und Ausbeute durch Temperatur-, Druck- und Konzentrationsänderung, Katalysatoren)",
+        "Massenwirkungsgesetz (Massenwirkungsquotient Q, Gleichgewichtskonstante Kc, Rechenbeispiele für homogene Systeme)",
+        "Modellhafte Darstellung von Löslichkeitsgleichgewichten, gleichioniger Zusatz",
+        "Löslichkeitsprodukt KL (z. B. Unterscheidung von Silberhalogenid-Niederschlägen)",
+        "Technische, ökonomische und ökologische Bedeutung chemischer Gleichgewichte (Ammoniaksynthese (Haber-Bosch-Verfahren), Einfluss der Ozeane auf den Kohlenstoffdioxidgehalt der Atmosphäre, Kläranlage (Phosphatfällung))"
+      ],
+      "kernkompetenzen": [
+        "Auch mithilfe von Modellen chemische Gleichgewichte auf Stoff- und Teilchenebene charakterisieren, um den statischen Zustand auf Stoffebene vom dynamischen Zustand auf Teilchenebene abzugrenzen.",
+        "Möglichkeiten zur Erhöhung bzw. Erniedrigung der Produktkonzentrationen durch Außenfaktoren ableiten, indem das Prinzip von Le Chatelier auf ausgewählte technische Prozesse und chemische Gleichgewichte im Alltag angewendet wird.",
+        "Das Massenwirkungsgesetz auf homogene Gleichgewichte anwenden und die Gleichgewichtskonstante nutzen, um Aussagen bezüglich der Lage des Gleichgewichtes zu treffen.",
+        "Löslichkeitsgleichgewichte als dynamisches Gleichgewicht der Ionen zwischen ungelöstem Niederschlag und Lösung beschreiben.",
+        "Das Löslichkeitsprodukt als besondere Form der Gleichgewichtskonstante anwenden, um die unterschiedlichen Löslichkeiten von Ionenverbindungen zu erklären.",
+        "Durch mathematische Berechnungen die Lage eines Gleichgewichts und den Einfluss von Außenfaktoren auf die Lage eines Gleichgewichts begründen, um Optimierungsmöglichkeiten für technische Prozesse abzuleiten.",
+        "Die technische, ökonomische und ökologische Bedeutung chemischer Gleichgewichte an gesellschaftlich relevanten Beispielen erläutern, dazu Informationen aus analogen und digitalen Quellen gezielt auswählen und deren Vertrauenswürdigkeit prüfen."
+      ]
+    },
+    {
+      "thema": "Redoxgleichgewichte – Energetik und technische Anwendung",
+      "relevante_unterthemen": [
+        "Energieumsätze bei der Reaktion von Metallen mit Salzlösungen (Elektronenübergänge, korrespondierende Redoxpaare, Reaktionsenthalpie, elektrische Arbeit)",
+        "Galvanische Zellen als elektrochemische Spannungsquellen (Halbzellen, Leerlaufspannung/Zellspannung, Stromstärke, Optimierung)",
+        "Standardwasserstoffhalbzelle, Standardpotential, elektrochemische Spannungsreihe",
+        "Konzentrationsabhängigkeit des Redoxpotentials (Konzentrationszelle, Nernst-Gleichung)",
+        "Primärzellen aus Alltag und Technik (Zink-Luft-Batterie, Zink-Braunstein-Batterie, Zink-Silberoxid-Batterie, Lithium-Batterie), Brennstoffzelle",
+        "Wertigkeit von Energieformen, Energieumwandlung bei Brennstoffzelle und Verbrennungskraftwerk (1. Hauptsatz der Thermodynamik)",
+        "Gebundene Energie (T∙ΔS) als Differenz zwischen Reaktionsenthalpie und nutzbarer Arbeit, Entropie als Maß für die Verteilung von Energie und Teilchen (2. Hauptsatz der Thermodynamik)",
+        "Gibbs-Helmholtz-Gleichung (Triebkraft chemischer Reaktionen, Enthalpieminimierung, Entropiemaximierung, exergone und endergone Reaktionen, Freie Enthalpie G, Bedeutung von ΔG = 0)",
+        "Elektrolyse als endergone Reaktion, „Energieverlust“ durch Entropieerzeugung",
+        "Sekundärzellen (Laden und Entladen als endergone und exergone Prozesse, Anwendungsbeispiele wie Lithium-Ionen-Akkumulator, Blei-Akkumulator)",
+        "Rohstoff-, Werkstoff- und Energiebereitstellung für Elektromobilität, ökonomische und ökologische Aspekte"
+      ],
+      "kernkompetenzen": [
+        "Das Energiekonzept auf Donator-Akzeptor-Reaktionen anwenden und dazu thermometrische Messungen durchführen.",
+        "Die räumliche Trennung von Oxidation und Reduktion in galvanischen Zellen als Voraussetzung für die Nutzung der Reaktionsenthalpie als elektrische Energie erklären und die von galvanischen Zellen leistbare elektrische Arbeit anhand von Spannungs- und Stromstärkemessungen ermitteln.",
+        "Das Prinzip von Le Chatelier zur Optimierung galvanischer Zellen anwenden und die Auswirkungen der gewählten Veränderungen auf Teilchenebene begründen.",
+        "Vorhersagen über den Verlauf von Redoxreaktionen treffen und die Leerlaufspannung/Zellspannung galvanischer Zellen mithilfe der elektrochemischen Spannungsreihe und der Nernst-Gleichung ermitteln.",
+        "Das Bau- und Funktionsprinzip galvanischer Zellen auf im Alltag und in der Technik verwendete Primärzellen übertragen und Vor- und Nachteile unterschiedlicher Batterietypen aus fachlicher und gesellschaftlicher Sicht beurteilen.",
+        "Die Unmöglichkeit, Wärme vollständig in Arbeit umzuwandeln, beschreiben, um Alltagsbegriffe wie „Energieverbrauch“ und „Energieverlust“ zu erklären.",
+        "Die Energieumwandlung in Brennstoffzellen und Verbrennungskraftwerken unter Einbezug ökologischer, ökonomischer und sozialer Perspektiven vergleichen und bewerten.",
+        "Die Entropieänderung bei ausgewählten chemischen Reaktionen abschätzen, indem die Verteilung von Energie und Teilchen als Maß für die Entropie verwendet wird.",
+        "Mithilfe der Gibbs-Helmholtz-Gleichung qualitativ den Einfluss von Enthalpie- und Entropie-Änderungen auf den freiwilligen Ablauf chemischer Reaktionen abschätzen.",
+        "Mithilfe der Gibbs-Helmholtz-Gleichung den Einfluss von Enthalpie- und Entropieänderungen auf die Richtung chemischer Reaktionen berechnen.",
+        "Vorhersagen zur Freiwilligkeit des Ablaufs chemischer Reaktionen sowie zur Möglichkeit der Gleichgewichtseinstellung treffen, indem die Gibbs-Helmholtz-Gleichung angewendet wird.",
+        "Die Bedeutung der energetischen Kopplung einer endergonen mit einer exergonen Reaktion erklären und die dabei auftretenden Energieunterschiede als Entropieerzeugung interpretieren.",
+        "Das Bauprinzip recherchieren und die Funktionsweise sowie die Energetik von im Alltag verwendeten Sekundärzellen erläutern und deren Einsatzmöglichkeiten bewerten, dabei die Vertrauenswürdigkeit und Urheberschaft der verwendeten Quellen prüfen und Zitate kennzeichnen.",
+        "Elektromobilität hinsichtlich ihrer Effizienz aus energetischer, ökonomischer und ökologischer Sicht bewerten, dabei die Herkunft und Validität von Informationen berücksichtigen."
+      ]
+    }
+  ]
+}

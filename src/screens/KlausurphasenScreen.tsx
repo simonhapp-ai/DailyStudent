@@ -296,7 +296,7 @@ export function KlausurphasenScreen() {
 
             {/* Lernzettel */}
             <button
-              onClick={() => console.log('lernzettel')}
+              onClick={() => navigate('/klausurmodus/lernzettel')}
               className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 flex items-center gap-4 text-left press"
             >
               <GradientIcon gradient={G.lernzettel}>

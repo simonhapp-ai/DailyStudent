@@ -1,0 +1,74 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Englisch",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen (Ausgabe 2024) verfolgt einen kompetenzorientierten Ansatz, der Lernende auf die Allgemeine Hochschulreife sowie auf ein Studium oder eine berufliche Ausbildung vorbereitet. Im Zentrum steht die Entwicklung einer umfassenden funktionalen kommunikativen Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung) sowie interkultureller kommunikativer Kompetenz, Text- und Medienkompetenz, Sprachbewusstheit und Sprachlernkompetenz. Der Unterricht ist als Spiralcurriculum angelegt, das in der Einführungsphase Grundlagen festigt und in der Qualifikationsphase zunehmend komplexe, wissenschaftspropädeutische Anforderungen stellt. Die Inhalte sind in Themenfelder gegliedert, die aktuelle gesellschaftliche, politische und kulturelle Aspekte der englischsprachigen Welt (USA, Vereinigtes Königreich sowie weitere Länder) behandeln. Ein besonderer Fokus liegt auf der Reflexion über Sprache, der kritischen Auseinandersetzung mit Medien und der Vorbereitung auf eine globalisierte Welt, wobei die Lernenden dazu befähigt werden sollen, selbstbestimmt, kritisch-reflexiv und sozial verantwortlich zu handeln.",
+  "hauptthemen": [
+    {
+      "thema": "The individual and society",
+      "relevante_unterthemen": [
+        "Identitätsfragen (Ambitionen, Hindernisse, Konformität vs. Individualismus)",
+        "Chancen und Herausforderungen für die Gesellschaft (Diversität, Genderfragen)"
+      ],
+      "kernkompetenzen": [
+        "Reflexion über persönliche Identitätsfindung im gesellschaftlichen Kontext",
+        "Analyse von Diskriminierung und sozialen Konstrukten"
+      ]
+    },
+    {
+      "thema": "Politics, culture, society – between tradition and change",
+      "relevante_unterthemen": [
+        "USA (Amerikanische Ideale vs. Realität, Geschichte, aktueller Wandel)",
+        "Vereinigtes Königreich (Elisabethanisches Zeitalter, Empire, Postkolonialismus, aktuelle Entwicklungen)",
+        "Weitere englischsprachige Länder (Weg zur Unabhängigkeit, postkoloniale Identität)"
+      ],
+      "kernkompetenzen": [
+        "Verständnis landesspezifischer historischer und politischer Entwicklungen",
+        "Kritische Reflexion nationaler Identitäten und Werte"
+      ]
+    },
+    {
+      "thema": "The media",
+      "relevante_unterthemen": [
+        "Wandel der Medienlandschaft (traditionell vs. modern)",
+        "Einfluss der Medien auf Individuum und Gesellschaft (Information, Unterhaltung, Manipulation)"
+      ],
+      "kernkompetenzen": [
+        "Medienkompetenz (Analyse, Bewertung und Gestaltung von Medien)",
+        "Kritisches Denken gegenüber Fehlinformationen und Manipulationsstrategien"
+      ]
+    },
+    {
+      "thema": "The world of work",
+      "relevante_unterthemen": [
+        "Automatisierung und Digitalisierung",
+        "Globaler Arbeitsmarkt (Englisch als Lingua Franca, Karrierewege, Wettbewerb)"
+      ],
+      "kernkompetenzen": [
+        "Vorbereitung auf Anforderungen der modernen Arbeitswelt",
+        "Verständnis globaler wirtschaftlicher Zusammenhänge und beruflicher Mobilität"
+      ]
+    },
+    {
+      "thema": "Global chances and challenges",
+      "relevante_unterthemen": [
+        "Nachhaltigkeit (sozial, ökologisch, ökonomisch)",
+        "Internationale Beziehungen (Konflikt, Kooperation, Friedenssicherung, Migration)"
+      ],
+      "kernkompetenzen": [
+        "Analyse globaler Zusammenhänge und deren Auswirkungen",
+        "Entwicklung einer verantwortungsbewussten Weltanschauung"
+      ]
+    },
+    {
+      "thema": "Science and technology",
+      "relevante_unterthemen": [
+        "Wissenschaftlicher und technologischer Fortschritt",
+        "Zukunftsvisionen (Utopie vs. Dystopie)"
+      ],
+      "kernkompetenzen": [
+        "Ethische Bewertung technischer Entwicklungen",
+        "Kritische Auseinandersetzung mit Zukunftsentwürfen in Literatur und Film"
+      ]
+    }
+  ]
+}

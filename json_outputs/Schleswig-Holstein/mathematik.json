@@ -1,0 +1,79 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Mathematik",
+  "zusammenfassung": "Die Fachanforderungen Mathematik für Schleswig-Holstein (2024) definieren einen kompetenzorientierten Unterricht für die Sekundarstufen I und II. Das Kernziel ist der Erwerb mathematischer Grundbildung, die sowohl als Werkzeug zur Welterschließung als auch als geistige Schöpfung verstanden wird. Der Unterricht basiert auf fünf mathematischen Leitideen (Zahl und Operation, Größen und Messen, Strukturen und funktionaler Zusammenhang, Raum und Form, Daten und Zufall) und sieben prozessbezogenen Kompetenzen (Argumentieren, Kommunizieren, Problemlösen, Modellieren, Darstellen, Umgang mit Objekten, Arbeiten mit Medien). Ein besonderer Fokus liegt auf der kognitiven Aktivierung, der Vernetzung von Inhalten durch Themenstränge und der Förderung überfachlicher Kompetenzen. Die Leistungsbeurteilung erfolgt formativ und summativ, wobei Unterrichtsbeiträge stärker gewichtet werden als Leistungsnachweise. Die Anforderungen sind abschlussbezogen (ESA, MSA, AHR) differenziert, wobei der Unterricht durchgängig alle Anforderungsbereiche (Reproduzieren, Zusammenhänge herstellen, Verallgemeinern und Reflektieren) abdecken muss.",
+  "hauptthemen": [
+    {
+      "thema": "Zahl und Operation",
+      "relevante_unterthemen": [
+        "Zahlbereichserweiterungen (natürliche, rationale, reelle Zahlen)",
+        "Bruchrechnung und Dezimalbrüche",
+        "Prozent- und Zinsrechnung",
+        "Potenzen und wissenschaftliche Schreibweise",
+        "Grundrechenarten und Termumformungen"
+      ],
+      "kernkompetenzen": [
+        "Sicheres Operieren in verschiedenen Zahlenbereichen",
+        "Verständnis für die Bedeutung von Rechenoperationen und deren Umkehrung",
+        "Situationsgerechtes Darstellen und Umwandeln von Zahlen"
+      ]
+    },
+    {
+      "thema": "Größen und Messen",
+      "relevante_unterthemen": [
+        "Längen, Flächeninhalte und Volumina",
+        "Winkelmessung und -konstruktion",
+        "Satz des Pythagoras",
+        "Trigonometrische Funktionen",
+        "Maßstäbliche Umrechnungen"
+      ],
+      "kernkompetenzen": [
+        "Sachgerechtes Messen und Bestimmen von Größen",
+        "Anwendung geometrischer Sätze zur Längen- und Winkelbestimmung",
+        "Verständnis für Einheiten und deren Umwandlung im Sachzusammenhang"
+      ]
+    },
+    {
+      "thema": "Strukturen und funktionaler Zusammenhang",
+      "relevante_unterthemen": [
+        "Variablen und Terme",
+        "Lineare, quadratische, exponentielle und trigonometrische Funktionen",
+        "Gleichungen und Gleichungssysteme",
+        "Darstellungswechsel (Tabelle, Graph, Term, Text)"
+      ],
+      "kernkompetenzen": [
+        "Modellierung von Realsituationen durch Funktionen",
+        "Sicheres Lösen von Gleichungen und Gleichungssystemen",
+        "Flexibler Wechsel zwischen verschiedenen Darstellungsformen"
+      ]
+    },
+    {
+      "thema": "Raum und Form",
+      "relevante_unterthemen": [
+        "Geometrische Figuren (Dreiecke, Vierecke, Kreise)",
+        "Körper (Prismen, Pyramiden, Zylinder, Kegel, Kugel)",
+        "Abbildungsgeometrie und Kongruenz",
+        "Konstruktionen mit Zirkel und Lineal sowie DGS"
+      ],
+      "kernkompetenzen": [
+        "Klassifizierung und Beschreibung geometrischer Objekte",
+        "Durchführung und Reflexion geometrischer Konstruktionen",
+        "Argumentieren und Beweisen geometrischer Zusammenhänge"
+      ]
+    },
+    {
+      "thema": "Daten und Zufall",
+      "relevante_unterthemen": [
+        "Beschreibende Statistik (Mittelwert, Median, Diagramme)",
+        "Wahrscheinlichkeitsrechnung",
+        "Zufallsexperimente (einstufig und mehrstufig)",
+        "Kombinatorik"
+      ],
+      "kernkompetenzen": [
+        "Auswertung und kritische Interpretation statistischer Daten",
+        "Berechnung von Wahrscheinlichkeiten bei Zufallsexperimenten",
+        "Unterscheidung zwischen relativer Häufigkeit und Wahrscheinlichkeit"
+      ]
+    }
+  ]
+}

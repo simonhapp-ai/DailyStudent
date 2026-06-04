@@ -1,0 +1,96 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Der Lehrplan für das Fach 'Allgemeine Ethik' in der gymnasialen Oberstufe des Saarlandes zielt darauf ab, Schülerinnen und Schüler von einer unreflektierten, alltagspraktischen Moral zu einem begründeten, ethischen Denken und verantwortungsvollen Handeln zu führen. Das Curriculum ist in drei Dimensionen gegliedert: die deskriptive Dimension (Wahrnehmung und Analyse des 'Seins'), die normative Dimension (Begründung des 'Sollens' durch ethische Theorien) und die performative Dimension (selbstbestimmtes Handeln). Zentrale Metakompetenzen sind die Orientierungs- und Handlungskompetenz, die im Sinne philosophischer Mündigkeit entwickelt werden. Der Unterricht verknüpft dabei anthropologische Grundlagen, Glücksethik, moraltheoretische Modelle (Utilitarismus, Pflichtethik, Diskursethik, Verantwortungsethik) sowie Fragen der Gerechtigkeit und angewandten Ethik. Ein besonderer Fokus liegt auf der Methodenkompetenz, insbesondere dem ethischen Argumentieren, um Urteile theoriegestützt zu begründen und in einem diskursiven Prozess zu reflektieren.",
+  "hauptthemen": [
+    {
+      "thema": "Argumentieren",
+      "relevante_unterthemen": [
+        "Logik des Argumentierens",
+        "Ethisches Argumentieren",
+        "Syllogismen",
+        "Naturalistischer Fehlschluss"
+      ],
+      "kernkompetenzen": [
+        "Implizite Prämissen von Aussagen erschließen",
+        "Argumentationsgänge rekonstruieren und auf Stichhaltigkeit prüfen"
+      ]
+    },
+    {
+      "thema": "Anthropologie – Freiheit und Verantwortung",
+      "relevante_unterthemen": [
+        "Willens- und Handlungsfreiheit",
+        "Verantwortungsrelationen",
+        "Autonomie vs. Heteronomie",
+        "Determinismus"
+      ],
+      "kernkompetenzen": [
+        "Verantwortung als Selbstverpflichtung erklären",
+        "Reichweite von Determinierungen des Willens diskutieren"
+      ]
+    },
+    {
+      "thema": "Glück und das gute Leben",
+      "relevante_unterthemen": [
+        "Glücksbegriffe",
+        "Antike Glücksethik (Epikur)",
+        "Tugendlehre",
+        "Glück und Moral"
+      ],
+      "kernkompetenzen": [
+        "Glückspotenzial von Lebensentwürfen prüfen",
+        "Verhältnis von Glück und moralischen Ansprüchen reflektieren"
+      ]
+    },
+    {
+      "thema": "Grundbegriffe der Ethik und der Moral",
+      "relevante_unterthemen": [
+        "Deskriptive vs. normative Aussagen",
+        "Moralische vs. nicht-moralische Normen",
+        "Ethischer Relativismus"
+      ],
+      "kernkompetenzen": [
+        "Ethische Relevanz von Situationen erkennen",
+        "Grundprinzipien wie Würde, Gerechtigkeit und Vernunft identifizieren"
+      ]
+    },
+    {
+      "thema": "Moraltheoretische Modelle",
+      "relevante_unterthemen": [
+        "Utilitarismus",
+        "Pflichtethik (Kant)",
+        "Diskursethik (Habermas)",
+        "Verantwortungsethik (Jonas)"
+      ],
+      "kernkompetenzen": [
+        "Ethische Situationen theoriegestützt beurteilen",
+        "Kategorischen Imperativ anwenden",
+        "Begründungsstrategien vergleichen"
+      ]
+    },
+    {
+      "thema": "Gerechtigkeit",
+      "relevante_unterthemen": [
+        "Verteilungsgerechtigkeit",
+        "Ausgleichende Gerechtigkeit",
+        "Recht auf Widerstand",
+        "Globale Gerechtigkeit"
+      ],
+      "kernkompetenzen": [
+        "Prinzipien der Verteilungsgerechtigkeit problematisieren",
+        "Legalität von Legitimität unterscheiden"
+      ]
+    },
+    {
+      "thema": "Angewandte Ethik",
+      "relevante_unterthemen": [
+        "Variabler Pflichtbereich",
+        "Anwendung ethischer Theorien auf aktuelle Fallbeispiele"
+      ],
+      "kernkompetenzen": [
+        "Ethische Urteile unter Einbeziehung von Einzelwissenschaften fällen",
+        "Ergebnis- und ambiguitätsoffen diskutieren"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Biologie",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Biologie in der gymnasialen Oberstufe in Niedersachsen verfolgt das Ziel, eine naturwissenschaftliche Grundbildung (Scientific Literacy) zu vermitteln. Es ist kompetenzorientiert aufgebaut und gliedert sich in die vier Kompetenzbereiche Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz. Diese werden an fachlichen Inhalten erworben, die durch fünf zentrale Basiskonzepte (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, Individuelle und evolutive Entwicklung) strukturiert sind. Der Unterricht soll systemisches Denken fördern, die Fachsprache sichern und die Lernenden befähigen, gesellschaftlich relevante biologische Themen (z. B. Medizin, Ökologie, Ethik) fundiert zu bewerten. Ein besonderer Fokus liegt auf der Verknüpfung von Theorie und Praxis durch Experimente sowie der Integration digitaler Medien. Das Curriculum dient als Grundlage für die Einführungs- und Qualifikationsphase sowie für die Abiturprüfung.",
+  "hauptthemen": [
+    {
+      "thema": "Biologie der Zelle",
+      "relevante_unterthemen": [
+        "Biomembranen und Stofftransport",
+        "Enzymatik",
+        "Zelluläre und molekulare Immunabwehr"
+      ],
+      "kernkompetenzen": [
+        "Struktur-Funktions-Zusammenhänge auf zellulärer Ebene erläutern",
+        "Experimente zur Enzymaktivität und Membranfunktion hypothesengeleitet planen und auswerten"
+      ]
+    },
+    {
+      "thema": "Leben und Energie",
+      "relevante_unterthemen": [
+        "Zellatmung und Gärung",
+        "Fotosynthese",
+        "Angepasstheiten von Laubblättern"
+      ],
+      "kernkompetenzen": [
+        "Stoff- und Energieumwandlungsprozesse in biologischen Systemen analysieren",
+        "Chemiosmotische Modelle zur ATP-Synthese erläutern"
+      ]
+    },
+    {
+      "thema": "Vielfalt des Lebens",
+      "relevante_unterthemen": [
+        "Proteinbiosynthese und Genexpression",
+        "Gentechnik und Medizin",
+        "Evolutionstheorie und Verhaltensbiologie"
+      ],
+      "kernkompetenzen": [
+        "Molekularbiologische Grundlagen der Vererbung und Genregulation erklären",
+        "Evolutive Prozesse und Verhaltensweisen unter Fitness-Aspekten bewerten"
+      ]
+    },
+    {
+      "thema": "Lebewesen in ihrer Umwelt",
+      "relevante_unterthemen": [
+        "Ökosysteme und Biodiversität",
+        "Populationsdynamik",
+        "Stoffkreisläufe und anthropogene Einflüsse"
+      ],
+      "kernkompetenzen": [
+        "Wechselbeziehungen in Ökosystemen analysieren",
+        "Nachhaltigkeit von Ressourcen unter ökologischen und sozialen Aspekten bewerten"
+      ]
+    },
+    {
+      "thema": "Informationsverarbeitung in Lebewesen",
+      "relevante_unterthemen": [
+        "Neurobiologie (Potenziale, Synapsen)",
+        "Hormonelle Informationsübertragung",
+        "Neuronale Plastizität"
+      ],
+      "kernkompetenzen": [
+        "Erregungsleitung und synaptische Übertragung auf molekularer Ebene erklären",
+        "Zusammenspiel von neuronalen und hormonellen Systemen analysieren"
+      ]
+    }
+  ]
+}

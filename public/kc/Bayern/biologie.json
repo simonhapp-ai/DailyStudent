@@ -1,0 +1,80 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Biologie",
+  "zusammenfassung": "Das bayerische Kerncurriculum für Biologie der 12. Jahrgangsstufe (erhöhtes Anforderungsniveau) zielt darauf ab, ein tiefgreifendes Verständnis biologischer Prinzipien und deren Anwendung zu vermitteln. Es fördert vier eng miteinander verknüpfte Kernkompetenzen: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Die Schülerinnen und Schüler sollen biologische Sachverhalte, Phänomene und Anwendungen sachgerecht beschreiben und erläutern, theoriegeleitete Hypothesen formulieren und Aussagen treffen. Sie lernen, lebende Systeme unter qualitativen und quantitativen Aspekten zu erschließen und Vernetzungen zwischen Systemebenen herzustellen. Ein zentraler Bestandteil ist die Fähigkeit zur Erkenntnisgewinnung: Fragestellungen und Hypothesen zu entwickeln, Beobachtungen, Experimente und Modellierungen zu planen und durchzuführen, Daten auszuwerten und Ergebnisse kritisch zu reflektieren, einschließlich der Beurteilung von Gültigkeit, Fehlerquellen und Grenzen wissenschaftlicher Methoden. Im Bereich der Kommunikationskompetenz sollen die Lernenden zielgerichtet Informationen recherchieren, deren Herkunft und Qualität analysieren, Sachverhalte strukturiert aufbereiten und präsentieren sowie wissenschaftlich fundiert argumentieren. Die Bewertungskompetenz befähigt sie, Sachverhalte multiperspektivisch zu beurteilen, deskriptive und normative Aussagen zu unterscheiden, Bewertungskriterien aufzustellen und kriteriengeleitet Meinungen und Entscheidungen zu bilden. Dabei sollen sie kurz- und langfristige, lokale und globale Folgen eigener und gesellschaftlicher Entscheidungen reflektieren und die Auswirkungen biologischer Anwendungen im Sinne einer nachhaltigen Entwicklung aus ökologischer, ökonomischer, politischer und sozialer Perspektive bewerten. Das Curriculum bietet zudem Einblicke in Berufs- und Studienfelder der Biologie. Die Inhalte gliedern sich in die Hauptbereiche Genetik und Gentechnik, Evolution sowie Verhaltensökologie, wobei stets der Bezug zu aktuellen wissenschaftlichen Erkenntnissen und gesellschaftlichen Fragestellungen hergestellt wird.",
+  "hauptthemen": [
+    {
+      "thema": "Genetik und Gentechnik",
+      "relevante_unterthemen": [
+        "Speicherung und Realisierung genetischer Information (DNA/RNA-Bau, genetischer Code, Proteinbiosynthese, alternatives Spleißen, Viren, Antisense-RNA, Antibiotika, Genwirkketten)",
+        "Regulation der Genaktivität (Mechanismen bei Eukaryoten, Epigenetik, Stammzellen)",
+        "Vervielfältigung genetischer Information (DNA-Replikation, PCR, DNA-Reparatur, Zellzyklus, Apoptose, Tumorbildung)",
+        "Neukombination und Veränderung genetischer Information (Meiose, Genommutationen, Genmutationen, Gentechnik-Verfahren wie CRISPR/Cas, Anwendungen und gesellschaftliche Auswirkungen)",
+        "Weitergabe genetischer Information (Kreuzungsexperimente, Mendelsche Regeln, mono- und dihybride Erbgänge, Genkopplung, epigenetische Vererbung)",
+        "Genetik menschlicher Erkrankungen und DNA-Analytik (Erbgänge, genetische Familienberatung, Pränatal-/Präimplantationsdiagnostik, DNA-Analytik, personalisierte Medizin, ethische Aspekte)"
+      ],
+      "kernkompetenzen": [
+        "Modelle zum Bau von DNA und RNA beschreiben und vergleichen.",
+        "Aminosäuresequenzen aus DNA-Basensequenzen ableiten und umgekehrt unter Anwendung des genetischen Codes.",
+        "Mechanismus der Proteinbiosynthese erklären und deren Bedeutung für das Leben erläutern.",
+        "Bedeutung des alternativen Spleißens für Proteinvielfalt und Evolution erklären.",
+        "Eingriff von Viren in die Proteinbiosynthese und deren Vermehrungszyklus beschreiben, Auswirkungen und Therapieansätze erläutern.",
+        "Wirkung von Antisense-RNA auf Proteinbiosynthese erklären und medizinische Anwendungen ableiten.",
+        "Angriffsorte für Antibiotika in Prokaryoten aus Unterschieden der Proteinbiosynthese ableiten.",
+        "Aufgaben von Proteinen und Zusammenwirken von Genen in Genwirkketten erklären, Auswirkungen von Unterbrechungen erläutern.",
+        "Mechanismen zur Regulation der Genaktivität beschreiben, um Zelldifferenzierung und Anpassung zu erklären.",
+        "Bedeutung von Stammzellen für Forschung und Medizin beurteilen und ethisch bewerten.",
+        "DNA-Replikation mit PCR vergleichen, Probleme und Lösungen technischer Umsetzung erklären, Bedeutung von Reparaturenzymen beschreiben.",
+        "Phasen des Zellzyklus beschreiben und biologische Bedeutung erklären.",
+        "Ursachen und Auswirkungen von Störungen des Zellzyklus und der Apoptose (z.B. Tumorbildung) erklären.",
+        "Ablauf der Meiose beschreiben und Bedeutung für geschlechtliche Fortpflanzung und Biodiversität erklären.",
+        "Zusammenhang zwischen genetischen Neukombinationsprozessen und Evolution erklären.",
+        "Genommutationen aus Karyogrammen ableiten, Auswirkungen beschreiben und zwischen Genotyp, Phänotyp und Krankheit differenzieren.",
+        "Genmutationen unterscheiden, Auswirkungen auf Proteinfunktion erläutern und Sensibilisierung für Schutz vor Mutagenen.",
+        "Prinzipielle Verfahrensweise und konkrete Technik (z.B. CRISPR/Cas) zur künstlichen Veränderung von Erbanlagen erläutern, Anwendungen und gesellschaftliche Auswirkungen bewerten.",
+        "Kreuzungsexperimente auswerten, statistischen Charakter der Vererbung ableiten.",
+        "Vorhersagen zur Genotypen- und Phänotypenverteilung bei Kreuzungen treffen (mono- und dihybride Erbgänge).",
+        "Direkten Einfluss von Umweltbedingungen auf Genaktivität der nächsten Generation als Folge epigenetischer Regulation erklären.",
+        "Veränderung des Wissens und Bedeutung neuer Erkenntnisse bei der Erklärung biologischer Phänomene (z.B. Vererbung) beschreiben.",
+        "Erbgänge mithilfe von Familienstammbäumen analysieren und Vorhersagen über genetisch bedingte Krankheiten treffen.",
+        "Methoden der genetischen Familienberatung abgrenzen, Vor- und Nachteile bewerten und begründete Entscheidungen (auch ethisch) treffen.",
+        "Bedeutung der DNA-Analytik beim Menschen in medizinischen und gesellschaftlichen Kontexten erläutern, analysieren und ethisch bewerten."
+      ]
+    },
+    {
+      "thema": "Evolution",
+      "relevante_unterthemen": [
+        "Evolutionsforschung (molekularbiologische Homologien, Stammbäume/Kladogramme, Systematisierung von Lebewesen, Evolution des Menschen, Artbegriff)",
+        "Mechanismen der Evolution (Erklärungsansätze Darwin/Lamarck, synthetische Evolutionstheorie, Evolutionsfaktoren, Artbildung, Koevolution, kulturelle Evolution, menschliche Umweltanpassung, Grenzen/Gefahren menschlicher Eingriffe)"
+      ],
+      "kernkompetenzen": [
+        "Stammbäume/Kladogramme für ausgewählte Lebewesen erstellen durch Vergleich molekularer Merkmale.",
+        "Historische und aktuelle Ansätze zur Systematisierung von Lebewesen vergleichen und Aussagekraft beurteilen.",
+        "Tier- und Pflanzenarten bestimmen.",
+        "Aussagekraft verschiedener Erklärungsansätze zu Evolutionsmechanismen beurteilen und Vereinbarkeit mit Genetik überprüfen.",
+        "Synthetische Evolutionstheorie anwenden, um Entstehung von Biodiversität und Arten (z.B. Primaten) als Zusammenspiel von Evolutionsfaktoren zu erklären.",
+        "Wechselseitige Angepasstheiten zwischen interagierenden artfremden Lebewesen (Koevolution) erklären.",
+        "Selektionsvorteile des Menschen durch sprachliche Weitergabe von Wissen/Verhalten ableiten, Bedeutung der sozialen und kulturellen Evolution erklären.",
+        "Beschreiben, wie der Mensch seine Umwelt aktiv anpasst, dies mit natürlicher Selektion vergleichen und Grenzen/Gefahren menschlicher Eingriffe in Evolutionsprozesse aufzeigen."
+      ]
+    },
+    {
+      "thema": "Verhaltensökologie – Evolution und Angepasstheit von Verhalten",
+      "relevante_unterthemen": [
+        "Adaptiver Wert von Verhalten (Gesamtfitness)",
+        "Methoden der verhaltensökologischen Forschung (Kosten-Nutzen-Analyse, Optimalitätsmodell)",
+        "Verhaltensweisen zum Überleben des Individuums (Nahrungserwerb, Habitatwahl)",
+        "Kooperation und Altruismus",
+        "Kommunikation (Sender-Empfänger-Modell, Signale, Signalfälschung)",
+        "Aggression (Intensitätsstufen, Aggressionskontrolle)",
+        "Fortpflanzung (Partnerwahl, Paarungssysteme, Elternaufwand)",
+        "Sozialverhalten von Primaten inkl. Mensch (exogene/endogene Ursachen, Fortpflanzungsverhalten, Kooperation, Kommunikation, Aggression)"
+      ],
+      "kernkompetenzen": [
+        "Auftreten verschiedener Verhaltensweisen erklären, indem deren Einfluss auf die Gesamtfitness beurteilt wird.",
+        "Methoden der verhaltensökologischen Forschung anwenden, um Verhaltensweisen zum Überleben des Individuums (Kooperation, Kommunikation, Aggression, Fortpflanzung) zu analysieren und deren Bedeutung für die Weitergabe genetischer Information zu erklären.",
+        "Sozialverhalten der Primaten im Hinblick auf exogene und endogene Ursachen analysieren, um menschliche Verhaltensweisen zu erklären, und biologistischen Erklärungsansätzen kritisch gegenübertreten."
+      ]
+    }
+  ]
+}

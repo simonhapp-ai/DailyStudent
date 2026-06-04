@@ -1,0 +1,78 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Fachlehrplan Biologie für das Gymnasium in Sachsen-Anhalt (Stand 2022) zielt darauf ab, Schülerinnen und Schülern eine fundierte naturwissenschaftliche Bildung zu vermitteln, die sie zur aktiven Teilhabe an gesellschaftlichen Diskursen (z. B. Medizin, Biotechnologie, Umweltschutz) befähigt. Das Kerncurriculum basiert auf einem Kompetenzmodell, das Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz umfasst. Ein zentrales Element ist die Arbeit mit Basiskonzepten (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, Individuelle und evolutive Entwicklung), die als kognitive Anker dienen, um biologische Phänomene über verschiedene Systemebenen hinweg zu vernetzen. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet und fördert die Studierfähigkeit durch den Einsatz moderner Methoden wie Experimente, Modellbildung, Simulationen und digitale Werkzeuge. Ein besonderer Fokus liegt auf der Bildung für nachhaltige Entwicklung (BNE) und der digitalen Bildung, wobei die Schüler lernen, biologische Erkenntnisse kritisch zu reflektieren, ethische Abwägungen zu treffen und Verantwortung für ihr Handeln in einer globalisierten Welt zu übernehmen.",
+  "hauptthemen": [
+    {
+      "thema": "Biologie als Lehre von lebenden Systemen (Jg. 5/6)",
+      "relevante_unterthemen": [
+        "Merkmale von Lebewesen",
+        "Wirbeltiere und ihre Angepasstheit",
+        "Pubertät und Entwicklung des Menschen",
+        "Samenpflanzen"
+      ],
+      "kernkompetenzen": [
+        "Allgemeine Merkmale von Lebewesen beschreiben",
+        "Angepasstheit von Wirbeltieren an Lebensräume erläutern",
+        "Biologische Grundlagen der Pubertät verstehen"
+      ]
+    },
+    {
+      "thema": "Zellbiologie und Mikroorganismen (Jg. 7/8)",
+      "relevante_unterthemen": [
+        "Zelluläre Strukturen",
+        "Mikroorganismen",
+        "Biotechnologische Anwendungen",
+        "Zellteilung"
+      ],
+      "kernkompetenzen": [
+        "Zelluläre Strukturen mikroskopieren und vergleichen",
+        "Bedeutung von Mikroorganismen für den Menschen darstellen",
+        "Zellteilungsprozesse erläutern"
+      ]
+    },
+    {
+      "thema": "System Mensch und Umwelt (Jg. 9)",
+      "relevante_unterthemen": [
+        "Reizbarkeit und Informationsverarbeitung",
+        "Nervensystem",
+        "Sinnesorgane",
+        "Ökosystem Wald"
+      ],
+      "kernkompetenzen": [
+        "Reiz-Reaktions-Beziehungen erklären",
+        "Wechselwirkungen im Ökosystem Wald analysieren",
+        "Suchtproblematik und Gesundheitsvorsorge reflektieren"
+      ]
+    },
+    {
+      "thema": "Genetik und Evolution (Jg. 10 - Einführungsphase)",
+      "relevante_unterthemen": [
+        "Vererbungsvorgänge",
+        "DNA-Struktur",
+        "Mendel'sche Regeln",
+        "Evolutionstheorien"
+      ],
+      "kernkompetenzen": [
+        "Gesetzmäßigkeiten der Vererbung anwenden",
+        "Biologische Phänomene evolutionär interpretieren",
+        "Chancen und Risiken der Gentechnik bewerten"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase (Jg. 11/12)",
+      "relevante_unterthemen": [
+        "Neurobiologie",
+        "Molekulargenetik",
+        "Ökologie",
+        "Evolutionsbiologie"
+      ],
+      "kernkompetenzen": [
+        "Prozesse der Informationsverarbeitung auf zellulärer Ebene erklären",
+        "Konstanz und Variabilität genetischer Information interpretieren",
+        "Ökosysteme und deren Dynamik analysieren",
+        "Synthetische Evolutionstheorie anwenden"
+      ]
+    }
+  ]
+}

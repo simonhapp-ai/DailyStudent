@@ -1,0 +1,124 @@
+{
+  "bundesland": "NRW",
+  "fach": "Sozialkunde",
+  "zusammenfassung": "Der Kernlehrplan für die gymnasiale Oberstufe in NRW (Sozialwissenschaften / Wirtschaft) zielt auf die Entwicklung einer mündigen und sozial verantwortlichen Persönlichkeit ab. Das Fach ist als Integrationsfach der Disziplinen Wirtschaftswissenschaften, Politikwissenschaften und Soziologie konzipiert. Zentrale Zielsetzung ist die Befähigung der Schülerinnen und Schüler, komplexe ökonomische, politische und gesellschaftliche Zusammenhänge strukturiert zu analysieren, Interessen abzuwägen und kriteriengeleitet zu urteilen. Der Unterricht ist kompetenzorientiert und folgt einem spiralcurricularen Aufbau, der von der Einführungsphase bis zur Qualifikationsphase zunehmend an Komplexität gewinnt. Dabei werden vier Kompetenzbereiche (Sach-, Methoden-, Urteils- und Handlungskompetenz) systematisch gefördert. Der Lehrplan legt großen Wert auf Wissenschaftspropädeutik, die Auseinandersetzung mit aktuellen Herausforderungen wie Globalisierung, Digitalisierung und ökologischen Krisen sowie die Vorbereitung auf die Abiturprüfung. Schulen erhalten dabei Gestaltungsspielräume, um den Unterricht lerngruppenbezogen zu fokussieren.",
+  "hauptthemen": [
+    {
+      "thema": "Gestaltung der Marktwirtschaft",
+      "relevante_unterthemen": [
+        "Grundannahmen der Marktwirtschaft",
+        "Leistungsfähigkeit des Marktes und Marktversagen",
+        "Wettbewerbs- und Ordnungspolitik",
+        "Nachhaltiges Wirtschaften"
+      ],
+      "kernkompetenzen": [
+        "Erläuterung des Spannungsverhältnisses von Knappheit und Bedürfnissen",
+        "Beurteilung staatlicher Wettbewerbssicherung und ordnungspolitischer Maßnahmen"
+      ]
+    },
+    {
+      "thema": "Sicherung der Demokratie",
+      "relevante_unterthemen": [
+        "Demokratietheoretische Grundkonzepte",
+        "Verfassungsgrundlagen des Grundgesetzes",
+        "Medien im politischen Willensbildungsprozess",
+        "Gefährdungen der Demokratie"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Politikzyklen und Partizipationsmöglichkeiten",
+        "Bewertung des Spannungsverhältnisses zwischen Freiheit und Sicherheit"
+      ]
+    },
+    {
+      "thema": "Individuum in Gruppe und Gesellschaft",
+      "relevante_unterthemen": [
+        "Sozialisationsinstanzen",
+        "Rollentheorie",
+        "Identitätsentwicklung",
+        "Gruppenbezogene Menschenfeindlichkeit"
+      ],
+      "kernkompetenzen": [
+        "Erläuterung sozialer Interaktionen mittels Rollentheorie",
+        "Beurteilung von Handlungsspielräumen unter Berücksichtigung von Gender und Migration"
+      ]
+    },
+    {
+      "thema": "Gestaltungsrahmen der Wirtschaftspolitik",
+      "relevante_unterthemen": [
+        "Wirtschaftspolitische Konzeptionen",
+        "Konjunktur- und Wachstumsschwankungen",
+        "Staatsverschuldung",
+        "Qualitatives Wachstum"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Zielharmonien und -konflikten in der Wirtschaftspolitik",
+        "Erörterung ökonomischer und ökologischer Wirkungen wirtschaftspolitischer Maßnahmen"
+      ]
+    },
+    {
+      "thema": "Sozialstruktur und Werte im Wandel",
+      "relevante_unterthemen": [
+        "Soziale Ungleichheit",
+        "Wertewandel",
+        "Sozialstrukturmodelle",
+        "Strukturwandel"
+      ],
+      "kernkompetenzen": [
+        "Bewertung sozialer Ungleichheit vor dem Hintergrund von Gerechtigkeitsprinzipien",
+        "Analyse von Modellen vertikaler und horizontaler Ungleichheit"
+      ]
+    },
+    {
+      "thema": "Aufgaben des Sozialstaats",
+      "relevante_unterthemen": [
+        "Legitimation sozialstaatlichen Handelns",
+        "Wohlfahrtsstaatliche Modelle",
+        "Verteilungspolitik",
+        "Demografischer Wandel"
+      ],
+      "kernkompetenzen": [
+        "Erklärung von Gestaltungs- und Wirkprinzipien sozialer Sicherungssysteme",
+        "Diskussion von Finanzierungsmöglichkeiten und Herausforderungen durch Migration"
+      ]
+    },
+    {
+      "thema": "Entwicklung der Europäischen Union",
+      "relevante_unterthemen": [
+        "Europäische Integration",
+        "Institutionen der EU",
+        "Geldpolitik der EZB",
+        "Krisenbewältigung"
+      ],
+      "kernkompetenzen": [
+        "Bewertung von Handlungs- und Entscheidungskompetenzen der EU-Institutionen",
+        "Diskussion von Zukunftsperspektiven der europäischen Integration"
+      ]
+    },
+    {
+      "thema": "Globalisierte ökonomische Strukturen und Prozesse",
+      "relevante_unterthemen": [
+        "Globalisierung",
+        "Internationale Wirtschaftsbeziehungen",
+        "Standortwettbewerb",
+        "Globalisierungskritik"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Antriebskräften und Auswirkungen der Globalisierung",
+        "Bewertung von Freihandel und Protektionismus"
+      ]
+    },
+    {
+      "thema": "Internationale Friedens- und Sicherheitspolitik",
+      "relevante_unterthemen": [
+        "Friedens- und Konfliktforschung",
+        "Theorien internationaler Beziehungen",
+        "Vereinte Nationen",
+        "Menschenrechte"
+      ],
+      "kernkompetenzen": [
+        "Erläuterung von Ursachen internationaler Konflikte",
+        "Bewertung der Handlungsmöglichkeiten internationaler Akteure und Organisationen"
+      ]
+    }
+  ]
+}

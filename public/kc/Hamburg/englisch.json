@@ -1,0 +1,64 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Bildungsplan für die Studienstufe in Hamburg zielt darauf ab, Schülerinnen und Schüler zu befähigen, in einer globalisierten Welt kompetent, reflektiert und selbstständig in der englischen Sprache zu handeln. Der Unterricht fördert die Entwicklung plurilingualer Diskurskompetenz und interkultureller kommunikativer Kompetenz. Dabei stehen die Auseinandersetzung mit den Bezugskulturen (USA, UK, weitere anglophone Länder) sowie gesellschaftlich relevante Themen wie Identität, Arbeitswelt, Medien und globale Herausforderungen im Zentrum. Die Schülerinnen und Schüler sollen durch die Analyse komplexer Texte und Medien, die Anwendung funktionaler kommunikativer Fertigkeiten (Hören, Lesen, Sprechen, Schreiben, Sprachmittlung) sowie die Reflexion über Sprache und Lernprozesse auf Studium, Beruf und gesellschaftliche Teilhabe vorbereitet werden. Ein besonderer Fokus liegt auf der Verknüpfung von fachlichem Wissen mit Werten wie Toleranz, Demokratiebewusstsein und nachhaltiger Entwicklung.",
+  "hauptthemen": [
+    {
+      "thema": "Bezugskulturen (USA, Vereinigtes Königreich, weitere anglophone Länder)",
+      "relevante_unterthemen": [
+        "Historische Entwicklung und politisches System",
+        "American Dream vs. American Nightmare",
+        "Brexit und Identitätsdebatten",
+        "Kolonialismus und Postkolonialismus",
+        "Multikulturalismus und Diversität"
+      ],
+      "kernkompetenzen": [
+        "Anwendung von Orientierungswissen über historische und politische Gegebenheiten",
+        "Perspektivenwechsel und kritische Reflexion von Werten und Normen",
+        "Analyse fremdkultureller Texte und Diskurse"
+      ]
+    },
+    {
+      "thema": "Lebens- und Erfahrungswelt Heranwachsender (The Individual and Society)",
+      "relevante_unterthemen": [
+        "Identitätsbildung und Rollenbilder",
+        "Konformität vs. Individualismus",
+        "Soziale Ungleichheit und Diversität",
+        "Gender-Themen"
+      ],
+      "kernkompetenzen": [
+        "Reflexion individueller und kollektiver Identitätskonzepte",
+        "Auseinandersetzung mit gesellschaftlichen Erwartungen und Werten",
+        "Kritische Analyse von Lebensentwürfen in Literatur und Film"
+      ]
+    },
+    {
+      "thema": "Alltag und Berufswelt (The World of Work / The Media)",
+      "relevante_unterthemen": [
+        "Digitalisierung und Automatisierung der Arbeitswelt",
+        "Englisch als Lingua Franca im Beruf",
+        "Medienkompetenz und Medienwandel",
+        "Manipulation, Fake News und ethische Implikationen"
+      ],
+      "kernkompetenzen": [
+        "Verwendung der Fremdsprache in professionellen Kontexten",
+        "Kritische Bewertung von Medieninhalten und deren Einfluss auf Individuum und Gesellschaft",
+        "Stärkung digitaler Mündigkeit"
+      ]
+    },
+    {
+      "thema": "Themen globaler Bedeutung (Global Chances and Challenges / Science and Technology)",
+      "relevante_unterthemen": [
+        "Nachhaltigkeit (ökologisch, ökonomisch, sozial)",
+        "Globalisierung und internationale Beziehungen",
+        "Dystopische Zukunftsvisionen",
+        "Ethische Implikationen von KI, Gentechnik und Robotik"
+      ],
+      "kernkompetenzen": [
+        "Bewertung globaler Herausforderungen und Lösungsansätze",
+        "Reflexion über Verantwortung für nachhaltiges Handeln",
+        "Diskursfähigkeit zu wissenschaftlich-technischen Fortschrittsthemen"
+      ]
+    }
+  ]
+}

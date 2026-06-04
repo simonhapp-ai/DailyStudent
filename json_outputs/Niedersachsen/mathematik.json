@@ -1,0 +1,50 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Mathematik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Mathematik in der gymnasialen Oberstufe in Niedersachsen zielt darauf ab, Schülerinnen und Schüler auf ein Studium oder eine berufliche Ausbildung vorzubereiten und sie zur aktiven Teilhabe am gesellschaftlichen Leben zu befähigen. Der Unterricht ist kompetenzorientiert und verknüpft prozessbezogene Kompetenzen (Argumentieren, Problemlösen, Modellieren, Darstellen, Umgang mit symbolischen/technischen Elementen, Kommunizieren) mit inhaltsbezogenen Leitideen (Algorithmus und Zahl, Messen, Raum und Form, Funktionaler Zusammenhang, Daten und Zufall). Ein zentrales Element ist die Förderung von 'intelligentem Wissen' durch den Einsatz digitaler Mathematikwerkzeuge, wobei grundlegende mathematische Verfahren auch hilfsmittelfrei beherrscht werden müssen. Das Curriculum unterscheidet zwischen einer Einführungsphase zur Angleichung der Vorkenntnisse und einer Qualifikationsphase, die auf das Abitur vorbereitet. Dabei wird zwischen grundlegendem (gA) und erhöhtem Anforderungsniveau (eA) differenziert, wobei das Berufliche Gymnasium spezifische berufsorientierte Schwerpunkte (Technik, Wirtschaft, Gesundheit/Soziales) integriert. Die Leistungsbewertung erfolgt ganzheitlich durch Klausuren und sonstige Leistungen, wobei der Lernprozess und die individuelle Entwicklung im Vordergrund stehen.",
+  "hauptthemen": [
+    {
+      "thema": "Analysis (Funktionaler Zusammenhang)",
+      "relevante_unterthemen": [
+        "Ganzrationale Funktionen",
+        "Exponentialfunktionen (e-Funktion)",
+        "Differentialrechnung (Ableitungen)",
+        "Integralrechnung (Bestandsrekonstruktion)",
+        "Wachstumsmodelle (begrenzt, logistisch)",
+        "Funktionenscharen"
+      ],
+      "kernkompetenzen": [
+        "Funktionale Zusammenhänge in Sachsituationen erkennen, modellieren und interpretieren",
+        "Ableitungs- und Integrationsregeln sicher anwenden und zur Lösung von Optimierungs- oder Bestandsaufgaben nutzen"
+      ]
+    },
+    {
+      "thema": "Analytische Geometrie / Lineare Algebra",
+      "relevante_unterthemen": [
+        "Vektorrechnung in Ebene und Raum",
+        "Lagebeziehungen von Geraden und Ebenen",
+        "Skalarprodukt und metrische Berechnungen",
+        "Matrizenrechnung (insb. Berufliches Gymnasium)",
+        "Lineare Gleichungssysteme (Gauß-Algorithmus)"
+      ],
+      "kernkompetenzen": [
+        "Geometrische Objekte im Raum koordinatisieren und deren Lagebeziehungen untersuchen",
+        "Vektoren und Matrizen zur Modellierung von Prozessen und geometrischen Sachverhalten einsetzen"
+      ]
+    },
+    {
+      "thema": "Stochastik (Daten und Zufall)",
+      "relevante_unterthemen": [
+        "Beschreibende Statistik",
+        "Bedingte Wahrscheinlichkeit",
+        "Binomialverteilung",
+        "Normalverteilung als Approximation",
+        "Prognose- und Konfidenzintervalle"
+      ],
+      "kernkompetenzen": [
+        "Zufallsexperimente modellieren und Wahrscheinlichkeiten berechnen",
+        "Statistische Daten erheben, auswerten und fundierte Urteile in Entscheidungssituationen treffen"
+      ]
+    }
+  ]
+}

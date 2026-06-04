@@ -1,0 +1,75 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Politik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach 'Politik und Gesellschaft' in der Jahrgangsstufe 12 am bayerischen Gymnasium zielt darauf ab, Schülerinnen und Schüler zu einer reflektierten, demokratischen Teilhabe in einer komplexen, globalisierten Welt zu befähigen. Der Lehrplan gliedert sich in fünf Lernbereiche, die von der deutschen Außen- und Sicherheitspolitik über die europäische Integration bis hin zu politischen Theorien und dem Vergleich globaler politischer Systeme reichen. Ein zentraler Fokus liegt auf der Analyse von Herausforderungen des 21. Jahrhunderts wie Terrorismus, hybriden Bedrohungen und der Notwendigkeit vernetzter Sicherheit. Die Lernenden setzen sich kritisch mit der Rolle der EU als Wertegemeinschaft und Akteurin der Weltpolitik auseinander, hinterfragen das Verhältnis von Individuum und Staat durch ideengeschichtliche Theorien und Utopien und entwickeln ein tiefgreifendes Verständnis für die Stabilität und Gefährdung demokratischer Systeme. Abschließend werden Möglichkeiten der Demokratieförderung und des 'State Building' untersucht, um ein realistisches Bild politischer Gestaltungsmöglichkeiten zu vermitteln. Ziel ist die Festigung einer demokratischen Grundhaltung, die Fähigkeit zur kritischen Urteilsbildung sowie die Bereitschaft, aktiv an der Gestaltung der Gesellschaft mitzuwirken.",
+  "hauptthemen": [
+    {
+      "thema": "Frieden und Sicherheit als zentrale Motive deutscher Außenpolitik",
+      "relevante_unterthemen": [
+        "Umfassender Sicherheitsbegriff und vernetzte Sicherheit",
+        "Terrorismus als globale Bedrohung",
+        "Hybride Kriegsführung und staatliche Resilienz",
+        "Bundeswehr als Parlamentsarmee",
+        "Zivile Konfliktbearbeitung und Entwicklungszusammenarbeit"
+      ],
+      "kernkompetenzen": [
+        "Sicherheitsbedrohungen des 21. Jahrhunderts analysieren und bewerten",
+        "Die Rolle Deutschlands in internationalen Konflikten unter Berücksichtigung rechtlicher und ethischer Rahmenbedingungen beurteilen"
+      ]
+    },
+    {
+      "thema": "Das europäische Projekt verstehen und mitgestalten",
+      "relevante_unterthemen": [
+        "Wertebasis und institutioneller Aufbau der EU",
+        "Rechtsetzungsprozesse und Europäisierung des Rechts",
+        "Gemeinsame Außen- und Sicherheitspolitik (GASP)",
+        "Demokratisierung der EU und Erweiterungsperspektiven",
+        "Europäisches Bewusstsein und Bürgerbeteiligung"
+      ],
+      "kernkompetenzen": [
+        "Das Zusammenwirken von intergouvernementalen und supranationalen Strukturen verstehen",
+        "Chancen und Grenzen der EU als internationaler Akteur kritisch erörtern"
+      ]
+    },
+    {
+      "thema": "Politische Theorien und Utopien",
+      "relevante_unterthemen": [
+        "Verhältnis von Individuum und Staat (Konservativismus, Liberalismus, Sozialismus)",
+        "Staatstheorien der Aufklärung",
+        "Funktion von Utopien und Dystopien",
+        "Wissenschaftliche Zukunftsprognosen in der Politikberatung"
+      ],
+      "kernkompetenzen": [
+        "Politische Theorien als Grundlage moderner Demokratien reflektieren",
+        "Eigene Utopien/Dystopien entwickeln und auf ihre Realisierbarkeit im demokratischen Kontext prüfen"
+      ]
+    },
+    {
+      "thema": "Politische Systeme im Vergleich",
+      "relevante_unterthemen": [
+        "Demokratie vs. Diktatur",
+        "Parlamentarische, präsidentielle und semipräsidentielle Systeme",
+        "Antidemokratische Tendenzen und Freiheitssicherung",
+        "Einfluss der Digitalisierung auf die politische Willensbildung",
+        "Reformen der deutschen Demokratie"
+      ],
+      "kernkompetenzen": [
+        "Politische Systeme anhand von Herrschaftsdimensionen vergleichend analysieren",
+        "Gefahren für die Demokratie identifizieren und Strategien zur Stärkung der demokratischen Grundhaltung entwickeln"
+      ]
+    },
+    {
+      "thema": "Möglichkeiten der Demokratieförderung",
+      "relevante_unterthemen": [
+        "Fragile Staatlichkeit",
+        "State-Building-Prozesse",
+        "Innere vs. äußere Demokratisierung",
+        "Akteure der internationalen Demokratieförderung"
+      ],
+      "kernkompetenzen": [
+        "Voraussetzungen und Hemmnisse für Demokratisierungsprozesse bewerten",
+        "Die Rolle internationaler Akteure bei der Stabilisierung von Staaten kritisch hinterfragen"
+      ]
+    }
+  ]
+}

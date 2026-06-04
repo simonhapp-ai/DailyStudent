@@ -1,0 +1,59 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Biologie",
+  "zusammenfassung": "Die Fachanforderungen Biologie für Schleswig-Holstein (Stand 2023) definieren einen kompetenzorientierten Unterricht für die Sekundarstufen I und II. Das zentrale didaktische Leitbild ist die Evolutionstheorie nach Darwin als integratives Organisationsprinzip der Biologie. Der Unterricht zielt auf den Erwerb einer naturwissenschaftlichen Grundbildung (Scientific Literacy), die Schüler befähigt, biologische Phänomene zu verstehen, naturwissenschaftliche Arbeitsweisen anzuwenden und gesellschaftliche sowie ethische Fragestellungen (z. B. Gentechnik, Sexualerziehung, Nachhaltigkeit) fundiert zu bewerten. In der Sekundarstufe I liegt der Fokus auf dem Aufbau von Basiskonzepten (Struktur/Funktion, System, Entwicklung) und prozessbezogenen Kompetenzen (Erkenntnisgewinnung, Kommunikation, Bewertung). In der Sekundarstufe II erfolgt eine Vertiefung durch Abstraktion, Mathematisierung und wissenschaftspropädeutisches Arbeiten, wobei die synthetische Evolutionstheorie als theoretisches Fundament dient. Die Leistungsbewertung ist prozessorientiert und umfasst sowohl Unterrichtsbeiträge als auch Leistungsnachweise, wobei die individuelle Lernentwicklung im Vordergrund steht.",
+  "hauptthemen": [
+    {
+      "thema": "Struktur und Funktion",
+      "relevante_unterthemen": [
+        "Zellbiologie (Pro- und Eukaryoten)",
+        "Biomembranen und Stofftransport",
+        "Biologische Makromoleküle",
+        "Enzymatik"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhang von Struktur und Funktion auf verschiedenen Systemebenen erläutern",
+        "Zelluläre Vorgänge unter Anwendung von Basiskonzepten erklären"
+      ]
+    },
+    {
+      "thema": "Stoff- und Energieumwandlung",
+      "relevante_unterthemen": [
+        "Fotosynthese",
+        "Zellatmung",
+        "Gärungsprozesse",
+        "Stoffkreisläufe und Energiefluss in Ökosystemen"
+      ],
+      "kernkompetenzen": [
+        "Stoffwechselwege analysieren und energetisch bewerten",
+        "Bedeutung von Stoffkreisläufen für die Biosphäre erklären"
+      ]
+    },
+    {
+      "thema": "Information und Kommunikation",
+      "relevante_unterthemen": [
+        "Neurobiologie (Potenziale, Synapsen)",
+        "Hormonsystem",
+        "Immunsystem",
+        "Molekulargenetik"
+      ],
+      "kernkompetenzen": [
+        "Informationsverarbeitung in lebenden Systemen beschreiben",
+        "Signaltransduktion und Kommunikation auf verschiedenen Systemebenen analysieren"
+      ]
+    },
+    {
+      "thema": "Individuelle und evolutive Entwicklung",
+      "relevante_unterthemen": [
+        "Synthetische Evolutionstheorie",
+        "Genetik (Mitose, Meiose, Vererbung)",
+        "Populationsgenetik",
+        "Menschwerdung"
+      ],
+      "kernkompetenzen": [
+        "Evolutionsprozesse auf Populationsebene erklären",
+        "Genetische Variabilität und Selektionsmechanismen verknüpfen"
+      ]
+    }
+  ]
+}

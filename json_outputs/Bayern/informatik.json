@@ -1,0 +1,95 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Informatik",
+  "zusammenfassung": "Der Lehrplan für Informatik 11 (NTG) in Bayern vermittelt den Schülerinnen und Schülern ein umfassendes Verständnis grundlegender und aktueller Konzepte der Informatik, kombiniert mit praktischen Implementierungsfähigkeiten. Er gliedert sich in fünf Lernbereiche, die von der Modellierung und algorithmischen Verarbeitung vernetzter Strukturen bis hin zu den Grundlagen der Künstlichen Intelligenz reichen. Im Bereich 'Graphen' lernen die Schüler, vernetzte Strukturen als Graphen zu modellieren, diese zu klassifizieren und wichtige Algorithmen wie Breitensuche und Dijkstra zu implementieren und anzuwenden, wodurch sie die Alltagsrelevanz von Algorithmen erkennen. Der Lernbereich 'Codierung und Verschlüsselung' behandelt die Prinzipien der Informationscodierung (z.B. binär, hexadezimal, Prüfsummen) und führt in die symmetrische und asymmetrische Kryptographie ein. Die Schüler wenden einfache Verschlüsselungsverfahren an, bewerten deren Sicherheit (z.B. Brute-Force) und verstehen die Bedeutung digitaler Signaturen und Zertifikate für Authentifizierung und Integrität. Im Modul 'Kommunikation in Netzwerken, Internet' erwerben sie Kenntnisse über die Struktur und Funktionsweise des Internets, die Adressierung von Geräten und das Schichtenmodell der Kommunikation. Sie implementieren einfache Clients, beschreiben Client-Server-Interaktionen und reflektieren kritisch über Chancen, Risiken und den Schutz persönlicher Daten im Internet. Ein zukunftsweisender Schwerpunkt liegt auf der 'Künstlichen Intelligenz', wo die Schüler verschiedene Definitionsansätze diskutieren, Grundideen des maschinellen Lernens (z.B. k-nächste-Nachbarn, Entscheidungsbäume) und die Funktionsweise künstlicher Neuronen (Perzeptron) kennenlernen. Sie analysieren den Einfluss von Trainingsdaten und Parametern auf die Zuverlässigkeit von KI-Verfahren, implementieren ein künstliches Neuron und bewerten die gesellschaftlichen Chancen und Risiken von KI. Der abschließende Lernbereich 'Vertiefung' ermöglicht es den Schülern, ihr erworbenes Wissen und ihre Fähigkeiten durch die Bearbeitung weiterführender Problemstellungen, oft im Rahmen von Projektarbeit, zu festigen und zu erweitern. Insgesamt zielt der Lehrplan darauf ab, analytisches Denken, Problemlösungskompetenz und ein kritisches Bewusstsein für die Auswirkungen der Informationstechnologie zu fördern.",
+  "hauptthemen": [
+    {
+      "thema": "Graphen",
+      "relevante_unterthemen": [
+        "Graph: Knoten, Kanten, Pfad, Erreichbarkeit von Knoten, Zyklus",
+        "Eigenschaften von Graphen: gerichtet, (stark/schwach) zusammenhängend, bewertet/gewichtet, zyklenfrei",
+        "Adjazenzmatrix",
+        "Breitensuche",
+        "Dijkstra-Algorithmus"
+      ],
+      "kernkompetenzen": [
+        "Modellieren im Rahmen praktischer Fragestellungen vernetzte Strukturen als Graphen und Klassifizieren dieser anhand ihrer Eigenschaften.",
+        "Implementieren mithilfe einer objektorientierten Programmiersprache und unter Verwendung einer Adjazenzmatrix die Datenstruktur Graph.",
+        "Erläutern allgemein die Idee der Breitensuche, Formulieren des zugehörigen Algorithmus und Anwenden an konkreten Beispielen.",
+        "Implementieren des Breitensuche-Algorithmus und Modifizieren diesen in geeigneter, vom Anwendungskontext abhängiger Weise.",
+        "Analysieren und Erläutern die Funktionsweise des Dijkstra-Algorithmus und Anwenden an konkreten Beispielen; dabei Erkennen, dass Algorithmen den Alltag mitbestimmen."
+      ]
+    },
+    {
+      "thema": "Codierung und Verschlüsselung",
+      "relevante_unterthemen": [
+        "Prinzip und Bedeutung der Codierung von Information (z. B. Strichcode, RGB-Farbcode, QR-Code)",
+        "Validierung codierter Information durch Prüfsummen (z. B. GTIN, IBAN)",
+        "Binäre und hexadezimale Codierung von Zahlen (Binärsystem, Hexadezimalsystem, Bit, Byte)",
+        "Symmetrische und asymmetrische Verschlüsselung: Klartext, Geheimtext, Schlüssel",
+        "Einfache symmetrische Verfahren (z. B. Caesar, Vigenère)",
+        "Brute-Force-Verfahren",
+        "Authentifizierung, Integrität, digitale Signatur, kryptografische Hashfunktion, Zertifikat"
+      ],
+      "kernkompetenzen": [
+        "Erläutern das Prinzip und die Bedeutung der Codierung von Information anhand geeigneter Beispiele sowie die Möglichkeit der Validierung durch Prüfsummen.",
+        "Codieren natürliche Zahlen binär und hexadezimal und Führen entsprechende Decodierungen durch.",
+        "Erklären die Grundprinzipien symmetrischer und asymmetrischer Verschlüsselung.",
+        "Wenden einfache symmetrische Verfahren zur Ver- und Entschlüsselung an und Implementieren einen zugehörigen Algorithmus.",
+        "Bewerten Sicherheitsaspekte eines ausgewählten Verfahrens im Hinblick auf mögliche Angriffe, insbesondere durch die Brute-Force-Methode.",
+        "Erklären den Zweck und die prinzipielle Funktionsweise einer digitalen Signatur und Beschreiben in diesem Zusammenhang die Bedeutung von Zertifikaten."
+      ]
+    },
+    {
+      "thema": "Kommunikation in Netzwerken, Internet",
+      "relevante_unterthemen": [
+        "Struktur und Funktionsweise des Internets: Client, Server, Router",
+        "Adressierung im Internet (MAC-Adresse, IP-Adresse, DNS, Port)",
+        "Schichtenmodell: Anwendungsschicht, Transportschicht, Vermittlungsschicht, Netzzugangsschicht",
+        "Protokolle zur Beschreibung der Kommunikation im Internet",
+        "WWW als Beispiel eines Dienstes, Browser, HTML, Cookies",
+        "Chancen und Risiken des Internets",
+        "Schutz persönlicher Daten, Minimierung der Gefahr des Missbrauchs"
+      ],
+      "kernkompetenzen": [
+        "Erläutern die Struktur und Funktionsweise des Internets sowie die damit verbundene Adressierung von Geräten.",
+        "Strukturieren Kommunikationsvorgänge im Internet in aufeinander aufbauende Schichten und Beschreiben so die Übermittlung elektronischer Daten; dabei Erlangen eines grundlegenden Verständnisses für die Bedeutung von Protokollen.",
+        "Implementieren einen einfachen Client, z. B. Anfordern einer Webseite.",
+        "Beschreiben das Zusammenspiel von Client und Server bei Webanwendungen.",
+        "Erläutern Chancen und Risiken des Internets, Beurteilen des eigenen Umgangs mit dessen Diensten und Reflektieren, wodurch der Schutz persönlicher Daten erhöht und die Gefahr des Missbrauchs minimiert werden kann."
+      ]
+    },
+    {
+      "thema": "Künstliche Intelligenz",
+      "relevante_unterthemen": [
+        "Ansätze zur Definition des Begriffs Künstliche Intelligenz (KI)",
+        "Grundideen von Verfahren der KI (u. a. maschinelles Lernen)",
+        "Anwendungsbereiche von KI",
+        "Funktionsweise eines ausgewählten Algorithmus maschinellen Lernens (k-nächste-Nachbarn-Algorithmus oder Entscheidungsbaum-Algorithmus)",
+        "Trainingsdaten, Testdaten",
+        "Einfluss von Trainingsdaten und Parametern auf die Zuverlässigkeit der Ergebnisse",
+        "Künstliches Neuron (Perzeptron), Delta-Lernregel",
+        "Grundsatzaufbau eines künstlichen neuronalen Netzes",
+        "Aktuelle Einsatzmöglichkeiten der KI, Chancen und Risiken für Individuum und Gesellschaft"
+      ],
+      "kernkompetenzen": [
+        "Diskutieren Ansätze zur Definition des Begriffs Künstliche Intelligenz (KI), Beschreiben verschiedene Grundideen von Verfahren der KI sowie ihre Anwendungsbereiche.",
+        "Erläutern die Funktionsweise eines ausgewählten Algorithmus maschinellen Lernens allgemein und an konkreten Beispielen.",
+        "Analysieren den Einfluss von Trainingsdaten und Parametern auf die Zuverlässigkeit der Ergebnisse eines Verfahrens maschinellen Lernens.",
+        "Erläutern die Funktionsweise eines künstlichen Neurons (Perzeptron) und Beschreiben den grundsätzlichen Aufbau eines künstlichen neuronalen Netzes.",
+        "Implementieren ein künstliches Neuron.",
+        "Nehmen zu ausgewählten aktuellen Einsatzmöglichkeiten der Künstlichen Intelligenz Stellung und Bewerten Chancen und Risiken für Individuum und Gesellschaft."
+      ]
+    },
+    {
+      "thema": "Vertiefung",
+      "relevante_unterthemen": [
+        "Weiterführende Problemstellungen mit Bezug zu den Lernbereichen 1 bis 4",
+        "Methoden der Projektarbeit"
+      ],
+      "kernkompetenzen": [
+        "Lösen einer weiterführenden Problemstellung mit Bezug zu einem der Lernbereiche 1 bis 4, ggf. mit Methoden der Projektarbeit."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Fachlehrplan Chemie für das Gymnasium in Sachsen-Anhalt (Stand 2022) zielt auf eine fundierte naturwissenschaftliche Grundbildung ab, die Schülerinnen und Schüler zur aktiven Teilhabe an einer technologisch geprägten Gesellschaft befähigt. Der Unterricht ist kompetenzorientiert strukturiert und basiert auf vier zentralen Kompetenzbereichen: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Diese werden durch drei Basiskonzepte (Stoff-Teilchen-Konzept, Konzept der chemischen Reaktion, Energiekonzept) systematisiert, um kumulatives Lernen zu ermöglichen. Ein besonderer Fokus liegt auf der Wissenschaftspropädeutik, der Förderung der Studierfähigkeit sowie der Integration von Nachhaltigkeit, digitaler Bildung und bildungssprachlicher Kompetenz. Der Lehrplan sieht eine klare Progression von den Grundlagen in den Klassen 7/8 über die Einführungsphase (Klasse 10) bis hin zur Qualifikationsphase (11/12) vor, wobei zwischen grundlegendem und erhöhtem Anforderungsniveau differenziert wird. Experimentelles Arbeiten, der Einsatz digitaler Werkzeuge und die Reflexion gesellschaftlicher sowie ethischer Aspekte chemischer Prozesse bilden den Kern des Unterrichts.",
+  "hauptthemen": [
+    {
+      "thema": "Grundlagen der Chemie und Stoffeigenschaften (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Stoffklasse der Metalle",
+        "Bestandteile der Luft",
+        "Wasser als Oxid",
+        "Säuren, Basen und Salze",
+        "Neutralisation"
+      ],
+      "kernkompetenzen": [
+        "Reine Stoffe von Stoffgemischen unterscheiden und Stoffeigenschaften klassifizieren",
+        "Chemische Reaktionen (Oxidation, Neutralisation) auf Stoff- und Teilchenebene deuten",
+        "Sicheres Durchführen von Schülerexperimenten und Protokollierung"
+      ]
+    },
+    {
+      "thema": "Organische Chemie (Klasse 9)",
+      "relevante_unterthemen": [
+        "Kohlenstoffmodifikationen",
+        "Kohlenwasserstoffe (Alkane, Alkene, Alkine)",
+        "Derivate der Alkane (Alkanole, Alkansäuren, Ester)",
+        "Erdöl und Erdgas"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhang zwischen Struktur, Eigenschaften und Verwendung organischer Verbindungen erklären",
+        "Reaktionsverhalten (Substitution, Addition) beispielhaft erläutern",
+        "Bedeutung fossiler Rohstoffe und Nachhaltigkeit bewerten"
+      ]
+    },
+    {
+      "thema": "Stickstoffverbindungen und technische Verfahren (Klasse 10)",
+      "relevante_unterthemen": [
+        "Stickstoff und Ammoniak",
+        "Ammoniumsalze",
+        "Redoxreaktionen",
+        "Katalyse",
+        "Aminosäuren und Proteine"
+      ],
+      "kernkompetenzen": [
+        "Donator-Akzeptor-Prinzip auf Protonen- und Elektronenübergänge anwenden",
+        "Technische Verfahren (z.B. Hochofen, Ammoniaksynthese) qualitativ und quantitativ analysieren",
+        "Gesellschaftliche Relevanz technischer Prozesse reflektieren"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase (Klassen 11/12)",
+      "relevante_unterthemen": [
+        "Energetik chemischer Reaktionen (Enthalpie, Entropie, Gibbs-Helmholtz)",
+        "Chemisches Gleichgewicht (Massenwirkungsgesetz, Le Chatelier)",
+        "Säure-Base-Chemie (Titration, Puffer)",
+        "Elektrochemie (Redox, Elektrolyse, Spannungsquellen)",
+        "Vertiefte organische Chemie und Reaktionsmechanismen"
+      ],
+      "kernkompetenzen": [
+        "Chemische Reaktionen quantitativ-mathematisch beschreiben und berechnen",
+        "Komplexe Gleichgewichtssysteme und elektrochemische Prozesse analysieren",
+        "Selbstständige Planung und Durchführung komplexer experimenteller Untersuchungen"
+      ]
+    }
+  ]
+}

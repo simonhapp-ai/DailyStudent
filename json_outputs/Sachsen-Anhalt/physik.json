@@ -1,0 +1,80 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Physik",
+  "zusammenfassung": "Der Fachlehrplan Physik für das Gymnasium in Sachsen-Anhalt (Stand 2022) verfolgt das Ziel, Schülerinnen und Schülern ein tiefgreifendes Verständnis für physikalische Phänomene, deren mathematische Modellierung und deren Bedeutung für die moderne Gesellschaft zu vermitteln. Das Curriculum ist als Spiralcurriculum angelegt, das von der Sekundarstufe I bis zur Qualifikationsphase der gymnasialen Oberstufe (11/12) kontinuierlich aufbaut. Ein zentraler Fokus liegt auf der Kompetenzentwicklung in vier Bereichen: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Dabei werden vier Basiskonzepte (Erhaltung und Gleichgewicht, Superposition und Komponenten, Mathematisieren und Vorhersagen, Zufall und Determiniertheit) genutzt, um fachliche Inhalte zu vernetzen. Der Unterricht integriert moderne Anforderungen wie Bildung in der digitalen Welt, Nachhaltigkeit (BNE) und die Stärkung bildungssprachlicher Kompetenzen. In der Oberstufe wird zwischen grundlegendem und erhöhtem Anforderungsniveau differenziert, wobei letzteres eine höhere Komplexität und tiefere mathematische Durchdringung (z. B. Infinitesimalrechnung, Relativitätstheorie) erfordert. Praktika in den Jahrgängen 10 und 12 dienen der Anwendung wissenschaftlicher Methoden und der Vorbereitung auf die Studierfähigkeit.",
+  "hauptthemen": [
+    {
+      "thema": "Mechanik",
+      "relevante_unterthemen": [
+        "Kräfte und ihre Wirkungen",
+        "Bewegung von Körpern und Teilchen",
+        "Punktmasse",
+        "Schwingungen und Wellen",
+        "Gravitation",
+        "Impuls und Stoßvorgänge"
+      ],
+      "kernkompetenzen": [
+        "Bewegungsabläufe mit Modellen (Punktmasse) beschreiben und mathematisch modellieren",
+        "Energie- und Impulserhaltungssätze auf mechanische Systeme anwenden",
+        "Kräftezerlegung und vektorielle Betrachtung von Bewegungen durchführen"
+      ]
+    },
+    {
+      "thema": "Elektrodynamik",
+      "relevante_unterthemen": [
+        "Elektrischer Strom und Stromkreise",
+        "Elektrisches Feld",
+        "Magnetisches Feld",
+        "Elektromagnetische Induktion",
+        "Wechselstromwiderstände"
+      ],
+      "kernkompetenzen": [
+        "Elektrische und magnetische Felder mit dem Feldlinienmodell beschreiben",
+        "Induktionsvorgänge und deren technische Anwendung (Transformator, Generator) erklären",
+        "Bewegung geladener Teilchen in Feldern berechnen"
+      ]
+    },
+    {
+      "thema": "Optik",
+      "relevante_unterthemen": [
+        "Strahlenoptik",
+        "Geometrische Optik",
+        "Welleneigenschaften des Lichtes",
+        "Interferenz und Beugung"
+      ],
+      "kernkompetenzen": [
+        "Lichtphänomene wahlweise mit dem Strahlen- oder Wellenmodell erklären",
+        "Interferenzmuster am Doppelspalt und Gitter quantitativ auswerten",
+        "Polarisation als Eigenschaft transversaler Wellen deuten"
+      ]
+    },
+    {
+      "thema": "Quanten- und Kernphysik",
+      "relevante_unterthemen": [
+        "Radioaktivität und Kernenergie",
+        "Eigenschaften von Quantenobjekten",
+        "Quantenphysikalisches Atommodell",
+        "Spezielle Relativitätstheorie"
+      ],
+      "kernkompetenzen": [
+        "Widersprüche zwischen klassischer Physik und Quantenphänomenen (Photoeffekt) analysieren",
+        "Stochastische Vorhersagbarkeit und Unbestimmtheitsrelation interpretieren",
+        "Kernumwandlungsprozesse und deren energetische Bedeutung bewerten"
+      ]
+    },
+    {
+      "thema": "Thermodynamik und Klimaphysik",
+      "relevante_unterthemen": [
+        "Temperatur und Wärme",
+        "Verhalten von Gasen",
+        "Klimaphysik",
+        "Strahlungshaushalt der Erde"
+      ],
+      "kernkompetenzen": [
+        "Zustandsgrößen und Hauptsätze der Thermodynamik auf technische Systeme anwenden",
+        "Physikalische Grundlagen des Treibhauseffekts und Klimawandels erklären",
+        "Energiebilanzen für thermodynamische Systeme aufstellen"
+      ]
+    }
+  ]
+}

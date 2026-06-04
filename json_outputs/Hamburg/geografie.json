@@ -1,0 +1,78 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Bildungsplan für die Studienstufe in Hamburg zielt darauf ab, Schülerinnen und Schüler zu befähigen, räumliche Strukturen und Prozesse im Mensch-Umwelt-System Erde zu analysieren. Das Fach versteht sich als Integrationsfach, das natur- und gesellschaftswissenschaftliche Perspektiven vereint, um zentrale Herausforderungen der Gegenwart und Zukunft zu bewältigen. Im Zentrum steht die Bildung für nachhaltige Entwicklung (BNE), wobei die vier Dimensionen der Nachhaltigkeit (Ökologie, Ökonomie, Soziales, Politik) als Analyse- und Bewertungsrahmen dienen. Die Schülerinnen und Schüler sollen raumbezogene Handlungskompetenz erwerben, um als mündige Bürgerinnen und Bürger an Entscheidungsprozessen partizipieren zu können. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet, fördert systemisches Denken durch geographische Basiskonzepte und integriert digitale Geomedien als zentrales Werkzeug zur Erkenntnisgewinnung und Problemlösung.",
+  "hauptthemen": [
+    {
+      "thema": "Geoökosysteme im Zeitalter des Anthropozäns",
+      "relevante_unterthemen": [
+        "Polare und subpolare Räume",
+        "Aride und semiaride Räume",
+        "Immerfeuchte Tropen",
+        "Hochgebirge",
+        "Marine Ökosysteme und Küsten",
+        "Kühlgemäßigte mittlere Breiten",
+        "Urbane Geoökosysteme"
+      ],
+      "kernkompetenzen": [
+        "Anwendung des Systems der Geoökozonen als Ordnungsmuster",
+        "Analyse von Wirkungsgefügen zwischen abiotischen und biotischen Elementen",
+        "Bewertung von Nutzungsansprüchen und Gefährdungspotenzialen unter Nachhaltigkeitsaspekten",
+        "Darstellung von Klimawandelfolgen für spezifische Ökosysteme"
+      ]
+    },
+    {
+      "thema": "Leben im Zeitalter der Urbanisierung",
+      "relevante_unterthemen": [
+        "Stadtentwicklungsprozesse",
+        "Stadtentwicklungsmodelle",
+        "Urbanisierung und Metropolisierung als globale Prozesse",
+        "Stadtentwicklung in anderen Kulturräumen",
+        "Nachhaltige Stadtplanung"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Stadtstrukturen und Funktionswandel",
+        "Beurteilung von Stadtstrukturmodellen hinsichtlich ihrer Übertragbarkeit",
+        "Bewertung von Sanierungs- und Entwicklungsmaßnahmen",
+        "Anwendung von Datenerhebungsverfahren (Kartierung, Befragung, Exkursion)"
+      ]
+    },
+    {
+      "thema": "Entwicklung im Zeitalter globaler Disparitäten",
+      "relevante_unterthemen": [
+        "Indikatoren und Klassifizierungen",
+        "Ansätze zur Reduzierung von Disparitäten",
+        "Bevölkerungsentwicklung",
+        "Ernährungssicherung",
+        "Agrarproduktion, Rohstoffförderung und Industrieproduktion",
+        "Dienstleistungen",
+        "Migration"
+      ],
+      "kernkompetenzen": [
+        "Klassifizierung von Ländern anhand sozioökonomischer Indikatoren",
+        "Analyse kausaler Zusammenhänge zwischen Naturpotenzial und wirtschaftlicher Nutzung",
+        "Erörterung von Entwicklungstheorien und -strategien",
+        "Bewertung von Zielkonflikten zwischen ökonomischer Entwicklung und ökologischer Verträglichkeit"
+      ]
+    },
+    {
+      "thema": "Zukunftssicherung im Zeitalter der Globalisierung",
+      "relevante_unterthemen": [
+        "Globalisierungsprozesse",
+        "Nachhaltige Landwirtschaft",
+        "Nachhaltige Industrieproduktion",
+        "Nachhaltiger Tourismus",
+        "Nachhaltige Energieerzeugung",
+        "Süßwasser als knappe Ressource",
+        "Umgang mit Müll",
+        "Pandemien und Raumwirksamkeit"
+      ],
+      "kernkompetenzen": [
+        "Analyse globaler Handelsströme und deren Auswirkungen",
+        "Entwicklung und Diskussion von Handlungsansätzen für eine nachhaltige Problemlösung",
+        "Bewertung von Transformationsprozessen in Wirtschaftssektoren",
+        "Reflexion über globale Verantwortung und Generationengerechtigkeit"
+      ]
+    }
+  ]
+}

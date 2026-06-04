@@ -1,0 +1,64 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Politik",
+  "zusammenfassung": "Der Rahmenlehrplan für das Fach Politische Bildung in der gymnasialen Oberstufe in Brandenburg zielt auf die Entwicklung politischer Mündigkeit ab. Die Schülerinnen und Schüler sollen befähigt werden, sich in einer komplexen Gesellschaft zu orientieren, politische Probleme zu analysieren, auf demokratischer Grundlage reflektiert zu urteilen und sich aktiv in öffentliche Angelegenheiten einzubringen. Der Kompetenzerwerb basiert auf vier Säulen: konzeptuelles Deutungswissen (Verständnis von Modellen und Theorien), politische Urteilsfähigkeit (Analyse und Bewertung unter Sach- und Wertaspekten), politische Handlungsfähigkeit (Teilnahme am öffentlichen Leben und Diskursfähigkeit) sowie methodische Fähigkeiten (sozialwissenschaftliche Arbeitsweisen). Der Unterricht ist in vier verbindliche Kurshalbjahre gegliedert: Demokratie, Wirtschaft, Gesellschaft und Internationale Politik. Dabei wird ein kumulativer Lernprozess verfolgt, der wissenschaftspropädeutisches Arbeiten fördert und die Schülerinnen und Schüler auf die Anforderungen der Abiturprüfung vorbereitet, wobei der Leistungskurs durch eine tiefere theoretische Durchdringung und die Einbeziehung komplexerer Fallbeispiele gekennzeichnet ist.",
+  "hauptthemen": [
+    {
+      "thema": "Demokratie",
+      "relevante_unterthemen": [
+        "Grundgesetz und politische Ordnung der BRD",
+        "Demokratietheorien",
+        "Politischer Prozess und Partizipation",
+        "Europäische Integration und Identität",
+        "Demokratie im Wandel (z.B. 1968, Umbrüche seit 1989)"
+      ],
+      "kernkompetenzen": [
+        "Vergleich demokratischer, autoritärer und totalitärer Systeme",
+        "Analyse von Entscheidungsprozessen auf nationaler und EU-Ebene",
+        "Bewertung von Partizipationsmöglichkeiten und deren demokratietheoretische Einordnung"
+      ]
+    },
+    {
+      "thema": "Wirtschaft",
+      "relevante_unterthemen": [
+        "Wirtschaftstheorien (Liberalismus, Keynesianismus, Neoliberalismus)",
+        "Wirtschaftspolitik in der sozialen Marktwirtschaft",
+        "Globalisierung und nachhaltige Entwicklung",
+        "Staatliche Wirtschaftsförderung und Krisenmanagement"
+      ],
+      "kernkompetenzen": [
+        "Bezugnahme wirtschaftspolitischer Debatten auf theoretische Konzepte",
+        "Beurteilung der Wirksamkeit staatlicher Maßnahmen",
+        "Analyse globaler wirtschaftlicher Herausforderungen und deren Auswirkungen auf politische Handlungsspielräume"
+      ]
+    },
+    {
+      "thema": "Gesellschaft",
+      "relevante_unterthemen": [
+        "Soziale Differenzierung und Ungleichheit",
+        "Modelle der Sozialstruktur",
+        "Sozialer Wandel (Werte, Demografie, Arbeit)",
+        "Sozialstaat und soziale Sicherung"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Bewertung von Theorien zur sozialen Ungleichheit",
+        "Erörterung aktueller Herausforderungen der Sozialpolitik",
+        "Reflexion des sozialen Wandels unter Einbeziehung regionaler Beispiele"
+      ]
+    },
+    {
+      "thema": "Internationale Politik",
+      "relevante_unterthemen": [
+        "Herausforderungen (Umwelt, Ressourcen, Terrorismus)",
+        "Akteure der internationalen Politik",
+        "Theorien der internationalen Politik (Realismus, Idealismus)",
+        "Lösungsansätze und internationale Konfliktbewältigung"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Interessen und Motiven internationaler Akteure",
+        "Bewertung von militärischen und nicht-militärischen Lösungsansätzen",
+        "Entwicklung von Szenarien für globale Zukunftsfragen"
+      ]
+    }
+  ]
+}

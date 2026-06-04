@@ -1,0 +1,55 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Das Kerncurriculum für Französisch in der Studienstufe in Hamburg zielt auf die Entwicklung einer plurilingualen und interkulturellen kommunikativen Kompetenz ab. Die Schülerinnen und Schüler sollen befähigt werden, in einer globalisierten Welt erfolgreich zu kommunizieren, indem sie ihre funktionalen kommunikativen Fertigkeiten (Hören, Sprechen, Lesen, Schreiben, Sprachmittlung) sowie ihre Text- und Medienkompetenz vertiefen. Ein besonderer Fokus liegt auf der Auseinandersetzung mit den Bezugskulturen (Frankreich und frankophone Welt), um soziokulturelles Orientierungswissen zu erwerben und interkulturelle Handlungsfähigkeit zu stärken. Der Unterricht ist handlungsorientiert, fördert die Sprachbewusstheit und Sprachlernkompetenz und integriert digitale Medien als Werkzeuge für den Lernprozess. Überfachliche Kompetenzen wie personale, soziale und lernmethodische Fähigkeiten werden fächerübergreifend gefördert, wobei Wertebildung und Bildung für nachhaltige Entwicklung (BNE) als zentrale Leitperspektiven dienen.",
+  "hauptthemen": [
+    {
+      "thema": "Bezugskulturen",
+      "relevante_unterthemen": [
+        "Frankreich und Deutschland im europäischen Kontext",
+        "Frankophonie (koloniales Erbe, globale Zusammenarbeit)"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Gesellschaft, Politik und Kultur Frankreichs sowie dessen Verhältnis zu Deutschland",
+        "Verständnis der historischen Entwicklung und des politischen Systems frankophoner Länder",
+        "Reflexion über interkulturelle Identitäten und das koloniale Erbe"
+      ]
+    },
+    {
+      "thema": "Lebens- und Erfahrungswelt Heranwachsender",
+      "relevante_unterthemen": [
+        "Lebensformen im Wandel",
+        "Die Französische Revolution und ihre Wirkungen"
+      ],
+      "kernkompetenzen": [
+        "Auseinandersetzung mit Identitätssuche, zwischenmenschlichen Beziehungen und gesellschaftlichem Engagement",
+        "Reflexion republikanischer und humanitärer Werte (Liberté, Égalité, Fraternité)",
+        "Umgang mit persönlichen und gesellschaftlichen Herausforderungen"
+      ]
+    },
+    {
+      "thema": "Alltags- und Berufswelt",
+      "relevante_unterthemen": [
+        "Das Individuum in der Gesellschaft",
+        "Die Arbeitswelt"
+      ],
+      "kernkompetenzen": [
+        "Einordnung aktueller Diskurse zu Migration, Multikulturalität und gesellschaftlichen Werten",
+        "Reflexion über Studien- und Berufswahl sowie Arbeitsbedingungen im frankophonen Raum",
+        "Analyse von Auswirkungen der Globalisierung und Digitalisierung auf die Arbeitswelt"
+      ]
+    },
+    {
+      "thema": "Themen globaler Bedeutung",
+      "relevante_unterthemen": [
+        "Medien – Kommunikation im 21. Jahrhundert",
+        "Herausforderungen der Globalisierung"
+      ],
+      "kernkompetenzen": [
+        "Kritische Reflexion des Medienkonsums und der Rolle von Medien in der Gesellschaft",
+        "Bewusstsein für ökologische Probleme, nachhaltige Entwicklung und Wirtschaft",
+        "Analyse von Spannungsfeldern zwischen kultureller Vielfalt und globaler Einheitlichkeit"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Geografie",
+  "zusammenfassung": "Die Fachanforderungen Geografie für Schleswig-Holstein zielen auf die Entwicklung einer Raumverhaltenskompetenz ab, die Schülerinnen und Schüler befähigt, die Gegenwart und Zukunft auf der Erde nachhaltig zu gestalten. Das Fach fungiert als Brückenfach zwischen Natur- und Gesellschaftswissenschaften und nutzt den Raum als zentrale Dimension menschlichen Handelns. Der Unterricht ist kompetenzorientiert und systemisch ausgerichtet, wobei die Basiskonzepte Struktur, Funktion und Prozess zur Erfassung räumlicher Komplexität dienen. In der Sekundarstufe I liegt der Fokus auf der systematischen Einführung in geographische Arbeitsweisen und der Analyse von Mensch-Umwelt-Beziehungen. In der Sekundarstufe II wird dieser Ansatz wissenschaftspropädeutisch vertieft, wobei der 'Globale Wandel' als roter Faden dient. Die Leistungsbewertung erfolgt transparent und umfasst sowohl Unterrichtsbeiträge als auch Leistungsnachweise, wobei die Förderung überfachlicher Kompetenzen (Selbst-, Sozial- und Methodenkompetenz) sowie die Bildung für nachhaltige Entwicklung (BNE) als Querschnittsaufgaben integriert sind.",
+  "hauptthemen": [
+    {
+      "thema": "Sekundarstufe I: Räumliche Orientierung und Systeme",
+      "relevante_unterthemen": [
+        "Arbeiten wie ein Geograph (Karte, Atlas, WebGIS)",
+        "Geografie Deutschlands und Schleswig-Holsteins",
+        "Naturgeografie Europas (Klima, Vegetation, Oberflächenformen)",
+        "Wirtschaftsräume und globale Verflechtungen",
+        "Nachhaltige Ressourcennutzung"
+      ],
+      "kernkompetenzen": [
+        "Räume als natur- und humangeographische Systeme erfassen",
+        "Geographische Medien und Methoden zur Erkenntnisgewinnung anwenden",
+        "Raumbezogene Sachverhalte kriterienorientiert beurteilen",
+        "Verantwortungsbewusstes Handeln im Sinne der Nachhaltigkeit entwickeln"
+      ]
+    },
+    {
+      "thema": "Sekundarstufe II: Globaler Wandel und Raumdynamik",
+      "relevante_unterthemen": [
+        "Anthropozän und globaler Wandel",
+        "Raumprägende Faktoren und nachhaltige Raumplanung",
+        "Wirtschaftsräumliche Dynamiken in Europa",
+        "Fragmentierung in der Einen Welt",
+        "Globalisierung und Regionalisierung",
+        "Lebensstile und ihre Raumwirksamkeit"
+      ],
+      "kernkompetenzen": [
+        "Komplexe Mensch-Umwelt-Systeme analysieren und Szenarien begründen",
+        "Wissenschaftsorientierte Recherche und Auswertung geographischer Daten",
+        "Fachsprachlich fundierte Argumentation und Diskursfähigkeit",
+        "Werteorientierte Bewertung von Raumnutzungskonflikten und Handlungsalternativen"
+      ]
+    }
+  ]
+}

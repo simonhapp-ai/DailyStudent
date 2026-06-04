@@ -1,0 +1,53 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Bildungsplan für das Fach Deutsch in der Studienstufe (gymnasiale Oberstufe) in Hamburg zielt auf die umfassende sprachliche, kulturelle und ästhetische Bildung der Schülerinnen und Schüler ab. Im Zentrum steht die Entwicklung von Kompetenzen in den Bereichen Sprechen und Zuhören, Schreiben, Lesen, der Auseinandersetzung mit Texten und Medien sowie der Reflexion über Sprache. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet und bereitet auf Studium und Beruf vor. Ein besonderer Fokus liegt auf der Integration digitaler Medien als Unterrichtsgegenstand und -werkzeug (Kultur der Digitalität), der Förderung von Diversitätsbewusstsein sowie der Verknüpfung mit Leitperspektiven wie Werteorientierung und Bildung für nachhaltige Entwicklung (BNE). Die Schülerinnen und Schüler sollen befähigt werden, komplexe Texte (literarisch und pragmatisch) zu analysieren, eigene Texte adressatengerecht zu verfassen, mündlich sicher zu kommunizieren und Sprache als historisch gewachsenes, machtvolles System zu reflektieren.",
+  "hauptthemen": [
+    {
+      "thema": "Sprache und Medien",
+      "relevante_unterthemen": [
+        "Sprache, Denken, Handeln",
+        "Sprache im Wandel",
+        "Sprachliche Vielfalt",
+        "Sprache und Öffentlichkeit",
+        "Mediengeschichte",
+        "Kultur der Digitalität",
+        "Journalismus und Öffentlichkeit"
+      ],
+      "kernkompetenzen": [
+        "Analyse der Interdependenz zwischen Sprache, Sprechern und Öffentlichkeit",
+        "Reflexion über digitale Kommunikationsformen und deren gesellschaftliche Auswirkungen",
+        "Anwendung von Diskursanalyse und Bewertung von Informationsstrategien"
+      ]
+    },
+    {
+      "thema": "Kulturgeschichte und Literatur (18. bis 21. Jahrhundert)",
+      "relevante_unterthemen": [
+        "Literatur um 1800 (Aufklärung bis Romantik)",
+        "Literatur um 1850 (Vormärz bis Realismus)",
+        "Literatur um 1900 (Stilpluralismus)",
+        "Literatur 1914-1949",
+        "Literatur 1945 bis Gegenwart (Migration, Identität, Formsuche)"
+      ],
+      "kernkompetenzen": [
+        "Einordnung literarischer Werke in ihren historischen und kulturgeschichtlichen Kontext",
+        "Vergleich von literarischen Epochen und Strömungen",
+        "Reflexion existenzieller Erfahrungen und gesellschaftlicher Umbrüche anhand literarischer Texte"
+      ]
+    },
+    {
+      "thema": "Fachwissen Gattungen, Medien, Stilistik",
+      "relevante_unterthemen": [
+        "Epik, Lyrik, Dramatik",
+        "Pragmatische Texte",
+        "Sprachliche Mittel",
+        "Filmanalyse"
+      ],
+      "kernkompetenzen": [
+        "Anwendung gattungsspezifischer Analysekriterien auf komplexe Texte",
+        "Analyse der visuellen, auditiven und narrativen Ebene von Filmen",
+        "Erkennen und Bewerten rhetorischer Strategien und deren Wirkungsabsichten"
+      ]
+    }
+  ]
+}

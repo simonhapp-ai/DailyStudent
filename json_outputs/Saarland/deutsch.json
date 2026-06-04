@@ -1,0 +1,59 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe (Hauptphase) im Saarland zielt auf die Entwicklung einer umfassenden Sprach-, Lese-, Schreib- und Kommunikationskompetenz ab, die auf die Anforderungen des Abiturs und die Anforderungen in Studium und Beruf vorbereitet. Der Unterricht ist kompetenzorientiert und integriert die vier Bereiche Schreiben, Lesen, Sprechen/Zuhören sowie Sprache/Sprachgebrauch. Ein besonderer Fokus liegt auf der funktionalen Anwendung von Wissen: Sprachliche Phänomene und literarische Texte werden nicht isoliert, sondern in ihrem Verwendungszusammenhang und ihrer Wirkung analysiert. Die Schülerinnen und Schüler sollen befähigt werden, komplexe Texte zu verstehen, eigenständig zu interpretieren, argumentativ Stellung zu beziehen und ihre Schreib- sowie Sprechprozesse kritisch zu reflektieren. Der Lehrplan gibt verbindliche Themenfelder und Pflichtlektüren vor, lässt jedoch Raum für didaktische Vertiefungen. Die Leistungsbewertung erfolgt kriterienorientiert und unterscheidet zwischen Verstehens- und Darstellungsleistung, wobei die abiturrelevanten Aufgabenformate (Textinterpretation, Analyse pragmatischer Texte, literarische Erörterung, materialgestütztes Schreiben) den Kern der Leistungsüberprüfung bilden.",
+  "hauptthemen": [
+    {
+      "thema": "Schreiben",
+      "relevante_unterthemen": [
+        "Textbezogenes Schreiben (Interpretation, Analyse, Erörterung)",
+        "Materialgestütztes Schreiben (informierend, argumentierend)",
+        "Schreibprozess (Planung, Produktion, Überarbeitung)",
+        "Fachsprache und Zitierweise"
+      ],
+      "kernkompetenzen": [
+        "Eigenständiges Verfassen komplexer, strukturierter und adressatengerechter Texte in verschiedenen Formaten.",
+        "Reflektierte Anwendung von Schreibstrategien und kriterienorientierte Überarbeitung eigener und fremder Texte."
+      ]
+    },
+    {
+      "thema": "Lesen – mit Texten und Medien umgehen",
+      "relevante_unterthemen": [
+        "Literarische Texte (Epochen, Gattungen, Pflichtlektüren)",
+        "Pragmatische Texte (Reden, Sachtexte)",
+        "Mediale Texte (Film, Hörspiel, Theaterinszenierungen)",
+        "Lesestrategien und Textverstehen"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige Erschließung und Interpretation literarischer und pragmatischer Texte unter Einbeziehung von Kontextwissen.",
+        "Kritische Analyse und ästhetische Bewertung von Texten und medialen Darstellungsformen."
+      ]
+    },
+    {
+      "thema": "Sprechen und verstehendes Zuhören",
+      "relevante_unterthemen": [
+        "Monologische Sprechformen (Referat, Präsentation, Vortrag)",
+        "Dialogische Sprechformen (Diskussion, Debatte, Prüfungsgespräch)",
+        "Verstehendes Zuhören und Mitschreibtechniken",
+        "Feedbackkultur"
+      ],
+      "kernkompetenzen": [
+        "Strukturiertes, adressatengerechtes und sachbezogenes Sprechen in monologischen und dialogischen Situationen.",
+        "Aktives, zielgerichtetes Zuhören und kritische Reflexion des eigenen sowie fremden Sprechverhaltens."
+      ]
+    },
+    {
+      "thema": "Sprache und Sprachgebrauch untersuchen",
+      "relevante_unterthemen": [
+        "Funktionale Grammatik und Syntax",
+        "Semantik und Bedeutungswandel",
+        "Kommunikationsmodelle",
+        "Sprachvarietäten, Mehrsprachigkeit und Sprachwandel"
+      ],
+      "kernkompetenzen": [
+        "Analyse der Funktion und Wirkung sprachlicher Mittel in verschiedenen Kommunikationssituationen.",
+        "Reflexion über Sprache als System, ihre manipulative Kraft und ihre Bedeutung für gesellschaftliche Teilhabe."
+      ]
+    }
+  ]
+}

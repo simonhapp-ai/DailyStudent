@@ -1,0 +1,79 @@
+{
+  "bundesland": "NRW",
+  "fach": "Physik",
+  "zusammenfassung": "Der Kernlehrplan für die gymnasiale Oberstufe in NRW (gültig ab 2022) definiert Physik als eine theoriegeleitete Erfahrungswissenschaft, die zur allgemeinen Studierfähigkeit und zur Teilhabe an einer technologisch geprägten Gesellschaft befähigt. Das Fach ist kompetenzorientiert strukturiert und umfasst die vier Kompetenzbereiche Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Diese werden durch vier Basiskonzepte (Erhaltung und Gleichgewicht, Superposition und Komponenten, Mathematisieren und Vorhersagen, Zufall und Determiniertheit) vernetzt. Der Unterricht ist kontextorientiert und experimentell ausgerichtet, wobei in der Qualifikationsphase zwischen Grundkursen und Leistungskursen hinsichtlich der fachlichen Tiefe und Mathematisierung unterschieden wird. Die Leistungsbewertung erfolgt prozess- und ergebnisorientiert durch Klausuren sowie sonstige Mitarbeit, wobei experimentelle und fachpraktische Anteile einen hohen Stellenwert einnehmen, um den wissenschaftspropädeutischen Charakter des Faches zu unterstreichen.",
+  "hauptthemen": [
+    {
+      "thema": "Grundlagen der Mechanik",
+      "relevante_unterthemen": [
+        "Kinematik (gleichförmige/beschleunigte Bewegung, freier Fall, waagerechter Wurf)",
+        "Dynamik (Newton'sche Gesetze, Kräftegleichgewicht, Reibung)",
+        "Erhaltungssätze (Impuls, Energie, Stoßvorgänge)"
+      ],
+      "kernkompetenzen": [
+        "Bewegungen qualitativ und quantitativ anhand wirkender Kräfte und energetischer Sicht analysieren",
+        "Erhaltungssätze zur Erklärung und Berechnung von Bewegungsabläufen anwenden"
+      ]
+    },
+    {
+      "thema": "Kreisbewegung, Gravitation und Weltbilder",
+      "relevante_unterthemen": [
+        "Gleichförmige Kreisbewegung und Zentripetalkraft",
+        "Gravitationsgesetz und Kepler'sche Gesetze",
+        "Wandel physikalischer Weltbilder (geo-/heliozentrisch, spezielle Relativitätstheorie)"
+      ],
+      "kernkompetenzen": [
+        "Kinematische Größen der Kreisbewegung berechnen",
+        "Bedeutung von Bezugssystemen und Invarianz der Lichtgeschwindigkeit erläutern"
+      ]
+    },
+    {
+      "thema": "Klassische Wellen und geladene Teilchen in Feldern",
+      "relevante_unterthemen": [
+        "Mechanische Schwingungen und Wellen (Huygens'sches Prinzip, Interferenz)",
+        "Elektrische und magnetische Felder",
+        "Bahnformen geladener Teilchen in homogenen Feldern"
+      ],
+      "kernkompetenzen": [
+        "Wellenphänomene wie Reflexion, Brechung und Beugung erklären",
+        "Verhalten geladener Teilchen in elektrischen und magnetischen Feldern quantitativ beschreiben"
+      ]
+    },
+    {
+      "thema": "Quantenobjekte / Quantenphysik",
+      "relevante_unterthemen": [
+        "Teilchenaspekte von Photonen (Photoeffekt)",
+        "Wellenaspekt von Elektronen (De-Broglie-Wellenlänge, Interferenz)",
+        "Wahrscheinlichkeitsinterpretation und Kopenhagener Deutung"
+      ],
+      "kernkompetenzen": [
+        "Grenzen klassischer Modelle bei Quantenobjekten aufzeigen",
+        "Wahrscheinlichkeitsaussagen zur Beschreibung von Quantenphänomenen nutzen"
+      ]
+    },
+    {
+      "thema": "Elektrodynamik und Energieübertragung",
+      "relevante_unterthemen": [
+        "Elektromagnetische Induktion und Induktionsgesetz",
+        "Wechselspannung, Generatoren und Transformatoren",
+        "Auf- und Entladevorgänge am Kondensator"
+      ],
+      "kernkompetenzen": [
+        "Induktionsvorgänge physikalisch erklären und mathematisch modellieren",
+        "Technische Anwendungen der Energieübertragung bewerten"
+      ]
+    },
+    {
+      "thema": "Strahlung und Materie / Atom- und Kernphysik",
+      "relevante_unterthemen": [
+        "Atommodelle und Energieniveaus",
+        "Ionisierende Strahlung und Nachweisverfahren",
+        "Kernumwandlungen (Spaltung, Fusion, Zerfallsgesetz)"
+      ],
+      "kernkompetenzen": [
+        "Eigenschaften ionisierender Strahlung und deren biologische Wirkung beurteilen",
+        "Kernphysikalische Prozesse unter Berücksichtigung von Massendefekt und Bindungsenergie erklären"
+      ]
+    }
+  ]
+}

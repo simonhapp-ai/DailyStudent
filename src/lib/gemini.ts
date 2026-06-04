@@ -1,4 +1,5 @@
 import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, TaskCorrection } from '../types'
+import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent'
 const EXAM_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'
@@ -222,22 +223,23 @@ function parseExam(raw: unknown, subject: string, subjectId: string, topic: stri
   }
 }
 
-export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III'): Promise<GeneratedExam> {
+export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData): Promise<GeneratedExam> {
   const materialRule = afb === 'I'
     ? 'Kein Material (leeres Array).'
     : afb === 'II'
       ? 'Genau 1 passendes Material (Tabelle oder Text).'
       : 'Optional 1 Material wenn nötig, sonst leer.'
   const beRange = afb === 'I' ? '4–8' : '8–12'
+  const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
   const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}
+    `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${kcBlock}
 
 JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":[]}],"totalBE":8}`)
   return parseExam(raw, subject, subjectId, topic, 1)
 }
 
-export async function generateMode2Exam(subject: string, subjectId: string, topic: string): Promise<GeneratedExam> {
+export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
   const fachHinweis: Record<string, string> = {
     biologie: '1 Komplex, Teilaufgaben 1.1–1.4, ~35 BE, 2 Materialien (M1+M2).',
     physik: '1 Komplex, Teilaufgaben 1.1–1.5, ~50 BE, M1=Versuchsaufbau+Messdaten, M2=Diagramm.',
@@ -245,18 +247,20 @@ export async function generateMode2Exam(subject: string, subjectId: string, topi
     religion: '1 Komplex, 4–6 Aufgaben Trichter I→II→III, ~50 BE.',
   }
   const hinweis = fachHinweis[subjectId] ?? '1 Komplex, 3–5 Teilaufgaben, AFB I→II→III, 2–3 Materialien, ~45 BE.'
+  const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
   const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}
+    `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
 
 JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","content":"..."},{"id":"M2","title":"...","type":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
     0.55)
   return parseExam(raw, subject, subjectId, topic, 2)
 }
 
-export async function generateMode3Exam(subject: string, subjectId: string, topic: string): Promise<GeneratedExam> {
+export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
+  const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
   const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | Modus: Materialklausur
+    `Fach: ${subject} | Thema: ${topic} | Modus: Materialklausur${kcBlock}
 Regeln: M1=Kontext (Text/Versuch), M2=Daten (Tabelle/Diagramm), M3=optional.
 Aufg.1 AFB I 6–8 BE: Fachwissen nötig zum Materialverständnis (kein Materialbezug).
 Aufg.2 AFB II 10–12 BE: Material direkt auswerten + Fachwissen verknüpfen.
@@ -266,9 +270,10 @@ JSON: {"materials":[{"id":"M1","title":"...","type":"text","content":"..."},{"id
   return parseExam(raw, subject, subjectId, topic, 3)
 }
 
-export async function generateMode4Exam(subject: string, subjectId: string, topic: string): Promise<GeneratedExam> {
+export async function generateMode4Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
+  const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
   const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | Modus: Ohne Material (alles aus dem Kopf)
+    `Fach: ${subject} | Thema: ${topic} | Modus: Ohne Material (alles aus dem Kopf)${kcBlock}
 Aufg.1 AFB I 4–8 BE: Reproduktion ohne Material.
 Aufg.2 AFB II 8–12 BE: Transfer OHNE Material — Vergleich, Szenario, oder "an einem selbst gewählten Beispiel".
 Aufg.3 AFB III 8–10 BE: Argumentative Beurteilung/Erörterung ohne Material.

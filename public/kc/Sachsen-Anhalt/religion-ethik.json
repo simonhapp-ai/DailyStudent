@@ -1,0 +1,111 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Der Fachlehrplan Ethik für das Gymnasium in Sachsen-Anhalt zielt darauf ab, Schülerinnen und Schüler zu einer reflektierten Urteils- und Handlungskompetenz in Fragen des gelingenden Lebens und des richtigen Handelns zu führen. Das Fach versteht sich als werteorientierendes Fach, das in einer pluralistischen und globalisierten Welt die Fähigkeit zur kritischen Reflexion, zum ethischen Argumentieren und zur verantwortungsvollen Teilhabe am gesellschaftlichen Leben stärkt. Es vermittelt eine vertiefte allgemeine Bildung und wissenschaftspropädeutische Fähigkeiten, indem es philosophische Konzepte und Begriffe (wie Freiheit, Gerechtigkeit, Verantwortung, Glück) systematisch erschließt. Das Kompetenzmodell basiert auf fünf Säulen: phänomenologische, hermeneutische, analytische, dialektische und spekulative Kompetenz. Diese werden über die Schuljahrgänge hinweg in acht inhaltlichen Schwerpunkten (Ethik und Menschenbild, Freiheit und Abhängigkeit, Wahrheit und Erkenntnis, Moralphilosophie, Recht und Gerechtigkeit, Angewandte Ethik, Glück und Lebenssinn, Religion und Weltanschauung) vertieft. Ein besonderer Fokus liegt auf der Verknüpfung von lebensweltlichen Erfahrungen mit philosophischen Theorien, der Förderung der Bildungssprache sowie der Integration von Themen wie Nachhaltigkeit, digitaler Welt und Demokratiebildung.",
+  "hauptthemen": [
+    {
+      "thema": "Ethik und Menschenbild",
+      "relevante_unterthemen": [
+        "Moralische Gefühle und Bedürfnisse",
+        "Herkunft und Bestimmung des Menschen",
+        "Würde des Menschen",
+        "Moralische Natur des Menschen"
+      ],
+      "kernkompetenzen": [
+        "Ethisch relevante Phänomene als solche wahrnehmen und philosophische Fragestellungen artikulieren",
+        "Die moralische Natur des Menschen und die Würde des Menschen kritisch reflektieren"
+      ]
+    },
+    {
+      "thema": "Freiheit und Abhängigkeit",
+      "relevante_unterthemen": [
+        "Zwischenmenschliche Konflikte",
+        "Soziale Beziehungen",
+        "Gewissensmodelle",
+        "Determinismusproblem"
+      ],
+      "kernkompetenzen": [
+        "Konfliktdynamiken analysieren und Lösungsstrategien bewerten",
+        "Das Spannungsfeld zwischen Freiheit und Determinismus erörtern"
+      ]
+    },
+    {
+      "thema": "Wahrheit und Erkenntnis",
+      "relevante_unterthemen": [
+        "Ursprünge des Philosophierens",
+        "Moralische Urteile",
+        "Wirklichkeitsauffassungen",
+        "Methodisch philosophieren"
+      ],
+      "kernkompetenzen": [
+        "Philosophische Texte und Denkmodelle erschließen",
+        "Wahrheitsansprüche und Erkenntnisweisen kritisch prüfen"
+      ]
+    },
+    {
+      "thema": "Moralphilosophie",
+      "relevante_unterthemen": [
+        "Werte und Tugenden",
+        "Pflicht und Nutzen",
+        "Praktische Diskurse",
+        "Ethische Theorien"
+      ],
+      "kernkompetenzen": [
+        "Ethische Theorien (deontologisch/teleologisch) prüfen und anwenden",
+        "Praktische Diskurse analysieren und eigene Positionen begründen"
+      ]
+    },
+    {
+      "thema": "Recht und Gerechtigkeit",
+      "relevante_unterthemen": [
+        "Verteilungsmaßstäbe",
+        "Strafgerechtigkeit",
+        "Fairness-Gedanke",
+        "Rechtsgeltung"
+      ],
+      "kernkompetenzen": [
+        "Rechtliche und moralische Gerechtigkeitsvorstellungen unterscheiden und diskutieren",
+        "Fragen der Rechtsgeltung und des Widerstandsrechts prüfen"
+      ]
+    },
+    {
+      "thema": "Angewandte Ethik",
+      "relevante_unterthemen": [
+        "Verantwortung für die Umwelt",
+        "Verantwortung in der Gesellschaft",
+        "Liebe als Ideal",
+        "Neue Verantwortungsfragen (Technik/Wachstum)"
+      ],
+      "kernkompetenzen": [
+        "Verantwortungsbezüge in komplexen Situationen analysieren",
+        "Ethische Urteile zu aktuellen gesellschaftlichen und ökologischen Problemen fällen"
+      ]
+    },
+    {
+      "thema": "Glück und Lebenssinn",
+      "relevante_unterthemen": [
+        "Glücksvorstellungen",
+        "Streben nach Lust",
+        "Kontingenzerfahrungen",
+        "Anleitungen zum geglückten Leben"
+      ],
+      "kernkompetenzen": [
+        "Verschiedene Glückskonzepte vergleichen und auf das eigene Leben beziehen",
+        "Umgang mit Kontingenz und Sterblichkeit reflektieren"
+      ]
+    },
+    {
+      "thema": "Religion und Weltanschauung",
+      "relevante_unterthemen": [
+        "Religiöse Sinnangebote",
+        "Erlösungsvorstellungen",
+        "Religiöse Ethik",
+        "Religion aus philosophischer Sicht"
+      ],
+      "kernkompetenzen": [
+        "Religiöse Phänomene und Weltanschauungen philosophisch einordnen",
+        "Die Rolle von Religion in einer pluralen Gesellschaft kritisch diskutieren"
+      ]
+    }
+  ]
+}

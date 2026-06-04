@@ -1,0 +1,59 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Rahmenplan für die gymnasiale Oberstufe in Mecklenburg-Vorpommern (2019) zielt auf die Entwicklung einer umfassenden interkulturellen kommunikativen Handlungsfähigkeit ab. Im Zentrum steht der Kompetenzerwerb, der die Schülerinnen und Schüler auf ein selbstbestimmtes Leben, Studium und Beruf in einer globalisierten, digitalisierten Welt vorbereitet. Der Unterricht ist problemorientiert und wissenschaftspropädeutisch gestaltet, wobei die funktionale kommunikative Kompetenz (Niveau B2 GeR), Text- und Medienkompetenz, Sprachbewusstheit und Sprachlernkompetenz als Einheit betrachtet werden. Der Plan ist als verbindliches Instrument konzipiert, das ca. 80% der Unterrichtszeit abdeckt und Lehrkräften Freiraum für methodisch-didaktische Entscheidungen lässt. Querschnittsthemen wie Demokratieerziehung, Bildung für nachhaltige Entwicklung (BNE), Medienbildung und die regionale Identität (Mecklenburg-Vorpommern) sind integraler Bestandteil. Die Leistungsbewertung erfolgt kriteriengestützt und berücksichtigt sowohl mündliche als auch schriftliche Leistungen, wobei die Anforderungsbereiche I bis III gemäß den Bildungsstandards für die allgemeine Hochschulreife angewendet werden.",
+  "hauptthemen": [
+    {
+      "thema": "Individu et société / Individuum und Gesellschaft",
+      "relevante_unterthemen": [
+        "Adoleszenz und Lebensentwürfe",
+        "Rolle in der Gesellschaft",
+        "Individualität vs. Konformität"
+      ],
+      "kernkompetenzen": [
+        "Mündliche Selbstdarstellung und Reflexion über Lebensentwürfe",
+        "Auseinandersetzung mit gesellschaftlichen Strukturen und Werten",
+        "Analyse von literarischen und medialen Texten zur Identitätsfindung"
+      ]
+    },
+    {
+      "thema": "Identité nationale et diversité culturelle / Nationale Identität und kulturelle Vielfalt",
+      "relevante_unterthemen": [
+        "Geschichte Frankreichs und deutsch-französische Beziehungen",
+        "Einwanderungsgeschichte und kulturelle Vielfalt",
+        "Francophonie"
+      ],
+      "kernkompetenzen": [
+        "Recherche und Präsentation historischer und aktueller Zusammenhänge",
+        "Reflexion über Identitätsbegriffe und Vorurteile",
+        "Analyse der Rolle von Schriftstellern und Künstlern in der Gesellschaft"
+      ]
+    },
+    {
+      "thema": "Aspects actuels de la vie politique et sociale / Aktuelle Aspekte der Politik und Gesellschaft",
+      "relevante_unterthemen": [
+        "Globalisierung",
+        "Arbeitswelt der Zukunft",
+        "Ethische Aspekte und soziale Gerechtigkeit"
+      ],
+      "kernkompetenzen": [
+        "Kritische Reflexion über Chancen und Risiken der Globalisierung",
+        "Diskussion über neue Berufsbilder und technologische Entwicklungen",
+        "Stellungnahme zu ethischen Fragen und gesellschaftlicher Verantwortung"
+      ]
+    },
+    {
+      "thema": "Défis du monde contemporain / Globale Herausforderungen der Gegenwart",
+      "relevante_unterthemen": [
+        "Mensch und Umwelt (Nachhaltigkeit)",
+        "Medienvielfalt und digitale Kommunikation",
+        "Wissenschaft und Visionen"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Produktion von Texten zu globalen Herausforderungen",
+        "Reflexion über den eigenen Medienkonsum und digitale Verantwortung",
+        "Diskussion über wissenschaftliche Möglichkeiten und Grenzen"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Berlin zielt auf die Entwicklung eines reflektierten und selbstreflexiven Geschichtsbewusstseins ab. Im Zentrum steht die 'Narrative Kompetenz', die Lernende befähigt, Geschichte kriteriengeleitet zu analysieren, zu deuten und zu beurteilen. Der Unterricht ist problemorientiert und fördert die Fähigkeit, historische Narrationen zu dekonstruieren und eigene, begründete Deutungen zu formulieren. Dabei werden fachspezifische Methoden (Quellenkritik, Analyse von Darstellungen) mit bildungssprachlichen Kompetenzen und Handlungskompetenzen in der digitalen Welt verknüpft. Die Qualifikationsphase gliedert sich in vier Kurshalbjahre: Q1 (Umbrüche, Transformationen und Krisen), Q2 (Demokratie, Diktaturen und Krieg), Q3 (Zeitgeschichte nach 1945) und Q4 (Geschichtskultur). Ein besonderer Fokus liegt auf der Urteilsbildung (Sach- und Werturteile) im Rahmen der freiheitlich-demokratischen Grundordnung sowie der Auseinandersetzung mit der Geschichtskultur als gesellschaftlichem Umgang mit Vergangenheit.",
+  "hauptthemen": [
+    {
+      "thema": "Umbrüche, Transformationen und Krisen (Q1)",
+      "relevante_unterthemen": [
+        "Revolutionen (Amerikanische, Französische, 1848/49)",
+        "Industrialisierung und Globalisierung",
+        "Ideengeschichte (Antike bis Aufklärung)",
+        "Wirtschaftsbeziehungen und -krisen",
+        "Krankheit und Gesundheit als transformative Kräfte",
+        "Religion als Referenz für Umbrüche",
+        "Hochimperialismus und kolonialisierte Räume"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge von Revolutionen nach Anlass, Ursache und Wirkung bestimmen",
+        "Geschichtswissenschaftliche Theorien zu Wachstum und Industrialisierung analysieren",
+        "Kausale Beziehungen zwischen gesellschaftlichen Transformationsprozessen deuten",
+        "Positionen zur Sozialen Frage kriteriengeleitet und kontrovers beurteilen"
+      ]
+    },
+    {
+      "thema": "Gesellschaftliche Kräfte und die Entwicklung von Staaten (Q2)",
+      "relevante_unterthemen": [
+        "Weimarer Republik (Staat, Gesellschaft, Emanzipationsbewegungen)",
+        "Nationalsozialistische Gewaltherrschaft (Ideologie, Holocaust, Zweiter Weltkrieg)",
+        "Kunst, Kultur und Erziehung in der Zwischenkriegszeit",
+        "Nationalismus, Internationalismus und Pazifismus",
+        "Kommunistische Diktatur in der Sowjetunion",
+        "Europäische Staaten im Spannungsfeld zwischen Demokratie und Diktatur",
+        "Globale Dimensionen der Weltkriege"
+      ],
+      "kernkompetenzen": [
+        "Kontroversen zur individuellen und kollektiven Verantwortung in der NS-Diktatur wiedergeben",
+        "Argumente zur Deutung der Novemberrevolution multiperspektivisch untersuchen",
+        "Zeitgenössische Handlungsspielräume von Menschen in der NS-Diktatur herausarbeiten",
+        "Ethische und normative Werte in Quellen zur NS-Erziehung bewerten"
+      ]
+    },
+    {
+      "thema": "Zeitgeschichte nach 1945 (Q3)",
+      "relevante_unterthemen": [
+        "Ost-West-Konflikt und polyzentrische Weltordnung",
+        "Deutsche Teilung und Einigungsprozess",
+        "Migration in der deutsch-deutschen Geschichte",
+        "MOEL- und südosteuropäische Staaten nach 1990",
+        "Regionale Konflikte (Nahost, China/Taiwan)",
+        "Umwelt- und Artenschutzgeschichte",
+        "Biografische Zugänge zur Zeitgeschichte"
+      ],
+      "kernkompetenzen": [
+        "Verfahren historischen Denkens zur Analyse des 17. Juni 1953 anwenden",
+        "Informationen zur Kubakrise analysieren und bewerten",
+        "Eigene Zeit- und Standortgebundenheit bei der Deutung der 1950er Jahre reflektieren",
+        "Die SED-Diktatur als Herrschaftsform kriteriengeleitet beurteilen"
+      ]
+    },
+    {
+      "thema": "Geschichtskultur (Q4)",
+      "relevante_unterthemen": [
+        "Erinnern und Gedenken (Kolonialismus, NS, SED-Diktatur)",
+        "Geschichtskultur im internationalen Vergleich",
+        "Historische Personen und Geschichtspolitik",
+        "Darstellungen von Geschichte in Medien (Film, Spiele, Social Media, Comics)"
+      ],
+      "kernkompetenzen": [
+        "Erinnerungskulturen in regionalen und nationalen Perspektiven unterscheiden",
+        "Historische Deutungen zur kolonialen Vergangenheit auf Triftigkeit prüfen",
+        "Eigene Standortgebundenheit bei der Deutung kolonialer Geschichte reflektieren",
+        "Beurteilungsmaßstäbe für Diktaturen auf geschichtskulturelle Deutungen anwenden"
+      ]
+    }
+  ]
+}

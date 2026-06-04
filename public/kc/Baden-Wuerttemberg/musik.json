@@ -1,0 +1,295 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Musik",
+  "zusammenfassung": "Der Bildungsplan 2016 für das Fach Musik am Gymnasium in Baden-Württemberg zielt darauf ab, Schülerinnen und Schüler ganzheitlich in ihrer Persönlichkeitsentwicklung und Identitätsfindung zu fördern. Musik wird als zentrales Element verstanden, das emotionale, kreative, psychomotorische, soziale und kognitive Kompetenzen entwickelt und wesentlich zur kulturellen Bildung beiträgt. Der Lehrplan befähigt zu einem bewussten, aktiven und rezipierenden Umgang mit Musik und zur selbstbestimmten Teilhabe am kulturellen Leben, fördert kulturelle Identitätsbildung und interkulturellen Dialog.\n\nDie Leitperspektiven des Bildungsplans – Bildung für nachhaltige Entwicklung, Toleranz und Akzeptanz von Vielfalt, Prävention und Gesundheitsförderung, Berufliche Orientierung, Medienbildung und Verbraucherbildung – sind umfassend in den Musikunterricht integriert. Der Unterricht baut auf in der Grundschule erworbenen Kompetenzen auf und bietet vielfältige Handlungsformen wie Singen, Spielen, Bewegen, Tanzen, Hören, Improvisieren, Diskutieren und Reflektieren. Besondere Modelle wie Klassenmusizieren, musikalische Arbeitsgemeinschaften und außerschulische Lernorte bereichern das Angebot. Kooperationen mit Fächern wie Bildende Kunst, Sport, Fremdsprachen und Deutsch werden gefördert.\n\nDer Kompetenzerwerb gliedert sich in prozessbezogene und inhaltsbezogene Kompetenzen, die eng miteinander verknüpft sind. Die fünf Bereiche der prozessbezogenen Kompetenzen umfassen \"Persönlichkeit und Identität\", \"Gemeinschaft und Verantwortung\", \"Methoden und Techniken\", \"Kommunikation\" und \"Gesellschaft und Kultur\". Sie beschreiben die vielschichtigen Handlungsweisen der Schülerinnen und Schüler im Umgang mit Musik, von der Selbstwahrnehmung und -regulation über Kooperation und Konfliktlösung bis hin zur Anwendung musikpraktischer und medialer Fertigkeiten sowie der Reflexion kultureller Vielfalt.\n\nDie inhaltsbezogenen Kompetenzen sind jahrgangsbezogen formuliert und in die drei Bereiche \"Musik gestalten und erleben\", \"Musik verstehen\" und \"Musik reflektieren\" unterteilt. Diese Bereiche sind nicht isoliert, sondern durchdringen sich gegenseitig, wobei das Hören als Basiskompetenz eine zentrale Rolle spielt. Schülerinnen und Schüler sollen Musik aktiv gestalten, ihre Strukturen und Merkmale verstehen sowie ihre Entstehung, Funktion und Wirkung kritisch reflektieren können. Didaktisch wird ein exemplarischer Ansatz verfolgt, der eine Schwerpunktsetzung auf wesentliche Inhalte ermöglicht und die Lehrkräfte bei der Werkauswahl unterstützt, um einen dem Lernstand entsprechenden Kompetenzerwerb zu gewährleisten.",
+  "hauptthemen": [
+    {
+      "thema": "Musik gestalten und erleben (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Lieder unterschiedlicher Stile und Kulturen (Volkslieder, Kanons, Popsongs, Bewegungslieder, Sprechstücke)",
+        "Stimmbildungsübungen und Warm-ups (Haltung, Atmung, Intonation, Stimmumfang, Artikulation)",
+        "Rhythmische und melodische Patterns auf schuleigenen Instrumenten (Spieltechnik, Klangfarbe, Mitspielsätze, Körperperkussion)",
+        "Liedbegleitung (Bassstimme, Bordun, Rhythmus-Pattern, Zusatzstimme)",
+        "Hörerlebnisse im freien und assoziativen Hören (Assoziationen mit Farben, Bildern, Jahreszeiten)",
+        "Musik erfinden (Klangexperiment, grafische und traditionelle Notation, unkonventionelle Spielweisen)",
+        "Verklanglichung von Bild, Szene oder Text (Gemälde, Fotografie, Gedicht, konventionelle und unkonventionelle Klangerzeuger)",
+        "Musik in Bewegung umsetzen (freie Bewegung, wiederholbare Bewegungsabläufe, koordinierte Schrittfolgen, einfache Tänze)",
+        "Digitale Medien zur Aufnahme und Wiedergabe"
+      ],
+      "kernkompetenzen": [
+        "Lieder unterschiedlicher Stile und Kulturen singen und gestalten: Volkslieder, Kanons, Popsongs, Bewegungslieder, Sprechstücke",
+        "Stimmbildungsübungen und Warm-ups anwenden: Haltung, Atmung, Intonation, Stimmumfang, Artikulation",
+        "Rhythmische und melodische Patterns auf schuleigenen Instrumenten spielen und einfache Musikstücke erarbeiten, üben und präsentieren: Spieltechnik und Klangfarbe",
+        "Lieder instrumental begleiten: Bassstimme, Bordun, Rhythmus-Pattern, Zusatzstimme",
+        "Hörerlebnisse im freien und assoziativen Hören sprachlich äußern",
+        "Musik erfinden und präsentieren: Klangexperiment, grafische und traditionelle Notation",
+        "Bild, Szene oder Text verklanglichen",
+        "Musik in Bewegung umsetzen: freie Bewegung, wiederholbare Bewegungsabläufe, koordinierte Schrittfolgen, einfache Tänze",
+        "Digitale Medien zur Aufnahme und Wiedergabe einsetzen"
+      ]
+    },
+    {
+      "thema": "Musik verstehen (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Noten- und Pausenwerte (Ganze, Halbe, Viertel, Achtel, Sechzehntel, Punktierung, Triole, Synkope)",
+        "Taktarten (2/4-Takt, 4/4-Takt, 3/4-Takt, 6/8-Takt, Puls, Metrum)",
+        "Töne im Tonbereich von g bis c''' (Stammtöne, Versetzungszeichen, Solmisation)",
+        "Skalen, Intervalle und Dreiklänge (Ganz- und Halbtonschritte, Pentatonik, Dur, Moll, Konsonanz, Dissonanz)",
+        "Musikalische Merkmale (Klangfarbe, Dynamik, Tempo, Form, Artikulation, Tongeschlecht, Fachvokabular)",
+        "Ausdruck und Wirkung von musikalischen Ereignissen und kurzen Musikstücken",
+        "Aufbau von Liedern und Instrumentalstücken (Wiederholung, Veränderung, Kontrast, Motiv, A-B-A-Form, Rondo, Strophe, Refrain, Intro, Bridge, Outro, Phrase)",
+        "Ausgewählte Instrumente und Ensembles (Saiten- und Blasinstrumente, Schlaginstrumente, Instrumentenfamilien)",
+        "Lebens- und Arbeitsumfeld von Komponisten und Musikern (historisch und zeitgenössisch)"
+      ],
+      "kernkompetenzen": [
+        "Verschiedene Noten- und Pausenwerte benennen und anwenden: Ganze, Halbe, Viertel, Achtel, Sechzehntel, Punktierung, Triole, Synkope",
+        "Verschiedene Taktarten anwenden und erkennen: 2/4-Takt, 4/4-Takt, 3/4-Takt, 6/8-Takt",
+        "Töne im Tonbereich von g bis c''' benennen und anwenden: Stammtöne, Versetzungszeichen",
+        "Skalen, Intervalle und Dreiklänge benennen und anwenden: Ganz- und Halbtonschritte, Pentatonik, Dur, Moll",
+        "Musikalische Merkmale hörend erkennen: Klangfarbe, Dynamik, Tempo, Form, Artikulation, Tongeschlecht",
+        "Ausdruck und Wirkung von musikalischen Ereignissen und kurzen Musikstücken mit einfachen Worten beschreiben",
+        "Den Aufbau von Liedern und Instrumentalstücken erklären: Wiederholung, Veränderung, Kontrast, Motiv, A-B-A-Form, Rondo, Strophe, Refrain, Intro, Bridge, Outro",
+        "Ausgewählte Instrumente und Ensembles beschreiben, hörend erkennen und Instrumentenfamilien zuordnen: Saiten- und Blasinstrumente, Schlaginstrumente",
+        "Ausgehend von historischen und zeitgenössischen Musikstücken Lebens- und Arbeitsumfeld von Komponisten und Musikern nennen, vergleichen und einordnen"
+      ]
+    },
+    {
+      "thema": "Musik reflektieren (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Beurteilungen für sich und andere beim Üben und Vortragen (Dynamik, Rhythmus, Tonhöhe, Klang, Genauigkeit, Originalität, Wirkung)",
+        "Formale, kreative und ästhetische Beurteilungskriterien",
+        "Lieder, Musikstücke und Tänze unterschiedlicher Kulturen und Zeiten (Vergleich, Interpretation, historisches, biografisches, kulturelles Umfeld)",
+        "Erkundung der Umwelt in Bezug auf Musik (Exkursionen, Konzerte, Musiker, Recherche)",
+        "Medien zur Musiknutzung im Alltag (Möglichkeiten und Gefahren)"
+      ],
+      "kernkompetenzen": [
+        "Beim Üben und Vortragen Beurteilungen für sich und andere vornehmen und begründen",
+        "Vorgegebene und selbst gewählte formale, kreative und ästhetische Beurteilungskriterien zum Reflektieren anwenden",
+        "Lieder, Musikstücke und Tänze unterschiedlicher Kulturen und Zeiten beschreiben, vergleichen und interpretieren",
+        "Ihre Umwelt in Bezug auf Musik erkunden, die Ergebnisse dokumentieren, präsentieren und erläutern",
+        "Medien zur Musiknutzung in ihrem Alltag nennen und deren Möglichkeiten und Gefahren reflektieren"
+      ]
+    },
+    {
+      "thema": "Musik gestalten und erleben (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Lieder unterschiedlicher Stile, Zeiten und Kulturen (Rock- und Popsongs, Schlager, Volkslieder, religiöse Lieder, Sprechstücke, Folksongs, Kunstlieder)",
+        "Stimmeinsatz und Stimmbildungsübungen (Haltung, Atmung, Intonation, Stimmumfang, Artikulation, vokale Perkussion)",
+        "Rhythmische und melodische Patterns auf schuleigenen Instrumenten (call and response, Improvisation, Motiv, Riff, Körperperkussion)",
+        "Liedbegleitung (Bassstimme, Bordun, Rhythmus-Pattern, Zusatzstimmen auf Stabspielen, Perkussionsinstrumenten, Keyboard, Gitarre, E-Bass)",
+        "Musikproduktion (einfache tontechnische Aufnahme-, Bearbeitungs- und Wiedergabeverfahren, Klangexperimente, digitale Medien)",
+        "Vertonung von Bild, Szene oder Text (Gemälde, Fotografie, Gedicht, konventionelle und unkonventionelle Klangerzeuger, digitale Medien)",
+        "Musik in Bewegung oder andere darstellende Ausdrucksformen (freie Bewegung, Tänze, Darstellendes Spiel, Bildfolgen)",
+        "Hörerlebnisse im freien und assoziativen Hören"
+      ],
+      "kernkompetenzen": [
+        "Lieder unterschiedlicher Stile, Zeiten und Kulturen singen und gestalten: Rock- und Popsongs, Schlager, Volkslieder, religiöse Lieder, Sprechstücke",
+        "Mit ihrer Stimme entwicklungs- und altersgemäß umgehen, Stimmbildungsübungen und Warm-ups anwenden: Haltung, Atmung, Intonation, Stimmumfang, Artikulation",
+        "Rhythmische und melodische Patterns auf schuleigenen Instrumenten spielen sowie ein- und mehrstimmige Musikstücke erarbeiten, gestalten und präsentieren",
+        "Lieder instrumental begleiten: Bassstimme, Bordun, Rhythmus-Pattern, Zusatzstimmen",
+        "Musik produzieren: einfache tontechnische Aufnahme-, Bearbeitungs- und Wiedergabeverfahren",
+        "Bild, Szene oder Text vertonen",
+        "Musik in Bewegung oder andere darstellende Ausdrucksformen umsetzen und präsentieren",
+        "Hörerlebnisse im freien und assoziativen Hören sprachlich äußern"
+      ]
+    },
+    {
+      "thema": "Musik verstehen (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Funktionsweise des menschlichen Atem- und Stimmapparats (Klangerzeuger, Resonanzkörper, Naturtonreihe)",
+        "Instrumentenfamilien und deren Klang",
+        "Besetzungen vokaler und instrumentaler Ensembles (Sologesang, Vokalensemble, Chor, Streichquartett, Sinfonieorchester, Jazzcombo, Big Band, Rockband)",
+        "Metrische, rhythmische, melodische und harmonische Eigenschaften (gerade und ungerade Taktarten, Beat, Offbeat, Bassschlüssel, Skalen (Dur, Moll, Paralleltonarten, Blues-Pentatonik), Harmonik (Tonika, Dominante, Subdominante, Kadenz, Dominantseptakkord), Akkordsymbole)",
+        "Musikalische Parameter als Gestaltungsmittel (Rhythmus, Melodie, Dynamik, Artikulation, Instrumentierung, Form)",
+        "Notation mit mehreren Stimmen (Partitur, Melodie, Begleitung, Homofonie, Polyfonie, Rhythmuspartitur, Klavierauszug)",
+        "Entstehung und Entwicklung der Rock- und Popmusik (Rhythm & Blues, Rock'n'Roll, Stile des 20. und 21. Jahrhunderts)",
+        "Gestaltungsmittel in textgebundener Musik (Ballade, Rezitativ und Arie, Musiktheater (Oper, Musical), Wort-Ton-Verhältnis)",
+        "Musikalische Darstellung von außermusikalischen Inhalten (Programmmusik, Tier-/Naturimitationen, Themen wie Licht, Nacht, Winter, Streit, Sehnsucht, Angst)"
+      ],
+      "kernkompetenzen": [
+        "Die Funktionsweise des menschlichen Atem- und Stimmapparats sowie verschiedener Instrumentenfamilien beschreiben und deren Klang unterscheiden: menschliche Stimme, Klangerzeuger, Resonanzkörper, Naturtonreihe",
+        "Verschiedene Besetzungen vokaler und instrumentaler Ensembles nennen und hörend zuordnen: Sologesang, Vokalensemble, Chor, Streichquartett, Sinfonieorchester, Jazzcombo, Big Band, Rockband",
+        "Metrische, rhythmische, melodische und harmonische Eigenschaften von Musik erkennen und beim Musizieren anwenden: gerade und ungerade Taktarten, Beat, Offbeat, Bassschlüssel, Skalen (Dur, Moll, Paralleltonarten, Blues-Pentatonik), Harmonik (Tonika, Dominante, Subdominante, Kadenz, Dominantseptakkord)",
+        "Beim Hören eines Musikstücks musikalische Parameter als Gestaltungsmittel wahrnehmen und in Ausdruck und Wirkung differenziert beschreiben: Rhythmus, Melodie, Dynamik, Artikulation, Instrumentierung, Form",
+        "Eine Notation mit mehreren Stimmen verfolgen, deren Verlauf und deren Verhältnis zueinander beschreiben: Partitur, Melodie, Begleitung, Homofonie, Polyfonie",
+        "Wichtige Aspekte der Entstehung und Entwicklung der Rock- und Popmusik nennen und deren Ausprägungen anhand von Stilen des 20. und 21. Jahrhunderts beschreiben",
+        "Gestaltungsmittel in textgebundener Musik erläutern: Ballade, Rezitativ und Arie mit Bezug auf Musiktheater (Oper, Musical)",
+        "Die musikalische Darstellung von außermusikalischen Inhalten anhand ausgewählter Beispiele und an einem Werk der Programmmusik erläutern"
+      ]
+    },
+    {
+      "thema": "Musik reflektieren (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Beurteilungen für sich und andere beim Üben und Vortragen (Dynamik, Rhythmus, Tonhöhe, Klang, Genauigkeit, Originalität, Wirkung)",
+        "Selbstständige Anwendung formaler, kreativer und ästhetischer Beurteilungskriterien",
+        "Gebrauchsweisen, Funktionen und Wirkungen von Musik (Alltag, Tanzen, Werbung, Kult, Religion, Arbeit, Politik, Identitätsfindung, Unterhaltung, Freizeitgestaltung, Gesundheitsgefährdung)",
+        "Musik in identitätsstiftenden und gesellschaftlichen Kontexten (Ablehnung, Abgrenzung, Solidarisierung, Fangesang, Hymnen, Jugendkulturen, Musikgeschmack)",
+        "Wechselwirkungen von Musik und ihrer Vermarktung (Marktmechanismen, geistiges Eigentum, Persönlichkeitsrechte, Urheberrecht, Datenschutz, Jugendmedienschutz)",
+        "Merkmale und Aspekte der Entstehungszeit von Musikstücken"
+      ],
+      "kernkompetenzen": [
+        "Beim Üben und Vortragen Beurteilungen für sich und andere vornehmen und begründen",
+        "Selbstständig formale, kreative und ästhetische Beurteilungskriterien zum Reflektieren anwenden",
+        "Gebrauchsweisen, Funktionen und Wirkungen von Musik wahrnehmen, beschreiben, diskutieren und bewerten: Musikgebrauch im Alltag (eigene Musikgewohnheiten, Musik und Gesundheit), Musik zum Tanzen, Musik in der Werbung",
+        "Musik in identitätsstiftenden und gesellschaftlichen Kontexten reflektieren: Ablehnung, Abgrenzung und Solidarisierung durch Musik",
+        "Wechselwirkungen von Musik und ihrer Vermarktung beschreiben und bewerten sowie relevante Inhalte des Urheberrechts, des Datenschutzes und des Jugendmedienschutzes erläutern",
+        "Merkmale und Aspekte der Entstehungszeit von Musikstücken reflektieren"
+      ]
+    },
+    {
+      "thema": "Musik gestalten und erleben (Klassen 9/10) - Allgemeine Kompetenzen",
+      "relevante_unterthemen": [
+        "Stimmeinsatz und Stimmbildungsübungen (Haltung, Atmung, Intonation, Stimmumfang, Artikulation)",
+        "Bewegung zu Musik (ausdrucks-, parameter- oder formbezogen, Tänze, szenisches Spiel, außereuropäische Musik)",
+        "Digitale Medien zum Produzieren und Bearbeiten von Musik (Musik im Film, Videoclip, Soundscapes, Klangcollagen)"
+      ],
+      "kernkompetenzen": [
+        "Mit ihrer Stimme entwicklungs- und altersgemäß umgehen, Stimmbildungsübungen und Warm-ups anwenden",
+        "Sich zu Musik ausdrucks-, parameter- oder formbezogen bewegen",
+        "Digitale Medien zum Produzieren und Bearbeiten von Musik einsetzen"
+      ]
+    },
+    {
+      "thema": "Modelle des Konzertierens (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Musizier- und Kompositionsprinzipien (Konzertierendes Prinzip im Barock, Call & Response-Prinzip im Jazz)",
+        "Reproduzierendes Musizieren, Improvisieren, Bewegung (Ausschnitte aus Concerti, Big Band-Arrangements)",
+        "Erscheinungsformen des Konzertierens (barockes Concerto, Jazzstücke, Gemeinsamkeiten, Unterschiede, Besetzung, Instrumentierung, Formverlauf, Tongebung, Homofonie/Polyfonie, Solo/Tutti, Ritornell, Sequenzierung, Variation, Chorus, binäre/ternäre Rhythmik)",
+        "Bedeutung von Komposition, Notation und Improvisation im barocken Concerto und verschiedenen Stilen des Jazz (zeitlicher Kontext, Interpretationsvergleich)"
+      ],
+      "kernkompetenzen": [
+        "Musizier- und Kompositionsprinzipien (Konzertierendes Prinzip im Barock, Call & Response-Prinzip im Jazz) musikalisch gestalten: reproduzierend musizieren, improvisieren, in Bewegung umsetzen",
+        "Erscheinungsformen des Konzertierens an Beispielen des barocken Concerto und in Jazzstücken hörend und am Notentext beschreiben: Gemeinsamkeiten und Unterschiede, Besetzung, Instrumentierung, Formverlauf, Tongebung",
+        "Die Bedeutung von Komposition, Notation und Improvisation im barocken Concerto und verschiedenen Stilen des Jazz vergleichend erläutern und in ihrem zeitlichen Kontext reflektieren"
+      ]
+    },
+    {
+      "thema": "Ästhetische Gestaltungsprinzipien (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Musikalische Verläufe nach grundlegenden ästhetischen Gestaltungsprinzipien (Wiederholung, Veränderung, Kontrast)",
+        "Instrumentaler, vokaler Vortrag oder Einsatz technischer Medien (eigene Gestaltungsversuche, melodische Erfindungsübungen)",
+        "Sonaten und Sinfonien der Klassik (formbildende Prinzipien, Bau von Themenstrukturen, Periodik, Symmetrie, Exposition – Durchführung – Reprise, Menuett – Trio)",
+        "Musik der Klassik in ihrem zeitgeschichtlichen Kontext (Bedeutung im Musikleben der Gegenwart, gesellschaftliche Stellung des Komponisten)"
+      ],
+      "kernkompetenzen": [
+        "Musikalische Verläufe nach grundlegenden ästhetischen Gestaltungsprinzipien, insbesondere der formbildenden Kriterien Wiederholung, Veränderung und Kontrast, entwerfen sowie instrumental, vokal oder durch den Einsatz technischer Medien vortragen",
+        "In Sonaten und Sinfonien der Klassik grundlegende ästhetische Gestaltungsprinzipien, insbesondere die formbildenden Prinzipien Wiederholung, Veränderung, Kontrast, hörend und am Notentext beschreiben",
+        "Musik der Klassik in ihrem zeitgeschichtlichen Kontext reflektieren und ihre Bedeutung im Musikleben der Gegenwart diskutieren"
+      ]
+    },
+    {
+      "thema": "Ausdruck und Wirkung (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Lieder der Romantik und Songs aus dem Rock-Pop-Bereich (gemeinsamer Topos wie Frühling, Verlorene Liebe, Traum, Verlust, Sehnsucht)",
+        "Musikalische Gestaltungsmerkmale und deren Wirkung in thematisch verwandten Kunstliedern und Songs (Rhythmus, Melodie, Dynamik, Instrumentierung, Form, Klang/Sound, Wort-Ton-Verhältnis)",
+        "Lieder der Romantik und aktuelle Songs in ihrem zeitlichen Kontext (ästhetische Gesichtspunkte, persönliche Gesichtspunkte)"
+      ],
+      "kernkompetenzen": [
+        "Lieder der Romantik und Songs aus dem Rock-Pop-Bereich singen und gestalten",
+        "Hörend, musizierend und am Notentext musikalische Gestaltungsmerkmale und deren Wirkung in thematisch verwandten Kunstliedern und Songs erkennen und mit Fachbegriffen beschreiben: Rhythmus, Melodie, Dynamik, Instrumentierung, Form, Klang/Sound, Wort-Ton-Verhältnis",
+        "Lieder der Romantik und aktuelle Songs in ihrem zeitlichen Kontext reflektieren und unter ästhetischen Gesichtspunkten vergleichen und interpretieren"
+      ]
+    },
+    {
+      "thema": "Ordnung – Freiheit, Kontrolle – Zufall (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Musik unter Berücksichtigung kontrastierender Phänomene wie Ordnung und Freiheit, Kontrolle und Zufall (technische Medien, grafische Partituren)",
+        "Musik des 20. oder 21. Jahrhunderts (strukturbildende Phänomene, Collage, Cluster, serielle/aleatorische Gestaltung, Klangflächenmusik, Minimal Music, Klangfarbe, ungewöhnliche Instrumente, alltägliche Klangereignisse, konzeptuale Musik, instrumentales/vokales Theater, Konvention und Individualismus)",
+        "Musikwerke des 20. oder 21. Jahrhunderts in ihren Wechselbeziehungen von Komponist, Interpret und Zuhörer (Grenzen schriftlicher Fixierbarkeit, kompositorische Festlegung, interpretatorischer Freiraum)"
+      ],
+      "kernkompetenzen": [
+        "Musik unter besonderer Berücksichtigung kontrastierender Phänomene wie Ordnung und Freiheit, Kontrolle und Zufall entwerfen und gestalten",
+        "An ausgewählten Beispielen von Musik des 20. oder 21. Jahrhunderts strukturbildende Phänomene wie Ordnung und Freiheit, Kontrolle und Zufall hörend und am Notentext erkunden und beschreiben",
+        "Musikwerke des 20. oder 21. Jahrhunderts in ihren Wechselbeziehungen von Komponist, Interpret und Zuhörer diskutieren"
+      ]
+    },
+    {
+      "thema": "Funktionale Musik (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Musik zu Szenen gestalten (Filmmusik oder Musiktheater, unterschiedliche musikalische Gestaltungen zur gleichen szenischen Vorlage, Stimme, konventionelle/unkonventionelle Klangerzeuger, digitale Medien)",
+        "Gestaltungsmittel von Filmmusik oder Musik aus dem Bereich Musiktheater (Wort-Ton-Verhältnis, Leitmotiv-Technik, Mood-Technik, Mickeymousing, Musik in der Werbung, On-Screen und Off-Screen)",
+        "Gebrauchsweisen, Funktionen und Wirkungen von Musik (Filmmusik oder Musiktheater, Wirkung von Filmszenen mit und ohne Musik)"
+      ],
+      "kernkompetenzen": [
+        "Musik zu Szenen gestalten: Filmmusik oder Musiktheater",
+        "Gestaltungsmittel von Filmmusik oder von Musik aus dem Bereich Musiktheater erkennen und in ihrer Wirkung beschreiben: Wort-Ton-Verhältnis, Leitmotiv-Technik, Mood-Technik, Mickeymousing",
+        "Gebrauchsweisen, Funktionen und Wirkungen von Musik diskutieren und bewerten: Filmmusik oder Musiktheater"
+      ]
+    },
+    {
+      "thema": "Interkulturalität (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Lieder und Songs aus verschiedenen Kulturen mit religiösen oder gesellschaftsrelevanten Inhalten (mehrstimmiges Singen, außereuropäische Musik)",
+        "Musik verschiedener Kulturen in Bezug auf Klang, Rhythmus, Melodie und Harmonie (religiöse Musik oder Musik mit gesellschaftlich relevanten Botschaften, afrikanische, orientalische, südamerikanische Musik)",
+        "Musikalische Erscheinungsformen in ihrem kulturellen und zeitlichen Kontext (religiöse Musik oder politisch motivierte Musik, Ausprägung und Bedeutung von Musik in verschiedenen Religionen)"
+      ],
+      "kernkompetenzen": [
+        "Lieder und Songs aus verschiedenen Kulturen mit religiösen oder gesellschaftsrelevanten Inhalten singen und gestalten",
+        "Musik verschiedener Kulturen in Bezug auf Klang, Rhythmus, Melodie und Harmonie beschreiben und vergleichen: religiöse Musik oder Musik mit gesellschaftlich relevanten Botschaften",
+        "Musikalische Erscheinungsformen in ihrem kulturellen und zeitlichen Kontext reflektieren: religiöse Musik oder politisch motivierte Musik"
+      ]
+    },
+    {
+      "thema": "Musik reflektieren (Klassen 9/10) - Allgemeine Kompetenzen",
+      "relevante_unterthemen": [
+        "Beurteilungen für sich und andere beim Üben und Präsentieren (Dynamik, Rhythmus, Tonhöhe, Klang, Genauigkeit, Originalität, Wirkung)",
+        "Selbstständige Anwendung formaler, kreativer und ästhetischer Beurteilungskriterien"
+      ],
+      "kernkompetenzen": [
+        "Beim Üben und Präsentieren Beurteilungen für sich und andere vornehmen und begründen",
+        "Selbstständig formale, kreative und ästhetische Beurteilungskriterien zum Reflektieren anwenden"
+      ]
+    },
+    {
+      "thema": "Musik gestalten und erleben (Klassen 11/12)",
+      "relevante_unterthemen": [
+        "Musik unterschiedlicher Genres, Stile und Epochen (Vokal- und Instrumentalmusik)",
+        "Musik erfinden, improvisieren oder arrangieren (digitale Medien, Textvertonungen, Songwriting, Klangexperimente, grafische Notation, Klangflächen, Cluster, Collage, konzeptuale Ansätze)",
+        "Musik in andere Ausdrucksformen umsetzen (Bewegung, Grafik, Text, Szene oder Video)",
+        "Musikpraktische Aufgabenstellungen projektorientiert erarbeiten und kreativ gestalten"
+      ],
+      "kernkompetenzen": [
+        "Musik unterschiedlicher Genres, Stile und Epochen in der Gruppe oder solistisch musizieren",
+        "Musik erfinden, improvisieren oder arrangieren, auch mithilfe von digitalen Medien",
+        "Musik in andere Ausdrucksformen umsetzen: Bewegung, Grafik, Text, Szene oder Video",
+        "Musikpraktische Aufgabenstellungen projektorientiert erarbeiten und kreativ gestalten"
+      ]
+    },
+    {
+      "thema": "Musik verstehen (Klassen 11/12)",
+      "relevante_unterthemen": [
+        "Musikalische Verläufe und Strukturen (Melodik, Rhythmik, Harmonik, Formgebung, Satztechnik, Instrumentierung und Besetzung, Ausdruck und Wirkung, Analysemethoden)",
+        "Form- beziehungsweise gattungstypische und individuelle Gestaltungsmerkmale (verschiedene musikhistorische Epochen, Romantik mit Sinfonie, Programmmusik, Kunstlied, Oper)",
+        "Historische Entwicklungen und epochentypische Merkmale (Mittelalter, Renaissance, Barock, Klassik, 19. Jahrhundert, Fuge, Messe, Requiem)",
+        "Stilvielfalt der Musik des 20. und 21. Jahrhunderts (klassische Moderne, Neue Musik ab 1945, Jazz, Rock und Pop, musikalische Globalisierung)",
+        "Gestaltungsmittel und Ausdruck von Musik aus verschiedenen gewachsenen Traditionen (interkulturelle Aspekte, Original und Bearbeitung, Crossover, Ethno-Pop, Folklore)",
+        "Musik in ihrer Verknüpfung mit Wort, Bild, Programm und Szene (wortgebundene Musik, Programmmusik, Musiktheater, Ballett)"
+      ],
+      "kernkompetenzen": [
+        "Musikalische Verläufe und Strukturen mithilfe angemessener Analysemethoden erfassen und unter Verwendung der Fachsprache beschreiben: Melodik, Rhythmik, Harmonik, Formgebung, Satztechnik, Instrumentierung und Besetzung, Ausdruck und Wirkung",
+        "Form- beziehungsweise gattungstypische und individuelle Gestaltungsmerkmale musikalischer Werke in verschiedenen musikhistorischen Epochen erkennen und einordnen",
+        "Historische Entwicklungen und epochentypische Merkmale exemplarisch an einer musikalischen Form oder Gattung erkennen und einordnen: Mittelalter, Renaissance, Barock, Klassik, 19. Jahrhundert",
+        "Die Stilvielfalt der Musik des 20. und 21. Jahrhunderts an ausgewählten Beispielen erläutern und wechselseitige Einflüsse musikalischer Stile und Traditionen darstellen",
+        "Gestaltungsmittel und Ausdruck von Musik aus verschiedenen gewachsenen Traditionen erläutern: Gemeinsamkeiten, Unterschiede und gegenseitige Einflüsse",
+        "Musik in ihrer Verknüpfung mit Wort, Bild, Programm und Szene interpretieren"
+      ]
+    },
+    {
+      "thema": "Musik reflektieren (Klassen 11/12)",
+      "relevante_unterthemen": [
+        "Musik in ihrem zeitgeschichtlichen Kontext (entstehungsgeschichtliche, biografische, geistesgeschichtliche und gesellschaftliche Aspekte, musiksoziologische Fragestellungen)",
+        "Bedeutung und Funktion von Musik in unterschiedlichen Kontexten (Wirkmechanismen, funktionale Musik, Botschaften, manipulierende Musik, musikpsychologische Aspekte, Ausdruck emotionaler/existenzieller Erfahrungen)",
+        "Musik aus unterschiedlichen Kulturen (Phänomene musikalischer Globalisierung)",
+        "Bedeutung von Musik für unsere Kultur, für einzelne Menschen und für ihr eigenes Leben (Entwicklung musikalischer Fähigkeiten, Musikpräferenzen, Wirkung, Umgangsweisen, Gebrauchspraxen)",
+        "Ökonomischer Aspekt von Musik in unserer Gesellschaft (Vielfalt verschiedener Musikberufe)"
+      ],
+      "kernkompetenzen": [
+        "Musik in ihrem zeitgeschichtlichen Kontext reflektieren und dabei entstehungsgeschichtliche, biografische, geistesgeschichtliche und gesellschaftliche Aspekte darstellen",
+        "Die Bedeutung und Funktion von Musik in unterschiedlichen Kontexten erkennen und reflektieren und dabei Wirkmechanismen der Musik beschreiben und interpretieren",
+        "Sich mit Musik aus unterschiedlichen Kulturen auseinandersetzen und Phänomene musikalischer Globalisierung diskutieren",
+        "Die Bedeutung von Musik für unsere Kultur, für einzelne Menschen und für ihr eigenes Leben reflektieren",
+        "Sich mit dem ökonomischen Aspekt von Musik in unserer Gesellschaft reflektiert auseinandersetzen und dabei die Vielfalt verschiedener Musikberufe darstellen"
+      ]
+    }
+  ]
+}

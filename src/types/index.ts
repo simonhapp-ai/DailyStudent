@@ -197,6 +197,23 @@ export interface AppStats {
   examScores: ExamScoreRecord[]
 }
 
+/* ─── Lernzettel ────────────────────────────────────────────── */
+
+export interface Lernzettel {
+  id: string               // 'lz-{subjectId}-{timestamp}'
+  subjectId: string
+  subjectName: string
+  title: string
+  selectedTopics: string[] // KC hauptthemen.thema die der User wählte
+  sourceNoteIds: string[]  // UserNote-IDs die als Input dienten
+  content: string          // Markdown-artiger Lernzettel-Body (KI-generiert)
+  keywords: string[]
+  examTopics: string[]
+  generatedAt: string
+  userNoteId: string       // ID der begleitenden UserNote im Lernzettel-Ordner
+  folderId: string         // 'folder-lernzettel-{subjectId}'
+}
+
 /* ─── SmartNote (generated) ─────────────────────────────────── */
 
 export interface GeneratedSmartNote {

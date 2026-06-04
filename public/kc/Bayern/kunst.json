@@ -1,0 +1,35 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Lehrplan für das Fach Kunst in der Jahrgangsstufe 12 (grundlegendes Anforderungsniveau) am bayerischen Gymnasium fokussiert auf die vertiefte Auseinandersetzung mit den Lernbereichen 'Objekt' und 'Raum'. Ziel ist es, die Schülerinnen und Schüler zu befähigen, Alltagsgegenstände, Designobjekte sowie architektonische Räume systematisch zu analysieren und gestalterisch zu interpretieren. Dabei wird ein breites Spektrum an Methoden angewandt, das von klassischen zeichnerischen und plastischen Studien bis hin zu digitalen Verfahren wie CAD, 3D-Druck und KI-gestützter Objekterkennung reicht. Im Bereich 'Objekt' stehen die Wechselwirkungen zwischen Form, Material, Funktion und symbolischer Bedeutung im Zentrum, wobei historische und zeitgenössische Positionen (z. B. Readymade, Installation) kritisch reflektiert werden. Der Bereich 'Raum' erweitert diesen Fokus auf die Architektur und die Schnittstelle zur Bildenden Kunst. Hierbei werden komplexe Entwurfsaufgaben bearbeitet, die Aspekte wie Konstruktion, Materialität, gesellschaftliche Relevanz, Nachhaltigkeit und die Wirkung auf den Betrachter einbeziehen. Die Schülerinnen und Schüler lernen, sowohl spielerisch als auch planvoll vorzugehen, ihre Ergebnisse fachsprachlich zu reflektieren und aktuelle Diskurse – etwa zu ökologischem Bauen oder partizipativen Prozessen – in ihre gestalterische Arbeit zu integrieren.",
+  "hauptthemen": [
+    {
+      "thema": "Objekt",
+      "relevante_unterthemen": [
+        "Symbolische und ästhetische Qualitäten von Alltagsgegenständen",
+        "Design und Bildende Kunst des 20. und 21. Jahrhunderts",
+        "Methoden der Werkerschließung (analog und digital)",
+        "Gestaltungsformen wie Readymade, Assemblage und Installation"
+      ],
+      "kernkompetenzen": [
+        "Systematische Analyse von Form, Farbe, Material und Funktion bei Objekten",
+        "Realisierung eigener gestalterischer Vorhaben unter Berücksichtigung von Mensch-Objekt-Beziehungen",
+        "Reflexion gestalterischer Prinzipien und Positionen der Moderne und Gegenwart"
+      ]
+    },
+    {
+      "thema": "Raum",
+      "relevante_unterthemen": [
+        "Architekturkonzepte und Bauaufgaben",
+        "Schnittstellen zwischen Architektur und Kunst",
+        "Werkerschließung von Räumen (architektonisch und künstlerisch)",
+        "Aktuelle Diskurse (Nachhaltigkeit, Smart City, Partizipation)"
+      ],
+      "kernkompetenzen": [
+        "Entwurf von Lösungen für Bauaufgaben unter Berücksichtigung von Konstruktion und Material",
+        "Untersuchung der Relationen zwischen Baukörper, Innen-, Außen- und Umraum",
+        "Erörterung architektonischer und künstlerischer Raumkonzepte im Kontext gesellschaftlicher Anforderungen"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Chemie",
+  "zusammenfassung": "Die Fachanforderungen Chemie für Schleswig-Holstein (2022) definieren einen kompetenzorientierten Unterricht für die Sekundarstufen I und II. Ziel ist der Erwerb einer naturwissenschaftlichen Grundbildung (Scientific Literacy), die es den Lernenden ermöglicht, chemische Phänomene zu verstehen, zu bewerten und verantwortungsvoll zu handeln. Der Unterricht basiert auf drei zentralen Basiskonzepten: 'Stoff-Teilchen-Konzept', 'Struktur-Eigenschafts-Konzept' und 'Konzept der chemischen Reaktion' (in der Sek II ergänzt durch das 'Energiekonzept'). Die Kompetenzentwicklung gliedert sich in vier Bereiche: Sachkompetenz, Erkenntnisgewinnung, Kommunikation und Bewertung. Dabei wird ein kumulativer Aufbau angestrebt, der von der Sekundarstufe I bis zur allgemeinen Hochschulreife führt. Die Lehrpläne sind abschlussbezogen (ESA, MSA, Abitur) und betonen die Verknüpfung von Fachwissen mit Kontexten aus der Lebenswelt, forschendem Lernen und der Reflexion gesellschaftlicher Auswirkungen chemischer Prozesse. Schulen haben innerhalb dieser Rahmenvorgaben Gestaltungsfreiheit bei der Erstellung schulinterner Fachcurricula.",
+  "hauptthemen": [
+    {
+      "thema": "Stoff-Teilchen-Konzept",
+      "relevante_unterthemen": [
+        "Stoffeigenschaften und Trennverfahren",
+        "Teilchenmodell und Aggregatzustände",
+        "Atomaufbau und Periodensystem",
+        "Chemische Bindungen (Ionen-, Metall-, Elektronenpaarbindung)",
+        "Struktur organischer Verbindungen"
+      ],
+      "kernkompetenzen": [
+        "Unterscheidung zwischen Stoff- und Teilchenebene",
+        "Erklärung von Stoffeigenschaften durch den Aufbau der Teilchen",
+        "Anwendung von Bindungsmodellen zur Vorhersage von Stoffeigenschaften"
+      ]
+    },
+    {
+      "thema": "Konzept der chemischen Reaktion",
+      "relevante_unterthemen": [
+        "Kennzeichen chemischer Reaktionen",
+        "Reaktionsschemata und Massenerhaltung",
+        "Redoxreaktionen (Elektronenübertragung)",
+        "Säure-Base-Reaktionen (Protonenübertragung)",
+        "Reaktionsgeschwindigkeit und chemisches Gleichgewicht"
+      ],
+      "kernkompetenzen": [
+        "Deutung chemischer Reaktionen als Teilchenumgruppierung",
+        "Systematisierung von Reaktionen (Donator-Akzeptor-Prinzip)",
+        "Quantitative Beschreibung von Reaktionsgleichgewichten"
+      ]
+    },
+    {
+      "thema": "Energiekonzept",
+      "relevante_unterthemen": [
+        "Energieumsatz bei chemischen Reaktionen",
+        "Exotherme und endotherme Prozesse",
+        "Aktivierungsenergie und Katalyse",
+        "Elektrochemische Energieumwandlung",
+        "Energetische Bewertung von Stoffkreisläufen"
+      ],
+      "kernkompetenzen": [
+        "Darstellung energetischer Verhältnisse in Energiediagrammen",
+        "Erklärung der Triebkraft chemischer Reaktionen",
+        "Bewertung der energetischen Effizienz chemischer Prozesse"
+      ]
+    },
+    {
+      "thema": "Struktur-Eigenschafts-Konzept",
+      "relevante_unterthemen": [
+        "Intermolekulare Wechselwirkungen",
+        "Struktur organischer Stoffklassen",
+        "Naturstoffe (Proteine, Kohlenhydrate, Fette)",
+        "Kunststoffe und funktionale Materialien",
+        "Aromatische Verbindungen"
+      ],
+      "kernkompetenzen": [
+        "Ableitung von Stoffeigenschaften aus der molekularen Struktur",
+        "Analyse von Struktur-Wirkungs-Beziehungen bei Naturstoffen",
+        "Bewertung von Werkstoffen hinsichtlich ihrer Verwendung"
+      ]
+    }
+  ]
+}

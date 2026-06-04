@@ -1,0 +1,65 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Englisch",
+  "zusammenfassung": "Die Fachanforderungen für das Fach Englisch in Schleswig-Holstein (Sekundarstufe I und II) basieren auf den KMK-Bildungsstandards und dem Gemeinsamen europäischen Referenzrahmen (GeR). Ziel ist die Entwicklung funktionaler kommunikativer Kompetenz, interkultureller Kompetenz sowie methodischer Kompetenz. Der Unterricht ist kompetenzorientiert, aufgabenbasiert und folgt dem Prinzip der funktionalen Einsprachigkeit. In der Sekundarstufe I liegt der Fokus auf der Vorbereitung auf die Schulabschlüsse (ESA, MSA) und den Übergang in die Oberstufe. In der Sekundarstufe II steht die Wissenschaftspropädeutik, die Diskursfähigkeit und die Vorbereitung auf das Abitur (auf grundlegendem oder erhöhtem Anforderungsniveau) im Vordergrund. Leistungsbewertungen umfassen Unterrichtsbeiträge und Leistungsnachweise, wobei die sprachliche Leistung bei schriftlichen Produktionen stärker gewichtet wird als die inhaltliche.",
+  "hauptthemen": [
+    {
+      "thema": "Funktionale kommunikative Kompetenz",
+      "relevante_unterthemen": [
+        "Hör- und Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (an Gesprächen teilnehmen, zusammenhängendes Sprechen)",
+        "Schreiben",
+        "Sprachmittlung",
+        "Verfügung über sprachliche Mittel"
+      ],
+      "kernkompetenzen": [
+        "Situationsangemessene und sachgerechte Kommunikation in der Fremdsprache",
+        "Sicherer und flexibler Gebrauch der englischen Sprache",
+        "Anwendung von Strategien zur Bewältigung von Kommunikationssituationen"
+      ]
+    },
+    {
+      "thema": "Interkulturelle kommunikative Kompetenz",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen",
+        "Umgang mit kultureller Differenz",
+        "Perspektivenwechsel",
+        "Reflexion von Werten und Stereotypen"
+      ],
+      "kernkompetenzen": [
+        "Verstehen und Handeln in interkulturellen Kontexten",
+        "Kritische Auseinandersetzung mit fremden und eigenen kulturellen Sichtweisen",
+        "Empathie und Toleranz gegenüber anderen Lebensweisen"
+      ]
+    },
+    {
+      "thema": "Text- und Medienkompetenz",
+      "relevante_unterthemen": [
+        "Analyse und Deutung von Texten",
+        "Medienkritik",
+        "Produktion eigener Texte",
+        "Umgang mit fiktionalen und nichtfiktionalen Texten"
+      ],
+      "kernkompetenzen": [
+        "Selbstständiges und zielbezogenes Verstehen und Deuten komplexer Texte",
+        "Erkennen der Wirkung von Gestaltungsmitteln in Medien",
+        "Begründete Interpretation und kritische Reflexion von Texten"
+      ]
+    },
+    {
+      "thema": "Sprachlernkompetenz und Sprachbewusstheit",
+      "relevante_unterthemen": [
+        "Lernstrategien",
+        "Selbstevaluation",
+        "Reflexion über Sprachgebrauch",
+        "Mehrsprachigkeit"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige Gestaltung und Optimierung des eigenen Lernprozesses",
+        "Bewusste Nutzung von Sprachwissen und Sprachlernmethoden",
+        "Reflexion über die Rolle von Sprache in der Welt"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Der Rahmenplan für das Fach Evangelische Religion in der gymnasialen Oberstufe in Mecklenburg-Vorpommern zielt darauf ab, Schülerinnen und Schüler zu einer eigenverantwortlichen Lebensführung und zur Teilhabe an einer pluralistischen, demokratischen Gesellschaft zu befähigen. Das Fach versteht sich als Beitrag zur allgemeinen Bildung, indem es Religion als Modus der Weltbegegnung erschließt. Im Zentrum steht der Kompetenzerwerb in den Bereichen Wahrnehmungs-, Deutungs-, Urteils-, Dialog- und Gestaltungsfähigkeit. Der Unterricht ist erfahrungs-, subjekt- und diskursorientiert gestaltet und integriert Querschnittsthemen wie Digitalisierung, Demokratieerziehung, interkulturelle Bildung und nachhaltige Entwicklung. Die Qualifikationsphase vermittelt eine wissenschaftspropädeutische Grundbildung, die Schülerinnen und Schüler dazu anregt, existentielle Sinn- und Wertfragen im Dialog mit biblisch-christlichen Traditionen sowie anderen weltanschaulichen Positionen kritisch zu reflektieren und eigene Standpunkte begründet zu vertreten.",
+  "hauptthemen": [
+    {
+      "thema": "Religion in ihrer Vielfalt",
+      "relevante_unterthemen": [
+        "Religion und Wirklichkeit",
+        "Religiöse Erfahrungen und ihre Ausdrucksformen",
+        "Religion und Gesellschaft"
+      ],
+      "kernkompetenzen": [
+        "Religiöse Spuren und Dimensionen in der Lebenswelt aufdecken",
+        "Modelle des Verhältnisses von Staat und Religion sowie Wahrheitsansprüche kriteriengeleitet bewerten",
+        "Eigene Standpunkte zu religiösen und ethischen Fragen im Kontext der Pluralität argumentativ vertreten"
+      ]
+    },
+    {
+      "thema": "Gott und Transzendenz",
+      "relevante_unterthemen": [
+        "Sinnerfahrung und die Rede von Gott heute",
+        "Vielstimmigkeit des Redens von Gott",
+        "Der Mensch und das Leid",
+        "Zweifel und Kritik"
+      ],
+      "kernkompetenzen": [
+        "Biblische Texte und theologische Entwürfe methodisch reflektiert auslegen",
+        "Gottesbilder und Transzendenzerfahrungen in verschiedenen Kontexten analysieren",
+        "Theodizee-Fragen und Religionskritik in Bezug auf das eigene Wirklichkeitsverständnis reflektieren"
+      ]
+    },
+    {
+      "thema": "Jesus Christus",
+      "relevante_unterthemen": [
+        "Zugänge zur Erzählung von Jesus Christus",
+        "Vorstellungen vom Reich Gottes",
+        "Passion und Auferstehung"
+      ],
+      "kernkompetenzen": [
+        "Christusdarstellungen in Kunst, Medien und Theologie deuten",
+        "Die Verkündigung Jesu vom Reich Gottes in sozialgeschichtlichen Kontexten erschließen",
+        "Theologische Deutungen von Passion und Auferstehung kritisch vergleichen"
+      ]
+    },
+    {
+      "thema": "Leben in Freiheit und Verantwortung",
+      "relevante_unterthemen": [
+        "Begründung von Ethik",
+        "Grundlagen ethischer Argumentation",
+        "Freiheit und Verantwortung",
+        "Lebensgestaltung im Pluralismus"
+      ],
+      "kernkompetenzen": [
+        "Modelle ethischer Urteilsbildung kritisch beurteilen und anwenden",
+        "Die Menschenwürde theologisch begründen und in aktuellen Konflikten zur Geltung bringen",
+        "Ethische Handlungsoptionen in christlicher Perspektive reflektieren"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Der Bildungsplan für das Fach Religion in der Studienstufe in Hamburg verfolgt einen dialogorientierten Ansatz, der sich an alle Schülerinnen und Schüler richtet, unabhängig von ihrer persönlichen religiösen oder weltanschaulichen Prägung. Ziel ist es, religiöse Vielfalt als Reichtum zu begreifen und die Schülerinnen und Schüler zu befähigen, sich in einer pluralistischen Gesellschaft eigenständig zu positionieren. Der Unterricht basiert auf sechs didaktischen Prinzipien, darunter Schüler-, Quellen-, Dialog- und Wissenschaftsorientierung. Er ist in vier Themenbereiche gegliedert: Religionen, Gott/Göttliches/Transzendenz, Mensch und Verantwortung. Ein zentrales Element ist die 'didaktische Kreisbewegung', bei der allgemeine Fragenbereiche mit spezifischen religiösen Perspektiven und lebensweltlichen Erfahrungen der Lernenden verknüpft werden. Dabei wird zwischen A-Teilen (für alle verbindlich) und B-Teilen (Vertiefung in einer spezifischen Binnenperspektive) unterschieden, um sowohl interreligiöses Lernen als auch eine vertiefte Auseinandersetzung mit der eigenen oder einer fremden Religion zu ermöglichen. Der Unterricht fördert überfachliche Kompetenzen sowie spezifische fachliche Kompetenzen (Dialog-, Urteils- und Orientierungskompetenz) und integriert Leitperspektiven wie Wertebildung, Bildung für nachhaltige Entwicklung und digitale Bildung.",
+  "hauptthemen": [
+    {
+      "thema": "Religionen",
+      "relevante_unterthemen": [
+        "Wahrheit: Offenbarung und Weisheit",
+        "Theologie der Religionen",
+        "Begegnungen der Religionen",
+        "Vielfalt gelebter Religion"
+      ],
+      "kernkompetenzen": [
+        "Religiöse Wahrheits- und Geltungsansprüche multiperspektivisch analysieren und reflektieren",
+        "Konflikt- und Dialogmuster in der Begegnung von Religionen bewerten",
+        "Formen gelebter Religion und deren Wandel in der Gesellschaft verstehen"
+      ]
+    },
+    {
+      "thema": "Gott/Göttliches/Transzendenz",
+      "relevante_unterthemen": [
+        "Reden von Gott, Göttlichem und Transzendenz",
+        "Glaube und Naturwissenschaft",
+        "Theodizee",
+        "Mystik – Mensch und Gott"
+      ],
+      "kernkompetenzen": [
+        "Gottesvorstellungen und Transzendenzverständnisse in verschiedenen Religionen vergleichen",
+        "Das Spannungsfeld zwischen religiösem Glauben und naturwissenschaftlichen Erkenntnissen reflektieren",
+        "Theodizee-Problematiken und mystische Zugänge theologisch einordnen"
+      ]
+    },
+    {
+      "thema": "Mensch",
+      "relevante_unterthemen": [
+        "Anthropologie",
+        "Freiheit",
+        "Menschenwürde",
+        "Identität – Körper, Seele, Geist"
+      ],
+      "kernkompetenzen": [
+        "Anthropologische Grundbeschreibungen und das Streben nach Heil/Erlösung vergleichen",
+        "Das Spannungsfeld von Freiheit und Determination unter religiösen und wissenschaftlichen Aspekten analysieren",
+        "Begründungen der Menschenwürde und Identitätskonzepte in einer digital geprägten Welt reflektieren"
+      ]
+    },
+    {
+      "thema": "Verantwortung",
+      "relevante_unterthemen": [
+        "Ethik",
+        "Ethik des Lebens",
+        "Religion und Gesellschaft",
+        "Religion und Politik"
+      ],
+      "kernkompetenzen": [
+        "Ethische Begründungsmuster aus Religionen und anderen Kontexten herausarbeiten und vergleichen",
+        "Konkrete ethische Fallbeispiele (z.B. Lebensethik, soziale Gerechtigkeit) multiperspektivisch beurteilen",
+        "Das Verhältnis von Religion, Staat und Politik vor dem Hintergrund des Grundgesetzes analysieren"
+      ]
+    }
+  ]
+}

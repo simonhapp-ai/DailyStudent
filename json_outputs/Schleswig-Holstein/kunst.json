@@ -1,0 +1,53 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Kunst",
+  "zusammenfassung": "Die Fachanforderungen für das Fach Kunst in Schleswig-Holstein (Sekundarstufe I und II) zielen auf den systematischen Erwerb von Bildkompetenz ab. Das Fach versteht das 'Bild' als umfassenden Begriff für visuelle Artefakte, Prozesse und Situationen. Der Unterricht ist kompetenzorientiert und integriert die drei Dimensionen Produktion, Rezeption und Reflexion. Schülerinnen und Schüler sollen befähigt werden, ihre Lebenswelt aktiv und kritisch zu gestalten, kulturelle Teilhabe zu erfahren und problemlösendes, vernetztes Denken zu entwickeln. Der Lehrplan ist in neun künstlerische Arbeitsfelder gegliedert (Zeichnen, Grafik, Malerei, Plastik/Installation, Performative Kunst, Medienkunst, Architektur, Produktdesign, Kommunikationsdesign), die in Verbindung mit acht Kompetenzbereichen (Wahrnehmen, Beschreiben, Analysieren, Interpretieren, Beurteilen, Herstellen, Gestalten, Verwenden) stehen. Ein besonderer Fokus liegt auf der Förderung von Selbst-, Sozial- und Methodenkompetenz sowie der Vorbereitung auf die Berufs- und Studienorientierung.",
+  "hauptthemen": [
+    {
+      "thema": "Künstlerische Arbeitsfelder",
+      "relevante_unterthemen": [
+        "Zeichnen",
+        "Grafik",
+        "Malerei",
+        "Plastik und Installation",
+        "Performative Kunst",
+        "Medienkunst",
+        "Architektur",
+        "Produktdesign",
+        "Kommunikationsdesign"
+      ],
+      "kernkompetenzen": [
+        "Sicheres Anwenden fachspezifischer Techniken und Verfahren in den jeweiligen Arbeitsfeldern.",
+        "Verständnis für die spezifischen Ausdrucksmöglichkeiten und Funktionen der verschiedenen künstlerischen Medien."
+      ]
+    },
+    {
+      "thema": "Kompetenzbereiche (Rezeption & Reflexion)",
+      "relevante_unterthemen": [
+        "Wahrnehmen",
+        "Beschreiben",
+        "Analysieren",
+        "Interpretieren",
+        "Beurteilen"
+      ],
+      "kernkompetenzen": [
+        "Sinnlich gegebene Sachverhalte differenziert wahrnehmen und emotional oder reflexiv darauf reagieren.",
+        "Bilder kriterienorientiert analysieren und unter Berücksichtigung von Kontext und Epoche interpretieren.",
+        "Ästhetische Urteilsfähigkeit entwickeln und begründete Stellungnahmen formulieren."
+      ]
+    },
+    {
+      "thema": "Produktion und Prozessgestaltung",
+      "relevante_unterthemen": [
+        "Herstellen",
+        "Gestalten",
+        "Verwenden"
+      ],
+      "kernkompetenzen": [
+        "Arbeitsprozesse selbstständig planen, organisieren und zielgerichtet umsetzen.",
+        "Eigene Gestaltungsideen unter Einbeziehung von Imagination und Originalität realisieren.",
+        "Verantwortungsvoller Umgang mit Ressourcen und Materialien."
+      ]
+    }
+  ]
+}

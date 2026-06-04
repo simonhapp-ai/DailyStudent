@@ -1,0 +1,62 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Physik",
+  "zusammenfassung": "Der Bildungsplan für das Fach Physik in der Hamburger Sekundarstufe I und Studienstufe zielt auf die Vermittlung einer naturwissenschaftlichen Grundbildung (Scientific Literacy) ab, die Schülerinnen und Schüler befähigt, physikalische Phänomene zu verstehen, kritisch zu hinterfragen und fundierte Entscheidungen in einer komplexen, technisierten Welt zu treffen. Der Unterricht ist kompetenzorientiert und wissenschaftspropädeutisch gestaltet, wobei er die vier Kompetenzbereiche Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz integriert. Ein besonderer Fokus liegt auf der Verknüpfung von Theorie und Experiment, der Nutzung digitaler Medien zur Modellierung und Messwerterfassung sowie der Einbettung physikalischer Inhalte in gesellschaftlich relevante Kontexte (z. B. Klimawandel, Energie, Digitalisierung). Durch den Einsatz von Basiskonzepten (Erhaltung und Gleichgewicht, Superposition und Komponenten, Mathematisieren und Vorhersagen, Zufall und Determiniertheit) wird ein kumulativer Wissensaufbau gefördert, der die Schülerinnen und Schüler auf ein Studium oder eine Berufsausbildung vorbereitet.",
+  "hauptthemen": [
+    {
+      "thema": "Elektrische und magnetische Felder",
+      "relevante_unterthemen": [
+        "Feldkonzept und Wechselwirkungen",
+        "Körper in statischen Feldern",
+        "Veränderliche elektromagnetische Felder"
+      ],
+      "kernkompetenzen": [
+        "Erklären von Phänomenen unter Nutzung physikalischer Feldmodelle",
+        "Anwenden mathematischer Verfahren auf elektrische und magnetische Sachverhalte",
+        "Analysieren von Bahnformen geladener Teilchen in Feldern",
+        "Reflektieren über technische Anwendungen wie Induktion und Kondensatoren"
+      ]
+    },
+    {
+      "thema": "Mechanische und elektromagnetische Schwingungen und Wellen",
+      "relevante_unterthemen": [
+        "Schwingungen",
+        "Eigenschaften und Ausbreitung von Wellen",
+        "Überlagerung von Wellen (Interferenz)"
+      ],
+      "kernkompetenzen": [
+        "Beschreiben von Schwingungsvorgängen unter energetischen Aspekten",
+        "Anwenden des Superpositionsprinzips auf Wellenphänomene",
+        "Bestimmen von Wellenlängen und Frequenzen in Experimenten",
+        "Beurteilen von Wellenphänomenen wie Beugung und Reflexion"
+      ]
+    },
+    {
+      "thema": "Quantenphysik und Materie",
+      "relevante_unterthemen": [
+        "Quantenobjekte",
+        "Atomvorstellungen"
+      ],
+      "kernkompetenzen": [
+        "Verstehen der stochastischen Natur von Quantenobjekten",
+        "Anwenden der Einsteinbeziehung und De-Broglie-Beziehung",
+        "Reflektieren über die Grenzen klassischer Anschauungen (Realismus, Lokalität)",
+        "Interpretieren von Linienspektren und Energiestufenmodellen"
+      ]
+    },
+    {
+      "thema": "Gravitation und Astrophysik",
+      "relevante_unterthemen": [
+        "Planetenbewegungen",
+        "Aspekte der Astrophysik",
+        "Allgemeine Relativitätstheorie"
+      ],
+      "kernkompetenzen": [
+        "Berechnen von Bahnen im Gravitationsfeld unter Nutzung der Keppler'schen Gesetze",
+        "Anwenden von Energieerhaltungssätzen auf astronomische Systeme",
+        "Beurteilen von Strahlungsprozessen und Klimabilanzen",
+        "Reflektieren über die Bedeutung der Raumzeit und Gravitationswellen"
+      ]
+    }
+  ]
+}

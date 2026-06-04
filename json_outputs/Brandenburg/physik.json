@@ -1,0 +1,64 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Physik",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Brandenburg zielt auf die Entwicklung einer umfassenden naturwissenschaftlichen Kompetenz ab, die über reines Fachwissen hinausgeht. Die Lernenden sollen physikalische Phänomene durch Modellbildung, mathematische Formalisierung und experimentelle Überprüfung erschließen. Das Kompetenzmodell gliedert sich in Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz. Ein zentrales Element ist die Arbeit mit Basiskonzepten (Erhaltung und Gleichgewicht, Superposition und Komponenten, Mathematisieren und Vorhersagen, Zufall und Determiniertheit), die eine Vernetzung der Inhalte über die gesamte Qualifikationsphase hinweg ermöglichen. Der Unterricht ist wissenschaftspropädeutisch angelegt und fördert sowohl die Studierfähigkeit als auch die gesellschaftliche Teilhabe durch die Reflexion über Technik, Energie und moderne physikalische Weltbilder. Dabei wird zwischen Grund- und Leistungskursen differenziert, wobei letztere ein höheres Maß an mathematischer Komplexität, methodischer Reflexion und inhaltlicher Tiefe fordern.",
+  "hauptthemen": [
+    {
+      "thema": "Mechanik (Einführungsphase)",
+      "relevante_unterthemen": [
+        "Wurfbewegungen",
+        "Kreisbewegungen",
+        "Impuls und Impulserhaltung",
+        "Energie"
+      ],
+      "kernkompetenzen": [
+        "Anwendung von Bewegungsgesetzen auf reale Kontexte",
+        "Entwicklung von Energiebilanzen",
+        "Verständnis von Impulserhaltung bei Stoßprozessen"
+      ]
+    },
+    {
+      "thema": "Felder (Gravitation, Elektrik, Magnetismus)",
+      "relevante_unterthemen": [
+        "Gravitationsfeld",
+        "Elektrisches Feld",
+        "Magnetfeld",
+        "Bewegung geladener Teilchen in Feldern"
+      ],
+      "kernkompetenzen": [
+        "Mathematische Beschreibung von Feldstärken und Potenzialen",
+        "Analyse von Teilchenbahnen in Feldern",
+        "Verständnis der elektromagnetischen Induktion"
+      ]
+    },
+    {
+      "thema": "Schwingungen und Wellen",
+      "relevante_unterthemen": [
+        "Mechanische Schwingungen",
+        "Elektromagnetische Schwingungen",
+        "Wellenphänomene",
+        "Wellenoptik"
+      ],
+      "kernkompetenzen": [
+        "Beschreibung harmonischer Schwingungen mittels Winkelfunktionen",
+        "Analyse von Interferenzphänomenen",
+        "Verständnis der Ausbreitung elektromagnetischer Wellen"
+      ]
+    },
+    {
+      "thema": "Quantenphysik und Atomphysik",
+      "relevante_unterthemen": [
+        "Quantenobjekte",
+        "Fotoeffekt",
+        "Materiewellen",
+        "Atombau",
+        "Röntgenstrahlung"
+      ],
+      "kernkompetenzen": [
+        "Reflexion des Übergangs von klassischer zu moderner Physik",
+        "Interpretation von Wahrscheinlichkeitsaussagen",
+        "Analyse von Linienspektren und Energieniveaus"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Bildungsplan für die Studienstufe in Hamburg zielt auf die Vermittlung eines reflektierten Geschichtsbewusstseins ab, das als Orientierungshilfe in einer pluralistischen Gesellschaft dient. Der Unterricht ist wissenschaftsorientiert, problemorientiert und schülerzentriert gestaltet. Er fördert die Fähigkeit, historische Prozesse zu rekonstruieren und Darstellungen zu dekonstruieren. Die Schülerinnen und Schüler sollen durch die Auseinandersetzung mit Vergangenheit, Gegenwart und Zukunft ihre eigene Identität bilden und politische Handlungsfähigkeit erlangen. Dabei werden drei zentrale Kompetenzbereiche (Orientierungskompetenz, Methodenkompetenz, Urteilskompetenz) eng miteinander verschränkt. Der Unterricht integriert Leitperspektiven wie Wertebildung, Bildung für nachhaltige Entwicklung (BNE) und digitales Lernen, um die Lernenden auf eine aktive Teilhabe am demokratischen Diskurs vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Macht und Herrschaft",
+      "relevante_unterthemen": [
+        "Krise und Untergang der Römischen Republik",
+        "Frauen und Macht in Mittelalter und Früher Neuzeit",
+        "Die Reformation und ihre Folgen",
+        "Die Entstehung der USA",
+        "Die Französische Revolution",
+        "Die russische Revolution"
+      ],
+      "kernkompetenzen": [
+        "Macht und Herrschaft als Fachbegriffe definieren und an Beispielen abgrenzen",
+        "Erscheinungsformen von Herrschaft und Mechanismen der Macht epochenspezifisch analysieren",
+        "Legitimität von Herrschaftsordnungen beurteilen",
+        "Formen der Repression, des Aufbegehrens und revolutionären Wandels vergleichen"
+      ]
+    },
+    {
+      "thema": "Krisen, Umbrüche und Modernisierungsprozesse in Wirtschaft und Gesellschaft",
+      "relevante_unterthemen": [
+        "Städte im Mittelalter",
+        "Die Industrielle Revolution in Großbritannien und Deutschland",
+        "Soziale Bewegungen",
+        "Die Weltwirtschaft in der Krise",
+        "Modernisierung nach 1945",
+        "Medienrevolutionen"
+      ],
+      "kernkompetenzen": [
+        "Modernisierung als Phänomen und Kategorie unterscheiden",
+        "Sozio-ökonomische Voraussetzungen und Folgen von Wandlungsprozessen analysieren",
+        "Einfluss von Medien auf historische Prozesse zwischen Aufklärung und Manipulation beurteilen",
+        "Historisches Wissen über Zwänge und Freiheiten in Modernisierungsprozessen auf gegenwärtige Lebensmodelle beziehen"
+      ]
+    },
+    {
+      "thema": "Staat und Nation in Deutschland im 19. und 20. Jahrhundert",
+      "relevante_unterthemen": [
+        "Der Kampf um Einheit und Freiheit 1813–1871",
+        "Das deutsche Kaiserreich",
+        "Die Weimarer Republik",
+        "Die NS-Zeit",
+        "Deutschland im Kalten Krieg",
+        "Die DDR"
+      ],
+      "kernkompetenzen": [
+        "Begriffe wie Nation, Nationalstaat und Nationalismus definieren und kritisch hinterfragen",
+        "Wendepunkte der deutschen Geschichte im europäischen Kontext einordnen",
+        "Formen der kollektiven Erinnerung an die NS-Gewaltherrschaft beurteilen",
+        "Vergleichbarkeit von Diktaturen (z.B. NS-Diktatur und SED-Staat) kriteriengeleitet diskutieren"
+      ]
+    },
+    {
+      "thema": "Kulturbegegnungen – Europa und die Welt",
+      "relevante_unterthemen": [
+        "Römer und Germanen",
+        "Die Kreuzzüge",
+        "Lateinamerika in der Frühen Neuzeit",
+        "Das deutsche Kolonialreich",
+        "Japan, China und der Westen",
+        "Entkolonialisierungen und koloniales Erbe"
+      ],
+      "kernkompetenzen": [
+        "Kulturelle Identität und Weltbilder im Wandel erläutern",
+        "Formen, Verlauf und Folgen der europäischen Expansion vergleichen",
+        "Befruchtende und zerstörerische Wirkungen von Kulturkontakten abwägen",
+        "Einen eigenen Standpunkt im Spannungsfeld von Universalismus, Eurozentrismus und Kulturrelativismus formulieren"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Physik",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen (Ausgabe 2024) definiert einen kompetenzorientierten Physikunterricht, der auf die Allgemeine Hochschulreife vorbereitet. Ziel ist die Vermittlung physikalischer Bildung als Teil der naturwissenschaftlichen Welterschließung. Der Unterricht basiert auf vier Kompetenzbereichen (Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz) und nutzt vier zentrale Basiskonzepte (Erhaltung und Gleichgewicht, Superposition und Komponenten, Mathematisieren und Vorhersagen, Zufall und Determiniertheit) zur Vernetzung der Inhalte. Die gymnasiale Oberstufe gliedert sich in die Einführungsphase (Mechanik) und die Qualifikationsphase (Q1-Q4), wobei die Themenfelder von elektrischen/magnetischen Feldern über Schwingungen und Wellen bis hin zur Quantenphysik und modernen Strukturmodellen der Materie reichen. Ein besonderer Fokus liegt auf wissenschaftspropädeutischem Arbeiten, der Anwendung digitaler Werkzeuge und der Reflexion über gesellschaftliche sowie ethische Implikationen physikalischer Erkenntnisse.",
+  "hauptthemen": [
+    {
+      "thema": "Mechanik (Einführungsphase)",
+      "relevante_unterthemen": [
+        "Bewegungsbeschreibungen (t-s, t-v, t-a Diagramme)",
+        "Newton’sche Axiome",
+        "Erhaltungssätze (Energie, Impuls)",
+        "Gravitation",
+        "Grundlagen der Thermodynamik",
+        "Drehbewegungen"
+      ],
+      "kernkompetenzen": [
+        "Physikalische Vorgänge mathematisch modellieren und Vorhersagen treffen",
+        "Experimente planen, durchführen und Messergebnisse unter Berücksichtigung von Idealisierungen auswerten"
+      ]
+    },
+    {
+      "thema": "Elektrische und magnetische Felder (Q1)",
+      "relevante_unterthemen": [
+        "Elektrisches Feld (Kondensator, Feldstärke, Potenzial)",
+        "Magnetisches Feld (Lorentzkraft, Flussdichte)",
+        "Bewegung geladener Teilchen in Feldern",
+        "Technische Anwendungen (Beschleuniger, Geschwindigkeitsfilter)"
+      ],
+      "kernkompetenzen": [
+        "Feldkonzepte zur Erklärung physikalischer Phänomene nutzen",
+        "Superposition von Feldern quantitativ beschreiben"
+      ]
+    },
+    {
+      "thema": "Schwingungen, Induktion und Wellen (Q2)",
+      "relevante_unterthemen": [
+        "Mechanische Schwingungen (Feder-/Fadenpendel)",
+        "Induktionsgesetz und Selbstinduktion",
+        "Elektromagnetische Schwingkreise",
+        "Mechanische Wellen (Interferenz, Beugung, stehende Wellen)"
+      ],
+      "kernkompetenzen": [
+        "Periodische Vorgänge mathematisch beschreiben und analysieren",
+        "Analogiebetrachtungen zwischen mechanischen und elektromagnetischen Systemen anwenden"
+      ]
+    },
+    {
+      "thema": "Elektromagnetische Wellen und Quantenphysik (Q3)",
+      "relevante_unterthemen": [
+        "Wellenoptik (Interferenz, Beugung)",
+        "Welle-Teilchen-Dualismus (Fotoeffekt, De-Broglie-Wellen)",
+        "Atommodelle (Bohr’sches Modell, Energieniveaus)"
+      ],
+      "kernkompetenzen": [
+        "Grenzen klassischer Modelle erkennen und durch Quantenmodelle erweitern",
+        "Experimentelle Befunde (z.B. Fotoeffekt) theoriegeleitet interpretieren"
+      ]
+    },
+    {
+      "thema": "Struktur von Materie, Raum und Zeit (Q4)",
+      "relevante_unterthemen": [
+        "Quantenobjekte (Potenzialtopf, Unbestimmtheit)",
+        "Kernphysik (Zerfallsgesetze, Bindungsenergie)",
+        "Spezielle Relativitätstheorie",
+        "Festkörperphysik (Bändermodell, Halbleiter)",
+        "Astrophysik"
+      ],
+      "kernkompetenzen": [
+        "Erkenntnistheoretische Fragestellungen (Realität, Lokalität, Determinismus) reflektieren",
+        "Physikalische Weltbilder in historischen und gesellschaftlichen Kontexten bewerten"
+      ]
+    }
+  ]
+}

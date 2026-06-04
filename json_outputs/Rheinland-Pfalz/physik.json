@@ -1,0 +1,84 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Physik",
+  "zusammenfassung": "Der Lehrplan für das Fach Physik in der gymnasialen Oberstufe in Rheinland-Pfalz ist als modulares Baukastensystem konzipiert, das den Lehrkräften maximale didaktische Gestaltungsfreiheit bei der Auswahl und Reihung von Themen bietet. Physik wird als theoriegeleitete Erfahrungswissenschaft verstanden, deren Ziel es ist, durch ein Wechselspiel von theoretischen Modellen und experimenteller Überprüfung ein Verständnis für Natur, Technik und Umwelt zu entwickeln. Der Unterricht zielt darauf ab, sowohl fachspezifische Methoden (Reduktion, Idealisierung, Mathematisierung) als auch allgemeine Kompetenzen wie Problemlösefähigkeit, Abstraktion und Teamfähigkeit zu fördern. Dabei wird zwischen Grund- und Leistungsfach unterschieden: Während das Grundfach einen stärkeren Fokus auf exemplarische Behandlung, Anwendungsbezug und Lebensweltorientierung legt, zeichnet sich das Leistungsfach durch eine höhere Eindringtiefe, einen stärkeren Formalisierungsgrad und eine intensivere Auseinandersetzung mit physikalischen Denkgebäuden aus. Ein wesentlicher Bestandteil ist zudem das fachübergreifende Lernen, das vernetztes Denken fördern und die gesellschaftspolitische Dimension physikalischer Erkenntnisse verdeutlichen soll.",
+  "hauptthemen": [
+    {
+      "thema": "Mechanik",
+      "relevante_unterthemen": [
+        "Kinematik",
+        "Dynamik",
+        "Erhaltungssätze",
+        "Kreisbewegung",
+        "Gravitation",
+        "Reibung",
+        "Wurfbewegungen"
+      ],
+      "kernkompetenzen": [
+        "Sicherer Umgang mit Bewegungsgrößen und Kraftkonzepten",
+        "Anwendung von Erhaltungssätzen zur Bilanzierung physikalischer Vorgänge",
+        "Modellierung mechanischer Systeme unter Nutzung mathematischer Verfahren"
+      ]
+    },
+    {
+      "thema": "Elektrizität und Magnetismus",
+      "relevante_unterthemen": [
+        "Elektrische Felder",
+        "Magnetische Felder",
+        "Induktion",
+        "Wechselstrom",
+        "Elektromagnetische Schwingungen und Wellen",
+        "Elektronik"
+      ],
+      "kernkompetenzen": [
+        "Verständnis des Feldkonzepts zur Beschreibung von Wechselwirkungen",
+        "Analyse von Schaltungen und technischen Anwendungen",
+        "Mathematische Beschreibung elektromagnetischer Phänomene"
+      ]
+    },
+    {
+      "thema": "Quantenphysik und Atomphysik",
+      "relevante_unterthemen": [
+        "Mikroobjekte",
+        "Atommodelle",
+        "Fotoeffekt",
+        "Kernphysik",
+        "Elementarteilchenphysik",
+        "Interpretationen der Quantenphysik"
+      ],
+      "kernkompetenzen": [
+        "Verständnis der Quantisierung als fundamentales Prinzip",
+        "Reflexion über die Grenzen klassischer Vorstellungen",
+        "Interpretation experimenteller Befunde am Doppelspalt"
+      ]
+    },
+    {
+      "thema": "Wellen und Optik",
+      "relevante_unterthemen": [
+        "Mechanische Wellen",
+        "Wellenoptik",
+        "Akustik",
+        "Interferenz"
+      ],
+      "kernkompetenzen": [
+        "Anwendung des Wellenmodells auf verschiedene physikalische Phänomene",
+        "Durchführung und Auswertung von Interferenzexperimenten"
+      ]
+    },
+    {
+      "thema": "Moderne Physik und übergreifende Konzepte",
+      "relevante_unterthemen": [
+        "Relativitätstheorie",
+        "Energie und Entropie",
+        "Chaos und Fraktale",
+        "Astrophysik und Kosmologie",
+        "Geschichte der Physik"
+      ],
+      "kernkompetenzen": [
+        "Einordnung physikalischer Theorien in historische und philosophische Kontexte",
+        "Bewertung von Energiegewinnung und Entropieprozessen",
+        "Vernetztes Denken über fachliche Grenzen hinweg"
+      ]
+    }
+  ]
+}

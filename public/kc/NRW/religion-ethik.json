@@ -1,0 +1,82 @@
+{
+  "bundesland": "NRW",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Der Kernlehrplan für das Fach Evangelische Religionslehre in der gymnasialen Oberstufe in Nordrhein-Westfalen verfolgt einen kompetenzorientierten Ansatz, der den Paradigmenwechsel von der Input- zur Outputorientierung vollzieht. Ziel des Faches ist die Erschließung der religiösen Dimension der Wirklichkeit und des Lebens. Die Schülerinnen und Schüler sollen befähigt werden, sich mit existentiellen Grundfragen, dem christlichen Glauben in seiner evangelischen Ausprägung sowie mit anderen Religionen und Weltanschauungen auseinanderzusetzen. Der Unterricht fördert die Identitätsbildung und die Teilhabe am gesellschaftlichen Diskurs. Dabei werden vier zentrale Kompetenzbereiche (Sach-, Urteils-, Handlungs- und Methodenkompetenz) in sechs verbindlichen Inhaltsfeldern (Mensch, Gott, Jesus Christus, Kirche, Handeln, Hoffnung) entwickelt. Der Lehrplan betont die dialogische Anlage des Faches, die Achtung der positiven Religionsfreiheit und die wissenschaftspropädeutische Vorbereitung auf das Abitur, wobei die individuelle Glaubenshaltung der Lernenden nicht bewertet wird.",
+  "hauptthemen": [
+    {
+      "thema": "Der Mensch in christlicher Perspektive",
+      "relevante_unterthemen": [
+        "Mensch als Geschöpf und Ebenbild Gottes",
+        "Freiheit und Verantwortung",
+        "Gewissensentscheidungen",
+        "Sünde, Schuld und Vergebung"
+      ],
+      "kernkompetenzen": [
+        "Unterscheidung verschiedener Menschenbilder hinsichtlich Freiheit und Verantwortung",
+        "Beurteilung der Konsequenzen unterschiedlicher Menschenbilder für das individuelle und gesellschaftliche Leben"
+      ]
+    },
+    {
+      "thema": "Christliche Antworten auf die Gottesfrage",
+      "relevante_unterthemen": [
+        "Existenz Gottes",
+        "Biblisches Reden von Gott",
+        "Theodizee-Frage",
+        "Religionskritik"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Vergleich biblischer Gottesbilder mit religionskritischen Entwürfen",
+        "Erörterung der Theodizee-Frage vor dem Hintergrund von Leid und Tod"
+      ]
+    },
+    {
+      "thema": "Das Evangelium von Jesus Christus",
+      "relevante_unterthemen": [
+        "Reich-Gottes-Verkündigung",
+        "Passion, Kreuz und Auferweckung",
+        "Jesusbilder in verschiedenen Traditionen"
+      ],
+      "kernkompetenzen": [
+        "Erläuterung der Bedeutung der Reich-Gottes-Botschaft für die Lebensgestaltung",
+        "Kriterienorientierter Vergleich verschiedener Jesus-Deutungen in Geschichte und Gegenwart"
+      ]
+    },
+    {
+      "thema": "Die Kirche und ihre Aufgabe in der Welt",
+      "relevante_unterthemen": [
+        "Selbstverständnis der Kirche",
+        "Verhältnis von Kirche und Staat",
+        "Ökumenischer Dialog",
+        "Interreligiöser Dialog"
+      ],
+      "kernkompetenzen": [
+        "Analyse des kirchlichen Auftrags in einer sich wandelnden Gesellschaft",
+        "Beurteilung von Handlungsweisen der Kirche vor dem Hintergrund ihres Selbstverständnisses"
+      ]
+    },
+    {
+      "thema": "Verantwortliches Handeln aus christlicher Motivation",
+      "relevante_unterthemen": [
+        "Gerechtigkeit und Frieden",
+        "Ethische Begründungsansätze",
+        "Schöpfungsverantwortung"
+      ],
+      "kernkompetenzen": [
+        "Vergleich ethischer Begründungsansätze in Religionen und Weltanschauungen",
+        "Beurteilung von Dilemma-Situationen im Kontext von Gerechtigkeit und Frieden"
+      ]
+    },
+    {
+      "thema": "Die christliche Hoffnung auf Vollendung",
+      "relevante_unterthemen": [
+        "Apokalyptische Bilder",
+        "Eschatologischer Vorbehalt",
+        "Zukunftsvisionen und Utopien"
+      ],
+      "kernkompetenzen": [
+        "Unterscheidung von Eschatologie und Apokalyptik",
+        "Erörterung der Bedeutung christlicher Hoffnung für die Bewältigung von Gegenwartsaufgaben"
+      ]
+    }
+  ]
+}

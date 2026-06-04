@@ -1,0 +1,49 @@
+{
+  "bundesland": "NRW",
+  "fach": "Musik",
+  "zusammenfassung": "Der Kernlehrplan für das Fach Musik in der gymnasialen Oberstufe in NRW verfolgt einen konsequent kompetenzorientierten Ansatz, der den Paradigmenwechsel von der Input- zur Outputorientierung vollzieht. Ziel ist die Befähigung der Schülerinnen und Schüler zur künstlerisch-ästhetischen Identitätsentwicklung, zur Entfaltung kreativen Gestaltungspotentials sowie zur Ausbildung eines fundierten ästhetischen Reflexions- und Urteilsvermögens. Der Unterricht gliedert sich in drei Kompetenzbereiche (Rezeption, Produktion, Reflexion) und drei verbindliche Inhaltsfelder (Bedeutungen von Musik, Entwicklungen von Musik, Verwendungen von Musik). Diese bilden die Grundlage für die Leistungsbewertung und die Abiturprüfung. Der Lehrplan definiert dabei verbindliche Standards für die Einführungsphase sowie differenziert für Grund- und Leistungskurse in der Qualifikationsphase, wobei der Leistungskurs durch eine höhere Komplexität und einen gesteigerten Grad an Selbstständigkeit gekennzeichnet ist.",
+  "hauptthemen": [
+    {
+      "thema": "Bedeutungen von Musik",
+      "relevante_unterthemen": [
+        "Ästhetische Konzeptionen von Musik",
+        "Sprachcharakter von Musik",
+        "Ausdrucksabsichten und Ausdrucksgesten"
+      ],
+      "kernkompetenzen": [
+        "Subjektive Höreindrücke differenziert beschreiben und vergleichen",
+        "Deutungsansätze und Hypothesen zu ästhetischen Konzeptionen formulieren und erläutern",
+        "Musikalische Strukturen im Hinblick auf Ausdrucksabsichten und Sprachcharakter analysieren und interpretieren",
+        "Gestaltungskonzepte unter Berücksichtigung ästhetischer Konzeptionen entwickeln und realisieren"
+      ]
+    },
+    {
+      "thema": "Entwicklungen von Musik",
+      "relevante_unterthemen": [
+        "Paradigmenwechsel im Umgang mit Musik",
+        "Gattungsspezifische Merkmale im historisch-gesellschaftlichen Kontext",
+        "Historisch-gesellschaftliche Bedingungen"
+      ],
+      "kernkompetenzen": [
+        "Musikalische Strukturen im Hinblick auf Paradigmenwechsel analysieren",
+        "Stil- und Gattungsmerkmale im historisch-gesellschaftlichen Kontext benennen und analysieren",
+        "Musikalische Entwicklungen vor dem Hintergrund gesellschaftlich-politischer und biografischer Kenntnisse interpretieren",
+        "Gestaltungsergebnisse in einen historischen Kontext einordnen und begründen"
+      ]
+    },
+    {
+      "thema": "Verwendungen von Musik",
+      "relevante_unterthemen": [
+        "Wahrnehmungssteuerung durch Musik",
+        "Musik in außermusikalischen Kontexten",
+        "Wirkungsabsichten und Funktionen"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge zwischen Wirkungsabsichten und musikalischen Strukturen erläutern",
+        "Musik hinsichtlich Wahrnehmungssteuerung und außermusikalischer Kontexte analysieren",
+        "Gestaltungskonzepte im Hinblick auf funktionale Wirkungsabsichten entwickeln",
+        "Problemstellungen zu Funktionen von Musik erörtern und kriteriengeleitet beurteilen"
+      ]
+    }
+  ]
+}

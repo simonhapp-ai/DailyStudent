@@ -1,0 +1,69 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Französisch in der gymnasialen Oberstufe (Niedersachsen, 2024) zielt auf die Entwicklung einer umfassenden interkulturellen kommunikativen Kompetenz ab. Im Zentrum steht die funktionale kommunikative Kompetenz (Hör-/Sehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung), die durch den Umgang mit authentischen Texten und Medien in realitätsnahen Kontexten gefördert wird. Das Curriculum ist kompetenzorientiert und orientiert sich am Gemeinsamen europäischen Referenzrahmen (GeR), wobei für die fortgeführte Fremdsprache am Ende der Oberstufe das Niveau B2 und für die neu beginnende Fremdsprache das Niveau B1 angestrebt wird. Ein besonderer Fokus liegt auf der Anwendungsorientierung, der funktionalen Fehlertoleranz und der Förderung von Sprachbewusstheit sowie Sprachlernkompetenz. Zudem wird die Integration digitaler Medien zur Individualisierung und zur Förderung eigenverantwortlichen Lernens explizit gefordert. Die Leistungsbewertung ist transparent und umfasst neben Klausuren auch die Mitarbeit im Unterricht, wobei kommunikativer Erfolg und Risikobereitschaft im Vordergrund stehen.",
+  "hauptthemen": [
+    {
+      "thema": "Modes de vie en transformation",
+      "relevante_unterthemen": [
+        "Lebensentwürfe im 20./21. Jahrhundert",
+        "Multikulturelle Gesellschaft",
+        "Werte der Gesellschaft (Demokratie, Freiheit, Solidarität)"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Deutung von Texten zu gesellschaftlichen Wandlungsprozessen",
+        "Reflexion über eigene und fremde Lebensentwürfe",
+        "Argumentative Auseinandersetzung mit gesellschaftlichen Werten"
+      ]
+    },
+    {
+      "thema": "La France et l’Allemagne au cœur de l’Europe",
+      "relevante_unterthemen": [
+        "Deutsch-französische Beziehungen seit 1945",
+        "Kooperation in der EU",
+        "Identitäten im europäischen Kontext"
+      ],
+      "kernkompetenzen": [
+        "Erfassung der historischen und politischen Dimensionen der deutsch-französischen Partnerschaft",
+        "Perspektivenwechsel bei der Analyse europäischer Kooperationsmodelle"
+      ]
+    },
+    {
+      "thema": "La France et la francophonie",
+      "relevante_unterthemen": [
+        "Koloniales Erbe",
+        "Beziehungen zu anderen frankophonen Ländern",
+        "Globale Perspektiven der Frankophonie"
+      ],
+      "kernkompetenzen": [
+        "Einordnung politischer und soziokultureller Aspekte des kolonialen Erbes",
+        "Vergleich kultureller Identitäten innerhalb der Frankophonie"
+      ]
+    },
+    {
+      "thema": "Le monde du travail",
+      "relevante_unterthemen": [
+        "Berufswahl und Ausbildung",
+        "Berufseinstieg",
+        "Berufliche Herausforderungen"
+      ],
+      "kernkompetenzen": [
+        "Anwendung von Fachwortschatz zur Berufsorientierung",
+        "Verständnis von Texten zur Arbeitswelt und beruflichen Anforderungen"
+      ]
+    },
+    {
+      "thema": "Les médias et la mondialisation",
+      "relevante_unterthemen": [
+        "Rolle der Medien",
+        "Digitale Kommunikation",
+        "Nachhaltigkeit und globale Wirtschaft"
+      ],
+      "kernkompetenzen": [
+        "Kritische Analyse medialer Gestaltungsmittel",
+        "Bewertung von Einflüssen der Globalisierung auf kulturelle Facetten",
+        "Reflektierter Umgang mit digitalen Medien und Quellen"
+      ]
+    }
+  ]
+}

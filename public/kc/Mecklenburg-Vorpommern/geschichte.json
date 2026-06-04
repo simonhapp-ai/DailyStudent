@@ -1,0 +1,72 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Rahmenplan für die Qualifikationsphase der gymnasialen Oberstufe in Mecklenburg-Vorpommern (2019) verfolgt einen konsequent kompetenzorientierten Ansatz. Ziel ist der Erwerb historisch-politischer Kompetenz, die Schüler befähigt, als mündige Bürger in einer globalisierten und digitalen Welt zu agieren. Der Unterricht basiert auf konzeptuellem Lernen, bei dem zeitübergreifende Begriffe (z.B. Revolution, Menschenrechte, Migration) durch Längsschnitte, Querschnitte und Fallanalysen untersucht werden. Der Plan ist modular aufgebaut: Jedes Semester umfasst ein Basismodul (genetisch-chronologischer Überblick) sowie obligatorische Vertiefungs- und Aufbaumodule. Ein besonderer Fokus liegt auf der Verknüpfung von historischem Wissen mit aktuellen gesellschaftlichen Herausforderungen, der Förderung von Demokratie-, Rechts- und Friedenserziehung sowie der Integration digitaler Medien. Regionale Bezüge zu Mecklenburg-Vorpommern sind als Querschnittsaufgabe verankert, um die Identitätsbildung und das Verständnis für das kulturelle Erbe zu stärken.",
+  "hauptthemen": [
+    {
+      "thema": "Gesellschaftliche Umbrüche und der moderne Staat",
+      "relevante_unterthemen": [
+        "Französische Revolution",
+        "Revolutionen im Vergleich",
+        "Freiheit und Partizipation",
+        "Personalisierung von Herrschaft",
+        "Demokratiekonzepte",
+        "Religion und Macht",
+        "Grenzräume"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Umbruchsprozessen und deren Auswirkungen auf moderne Staatlichkeit",
+        "Vergleich von Herrschaftsformen und Demokratiekonzepten",
+        "Reflexion über das Verhältnis von Religion, Macht und staatlicher Ordnung"
+      ]
+    },
+    {
+      "thema": "Nationalismus und Globalisierung",
+      "relevante_unterthemen": [
+        "Deutsche Frage im 19. Jahrhundert",
+        "Industrialisierung",
+        "Soziale Sicherung",
+        "Menschen- und Bürgerrechte",
+        "Nation und Identität",
+        "Migration",
+        "Ökonomie und Gesellschaft"
+      ],
+      "kernkompetenzen": [
+        "Verständnis von Nationsbildungsprozessen und deren globalen Folgen",
+        "Bewertung sozialer Sicherungssysteme im historischen Wandel",
+        "Analyse von Migrationsprozessen und Diskriminierungsmechanismen"
+      ]
+    },
+    {
+      "thema": "Demokratie und Diktatur",
+      "relevante_unterthemen": [
+        "Weimarer Republik",
+        "NS-Diktatur",
+        "Erinnerungskultur",
+        "Europäischer Widerstand",
+        "Propaganda und Medien",
+        "Opposition und Widerstand"
+      ],
+      "kernkompetenzen": [
+        "Erkennen von Mechanismen der Etablierung und Zerstörung von Demokratien",
+        "Kritische Auseinandersetzung mit NS-Verbrechen und Erinnerungskultur",
+        "Reflexion über die Rolle von Medien und Propaganda in politischen Systemen"
+      ]
+    },
+    {
+      "thema": "Konfrontation und Kooperation",
+      "relevante_unterthemen": [
+        "Geteiltes Deutschland",
+        "Friedliche Revolution 1989",
+        "Europäischer Integrationsprozess",
+        "Konfliktlösungen",
+        "Transformationsprozesse nach 1990"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Systemkonfrontationen und deren Überwindung",
+        "Bewertung des europäischen Integrationsprozesses",
+        "Verständnis von Transformationsprozessen in politischen und wirtschaftlichen Systemen"
+      ]
+    }
+  ]
+}

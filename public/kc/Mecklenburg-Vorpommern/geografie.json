@@ -1,0 +1,64 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Rahmenplan für die gymnasiale Oberstufe in Mecklenburg-Vorpommern (2019) zielt darauf ab, Schülerinnen und Schüler zu befähigen, die komplexen Herausforderungen einer globalisierten Welt im Anthropozän zu verstehen und eigenverantwortlich zu handeln. Im Zentrum steht der Kompetenzerwerb in sechs domänenspezifischen Bereichen (raumbezogenes Wissen, Raumorientierung, raumbezogene Methoden, raumbezogene Kommunikation, Raumbewertung, raumbezogenes Handeln). Der Unterricht ist problemorientiert und fächerübergreifend gestaltet, wobei die Kategorie 'Raum' in vier Dimensionen (Container, System von Lagebeziehungen, perzeptionsorientiert, konstruktivistisch) analysiert wird. Ein besonderer Fokus liegt auf der Bildung für eine nachhaltige Entwicklung (BNE), der Digitalisierung als Querschnittsthema sowie der regionalen Identität ('Mein modernes Mecklenburg-Vorpommern'). Der Plan bietet verbindliche inhaltliche Vorgaben, lässt jedoch Freiraum für methodisch-didaktische Entscheidungen der Lehrkräfte, um den Unterricht an die Bedürfnisse der Lernenden anzupassen.",
+  "hauptthemen": [
+    {
+      "thema": "Physische Geografie",
+      "relevante_unterthemen": [
+        "Tektonik",
+        "Klima und Vegetation",
+        "Geomorphologie",
+        "Rohstoffe"
+      ],
+      "kernkompetenzen": [
+        "Kausalitäten und Gesetzmäßigkeiten in Geoökosystemen erfassen",
+        "Naturereignisse und Naturkatastrophen kritisch reflektieren",
+        "Wirkungsgefüge erstellen und strukturieren",
+        "Bodenanalysen durchführen und interpretieren"
+      ]
+    },
+    {
+      "thema": "Globale Herausforderungen und nachhaltige Raumentwicklung",
+      "relevante_unterthemen": [
+        "Nachhaltigkeit",
+        "Ressourcenmanagement",
+        "Demografie",
+        "Migration und Mobilität"
+      ],
+      "kernkompetenzen": [
+        "Dimensionen der Nachhaltigkeit auf konkrete Raumbeispiele anwenden",
+        "Vulnerabilität und Resilienz von Systemen analysieren",
+        "Demografische Daten und Szenarien kritisch bewerten",
+        "Interkulturelle Kompetenz im Kontext globaler Wanderungsbewegungen entwickeln"
+      ]
+    },
+    {
+      "thema": "Wirtschaftsräume und -strategien",
+      "relevante_unterthemen": [
+        "Weltwirtschaftsregionen",
+        "Europäische Union",
+        "Globale Verflechtungen"
+      ],
+      "kernkompetenzen": [
+        "Räumliche Disparitäten und deren Ursachen erläutern",
+        "Standortfaktoren und -theorien auf Wirtschaftsräume anwenden",
+        "Strukturwandel in altindustriellen und neuen Wachstumsräumen vergleichen",
+        "Chancen und Risiken der Globalisierung multiperspektivisch erörtern"
+      ]
+    },
+    {
+      "thema": "Siedlungsgeografie und Raumordnung",
+      "relevante_unterthemen": [
+        "Siedlungsgeografie",
+        "Raumordnung"
+      ],
+      "kernkompetenzen": [
+        "Stadtentwicklungsprozesse (Segregation, Gentrifizierung) analysieren",
+        "Stadt-Umland-Beziehungen und nachhaltige Stadtplanung beurteilen",
+        "Instrumente der Raumordnung und Bürgerbeteiligung nachvollziehen",
+        "Zentralität von Orten und grenzüberschreitende Raumplanung bewerten"
+      ]
+    }
+  ]
+}

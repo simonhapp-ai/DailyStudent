@@ -1,0 +1,70 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Fachlehrplan Geografie für das Gymnasium in Sachsen-Anhalt (Stand 2022) zielt auf die Entwicklung einer raumbezogenen Analyse- und Handlungskompetenz ab. Im Zentrum steht das Verständnis der Wechselwirkungen zwischen Mensch und Umwelt im Kontext globaler Herausforderungen wie Klimawandel, Globalisierung, Ressourcenkonflikten und demografischem Wandel. Der Unterricht ist problemorientiert und wissenschaftspropädeutisch gestaltet, wobei die Schülerinnen und Schüler befähigt werden, komplexe geographische Sachverhalte zu analysieren, zu bewerten und verantwortungsvoll im Sinne einer nachhaltigen Entwicklung zu handeln. Ein besonderer Fokus liegt auf der Integration digitaler Medien und Geoinformationssysteme (GIS) sowie der Stärkung bildungssprachlicher Kompetenzen. Die Kompetenzentwicklung erfolgt über die vier Bereiche: Erkenntnisse gewinnen und anwenden, sich räumlich orientieren, kommunizieren sowie beurteilen und bewerten. Der Lehrplan fördert zudem die fächerübergreifende Zusammenarbeit und bereitet die Lernenden auf die Anforderungen der modernen Lebenswelt sowie auf ein Studium oder eine berufliche Ausbildung vor.",
+  "hauptthemen": [
+    {
+      "thema": "Die Erde als Planet und Lebensraum",
+      "relevante_unterthemen": [
+        "Planetare Merkmale",
+        "Orientierung auf der Erde",
+        "Lebensräume der Menschen"
+      ],
+      "kernkompetenzen": [
+        "Die Gestalt und Bewegungen der Erde beschreiben",
+        "Die Einzigartigkeit der Erde und die Notwendigkeit ihrer Bewahrung begründen"
+      ]
+    },
+    {
+      "thema": "Raumstrukturen und -prozesse (Deutschland, Europa, Welt)",
+      "relevante_unterthemen": [
+        "Naturraumausstattung",
+        "Wirtschaftsräume",
+        "Siedlungsentwicklung",
+        "Verstädterung"
+      ],
+      "kernkompetenzen": [
+        "Strukturen und Prozesse in Räumen verschiedener Maßstabsebenen analysieren",
+        "Standortfaktoren und wirtschaftliche Entwicklungen bewerten"
+      ]
+    },
+    {
+      "thema": "Kernprobleme des Globalen Wandels",
+      "relevante_unterthemen": [
+        "Bevölkerungsentwicklung",
+        "Ernährungssicherung",
+        "Klimawandel",
+        "Bodendegradation"
+      ],
+      "kernkompetenzen": [
+        "Ursachen und Folgen globaler Probleme erläutern",
+        "Nachhaltige Lösungsansätze unter Perspektivenwechsel beurteilen"
+      ]
+    },
+    {
+      "thema": "Geoökozonen und Geoökosysteme",
+      "relevante_unterthemen": [
+        "Geoökologische Systemanalyse",
+        "Landschaftswandel",
+        "Gebirgsökosysteme"
+      ],
+      "kernkompetenzen": [
+        "Zusammenwirken von Geoökofaktoren in Wirkungsgeflechten darstellen",
+        "Tragfähigkeit von Ökosystemen bewerten"
+      ]
+    },
+    {
+      "thema": "Globale Entwicklungsdisparitäten und Ressourcen",
+      "relevante_unterthemen": [
+        "Globalisierung",
+        "Weltwirtschaft",
+        "Ressourcenverfügbarkeit (Wasser, Rohstoffe)",
+        "Entwicklungszusammenarbeit"
+      ],
+      "kernkompetenzen": [
+        "Entwicklungsstand von Ländern anhand von Indikatoren analysieren",
+        "Konfliktpotenzial der Ressourcennutzung bewerten und Lösungsansätze entwickeln"
+      ]
+    }
+  ]
+}

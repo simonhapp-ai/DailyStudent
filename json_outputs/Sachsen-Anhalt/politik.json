@@ -1,0 +1,64 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Politik",
+  "zusammenfassung": "Der Fachlehrplan Sozialkunde für das Gymnasium in Sachsen-Anhalt zielt auf die Entwicklung mündiger, politisch handlungsfähiger Bürgerinnen und Bürger ab, mit dem expliziten Ziel, 'Aktivbürger' zu fördern. Der Unterricht basiert auf dem Beutelsbacher Konsens (Überwältigungsverbot, Kontroversitätsgebot, Schülerorientierung) und verfolgt einen wissenschaftspropädeutischen Ansatz. Die Kompetenzentwicklung gliedert sich in drei Bereiche: Analyse-, Urteils- und Handlungskompetenz. Diese werden durch verbindliche Makromethoden (Problemstudie, Konfliktanalyse, Fallanalyse, Fallstudie, Planspiel) in allen Jahrgangsstufen systematisch geschult. Ein besonderer Fokus liegt auf der Unterscheidung von Sach- und Werturteilen sowie der Integration von Bildung in der digitalen Welt und Bildung für nachhaltige Entwicklung. Der Lehrplan ist spiralförmig aufgebaut, beginnend mit schulischen Mitwirkungsmöglichkeiten in Klasse 8 bis hin zu komplexen Analysen politischer Systeme, gesellschaftlicher Herausforderungen, Wirtschaftspolitik und internationaler Sicherheit in der Qualifikationsphase.",
+  "hauptthemen": [
+    {
+      "thema": "Demokratische Partizipation und politisches System",
+      "relevante_unterthemen": [
+        "Mitwirkungsmöglichkeiten in der Schule",
+        "Partizipation in der Demokratie",
+        "Wahlen in der Demokratie",
+        "Zustand und Perspektiven des politischen Systems",
+        "Inszenierung von Politik und Protest"
+      ],
+      "kernkompetenzen": [
+        "Demokratische Mitwirkungsmöglichkeiten analysieren und bewerten",
+        "Einflussmöglichkeiten von Bürgern auf politische Entscheidungen beurteilen",
+        "Wahlprogramme und Wahlverhalten kategorial analysieren",
+        "Strategien zur Weiterentwicklung des politischen Systems diskutieren"
+      ]
+    },
+    {
+      "thema": "Recht, Gesellschaft und soziale Gerechtigkeit",
+      "relevante_unterthemen": [
+        "Rechtliche Grundlagen für Jugendliche",
+        "Alltagsdiskriminierung",
+        "Soziale Ungleichheit",
+        "Grundrechte in der Demokratie",
+        "Gesellschaftliche Herausforderungen"
+      ],
+      "kernkompetenzen": [
+        "Rechtliche Rahmenbedingungen und Sanktionsmöglichkeiten beurteilen",
+        "Diskriminierungsformen und Konzepte dagegen analysieren",
+        "Phänomene sozialer Ungleichheit mit sozialwissenschaftlichen Methoden untersuchen",
+        "Spannungsverhältnisse zwischen Grundrechten abwägen"
+      ]
+    },
+    {
+      "thema": "Wirtschaft und Nachhaltigkeit",
+      "relevante_unterthemen": [
+        "Soziale Marktwirtschaft",
+        "Nachhaltige Wirtschaftsentwicklung",
+        "Wirtschaftspolitik in der globalisierten Welt"
+      ],
+      "kernkompetenzen": [
+        "Chancen und Grenzen der sozialen Marktwirtschaft diskutieren",
+        "Steuerungsinstrumente für Nachhaltigkeit analysieren",
+        "Wirtschaftspolitische Konzepte (Angebots-/Nachfrageorientierung) bewerten"
+      ]
+    },
+    {
+      "thema": "Internationale Politik und Sicherheit",
+      "relevante_unterthemen": [
+        "Herausforderungen für Politik in Europa",
+        "Strategien internationaler Friedens- und Sicherheitspolitik"
+      ],
+      "kernkompetenzen": [
+        "Verflechtungen und Entscheidungsverfahren in der EU beurteilen",
+        "Friedens- und sicherheitspolitische Strategien und Bedrohungen analysieren",
+        "Modelle internationaler Beziehungen auf aktuelle Konflikte anwenden"
+      ]
+    }
+  ]
+}

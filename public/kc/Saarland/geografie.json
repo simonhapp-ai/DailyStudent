@@ -1,0 +1,68 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Lehrplan für den Grundkurs Erdkunde in der gymnasialen Oberstufe des Saarlandes zielt auf die Entwicklung einer raumbezogenen Handlungskompetenz ab. Im Zentrum steht die Analyse von Mensch-Umwelt-Beziehungen unter dem Leitbild der nachhaltigen Entwicklung. Die Schülerinnen und Schüler lernen, komplexe globale Herausforderungen des 21. Jahrhunderts – wie den Klimawandel, Ressourcenknappheit, wirtschaftliche Disparitäten und Urbanisierung – systemisch zu erfassen. Methodisch liegt der Fokus auf der Raumanalyse, der Anwendung von Raumkonzepten und dem Syndromansatz, um globale Entwicklungsmuster zu verstehen. Der Unterricht fördert die Fähigkeit, geographische Sachverhalte problemorientiert zu analysieren, kritisch zu beurteilen und adressatenbezogen zu präsentieren. Dabei wird ein besonderer Wert auf die Verknüpfung von physisch-geographischen Grundlagen mit humangeographischen Prozessen gelegt, um die Schülerinnen und Schüler auf die Anforderungen der Abiturprüfung und eine verantwortungsvolle Teilhabe an einer zukunftsfähigen Welt vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Physisch-geographische Grundlagen der Raumanalyse",
+      "relevante_unterthemen": [
+        "Klima (planetarisches Windsystem, Klimaklassifikation)",
+        "Vegetation (Vegetationszonen, Angepasstheiten)",
+        "Relieforientierte Grobgliederung"
+      ],
+      "kernkompetenzen": [
+        "Systematische Auswertung von Klimakarten, Diagrammen und Modellen",
+        "Anwendung globaler Orientierungsraster zur Einordnung von Räumen"
+      ]
+    },
+    {
+      "thema": "Mensch-Umwelt-Beziehungen in ausgewählten Räumen",
+      "relevante_unterthemen": [
+        "Tropen (Agrargeographie, Regenwaldzerstörung)",
+        "Arider Raum (Wasserknappheit, Aralseesyndrom)"
+      ],
+      "kernkompetenzen": [
+        "Erstellung komplexer Wirkungsgefüge zur Problemanalyse",
+        "Beurteilung ökologisch angepasster Wirtschaftsformen hinsichtlich Nachhaltigkeit"
+      ]
+    },
+    {
+      "thema": "Wirtschaftsräume und Wirtschaftszentren im Wandel",
+      "relevante_unterthemen": [
+        "Strukturwandel (Deutschland/Saarland)",
+        "Stadtgeographie (Gentrifizierung, Stadtökologie)",
+        "Disparitäten in Europa"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Standortfaktoren und sozioökonomischen Disparitäten",
+        "Durchführung eines Unterrichtsgangs mit Exkursionsprotokoll"
+      ]
+    },
+    {
+      "thema": "Globale Entwicklungen als Herausforderung",
+      "relevante_unterthemen": [
+        "Globale Entwicklungsdisparitäten",
+        "Ernährungssicherung",
+        "Metropolisierung und Marginalisierung",
+        "Tourismus als Entwicklungschance"
+      ],
+      "kernkompetenzen": [
+        "Kritische Überprüfung von Entwicklungsindikatoren (HDI, SDGI)",
+        "Analyse der medialen Konstruktion von Räumen"
+      ]
+    },
+    {
+      "thema": "Variabler Pflichtbereich",
+      "relevante_unterthemen": [
+        "Globalisierung",
+        "Nutzung und Gefährdung der Ozeane",
+        "Globale Migration",
+        "Energiewirtschaft und Geostrategie (Naher Osten)"
+      ],
+      "kernkompetenzen": [
+        "Vertiefte Beurteilungskompetenz bei komplexen globalen Konfliktfeldern",
+        "Reflexion des eigenen Konsumverhaltens und Handelns"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Deutsch",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Deutsch in der gymnasialen Oberstufe in Niedersachsen verfolgt das Ziel, die sprachliche, literarische und mediale Bildung der Schülerinnen und Schüler zu vertiefen. Es bereitet wissenschaftspropädeutisch auf ein Hochschulstudium sowie auf berufliche Anforderungen vor. Der Unterricht ist kompetenzorientiert und gliedert sich in fünf Bereiche: Sprechen und Zuhören, Schreiben, Lesen sowie die domänenspezifischen Bereiche 'Sich mit Texten und Medien auseinandersetzen' und 'Sprache und Sprachgebrauch reflektieren'. Die Qualifikationsphase ist durch sieben verbindliche Rahmenthemen strukturiert, die Pflicht- und Wahlpflichtmodule kombinieren, um sowohl eine einheitliche Vorbereitung auf das Abitur als auch individuelle Schwerpunktsetzungen zu ermöglichen. Ein besonderer Fokus liegt auf der kumulativen Kompetenzentwicklung, der Arbeit mit Ganzschriften und der Reflexion über Sprache und Medien.",
+  "hauptthemen": [
+    {
+      "thema": "Literatur und Sprache um 1800",
+      "relevante_unterthemen": [
+        "Aufklärung",
+        "Romantik",
+        "Sturm und Drang",
+        "Klassik",
+        "Epochenbegriff und Periodisierung"
+      ],
+      "kernkompetenzen": [
+        "Kontrastive Analyse von Leitideen und Menschenbildern der Epochen",
+        "Analyse epochentypischer Sprachverwendung und literarischer Formen"
+      ]
+    },
+    {
+      "thema": "Drama und Kommunikation",
+      "relevante_unterthemen": [
+        "Dramentheorie",
+        "Kommunikationsstrukturen im Drama",
+        "Szenische Interpretation",
+        "Konfliktgestaltung"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Dialogverläufen und nonverbaler Kommunikation",
+        "Anwendung dramentheoretischer Kenntnisse auf Inszenierungen"
+      ]
+    },
+    {
+      "thema": "Literatur und Sprache um 1900 – neue Ausdrucksformen der Epik",
+      "relevante_unterthemen": [
+        "Realismus",
+        "Moderne",
+        "Großstadtlyrik",
+        "Sprachkrise",
+        "Naturalismus"
+      ],
+      "kernkompetenzen": [
+        "Vergleich von Erzählformen des Realismus und der Moderne",
+        "Analyse von Krisenerfahrungen und Desillusionierung in literarischen Texten"
+      ]
+    },
+    {
+      "thema": "Vielfalt lyrischen Sprechens",
+      "relevante_unterthemen": [
+        "Liebeslyrik",
+        "Naturlyrik",
+        "Kriegslyrik",
+        "Politische Lyrik",
+        "Sprachreflexion im Gedicht"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Form und Inhalt lyrischer Texte über Epochengrenzen hinweg",
+        "Interpretation von Gedichten unter Berücksichtigung des lyrischen Ichs und rhetorischer Mittel"
+      ]
+    },
+    {
+      "thema": "Literatur und Sprache von 1945 bis zur Gegenwart",
+      "relevante_unterthemen": [
+        "Nachkriegsliteratur",
+        "DDR-Literatur",
+        "Identitätssuche",
+        "Interkulturalität",
+        "Postmoderne Erzählweisen"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Wirklichkeitserfahrungen junger Protagonisten",
+        "Kontextualisierung von Literatur im Spiegel gesellschaftlicher Umbrüche"
+      ]
+    },
+    {
+      "thema": "Sprache und Sprachgebrauch reflektieren",
+      "relevante_unterthemen": [
+        "Sprachwandel",
+        "Varietäten",
+        "Rhetorik",
+        "Sprachkritik",
+        "Sprache und Macht"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Tendenzen der Gegenwartssprache",
+        "Reflexion über die Funktion von Sprache in gesellschaftlichen und politischen Kontexten"
+      ]
+    },
+    {
+      "thema": "Medienwelten",
+      "relevante_unterthemen": [
+        "Mediengeschichte",
+        "Digitale Medien",
+        "Film und Literaturverfilmung",
+        "Medienkritik",
+        "Journalistische Darstellungsformen"
+      ],
+      "kernkompetenzen": [
+        "Kritische Analyse von Medienprodukten und Mediennutzung",
+        "Produktive Gestaltung eigener Medienbeiträge"
+      ]
+    }
+  ]
+}

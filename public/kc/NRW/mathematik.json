@@ -1,0 +1,46 @@
+{
+  "bundesland": "NRW",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Kernlehrplan für die gymnasiale Oberstufe in NRW (2014) vollzieht einen Paradigmenwechsel von der Input- zur Outputorientierung. Ziel ist der Erwerb mathematischer Kompetenzen, die über reines Faktenwissen hinausgehen und die Studierfähigkeit sowie eine reflektierte Teilhabe am gesellschaftlichen Leben sichern. Der Unterricht ist in drei zentrale Inhaltsfelder (Analysis, Analytische Geometrie/Lineare Algebra, Stochastik) gegliedert, die mit fünf prozessbezogenen Kompetenzbereichen (Modellieren, Problemlösen, Argumentieren, Kommunizieren, Werkzeuge nutzen) verknüpft werden. Die Leistungsbewertung erfolgt kompetenzorientiert und umfasst neben Klausuren auch sonstige Mitarbeit, wobei Fehler als Lernchancen begriffen werden. Das Abitur wird zentral gestellt und prüft die erworbenen Kompetenzen über drei Anforderungsbereiche hinweg, wobei der Schwerpunkt auf dem selbstständigen Transfer und der Anwendung mathematischer Konzepte liegt.",
+  "hauptthemen": [
+    {
+      "thema": "Funktionen und Analysis",
+      "relevante_unterthemen": [
+        "Potenz-, Exponential- und Sinusfunktionen",
+        "Differentialrechnung (Ableitungsbegriff, Änderungsraten)",
+        "Integralrechnung (Flächeninhalte, Rekonstruktion von Beständen)",
+        "Extremalprobleme und Steckbriefaufgaben"
+      ],
+      "kernkompetenzen": [
+        "Funktionale Zusammenhänge als mathematische Modelle für reale Prozesse nutzen",
+        "Ableitungs- und Integralbegriff zur Untersuchung von Änderungsraten und Bestandsgrößen anwenden"
+      ]
+    },
+    {
+      "thema": "Analytische Geometrie und Lineare Algebra",
+      "relevante_unterthemen": [
+        "Vektoren und Vektoroperationen",
+        "Lineare Gleichungssysteme (Gauß-Algorithmus)",
+        "Lagebeziehungen von Geraden und Ebenen",
+        "Skalarprodukt (Winkel- und Abstandsbestimmung)"
+      ],
+      "kernkompetenzen": [
+        "Geometrische Objekte im Raum koordinatisieren und mit algebraischen Mitteln untersuchen",
+        "Lagebeziehungen zwischen geometrischen Objekten rechnerisch bestimmen und interpretieren"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Mehrstufige Zufallsexperimente und bedingte Wahrscheinlichkeiten",
+        "Binomialverteilung und Normalverteilung",
+        "Hypothesentests",
+        "Stochastische Prozesse (Übergangsmatrizen)"
+      ],
+      "kernkompetenzen": [
+        "Zufallsbedingte Phänomene durch Wahrscheinlichkeitsverteilungen modellieren",
+        "Statistische Daten auswerten und Entscheidungen unter Unsicherheit auf Basis von Hypothesentests treffen"
+      ]
+    }
+  ]
+}

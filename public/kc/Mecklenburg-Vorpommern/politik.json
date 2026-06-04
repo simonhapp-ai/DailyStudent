@@ -1,0 +1,59 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Politik",
+  "zusammenfassung": "Der Rahmenplan für das Fach Sozialkunde in der gymnasialen Oberstufe (Qualifikationsphase) in Mecklenburg-Vorpommern verfolgt das Ziel, Schülerinnen und Schüler zu politischer Mündigkeit und demokratischer Teilhabe zu befähigen. Der Unterricht soll sie in die Lage versetzen, komplexe politische, gesellschaftliche, rechtliche und ökonomische Prozesse zu analysieren, kritisch zu hinterfragen und fundierte Urteile zu bilden. Dabei stehen die Prinzipien des Überwältigungsverbots, des Kontroversitätsgebots und die Berücksichtigung der Interessenlagen der Lernenden im Zentrum. Der Rahmenplan ist als verbindliches, aber flexibel gestaltbares Instrument konzipiert, das ca. 80 % der Unterrichtszeit vorgibt und Raum für aktuelle Bezüge lässt. Ein besonderer Fokus liegt auf der Integration digitaler Kompetenzen, interkultureller Bildung sowie der regionalen Identität (Mecklenburg-Vorpommern). Die Kompetenzentwicklung gliedert sich in Sach- und Analysekompetenz, Urteilskompetenz, Methodenkompetenz und Handlungskompetenz, wobei zwischen Grund- und Leistungskursen hinsichtlich des Anforderungsniveaus differenziert wird.",
+  "hauptthemen": [
+    {
+      "thema": "Politische Systeme",
+      "relevante_unterthemen": [
+        "Macht- und Herrschaftssysteme",
+        "Demokratietheorien",
+        "Wahlen und Partizipation",
+        "Herausforderungen durch Populismus und Extremismus"
+      ],
+      "kernkompetenzen": [
+        "Unterscheidung von Herrschaftsformen und Analyse von Staats- und Politikverdrossenheit",
+        "Hinterfragen politischer Entscheidungsprozesse und Bildung kriteriengeleiteter Urteile"
+      ]
+    },
+    {
+      "thema": "Soziologie",
+      "relevante_unterthemen": [
+        "Sozialisation und soziales Handeln",
+        "Sozialstruktur und soziale Ungleichheit",
+        "Wertewandel und gesellschaftliche Diversität",
+        "Demografischer Wandel"
+      ],
+      "kernkompetenzen": [
+        "Interpretation von Statistiken zur Sozialstruktur und zum demografischen Wandel",
+        "Beurteilung von Lösungsansätzen für aktuelle gesamtgesellschaftliche Fragen"
+      ]
+    },
+    {
+      "thema": "Recht",
+      "relevante_unterthemen": [
+        "Grundlagen und Funktionen des Rechts",
+        "Rechtsstaatlichkeit",
+        "Rechtsnorm und Rechtswirklichkeit",
+        "Herausforderungen durch Digitalisierung und neue Technologien"
+      ],
+      "kernkompetenzen": [
+        "Strukturiertes Darstellen rechtlicher Fragestellungen aus Fachtexten und Urteilen",
+        "Formulierung begründeter Sach- und Werturteile zu aktuellen Rechtsfällen"
+      ]
+    },
+    {
+      "thema": "Internationale Politik",
+      "relevante_unterthemen": [
+        "Internationale Beziehungen und Akteure",
+        "Deutschlands Rolle in der Weltpolitik",
+        "Konflikte und Friedenssicherung",
+        "Globale Herausforderungen (Klimawandel, Migration, Nachhaltigkeit)"
+      ],
+      "kernkompetenzen": [
+        "Analyse der Komplexität internationaler Herausforderungen und Akteurskonstellationen",
+        "Entwicklung von Lösungsstrategien für internationale Konflikte und Einschätzung deren Erfolgschancen"
+      ]
+    }
+  ]
+}

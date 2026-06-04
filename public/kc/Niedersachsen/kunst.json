@@ -1,0 +1,59 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Kunst",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Kunst in der gymnasialen Oberstufe in Niedersachsen zielt auf den Erwerb umfassender Bildkompetenz ab. Diese wird durch die gleichwertige Verknüpfung von Produktion und Rezeption von Bildern erreicht. Das Fach versteht sich als Beitrag zur ästhetischen Bildung, die zur kulturellen Teilhabe befähigt, die Persönlichkeitsentwicklung fördert und zur kritischen Auseinandersetzung mit einer zunehmend medial geprägten Welt anregt. Ein zentrales Unterrichtsprinzip ist die 'Werkstatt', die selbstständiges, individualisiertes und prozessorientiertes Arbeiten ermöglicht. Die Qualifikationsphase bereitet auf das Abitur vor, wobei zwischen grundlegendem und erhöhtem Anforderungsniveau unterschieden wird. Die inhaltliche Arbeit gliedert sich in die vier Bereiche 'Bild des Menschen', 'Bild des Raumes', 'Bild der Zeit' und 'Bild der Dinge', an denen kunstgeschichtliches Wissen sowie wissenschafts- und kunstpropädeutische Methoden vermittelt werden.",
+  "hauptthemen": [
+    {
+      "thema": "Bild des Menschen",
+      "relevante_unterthemen": [
+        "Porträt und Selbstporträt",
+        "Inszenierung und Repräsentation",
+        "Mensch und Gesellschaft",
+        "Körper als Zeichen"
+      ],
+      "kernkompetenzen": [
+        "Untersuchung von Bildern des Menschen hinsichtlich ihrer Funktion und Wirkung",
+        "Gestaltung funktionsbezogener Porträts und Auseinandersetzung mit der eigenen Person"
+      ]
+    },
+    {
+      "thema": "Bild des Raumes",
+      "relevante_unterthemen": [
+        "Architektur und Stadtplanung",
+        "Innen- und Außenraum",
+        "Rauminstallation und Land Art",
+        "Wohnformen und Architekturvisionen"
+      ],
+      "kernkompetenzen": [
+        "Entwurf von Innen- und Außenräumen unter Einsatz raumillusionistischer Mittel",
+        "Analyse und Vergleich von Bauwerken und architektonischen Konzepten"
+      ]
+    },
+    {
+      "thema": "Bild der Zeit",
+      "relevante_unterthemen": [
+        "Zeit als konstitutiver Bestandteil des Bildes",
+        "Montage und Sequenz",
+        "Kinetische Kunst und Performance",
+        "Der fotografierte Augenblick"
+      ],
+      "kernkompetenzen": [
+        "Gestaltung zeitlicher Abläufe im Einzelbild oder in Bildfolgen",
+        "Reflexion zeitbezogener künstlerischer Ausdrucksformen und deren soziokultureller Kontexte"
+      ]
+    },
+    {
+      "thema": "Bild der Dinge",
+      "relevante_unterthemen": [
+        "Stillleben",
+        "Design und Kommunikationsdesign",
+        "Plastik, Skulptur und Objekt",
+        "Ding und Identifikation"
+      ],
+      "kernkompetenzen": [
+        "Darstellung von Dingen unter Berücksichtigung von Materialität und Plastizität",
+        "Analyse und Bewertung von Gebrauchsgegenständen und Designobjekten hinsichtlich Funktion und Symbolik"
+      ]
+    }
+  ]
+}

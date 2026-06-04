@@ -41,7 +41,7 @@ type AnalysisStatus = 'idle' | 'analyzing' | 'done' | 'error'
 export function SmartNotesScreen() {
   const { id, lessonId } = useParams<{ id: string; lessonId: string }>()
   const navigate = useNavigate()
-  const { generatedNotes, userNotes, completedHomeworkIds, saveGeneratedNote, updateUserNote, saveFlashCards } = useUser()
+  const { generatedNotes, userNotes, completedHomeworkIds, saveGeneratedNote, updateUserNote, saveFlashCards, getKc } = useUser()
 
   const subject = subjects.find((s) => s.id === id)
   const mockLesson = lessons.find((l) => l.id === lessonId)
@@ -99,7 +99,7 @@ export function SmartNotesScreen() {
     if (explanations[kw] !== undefined) return
     setLoadingKeyword(kw)
     try {
-      const text = await explainKeyword(kw, subject?.name ?? 'Allgemein', note.summary ?? undefined)
+      const text = await explainKeyword(kw, subject?.name ?? 'Allgemein', note.summary ?? undefined, getKc(id ?? '') ?? undefined)
       setExplanations((prev) => ({ ...prev, [kw]: text }))
     } catch {
       setExplanations((prev) => ({ ...prev, [kw]: 'Erklärung konnte nicht geladen werden.' }))
@@ -158,7 +158,7 @@ export function SmartNotesScreen() {
         rawText = rawText ? `${rawText}\n\n${ocrText}` : ocrText
       }
       if (!rawText) throw new Error('Kein Text zum Analysieren gefunden.')
-      const newNote = await generateSmartNote(rawText, subjectName, lessonId ?? '')
+      const newNote = await generateSmartNote(rawText, subjectName, lessonId ?? '', getKc(id ?? '') ?? undefined)
       setEditGeneratedNote(newNote)
       setAnalysisStatus('done')
     } catch (e) {
@@ -174,8 +174,8 @@ export function SmartNotesScreen() {
     if (!sourceNote) return
     setFcStatus('generating')
     try {
-      const pairs = await generateFlashcards(sourceNote)
       const subjectId = userNote?.subjectId ?? id ?? 'unknown'
+      const pairs = await generateFlashcards(sourceNote, 7, getKc(subjectId) ?? undefined)
       const cards: FlashCard[] = pairs.map((p, i) => ({
         id: `fc-${lessonId}-${i}-${Date.now()}`,
         subjectId,

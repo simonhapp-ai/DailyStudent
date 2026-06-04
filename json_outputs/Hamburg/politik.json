@@ -1,0 +1,47 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Politik",
+  "zusammenfassung": "Das Fach Politik/Gesellschaft/Wirtschaft (PGW) in der Hamburger Studienstufe zielt auf die Entwicklung von Demokratiefähigkeit und Mündigkeit. Die Schülerinnen und Schüler sollen befähigt werden, komplexe gesellschaftliche, wirtschaftliche und politische Zusammenhänge zu analysieren, kritisch zu beurteilen und verantwortungsvoll an demokratischen Prozessen teilzuhaben. Der Unterricht basiert auf dem Beutelsbacher Konsens (Überwältigungsverbot, Kontroversitätsgebot, Schülerorientierung) und integriert Perspektiven aus Politikwissenschaft, Soziologie, Ökonomie, Recht und Geschichte. Zentrale didaktische Prinzipien sind Aktualitätsbezug, Fallorientierung, Konfliktorientierung und Wissenschaftspropädeutik. Die Kompetenzentwicklung gliedert sich in Analyse-, Urteils- und Handlungskompetenz, wobei überfachliche Kompetenzen (personale, motivationale, lernmethodische und soziale) als Grundlage dienen. Leitperspektiven wie Wertebildung, Bildung für nachhaltige Entwicklung (BNE) und das Leben in einer digital geprägten Welt sind integraler Bestandteil der inhaltlichen Module.",
+  "hauptthemen": [
+    {
+      "thema": "Demokratie und Partizipation",
+      "relevante_unterthemen": [
+        "Analyseinstrumente (Politikzyklus, Dimensionen des Politischen)",
+        "Ideengeschichte (Demokratietheorien, Weltanschauungen)",
+        "Politisches Handeln (Verfassung, Parteien, Medien, Lobbyismus)",
+        "Internationale Konflikte (Global Governance, Völkerrecht, Konfliktfelder)"
+      ],
+      "kernkompetenzen": [
+        "Politische Prozesse und Konflikte mithilfe sozialwissenschaftlicher Kategorien und Modelle analysieren",
+        "Kriterienorientierte Urteile zu politischen Sachverhalten bilden und eigene Positionen begründet vertreten",
+        "Demokratische Aushandlungsprozesse simulativ oder praktisch erproben und Kompromisse schließen"
+      ]
+    },
+    {
+      "thema": "Gesellschaft und Gerechtigkeit",
+      "relevante_unterthemen": [
+        "Gesellschaftsstruktur (Strukturmodelle, sozialer Wandel, Ungleichheit)",
+        "Systeme sozialer Sicherung (Wohlfahrtsstaatsmodelle, soziale Risiken, Umverteilung)",
+        "Lebensentwürfe, Arbeit und Individuum, Soziologie des Konsums"
+      ],
+      "kernkompetenzen": [
+        "Soziale Ungleichheit und Gerechtigkeitskonzepte theoretisch fundiert untersuchen",
+        "Spannungsverhältnisse zwischen individueller Freiheit und staatlicher Sicherung reflektieren",
+        "Gesellschaftliche Entwicklungen unter ethischen Gesichtspunkten bewerten und Toleranz gegenüber Vielfalt zeigen"
+      ]
+    },
+    {
+      "thema": "Wirtschaft und Nachhaltigkeit",
+      "relevante_unterthemen": [
+        "Wachstum und Marktwirtschaft (BIP-Kritik, Nachhaltigkeitskonzepte)",
+        "Konjunkturpolitik (Zyklen, angebots- vs. nachfrageorientierte Politik)",
+        "Internationale Wirtschaftsbeziehungen, Europäische Währungsunion, Betriebswirtschaftliche Grundlagen"
+      ],
+      "kernkompetenzen": [
+        "Ökonomische Handlungsweisen und deren ökologische sowie soziale Folgen analysieren",
+        "Wirtschaftspolitische Maßnahmen kriterienorientiert beurteilen (z.B. Effizienz, Nachhaltigkeit)",
+        "Verantwortung für eine nachhaltige Entwicklung in wirtschaftlichen Entscheidungsprozessen erkennen"
+      ]
+    }
+  ]
+}

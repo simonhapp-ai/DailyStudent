@@ -1,0 +1,106 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Sport",
+  "zusammenfassung": "Die Fachanforderungen Sport für Schleswig-Holstein definieren einen kompetenzorientierten Sportunterricht, der auf einem Doppelauftrag basiert: der Entwicklungsförderung durch Bewegung, Spiel und Sport sowie der Erschließung der Bewegungs-, Spiel- und Sportkultur. Der Unterricht ist in sieben verbindliche Themenbereiche gegliedert (Fitness, Sportspiele, Turnen, Laufen/Springen/Werfen, Schwimmen, Bewegungsgestaltung/Tanz, Raufen/Ringen/Verteidigen). Ein zentrales Ziel ist die Entwicklung einer sportlichen Handlungsfähigkeit, die Wissen, Fertigkeiten, Fähigkeiten und Einstellungen integriert. In der Sekundarstufe I liegt der Fokus auf der breiten motorischen Grundbildung und der Motivation zu lebenslangem Sporttreiben. In der Sekundarstufe II erfolgt eine vertiefende Theorie-Praxis-Verknüpfung, die auf die Abiturprüfung vorbereitet. Die Leistungsbewertung ist prozessorientiert, transparent und berücksichtigt individuelle Lernausgangslagen sowie Anstrengungsbereitschaft. Inklusion, Gesundheitsförderung und die Vermittlung von Werten wie Fairness und soziale Verantwortung sind durchgängige Prinzipien.",
+  "hauptthemen": [
+    {
+      "thema": "Fitness",
+      "relevante_unterthemen": [
+        "Ausdauer",
+        "Kraft",
+        "Schnelligkeit",
+        "Beweglichkeit",
+        "Koordination",
+        "Gesundheitsförderung"
+      ],
+      "kernkompetenzen": [
+        "Lösen von Bewegungsaufgaben auf Basis konditioneller und koordinativer Fähigkeiten",
+        "Einschätzung der eigenen Belastungsgrenzen und gesundheitlicher Auswirkungen"
+      ]
+    },
+    {
+      "thema": "Sportspiele",
+      "relevante_unterthemen": [
+        "Allgemeine Ballschule",
+        "Zielwurf-/Zielschussspiele (z.B. Handball, Basketball, Fußball)",
+        "Rückschlagspiele (z.B. Volleyball, Badminton)"
+      ],
+      "kernkompetenzen": [
+        "Bewältigung und Gestaltung von Spielsituationen",
+        "Anwendung sportspielspezifischer Techniken und taktischer Verhaltensweisen",
+        "Übernahme von Schiedsrichterrollen und Fairplay"
+      ]
+    },
+    {
+      "thema": "Turnen",
+      "relevante_unterthemen": [
+        "Boden",
+        "Sprung",
+        "Reck",
+        "Barren",
+        "Akrobatik",
+        "Helfen und Sichern"
+      ],
+      "kernkompetenzen": [
+        "Gestaltung und Präsentation turnerischer Bewegungsaufgaben",
+        "Sicherer Umgang mit Wagnissituationen",
+        "Anwendung von Hilfe- und Sicherheitsstellungen"
+      ]
+    },
+    {
+      "thema": "Laufen, Springen, Werfen (Leichtathletik)",
+      "relevante_unterthemen": [
+        "Sprint",
+        "Weitsprung",
+        "Hochsprung",
+        "Wurf- und Stoßdisziplinen"
+      ],
+      "kernkompetenzen": [
+        "Bestmögliche Erfüllung leichtathletischer Maßkriterien",
+        "Beherrschung wettkampfgerechter Techniken",
+        "Regelgerechte Messung und Durchführung von Wettbewerben"
+      ]
+    },
+    {
+      "thema": "Schwimmen",
+      "relevante_unterthemen": [
+        "Schwimmtechniken",
+        "Tauchen",
+        "Springen",
+        "Rettungsfertigkeiten"
+      ],
+      "kernkompetenzen": [
+        "Sicheres Bewegen im tiefen Wasser",
+        "Beherrschung verschiedener Schwimmstile",
+        "Kenntnis von Baderegeln und Rettungsmaßnahmen"
+      ]
+    },
+    {
+      "thema": "Bewegungsgestaltung, Tanz",
+      "relevante_unterthemen": [
+        "Gymnastik",
+        "Tanzchoreographien",
+        "Rhythmisierung",
+        "Ausdrucksformen"
+      ],
+      "kernkompetenzen": [
+        "Gestaltung künstlerischer Bewegungsaufgaben",
+        "Präsentation tänzerischer Choreographien",
+        "Umsetzung von Musik in Bewegung"
+      ]
+    },
+    {
+      "thema": "Raufen, Ringen, Verteidigen",
+      "relevante_unterthemen": [
+        "Bodenkampf",
+        "Ritualisierte Kämpfe",
+        "Kampf als Dialog"
+      ],
+      "kernkompetenzen": [
+        "Regel- und wettkampfgerechtes Kämpfen",
+        "Verantwortungsvoller Umgang mit Partnern",
+        "Gewaltfreie Konflikt- und Konfliktbewältigung"
+      ]
+    }
+  ]
+}

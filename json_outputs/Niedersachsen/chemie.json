@@ -1,0 +1,86 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Chemie",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Chemie in der gymnasialen Oberstufe in Niedersachsen verfolgt das Ziel einer naturwissenschaftlichen Grundbildung (Scientific Literacy). Die Lernenden sollen Phänomene der stofflichen Welt experimentell und theoretisch erschließen, ein rationales Weltbild entwickeln und die Bedeutung von Modellen (insbesondere den Wechsel zwischen Stoff- und Teilchenebene) verstehen. Der Unterricht ist kompetenzorientiert und gliedert sich in die vier Bereiche Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz, die durch drei Basiskonzepte (Aufbau der Stoffe, Chemische Reaktion, Energiekonzept) vernetzt werden. Ein besonderer Fokus liegt auf der Förderung der Fachsprache, der Medienbildung in einer digital geprägten Welt sowie der beruflichen Orientierung. Das Curriculum unterscheidet zwischen der Einführungsphase (Festigung und Erweiterung von Grundlagen) und der Qualifikationsphase (Vertiefung und Komplexitätssteigerung), wobei für Kurse auf erhöhtem Anforderungsniveau (eA) zusätzliche, komplexere Inhalte und eine stärkere Mathematisierung vorgesehen sind.",
+  "hauptthemen": [
+    {
+      "thema": "Strukturen von Molekülen organischer Stoffe",
+      "relevante_unterthemen": [
+        "Kohlenwasserstoffe",
+        "Homologe Reihe der Alkane",
+        "Strukturisomerie",
+        "IUPAC-Nomenklatur",
+        "EPA-Modell und räumliche Struktur"
+      ],
+      "kernkompetenzen": [
+        "Unterscheidung von Stoff- und Teilchenebene bei organischen Verbindungen",
+        "Anwendung verschiedener Strukturformelschreibweisen und Ableitung von Isomeren"
+      ]
+    },
+    {
+      "thema": "Reaktionen organischer Stoffe",
+      "relevante_unterthemen": [
+        "Verbrennungsreaktionen",
+        "Oxidation von Alkanolen",
+        "Reaktionsmechanismen (Substitution, Addition, Kondensation, Eliminierung)",
+        "Funktionelle Gruppen (Hydroxy-, Carbonyl-, Carboxy-Gruppe)"
+      ],
+      "kernkompetenzen": [
+        "Aufstellen von Reaktionsgleichungen und Mechanismen unter Verwendung von Oxidationszahlen",
+        "Beurteilung von Gefahren und Sicherheit im Labor und Alltag"
+      ]
+    },
+    {
+      "thema": "Energetik und Kinetik",
+      "relevante_unterthemen": [
+        "Reaktionsenthalpie und Standardbildungsenthalpie",
+        "Satz von Hess",
+        "Entropie und freie Enthalpie (eA)",
+        "Reaktionsgeschwindigkeit und Katalyse"
+      ],
+      "kernkompetenzen": [
+        "Berechnung von Energieumsätzen chemischer Reaktionen",
+        "Beurteilung der energetischen Effizienz und ökologischer Aspekte von Energieträgern"
+      ]
+    },
+    {
+      "thema": "Chemisches Gleichgewicht",
+      "relevante_unterthemen": [
+        "Massenwirkungsgesetz",
+        "Prinzip von Le Chatelier",
+        "Löslichkeitsgleichgewichte (eA)",
+        "Homogene und heterogene Katalyse"
+      ],
+      "kernkompetenzen": [
+        "Vorhersage der Lage von Gleichgewichten bei äußeren Einflüssen",
+        "Anwendung des Massenwirkungsgesetzes auf technische Prozesse"
+      ]
+    },
+    {
+      "thema": "Protonen- und Elektronenübertragungsreaktionen",
+      "relevante_unterthemen": [
+        "Säure-Base-Theorie nach Brönsted",
+        "pH-Wert-Berechnungen und Titrationen",
+        "Puffersysteme (eA)",
+        "Redoxreaktionen, Galvanische Zellen und Elektrolyse"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Säure-Base- und Redox-Prozessen in Alltag und Technik",
+        "Berechnung von Konzentrationen und Potenzialen in elektrochemischen Zellen"
+      ]
+    },
+    {
+      "thema": "Makromoleküle und Nanostrukturen",
+      "relevante_unterthemen": [
+        "Kunststoffe (Thermoplaste, Duroplaste, Elastomere)",
+        "Polymerisation",
+        "Naturstoffe (Kohlenhydrate, Proteine)",
+        "Nanoteilchen und Oberflächeneigenschaften (eA)"
+      ],
+      "kernkompetenzen": [
+        "Erklärung von Stoffeigenschaften durch Molekülstruktur und Wechselwirkungen",
+        "Bewertung von Nachhaltigkeit und Recycling von Kunststoffen"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Politik",
+  "zusammenfassung": "Die Fachanforderungen für das Fach Wirtschaft/Politik in Schleswig-Holstein zielen auf die Befähigung der Schülerinnen und Schüler zu mündigen, kommunikativen und partizipativen Bürgern. Der Unterricht ist problem- und kompetenzorientiert gestaltet und basiert auf dem Beutelsbacher Konsens, der Kontroversität und das Überwältigungsverbot sicherstellt. Das Fach integriert die drei Perspektiven Politik, Gesellschaft und Wirtschaft. In der Sekundarstufe I liegt der Fokus auf der Lebenswelt der Jugendlichen und der Vorbereitung auf den Übergang in die Oberstufe oder den Beruf. In der Sekundarstufe II wird das wissenschaftspropädeutische Arbeiten vertieft, wobei komplexe gesellschaftliche Herausforderungen, ökonomische Systeme und internationale Politikfelder analysiert werden. Zentrale Kompetenzbereiche sind Erschließung, Sachurteil, Werturteil und Handlungskompetenz, die durch kriteriengeleitete Analysen und die Anwendung fachspezifischer Methoden (z. B. Politikzyklus, Wirtschaftskreislauf) erworben werden.",
+  "hauptthemen": [
+    {
+      "thema": "Politik betrifft uns",
+      "relevante_unterthemen": [
+        "Politische Kommunikations- und Partizipationsmöglichkeiten",
+        "Wahlen und Wahlsysteme",
+        "Der politische Prozess und Willensbildung",
+        "Rechtsordnung und Rechtsstaat",
+        "Europäische Union"
+      ],
+      "kernkompetenzen": [
+        "Analyse politischer Entscheidungsprozesse",
+        "Bewertung von Partizipationsmöglichkeiten",
+        "Verständnis rechtsstaatlicher Grundsätze"
+      ]
+    },
+    {
+      "thema": "Jugendliche in einer sich wandelnden Gesellschaft",
+      "relevante_unterthemen": [
+        "Familie im Wandel",
+        "Erziehung und Sozialisation",
+        "Mediennutzung und Datenschutz",
+        "Migration und Integration",
+        "Demografischer Wandel",
+        "Soziale Ungleichheit"
+      ],
+      "kernkompetenzen": [
+        "Reflexion gesellschaftlicher Rollenbilder",
+        "Analyse von Sozialisationsprozessen",
+        "Beurteilung von Chancen und Risiken des sozialen Wandels"
+      ]
+    },
+    {
+      "thema": "Wirtschaft betrifft uns",
+      "relevante_unterthemen": [
+        "Jugendliche als Konsumenten",
+        "Marktmechanismen (Angebot und Nachfrage)",
+        "Soziale Marktwirtschaft",
+        "Berufsorientierung und Arbeitswelt"
+      ],
+      "kernkompetenzen": [
+        "Verständnis ökonomischer Grundprinzipien",
+        "Reflexion des eigenen Konsumverhaltens",
+        "Analyse der Funktionsweise der Sozialen Marktwirtschaft"
+      ]
+    },
+    {
+      "thema": "Wirtschaftspolitik und Globalisierung (Sekundarstufe II)",
+      "relevante_unterthemen": [
+        "Wirtschaftspolitik im Spannungsfeld von Markt und Staat",
+        "Europa in Gegenwart und Zukunft",
+        "Internationale Friedens- und Sicherheitspolitik",
+        "Zukunft des Sozialstaates",
+        "Globalisierung",
+        "Medien und Politik",
+        "Ökonomie und Ökologie"
+      ],
+      "kernkompetenzen": [
+        "Mehrperspektivische Analyse komplexer globaler Probleme",
+        "Kriteriengeleitete Urteilsbildung zu wirtschaftspolitischen Maßnahmen",
+        "Wissenschaftspropädeutische Anwendung von Theorien und Modellen"
+      ]
+    }
+  ]
+}

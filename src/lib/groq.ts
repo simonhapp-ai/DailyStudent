@@ -1,4 +1,5 @@
 import type { GeneratedSmartNote, StundenplanSlot } from '../types'
+import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
 const VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct'
@@ -102,7 +103,9 @@ interface TextBlockJSON {
 export async function analyzeTextBlock(
   text: string,
   subjectName: string,
+  kcData?: KcSubjectData,
 ): Promise<{ additionalKeywords: string[]; suggestExplain: string[]; summary: string }> {
+  const kcBlock = kcData ? `\n\n${buildKcPromptContext(kcData, 'oberstufe')}` : ''
   const content = await groqFetch({
     model: TEXT_MODEL,
     max_tokens: 512,
@@ -111,7 +114,7 @@ export async function analyzeTextBlock(
     messages: [
       {
         role: 'system',
-        content: 'Du bist ein Lernassistent für deutsche Gymnasiasten (Klasse 10–13). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.',
+        content: `Du bist ein Lernassistent für deutsche Gymnasiasten (Klasse 10–13). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.${kcBlock}`,
       },
       {
         role: 'user',
@@ -210,7 +213,9 @@ export async function explainKeyword(
   keyword: string,
   subjectName: string,
   context?: string,
+  kcData?: KcSubjectData,
 ): Promise<string> {
+  const kcBlock = kcData ? `\n\n${buildKcPromptContext(kcData, 'oberstufe')}` : ''
   return groqFetch({
     model: TEXT_MODEL,
     max_tokens: 150,
@@ -218,7 +223,7 @@ export async function explainKeyword(
     messages: [
       {
         role: 'system',
-        content: 'Du bist ein Lernassistent für deutsche Gymnasiasten. Antworte immer auf Deutsch. Erkläre Fachbegriffe kurz, präzise und verständlich.',
+        content: `Du bist ein Lernassistent für deutsche Gymnasiasten. Antworte immer auf Deutsch. Erkläre Fachbegriffe kurz, präzise und verständlich.${kcBlock}`,
       },
       {
         role: 'user',
@@ -340,7 +345,9 @@ export async function generateSmartNote(
   rawText: string,
   subjectName: string,
   lessonId: string,
+  kcData?: KcSubjectData,
 ): Promise<GeneratedSmartNote> {
+  const kcBlock = kcData ? `\n\n${buildKcPromptContext(kcData, 'oberstufe')}` : ''
   const content = await groqFetch({
     model: TEXT_MODEL,
     max_tokens: 2048,
@@ -349,7 +356,7 @@ export async function generateSmartNote(
     messages: [
       {
         role: 'system',
-        content: 'Du bist ein Lernassistent für deutsche Gymnasiasten (Klasse 10–13). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.',
+        content: `Du bist ein Lernassistent für deutsche Gymnasiasten (Klasse 10–13). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.${kcBlock}`,
       },
       {
         role: 'user',
@@ -414,7 +421,9 @@ interface FlashCardJSON {
 export async function generateFlashcards(
   note: GeneratedSmartNote,
   count = 7,
+  kcData?: KcSubjectData,
 ): Promise<{ front: string; back: string; keywords: string[] }[]> {
+  const kcBlock = kcData ? `\n\n${buildKcPromptContext(kcData, 'oberstufe')}` : ''
   const content = await groqFetch({
     model: TEXT_MODEL,
     max_tokens: 1200,
@@ -423,7 +432,7 @@ export async function generateFlashcards(
     messages: [
       {
         role: 'system',
-        content: 'Du bist ein Lernkarteikarten-Generator für deutsche Gymnasiasten (Abitur). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.',
+        content: `Du bist ein Lernkarteikarten-Generator für deutsche Gymnasiasten (Abitur). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.${kcBlock}`,
       },
       {
         role: 'user',
@@ -634,10 +643,12 @@ interface BlurtingEvalJSON {
 export async function evaluateBlurting(
   userText: string,
   referenceContent: string,
+  kcData?: KcSubjectData,
 ): Promise<{ correct: string[]; forgotten: string[]; corrections: string[] }> {
   const refSection = referenceContent.trim()
     ? `Referenzinhalt:\n${referenceContent.slice(0, 2000)}`
     : 'Kein spezifischer Referenzinhalt — bewerte den Text auf inhaltliche Vollständigkeit und Korrektheit.'
+  const kcBlock = kcData ? `\n\n${buildKcPromptContext(kcData, 'oberstufe')}` : ''
 
   const content = await groqFetch({
     model: TEXT_MODEL,
@@ -647,7 +658,7 @@ export async function evaluateBlurting(
     messages: [
       {
         role: 'system',
-        content: 'Du bist ein Lerncoach für deutsche Gymnasiasten (Klasse 10–13). Vergleiche den Text des Schülers mit dem Referenzinhalt. Antworte auf Deutsch. Gib nur valides JSON zurück, kein Markdown.',
+        content: `Du bist ein Lerncoach für deutsche Gymnasiasten (Klasse 10–13). Vergleiche den Text des Schülers mit dem Referenzinhalt. Antworte auf Deutsch. Gib nur valides JSON zurück, kein Markdown.${kcBlock}`,
       },
       {
         role: 'user',
@@ -661,5 +672,90 @@ export async function evaluateBlurting(
     correct: Array.isArray(parsed.correct) ? parsed.correct : [],
     forgotten: Array.isArray(parsed.forgotten) ? parsed.forgotten : [],
     corrections: Array.isArray(parsed.corrections) ? parsed.corrections : [],
+  }
+}
+
+/* ─── Lernzettel-Generator ───────────────────────────────── */
+
+export interface LernzettelInput {
+  subjectName: string
+  selectedTopics: string[]
+  smartNotes: GeneratedSmartNote[]
+  kcData?: KcSubjectData
+}
+
+export interface LernzettelOutput {
+  title: string
+  content: string
+  keywords: string[]
+  examTopics: string[]
+}
+
+interface LernzettelJSON {
+  title: string
+  content: string
+  keywords: string[]
+  examTopics: string[]
+}
+
+export async function generateLernzettel(input: LernzettelInput): Promise<LernzettelOutput> {
+  const { subjectName, selectedTopics, smartNotes, kcData } = input
+  const kcBlock = kcData ? `\n\n${buildKcPromptContext(kcData, 'oberstufe')}` : ''
+
+  const notesBlock = smartNotes.slice(0, 3).map((n, i) => {
+    const body = [
+      n.summary ? `Zusammenfassung: ${n.summary.slice(0, 400)}` : '',
+      n.keywords.length ? `Schlüsselbegriffe: ${n.keywords.join(', ')}` : '',
+      n.examTopics.length ? `Klausurthemen: ${n.examTopics.join(', ')}` : '',
+    ].filter(Boolean).join('\n')
+    return `--- Note ${i + 1} ---\n${body}`
+  }).join('\n\n')
+
+  const topicsLine = selectedTopics.length
+    ? `Ausgewählte Themen: ${selectedTopics.join(', ')}\n\n`
+    : ''
+
+  const content = await groqFetch({
+    model: TEXT_MODEL,
+    max_tokens: 2048,
+    temperature: 0.25,
+    response_format: { type: 'json_object' },
+    messages: [
+      {
+        role: 'system',
+        content: `Du bist ein Lernassistent für deutsche Gymnasiasten (Klasse 10–13). Erstelle strukturierte Lernzettel auf Basis von Smart Notes. Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.${kcBlock}`,
+      },
+      {
+        role: 'user',
+        content: `Fach: ${subjectName}
+${topicsLine}Smart Notes des Schülers:
+${notesBlock}
+
+Erstelle einen vollständigen Lernzettel als JSON:
+{
+  "title": "Fach — Thema Zusammenfassung (max. 60 Zeichen)",
+  "content": "vollständiger Lernzettel (600–1000 Wörter)",
+  "keywords": ["Fachbegriff1"],
+  "examTopics": ["Klausurthema1"]
+}
+
+Regeln für content:
+- Beginne mit kurzem Überblick (2–3 Sätze)
+- Struktur: ## Oberthema, ### Unterpunkt
+- Definitionen: **Begriff**: Erklärung
+- Merksätze als Zeile die mit "Merke: " beginnt
+- Klausurhinweise am Ende als ## Klausurrelevanz
+- keywords: 6–10 wichtige Fachbegriffe
+- examTopics: 3–5 prüfungsrelevante Punkte`,
+      },
+    ],
+  })
+
+  const parsed = JSON.parse(content) as LernzettelJSON
+  return {
+    title: parsed.title ?? `${subjectName} — Lernzettel`,
+    content: parsed.content ?? '',
+    keywords: Array.isArray(parsed.keywords) ? parsed.keywords : [],
+    examTopics: Array.isArray(parsed.examTopics) ? parsed.examTopics : [],
   }
 }

@@ -1,0 +1,142 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Lehrplan für Geografie in der Jahrgangsstufe 13 des Gymnasiums in Bayern (erhöhtes Anforderungsniveau) zielt darauf ab, die Schülerinnen und Schüler zu umfassenden geographischen Analysen und Bewertungen zu befähigen. Er gliedert sich in fünf zentrale Lernbereiche, die sowohl methodische Kompetenzen als auch inhaltliche Schwerpunkte abdecken.\n\nEin fundamentaler Pfeiler des Curriculums ist der Erwerb und die Anwendung **geographischer Arbeitstechniken**. Hier lernen die Schülerinnen und Schüler, eine Vielzahl von geographischen Medien – von physisch-geographischen und thematischen Karten über Wetter- und Satellitenbilder bis hin zu Diagrammen, Bodenprofilen und Statistiken – differenziert zu interpretieren und zu bewerten. Sie üben sich im Erstellen eigener graphischer Darstellungen wie Strukturskizzen, Kausalprofilen und Wirkungsgefügen, oft unter Einsatz digitaler Geoinformationssysteme (GIS). Die Fähigkeit zur Recherche in Fachliteratur, zur Hypothesenentwicklung und -überprüfung sowie zur Präsentation komplexer geographischer Erkenntnisse wird ebenso geschult wie die praktische Anwendung von Arbeitstechniken bei Exkursionen.\n\nEin weiterer Schwerpunkt liegt auf den **wirtschaftlichen Entwicklungen in einer globalisierten Welt**. Die Schülerinnen und Schüler setzen sich kritisch mit Indikatoren zur Beurteilung wirtschaftlicher und sozialer Entwicklung auseinander und analysieren globale Disparitäten. Sie untersuchen die Abhängigkeiten und Risiken globaler wirtschaftlicher Vernetzung, wie globale Lieferketten, und vergleichen den Entwicklungsstand verschiedener Länder vor dem Hintergrund aktueller Entwicklungstheorien. Der Einfluss der Globalisierung auf deutsche Wirtschaftsräume, die Chancen und Risiken des Ferntourismus sowie der Strukturwandel deutscher Tourismusregionen werden ebenso beleuchtet wie die Bedeutung von Nachhaltigkeit im Tourismus. Zudem wird die räumliche Bedeutung der Digitalisierung und die kritische Reflexion von Raumwahrnehmungen thematisiert.\n\nDer Lernbereich **Ressourcen und nachhaltige Entwicklung** adressiert die drängenden Fragen der Rohstoffversorgung und des Umweltschutzes. Die Schülerinnen und Schüler analysieren die Diskrepanz zwischen globalem Potenzial und weltweitem Verbrauch von Rohstoffen und begründen die Notwendigkeit eines nachhaltigen Ressourcenmanagements. Sie untersuchen globale Rohstoffströme, Energienetze und Transportwege unter wirtschaftlichen, geopolitischen und ökologischen Gesichtspunkten. Herausforderungen des Rohstoffabbaus in Extremräumen, die Bedeutung regenerativer Energieträger für die zukünftige Energieversorgung und Klimaziele sowie die geopolitische Rolle transnationaler Unternehmen im Rohstoffsektor sind zentrale Themen. Die Entwicklung nachhaltiger Energie- und Mobilitätskonzepte auf lokaler und regionaler Ebene und die Ableitung persönlicher Handlungsoptionen runden diesen Bereich ab.\n\nIm Bereich **Bevölkerung und Migration** werden demographische Strukturen und Prozesse in Ländern unterschiedlichen Entwicklungsstands verglichen, und deren globale sowie regionale Auswirkungen dargestellt. Die Schülerinnen und Schüler beurteilen die Aussagekraft von Bevölkerungsprognosen und -modellen und analysieren sozialgeographische Auswirkungen des demographischen Wandels, wie Änderungen der Familienstruktur oder Einflüsse auf die Arbeitswelt. Ökologische und anthropogene Ursachen von Migration, deren globale und regionale Dimensionen und Folgen sowie die politischen Implikationen von Flucht und Vertreibung werden kritisch erörtert, wobei auch die mediale Darstellung dieser Phänomene hinterfragt wird.\n\nSchließlich widmet sich der Lehrplan der **Stadtentwicklung und urbanen Räumen**. Hier analysieren die Schülerinnen und Schüler städtische Räume im Kontext raum-zeitlichen Wandels und überprüfen die Aussagekraft stadtgeographischer Modelle. Sie erörtern Probleme und Herausforderungen von Megastädten, die Bedeutung von Global Cities im Kontext der Globalisierung und aktuelle Entwicklungen in urbanen Räumen wie Smart Cities. Konzepte nachhaltiger Stadtentwicklung, die Rolle von Bürgerengagement und die Analyse des Ökosystems Stadt unter sich ändernden Klimabedingungen sind weitere Schwerpunkte. Auch die Imageorientierung von Städten und deren Projekte werden unter Nachhaltigkeitsaspekten diskutiert.\n\nInsgesamt fördert der Lehrplan ein tiefgreifendes Verständnis für komplexe geographische Zusammenhänge, die Fähigkeit zur kritischen Analyse und Bewertung sowie die Entwicklung von Lösungsansätzen für globale und regionale Herausforderungen, stets unter Berücksichtigung des Leitbilds der Nachhaltigkeit.",
+  "hauptthemen": [
+    {
+      "thema": "Geographische Arbeitstechniken für Jahrgangsstufe 12 und 13",
+      "relevante_unterthemen": [
+        "Interpretation physisch-geographischer und thematischer Karten",
+        "Analyse von Wetterkarten, Diagrammen, Bodenprofilen, Bildern und Satellitenbildern",
+        "Erstellung von Strukturskizzen und Visualisierung von Wirkungszusammenhängen",
+        "Interpretation und Bewertung von Strukturdaten, Statistiken und Indices (ggf. mit GIS)",
+        "Transfer von Informationen in graphische Darstellungen (Kausalprofile, Blockbilder, Wirkungsgefüge, Modelle)",
+        "Anwendung fachspezifischer Strategien zur Problemlösung",
+        "Interpretation und Bewertung von Modellen",
+        "Recherche zu aktuellen geographischen Fragestellungen mithilfe von Fachliteratur",
+        "Hypothesenentwicklung und -überprüfung anhand von Experimenten oder Materialien",
+        "Präsentation geographischer Erkenntnisse unter Einbeziehung unterschiedlicher Medien",
+        "Planung, Gestaltung und Durchführung von Exkursionen und Anwendung geographischer Arbeitstechniken vor Ort"
+      ],
+      "kernkompetenzen": [
+        "Interpretieren differenziert physisch-geographische und thematische Karten, Wetterkarten, Diagramme, Bodenprofile sowie Bilder und Satellitenbilder.",
+        "Erläutern regionale Ausprägungen des Klimas anhand von Klimadiagrammen.",
+        "Analysieren und erstellen selbstständig Strukturskizzen zu vernetzten Inhalten und visualisieren Wirkungszusammenhänge.",
+        "Interpretieren und bewerten Strukturdaten, Daten aus Statistiken sowie Indices und erstellen daraus eigene graphische Darstellungen, ggf. mit GIS.",
+        "Transferieren Informationen aus verschiedenen Quellen in eigene graphische Darstellungen, z. B. in Kausalprofile, Blockbilder, Wirkungsgefüge, Modelle.",
+        "Wenden gezielt fachspezifische Strategien an, um komplexe Fragestellungen lösen zu können.",
+        "Interpretieren vielschichtige Modelle und bewerten deren Aussagekraft.",
+        "Recherchieren zu ausgewählten aktuellen geographischen Fragestellungen mithilfe von Fachliteratur.",
+        "Entwickeln anhand von Experimenten bzw. Materialien Hypothesen aus geographischer Perspektive und überprüfen diese.",
+        "Präsentieren aus verschiedenen Materialien gewonnene geographische Erkenntnisse unter Einbeziehung unterschiedlicher, ggf. digitaler, Medien.",
+        "Beteiligen sich an Planung, Gestaltung und Durchführung von mindestens zwei Exkursionstagen in Jahrgangsstufe 12 oder 13 und wenden dabei geographische Arbeitstechniken vor Ort an."
+      ]
+    },
+    {
+      "thema": "Wirtschaftliche Entwicklungen in einer globalisierten Welt",
+      "relevante_unterthemen": [
+        "Voraussetzungen und Merkmale einer globalisierten Wirtschaft",
+        "Indikatoren für Entwicklung zur Differenzierung der Staaten",
+        "Wirtschaftliche Abhängigkeiten und Risiken in einer globalisierten Welt (z. B. globale Lieferketten)",
+        "Entwicklungsstand und Entwicklungsprozess verschiedener Länder im Vergleich",
+        "Gründe für Unterentwicklung, verschiedene aktuelle Entwicklungstheorien (u. a. Theorie der fragmentierenden Entwicklung)",
+        "Ausgewählte Entwicklungsstrategien auf globaler und regionaler Ebene, Ziele für nachhaltige Entwicklung und Umsetzung an Beispielen",
+        "Einfluss der Globalisierung auf Deutschland: Standortfaktoren und Wirtschaftsdynamik in Wachstumsräumen, wirtschaftsräumliche Disparitäten in Deutschland",
+        "Ferntourismus in Entwicklungs- und Schwellenländern: Chancen und Risiken der touristischen Erschließung, Auswirkungen auf Quell- und Zielgebiete, Aspekte der Nachhaltigkeit (Raumbeispiel Südostasien)",
+        "Tourismus in Deutschland vor dem Hintergrund veränderter Reisegewohnheiten, nachhaltiger Tourismus",
+        "Veränderte Raumwahrnehmung und Raumbedeutung durch die Digitalisierung"
+      ],
+      "kernkompetenzen": [
+        "Bewerten die Aussagekraft verschiedener Indikatoren zur Beurteilung der wirtschaftlichen und sozialen Entwicklung von Staaten und erläutern Disparitäten auf unterschiedlichen Maßstabsebenen.",
+        "Analysieren und problematisieren Abhängigkeiten und Risiken der globalen wirtschaftlichen Vernetzung.",
+        "Recherchieren und vergleichen Daten zum Entwicklungsstand und Entwicklungsprozess verschiedener Länder.",
+        "Begründen Entwicklungsunterschiede vor dem Hintergrund aktueller Entwicklungstheorien.",
+        "Stellen Zielsetzungen unterschiedlicher Entwicklungsstrategien dar und erörtern deren Umsetzung an Beispielen.",
+        "Untersuchen den Einfluss der Globalisierung auf ausgewählte Wirtschaftsräume in Deutschland.",
+        "Analysieren durch den Ferntourismus ausgelöste Veränderungen in Quell- und Zielgebieten, um so die Auswirkungen touristischer Erschließung kritisch zu hinterfragen.",
+        "Erfassen den Strukturwandel ausgewählter deutscher Tourismusregionen und erörtern unter dem Leitbild der Nachhaltigkeit zukunftsfähige Tourismuskonzepte.",
+        "Diskutieren und reflektieren Auswirkungen verschiedener Tourismusformen, insbesondere hinsichtlich Nachhaltigkeit, und leiten Richtlinien für eigenes Handeln bei Reisen ab.",
+        "Hinterfragen mediale Raumdarstellungen sowie eigene Raumwahrnehmungen und diskutieren die räumliche Bedeutung der Digitalisierung."
+      ]
+    },
+    {
+      "thema": "Ressourcen und nachhaltige Entwicklung",
+      "relevante_unterthemen": [
+        "Diskrepanz von globalem Potenzial und weltweitem Verbrauch von Rohstoffen",
+        "Begrenztheit von Rohstoffen und Notwendigkeit eines nachhaltigen Ressourcenmanagements",
+        "Globale und regionale Rohstoffströme, Energienetze und Transportwege (wirtschaftliche, geopolitische und ökologische Zusammenhänge)",
+        "Herausforderungen des Rohstoffabbaus in Extremräumen",
+        "Bedeutung ausgewählter regenerativer Energieträger für die zukünftige Energieversorgung und Klimaziele",
+        "Geopolitische Bedeutung von Rohstoffabbau durch transnationale Unternehmen",
+        "Möglichkeiten eines nachhaltigen Energiemanagements in Deutschland und regional",
+        "Regionale und persönliche Handlungsoptionen im Energiemanagement",
+        "Nachhaltige Mobilitätskonzepte und damit verbundene Problemstellungen",
+        "Rohstofflagerstätten mit weltwirtschaftlicher Bedeutung (Verbreitung, Verfügbarkeit, Reichweite, Erschließung unkonventioneller Lagerstätten, Substitution)",
+        "Rohstoffabbau in Entwicklungsländern (z. B. Seltene Erden, Lithium; Vermarktung, Konfliktpotenzial)",
+        "Wirtschaftliche, geopolitische und ökologische Aspekte eines Pipelinenetzes",
+        "Beitrag regenerativer Energien zur Erfüllung von Klimazielen in Deutschland, aktuelle Maßnahmen zur nachhaltigen Energieversorgung",
+        "Maßnahmen eines nachhaltigen Ressourcenmanagements auf lokaler Ebene",
+        "Herausforderungen bei der Energieerzeugung für nachhaltige Mobilität"
+      ],
+      "kernkompetenzen": [
+        "Zeigen die Diskrepanz von globalem Potenzial und weltweitem Verbrauch von Rohstoffen auf und begründen aus dem Wissen um deren Begrenztheit die Notwendigkeit eines nachhaltigen Ressourcenmanagements.",
+        "Informieren sich über globale und regionale Rohstoffströme, Energienetze und Transportwege, um wirtschaftliche, geopolitische und ökologische Zusammenhänge darzustellen und zu problematisieren.",
+        "Analysieren Herausforderungen des Rohstoffabbaus in Extremräumen und diskutieren dessen Notwendigkeit.",
+        "Beurteilen die Bedeutung ausgewählter regenerativer Energieträger vor dem Hintergrund der zukünftigen Energieversorgung und von Klimazielen.",
+        "Diskutieren die geopolitische Bedeutung von Rohstoffabbau durch transnationale Unternehmen.",
+        "Erörtern Möglichkeiten eines nachhaltigen Energiemanagements in Deutschland sowie in der eigenen Region und leiten daraus regionale und persönliche Handlungsoptionen ab.",
+        "Erörtern nachhaltige Mobilitätskonzepte und diskutieren damit verbundene Problemstellungen."
+      ]
+    },
+    {
+      "thema": "Bevölkerung und Migration",
+      "relevante_unterthemen": [
+        "Demographische Strukturen und Prozesse in Ländern unterschiedlichen Entwicklungsstands",
+        "Globale und regionale Auswirkungen der unterschiedlichen Entwicklungsdynamik der Weltbevölkerung",
+        "Ausgewählte demographische Strukturen auf globaler, nationaler und regionaler Ebene",
+        "Aussagekraft von Prognosen und Modellen (Modell des demographischen Übergangs, natürliche Bevölkerungsbewegungen)",
+        "Sozialgeographische Auswirkungen der Demographie im Wandel (Änderung der Familienstruktur, Stellung der Frau, Einflüsse auf die Arbeitswelt, Generationenvertrag, politische Steuerungsansätze)",
+        "Ökologische und anthropogene Ursachen von Migration",
+        "Globale und regionale Dimensionen und Folgen von Migration, Handlungsmöglichkeiten",
+        "Auswirkungen von Flucht und Vertreibung an zwei aktuellen Beispielen und deren mediale Darstellung",
+        "Politische Implikationen von Migration",
+        "Ursachen und Folgen demographischer Entwicklungen in Deutschland, Bewertung unterschiedlicher Prognoseszenarien",
+        "Formen und Ursachen von Migration auf unterschiedlichen Maßstabsebenen und deren Rückwirkungen auf Quell- und Zielgebiete",
+        "Steuerungsmöglichkeiten und geopolitische Dimension von Migrationsbewegungen, Bedeutung und Einfluss internationaler Organisationen",
+        "Bevölkerungswachstum und Tragfähigkeit der Erde"
+      ],
+      "kernkompetenzen": [
+        "Vergleichen demographische Strukturen und Prozesse in Ländern unterschiedlichen Entwicklungsstands und legen exemplarisch globale und regionale Auswirkungen der unterschiedlichen Entwicklungsdynamik der Weltbevölkerung dar.",
+        "Stellen ausgewählte demographische Strukturen auf globaler, nationaler und regionaler Ebene dar und beurteilen die Aussagekraft von Prognosen und Modellen.",
+        "Legen sozialgeographische Auswirkungen der Demographie im Wandel dar.",
+        "Analysieren ökologische und anthropogene Ursachen von Migration, um so globale und regionale Dimensionen und Folgen zu erörtern und Handlungsmöglichkeiten zu erschließen.",
+        "Erläutern Auswirkungen von Flucht und Vertreibung an zwei aktuellen Beispielen und diskutieren deren mediale Darstellung.",
+        "Nehmen Stellung zu politischen Implikationen von Migration.",
+        "Analysieren und beurteilen Ursachen und Folgen demographischer Entwicklungen in Deutschland und bewerten unterschiedliche Prognoseszenarien."
+      ]
+    },
+    {
+      "thema": "Stadtentwicklung und urbane Räume",
+      "relevante_unterthemen": [
+        "Städtische Räume vor dem Hintergrund des raum-zeitlichen Wandels",
+        "Aussagekraft stadtgeographischer Modelle (Verstädterung, Urbanisierung, Suburbanisierung, Reurbanisierung, Segregation und Integration)",
+        "Probleme und Herausforderungen von Megastädten (z. B. Infrastruktur, Slumbildung, Marginalisierung, informeller Sektor; Lösungsansätze)",
+        "Bedeutung von Global Cities als Entscheidungs-, Steuerungs- und Kontrollzentren im Kontext der Globalisierung",
+        "Aktuelle Entwicklungen in urbanen Räumen und deren Auswirkungen (z. B. Smart Cities, Boden- und Wohnraumpreisentwicklung, Urban Mining)",
+        "Chancen und Probleme nachhaltiger Stadtentwicklung",
+        "Bedeutung gelungenen Bürgerengagements",
+        "Ökosystem Stadt vor dem Hintergrund sich ändernder Klimabedingungen (Stadtklima im Wandel, städtische Begrünungskonzepte, Urban Gardening)",
+        "Imageorientierung von Städten unter Aspekten der Nachhaltigkeit (z. B. Prestigebauten, Stadtmarketing, Megaevents)"
+      ],
+      "kernkompetenzen": [
+        "Analysieren städtische Räume vor dem Hintergrund des raum-zeitlichen Wandels und überprüfen dabei die Aussagekraft stadtgeographischer Modelle.",
+        "Erörtern Probleme und Herausforderungen von Megastädten und diskutieren zukunftsweisende Lösungsansätze.",
+        "Erläutern die Bedeutung von Global Cities im Kontext der Globalisierung.",
+        "Recherchieren und präsentieren aktuelle Entwicklungen in urbanen Räumen.",
+        "Erörtern Chancen und Probleme nachhaltiger Stadtentwicklung und legen an einem Beispiel die Bedeutung gelungenen Bürgerengagements dar.",
+        "Analysieren das Ökosystem Stadt vor dem Hintergrund sich ändernder Klimabedingungen.",
+        "Diskutieren die Imageorientierung von Städten unter Aspekten der Nachhaltigkeit am Beispiel ausgewählter Projekte."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Lehrplan für das Fach Bildende Kunst in der gymnasialen Oberstufe (Sek. II) in Rheinland-Pfalz (Stand 1998) verfolgt das Ziel, Schülerinnen und Schülern eine alternative Zugangsweise zur Welt in einer naturwissenschaftlich geprägten Zivilisation zu eröffnen. Das Fach ist als Einheit konzipiert und gliedert sich in die drei Lernbereiche Theorie (A), Praxis (B) und Geschichte (C). Ein zentrales Anliegen ist die Förderung der 'ästhetisch-aisthetischen Kompetenz', die sowohl rezeptive als auch produktive Dimensionen umfasst. Der Lehrplan ist in sechs Phänomenbereiche unterteilt, die von grundlegenden Wahrnehmungsfragen bis hin zu komplexen philosophischen Fragestellungen (Kunst und Sinn) reichen. Dabei wird ein besonderer Fokus auf die Integration neuer Medien (Techno-Imagination) und die Förderung von Methoden- und Sozialkompetenz durch projektorientiertes Arbeiten gelegt. Der Unterricht soll ein Spannungsfeld zwischen rationaler Analyse und sinnlicher Erfahrung aufbauen, wobei der 'pädagogische Freiraum' den Lehrkräften Spielraum für individuelle Schwerpunktsetzungen und fächerverbindende Projekte bietet.",
+  "hauptthemen": [
+    {
+      "thema": "Visuelle Wahrnehmung",
+      "relevante_unterthemen": [
+        "Perzeption und Apperzeption",
+        "Gestaltgesetze",
+        "Wahrnehmung als konstruktiver Prozess",
+        "Raum- und Zeitdarstellung"
+      ],
+      "kernkompetenzen": [
+        "Grundphänomene der Wahrnehmung verstehen und als konstruktiven Akt begreifen",
+        "Zusammenhang zwischen Wahrnehmungsstrukturen und bildnerischen Regeln analysieren"
+      ]
+    },
+    {
+      "thema": "Bildsprache, Kommunikation und Zeichensysteme",
+      "relevante_unterthemen": [
+        "Semiotik (Syntaktik, Semantik, Pragmatik)",
+        "Kommunikationstheorie",
+        "Ikonizität",
+        "Informationstheoretische Ästhetik"
+      ],
+      "kernkompetenzen": [
+        "Werke der Kunst und des Designs als Zeichensysteme interpretieren",
+        "Visuelle Kommunikationsprozesse analysieren und in eigenen Gestaltungen anwenden"
+      ]
+    },
+    {
+      "thema": "Deutung und Bedeutung",
+      "relevante_unterthemen": [
+        "Ikonographie und Ikonologie",
+        "Motivgeschichte",
+        "Hermeneutik",
+        "Film- und Medienanalyse"
+      ],
+      "kernkompetenzen": [
+        "Methoden der Kunstinterpretation (Ikonographie/Ikonologie) anwenden",
+        "Kunstwerke in ihren historischen, sozialen und ideengeschichtlichen Kontext einordnen"
+      ]
+    },
+    {
+      "thema": "Funktionale Ästhetik (Gestaltete Umwelt & Medien)",
+      "relevante_unterthemen": [
+        "Architekturtheorie",
+        "Design und Produktkultur",
+        "Technische Bildmedien (Foto, Film, Computer)",
+        "Funktion vs. Ästhetik"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhang von funktionalen und ästhetischen Faktoren in der Umweltgestaltung verstehen",
+        "Technische Medien kritisch reflektieren und gestalterisch nutzen"
+      ]
+    },
+    {
+      "thema": "Kunst und Gesellschaft",
+      "relevante_unterthemen": [
+        "Soziale Funktionen von Kunst",
+        "Realismus und Avantgarde",
+        "Kunst als Ware vs. Lebensmittel",
+        "Politische Instrumentalisierung von Kunst"
+      ],
+      "kernkompetenzen": [
+        "Wechselbeziehungen zwischen Kunst, Politik und Gesellschaft kritisch bewerten",
+        "Eigene engagierte Stellungnahmen zu gesellschaftlichen Problemen künstlerisch formulieren"
+      ]
+    },
+    {
+      "thema": "Kunst und Sinn",
+      "relevante_unterthemen": [
+        "Kunstphilosophie und Ästhetik",
+        "Grenzphänomene (Transrationalität)",
+        "Gegenwartskunst",
+        "Medienökologie"
+      ],
+      "kernkompetenzen": [
+        "Den Sinn und Stellenwert von Kunst in der Moderne und Postmoderne reflektieren",
+        "Sich mit dem 'ästhetischen Zustand' als ganzheitlicher Erfahrung auseinandersetzen"
+      ]
+    }
+  ]
+}

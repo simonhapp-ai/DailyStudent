@@ -1,0 +1,58 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Brandenburg zielt auf die Entwicklung einer interkulturellen fremdsprachigen Handlungsfähigkeit ab. Die Schülerinnen und Schüler sollen befähigt werden, in einer globalisierten Welt erfolgreich zu kommunizieren, indem sie ihre funktionalen kommunikativen Kompetenzen (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung) sowie ihre Text- und Medienkompetenz vertiefen. Ein besonderer Fokus liegt auf der Wissenschaftspropädeutik, der Förderung von Sprachbewusstheit und Sprachlernkompetenz sowie der kritischen Auseinandersetzung mit soziokulturellen, politischen und wirtschaftlichen Themen anglofoner Länder. Der Unterricht ist kompetenzorientiert und bereitet auf die Anforderungen der Allgemeinen Hochschulreife vor, wobei authentische Materialien und lebensweltorientierte Aufgabenstellungen im Zentrum stehen.",
+  "hauptthemen": [
+    {
+      "thema": "Individuum und Gesellschaft",
+      "relevante_unterthemen": [
+        "Zwischenmenschliche Beziehungen",
+        "Lebensziele und -entwürfe",
+        "Geschlechterrollen im Wandel",
+        "Gesellschaftliche und individuelle Moralvorstellungen"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Beweggründen menschlichen Handelns in persönlichen und gesellschaftlichen Kontexten",
+        "Reflexion von Lebensentwürfen vor dem Hintergrund der eigenen Lebenswelt"
+      ]
+    },
+    {
+      "thema": "Nationale und kulturelle Identität",
+      "relevante_unterthemen": [
+        "Überwindung von Vorurteilen",
+        "Multikulturelle Gesellschaft",
+        "Kunst als Ausdruck kultureller Identität",
+        "Tradition und Wandel anglofoner Gesellschaften"
+      ],
+      "kernkompetenzen": [
+        "Perspektivwechsel zur Relativierung eigener kultureller Konzepte",
+        "Analyse von Lebensbedingungen ethnischer Gruppen und deren Integrationsprozessen"
+      ]
+    },
+    {
+      "thema": "Eine Welt – globale Fragen",
+      "relevante_unterthemen": [
+        "Herausforderungen und Chancen der Globalisierung",
+        "Umweltverantwortung",
+        "Wissenschaft und Technik",
+        "Bedingungen für eine gerechtere Welt"
+      ],
+      "kernkompetenzen": [
+        "Kritische Stellungnahme zu globalen Entwicklungen in Politik, Wirtschaft und Umwelt",
+        "Entwicklung von Lösungsansätzen für globale gesellschaftliche Herausforderungen"
+      ]
+    },
+    {
+      "thema": "Herausforderungen der Gegenwart",
+      "relevante_unterthemen": [
+        "Arbeitswelt und Work-Life-Balance",
+        "Rolle und Wirkung der Massenmedien",
+        "Urbanes, suburbanes und rurales Leben"
+      ],
+      "kernkompetenzen": [
+        "Kritische Auseinandersetzung mit medialer Widerspiegelung der Realität",
+        "Vergleichende Analyse politischer und sozialer Entwicklungen anglofoner Länder mit dem eigenen Land"
+      ]
+    }
+  ]
+}

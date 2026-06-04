@@ -1,0 +1,53 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe in Rheinland-Pfalz (Stand 1998) verfolgt das Ziel, eine solide fachliche Wissensbasis mit der Entwicklung von Lernstrategien und wissenschaftspropädeutischen Kompetenzen zu verknüpfen. Er orientiert sich an einem konstruktivistischen Lernbegriff, bei dem Schüler aktiv Wissen in bestehende Strukturen integrieren. Ein zentrales Element ist die 'Integrationsphase' in der Jahrgangsstufe 11, die heterogene Vorkenntnisse aus der Sekundarstufe I ausgleichen soll. Der Unterricht ist in Bausteine gegliedert, die eine flexible, kontextorientierte und fächerübergreifende Gestaltung ermöglichen. Dabei stehen Bezüge zu Alltag, Technik, Umwelt und Gesellschaft im Vordergrund. Das Fach Chemie soll nicht nur Fachwissen vermitteln, sondern auch zur Entwicklung von Schlüsselqualifikationen wie Teamfähigkeit, Organisationskompetenz und ethischer Urteilsbildung beitragen. Die Lehrkräfte erhalten mehr Entscheidungsspielräume bei der Stoffauswahl und -abfolge, wobei ein fachlicher Kernbestand durch Pflichtbausteine gesichert bleibt.",
+  "hauptthemen": [
+    {
+      "thema": "Allgemeine Chemie und Grundlagen",
+      "relevante_unterthemen": [
+        "Atombau und Modellvorstellungen",
+        "Chemische Bindung (Orbitalmodell, Gillespie-Nyholm)",
+        "Energetik (Enthalpien, Entropie)",
+        "Chemisches Gleichgewicht und Massenwirkungsgesetz",
+        "Säuren und Basen",
+        "Redoxchemie und Elektrochemie"
+      ],
+      "kernkompetenzen": [
+        "Anwendung von Modellen zur Erklärung stofflicher Eigenschaften",
+        "Mathematische Beschreibung chemischer Gleichgewichte und energetischer Prozesse",
+        "Verständnis des Donator-Akzeptor-Prinzips in verschiedenen Reaktionskontexten"
+      ]
+    },
+    {
+      "thema": "Organische Chemie und Synthese",
+      "relevante_unterthemen": [
+        "Kohlenwasserstoffe und Alkohole",
+        "Aromaten und elektrophile Substitution",
+        "Reaktionsmechanismen (Substitution, Addition, Eliminierung)",
+        "Carbonylverbindungen und Ester",
+        "Syntheseplanung und mehrstufige Synthesen"
+      ],
+      "kernkompetenzen": [
+        "Vorhersage von Reaktionsprodukten basierend auf Mechanismen",
+        "Planung und Durchführung organischer Synthesen",
+        "Verknüpfung von Struktur und Reaktivität organischer Moleküle"
+      ]
+    },
+    {
+      "thema": "Angewandte Chemie und Makromoleküle",
+      "relevante_unterthemen": [
+        "Kunststoffe (Struktur, Eigenschaften, Recycling)",
+        "Natürliche Makromoleküle (Kohlenhydrate, Proteine, Nucleinsäuren)",
+        "Farbstoffe und Färbeverfahren",
+        "Arzneimittelchemie",
+        "Lebensmittelchemie"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Stoffkreisläufen und Energieflüssen",
+        "Bewertung von Produkten hinsichtlich ökonomischer und ökologischer Kriterien",
+        "Anwendung analytischer Verfahren zur Identifikation von Stoffen"
+      ]
+    }
+  ]
+}

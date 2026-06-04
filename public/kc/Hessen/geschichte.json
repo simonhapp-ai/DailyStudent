@@ -1,0 +1,83 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Geschichte",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen (Ausgabe 2024) verfolgt einen kompetenzorientierten Ansatz, der Schülerinnen und Schüler zur Allgemeinen Hochschulreife führen soll. Ziel ist die Entwicklung eines reflektierten Geschichtsbewusstseins, das es den Lernenden ermöglicht, die historische Bedingtheit der Gegenwart zu verstehen, Ursachen- und Sinnzusammenhänge zu konstruieren und zu dekonstruieren sowie sich in einer komplexen, globalisierten Welt orientieren zu können. Der Unterricht basiert auf dem Basiskonzept 'Kontinuität und Veränderung in der Zeit' und gliedert sich in vier Kompetenzbereiche: Wahrnehmungskompetenz, Analysekompetenz, Urteilskompetenz und Orientierungskompetenz. Die inhaltliche Struktur folgt einem chronologischen Prinzip von der Antike bis zur Gegenwart, wobei der Fokus auf problemorientiertem Lernen, Multiperspektivität und der Auseinandersetzung mit geschichtskulturellen Phänomenen liegt. Ein besonderer Schwerpunkt liegt auf der Antisemitismusprävention und der Vorbereitung auf das Landesabitur, wobei die Q4-Phase nun explizit in die Abiturprüfung einbezogen wird.",
+  "hauptthemen": [
+    {
+      "thema": "Einführungsphase (E1/E2): Wurzeln des europäischen Selbstverständnisses und Entstehung der modernen Welt",
+      "relevante_unterthemen": [
+        "Formen von Herrschaft und Gesellschaft in Antike und Mittelalter",
+        "Interkulturelle Begegnungen und europäische Aufbrüche",
+        "Die Französische Revolution",
+        "Antike Traditionen und Rezeption",
+        "Infragestellung traditionaler Herrschaft in der frühen Neuzeit"
+      ],
+      "kernkompetenzen": [
+        "Erkennen der historischen Dimensionen in alltäglichen Phänomenen",
+        "Anwendung wissenschaftspropädeutischer Arbeitsweisen",
+        "Verständnis für die Genese moderner politischer und gesellschaftlicher Strukturen"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase (Q1): Nation, Kapitalismus und Expansion im 19. Jahrhundert",
+      "relevante_unterthemen": [
+        "Revolution 1848/49",
+        "Emanzipationsbestrebungen",
+        "Herrschaft und Gesellschaft im europäischen Vergleich",
+        "Industrialisierung",
+        "Imperialismus",
+        "Erster Weltkrieg"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Ambivalenzen des politischen und wirtschaftlichen Fortschritts",
+        "Kritische Reflexion von Fortschrittsbegriffen",
+        "Vergleich historischer Phänomene unter Berücksichtigung von Kontinuität und Wandel"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase (Q2): Die Welt zwischen Demokratie und Diktatur (1917–1945)",
+      "relevante_unterthemen": [
+        "Weimarer Republik",
+        "Aushöhlung der Demokratie und NS-Diktatur",
+        "Holocaust und Vernichtungspolitik",
+        "Weltpolitische Faktoren (USA, Japan)",
+        "Sowjetunion unter Stalin",
+        "Widerstand und Kollaboration"
+      ],
+      "kernkompetenzen": [
+        "Analyse der Ursachen für den Zivilisationsbruch",
+        "Bewertung von Handlungsspielräumen historischer Akteure",
+        "Reflexion über die Gefährdung demokratischer Errungenschaften"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase (Q3): Ost-West-Konflikt, postkoloniale Welt und Globalisierung",
+      "relevante_unterthemen": [
+        "Kalter Krieg",
+        "Teilung Deutschlands",
+        "Weg zur deutschen Einheit",
+        "Weltpolitische Entwicklungen (Bipolarität/Multipolarität)",
+        "Nahostkonflikt",
+        "Umgang mit der NS-Vergangenheit"
+      ],
+      "kernkompetenzen": [
+        "Erfassung globaler Zusammenhänge und transnationaler Prozesse",
+        "Multiperspektivische Analyse von Konfliktlinien",
+        "Bewertung der 'Nachgeschichte' des Nationalsozialismus"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase (Q4): Öffentlicher Umgang mit Geschichte im Wandel",
+      "relevante_unterthemen": [
+        "Kontroversen über die Vergangenheit",
+        "Geschichtsbilder und Geschichtspolitik",
+        "Wahrnehmung und Deutung von Geschichte"
+      ],
+      "kernkompetenzen": [
+        "Dekonstruktion von Geschichtskultur und Erinnerungskultur",
+        "Analyse der Wirkungsabsicht von Geschichtsdarstellungen",
+        "Kritische Reflexion der Funktionalisierung von Geschichte durch Politik"
+      ]
+    }
+  ]
+}

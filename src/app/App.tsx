@@ -49,6 +49,8 @@ import { AbiRechnerScreen } from '../screens/AbiRechnerScreen'
 import { HausaufgabenheftScreen } from '../screens/HausaufgabenheftScreen'
 import { InsightsScreen } from '../screens/InsightsScreen'
 import { FaecherEditScreen } from '../screens/FaecherEditScreen'
+import { LernzettelScreen } from '../screens/LernzettelScreen'
+import { LernzettelGeneratorScreen } from '../screens/LernzettelGeneratorScreen'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -95,6 +97,7 @@ function Layout() {
   const hideNav =
     location.pathname === '/klausurmodus/klausur' ||
     location.pathname === '/klausurmodus/karteikarten/neu' ||
+    location.pathname === '/klausurmodus/lernzettel/neu' ||
     location.pathname === '/klausurmodus/blurting' ||
     location.pathname.endsWith('/neue-notiz') ||
     location.pathname.startsWith('/klausurmodus/probeklausur/')
@@ -128,6 +131,8 @@ function Layout() {
         <Route path="/klausurmodus/probeklausur/materialklausur" element={<ProbeklausurMode3Screen />} />
         <Route path="/klausurmodus/probeklausur/ohne-material" element={<ProbeklausurMode4Screen />} />
         <Route path="/klausurmodus/blurting" element={<BlurtingScreen />} />
+        <Route path="/klausurmodus/lernzettel" element={<LernzettelScreen />} />
+        <Route path="/klausurmodus/lernzettel/neu" element={<LernzettelGeneratorScreen />} />
         <Route path="/profil" element={<ProfilScreen />} />
         <Route path="/profil/faecher" element={<FaecherEditScreen />} />
         <Route path="/insights" element={<InsightsScreen />} />

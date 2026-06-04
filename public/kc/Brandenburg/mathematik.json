@@ -1,0 +1,44 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Brandenburg zielt darauf ab, mathematische Bildung als Fähigkeit zu etablieren, mathematische Fragestellungen im Alltag zu erkennen, Wissen flexibel einzusetzen und begründete Urteile abzugeben. Der Unterricht ist kompetenzorientiert und vernetzt allgemeine mathematische Kompetenzen (Argumentieren, Problemlösen, Modellieren, Darstellen, Umgang mit symbolischen/technischen Elementen, Kommunizieren) mit inhaltsbezogenen Leitideen (Algorithmus und Zahl, Messen, Raum und Form, Funktionaler Zusammenhang, Daten und Zufall). Die Qualifikationsphase umfasst vier Kurshalbjahre, die die Sachgebiete Analysis, Lineare Algebra, Analytische Geometrie und Stochastik abdecken. Ein besonderer Fokus liegt auf der Integration digitaler Werkzeuge bei gleichzeitiger Sicherung grundlegender Fertigkeiten ohne Hilfsmittel. Das vierte Kurshalbjahr dient der Vertiefung, Vernetzung und Vorbereitung auf die Abiturprüfung.",
+  "hauptthemen": [
+    {
+      "thema": "Analysis",
+      "relevante_unterthemen": [
+        "Funktionsklassen (ganzrational, exponentiell, trigonometrisch, Logarithmus)",
+        "Differentialrechnung (Ableitungsregeln, Kurvendiskussion)",
+        "Integralrechnung (Hauptsatz, Flächeninhalte, Rotationskörper)"
+      ],
+      "kernkompetenzen": [
+        "Ableitungen als lokale Änderungsraten deuten und anwenden",
+        "Bestimmte Integrale zur Flächen- und Bestandsberechnung nutzen"
+      ]
+    },
+    {
+      "thema": "Lineare Algebra und Analytische Geometrie",
+      "relevante_unterthemen": [
+        "Lineare Gleichungssysteme (Gauß-Verfahren)",
+        "Vektorrechnung (Operationen, lineare Abhängigkeit)",
+        "Geometrie im Raum (Geraden, Ebenen, Lagebeziehungen, Abstände)"
+      ],
+      "kernkompetenzen": [
+        "Geometrische Sachverhalte in Koordinatensystemen darstellen",
+        "Lagebeziehungen von Objekten im Raum analytisch untersuchen"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Beschreibende Statistik",
+        "Wahrscheinlichkeitsrechnung (Laplace, Baumdiagramme, bedingte Wahrscheinlichkeit)",
+        "Binomialverteilung",
+        "Beurteilende Statistik (Hypothesentests)"
+      ],
+      "kernkompetenzen": [
+        "Zufallsexperimente modellieren und Wahrscheinlichkeiten berechnen",
+        "Statistische Daten kritisch interpretieren und Hypothesentests durchführen"
+      ]
+    }
+  ]
+}

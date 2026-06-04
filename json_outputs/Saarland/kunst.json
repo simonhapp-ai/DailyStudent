@@ -1,0 +1,72 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Lehrplan für das Fach Bildende Kunst in der gymnasialen Oberstufe (Hauptphase) des Saarlandes zielt auf die Vermittlung einer umfassenden Bildkompetenz ab, die durch die enge Verzahnung von Produktion (herstellen, gestalten, verwenden, kommunizieren) und Rezeption (wahrnehmen, beschreiben, analysieren, deuten, werten) erworben wird. Das Fach leistet einen Beitrag zur ästhetischen und kulturellen Bildung, fördert die Persönlichkeitsentwicklung, Medienkompetenz und soziale Verantwortung. Der Unterricht ist kunst- und wissenschaftspropädeutisch ausgerichtet und orientiert sich am Prinzip des Exemplarischen. Er gliedert sich in einen fachwissenschaftlichen Lernbereich (thematische Schwerpunkte von der Romanik bis zur zeitgenössischen Kunst und Design) und einen fachpraktischen Lernbereich. Die Schülerinnen und Schüler sollen befähigt werden, visuelle Gestaltungen kritisch zu reflektieren, eigene Bildideen zu entwickeln und fachspezifische Methoden sowie Werkzeuge sachgerecht einzusetzen.",
+  "hauptthemen": [
+    {
+      "thema": "Bildende Kunst vom Mittelalter bis zum Barock",
+      "relevante_unterthemen": [
+        "Malerei der Romanik",
+        "Malerei der Renaissance",
+        "Malerei des Barock"
+      ],
+      "kernkompetenzen": [
+        "Religiöse, geistesgeschichtliche und gesellschaftliche Rahmenbedingungen analysieren",
+        "Werke hinsichtlich formaler Gestaltungsmittel untersuchen und stilgeschichtlich einordnen",
+        "Symbolsprache und Funktionen von Kunstwerken (z.B. Gegenreformation, Memento mori) deuten"
+      ]
+    },
+    {
+      "thema": "Bildende Kunst vom 18. bis zum 20. Jahrhundert",
+      "relevante_unterthemen": [
+        "Romantik und Realismus",
+        "Impressionismus, Expressionismus und Kubismus",
+        "Verismus und Surrealismus",
+        "Kunst im Nationalsozialismus"
+      ],
+      "kernkompetenzen": [
+        "Verhältnis von Bild und Wirklichkeit reflektieren",
+        "Loslösung vom Naturvorbild und Abstraktionsprozesse nachvollziehen",
+        "Kunst als Propagandamittel und gesellschaftskritische Funktion von Kunst bewerten"
+      ]
+    },
+    {
+      "thema": "Bildende Kunst nach 1945",
+      "relevante_unterthemen": [
+        "Abstrakter Expressionismus und Pop Art",
+        "Erweiterung des Kunstbegriffs (Joseph Beuys)"
+      ],
+      "kernkompetenzen": [
+        "Entstehungsprozesse (z.B. Action-Painting) und neue Kunstformen (Performance, Installation) analysieren",
+        "Konzept der sozialen Plastik und gesellschaftspolitische Aspekte von Kunst verstehen",
+        "Einfluss von Massenmedien und Konsumkultur auf die Kunst deuten"
+      ]
+    },
+    {
+      "thema": "Design",
+      "relevante_unterthemen": [
+        "Produktdesign im 19. und 20. Jahrhundert",
+        "Jugendstil, Bauhaus, Postmoderne (Memphis)"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhang von Form, Funktion und Ästhetik untersuchen",
+        "Soziale Aspekte und industrielle Fertigung im Design bewerten",
+        "Designobjekte als Ausdruck von Modernität oder Exklusivität deuten"
+      ]
+    },
+    {
+      "thema": "Variabler Pflichtbereich",
+      "relevante_unterthemen": [
+        "Land-Art",
+        "Bildzitate",
+        "Geschlechterrollen",
+        "Krieg und Gewalt"
+      ],
+      "kernkompetenzen": [
+        "Künstlerische Strategien (z.B. Verhüllung, Zitat, Dekonstruktion) analysieren",
+        "Aktuelle gesellschaftliche Themen in der Kunst kritisch diskutieren",
+        "Interdisziplinäre Bezüge und mediale Inszenierungen reflektieren"
+      ]
+    }
+  ]
+}

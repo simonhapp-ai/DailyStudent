@@ -1,0 +1,82 @@
+{
+  "bundesland": "Sachsen",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Lehrplan Biologie für das Gymnasium in Sachsen verfolgt einen wissenschaftspropädeutischen Ansatz, der darauf abzielt, Schülern ein tiefgreifendes Verständnis für biologische Phänomene, deren physikalische und chemische Grundlagen sowie deren mathematische Beschreibbarkeit zu vermitteln. Das Kernkonzept basiert auf fünf Basiskonzepten (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, Individuelle und evolutive Entwicklung), die als Erschließungsfelder dienen. Diese werden sukzessive eingeführt, vernetzt und in ihrer Abstraktion gesteigert. Der Unterricht ist kompetenzorientiert und fördert neben der Sachkompetenz insbesondere die Erkenntnisgewinnung, Kommunikations- und Bewertungskompetenz. Ein besonderer Fokus liegt auf der Bildung für nachhaltige Entwicklung, der Medienbildung sowie der Förderung von Selbstständigkeit und Verantwortung. Die Schüler lernen, biologische Sachverhalte kritisch zu hinterfragen, ethische Positionen zu beziehen und die Rolle des Menschen in der Natur reflektiert zu bewerten.",
+  "hauptthemen": [
+    {
+      "thema": "Biologische Grundlagen und Wirbeltiere",
+      "relevante_unterthemen": [
+        "Merkmale des Lebens",
+        "Wirbeltierklassen (Fische, Lurche, Kriechtiere, Vögel, Säugetiere)",
+        "Systematisierung"
+      ],
+      "kernkompetenzen": [
+        "Anwendung der Erschließungsfelder Vielfalt, Angepasstheit und Fortpflanzung",
+        "Durchführung einfacher biologischer Untersuchungen und Beobachtungen",
+        "Beurteilung der Verantwortung des Menschen für den Schutz von Tieren und Lebensräumen"
+      ]
+    },
+    {
+      "thema": "Pflanzenbiologie und Ökologie",
+      "relevante_unterthemen": [
+        "Samenpflanzen",
+        "Wald als Lebensgemeinschaft",
+        "Zellbiologie (pflanzlich/tierisch)",
+        "Ökosysteme (Gewässer, Wiese)",
+        "Stoff- und Energiewechsel"
+      ],
+      "kernkompetenzen": [
+        "Mikroskopieren und Anfertigen biologischer Zeichnungen",
+        "Analyse von Wechselwirkungen in Ökosystemen",
+        "Verständnis von Fotosynthese und Zellatmung als Stoffwechselprozesse"
+      ]
+    },
+    {
+      "thema": "Humanbiologie",
+      "relevante_unterthemen": [
+        "Blutkreislauf und Immunbiologie",
+        "Ernährung und Verdauung",
+        "Stütz- und Bewegungssystem",
+        "Sinnesorgane, Nerven- und Hormonsystem",
+        "Sexualität"
+      ],
+      "kernkompetenzen": [
+        "Verständnis der Funktionsweise menschlicher Organsysteme",
+        "Bewertung von Gesundheitsrisiken und Suchtgefahren",
+        "Reflexion ethischer Aspekte der Sexualität und medizinischer Eingriffe"
+      ]
+    },
+    {
+      "thema": "Genetik und Evolution",
+      "relevante_unterthemen": [
+        "Klassische Genetik",
+        "Molekulargenetik",
+        "Humangenetik",
+        "Synthetische Evolutionstheorie",
+        "Stammesgeschichte des Menschen"
+      ],
+      "kernkompetenzen": [
+        "Anwendung genetischer Regeln und Stammbaumanalysen",
+        "Verständnis der Proteinbiosynthese und Genregulation",
+        "Beurteilung von Chancen und Risiken der Gentechnik",
+        "Erkenntnis der Mechanismen der Evolution"
+      ]
+    },
+    {
+      "thema": "Gymnasiale Oberstufe (Grund- und Leistungskurs)",
+      "relevante_unterthemen": [
+        "Zellbiologie und Stoffwechselphysiologie",
+        "Ökologie und Nachhaltigkeit",
+        "Genetik und Gentechnik",
+        "Neurobiologie und Immunbiologie",
+        "Verhaltensbiologie"
+      ],
+      "kernkompetenzen": [
+        "Wissenschaftspropädeutisches Arbeiten und Hypothesenbildung",
+        "Selbstständige Anwendung komplexer Erschließungsfelder",
+        "Diskursfähigkeit bei bioethischen Fragestellungen",
+        "Analyse und Interpretation komplexer biologischer Daten"
+      ]
+    }
+  ]
+}

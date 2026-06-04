@@ -1,0 +1,91 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe (MSS) in Rheinland-Pfalz ist als modulares System konzipiert, das die Biologie als Wissenschaft von lebenden Systemen begreift. Ziel ist die Vermittlung von 'intelligentem Wissen' und 'emotionaler Intelligenz', um Studierfähigkeit und wissenschaftspropädeutisches Arbeiten zu fördern. Der Lehrplan ist nicht in starre Halbjahresabschnitte unterteilt, sondern in sechs Leitthemen gegliedert, die durch Pflicht- und Wahlpflichtbausteine flexibel strukturiert werden können. Ein besonderer Fokus liegt auf der Systemtheorie, der Vernetzung von Natur- und Geisteswissenschaften sowie der Förderung von Methodenkompetenz durch experimentelles Arbeiten und Modellbildung. Die Schüler sollen befähigt werden, biologische Prinzipien auf verschiedenen Systemebenen (Moleküle bis Biosphäre) zu verstehen und ethische sowie gesellschaftliche Konsequenzen biotechnologischer und ökologischer Entwicklungen kritisch zu bewerten.",
+  "hauptthemen": [
+    {
+      "thema": "Struktur & Funktion lebender Systeme",
+      "relevante_unterthemen": [
+        "Systemebenen (Moleküle bis Biozönosen)",
+        "Cytologische Grundlagen",
+        "Bioenergetik und Enzymatik",
+        "Modellbildung und dynamische Systeme"
+      ],
+      "kernkompetenzen": [
+        "Systemeigenschaften und hierarchische Strukturen des Lebendigen analysieren",
+        "Biologische Phänomene durch Modellbildung und Simulation erklären",
+        "Zusammenhang zwischen Struktur und Funktion auf verschiedenen Organisationsebenen interpretieren"
+      ]
+    },
+    {
+      "thema": "Stoffwechsel & Energiefluss lebender Systeme",
+      "relevante_unterthemen": [
+        "Gärung und Atmung",
+        "Photosynthese",
+        "Intermediärstoffwechsel",
+        "Energetik und Stoffkreisläufe"
+      ],
+      "kernkompetenzen": [
+        "Stoffwechselprozesse als energetisch gekoppelte Systeme verstehen",
+        "Bedeutung von ATP und Redoxsystemen für die Aufrechterhaltung lebender Ordnung erläutern",
+        "Experimentelle Daten zur Stoffwechselphysiologie auswerten und interpretieren"
+      ]
+    },
+    {
+      "thema": "Umwelt & Innenwelt lebender Systeme",
+      "relevante_unterthemen": [
+        "Ökosysteme und Biozönosen",
+        "Populationsökologie",
+        "Nachhaltige Entwicklung (Agenda 21)",
+        "Mensch und Biosphäre"
+      ],
+      "kernkompetenzen": [
+        "Wechselwirkungen zwischen Organismen und Umweltfaktoren analysieren",
+        "Ökologische Prinzipien auf globale Umweltprobleme anwenden",
+        "Verantwortung des Menschen für die Biosphäre bewerten"
+      ]
+    },
+    {
+      "thema": "Information & Kommunikation bei lebenden Systemen",
+      "relevante_unterthemen": [
+        "Neurobiologie und Informationsverarbeitung",
+        "Hormonphysiologie",
+        "Ethologie und Humanethologie",
+        "Lernen und Gedächtnis"
+      ],
+      "kernkompetenzen": [
+        "Mechanismen der Informationsübertragung im Nerven- und Hormonsystem verstehen",
+        "Verhaltensweisen von Tieren und Menschen evolutionsbiologisch einordnen",
+        "Neurobiologische Grundlagen von Lernen und Bewusstsein reflektieren"
+      ]
+    },
+    {
+      "thema": "Vererbung & Selbstorganisation lebender Systeme",
+      "relevante_unterthemen": [
+        "Molekulargenetik und Gentechnologie",
+        "Cytogenetik",
+        "Entwicklungsphysiologie",
+        "Ethische Bewertung biotechnologischer Eingriffe"
+      ],
+      "kernkompetenzen": [
+        "Genetische Kontinuität und Diskontinuität als Basis der Evolution verstehen",
+        "Gentechnologische Verfahren kritisch beurteilen",
+        "Zusammenwirken von Genen und Umwelt bei der Merkmalsausprägung analysieren"
+      ]
+    },
+    {
+      "thema": "Entstehung & Veränderung lebender Systeme",
+      "relevante_unterthemen": [
+        "Evolutionstheorien",
+        "Anthropologie",
+        "Erdgeschichte und Phylogenese",
+        "Wissenschaftstheoretische Reflexion"
+      ],
+      "kernkompetenzen": [
+        "Evolutionäre Prozesse als Grundlage der Biodiversität begreifen",
+        "Stammesgeschichtliche Entwicklung des Menschen interpretieren",
+        "Biologische Erkenntnisse in einen interdisziplinären Kontext (Natur- und Geisteswissenschaften) einordnen"
+      ]
+    }
+  ]
+}

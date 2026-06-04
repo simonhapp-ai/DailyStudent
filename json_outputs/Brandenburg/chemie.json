@@ -1,0 +1,59 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Brandenburg zielt auf die Entwicklung einer vertieften naturwissenschaftlichen Kompetenz ab, die auf den Bildungsstandards für den Mittleren Schulabschluss aufbaut. Das Fach Chemie vermittelt ein Verständnis für den Aufbau, die Eigenschaften und die Umwandlung von Stoffen unter energetischen Aspekten. Zentrale Kernziele sind die Förderung der Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz. Dabei werden drei Basiskonzepte – Aufbau und Eigenschaften der Stoffe, chemische Reaktion sowie Energiekonzept – genutzt, um fachliche Inhalte zu vernetzen. Der Unterricht legt einen starken Fokus auf das Experimentieren, die Modellbildung und die Anwendung chemischer Erkenntnisse auf gesellschaftlich relevante Themen wie Nachhaltigkeit, Verbraucherbildung und Technik. Die Qualifikationsphase vertieft diese Aspekte durch eine differenzierte Betrachtung in Grund- und Leistungskursen, wobei letztere eine höhere Komplexität in der Mathematisierung, Modellbildung und Reflexion erfordern.",
+  "hauptthemen": [
+    {
+      "thema": "Natürliche und synthetische makromolekulare Stoffe",
+      "relevante_unterthemen": [
+        "Proteine",
+        "Kunststoffe"
+      ],
+      "kernkompetenzen": [
+        "Struktur-Eigenschafts-Beziehungen von Makromolekülen analysieren",
+        "Reaktionsmechanismen der Polymerisation und Polykondensation verstehen",
+        "Ökologische und ökonomische Aspekte von Kunststoffen bewerten"
+      ]
+    },
+    {
+      "thema": "Verlauf chemischer Reaktionen",
+      "relevante_unterthemen": [
+        "Chemische Thermodynamik",
+        "Reaktionsgeschwindigkeit und Katalyse",
+        "Chemisches Gleichgewicht"
+      ],
+      "kernkompetenzen": [
+        "Energieumsätze bei chemischen Reaktionen berechnen und deuten",
+        "Einflussfaktoren auf die Reaktionsgeschwindigkeit und Gleichgewichtslage anwenden",
+        "Katalytische Prozesse auf Teilchenebene erklären"
+      ]
+    },
+    {
+      "thema": "Das Donator-Akzeptor-Prinzip",
+      "relevante_unterthemen": [
+        "Säure-Base-Reaktionen",
+        "Indikatorfarbstoffe",
+        "Redoxreaktionen"
+      ],
+      "kernkompetenzen": [
+        "Protonen- und Elektronenübergänge als Donator-Akzeptor-Prinzip identifizieren",
+        "pH-Wert-Berechnungen und Titrationskurven interpretieren",
+        "Zusammenhang zwischen Molekülstruktur und Farbigkeit bei Indikatoren verstehen"
+      ]
+    },
+    {
+      "thema": "Elektrische Energie aus chemischen Reaktionen",
+      "relevante_unterthemen": [
+        "Elektrochemie",
+        "Galvanische Zellen",
+        "Elektrolyse",
+        "Korrosion"
+      ],
+      "kernkompetenzen": [
+        "Elektrochemische Spannungsquellen und deren Funktionsweise analysieren",
+        "Faraday-Gesetze und Nernst-Gleichung anwenden",
+        "Technologische und umweltrelevante Aspekte der Elektrochemie bewerten"
+      ]
+    }
+  ]
+}

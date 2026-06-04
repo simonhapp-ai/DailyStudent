@@ -1,0 +1,43 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Das Thema Sklaverei im Rahmen des Religions- und Ethikunterrichts in Rheinland-Pfalz zielt darauf ab, die historische und ethische Dimension menschlicher Unfreiheit zu durchdringen. Im Zentrum steht die Auseinandersetzung mit der Würde des Menschen, die als unantastbar gilt und in direktem Widerspruch zur Praxis der Sklaverei steht. Die Schülerinnen und Schüler reflektieren die religiösen Begründungen für Freiheit und Gleichheit sowie die ethischen Implikationen von Machtmissbrauch und Ausbeutung. Dabei werden sowohl historische Kontexte als auch moderne Formen der Unfreiheit (wie Zwangsarbeit oder Menschenhandel) kritisch beleuchtet. Ziel ist die Entwicklung einer ethischen Urteilskompetenz, die es den Lernenden ermöglicht, Strukturen der Unterdrückung zu erkennen, die Bedeutung von Menschenrechten zu würdigen und Verantwortung für ein gerechtes Zusammenleben in einer globalisierten Welt zu übernehmen.",
+  "hauptthemen": [
+    {
+      "thema": "Menschenwürde und Freiheit",
+      "relevante_unterthemen": [
+        "Biblische und philosophische Begründungen der Menschenwürde",
+        "Freiheit als ethischer Grundwert",
+        "Die Unvereinbarkeit von Sklaverei und menschlicher Existenz"
+      ],
+      "kernkompetenzen": [
+        "Die Schüler können die Unantastbarkeit der Menschenwürde argumentativ begründen.",
+        "Die Schüler können den Widerspruch zwischen Sklaverei und ethischen Grundsätzen analysieren."
+      ]
+    },
+    {
+      "thema": "Historische und religiöse Perspektiven",
+      "relevante_unterthemen": [
+        "Sklaverei in antiken Gesellschaften",
+        "Religiöse Rechtfertigungsversuche und Kritik an der Sklaverei",
+        "Der Beitrag von Religionen zur Abschaffung der Sklaverei"
+      ],
+      "kernkompetenzen": [
+        "Die Schüler können historische Zusammenhänge zwischen Religion und gesellschaftlichen Machtstrukturen einordnen.",
+        "Die Schüler können religiöse Texte kritisch auf ihre Haltung zur Freiheit des Individuums prüfen."
+      ]
+    },
+    {
+      "thema": "Moderne Formen der Unfreiheit",
+      "relevante_unterthemen": [
+        "Moderne Sklaverei und Menschenhandel",
+        "Ausbeutung in globalen Lieferketten",
+        "Verantwortung des Einzelnen und der Gesellschaft"
+      ],
+      "kernkompetenzen": [
+        "Die Schüler können aktuelle Formen der Unfreiheit identifizieren und ethisch bewerten.",
+        "Die Schüler können Handlungsoptionen für ein gerechteres globales Wirtschaften entwickeln."
+      ]
+    }
+  ]
+}

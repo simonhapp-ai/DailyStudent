@@ -1,0 +1,72 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Musik",
+  "zusammenfassung": "Der Fachlehrplan Musik für die Sekundarschule in Sachsen-Anhalt verfolgt einen kompetenzorientierten Ansatz, der Musik als lebensbegleitendes Kulturgut begreift. Ziel ist die Entwicklung einer umfassenden musikalischen Handlungskompetenz, die sich aus den Bereichen Reproduktion (Singen, Musizieren), Rezeption (analytisches Hören, Reflexion) und Kreativität (Gestalten, Erfinden) zusammensetzt. Der Unterricht soll dabei nicht nur theoretisches Wissen vermitteln, sondern durch praktisches Tun – unter Einbeziehung digitaler Medien und Instrumente – die Persönlichkeitsentwicklung fördern. Ein besonderer Fokus liegt auf der Medienmündigkeit, der Auseinandersetzung mit verschiedenen Musikkulturen und Epochen sowie der Vorbereitung auf das gesellschaftliche und berufliche Leben. Der Lehrplan ist in fünf Kompetenzschwerpunkte gegliedert, die über die Schuljahrgänge hinweg systematisch vertieft werden, wobei 'theoretische Musik' zugunsten praktischer Anwendung vermieden werden soll.",
+  "hauptthemen": [
+    {
+      "thema": "Mit Stimme und Instrumenten musizieren",
+      "relevante_unterthemen": [
+        "Stimmbildung und physiologisch richtiger Stimmgebrauch",
+        "Liedrepertoire und Mehrstimmigkeit",
+        "Instrumentalspiel (Orff, Melodieinstrumente, Rhythmus)",
+        "Zusammenspiel in Gruppen"
+      ],
+      "kernkompetenzen": [
+        "Gesunde Stimmführung und rhythmisch-tonale Sicherheit beim Singen",
+        "Anwendung von Grundfertigkeiten auf Instrumenten zur Liedbegleitung und im Ensemble"
+      ]
+    },
+    {
+      "thema": "Musikalische Verlaufsstrukturen und Formen",
+      "relevante_unterthemen": [
+        "Motivik und Themenarbeit",
+        "Liedstrukturen und Akkordschrift",
+        "Rondo- und Variationsformen",
+        "Sonatenhauptsatz und Bluesschema"
+      ],
+      "kernkompetenzen": [
+        "Erkennen und Anwenden musikalischer Strukturen im praktischen Musizieren",
+        "Analytisches Hören unter Verwendung musikalischer Fachbegriffe"
+      ]
+    },
+    {
+      "thema": "Musik im Wandel der Zeit",
+      "relevante_unterthemen": [
+        "Musikgeschichte von Renaissance bis Gegenwart",
+        "Klassik, Romantik und Oper",
+        "Rock- und Popmusik",
+        "Künstlerporträts und regionale Musikgeschichte"
+      ],
+      "kernkompetenzen": [
+        "Einordnung von Musikwerken in historische und gesellschaftliche Kontexte",
+        "Vergleich von Original und Bearbeitung sowie Reflexion von Musiktheater"
+      ]
+    },
+    {
+      "thema": "Musikkulturen der Welt",
+      "relevante_unterthemen": [
+        "Musik aus verschiedenen Kontinenten",
+        "Pentatonik",
+        "Gospel, Spiritual und Blues",
+        "Nationalhymnen"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung von Toleranz gegenüber fremden Musikkulturen",
+        "Erfassen der Spezifik außereuropäischer Musik und deren kultureller Bedeutung"
+      ]
+    },
+    {
+      "thema": "Musik im Medienkontext",
+      "relevante_unterthemen": [
+        "Musik im Alltag und Werbung",
+        "Filmmusik und Hörspiel",
+        "Digitale Musikproduktion und Software",
+        "Urheberrecht und Lizenzmodelle"
+      ],
+      "kernkompetenzen": [
+        "Kritische Reflexion von Musikmedien und Musikwirtschaft",
+        "Sicherer und rechtlich korrekter Umgang mit digitalen Musikangeboten und Produktionswerkzeugen"
+      ]
+    }
+  ]
+}

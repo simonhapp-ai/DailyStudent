@@ -1,0 +1,51 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen (Stand 2022) definiert die Anforderungen für die Einführungs- und Qualifikationsphase. Er basiert auf den bundesweiten Bildungsstandards für die Allgemeine Hochschulreife und zielt auf die Entwicklung von prozessbezogenen Kompetenzen (Argumentieren, Problemlösen, Modellieren, Darstellen, Umgang mit formalen/technischen Elementen, Kommunizieren) sowie inhaltsbezogenen Kompetenzen in den drei Sachgebieten Analysis, Stochastik und Lineare Algebra/Analytische Geometrie. Ein zentrales Ziel ist die Vernetzung von Wissen durch fünf Leitideen (Algorithmus und Zahl, Messen, Raum und Form, Funktionaler Zusammenhang, Daten und Zufall). Der Unterricht ist vorstellungsorientiert und fördert die digitale Bildung durch den Einsatz von Mathematikwerkzeugen. Die Leistungsbewertung erfolgt transparent und kompetenzorientiert, wobei zwischen Lern- und Leistungssituationen unterschieden wird, um sowohl den Prozess als auch das Produkt zu würdigen.",
+  "hauptthemen": [
+    {
+      "thema": "Analysis",
+      "relevante_unterthemen": [
+        "Differentialrechnung",
+        "Integralrechnung",
+        "Funktionsklassen (ganzrational, exponentiell, trigonometrisch, gebrochen-rational)",
+        "Wachstums- und Zerfallsprozesse"
+      ],
+      "kernkompetenzen": [
+        "Lokale Änderungsraten bestimmen und als Tangentensteigung deuten",
+        "Bestimmte Integrale als rekonstruierten Bestand oder Flächeninhalt interpretieren",
+        "Funktionseigenschaften (Monotonie, Extrem- und Wendepunkte) analytisch untersuchen"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Kombinatorik",
+        "Statistische Kenngrößen",
+        "Wahrscheinlichkeitsrechnung",
+        "Binomialverteilung",
+        "Normalverteilung"
+      ],
+      "kernkompetenzen": [
+        "Zufallsexperimente modellieren und Wahrscheinlichkeiten berechnen",
+        "Binomialverteilte Zufallsgrößen analysieren und interpretieren",
+        "Statistische Daten auswerten und Hypothesen prüfen"
+      ]
+    },
+    {
+      "thema": "Lineare Algebra / Analytische Geometrie",
+      "relevante_unterthemen": [
+        "Vektorrechnung",
+        "Lineare Gleichungssysteme (Gauß-Algorithmus)",
+        "Matrizenkalkül",
+        "Geraden und Ebenen im Raum",
+        "Iterative Prozesse (Umverteilung, Populationsentwicklung)"
+      ],
+      "kernkompetenzen": [
+        "Vektoren als Zahlentupel interpretieren und geometrisch anwenden",
+        "Lösungsmengen von linearen Gleichungssystemen bestimmen",
+        "Lagebeziehungen von Geraden und Ebenen im Raum untersuchen"
+      ]
+    }
+  ]
+}

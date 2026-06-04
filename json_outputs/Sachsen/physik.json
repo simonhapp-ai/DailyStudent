@@ -1,0 +1,78 @@
+{
+  "bundesland": "Sachsen",
+  "fach": "Physik",
+  "zusammenfassung": "Der sächsische Lehrplan für das Fach Physik am Gymnasium ist als spiralförmiges Curriculum konzipiert, das von der Klassenstufe 6 bis zur gymnasialen Oberstufe (11/12) eine kontinuierliche Progression in Wissenserwerb und Kompetenzentwicklung sicherstellt. Der Unterricht zielt darauf ab, physikalische Phänomene der Lebenswelt zu erschließen, ein wissenschaftliches Weltbild zu fördern und die Studierfähigkeit zu entwickeln. Dabei stehen vier Kompetenzbereiche im Fokus: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Didaktisch wird ein starker Schwerpunkt auf das Experiment als zentrale Erkenntnismethode gelegt, ergänzt durch den Einsatz digitaler Werkzeuge zur Messwerterfassung und Modellbildung. Die Struktur gliedert sich in einen Anfangsunterricht (Kl. 6-7), einen vertiefenden Unterricht (Kl. 8-10) und einen wissenschaftspropädeutischen Unterricht in der Oberstufe (Grund- und Leistungskurse). Überfachliche Ziele wie Medienbildung, Bildung für nachhaltige Entwicklung und Werteorientierung sind integrativ verankert, um Schüler zu verantwortungsbewusstem Handeln in einer technisierten Gesellschaft zu befähigen.",
+  "hauptthemen": [
+    {
+      "thema": "Mechanik",
+      "relevante_unterthemen": [
+        "Kräfte und Bewegungen",
+        "Druck in Flüssigkeiten und Gasen",
+        "Energieerhaltung",
+        "Newton'sche Gesetze",
+        "Schwingungen und Wellen"
+      ],
+      "kernkompetenzen": [
+        "Bewegungsabläufe quantitativ beschreiben und analysieren",
+        "Energieumwandlungen in Systemen bilanzieren",
+        "Zusammenhänge zwischen Kraft, Masse und Beschleunigung anwenden"
+      ]
+    },
+    {
+      "thema": "Elektrizitätslehre und Magnetismus",
+      "relevante_unterthemen": [
+        "Stromkreise",
+        "Elektrische und magnetische Felder",
+        "Induktion",
+        "Elektronik und Halbleiter"
+      ],
+      "kernkompetenzen": [
+        "Elektrische Schaltungen analysieren und berechnen",
+        "Feldkonzepte zur Erklärung von Wechselwirkungen nutzen",
+        "Induktionsvorgänge in technischen Anwendungen verstehen"
+      ]
+    },
+    {
+      "thema": "Optik und Wellenlehre",
+      "relevante_unterthemen": [
+        "Lichtausbreitung",
+        "Linsen und optische Geräte",
+        "Interferenz und Beugung",
+        "Elektromagnetische Wellen"
+      ],
+      "kernkompetenzen": [
+        "Lichtphänomene mit dem Strahlen- und Wellenmodell erklären",
+        "Interferenzerscheinungen mathematisch beschreiben",
+        "Optische Geräte in ihrer Funktionsweise analysieren"
+      ]
+    },
+    {
+      "thema": "Moderne Physik und Astronomie",
+      "relevante_unterthemen": [
+        "Quantenobjekte",
+        "Atommodelle",
+        "Radioaktivität",
+        "Astrophysik",
+        "Relativitätstheorie"
+      ],
+      "kernkompetenzen": [
+        "Grenzen klassischer Modelle erkennen und durch moderne Theorien erweitern",
+        "Struktur und Entwicklung des Kosmos verstehen",
+        "Chancen und Risiken moderner physikalischer Technologien bewerten"
+      ]
+    },
+    {
+      "thema": "Thermodynamik",
+      "relevante_unterthemen": [
+        "Temperatur und Zustand",
+        "Wärmeübertragung",
+        "Hauptsätze der Thermodynamik",
+        "Kreisprozesse"
+      ],
+      "kernkompetenzen": [
+        "Zustandsänderungen idealer Gase berechnen",
+        "Energieentwertung und Wirkungsgrade von Wärmekraftmaschinen beurteilen"
+      ]
+    }
+  ]
+}

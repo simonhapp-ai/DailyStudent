@@ -1,0 +1,72 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der vorliegende Lehrplan für das Fach Geschichte am Gymnasium in Bayern (13. Jahrgangsstufe, grundlegendes Anforderungsniveau) gliedert sich in zwei Hauptbereiche: die Analyse internationaler Politik in historischer Perspektive und die historischen Grundlagen moderner politischer Ordnungsformen sowie Identifikationsmuster in Europa. Im ersten Teilbereich (G13 1) erschließen die Schülerinnen und Schüler globale Konflikte in ihrer historischen Dimension und erfassen das komplexe Zusammenspiel verschiedener Interessen. Exemplarisch wird der israelisch-palästinensische Konflikt behandelt, um die Notwendigkeit der Berücksichtigung historischer Wurzeln und unterschiedlicher Perspektiven zu verdeutlichen. Ein weiterer Schwerpunkt liegt auf der Rolle der USA, Russlands und Chinas als wesentliche weltpolitische Akteure im 20. und beginnenden 21. Jahrhundert, um die historische Bedingtheit internationaler Beziehungen und die zunehmende Globalisierung von Konflikten zu beleuchten. Dabei werden politische und gesellschaftliche Prozesse multikausal erklärt und differenzierte, problembewusste Argumentationen entwickelt. Der zweite Hauptbereich (G13 2) widmet sich den langfristig wirksamen Entwicklungen, die die moderne Lebenswelt prägen und ihren Ursprung in der griechischen Antike, im Mittelalter, in der Frühen Neuzeit und im 19. Jahrhundert haben. Hierbei wird untersucht, wie wesentliche Prinzipien der Legitimation und Gestaltung politischer Gewalt in modernen westlichen Gesellschaften auf vormodernen europäischen Prozessen beruhen. Dies umfasst die attische Demokratie, das Heilige Römische Reich und das staatspolitische Denken der Aufklärung. Ein zweiter Fokus liegt auf den Ursachen und der Problematik des Nationalismus in Europa vom 19. bis zum beginnenden 21. Jahrhundert, insbesondere am Beispiel des deutsch-französischen Verhältnisses. Die Schülerinnen und Schüler setzen sich mit der Überwindung nationalistischer Konfrontation im Zuge der europäischen Einigung nach 1945 auseinander und diskutieren die Bedeutung der deutsch-französischen Verständigung für den europäischen Integrationsprozess. Insgesamt zielt der Lehrplan darauf ab, die Fähigkeit zur historischen Orientierung, zur multikausalen Erklärung komplexer Sachverhalte, zur differenzierten Argumentation und zur kritischen Nutzung vielfältiger Quellen zu fördern.",
+  "hauptthemen": [
+    {
+      "thema": "Akteure internationaler Politik in historischer Perspektive",
+      "relevante_unterthemen": [
+        "Die historische Entwicklung des israelisch-palästinensischen Konflikts",
+        "USA, Russland und China im 20. und 21. Jh.",
+        "Diaspora und Zionismus als zentrale Aspekte des Judentums",
+        "Veränderungen im Nahen Osten um 1900 (arabisches Unabhängigkeitsstreben, europäische Präsenz, jüdische Einwanderung)",
+        "Gründung Israels als demokratischer Staat",
+        "Zentrale Entwicklungen im israelisch-palästinensischen Konflikt bis 1967 (Status von Jerusalem, palästinensische Flüchtlinge, territoriale Entwicklung)",
+        "Gestaltung und Gefährdung von Friedensbemühungen (z. B. Osloer Abkommen, Roadmap)",
+        "USA als weltpolitischer Akteur seit 1945 (Führungsmacht des Westens, Kalter Krieg)",
+        "Zerfall der Sowjetunion und Neuausrichtung Russlands seit den 1980er-Jahren",
+        "Transformation Chinas ab Mitte der 1970er-Jahre und der Weg zur Weltmacht",
+        "Weltpolitisches Agieren der USA, Russlands und Chinas im Rahmen der UNO (z. B. Irak, Syrien, UN-Friedensmissionen)"
+      ],
+      "kernkompetenzen": [
+        "Globale Konflikte in ihrer historischen Dimension erschließen und das komplexe Zusammenwirken verschiedener Interessen in der internationalen Politik erfassen.",
+        "Die historische Bedingtheit internationaler Beziehungen und die zunehmende Globalisierung internationaler Konflikte verstehen.",
+        "Den israelisch-palästinensischen Konflikt unter Berücksichtigung seiner historischen Wurzeln einordnen und verschiedene Perspektiven berücksichtigen.",
+        "Ausgewählte Aspekte des israelisch-palästinensischen Konflikts multikausal erklären und differenzierte, problembewusste Argumentationen entwickeln.",
+        "Diaspora und Zionismus als bedeutende Grundlagen jüdischer Geschichte erfassen.",
+        "Zentrale Entwicklungen im Nahen Osten bis 1967 beschreiben und die Komplexität von Urteilen über den Konflikt begreifen.",
+        "Chancen einer friedlichen Annäherung erörtern und Wechselwirkungen zwischen Radikalisierung, Instabilität und fehlender Verständigung erkennen.",
+        "Die Entwicklung der USA, Russlands und Chinas zu weltpolitisch einflussreichen Mächten im 20. und 21. Jh. erkennen und deren weltpolitisches Handeln vor historischem Hintergrund verstehen.",
+        "Politische und gesellschaftliche Prozesse in den USA, Russland und China von 1945 bis ins 21. Jh. multikausal erklären.",
+        "Komplexe Fragestellungen zu Hintergründen und Auswirkungen des weltpolitischen Engagements der USA seit 1945 bearbeiten.",
+        "Zentrale Stationen der Transformation der Sowjetunion bzw. Russlands seit den 1980er-Jahren beschreiben und deren Folgen für Frieden und Sicherheit in Europa diskutieren.",
+        "Grundzüge der Entwicklung Chinas zu einer Weltmacht charakterisieren.",
+        "Das weltpolitische Agieren der Großmächte USA, Russland und China im Rahmen der UNO diskutieren.",
+        "Zentrale Daten und Begriffe sicher und reflektiert anwenden und mit neuen Kontexten verknüpfen (z.B. Erster Weltkrieg, Zweiter Weltkrieg, Antike, Antisemitismus, Demokratie, Holocaust, Imperialismus, Judentum, Kalter Krieg, Migration, Nation, Nationalismus, Nationalsozialismus, Terrorismus, UNO, Kuba-Krise, Umbruch im Ostblock, 11. September 2001, Globalisierung, Hegemonie, Kommunismus, Menschenrechte, NATO, Osterweiterung der EU, Planwirtschaft, Sozialismus)."
+      ]
+    },
+    {
+      "thema": "Historische Grundlagen moderner politischer Ordnungsformen und Identifikationsmuster in Europa",
+      "relevante_unterthemen": [
+        "Historische Grundlagen moderner demokratischer Staatsordnungen",
+        "Von nationalistischer Konfrontation zu europäischer Integration vom 19. bis zum beginnenden 21. Jh.",
+        "Demokratie in der attischen Polis zur Zeit des Perikles (Beschränkung von Herrschaft, direkte Demokratie, exklusive Gleichheit)",
+        "Legitimation von Herrschaft im Heiligen Römischen Reich (geistliche und weltliche Gewalt, föderalistisches Prinzip, bürgerschaftlicher Republikanismus)",
+        "Wandel des politischen Denkens in der Zeit der Aufklärung (Menschenrechte, Volkssouveränität, Gewaltenteilung, Widerstandsrecht)",
+        "Herausbildung unterschiedlicher Nationsvorstellungen um 1800 (Abstammungsgemeinschaft vs. antiständische Integrationsideologie)",
+        "Zentrale Fragen der deutschen Nationalstaatsbildung im 19. Jh. (territoriale Aspekte, preußisch-österreichischer Dualismus, Staatsform, Nationalstaatsgründung)",
+        "Funktion und Wirkung nationaler Selbst- und Fremdbilder am Beispiel des deutsch-französischen Verhältnisses im 19. und in der ersten Hälfte des 20. Jh.",
+        "Überwindung nationalistischer Konfrontation im Zuge der europäischen Einigung nach 1945 (Europaidee, deutsch-französische Verständigung)"
+      ],
+      "kernkompetenzen": [
+        "Erkennen, dass die eigene Lebenswelt durch langfristig wirksame Entwicklungen von der Antike bis ins 19. Jh. geprägt ist.",
+        "Wesentliche Prinzipien der Legitimation und Gestaltung politischer Gewalt in modernen westlichen Gesellschaften auf historischen Prozessen des vormodernen Europas zurückführen.",
+        "Ursachen des Nationalismus sowie dessen Rolle und Problematik für die Geschichte Europas im 19. und 20. Jh. verstehen.",
+        "Die Bedeutung der deutsch-französischen Verständigung für die europäische Integration erfassen.",
+        "Erkennen, inwieweit verschiedene politische Ordnungsvorstellungen von der Antike bis in die Zeit der Aufklärung moderne demokratische Staatsordnungen geprägt haben.",
+        "Kontinuität und Wandel politischer und gesellschaftlicher Strukturen von der Antike bis zur Aufklärung multikausal erklären und differenzierte, problembewusste Argumentationen entwickeln.",
+        "Zentrale Merkmale der attischen Demokratie erfassen und den antiken Demokratiebegriff diskutieren.",
+        "Wesentliche Prinzipien der Legitimation und der Gestaltung politischer Macht im Heiligen Römischen Reich charakterisieren.",
+        "Die Bedeutung des staatspolitischen Denkens der Aufklärung für Politik und Gesellschaft bis in die Gegenwart beurteilen.",
+        "Am Beispiel des deutsch-französischen Verhältnisses die Bedeutung und Problematik des Nationalismus für die Geschichte Europas erkennen.",
+        "Sich mit der Überwindung nationalistischer Konfrontation im Zuge der europäischen Einigung nach 1945 auseinandersetzen.",
+        "Thesen zu historischen Fragestellungen von der Französischen Revolution bis zum Beginn des 21. Jh. erklären und überprüfen.",
+        "Die Nationsvorstellungen, die sich um 1800 in Frankreich und Deutschland herausbildeten, charakterisieren.",
+        "Zentrale Probleme der deutschen Nationalstaatsbildung zwischen 1848/49 und 1871 beschreiben und die Instrumentalisierung der Nationsidee für machtpolitische Interessen beurteilen.",
+        "Auswirkungen nationaler Selbst- und Fremdbilder auf das deutsch-französische Verhältnis erfassen und Strategien für ein friedliches Miteinander im heutigen Europa entwickeln.",
+        "Den Stellenwert der Überwindung nationalistischer Konfrontation und die Bedeutung der deutsch-französischen Verständigung für den europäischen Integrationsprozess diskutieren.",
+        "Zentrale Daten und Begriffe sicher und reflektiert anwenden und mit neuen Kontexten verknüpfen (z.B. 5. Jh. v. Chr. Blütezeit Athens, 800 Kaiserkrönung Karls des Großen, 962 Kaiserkrönung Ottos des Großen, 1618–1648 Dreißigjähriger Krieg, 17./18. Jh. Absolutismus, 1776 Amerikanische Unabhängigkeitserklärung, 1789 Beginn der Französischen Revolution, 1806 Ende des Heiligen Römischen Reiches, Absolutismus, Adel, Antike, Aufklärung, Bürger, Bürgertum, Demokratie, Gewaltenteilung, Investiturstreit, Kaiser, König, konstitutionelle Monarchie, Kurfürsten, Menschenrechte, Mittelalter, Neuzeit, Parlament, Polis, Republik, Säkularisation, Stadtrecht, Verfassung, Volkssouveränität, Westfälischer Friede, 1848/49 Revolution in Deutschland, 1871 Deutsche Reichsgründung, 1914–1918 Erster Weltkrieg, 1939–1945 Zweiter Weltkrieg, 1963 deutsch-französischer Freundschaftsvertrag, 1992 Gründung der Europäischen Union, Adenauer, Bismarck, Deutscher Bund, Deutsches Kaiserreich, europäische Integration, Liberalismus, Napoleon, Nation, Nationalismus, Nationalsozialismus, Osterweiterung der EU, Vertrag von Versailles, Weimarer Republik, Westintegration)."
+      ]
+    }
+  ]
+}

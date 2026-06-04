@@ -1,9 +1,16 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { subjects, topics } from '../data/mockData'
 import { generateMode1Exam, correctExam } from '../lib/gemini'
 import type { GeneratedExam, ExamCorrection } from '../types'
+
+interface ProbeklausurPrefill {
+  subjectId: string
+  subjectName: string
+  topics: string[]
+  sourceNoteIds: string[]
+}
 
 // ── Shared helpers ─────────────────────────────────────────────────────────
 
@@ -126,14 +133,16 @@ type Phase = 'setup' | 'loading' | 'exam' | 'correcting' | 'result'
 
 export function ProbeklausurMode1Screen() {
   const navigate = useNavigate()
-  const { profile } = useUser()
+  const location = useLocation()
+  const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
+  const { profile, getKc } = useUser()
 
   const userSubjects = subjects.filter((s) => profile?.faecher?.includes(s.id))
   const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
 
   const [phase, setPhase] = useState<Phase>('setup')
-  const [subjectId, setSubjectId] = useState(displaySubjects[0]?.id ?? '')
-  const [topic, setTopic] = useState('')
+  const [subjectId, setSubjectId] = useState(prefill?.subjectId ?? displaySubjects[0]?.id ?? '')
+  const [topic, setTopic] = useState(prefill?.topics[0] ?? '')
   const [afb, setAfb] = useState<'I' | 'II' | 'III'>('II')
   const [exam, setExam] = useState<GeneratedExam | null>(null)
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -153,6 +162,7 @@ export function ProbeklausurMode1Screen() {
         subjectId,
         topic.trim(),
         afb,
+        getKc(subjectId) ?? undefined,
       )
       setExam(generated)
       setAnswers({})

@@ -1,0 +1,49 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Musik",
+  "zusammenfassung": "Die Fachanforderungen Musik für Schleswig-Holstein definieren einen kompetenzorientierten Unterricht, der die Schülerinnen und Schüler zur aktiven Teilhabe am kulturellen Leben befähigt. Das Fach gliedert sich in die zwei zentralen Kompetenzbereiche 'Musik gestalten' (Aktion, Transposition) und 'Musik erschließen' (Rezeption, Reflexion), die eng miteinander verzahnt sind. Der Unterricht ist themenorientiert und an drei übergeordneten Themenbereichen ausgerichtet: 'Musik und ihre Ordnung', 'Musik und ihre Entwicklung' sowie 'Musik und ihre Bedeutung'. In der Sekundarstufe I liegt der Fokus auf der Entwicklung grundlegender musikalischer Fähigkeiten und der Orientierung in der Vielfalt musikalischer Angebote. In der Sekundarstufe II wird dieser Ansatz wissenschaftspropädeutisch vertieft, um die Studier- und Berufsfähigkeit zu fördern. Die Leistungsbewertung umfasst sowohl praktische als auch mündliche und schriftliche Beiträge, wobei der Prozess des Lernens ebenso wie das Ergebnis gewürdigt wird. Ein besonderes Augenmerk liegt auf der individuellen Förderung, der Inklusion und der Einbindung digitaler Medien sowie außerschulischer Lernorte.",
+  "hauptthemen": [
+    {
+      "thema": "Musik und ihre Ordnung",
+      "relevante_unterthemen": [
+        "Allgemeine Musiklehre",
+        "Formenlehre",
+        "Musikalische Parameter (Melodik, Rhythmik, Harmonik, Dynamik, Klangfarbe)",
+        "Notationsformen (konventionell und grafisch)",
+        "Strukturprinzipien und Kompositionstechniken"
+      ],
+      "kernkompetenzen": [
+        "Musikalische Parameter und Strukturen hörend erkennen und fachsprachlich beschreiben",
+        "Musikalische Ordnungssysteme praktisch anwenden und in eigenen Gestaltungen umsetzen"
+      ]
+    },
+    {
+      "thema": "Musik und ihre Entwicklung",
+      "relevante_unterthemen": [
+        "Musikgeschichte und Epochen",
+        "Gattungen und Stile",
+        "Komponistenportraits",
+        "Populäre Musik und ihre Entwicklungsstationen",
+        "Interkulturelle Aspekte und Musik anderer Kulturen"
+      ],
+      "kernkompetenzen": [
+        "Musikwerke in ihren historischen, gesellschaftlichen und biografischen Kontext einordnen",
+        "Wandel musikalischer Gestaltungen und Wirkungen über die Zeit hinweg vergleichen und diskutieren"
+      ]
+    },
+    {
+      "thema": "Musik und ihre Bedeutung",
+      "relevante_unterthemen": [
+        "Wirkung von Musik",
+        "Funktionsgebundene Musik (Film, Werbung, Politik)",
+        "Musik und Sprache/Text/Szene",
+        "Musikpsychologie und Musiksoziologie",
+        "Ästhetische Urteilsbildung"
+      ],
+      "kernkompetenzen": [
+        "Die Wirkung von Musik auf das eigene Erleben und das anderer reflektieren",
+        "Musik in funktionalen Kontexten analysieren und begründet interpretieren"
+      ]
+    }
+  ]
+}

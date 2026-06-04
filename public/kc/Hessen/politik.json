@@ -1,0 +1,87 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Politik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Politik und Wirtschaft in der gymnasialen Oberstufe in Hessen zielt auf die Befähigung der Lernenden zu mündigen, autonomen und gesellschaftlich verantwortungsbewussten Bürgern. Es verfolgt einen ganzheitlichen, kompetenzorientierten Ansatz, der fachliches Wissen mit überfachlichen Kompetenzen (personal, sozial, methodisch) verknüpft. Das Fach ist als Integrationsfach konzipiert, das die Domänen Politik, Wirtschaft und Gesellschaft in ihrer Wechselwirkung betrachtet. Zentrale Bildungsziele sind die Analysefähigkeit, Urteilsfähigkeit, Handlungskompetenz und Methodenkompetenz. Der Unterricht ist problemorientiert, wissenschaftspropädeutisch und kontroversitätsgebunden. Er bereitet auf die Allgemeine Hochschulreife vor, indem er Lernende befähigt, komplexe gesellschaftliche Herausforderungen – wie Demokratieentwicklung, Globalisierung, ökologische Nachhaltigkeit und wirtschaftliche Stabilität – zu analysieren, zu bewerten und aktiv mitzugestalten. Das Curriculum ist in eine Einführungsphase (E) und eine Qualifikationsphase (Q1-Q4) gegliedert, wobei die Q-Phase zunehmend domänenübergreifend und interdisziplinär angelegt ist.",
+  "hauptthemen": [
+    {
+      "thema": "Herausforderungen gesellschaftlichen Wandels (E1)",
+      "relevante_unterthemen": [
+        "Strukturen und Wandel der Gesellschaft",
+        "Soziale Ungleichheit",
+        "Politische Sozialisation",
+        "Migration"
+      ],
+      "kernkompetenzen": [
+        "Sozialwissenschaftliche Beschreibungen und Diagnosen moderner Gesellschaften analysieren",
+        "Wechselwirkungen zwischen individuellem Handeln und gesellschaftlichen Strukturen reflektieren"
+      ]
+    },
+    {
+      "thema": "Wachstum und Lebensqualität in marktwirtschaftlich organisierten Volkswirtschaften (E2)",
+      "relevante_unterthemen": [
+        "Wirtschaftskreislauf und Wachstum",
+        "Ökologische Herausforderungen",
+        "Umweltpolitik",
+        "Konsumentscheidungen"
+      ],
+      "kernkompetenzen": [
+        "Marktwirtschaftliche Zusammenhänge und externe Effekte analysieren",
+        "Nachhaltigkeitskonzepte und umweltpolitische Instrumente beurteilen"
+      ]
+    },
+    {
+      "thema": "Demokratie im politischen Mehrebenensystem (Q1)",
+      "relevante_unterthemen": [
+        "Verfassung und Rechtsstaatlichkeit",
+        "Parteiendemokratie",
+        "Europäische Integration",
+        "Öffentlichkeit und Medien",
+        "Interessenvertretung"
+      ],
+      "kernkompetenzen": [
+        "Demokratische Willensbildungs- und Entscheidungsprozesse analysieren",
+        "Institutionelle Rahmenbedingungen und Herausforderungen der Demokratie bewerten"
+      ]
+    },
+    {
+      "thema": "Wirtschaft und Wirtschaftspolitik in der sozialen Marktwirtschaft (Q2)",
+      "relevante_unterthemen": [
+        "Konjunkturpolitik",
+        "Ordnungspolitik",
+        "Europäische Währungsunion",
+        "Arbeitsmarkt- und Tarifpolitik",
+        "Sozialpolitik und Staatsfinanzierung"
+      ],
+      "kernkompetenzen": [
+        "Wirtschaftspolitische Konzeptionen (keynesianisch vs. angebotsorientiert) vergleichen und beurteilen",
+        "Zusammenhänge zwischen wirtschaftlicher Stabilität, sozialer Gerechtigkeit und staatlichem Handeln reflektieren"
+      ]
+    },
+    {
+      "thema": "Internationale Beziehungen im Zeitalter der Globalisierung (Q3)",
+      "relevante_unterthemen": [
+        "Internationale Konflikte und Friedenssicherung",
+        "Strukturwandel der Weltwirtschaft",
+        "Entwicklungspolitik",
+        "Transnationale Demokratie",
+        "Weltumweltpolitik"
+      ],
+      "kernkompetenzen": [
+        "Internationale Konflikte analysieren und Handlungsoptionen bewerten",
+        "Globalisierungsprozesse und deren Auswirkungen auf Politik und Wirtschaft beurteilen"
+      ]
+    },
+    {
+      "thema": "Gegenwart und Zukunft Europas in einer globalisierten Welt (Q4)",
+      "relevante_unterthemen": [
+        "Politisches System der EU",
+        "Wirtschaftliche Integration",
+        "EU als globaler Akteur"
+      ],
+      "kernkompetenzen": [
+        "Europäische Integrationsprozesse und deren Herausforderungen reflektieren",
+        "Die Rolle der EU im globalen Kontext analysieren und bewerten"
+      ]
+    }
+  ]
+}

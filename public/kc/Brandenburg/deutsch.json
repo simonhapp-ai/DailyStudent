@@ -1,0 +1,63 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Rahmenlehrplan für das Fach Deutsch in der gymnasialen Oberstufe in Brandenburg zielt auf die Entwicklung einer umfassenden Sprach-, Literatur- und Medienkompetenz ab, die zur Allgemeinen Hochschulreife führt. Das Fach versteht sich als Beitrag zur Persönlichkeitsbildung, zur Teilhabe am gesellschaftlichen Leben und zur Vorbereitung auf Studium und Beruf. Der Unterricht basiert auf einem weiten Textbegriff und integriert prozessbezogene Kompetenzen (Sprechen/Zuhören, Schreiben, Lesen) mit domänenspezifischen Inhalten (Auseinandersetzung mit Texten/Medien, Reflexion über Sprache). Ein besonderer Fokus liegt auf der Wissenschaftspropädeutik, der Förderung der Argumentations- und Reflexionsfähigkeit sowie der ästhetischen Urteilsbildung. Das Curriculum ist als Spiralcurriculum angelegt, das in der Einführungsphase Grundlagen festigt und in der Qualifikationsphase durch eine systematische Auseinandersetzung mit Epochen, Gattungen und Medientheorien vertieft. Dabei werden sowohl literarische als auch pragmatische Texte analysiert, wobei Leistungskurs-Schüler zusätzlich vertiefte theoretische und kontextuelle Anforderungen erfüllen müssen.",
+  "hauptthemen": [
+    {
+      "thema": "Kommunikation und Sprache",
+      "relevante_unterthemen": [
+        "Kommunikationsmodelle",
+        "Sprachvarietäten (Dialekte, Soziolekte, Fachsprache)",
+        "Sprachwandel und Gegenwartssprache",
+        "Persuasive und manipulative Strategien"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Bedingungen gelingender Kommunikation",
+        "Reflexion über Sprache als System und historisches Medium",
+        "Bewertung von Macht- und Dominanzverhältnissen in der Kommunikation"
+      ]
+    },
+    {
+      "thema": "Literaturgeschichte und Epochen",
+      "relevante_unterthemen": [
+        "Aufklärung, Empfindsamkeit, Sturm und Drang",
+        "Literatur um 1800",
+        "Literatur im 19. Jahrhundert",
+        "Literatur im 20./21. Jahrhundert"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Inhalt, Aufbau und sprachlicher Gestaltung literarischer Texte",
+        "Einordnung von Werken in literaturgeschichtliche und poetologische Kontexte",
+        "Vergleich von literarischer Tradition und Gegenwartsliteratur"
+      ]
+    },
+    {
+      "thema": "Medien und Film",
+      "relevante_unterthemen": [
+        "Filmisches Erzählen",
+        "Theaterinszenierungen",
+        "Hörtexte und audiovisuelle Medien",
+        "Medienkritik und Wirkungsanalyse"
+      ],
+      "kernkompetenzen": [
+        "Analyse der spezifischen Gestaltung von Texten unterschiedlicher medialer Form",
+        "Beurteilung der ästhetischen Qualität von Inszenierungen und Filmen",
+        "Erstellung eigener medialer Präsentationsformen"
+      ]
+    },
+    {
+      "thema": "Schreiben und Argumentieren",
+      "relevante_unterthemen": [
+        "Materialgestütztes Schreiben",
+        "Erklärendes und argumentierendes Schreiben",
+        "Gestaltendes Schreiben",
+        "Wissenschaftspropädeutisches Arbeiten"
+      ],
+      "kernkompetenzen": [
+        "Verfassen kohärenter, adressatengerechter und normgerechter Texte",
+        "Strukturierung komplexer Schreibprozesse und Nutzung digitaler Werkzeuge",
+        "Eigenständige Entwicklung von Interpretationsansätzen und Argumentationsstrukturen"
+      ]
+    }
+  ]
+}

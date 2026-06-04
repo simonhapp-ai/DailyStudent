@@ -1,0 +1,59 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Berlin (Biologie) zielt auf die Entwicklung einer fundierten naturwissenschaftlichen Kompetenz ab, die über reines Fachwissen hinausgeht. Er gliedert sich in vier zentrale Kompetenzbereiche: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Diese werden durch fünf Basiskonzepte (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, Individuelle und evolutive Entwicklung) vernetzt, um ein strukturiertes, kumulatives Lernen zu ermöglichen. Die Einführungsphase (Jahrgangsstufe 11) dient der Festigung und Vertiefung der Grundlagen, während die Qualifikationsphase (Q1-Q4) in vier verbindlichen Themenfeldern (Stoffwechsel/Informationsverarbeitung, Ökologie, Genetik, Evolution) auf ein erhöhtes Anforderungsniveau (AHR) hinarbeitet. Ein besonderer Fokus liegt auf der Wissenschaftspropädeutik, der ethischen Reflexion biologischer Anwendungen sowie der Förderung von systemischem Denken und der Teilhabe am gesellschaftlichen Diskurs.",
+  "hauptthemen": [
+    {
+      "thema": "Stoffwechsel und Informationsverarbeitung auf zellulärer Ebene",
+      "relevante_unterthemen": [
+        "Zellulärer Stoffwechsel (Dissimilation, ATP-Bildung)",
+        "Neurobiologie (Ruhe-/Aktionspotenzial, Synapsen)",
+        "Hormonelle Steuerung",
+        "Zelluläre Lernprozesse"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge zwischen Struktur und Funktion auf zellulärer Ebene erläutern",
+        "Neurophysiologische Prozesse und deren Störungen analysieren und bewerten"
+      ]
+    },
+    {
+      "thema": "Lebewesen in ihrer Umwelt (Ökologie)",
+      "relevante_unterthemen": [
+        "Abiotische und biotische Faktoren",
+        "Fotosynthese und Stoffkreisläufe",
+        "Populationsdynamik (Lotka-Volterra)",
+        "Nachhaltigkeit und anthropogene Einflüsse"
+      ],
+      "kernkompetenzen": [
+        "Ökosysteme als offene Systeme unter Nutzung von Basiskonzepten analysieren",
+        "Folgen menschlichen Handelns für Ökosysteme kriteriengeleitet bewerten"
+      ]
+    },
+    {
+      "thema": "Molekulargenetische Grundlagen des Lebens",
+      "relevante_unterthemen": [
+        "DNA-Struktur und Replikation",
+        "Genexpression (Transkription, Translation)",
+        "Epigenetik und Genregulation",
+        "Gentechnische Verfahren und Ethik"
+      ],
+      "kernkompetenzen": [
+        "Molekularbiologische Mechanismen der Informationsspeicherung und -realisierung erklären",
+        "Ethische Implikationen gentechnischer Verfahren reflektieren und bewerten"
+      ]
+    },
+    {
+      "thema": "Vielfalt und Entwicklung des Lebens (Evolution)",
+      "relevante_unterthemen": [
+        "Synthetische Evolutionstheorie",
+        "Evolutionsfaktoren (Mutation, Selektion, Drift)",
+        "Belege der Evolution",
+        "Evolution und kulturelle Entwicklung des Menschen"
+      ],
+      "kernkompetenzen": [
+        "Evolutionsprozesse theoriegeleitet erklären und von nicht-wissenschaftlichen Vorstellungen abgrenzen",
+        "Stammesgeschichtliche Verwandtschaftsverhältnisse anhand von Belegen analysieren"
+      ]
+    }
+  ]
+}

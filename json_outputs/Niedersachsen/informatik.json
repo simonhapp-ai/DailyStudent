@@ -1,0 +1,68 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Informatik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Informatik in den Schuljahrgängen 5-10 in Niedersachsen verfolgt das Ziel, Schülerinnen und Schüler zu einem reflektierten, verantwortungsbewussten und selbstbestimmten Umgang mit Informatiksystemen in einer zunehmend digitalisierten Gesellschaft zu befähigen. Der Unterricht ist kompetenzorientiert aufgebaut und verknüpft prozessbezogene Kompetenzen (wie Strukturieren, Modellieren, Implementieren, Kommunizieren, Bewerten und Werkzeugnutzung) mit inhaltsbezogenen Kompetenzen (Informationen/Daten, Algorithmen, Informatiksysteme, Informatik und Gesellschaft). Ein zentraler Fokus liegt auf projektorientiertem Arbeiten, bei dem Informatik als Werkzeug zur Problemlösung verstanden wird. Die Inhalte sind in vier Lernfelder gegliedert: 'Daten und ihre Spuren', 'Computerkompetenz', 'Algorithmisches Problemlösen' und 'Automatisierte Prozesse'. Das Curriculum betont die Bedeutung von Medienbildung, Teamarbeit und die Fähigkeit, übergeordnete Konzepte auf neue Situationen zu übertragen, um lebenslanges Lernen zu ermöglichen.",
+  "hauptthemen": [
+    {
+      "thema": "Daten und ihre Spuren",
+      "relevante_unterthemen": [
+        "Internetnutzung und -dienste",
+        "Aufbau von Netzwerken",
+        "Datenaustausch",
+        "Datenschutz und Datensicherheit",
+        "Verwaltung von Daten"
+      ],
+      "kernkompetenzen": [
+        "Gezielte Recherche und Beurteilung von Informationen im Internet",
+        "Verständnis des dezentralen Aufbaus von Netzwerken",
+        "Anwendung von Verschlüsselungsverfahren",
+        "Strukturierung und Analyse von Datenbeständen (z.B. Datenbanken)"
+      ]
+    },
+    {
+      "thema": "Computerkompetenz",
+      "relevante_unterthemen": [
+        "Aufbau von Computersystemen",
+        "Speichern von Daten",
+        "Textverarbeitung",
+        "Präsentation",
+        "Bildbearbeitung"
+      ],
+      "kernkompetenzen": [
+        "Verständnis des EVA-Prinzips (Eingabe, Verarbeitung, Ausgabe)",
+        "Sicherer Umgang mit Betriebssystemen und Dateiverwaltung",
+        "Zielgerichteter Einsatz von Anwendungssoftware",
+        "Reflektierte Gestaltung digitaler Produkte unter Berücksichtigung rechtlicher Aspekte"
+      ]
+    },
+    {
+      "thema": "Algorithmisches Problemlösen",
+      "relevante_unterthemen": [
+        "Algorithmusbegriff",
+        "Algorithmisieren und Implementieren",
+        "Kontrollstrukturen",
+        "Variablen und Datenstrukturen"
+      ],
+      "kernkompetenzen": [
+        "Zerlegung komplexer Probleme in Teilprobleme",
+        "Entwurf und Darstellung von Algorithmen (z.B. Struktogramme)",
+        "Implementierung von Algorithmen in Programmiersprachen",
+        "Systematisches Testen und Korrigieren von Programmen"
+      ]
+    },
+    {
+      "thema": "Automatisierte Prozesse",
+      "relevante_unterthemen": [
+        "Automatisierte Prozesse im Alltag",
+        "Modellierung von Automaten",
+        "Technische Realisierung (Robotik/Schaltnetze)"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Modellierung von Zustandsautomaten",
+        "Verständnis der Wechselwirkung von Sensoren und Aktoren",
+        "Konstruktion und Steuerung technischer Informatiksysteme",
+        "Bewertung der gesellschaftlichen Auswirkungen von Automatisierung"
+      ]
+    }
+  ]
+}

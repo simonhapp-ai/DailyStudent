@@ -1,0 +1,76 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Musik",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen (Ausgabe 2024) verfolgt einen kompetenzorientierten Ansatz, der Musik als Teil der ästhetischen Bildung begreift. Ziel ist es, Lernende zu einem aktiven, erfahrungsbezogenen und reflektierten Umgang mit Musik zu befähigen. Der Unterricht fördert die musikalische Identitätsbildung, die Fähigkeit zur differenzierten Rezeption sowie die wissenschaftspropädeutische Auseinandersetzung mit Musik in ihren historischen, gesellschaftlichen und kulturellen Kontexten. Das Curriculum ist als Spiralcurriculum angelegt, das in der Einführungsphase Grundlagen festigt und in der Qualifikationsphase (Q1-Q4) durch thematische Schwerpunkte (Formprinzipien, Kontext anderer Künste, gesellschaftlich-historischer Kontext, subjektiv-individueller Kontext) vertieft. Dabei werden drei zentrale Kompetenzbereiche (Hören/Beschreiben, Gestalten/Transformieren, Erschließen/Reflektieren) durch fachliche Konzepte (Elemente/Strukturen, Musikpraxis/Klangerzeugung, Kontext/Wirkung) strukturiert, um die Studierfähigkeit und allgemeine Hochschulreife vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Einführungsphase: Spektrum Musik",
+      "relevante_unterthemen": [
+        "Begegnung mit Musik",
+        "Musikalische Elemente und Gestaltung",
+        "Projekt Musikkultur",
+        "Musik in ihrer Zeit",
+        "Gestaltende Musikpraxis"
+      ],
+      "kernkompetenzen": [
+        "Sicherung und Erweiterung der musikbezogenen Kompetenzen aus der Sekundarstufe I",
+        "Grundlagen für einen fortgeschrittenen praktizierenden, rezipierenden und reflektierenden Umgang mit Musik schaffen"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase Q1: Prinzipien musikalischer Form",
+      "relevante_unterthemen": [
+        "Dialektisches Prinzip",
+        "Formmodelle (Reihung, Sonatenhauptsatz)",
+        "Monothematik und Kontrapunktik",
+        "Formmodelle in Rock/Pop/Jazz und Neuer Musik",
+        "Transformation in Bewegung und Grafik"
+      ],
+      "kernkompetenzen": [
+        "Verständnis von Gestaltungs- und Formprinzipien sowie deren Wirkung",
+        "Analyse und Reflexion von Formmodellen in unterschiedlichen Stilen und Kulturen"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase Q2: Musik im Kontext anderer Künste",
+      "relevante_unterthemen": [
+        "Musik und Sprache",
+        "Musik und Malerei",
+        "Musik und visuelle Medien",
+        "Musik und Tanz/Bewegung",
+        "Musik und Bühne"
+      ],
+      "kernkompetenzen": [
+        "Vernetzung von Musik mit anderen Kunstformen (Bildende Kunst, Literatur, Darstellende Kunst)",
+        "Übertragung von Musik in andere ästhetische und mediale Ausdrucksformen"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase Q3: Musik im gesellschaftlichen und historischen Kontext",
+      "relevante_unterthemen": [
+        "Weg in die Moderne",
+        "Wandel des Sonatenhauptsatzes",
+        "Musik in ihrer Zeit (Umbruchsituationen)",
+        "Funktionalität von Musik",
+        "Gesellschaftliche Rolle der Musikerin/des Musikers"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Zusammenhängen zwischen musikalischer Gestaltung und historisch-soziologischem Kontext",
+        "Kritische Reflexion der Funktion und Wirkung von Musik in der Gesellschaft"
+      ]
+    },
+    {
+      "thema": "Qualifikationsphase Q4: Musik im subjektiv-individuellen Kontext",
+      "relevante_unterthemen": [
+        "Interpretation in musikerschließender Ausrichtung",
+        "Rezeptionsgeschichte",
+        "Interpretation in fachpraktischer Ausrichtung",
+        "Hörpräferenz und musikalisches Werturteil"
+      ],
+      "kernkompetenzen": [
+        "Kriteriengeleitetes Nachdenken über das eigene musikbezogene Handeln und Hören",
+        "Zusammenführung der Inhalte der vorangegangenen Kurshalbjahre zu einer ganzheitlichen Gesamtschau"
+      ]
+    }
+  ]
+}

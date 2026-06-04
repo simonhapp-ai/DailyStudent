@@ -1,0 +1,42 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Geschichte",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Geschichte in Schleswig-Holstein verfolgt das übergeordnete Ziel, ein reflektiertes Geschichtsbewusstsein zu entwickeln. Dies geschieht durch die Förderung narrativer Kompetenz, die Schüler befähigt, Vergangenheit durch Konstruktion und Dekonstruktion von Narrationen sinnhaft zu erschließen. Der Unterricht ist kompetenzorientiert und gliedert sich in vier zentrale Bereiche: Wahrnehmung, Erschließung, Sachurteil und Orientierung. In der Sekundarstufe I liegt der Fokus auf der Vermittlung von Basiswissen und der methodischen Einübung, während in der Sekundarstufe II wissenschaftspropädeutisches Arbeiten, die Analyse komplexer historischer Zusammenhänge und die Reflexion von Kontroversen im Vordergrund stehen. Ein besonderer Schwerpunkt liegt auf der Zeitgeschichte nach 1945, die mindestens ein Viertel der Unterrichtszeit einnehmen muss. Die Leistungsbewertung ist transparent und prozessorientiert, wobei eigenständiges historisches Denken höher gewichtet wird als reine Reproduktion.",
+  "hauptthemen": [
+    {
+      "thema": "Sekundarstufe I: Historische Epochen und Prozesse",
+      "relevante_unterthemen": [
+        "Vorgeschichte und Antike",
+        "Mittelalter",
+        "Frühe Neuzeit",
+        "19. Jahrhundert (Industrialisierung, Nationalismus)",
+        "Erster Weltkrieg",
+        "Weimarer Republik und Nationalsozialismus",
+        "Welt seit 1945 (Ost-West-Konflikt)",
+        "Deutschland und Europa seit 1945"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung eines reflektierten Geschichtsbewusstseins durch Konstruktion und Dekonstruktion",
+        "Anwendung fachspezifischer Methoden (z.B. Quellenanalyse, Bildinterpretation, Zeitzeugenbefragung)",
+        "Formulierung begründeter Sach- und Werturteile unter Berücksichtigung verschiedener Perspektiven"
+      ]
+    },
+    {
+      "thema": "Sekundarstufe II: Themenzentrierte historische Analyse",
+      "relevante_unterthemen": [
+        "Vergangenheit und Gegenwart (Lernen aus der Geschichte)",
+        "Begegnungen von Kulturen (Migration, Kolonialismus)",
+        "Wandel von Wirtschaft und Gesellschaft",
+        "Menschenrechte aus universal-historischer Perspektive",
+        "Nationale Identitäten seit dem 19. Jahrhundert",
+        "Diktatur und Demokratie im 20. Jahrhundert",
+        "Friedensschlüsse und internationale Konflikte"
+      ],
+      "kernkompetenzen": [
+        "Wissenschaftspropädeutische Auseinandersetzung mit komplexen historischen Problemstellungen",
+        "Reflexion über den Konstruktionscharakter von Geschichte und aktuelle Forschungskontroversen",
+        "Selbstständige Erarbeitung und Präsentation historischer Narrationen auf hohem Abstraktionsniveau"
+      ]
+    }
+  ]
+}

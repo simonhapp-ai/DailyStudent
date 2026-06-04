@@ -1,0 +1,76 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe (Mainzer Studienstufe) in Rheinland-Pfalz zielt auf die Entwicklung einer differenzierten interkulturellen Kommunikationsfähigkeit ab. Er integriert die Lernbereiche Sprache, Inhalte (Literatur, Landeskunde, Sachthemen) und Methoden, um Schüler auf die Anforderungen in Alltag, Studium und Beruf vorzubereiten. Ein besonderer Fokus liegt auf der Befähigung zu selbstständigem, vernetztem Denken und wissenschaftspropädeutischem Arbeiten. Der Unterricht ist themenorientiert gestaltet, wobei den Lehrkräften große Spielräume bei der Stoffauswahl eingeräumt werden, um Lebensweltbezug und Aktualität zu gewährleisten. Fachübergreifendes Lernen ist ein konstitutives Element, das durch projektorientierte Ansätze und die Kooperation mit anderen Fächern gefördert wird. Ziel ist es, neben der sprachlichen Kompetenz auch die Persönlichkeitsentwicklung, Toleranz und die Fähigkeit zur kritischen Reflexion eigener und fremder Werthaltungen zu stärken.",
+  "hauptthemen": [
+    {
+      "thema": "Sprachliche Kompetenz",
+      "relevante_unterthemen": [
+        "Hör- und Sehverstehen",
+        "Mündliche Ausdrucksfähigkeit",
+        "Leseverstehen",
+        "Schriftliche Ausdrucksfähigkeit",
+        "Sprachmittlung (Dolmetschen/Übersetzen)"
+      ],
+      "kernkompetenzen": [
+        "Sich in realen Kommunikationssituationen sach- und situationsgerecht in der Fremdsprache verständigen",
+        "Komplexe authentische Texte (fiktional/nichtfiktional) analysieren und interpretieren",
+        "Sprachliche Mittel bewusst und differenziert einsetzen"
+      ]
+    },
+    {
+      "thema": "Literatur",
+      "relevante_unterthemen": [
+        "Ganzschriften (Roman/Drama)",
+        "Literaturgeschichte (vor 1900 bis Gegenwart)",
+        "Literarische Gattungen (Lyrik, Short Story, Essay)",
+        "Shakespeare und sein Zeitalter"
+      ],
+      "kernkompetenzen": [
+        "Literarische Texte als Ausdruck menschlicher Erfahrungen und kultureller Deutungen verstehen",
+        "Methoden der Textanalyse und kreativen Interpretation anwenden",
+        "Gesellschaftliche und historische Kontexte in die Interpretation einbeziehen"
+      ]
+    },
+    {
+      "thema": "Landeskunde (Cultural Studies)",
+      "relevante_unterthemen": [
+        "Politik, Gesellschaft und Wirtschaft anglophoner Länder",
+        "Interkulturelle Kommunikation",
+        "Kulturelle Identität und Differenz"
+      ],
+      "kernkompetenzen": [
+        "Kulturspezifische Sachverhalte und Wertvorstellungen reflektieren",
+        "Interkulturelle Sensibilität und Vorurteilsfreiheit entwickeln",
+        "Aktuelle gesellschaftliche Entwicklungen in Zielsprachenländern analysieren"
+      ]
+    },
+    {
+      "thema": "Sachthemen",
+      "relevante_unterthemen": [
+        "Naturwissenschaften, Technologie und Ökologie",
+        "Geistes- und Gesellschaftswissenschaften",
+        "Aktuelle globale und universale Themen"
+      ],
+      "kernkompetenzen": [
+        "Sich zu kulturübergreifenden Themen in der Fremdsprache informieren und positionieren",
+        "Fachübergreifende Zusammenhänge erkennen und vernetzt denken",
+        "Medien und Technologien zur Informationsbeschaffung und -verarbeitung nutzen"
+      ]
+    },
+    {
+      "thema": "Methodenkompetenz",
+      "relevante_unterthemen": [
+        "Lern- und Arbeitstechniken",
+        "Informationsentnahme und -verarbeitung",
+        "Kooperation und Kommunikation",
+        "Präsentationstechniken"
+      ],
+      "kernkompetenzen": [
+        "Lernprozesse selbstständig und verantwortungsbewusst gestalten",
+        "Arbeitsergebnisse adressatengerecht präsentieren",
+        "Effektiv in Partner- und Gruppenarbeit kooperieren"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Der Lehrplan für das Fach Evangelische Religionslehre (Jahrgangsstufe 12, erhöhtes Anforderungsniveau) ist darauf ausgerichtet, Schülerinnen und Schüler zu einer tiefgreifenden Auseinandersetzung mit existenziellen Sinnfragen, dem christlichen Gottesverständnis und der Rolle des Menschen in einer komplexen Gesellschaft zu befähigen. Ein zentrales methodisches Element ist die Arbeit an einem übergeordneten Längsschnittthema, das durch alle Lernbereiche hindurch aus theologischen, anthropologischen und ethischen Perspektiven beleuchtet wird. Die Lernbereiche decken dabei ein breites Spektrum ab: von der Theodizeefrage und der Trinitätslehre über die anthropologische Reflexion menschlicher Fragmentarität und Schuld bis hin zur Analyse von Arbeit, Leistung und sozialethischer Verantwortung. Ziel ist es, dass die Lernenden biblische Traditionen und reformatorische Denkfiguren mit philosophischen, wissenschaftlichen und gesellschaftskritischen Diskursen in einen kritischen Dialog bringen, um eine fundierte eigene Urteilsbildung zu entwickeln.",
+  "hauptthemen": [
+    {
+      "thema": "Sinnfrage und Gottesfrage",
+      "relevante_unterthemen": [
+        "Theodizeefrage",
+        "Trinitätslehre",
+        "Religionskritik",
+        "Biblisches Gottesverständnis"
+      ],
+      "kernkompetenzen": [
+        "Theologische Positionen zur Gottesfrage und Theodizee kritisch reflektieren und in Beziehung setzen",
+        "Religionskritische Ansätze (z.B. Feuerbach, Marx, Nietzsche) analysieren und aus christlicher Sicht bewerten"
+      ]
+    },
+    {
+      "thema": "Anthropologie: Der im-perfekte Mensch",
+      "relevante_unterthemen": [
+        "Identität und Selbstkonzept",
+        "Fragmentarität und Scheitern",
+        "Sünde, Gnade und Rechtfertigung",
+        "Erkenntnistheorie und Aggression"
+      ],
+      "kernkompetenzen": [
+        "Menschliche Fragmentarität und Schuld im Horizont christlicher Rechtfertigungslehre deuten",
+        "Philosophische und humanwissenschaftliche Theorien zu Identität und Aggression kritisch vergleichen"
+      ]
+    },
+    {
+      "thema": "Homo faber: Mensch und Möglichkeiten",
+      "relevante_unterthemen": [
+        "Arbeit und Berufung",
+        "Leistungsgesellschaft und Leistungszwang",
+        "Schöpfungsglaube und Weltgestaltung",
+        "Freiheit eines Christenmenschen"
+      ],
+      "kernkompetenzen": [
+        "Biblisch-reformatorische Perspektiven auf Arbeit und Leistung auf aktuelle gesellschaftliche Bedingungen anwenden",
+        "Ambivalenz von Aktivität und Passivität im Kontext des Schöpfungsglaubens reflektieren"
+      ]
+    },
+    {
+      "thema": "Sozialethik: Christsein in der Gesellschaft",
+      "relevante_unterthemen": [
+        "Individuum und Gesellschaft",
+        "Politische Verantwortung der Kirche",
+        "Sozialethische Modelle",
+        "Meinungsbildungsprozesse"
+      ],
+      "kernkompetenzen": [
+        "Theologische Modelle zur Sozialethik (z.B. Zwei-Reiche-Lehre) auf aktuelle gesellschaftliche Herausforderungen anwenden",
+        "Die Rolle der Kirche in der Gesellschaft kritisch analysieren und eigene Handlungsmöglichkeiten reflektieren"
+      ]
+    }
+  ]
+}

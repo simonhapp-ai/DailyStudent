@@ -1,0 +1,90 @@
+{
+  "bundesland": "NRW",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Kernlehrplan für die gymnasiale Oberstufe in NRW (gültig ab 2022) verfolgt das Ziel einer vertieften naturwissenschaftlichen Bildung, die Schülerinnen und Schüler zur allgemeinen Studierfähigkeit führt. Der Unterricht ist kompetenzorientiert und wissenschaftspropädeutisch angelegt. Er gliedert sich in vier Kompetenzbereiche (Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz), die an verbindliche Inhaltsfelder (z.B. Organische Stoffklassen, Elektrochemie, Reaktionswege) gebunden sind. Ein zentrales Element ist das Lernen in Kontexten, wobei das Experiment als zentrale Untersuchungsmethode dient. Die Basiskonzepte (Stoff-Teilchen, chemische Reaktion, Energie) dienen der Strukturierung und Vernetzung des Wissens. Der Lehrplan betont die Bedeutung von Nachhaltigkeit, digitaler Medienbildung und die Vorbereitung auf die Abiturprüfung, wobei zwischen Grund- und Leistungskursen hinsichtlich der Komplexität und Vernetzung der Inhalte unterschieden wird.",
+  "hauptthemen": [
+    {
+      "thema": "Organische Stoffklassen",
+      "relevante_unterthemen": [
+        "Funktionelle Gruppen",
+        "Struktur-Eigenschaftsbeziehungen",
+        "Isomerie",
+        "Oxidationsreihe der Alkanole",
+        "Estersynthese"
+      ],
+      "kernkompetenzen": [
+        "Organische Verbindungen aufgrund funktioneller Gruppen klassifizieren und benennen",
+        "Stoffeigenschaften auf Basis intermolekularer Wechselwirkungen erklären"
+      ]
+    },
+    {
+      "thema": "Reaktionsgeschwindigkeit und chemisches Gleichgewicht",
+      "relevante_unterthemen": [
+        "Reaktionskinetik",
+        "Prinzip von Le Chatelier",
+        "Massenwirkungsgesetz",
+        "Katalyse",
+        "Stoffkreisläufe"
+      ],
+      "kernkompetenzen": [
+        "Einflussfaktoren auf die Reaktionsgeschwindigkeit analysieren",
+        "Gleichgewichtslagen berechnen und durch äußere Bedingungen steuern"
+      ]
+    },
+    {
+      "thema": "Säuren, Basen und analytische Verfahren",
+      "relevante_unterthemen": [
+        "Brønsted-Konzept",
+        "pH-Wert-Berechnungen",
+        "Titrationsverfahren",
+        "Puffersysteme",
+        "Neutralisationsenthalpie"
+      ],
+      "kernkompetenzen": [
+        "Säure-Base-Reaktionen als Protonenübertragung interpretieren",
+        "Analytische Verfahren zur Konzentrationsbestimmung anwenden und auswerten"
+      ]
+    },
+    {
+      "thema": "Elektrochemische Prozesse und Energetik",
+      "relevante_unterthemen": [
+        "Redoxreaktionen",
+        "Galvanische Zellen",
+        "Elektrolyse",
+        "Thermodynamik (Enthalpie, Entropie, freie Enthalpie)",
+        "Korrosion"
+      ],
+      "kernkompetenzen": [
+        "Elektrochemische Spannungsquellen und deren Funktionsweise erläutern",
+        "Energetische Aspekte chemischer Reaktionen thermodynamisch bewerten"
+      ]
+    },
+    {
+      "thema": "Reaktionswege in der organischen Chemie",
+      "relevante_unterthemen": [
+        "Reaktionsmechanismen (Substitution, Addition)",
+        "Aromatische Systeme",
+        "Farbstoffe",
+        "Chromatografie",
+        "Mesomerie"
+      ],
+      "kernkompetenzen": [
+        "Reaktionsmechanismen auf Teilchenebene beschreiben",
+        "Struktur und Reaktivität organischer Verbindungen verknüpfen"
+      ]
+    },
+    {
+      "thema": "Moderne Werkstoffe",
+      "relevante_unterthemen": [
+        "Kunststoffklassen (Thermoplaste, Duroplaste, Elastomere)",
+        "Polymerisation",
+        "Recycling",
+        "Nanochemie"
+      ],
+      "kernkompetenzen": [
+        "Eigenschaften von Kunststoffen auf molekulare Strukturen zurückführen",
+        "Nachhaltigkeit von Werkstoffen und deren Verwertung bewerten"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Bildungsplan für das Fach Bildende Kunst in der Studienstufe (Oberstufe) in Hamburg zielt auf die Förderung ästhetischen Handelns und Denkens ab. Er verbindet sinnlich-leibliche Wahrnehmung mit kognitiven und affektiven Prozessen. Zentral ist die gleichwertige Verknüpfung von produktiver (Gestaltung) und rezeptiver (Reflexion) Arbeit. Die Schülerinnen und Schüler sollen durch die Auseinandersetzung mit Kunst, Architektur und Alltagskultur kulturelle Teilhabe erlangen, ihre Ausdrucksfähigkeit schulen und ein Bewusstsein für gestalterische Prozesse entwickeln. Der Unterricht ist projektorientiert und fördert sowohl individuelle als auch kooperative Leistungen. Ein besonderer Fokus liegt auf der 'Kultur der Digitalität', der Sprachbildung als Querschnittsaufgabe sowie der Vermittlung von Werten und nachhaltiger Entwicklung (BNE). Die Studienstufe verlangt eine systematische Vernetzung der drei Bezugsfelder (Freie Kunst, Architektur, Alltagskultur) mit den drei Gestaltungsdimensionen (Fläche, Raum, Zeit), um ein vertieftes kunst- und wissenschaftspropädeutisches Verständnis zu gewährleisten.",
+  "hauptthemen": [
+    {
+      "thema": "Bezugsfelder (Freie Kunst, Architektur, Alltagskultur)",
+      "relevante_unterthemen": [
+        "Freie Kunst (Malerei, Plastik, Installation, Performance, Film, Games)",
+        "Architektur (gebauter Raum, Städtebau, Landschaftsarchitektur, Bühnenarchitektur)",
+        "Alltagskultur (Design, visuelle Kommunikation, Mode, Körpergestaltung, Ästhetik des Feierns)"
+      ],
+      "kernkompetenzen": [
+        "Fähigkeit, ästhetische Phänomene in verschiedenen Bezugsfeldern zu erkennen, zu analysieren und zu deuten.",
+        "Transfer von historischem und zeitgenössischem Orientierungswissen auf aktuelle gestalterische Problemstellungen.",
+        "Kritische Reflexion der gesellschaftlichen Rolle von Kunst und gestalteter Umwelt."
+      ]
+    },
+    {
+      "thema": "Gestaltungsdimensionen (Fläche, Raum, Zeit)",
+      "relevante_unterthemen": [
+        "Arbeiten auf der Fläche (Organisation, Komposition, grafische/malerische Mittel)",
+        "Arbeiten im Raum (Körper-Raum-Beziehung, Konstruktion, Materialität)",
+        "Arbeiten mit Zeit (Prozesshaftigkeit, Dramaturgie, Montage, Bewegung)"
+      ],
+      "kernkompetenzen": [
+        "Sicherer Einsatz fachspezifischer Gestaltungsmittel und Vokabulars in analogen und digitalen Medien.",
+        "Entwicklung eigenständiger gestalterischer Lösungen unter Berücksichtigung von Form, Funktion und Wirkung.",
+        "Anwendung experimenteller und planender Entwurfsstrategien."
+      ]
+    },
+    {
+      "thema": "Kompetenzbereiche (Konzeption/Produktion, Rezeption/Reflexion, Präsentation/Kuration)",
+      "relevante_unterthemen": [
+        "Ästhetisches Forschen und Prozessdokumentation",
+        "Werkbetrachtung und Analyse (Beschreibung, Analyse, Interpretation)",
+        "Ausstellungsmanagement und Vermittlungskompetenz"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige Konzeption und Steuerung komplexer Gestaltungsprozesse.",
+        "Reflektierte Präsentation und Kuration eigener und fremder Arbeiten unter Berücksichtigung von Kontext und Adressaten.",
+        "Konstruktiver Umgang mit Feedback und Einhaltung rechtlicher Rahmenbedingungen (Urheberrecht, Lizenzen)."
+      ]
+    }
+  ]
+}

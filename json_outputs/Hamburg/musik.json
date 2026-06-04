@@ -1,0 +1,52 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Musik",
+  "zusammenfassung": "Der Bildungsplan für das Fach Musik in der Studienstufe in Hamburg zielt auf die Förderung ästhetischer Kompetenz durch die drei eng miteinander verknüpften Bereiche Produktion, Rezeption und Reflexion ab. Musikunterricht wird als ästhetische Praxis verstanden, die sowohl orientierendes als auch exemplarisches Lernen ermöglicht. Die Schülerinnen und Schüler sollen befähigt werden, Musik als Medium des Selbstausdrucks, der Kommunikation und der Welterschließung zu nutzen. Ein besonderer Fokus liegt auf der Wissenschaftspropädeutik, der Verknüpfung mit der Lebenswelt der Lernenden sowie der Integration digitaler Werkzeuge. Der Unterricht ist in drei zentrale Themenbereiche gegliedert: 'Musik in ihrer Gestalt' (Struktur und Funktion), 'Raum und Zeit' (Bedeutung und Bedeutsamkeit) sowie 'Musik in ihrer Wahrnehmung und Wirksamkeit' (Semantik, Wirkung und Funktion). Interkulturalität durchdringt dabei alle Bereiche. Überfachliche Kompetenzen (personale, motivationale, lernmethodische und soziale) werden als Grundlage für den Erwerb fachlicher Kompetenzen systematisch gefördert, wobei das erhöhte Anforderungsniveau eine höhere Komplexität, Selbstständigkeit und Differenziertheit in der Analyse und Gestaltung verlangt.",
+  "hauptthemen": [
+    {
+      "thema": "Musik in ihrer Gestalt",
+      "relevante_unterthemen": [
+        "Methoden der Analyse und Interpretation",
+        "Musikalische Parameter (Rhythmus, Harmonik, Melodik, Klangfarbe)",
+        "Formmodelle und Kompositionstechniken",
+        "Neue Klänge und experimentelle Musik",
+        "Kreative Mediengestaltung"
+      ],
+      "kernkompetenzen": [
+        "Musikalische Strukturen und Gestaltungsformen wahrnehmen und fachsprachlich beschreiben",
+        "Eigene Musikstücke oder Arrangements unter Einbeziehung stiltypischer Merkmale produzieren",
+        "Musikstücke analysieren und interpretieren unter Anwendung von Hör- und Notentextanalyse"
+      ]
+    },
+    {
+      "thema": "Raum und Zeit",
+      "relevante_unterthemen": [
+        "Ästhetische Kontroversen und Paradigmenwechsel",
+        "Epochenbegriff und Epochengliederung",
+        "Entstehungsgeschichte von Werken",
+        "Musik und Instrumente aus verschiedenen geographischen Räumen",
+        "Wandel der Musikproduktion und Technik"
+      ],
+      "kernkompetenzen": [
+        "Bezüge und Interdependenzen zwischen musikalischen Strömungen erfassen",
+        "Musik in ihrem historischen, gesellschaftlichen und kulturellen Kontext einordnen",
+        "Musik verschiedener Epochen und Kulturen vergleichen und deren Bedeutung reflektieren"
+      ]
+    },
+    {
+      "thema": "Musik in ihrer Wahrnehmung und Wirksamkeit",
+      "relevante_unterthemen": [
+        "Ausdrucksgehalt von Musik (Semantik)",
+        "Musik in szenischen Zusammenhängen (Oper, Musical, Film, Videospiele)",
+        "Politische und manipulative Verwendung von Musik",
+        "Musik in Verbindung mit Kult und Religion",
+        "Musikpsychologische Erklärungsmodelle"
+      ],
+      "kernkompetenzen": [
+        "Wirkungsabsichten von Musik identifizieren und hinterfragen",
+        "Das Verhältnis von Musik und Sprache (Wort-Ton-Verhältnis) analysieren",
+        "Eigene Gestaltungsversuche zur bewussten Umsetzung von Emotionen und Wahrnehmungssteuerung durchführen"
+      ]
+    }
+  ]
+}

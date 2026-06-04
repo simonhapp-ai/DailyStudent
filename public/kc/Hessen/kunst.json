@@ -1,0 +1,76 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Kunst",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Kunst in der gymnasialen Oberstufe in Hessen verfolgt einen kompetenzorientierten Ansatz, der auf die Allgemeine Hochschulreife vorbereitet. Im Zentrum steht die ästhetische Bildung als wesentlicher Beitrag zur Welterschließung in einer visuell geprägten Gesellschaft. Das Fach gliedert sich in die zwei gleichwertigen Kompetenzbereiche 'Bilderschließung' (Analyse und Interpretation) und 'Bildgestaltung' (praktische Produktion). Die Lernenden sollen befähigt werden, Bilder aus der Kunstgeschichte sowie der allgemeinen visuellen Kultur (Medien, Architektur, Design) fachgerecht zu analysieren, ihre eigene gestalterische Praxis zu reflektieren und einen begründeten Standpunkt zu ästhetischen Phänomenen zu entwickeln. Das Curriculum ist in Kurshalbjahre unterteilt, die von den klassischen Bildkünsten über Medien und gestaltete Umwelt bis hin zu zeitgenössischen Transformationsprozessen reichen. Dabei werden fachliche Konzepte wie Herstellungsbedingungen, Bildsprachen, Funktionen und historisch-gesellschaftliche Bezüge als strukturierende Elemente genutzt, um wissenschaftspropädeutisches Arbeiten zu fördern und die Lernenden zur Teilhabe am kulturellen Diskurs zu befähigen.",
+  "hauptthemen": [
+    {
+      "thema": "Einführungsphase (E1 & E2)",
+      "relevante_unterthemen": [
+        "Sprache der Künste (Malerei, Grafik, Plastik)",
+        "Formen der Werkanalyse",
+        "Wahrnehmungsprozesse und Selbstdarstellung",
+        "Wandel der Bildthemen (Mittelalter bis 19. Jahrhundert)"
+      ],
+      "kernkompetenzen": [
+        "Grundlegende Verfahren der Werkanalyse anwenden",
+        "Eigene Bildideen entwickeln und gestalterisch umsetzen",
+        "Basiswissen zu kunsthistorischen Epochen und Fachterminologie aufbauen"
+      ]
+    },
+    {
+      "thema": "Q1: Klassische Bildkünste",
+      "relevante_unterthemen": [
+        "Wandel von gegenständlicher zu ungegenständlicher Kunst",
+        "Plastik im Vergleich zu anderen Gattungen",
+        "Brechung von Konventionen",
+        "Gegenüberstellung künstlerischer Positionen"
+      ],
+      "kernkompetenzen": [
+        "Umbruchssituationen der Kunstgeschichte analysieren",
+        "Differenzierte Ausdrucksmittel der Malerei, Grafik und Plastik gezielt einsetzen",
+        "Künstlerische Positionen kritisch vergleichen und bewerten"
+      ]
+    },
+    {
+      "thema": "Q2: Medien (Fotografie, Grafikdesign)",
+      "relevante_unterthemen": [
+        "Dokumentarische vs. inszenierte Fotografie",
+        "Manipulation in Werbung und Social Media",
+        "Bildsprache und Typografie",
+        "Montage und Collage als künstlerische Strategie"
+      ],
+      "kernkompetenzen": [
+        "Manipulative Strategien in Bildmedien entschlüsseln",
+        "Fotografische und gebrauchsgrafische Ausdrucksmittel für eigene Entwürfe nutzen",
+        "Kritischen Standpunkt gegenüber medialen Bildwelten einnehmen"
+      ]
+    },
+    {
+      "thema": "Q3: Gestaltete Umwelt (Architektur, Produktdesign)",
+      "relevante_unterthemen": [
+        "Architektur im Spannungsfeld von Weltverständnis und Anspruch",
+        "Produktdesign und Gebrauchsobjekte",
+        "Utopie vs. Wirklichkeit in der Baugestaltung",
+        "Kunst im öffentlichen Raum"
+      ],
+      "kernkompetenzen": [
+        "Architektonische und designorientierte Ausdrucksmittel analysieren und anwenden",
+        "Funktionalität, Ästhetik und Symbolik von Objekten bewerten",
+        "Eigene Entwürfe (Grundrisse, Modelle) zu gestalterischen Problemen entwickeln"
+      ]
+    },
+    {
+      "thema": "Q4: Gegenwart und Transformation",
+      "relevante_unterthemen": [
+        "Zitat als Strategie in Kunst und Medien",
+        "Gattungsübergreifende Ausdrucksmittel (Mixed Media)",
+        "Konzepte urbaner Kunst (Streetart, Graffiti)"
+      ],
+      "kernkompetenzen": [
+        "Zeitgenössische Kunstströmungen und Transformationsprozesse erfassen",
+        "Künstlerische Zitate und Mixed-Media-Strategien reflektiert einsetzen",
+        "Interventionen im öffentlichen Raum planen und beurteilen"
+      ]
+    }
+  ]
+}

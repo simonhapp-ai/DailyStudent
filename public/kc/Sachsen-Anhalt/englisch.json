@@ -1,0 +1,61 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Fachlehrplan für das Fach Englisch am Gymnasium und Beruflichen Gymnasium in Sachsen-Anhalt verfolgt das Ziel, Schülerinnen und Schüler zu einer umfassenden kommunikativen und interkulturellen Handlungsfähigkeit zu befähigen. Englisch wird als Lingua franca der globalisierten Welt verstanden, deren Beherrschung für die persönliche Entwicklung, den beruflichen Erfolg und die Studierfähigkeit essenziell ist. Das Kompetenzmodell basiert auf dem Gemeinsamen europäischen Referenzrahmen (GeR) und umfasst die Bereiche funktionale kommunikative Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung), interkulturelle kommunikative Kompetenz, Text- und Medienkompetenz, Sprachbewusstheit sowie Sprachlernkompetenz. Der Unterricht folgt dem Prinzip der aufgeklärten Einsprachigkeit und fördert wissenschaftspropädeutisches Arbeiten. Über die Schuljahrgänge hinweg findet eine kontinuierliche Progression statt, die von der Ausbildung grundlegender Fertigkeiten in den Klassen 5/6 bis hin zur vertieften Analyse und Reflexion in der Qualifikationsphase (11/12) reicht. Dabei wird Wert auf die Auseinandersetzung mit soziokulturellem Orientierungswissen (Großbritannien, USA, weitere englischsprachige Länder) und die kritische Mediennutzung gelegt.",
+  "hauptthemen": [
+    {
+      "thema": "Funktionale kommunikative Kompetenz",
+      "relevante_unterthemen": [
+        "Hör- und Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (monologisch und dialogisch)",
+        "Schreiben",
+        "Sprachmittlung (Mediation)"
+      ],
+      "kernkompetenzen": [
+        "Sich in verschiedenen Situationen sach-, situations- und partnergerecht mündlich und schriftlich ausdrücken",
+        "Authentische Texte und Medieninhalte verstehen, analysieren und bewerten",
+        "Inhalte zwischen Sprachen und Kulturen adressatengerecht vermitteln"
+      ]
+    },
+    {
+      "thema": "Interkulturelle kommunikative Kompetenz",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen (UK, USA, Commonwealth)",
+        "Umgang mit kultureller Differenz",
+        "Interkulturelle Begegnungssituationen"
+      ],
+      "kernkompetenzen": [
+        "Toleranter und kritischer Umgang mit anderen Wertesystemen und Verhaltensmustern",
+        "Stärkung der eigenen Identität durch Multiperspektivität",
+        "Reflektiertes Agieren in interkulturellen Konfliktsituationen"
+      ]
+    },
+    {
+      "thema": "Text- und Medienkompetenz",
+      "relevante_unterthemen": [
+        "Literarische und nicht-literarische Texte",
+        "Digitale Medien und Informationsbeschaffung",
+        "Textanalyse und -produktion"
+      ],
+      "kernkompetenzen": [
+        "Souveräner Umgang mit vielfältigen Textsorten und Medien",
+        "Kritische Reflexion von Medieninhalten und Beeinflussungsstrategien",
+        "Anwendung von Präsentationstechniken und Visualisierung"
+      ]
+    },
+    {
+      "thema": "Sprachbewusstheit und Sprachlernkompetenz",
+      "relevante_unterthemen": [
+        "Reflexion über Sprache und Kommunikation",
+        "Lernstrategien und Selbstevaluation",
+        "Kontrastives Sprachenlernen"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige Analyse und Gestaltung des eigenen Sprachlernprozesses",
+        "Sensibilität für Stil, Register und soziokulturelle Prägung von Sprache",
+        "Effektive Nutzung von Hilfsmitteln wie Wörterbüchern und digitalen Ressourcen"
+      ]
+    }
+  ]
+}

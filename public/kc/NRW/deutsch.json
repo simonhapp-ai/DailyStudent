@@ -1,0 +1,67 @@
+{
+  "bundesland": "NRW",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Kernlehrplan für die gymnasiale Oberstufe in NRW (gültig ab 2023) definiert die fachlichen Anforderungen für das Fach Deutsch mit dem Ziel der allgemeinen Studierfähigkeit und der Vorbereitung auf die Berufs- und Arbeitswelt. Er ist kompetenzorientiert und basiert auf den Bildungsstandards der Kultusministerkonferenz. Der Unterricht ist in vier zentrale Inhaltsfelder gegliedert: Sprache, Texte, Kommunikation und Medien. Diese werden durch die Kompetenzbereiche Rezeption (Lesen, Zuhören, Reflektieren) und Produktion (Schreiben, Sprechen) strukturiert. Der Lehrplan betont eine kumulative Kompetenzentwicklung, die in der Einführungsphase beginnt und in der Qualifikationsphase (Grund- und Leistungskurs) wissenschaftspropädeutisch vertieft wird. Ein besonderer Fokus liegt auf der Reflexion über Sprache, der Analyse komplexer literarischer und pragmatischer Texte sowie der kritischen Auseinandersetzung mit medialen Gestaltungen und der digitalen Welt. Die Leistungsbewertung erfolgt durch Klausuren und sonstige Mitarbeit, wobei ein breites Spektrum an Überprüfungsformen (Analyse, Interpretation, Erörterung, materialgestütztes Schreiben) gefordert ist, um die Schülerinnen und Schüler auf die zentralen Abiturprüfungen vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Sprache",
+      "relevante_unterthemen": [
+        "Sprache als Zeichen- und Handlungssystem",
+        "Sprachvarietäten (Dialekte, Soziolekte)",
+        "Sprachwandel und Gegenwartssprache",
+        "Verhältnis von Sprache, Denken und Wirklichkeit",
+        "Spracherwerbstheorien"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Beurteilung sprachlicher Gestaltungsmittel und ihrer Wirkung",
+        "Reflexion über die gesellschaftliche Bedeutung von Sprache und Sprachvarietäten",
+        "Anwendung von Fachterminologie zur Beschreibung sprachlicher Phänomene"
+      ]
+    },
+    {
+      "thema": "Texte",
+      "relevante_unterthemen": [
+        "Literarische Texte (Drama, Erzähltexte, Lyrik)",
+        "Pragmatische Texte",
+        "Literaturgeschichte und Epochen",
+        "Poetologische Konzepte",
+        "Intertextualität und Textzusammenhänge"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige Interpretation und Analyse komplexer Texte unter Einbezug von Kontextwissen",
+        "Vergleichende Analyse von Texten unterschiedlicher Gattungen und Epochen",
+        "Gestaltender Umgang mit literarischen Vorlagen"
+      ]
+    },
+    {
+      "thema": "Kommunikation",
+      "relevante_unterthemen": [
+        "Kommunikationsmodelle",
+        "Monologische und dialogische Kommunikation",
+        "Verständigungsorientierung vs. Manipulation",
+        "Öffentlichkeit und Privatheit",
+        "Autor-Rezipienten-Kommunikation"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Kommunikationssituationen und -verläufen",
+        "Reflektiertes und adressatengerechtes Kommunikationsverhalten in verschiedenen Kontexten",
+        "Erkennen und Bewerten von Manipulationsstrategien"
+      ]
+    },
+    {
+      "thema": "Medien",
+      "relevante_unterthemen": [
+        "Mediale Gestaltung und Multimodalität",
+        "Information und Geltungsansprüche",
+        "Partizipation und gesellschaftliche Verantwortung",
+        "Filmische Umsetzung und Bühneninszenierung",
+        "Medientheorie und mediale Umbrüche"
+      ],
+      "kernkompetenzen": [
+        "Kritische Analyse und Beurteilung medialer Gestaltungen und ihrer Wirkung",
+        "Reflektierte Nutzung digitaler Werkzeuge zur Wissensverarbeitung und Produktion",
+        "Verantwortungsbewusste Teilhabe an digitalen Diskursen unter Beachtung von Urheber- und Persönlichkeitsrechten"
+      ]
+    }
+  ]
+}

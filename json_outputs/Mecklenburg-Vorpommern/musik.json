@@ -1,0 +1,77 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Musik",
+  "zusammenfassung": "Der Rahmenplan für die gymnasiale Oberstufe in Mecklenburg-Vorpommern (2019) zielt auf die Entwicklung einer umfassenden ästhetischen Urteilsfähigkeit und kulturellen Identität ab. Musikunterricht wird als integrativer Prozess verstanden, der sinnliche Wahrnehmung, praktisches Musizieren und theoretische Analyse verbindet. Die Schülerinnen und Schüler sollen befähigt werden, Musik in ihrer historischen, gesellschaftlichen und lebensweltlichen Bedeutung zu verstehen und aktiv mitzugestalten. Ein besonderer Fokus liegt auf der Förderung von Selbstständigkeit, Teamfähigkeit und der Integration digitaler Medien als Werkzeuge für Produktion und Reflexion. Der Unterricht ist in drei Kompetenzfelder gegliedert: Wahrnehmen/Erkennen, Reflektieren/Beurteilen sowie Gestalten/Aufführen. Diese Felder bilden die Basis für eine wissenschaftspropädeutische Grundbildung, die auf das Abitur vorbereitet und gleichzeitig zur Teilhabe an einer pluralistischen Gesellschaft befähigt.",
+  "hauptthemen": [
+    {
+      "thema": "Jazz",
+      "relevante_unterthemen": [
+        "Ursprünge und Verschmelzung von Traditionen",
+        "Instrumentations- und Spielweisen",
+        "Jazz als Spiegel gesellschaftlicher Konflikte",
+        "Moderne Jazzformen",
+        "Adaptionen in der Konzertmusik"
+      ],
+      "kernkompetenzen": [
+        "Stilistische Einordnung und Analyse von Jazz-Strukturen",
+        "Improvisation über Blues-Schemata und Jazz-Standards",
+        "Verständnis der soziokulturellen Hintergründe des Jazz"
+      ]
+    },
+    {
+      "thema": "Rock und Pop",
+      "relevante_unterthemen": [
+        "Jugendkultur und Lebensgefühl",
+        "Politisierung populärer Musik",
+        "Urheberrecht und digitale Distribution",
+        "Songstrukturen und Analyse von Pop-Produktionen"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Songstrukturen und Instrumentierung",
+        "Produktion eigener musikalischer Ideen mittels digitaler Medien",
+        "Reflexion über die Rolle von Musik in sozialen Medien und Gesellschaft"
+      ]
+    },
+    {
+      "thema": "Vokalmusik",
+      "relevante_unterthemen": [
+        "Vokalmusik im religiösen Kontext",
+        "Musik als Mahnmal",
+        "Dramaturgie in Oper und Musiktheater",
+        "Textausdeutung im Kunstlied und Schlager"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Wort-Ton-Verhältnissen",
+        "Sicheres Singen und mehrstimmiges Musizieren",
+        "Interpretation von Vokalwerken im historischen Kontext"
+      ]
+    },
+    {
+      "thema": "Instrumentalmusik",
+      "relevante_unterthemen": [
+        "Klaviermusik als ästhetischer Innovationsträger",
+        "Orchestermusik und Klangfarben",
+        "Neue Musiksprachen (Dodekaphonie, Aleatorik, Minimalismus)",
+        "Sonate und Sinfonie"
+      ],
+      "kernkompetenzen": [
+        "Analyse komplexer Partituren",
+        "Variations- und Kompositionstechniken",
+        "Verständnis für Klangwirkung und instrumentale Spieltechniken"
+      ]
+    },
+    {
+      "thema": "Musik und kulturelle Identität",
+      "relevante_unterthemen": [
+        "Einfluss von Volks- und Gesellschaftstänzen",
+        "Identitätsstiftende Musik und Nationalhymnen",
+        "Crossover und Multikulturalität"
+      ],
+      "kernkompetenzen": [
+        "Vergleich nationaler und kultureller Musiktraditionen",
+        "Choreographische und musikalische Umsetzung von Tanzformen",
+        "Reflexion über Musik als Ausdruck kultureller Zugehörigkeit"
+      ]
+    }
+  ]
+}

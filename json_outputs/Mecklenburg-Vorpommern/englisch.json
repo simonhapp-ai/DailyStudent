@@ -1,0 +1,61 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Rahmenplan für die gymnasiale Oberstufe in Mecklenburg-Vorpommern (2019) zielt darauf ab, Schülerinnen und Schüler zu befähigen, in einer globalisierten Welt eigenverantwortlich zu handeln und ihre Sprachkompetenz für Studium und Beruf zu nutzen. Der Fokus liegt nicht auf einer bloßen Stofffülle, sondern auf dem systematischen Erwerb funktionaler kommunikativer Kompetenzen (Hören, Lesen, Sprechen, Schreiben, Sprachmittlung) sowie interkultureller, text- und medienbezogener Kompetenzen. Ein besonderer Schwerpunkt liegt auf der Integration digitaler Medien als Werkzeug und Unterrichtsgegenstand. Der Unterricht soll wissenschaftspropädeutisch gestaltet sein, vernetztes Denken fördern und die Schülerinnen und Schüler zur kritischen Reflexion über kulturelle und gesellschaftliche Strukturen anregen. Die Leistungsbewertung erfolgt kriteriengestützt und orientiert sich an den Niveaustufen des Gemeinsamen europäischen Referenzrahmens (GeR), wobei zwischen Grund- und Leistungskursen differenziert wird.",
+  "hauptthemen": [
+    {
+      "thema": "The Individual and Society / Individuum und Gesellschaft",
+      "relevante_unterthemen": [
+        "Adoleszenz und Lebensentwürfe",
+        "Rollenverhalten und Identität",
+        "Öffentliche und private Moralvorstellungen"
+      ],
+      "kernkompetenzen": [
+        "Reflexion von Werten und Normen im historischen und persönlichen Kontext",
+        "Analyse von Lebensentwürfen und Rollenkonflikten",
+        "Diskussion über das Spannungsfeld zwischen Individualität und gesellschaftlicher Konformität"
+      ]
+    },
+    {
+      "thema": "National Identity and Cultural Diversity / Nationale Identität und kulturelle Vielfalt",
+      "relevante_unterthemen": [
+        "Tradition und Wandel in UK und USA",
+        "Migration und multikulturelle Gesellschaft",
+        "Commonwealth of Nations",
+        "Postkoloniale Erfahrungen"
+      ],
+      "kernkompetenzen": [
+        "Verständnis für landeskundliche und politische Systeme anglophoner Länder",
+        "Reflexion über kulturelle Vielfalt und den Umgang mit Vorurteilen",
+        "Analyse postkolonialer Zusammenhänge und deren heutige Bedeutung"
+      ]
+    },
+    {
+      "thema": "Global Challenges / Globale Herausforderungen der Gegenwart",
+      "relevante_unterthemen": [
+        "Gegenseitige Abhängigkeit und Weltwirtschaft",
+        "Umweltbewusstsein und Klimawandel",
+        "Wissenschaft und Technik",
+        "Die Künste"
+      ],
+      "kernkompetenzen": [
+        "Einschätzung globaler ökologischer und ökonomischer Zusammenhänge",
+        "Kritische Auseinandersetzung mit ethischen Fragen in Wissenschaft und Technik",
+        "Entwicklung von Lösungsansätzen für globale gesellschaftliche Herausforderungen"
+      ]
+    },
+    {
+      "thema": "Contemporary Issues in Society / Aktuelle Themen der Gesellschaft",
+      "relevante_unterthemen": [
+        "Medienkompetenz",
+        "Arbeitswelt und Berufsorientierung",
+        "Urbanes und ländliches Leben"
+      ],
+      "kernkompetenzen": [
+        "Kritische Reflexion der digitalen Revolution und Mediennutzung",
+        "Analyse von Anforderungen der modernen Arbeitswelt",
+        "Untersuchung von Lebensweisen im Kontext von Urbanisierung und gesellschaftlichem Wandel"
+      ]
+    }
+  ]
+}

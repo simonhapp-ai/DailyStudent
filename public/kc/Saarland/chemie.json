@@ -1,0 +1,107 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe im Saarland (Chemie, Grundkurs) verfolgt einen kompetenzorientierten Ansatz, der Fachwissen mit prozessbezogenen Kompetenzen (Erkenntnisgewinnung, Kommunikation, Bewertung) verknüpft. Das Ziel ist die Vermittlung einer wissenschaftlichen Grundbildung, die lebenslanges Lernen ermöglicht und Schüler befähigt, in einer technikgeprägten Gesellschaft verantwortungsvoll zu handeln. Der Unterricht basiert auf zentralen Basiskonzepten (Stoff-Teilchen, Struktur-Eigenschaft, Donator-Akzeptor, Energie, Gleichgewicht), die eine systemische Vernetzung der Inhalte gewährleisten. Der Lehrplan ist modular aufgebaut, was Freiräume für kontextorientiertes Lernen, fächerübergreifende Bezüge und aktuelle Themen bietet. Besondere Schwerpunkte liegen auf der Berufsorientierung, der Bildung für nachhaltige Entwicklung (BNE) sowie der Medienbildung. Die Lernerfolgskontrollen sollen alle Kompetenzbereiche abdecken, wobei experimentelles Arbeiten einen hohen Stellenwert einnimmt.",
+  "hauptthemen": [
+    {
+      "thema": "Chemische Bindung und Struktur – Eigenschaften – Beziehungen",
+      "relevante_unterthemen": [
+        "Metallbindung",
+        "Ionenbindung",
+        "Atombindung",
+        "Zwischenmolekulare Wechselwirkungen",
+        "Organische Stoffklassen (Alkane, Alkene, Alkine, Alkohole, Aldehyde, Ketone, Carbonsäuren, Ester, Amine)",
+        "Fette"
+      ],
+      "kernkompetenzen": [
+        "Stoffeigenschaften auf Basis von Bindungsarten und Molekülstrukturen erklären und vorhersagen",
+        "Organische Stoffklassen anhand funktioneller Gruppen systematisieren und benennen"
+      ]
+    },
+    {
+      "thema": "Energetische Betrachtung von chemischen Prozessen",
+      "relevante_unterthemen": [
+        "Energieformen und Energieumwandlung",
+        "Systembegriff",
+        "Enthalpie und Reaktionsenthalpie",
+        "Satz von Hess",
+        "Kalorimetrie"
+      ],
+      "kernkompetenzen": [
+        "Reaktionsenthalpien berechnen und energetische Zustände interpretieren",
+        "Den 1. Hauptsatz der Thermodynamik auf chemische Reaktionen anwenden"
+      ]
+    },
+    {
+      "thema": "Geschwindigkeit chemischer Prozesse",
+      "relevante_unterthemen": [
+        "Reaktionsgeschwindigkeit und Diagramme",
+        "Einflussgrößen (Konzentration, Druck, Temperatur, Grenzfläche)",
+        "Kollisionstheorie",
+        "Katalyse"
+      ],
+      "kernkompetenzen": [
+        "Reaktionsgeschwindigkeiten experimentell bestimmen und mathematisch beschreiben",
+        "Einflussfaktoren auf Teilchenebene mithilfe der Stoßtheorie deuten"
+      ]
+    },
+    {
+      "thema": "Chemisches Gleichgewicht",
+      "relevante_unterthemen": [
+        "Reversible Reaktionen",
+        "Massenwirkungsgesetz (MWG)",
+        "Prinzip von Le Chatelier und Braun",
+        "Technische Anwendungen (z.B. Haber-Bosch-Verfahren)"
+      ],
+      "kernkompetenzen": [
+        "Gleichgewichtslagen berechnen und durch äußere Bedingungen gezielt beeinflussen",
+        "Technische Prozesse hinsichtlich ihrer Optimierung beurteilen"
+      ]
+    },
+    {
+      "thema": "Säure-Base-Reaktionen und ihre Anwendungen",
+      "relevante_unterthemen": [
+        "Brønsted-Theorie",
+        "Autoprotolyse des Wassers",
+        "pH- und pOH-Wert",
+        "Säure- und Basenstärke (KS/KB)",
+        "Titrationen"
+      ],
+      "kernkompetenzen": [
+        "Protolysereaktionen als Protonenübergänge analysieren",
+        "pH-Werte berechnen und Titrationskurven interpretieren"
+      ]
+    },
+    {
+      "thema": "Redoxreaktionen und ihre Anwendungen",
+      "relevante_unterthemen": [
+        "Erweiterter Redoxbegriff",
+        "Oxidationszahlen",
+        "Standardredoxpotenziale",
+        "Galvanische Elemente",
+        "Elektrolyse",
+        "Brennstoffzellen",
+        "Korrosion und Korrosionsschutz"
+      ],
+      "kernkompetenzen": [
+        "Redoxgleichungen aufstellen und elektrochemische Spannungen berechnen",
+        "Funktionsweise von galvanischen Zellen und Elektrolysen erklären"
+      ]
+    },
+    {
+      "thema": "Reaktionen in der Organischen Chemie",
+      "relevante_unterthemen": [
+        "Redoxverhalten organischer Verbindungen",
+        "Induktive Effekte",
+        "Radikalische Substitution",
+        "Veresterung",
+        "Elektrophile Addition",
+        "Polymerisation"
+      ],
+      "kernkompetenzen": [
+        "Reaktionsmechanismen (SR, AE) in Strukturformeln darstellen",
+        "Reaktivität organischer Moleküle durch elektronische Effekte begründen"
+      ]
+    }
+  ]
+}

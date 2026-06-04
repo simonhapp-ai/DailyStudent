@@ -1,0 +1,77 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Deutsch",
+  "zusammenfassung": "Die Fachanforderungen Deutsch (2024) für Schleswig-Holstein bilden den verbindlichen Rahmen für den Deutschunterricht in der Primarstufe sowie der Sekundarstufe I und II. Im Zentrum steht der kumulative Kompetenzerwerb, der auf den Bildungsstandards der Kultusministerkonferenz basiert. Das Fach Deutsch leistet einen zentralen Beitrag zur allgemeinen Bildung, indem es die Sprachhandlungskompetenz fördert, die für gesellschaftliche Teilhabe, schulischen Erfolg und berufliche Orientierung essenziell ist. Der Unterricht ist integrativ angelegt und umfasst fünf Kompetenzbereiche: Sprechen und Zuhören, Schreiben, Lesen, Sich mit Texten und anderen Medien auseinandersetzen sowie Sprache und Sprachgebrauch untersuchen. Ein besonderer Fokus liegt auf der Digitalisierung, der Sprachbildung (Bildungssprache) und der Förderung überfachlicher Kompetenzen. Die Leistungsbeurteilung erfolgt formativ und summativ, wobei Unterrichtsbeiträge stärker gewichtet werden als schriftliche Leistungsnachweise. Die Fachkonferenzen der Schulen haben die Freiheit, diese Rahmenvorgaben in schulinternen Fachcurricula konkret auszugestalten, wobei sie die Anforderungsbereiche I bis III berücksichtigen müssen.",
+  "hauptthemen": [
+    {
+      "thema": "Sprechen und Zuhören",
+      "relevante_unterthemen": [
+        "Zu anderen sprechen",
+        "Verstehend zuhören",
+        "Miteinander sprechen",
+        "Vor anderen sprechen"
+      ],
+      "kernkompetenzen": [
+        "Adressatengerechte Kommunikation in vertrauten und unvertrauten Situationen",
+        "Demokratische Gesprächskultur und aktives Zuhören",
+        "Sicheres Auftreten bei Präsentationen und Debatten"
+      ]
+    },
+    {
+      "thema": "Schreiben",
+      "relevante_unterthemen": [
+        "Schreibfertigkeiten",
+        "Orthografisch schreiben",
+        "Texte verfassen",
+        "Texte überarbeiten"
+      ],
+      "kernkompetenzen": [
+        "Flüssiges und strukturiertes Verfassen von Texten für verschiedene Zwecke",
+        "Sichere Anwendung von Rechtschreibstrategien und Zeichensetzung",
+        "Selbstständige Planung, Formulierung und Überarbeitung von Texten"
+      ]
+    },
+    {
+      "thema": "Lesen",
+      "relevante_unterthemen": [
+        "Lesefertigkeiten",
+        "Leseverstehen",
+        "Lesestrategien",
+        "Lesemotivation"
+      ],
+      "kernkompetenzen": [
+        "Automatisierte und sinngestaltende Leseflüssigkeit",
+        "Einsatz kognitiver und metakognitiver Lesestrategien",
+        "Verknüpfung von Textinformationen mit Vorwissen zur Sinnkonstruktion"
+      ]
+    },
+    {
+      "thema": "Sich mit Texten und anderen Medien auseinandersetzen",
+      "relevante_unterthemen": [
+        "Textwissen",
+        "Medienorientierung",
+        "Literarische und pragmatische Texte",
+        "Digitale Formate"
+      ],
+      "kernkompetenzen": [
+        "Erschließung und Deutung literarischer sowie Sachtexte",
+        "Kritische Reflexion von Medienangeboten und digitalen Formaten",
+        "Herstellung von Bezügen zwischen Texten, Kontexten und eigener Lebenswelt"
+      ]
+    },
+    {
+      "thema": "Sprache und Sprachgebrauch untersuchen",
+      "relevante_unterthemen": [
+        "Sprachliche Verständigung",
+        "Sprachliche Vielfalt",
+        "Sprachliche Strukturen",
+        "Ressourcen zur deutschen Sprache"
+      ],
+      "kernkompetenzen": [
+        "Reflexion über Sprachfunktionen und Kommunikationsbedingungen",
+        "Analyse grammatischer Strukturen und deren funktionale Nutzung",
+        "Bewusster Umgang mit sprachlicher Variation und Mehrsprachigkeit"
+      ]
+    }
+  ]
+}

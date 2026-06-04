@@ -1,0 +1,54 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Musik",
+  "zusammenfassung": "Der Lehrplan für das Fach Musik in der Jahrgangsstufe 12 am Gymnasium (erhöhtes Anforderungsniveau) gliedert sich in drei zentrale Lernbereiche. Der erste Bereich fokussiert auf die historische Entwicklung der abendländischen Vokalmusik vom Gregorianischen Choral über die Renaissance und den Barock bis zur Wiener Klassik und Romantik. Hierbei stehen die Analyse von Satzstrukturen, Textausdeutung und die praktische stimmliche Umsetzung im Vordergrund. Der zweite Lernbereich 'Musik und Tradition' thematisiert das Spannungsfeld zwischen Traditionsbezügen und -brüchen, die Reflexion künstlerischer Identität sowie die kreative Auseinandersetzung mit polystilistischen Ansätzen. Der dritte Lernbereich 'Musik und Technik' untersucht den Einfluss digitaler und elektronischer Medien auf die Musikproduktion, Verbreitung und Rezeption. Dabei werden sowohl ästhetische Aspekte als auch ökonomische und rechtliche Fragestellungen (Urheberrecht, Vermarktung) kritisch reflektiert. Ziel ist es, den Schülern ein tiefgreifendes Verständnis für die historische Bedingtheit von Musik sowie die technologischen Transformationen der Gegenwart zu vermitteln.",
+  "hauptthemen": [
+    {
+      "thema": "Entwicklungen abendländischer Vokalmusik",
+      "relevante_unterthemen": [
+        "Gregorianik",
+        "Renaissance-Vokalmusik",
+        "Barocke Kantate und Oratorium",
+        "Wiener Klassik (Musiktheater)",
+        "Romantisches Lied"
+      ],
+      "kernkompetenzen": [
+        "Historische und politische Zusammenhänge von Vokalmusik erfassen",
+        "Stimmliche Fertigkeiten in verschiedenen Epochen anwenden",
+        "Notentexte (Quadratnotation) übertragen und modale Tonvorräte bestimmen",
+        "Musikalisch-rhetorische Figuren und Symbolik analysieren",
+        "Bearbeitungen für gemischten Chor erstellen"
+      ]
+    },
+    {
+      "thema": "Musik und Tradition",
+      "relevante_unterthemen": [
+        "Traditionsbezüge (z.B. Dies-irae, Quintfallsequenz)",
+        "Traditionsbrüche (z.B. Emanzipation der Dissonanz)",
+        "Künstlerische Identität",
+        "Polystilistik"
+      ],
+      "kernkompetenzen": [
+        "Traditionsbezüge und -brüche in der Musik analysieren",
+        "Eigene kulturelle Wurzeln in einer globalisierten Welt reflektieren",
+        "Stilübergreifende Gestaltungsversuche präsentieren",
+        "Qualitative Kriterien für polystilistische Musik diskutieren"
+      ]
+    },
+    {
+      "thema": "Musik und Technik",
+      "relevante_unterthemen": [
+        "Digitale Klangerzeugung und -bearbeitung",
+        "Verbreitungswege (Streaming, Komprimierung)",
+        "Einfluss technischer Entwicklungen auf Popular- und Kunstmusik",
+        "Ökonomische Aspekte und Urheberrecht"
+      ],
+      "kernkompetenzen": [
+        "Digitale Verfahren und elektronische Instrumente zur Musikproduktion erproben",
+        "Einflüsse technischer Entwicklungen auf die Musik des 20./21. Jahrhunderts beschreiben",
+        "Auswirkungen von Digitalisierung auf kreative Prozesse erörtern",
+        "Fragen des Urheberrechts und der Vermarktung kritisch reflektieren"
+      ]
+    }
+  ]
+}

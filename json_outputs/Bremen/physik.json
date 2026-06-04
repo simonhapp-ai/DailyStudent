@@ -1,0 +1,90 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Physik",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen zielt auf eine vertiefte allgemeine Bildung, Wissenschaftspropädeutik und Studierfähigkeit ab. Er orientiert sich an den KMK-Bildungsstandards für die Allgemeine Hochschulreife und gliedert sich in die Einführungsphase sowie die Qualifikationsphase. Der Unterricht basiert auf vier Kompetenzbereichen: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Zentrale Basiskonzepte wie Erhaltung und Gleichgewicht, Superposition und Komponenten, Mathematisieren und Vorhersagen sowie Zufall und Determiniertheit dienen der inhaltlichen Vernetzung. Ein besonderer Fokus liegt auf dem experimentellen Arbeiten, der Integration digitaler Werkzeuge und der Reflexion physikalischer Weltbilder im gesellschaftlichen Kontext. Die Qualifikationsphase ist modular aufgebaut und umfasst verbindliche Kernbausteine in den Bereichen elektrische/magnetische Felder, Schwingungen/Wellen sowie Quantenphysik und Materie, ergänzt durch flexible Erweiterungsbausteine zur individuellen Profilbildung.",
+  "hauptthemen": [
+    {
+      "thema": "Mechanik (Einführungsphase)",
+      "relevante_unterthemen": [
+        "Gleichförmige und beschleunigte Bewegungen",
+        "Wurfbewegungen",
+        "Vektorielle Kraftzerlegung",
+        "Impuls und Impulserhaltung",
+        "Kreisbewegungen",
+        "Messunsicherheiten"
+      ],
+      "kernkompetenzen": [
+        "Bewegungen mit t-s- und t-v-Diagrammen beschreiben und berechnen",
+        "Kräfte als Ursache von Bewegungsänderungen identifizieren und vektoriell addieren/zerlegen",
+        "Experimente zu Bewegungsvorgängen planen, durchführen und protokollieren",
+        "Messdaten unter Berücksichtigung von Messunsicherheiten auswerten"
+      ]
+    },
+    {
+      "thema": "Energie (Einführungsphase)",
+      "relevante_unterthemen": [
+        "Energieerhaltung und Energieformen",
+        "Systemgrenzen",
+        "Energieentwertung und Thermodynamik",
+        "Wirkungsgrade",
+        "Nachhaltige Energieversorgung und Klimawandel"
+      ],
+      "kernkompetenzen": [
+        "Energieerhaltungsprinzip auf physikalische Prozesse anwenden",
+        "Energieumwandlungsketten grafisch darstellen und Wirkungsgrade berechnen",
+        "Physikalische und gesellschaftliche Aspekte der Energieversorgung kriteriengeleitet bewerten",
+        "Energieentwertung in thermodynamischen Prozessen erläutern"
+      ]
+    },
+    {
+      "thema": "Elektrische und magnetische Felder (Qualifikationsphase)",
+      "relevante_unterthemen": [
+        "Elektrisches Feld und Plattenkondensator",
+        "Geladene Teilchen in Feldern",
+        "Magnetische Flussdichte",
+        "Lorentzkraft",
+        "Induktion und Induktionsgesetz"
+      ],
+      "kernkompetenzen": [
+        "Elektrische und magnetische Felder als Vektorfelder darstellen und superpositionieren",
+        "Energie im Feld eines Plattenkondensators berechnen",
+        "Bahnkurven geladener Teilchen in homogenen Feldern beschreiben",
+        "Induktionsvorgänge mithilfe der Lenz'schen Regel und des Induktionsgesetzes erklären"
+      ]
+    },
+    {
+      "thema": "Mechanische und elektromagnetische Schwingungen und Wellen (Qualifikationsphase)",
+      "relevante_unterthemen": [
+        "Harmonische Schwingungen",
+        "Feder- und Fadenpendel",
+        "Resonanz und Dämpfung",
+        "Wellenphänomene (Beugung, Reflexion, Interferenz)",
+        "Wellenoptik",
+        "Elektromagnetischer Schwingkreis"
+      ],
+      "kernkompetenzen": [
+        "Periodische Vorgänge mit Amplitude, Frequenz und Periodendauer beschreiben",
+        "Schwingungen mathematisch als Sinus-/Kosinusfunktion darstellen",
+        "Interferenzerscheinungen am Doppelspalt mit dem Wellenmodell erklären",
+        "Resonanzphänomene in mechanischen und elektromagnetischen Systemen analysieren"
+      ]
+    },
+    {
+      "thema": "Quantenphysik und Materie (Qualifikationsphase)",
+      "relevante_unterthemen": [
+        "Photonen und Elektronen als Quantenobjekte",
+        "Fotoeffekt",
+        "De-Broglie-Wellenlänge",
+        "Quantenmechanische Atommodelle",
+        "Energieniveaus und Spektren",
+        "Struktur der Materie (Quarks, Kernmodelle)"
+      ],
+      "kernkompetenzen": [
+        "Quantenphänomene wie den Fotoeffekt und Elektronenbeugung deuten",
+        "Das Planck'sche Wirkungsquantum experimentell bestimmen",
+        "Den Zusammenhang zwischen Energieniveauschemata und Linienspektren erläutern",
+        "Probleme bei der Übertragung klassischer Begriffe in das quantenphysikalische Weltbild reflektieren"
+      ]
+    }
+  ]
+}

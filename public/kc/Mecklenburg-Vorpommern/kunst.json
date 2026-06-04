@@ -1,0 +1,57 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Rahmenplan für das Fach Kunst und Gestaltung in der gymnasialen Oberstufe (Qualifikationsphase) in Mecklenburg-Vorpommern zielt auf die Entwicklung einer umfassenden Bildkompetenz ab. Diese wird durch die drei zentralen Kompetenzbereiche Produktion, Rezeption und Reflexion gefördert. Das Fach versteht sich als Beitrag zur Persönlichkeitsbildung, zur Orientierung in einer bildgeprägten, globalisierten Welt sowie zur wissenschaftspropädeutischen Vorbereitung auf Studium und Beruf. Ein besonderer Fokus liegt auf der Integration digitaler Medien, der interkulturellen Bildung und der regionalen Identität (Mecklenburg-Vorpommern). Der Unterricht ist prozessorientiert gestaltet, wobei die Schülerinnen und Schüler lernen, eigene künstlerische Ausdrucksformen zu finden, Kunstwerke kritisch zu analysieren und ihre gestalterischen Entscheidungen theoretisch zu begründen. Der Rahmenplan bietet verbindliche Themenfelder, lässt jedoch Freiraum für methodisch-didaktische Entscheidungen und die Einbindung aktueller Diskurse. Die Leistungsbewertung ist ganzheitlich angelegt und gewichtet praktische Arbeiten, Präsentationen und theoretische Reflexionen gleichermaßen.",
+  "hauptthemen": [
+    {
+      "thema": "Kommunikation in künstlerischen und medialen Welten",
+      "relevante_unterthemen": [
+        "Fotografie (analog/digital)",
+        "Audiovisuelle Medien (Film/Video)",
+        "Grafikdesign (Typografie/Layout)"
+      ],
+      "kernkompetenzen": [
+        "Künstlerische und mediale Gestaltungsmittel zielgerichtet und wirkungsorientiert einsetzen",
+        "Medien hinsichtlich ihrer Funktionen und Wirkungsweisen analysieren und kritisch reflektieren"
+      ]
+    },
+    {
+      "thema": "Bilder und Bildwelten als Ausdrucksmittel des Menschen",
+      "relevante_unterthemen": [
+        "Malerei",
+        "Grafik",
+        "Plastik/Objekt/Raum",
+        "Medien/Performance"
+      ],
+      "kernkompetenzen": [
+        "Wahrnehmungen und Ideen in eigene, subjektive Bildlösungen umsetzen",
+        "Bilder als komplexe Bedeutungsträger in historisch-kulturellen Kontexten erschließen"
+      ]
+    },
+    {
+      "thema": "Lebensräume und Alltagskultur",
+      "relevante_unterthemen": [
+        "Baukultur und Architektur",
+        "Wohnen",
+        "Design (Produktgestaltung/Mode)"
+      ],
+      "kernkompetenzen": [
+        "Grundprinzipien des Gestaltens auf Architektur- und Designobjekte anwenden",
+        "Gesellschaftliche Verantwortung und Funktionalität von Gestaltung im öffentlichen Raum reflektieren"
+      ]
+    },
+    {
+      "thema": "Gestaltung und Präsentation im öffentlichen Kontext",
+      "relevante_unterthemen": [
+        "Veranstaltungskonzept",
+        "Ausstellungsgestaltung",
+        "Dokumentation",
+        "Kampagne/Werbung/Corporate Design"
+      ],
+      "kernkompetenzen": [
+        "Konzeptideen für die Öffentlichkeit entwickeln und medienadäquat präsentieren",
+        "Präsentationsstrategien und visuelle Kommunikation analysieren und bewerten"
+      ]
+    }
+  ]
+}

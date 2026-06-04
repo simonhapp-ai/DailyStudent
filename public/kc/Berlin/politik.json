@@ -1,0 +1,60 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Politik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Politische Bildung in der gymnasialen Oberstufe in Berlin zielt auf die Entwicklung politischer Mündigkeit ab. Die Schülerinnen und Schüler sollen befähigt werden, sich in einer komplexen Gesellschaft zu orientieren, politische Probleme zu analysieren, auf demokratischer Grundlage reflektiert zu urteilen und aktiv am öffentlichen Leben teilzunehmen. Der Kompetenzerwerb basiert auf vier Säulen: konzeptuelles Deutungswissen (Verständnis von Modellen, Theorien und Institutionen), politische Urteilsfähigkeit (Analyse und Bewertung von Sachverhalten unter Sach- und Wertaspekten), politische Handlungsfähigkeit (Teilnahme an Diskursen und Aushandlungsprozessen) sowie methodische Fähigkeiten (sozialwissenschaftliche Arbeitsweisen). Der Unterricht ist in vier verbindliche Themenfelder gegliedert: Demokratie, Wirtschaft, Gesellschaft und Internationale Politik. Dabei wird ein kumulativer Lernprozess verfolgt, bei dem theoretische Grundlagen aus den ersten Halbjahren in den späteren Themenfeldern angewendet und vertieft werden. Ein besonderer Fokus liegt auf der Wissenschaftspropädeutik, der Förderung von Medienkompetenz und der Einhaltung des Beutelsbacher Konsenses, um eine Überwältigung der Lernenden zu vermeiden und Kontroversität zu wahren.",
+  "hauptthemen": [
+    {
+      "thema": "Demokratie",
+      "relevante_unterthemen": [
+        "Grundgesetz und politische Ordnung",
+        "Demokratietheorien",
+        "Politische Systeme (demokratisch, autoritär, totalitär)",
+        "Politischer Prozess und Partizipation",
+        "Europäische Integration und Identität"
+      ],
+      "kernkompetenzen": [
+        "Vergleich und kritische Reflexion politischer Systeme hinsichtlich Grund- und Menschenrechten",
+        "Analyse von Entscheidungsprozessen auf nationaler und EU-Ebene unter Anwendung von Integrationstheorien"
+      ]
+    },
+    {
+      "thema": "Wirtschaft",
+      "relevante_unterthemen": [
+        "Wirtschaftstheorien (Liberalismus, Keynesianismus, Neoliberalismus)",
+        "Wirtschaftsordnungen",
+        "Wirtschaftspolitik in der sozialen Marktwirtschaft",
+        "Globalisierung und nachhaltige Entwicklung"
+      ],
+      "kernkompetenzen": [
+        "Beurteilung wirtschaftspolitischer Maßnahmen anhand theoretischer Konzepte",
+        "Analyse von ökonomischen Krisen und Bewertung von Handlungsmöglichkeiten globaler Akteure"
+      ]
+    },
+    {
+      "thema": "Gesellschaft",
+      "relevante_unterthemen": [
+        "Soziale Differenzierung und Ungleichheit",
+        "Sozialstrukturmodelle",
+        "Sozialer Wandel",
+        "Sozialordnung und Sozialpolitik"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Bewertung von Theorien zur sozialen Ungleichheit",
+        "Erörterung aktueller Herausforderungen der Sozialpolitik und Vergleich von Sozialstaatsmodellen"
+      ]
+    },
+    {
+      "thema": "Internationale Politik",
+      "relevante_unterthemen": [
+        "Globale Herausforderungen (Umwelt, Ressourcen, Terrorismus)",
+        "Akteure der internationalen Politik",
+        "Theorien der internationalen Politik (Realismus, Idealismus)",
+        "Lösungsansätze und internationale Konfliktbewältigung"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Interessen und Motiven internationaler Akteure mittels Konfliktanalyse",
+        "Entwicklung und Bewertung von Szenarien für globale Lösungsansätze unter Einbeziehung politikwissenschaftlicher Theorien"
+      ]
+    }
+  ]
+}

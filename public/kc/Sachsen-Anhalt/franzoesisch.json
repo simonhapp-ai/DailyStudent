@@ -1,0 +1,60 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Fachlehrplan Französisch für das Gymnasium in Sachsen-Anhalt (Stand 2022) zielt auf die Entwicklung einer interkulturellen kommunikativen Kompetenz ab, die Schülerinnen und Schüler zur Teilhabe am gesellschaftlichen Leben in einem zusammenwachsenden Europa befähigt. Das Kompetenzmodell basiert auf den KMK-Bildungsstandards und umfasst die funktionale kommunikative Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung), Text- und Medienkompetenz, Sprachbewusstheit sowie Sprachlernkompetenz. Ein besonderer Fokus liegt auf dem Spiralcurriculum, das eine kontinuierliche Erweiterung der sprachlichen Mittel und Strategien vorsieht, um bis zum Ende der Sekundarstufe II das Niveau B2 des Gemeinsamen Europäischen Referenzrahmens zu erreichen. Der Unterricht ist handlungs- und produktionsorientiert gestaltet und integriert fächerübergreifende Themen wie Nachhaltigkeit, Bildung in der digitalen Welt und interkulturelle Perspektivierung. In der Qualifikationsphase erfolgt eine wissenschaftspropädeutische Ausrichtung, wobei zwischen grundlegendem und erhöhtem Anforderungsniveau differenziert wird, um die Schülerinnen und Schüler auf die allgemeine Hochschulreife vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Funktionale kommunikative Kompetenz",
+      "relevante_unterthemen": [
+        "Hör- und Hörsehverstehen",
+        "Leseverstehen",
+        "Sprechen (interaktiv und monologisch)",
+        "Schreiben",
+        "Sprachmittlung"
+      ],
+      "kernkompetenzen": [
+        "Erfolgreiche Bewältigung von Sprachhandlungssituationen durch gezielten Einsatz sprachlicher Mittel und Strategien.",
+        "Erreichen des Niveaus B2 bis zum Ende der Qualifikationsphase."
+      ]
+    },
+    {
+      "thema": "Interkulturelle kommunikative Kompetenz",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen",
+        "Alteritätstoleranz",
+        "Perspektivwechsel",
+        "Kulturelle Identität"
+      ],
+      "kernkompetenzen": [
+        "Offene und differenzierte Begegnung mit fremden Kulturen.",
+        "Reflektierter Umgang mit kultureller Geprägtheit und Empathiefähigkeit."
+      ]
+    },
+    {
+      "thema": "Text- und Medienkompetenz",
+      "relevante_unterthemen": [
+        "Textrezeption und -analyse",
+        "Textproduktion",
+        "Digitale Mediennutzung",
+        "Urheberrecht und Datenschutz"
+      ],
+      "kernkompetenzen": [
+        "Selbstständige Deutung von Texten in ihren historischen, sozialen und ästhetischen Kontexten.",
+        "Kritische Reflexion und verantwortungsbewusste Nutzung digitaler Medien und Werkzeuge."
+      ]
+    },
+    {
+      "thema": "Sprachbewusstheit und Sprachlernkompetenz",
+      "relevante_unterthemen": [
+        "Sprachsystem und Varietäten",
+        "Lernstrategien",
+        "Selbstevaluation",
+        "Kontrastives Sprachenlernen"
+      ],
+      "kernkompetenzen": [
+        "Bewusste Wahrnehmung von Sprachstrukturen und -normen.",
+        "Selbstständige Gestaltung und Optimierung des eigenen Sprachlernprozesses."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,599 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Bildungsplan 2016 für Mathematik am Gymnasium in Baden-Württemberg, in seiner Fassung vom 29. Februar 2024, betont den Bildungswert der Mathematik als zentrale kulturelle Errungenschaft und universelle Sprache in einer technisierten und ökonomisierten Welt. Er zielt darauf ab, Schülerinnen und Schüler zu einer umfassenden mathematischen Grundbildung zu befähigen, die es ihnen ermöglicht, mathematisches Wissen funktional einzusetzen, begründete Entscheidungen zu treffen und die Welt aus mathematischer Perspektive zu verstehen. Dies beinhaltet die Fähigkeit, technische, natürliche, soziale und kulturelle Phänomene mithilfe der Mathematik wahrzunehmen und zu beurteilen, die mathematische Sprache und ihre Symbole zu begreifen sowie allgemeine Problemlösefähigkeiten zu erwerben.\n\nDer Lehrplan fördert zudem die Persönlichkeitsentwicklung durch die Stärkung von Leistungsbereitschaft, Konzentrationsfähigkeit, Ausdauer, Sorgfalt, Exaktheit und Zielstrebigkeit. Er trägt zu den übergreifenden Leitperspektiven bei, indem er beispielsweise Werkzeuge für nachhaltige Entwicklung (BNE), kritisches Denken im Umgang mit Medien (MB) und fundierte Entscheidungen im Verbraucherbereich (VB) bereitstellt, und fördert die berufliche Orientierung sowie Prävention und Gesundheitsförderung.\n\nDie Kompetenzentwicklung ist zweigeteilt in prozessbezogene und inhaltsbezogene Kompetenzen, die im Unterricht eng miteinander verknüpft werden sollen. Die prozessbezogenen Kompetenzen sind übergreifende Fähigkeiten, die sich auf typische mathematische Tätigkeiten beziehen und über alle Inhalte hinweg entwickelt werden. Dazu gehören: mathematisch argumentieren und beweisen, Probleme mathematisch lösen, mathematisch modellieren, mit mathematischen Darstellungen umgehen, mit mathematischen Objekten umgehen, mathematisch kommunizieren und mit Medien mathematisch arbeiten. Diese Kompetenzen werden kontinuierlich bis zum Abitur vertieft und gefestigt.\n\nDie inhaltsbezogenen Kompetenzen sind in fünf \"Leitideen\" gegliedert, die zentrale mathematische Konzepte widerspiegeln: Zahl – Variable – Operation, Messen, Raum und Form, Funktionaler Zusammenhang sowie Daten und Zufall. Diese Leitideen werden spiralförmig über die Klassenstufen 5/6, 7/8, 9/10 und die Oberstufe (Klassen 11/12, differenziert in Basisfach und Leistungsfach) hinweg behandelt und vernetzt. Die Inhalte sind so konzipiert, dass Grundbegriffe auf verschiedenen kognitiven und sprachlichen Niveaus immer wieder aufgegriffen und weiterentwickelt werden.\n\nDidaktische Hinweise betonen aktive Aneignungsprozesse, nachhaltiges und vernetztes Wissen, die Entwicklung tragfähiger Grundvorstellungen, entdeckendes Lernen, kognitiv aktivierende Problemsituationen, vielfältiges Üben und den reflektierten Einsatz analoger und digitaler Hilfsmittel. Der Lehrplan berücksichtigt die Heterogenität der Schülerinnen und Schüler durch binnendifferenzierende Maßnahmen und bietet im Leistungsfach der Oberstufe eine quantitativ und qualitativ vertiefte wissenschaftspropädeutische Bildung im Vergleich zum Basisfach, das stärker realitätsbezogene Anwendungen fokussiert.",
+  "hauptthemen": [
+    {
+      "thema": "Prozessbezogene Kompetenzen",
+      "relevante_unterthemen": [
+        "Mathematisch argumentieren und beweisen",
+        "Probleme mathematisch lösen",
+        "Mathematisch modellieren",
+        "Mit mathematischen Darstellungen umgehen",
+        "Mit mathematischen Objekten umgehen",
+        "Mathematisch kommunizieren",
+        "Mit Medien mathematisch arbeiten"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler entwickeln Fragestellungen, äußern begründet Vermutungen und entwickeln und überprüfen mathematische Argumentationen. Sie beschreiben und begründen Lösungswege. Dabei nutzen sie einfache Plausibilitätsbetrachtungen, auch auf Basis von Alltagswissen, inhaltlich-anschauliche Begründungen und Beweise.",
+        "Schülerinnen und Schüler analysieren Probleme und bearbeiten sie planvoll und systematisch. Sie wählen geeignete Strategien zur Problemlösung aus und wenden diese an. Sie überprüfen Lösungen und reflektieren Lösungsideen und Lösungswege.",
+        "Schülerinnen und Schüler bearbeiten realitätsbezogene Fragestellungen, indem sie deren Struktur analysieren, sie vereinfachen und Annahmen treffen. Sie übersetzen die Situation in ein mathematisches Modell, finden im mathematischen Modell ein Ergebnis und interpretieren es in der Realsituation. Sie überprüfen das Ergebnis im Hinblick auf Stimmigkeit und Angemessenheit. Sie diskutieren die Tragweite von durch Modellierung gewonnenen Prognosen kritisch.",
+        "Schülerinnen und Schüler kennen verschiedene mathematische Darstellungsformen, zum Beispiel für geometrische Körper, Funktionen und Terme, und sie erkennen den spezifischen Nutzen dieser unterschiedlichen Darstellungsformen. Dadurch können sie die verschiedenen Darstellungen zielgerichtet verwenden, sie sachgerecht ineinander überführen und eigene Darstellungen entwickeln.",
+        "Schülerinnen und Schüler arbeiten flexibel mit mathematischen Objekten wie zum Beispiel Variablen, Gleichungen, Funktionen, Strecken und Winkel und können deren Eigenschaften beschreiben. Sie setzen Verfahren und Algorithmen problemangemessen ein. Sie sind in der Lage, diese zu erläutern, zu reflektieren und auf neue Situationen zu übertragen.",
+        "Schülerinnen und Schüler führen Dialoge und Diskussionen über mathematische Themen. Sie dokumentieren Überlegungen und präsentieren mathematische Sachverhalte in schriftlicher oder verbaler Form, auch unter Nutzung geeigneter Medien. Sie setzen sich mit Texten und mündlichen Äußerungen anderer zu mathematischen Themen kritisch und sachbezogen auseinander.",
+        "Schülerinnen und Schüler verwenden analoge und digitale Medien vielfältig im Mathematikunterricht und lernen dabei deren Möglichkeiten und Grenzen kennen. Dadurch können sie insbesondere den jeweiligen Nutzen ihres Einsatzes beurteilen und werden so dazu befähigt, die unterschiedlichen Medien sinnvoll und zielgerichtet einzusetzen. Sie erkennen darüber hinaus die Notwendigkeit, Ergebnisse digitaler Hilfsmittel oder Informationen aus der digitalen Welt kritisch zu hinterfragen und die Passung zur jeweiligen Problemstellung zu untersuchen. Dies geschieht insbesondere auf Basis mathematischer Gesichtspunkte, wodurch auch der reflektierte Umgang mit Medien im Alltag gefördert wird."
+      ]
+    },
+    {
+      "thema": "Leitidee Zahl – Variable – Operation (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Zahlbereiche erkunden",
+        "mit Zahlen rechnen",
+        "mit Zahltermen arbeiten"
+      ],
+      "kernkompetenzen": [
+        "die Prinzipien des dezimalen Stellenwertsystems im Vergleich zu einem anderen Zahlensystem beschreiben",
+        "natürliche Zahlen bis zur Größenordnung Billion lesen und nach Hören in Ziffern schreiben",
+        "Eigenschaften natürlicher Zahlen untersuchen (einfache Primzahlen erkennen, Primfaktoren bestimmen, die Teilbarkeitsregeln für 2, 3, 5, 6, 9, 10 anwenden)",
+        "ganze Zahlen zur Beschreibung von Realsituationen verwenden, insbesondere unter den Aspekten Skala und Änderung",
+        "Brüche zur Beschreibung von Realsituationen verwenden, insbesondere unter den Aspekten Anteil, Teile eines oder mehrerer Ganzer, Verhältnis, Operator, Maßzahl einer Größe",
+        "Brüche in verschiedenen Formen darstellen (zum Beispiel durch geometrische Figuren, Bruchstreifen)",
+        "rationale Zahlen und Punkte auf der Zahlengeraden einander zuordnen und rationale Zahlen vergleichen und anordnen",
+        "den Betrag einer Zahl angeben",
+        "erläutern, dass zwischen zwei verschiedenen rationalen Zahlen stets beliebig viele weitere rationale Zahlen liegen",
+        "Brüche in Dezimalzahlen (abbrechend oder periodisch) und abbrechende Dezimalzahlen in Brüche umwandeln",
+        "Brüche, Dezimalzahlen und Prozentangaben ineinander umwandeln",
+        "einfache Rechnungen sicher im Kopf durchführen, unter anderem um Ergebnisse überschlägig zu überprüfen",
+        "natürliche Zahlen und positive Dezimalzahlen schriftlich addieren, subtrahieren, multiplizieren (dabei ein Faktor maximal 3-stellig) und dividieren (Divisor maximal 2-stellig)",
+        "bei Division und Multiplikation von positiven Dezimalzahlen Kommaverschiebungen anwenden und das Verfahren begründen",
+        "Potenzen als Kurzschreibweise eines Produkts erklären und verwenden sowie die Quadratzahlen von 1 bis 20 wiedergeben und erkennen",
+        "Brüche erweitern und kürzen",
+        "Brüche mit natürlichen Zahlen multiplizieren und Brüche durch natürliche Zahlen dividieren",
+        "rationale Zahlen in Bruch- und in Dezimaldarstellung addieren, subtrahieren, multiplizieren, dividieren",
+        "Zahlenwerte und Größenangaben situationsgerecht runden und gerundete Angaben interpretieren",
+        "die Genauigkeit von Ergebnissen, die durch Rechnen mit gerundeten Werten gewonnen wurden, bewerten",
+        "natürliche Zahlen in Zehnerpotenzschreibweise angeben",
+        "Rechnungen unter Verwendung der Umkehroperation überprüfen",
+        "Sachsituationen (auch aus der Geometrie und bei Zahlenmustern) durch Zahlterme beschreiben",
+        "Fachbegriffe für Rechenarten (Addition, Subtraktion, Multiplikation, Division), Rechenoperationen (addieren, subtrahieren, multiplizieren, dividieren, potenzieren) und Rechenoperanden (Summand, Faktor, Minuend, Subtrahend, Dividend, Divisor, Basis, Exponent) verwenden",
+        "bei der Berechnung von Zahltermen Rechengesetze für Rechenvorteile nutzen",
+        "den Wert von Zahltermen mit Klammern in einfachen Fällen berechnen, zum Beispiel rationale Zahlen treten nur in gleicher Darstellung auf",
+        "einfache und zusammengesetzte Zahlterme mit den Fachbegriffen Summe, Differenz, Produkt, Quotient, Potenz beschreiben",
+        "einfache Aufgaben mit Unbekannten durch Ausprobieren oder Rückwärtsrechnen lösen"
+      ]
+    },
+    {
+      "thema": "Leitidee Messen (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "mit Größen umgehen",
+        "bei Figuren und Körpern Größen berechnen"
+      ],
+      "kernkompetenzen": [
+        "Messvorgänge und die Verwendung von Einheiten erläutern",
+        "in ihrem Umfeld Längen, Flächeninhalte, Volumina, Massen, Zeitspannen messen",
+        "Größenangaben durch Maßzahl und Einheit darstellen",
+        "die Bedeutung gängiger Vorsilben wie zum Beispiel milli, centi, dezi, kilo, Mega erklären",
+        "Einheiten für Masse, Zeit (-spanne), Geld, Länge, Flächeninhalt und Volumen verwenden und umwandeln",
+        "alltagsbezogene Repräsentanten als Schätzhilfe für Größenangaben verwenden, auch zur Plausibilitätsprüfung",
+        "Winkelweiten messen und schätzen",
+        "mit Größenangaben rechnen und dabei Einheiten korrekt anwenden",
+        "den Umfang von Rechteck, Quadrat, Dreieck, Trapez, Parallelogramm und Kreis sowie den Umfang zusammengesetzter Figuren bestimmen",
+        "die Zahl π als Verhältnis von Umfang und Durchmesser eines Kreises erklären",
+        "die Formel für den Flächeninhalt eines Rechtecks mit dem Grundprinzip des Messens erklären",
+        "die Formeln für den Flächeninhalt eines Parallelogramms und eines Dreiecks geometrisch erklären und die Formel für den Flächeninhalt eines Kreises durch einfache anschauliche Überlegungen erläutern",
+        "den Flächeninhalt von Quadrat, Rechteck, Parallelogramm, Trapez, Dreieck und Kreis berechnen und den Flächeninhalt von daraus zusammengesetzten Figuren bestimmen",
+        "die Formel für das Volumen eines Quaders mit dem Grundprinzip des Messens erklären",
+        "den Oberflächeninhalt und das Volumen von Würfeln und Quadern und daraus zusammengesetzten Körpern bestimmen"
+      ]
+    },
+    {
+      "thema": "Leitidee Raum und Form (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "geometrische Objekte und Beziehungen identifizieren und beschreiben",
+        "geometrische Objekte zeichnen und konstruieren"
+      ],
+      "kernkompetenzen": [
+        "Lagebeziehungen von Strecken und Geraden (parallel, senkrecht) mithilfe eines Geodreiecks untersuchen",
+        "Winkel unter Verwendung der Begriffe Scheitel und Schenkel beschreiben",
+        "rechte, spitze und stumpfe Winkel identifizieren",
+        "Achsensymmetrie und Punktsymmetrie bei Figuren erkennen und die Symmetrieachse beziehungsweise das Symmetriezentrum identifizieren",
+        "rechtwinklige, spitzwinklige, stumpfwinklige, gleichschenklige und gleichseitige Dreiecke identifizieren",
+        "Kreise und Vierecke (Quadrat, Rechteck, Raute, Drachenviereck, Parallelogramm, Trapez) identifizieren und deren spezielle Eigenschaften beschreiben",
+        "vorgegebene Körper (Quader, Würfel, Prisma, Zylinder, Pyramide, Kegel und Kugel) erkennen und benennen",
+        "sicher mit Geodreieck, Lineal und Zirkel umgehen und damit geometrische Objekte zeichnen",
+        "Kreise bei vorgegebenem Radius oder Durchmesser mithilfe eines Zirkels zeichnen",
+        "Orthogonalen, Parallelen und Winkel vorgegebener Winkelweite mithilfe eines Geodreiecks zeichnen",
+        "den Abstand zwischen Punkt und Gerade bestimmen, bei Dreiecken Höhen einzeichnen sowie den Abstand zwischen Parallelen bestimmen",
+        "geometrische Objekte in selbstständig skalierten zweidimensionalen kartesischen Koordinatensystemen darstellen",
+        "Achsenspiegelungen und Punktspiegelungen durchführen",
+        "Netze, Schrägbilder, Grund- und Aufrisse von Quadern und Würfeln zeichnen",
+        "Zusammenhänge zwischen den Darstellungsformen Netz, Schrägbild und Modell bei geraden Körpern (Quader, Würfel, Prisma, Zylinder, Pyramide und Kegel) herstellen"
+      ]
+    },
+    {
+      "thema": "Leitidee Funktionaler Zusammenhang (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Zusammenhänge beschreiben"
+      ],
+      "kernkompetenzen": [
+        "einfache Zusammenhänge zwischen Zahlen oder Größen erkennen und beschreiben",
+        "Muster (zum Beispiel Zahlenfolgen) erkennen, verbal beschreiben und diese fortsetzen",
+        "Punkte in ein Koordinatensystem eintragen und die Koordinaten von Punkten ablesen",
+        "einfache funktionale Zusammenhänge in verbaler, tabellarischer, ikonischer und graphischer Form (auch im Koordinatensystem) darstellen und zwischen Darstellungsformen wechseln",
+        "proportionale und antiproportionale Zusammenhänge in konkreten Situationen erkennen und Sachprobleme durch proportionales oder antiproportionales Rechnen lösen, auch in der Darstellungsform Dreisatz",
+        "den dynamischen Zusammenhang zwischen Größen in einfachen Situationen (Länge – Umfang – Flächeninhalt – Volumen) anschaulich erläutern",
+        "Originallängen, Bildlängen oder Maßstäbe im Zusammenhang mit maßstäblichen Angaben berechnen",
+        "maßstäbliche Zeichnungen anfertigen, auch mit selbstgewähltem, geeignetem Maßstab"
+      ]
+    },
+    {
+      "thema": "Leitidee Daten und Zufall (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Daten erfassen, darstellen und auswerten"
+      ],
+      "kernkompetenzen": [
+        "zu einer statistischen Fragestellung eine Datenerhebung planen und durchführen, auch unter den Aspekten Stichprobenauswahl und Erhebungsinstrument, und dabei Urlisten, Strichlisten, Häufigkeitstabellen anfertigen",
+        "absolute und relative Häufigkeiten (auch in Prozent) bestimmen",
+        "Daten graphisch darstellen (Balken-, Säulen-, Streifen-, Kreisdiagramm), auch unter Verwendung von Tabellenkalkulation",
+        "die Kenngrößen Maximum, Minimum, Spannweite und Mittelwert (arithmetisches Mittel) bestimmen",
+        "Daten aus vorgegebenen Sekundärquellen (zum Beispiel Texten, Diagrammen, bildlichen Darstellungen) entnehmen und interpretieren",
+        "statistische Aussagen mithilfe der Kenngrößen von Daten formulieren",
+        "Daten aus ihrer Erfahrungswelt auch bei unterschiedlichen Darstellungsformen auswerten, vergleichen und deuten, auch mithilfe von Tabellenkalkulation",
+        "statistische Darstellungen hinsichtlich ihrer Eignung und hinsichtlich Irreführung beurteilen"
+      ]
+    },
+    {
+      "thema": "Leitidee Zahl – Variable – Operation (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Zahlterme berechnen",
+        "mit Prozenten und Zinsen umgehen",
+        "mit Termen umgehen, die auch Variablen enthalten",
+        "mit Wurzeln umgehen",
+        "Zahlbereichserweiterungen untersuchen",
+        "Gleichungen lösen"
+      ],
+      "kernkompetenzen": [
+        "Zahlterme mit rationalen Zahlen – auch in unterschiedlicher Darstellung – vereinfachen und deren Wert berechnen",
+        "Prozentwert, Grundwert und Prozentsatz identifizieren, visualisieren (zum Beispiel Prozentstreifen) und berechnen",
+        "Zinsen und iterativ Zinseszinsen berechnen",
+        "eine Tabellenkalkulation verwenden, um Zinssatz, Tilgung/Sparrate und Laufzeit näherungsweise zu bestimmen",
+        "Situationen unter Verwendung von Variablen und Termen beschreiben",
+        "Zahlenfolgen fortsetzen und unter Verwendung von Variablen beschreiben (auch die Folge der ungeraden und geraden Zahlen)",
+        "den Wert von Termen, die Variablen enthalten, durch Einsetzen berechnen",
+        "die Assoziativgesetze, die Kommutativgesetze sowie das Distributivgesetz angeben und an Beispielen erläutern",
+        "die Rechengesetze zum Gliedern, Umformen oder Berechnen von Termen anwenden, auch Ausmultiplizieren von Summen und Ausklammern",
+        "die binomischen Formeln bei Termen, die nur eine Variable enthalten, auch zum Faktorisieren anwenden",
+        "einfache Formeln, unter anderem A = a · b, nach jeder Variablen auflösen",
+        "den Zusammenhang zwischen Wurzelziehen und Quadrieren erklären",
+        "den Wert der Quadratwurzel einer Zahl in einfachen Fällen unter Verwendung bekannter Quadratzahlen abschätzen",
+        "Zahlterme mit Quadratwurzeln vereinfachen, auch durch teilweises Wurzelziehen",
+        "anhand eines Beispiels erklären, dass im Allgemeinen √(a+b) ≠ √a + √b ist, aber √(a·b) = √a · √b ist",
+        "die Definition der Wurzel auch zur Bestimmung von Kubikwurzeln anwenden",
+        "anhand geeigneter Beispiele die Unvollständigkeit der rationalen Zahlen beschreiben und die Notwendigkeit der Zahlbereichserweiterung auf reelle Zahlen begründen",
+        "Beispiele für irrationale Zahlen angeben",
+        "ein iteratives Verfahren (zum Beispiel Heron-Verfahren, Intervallschachtelung) zur Bestimmung einer Wurzel durchführen, bewerten und mit einem digitalen Werkzeug implementieren",
+        "lineare Gleichungen durch systematisches Probieren und Äquivalenzumformungen lösen",
+        "die Lösung eines linearen Gleichungssystems mit zwei Variablen mithilfe eines Verfahrens bestimmen",
+        "die Lösungen einer quadratischen Gleichung mithilfe einer Formel bestimmen",
+        "den Satz vom Nullprodukt zum Lösen von Gleichungen verwenden",
+        "eine quadratische Gleichung zu vorgegebenen Lösungen bestimmen",
+        "Bruchgleichungen lösen, bei denen die einmalige Multiplikation mit x oder mit genau einem Linearfaktor zielführend ist",
+        "die Lösbarkeit und Lösungsvielfalt von linearen und quadratischen Gleichungen sowie linearen Gleichungssystemen untersuchen",
+        "lineare und quadratische Gleichungen sowie lineare Gleichungssysteme geometrisch als Schnittproblem von Graphen interpretieren und so näherungsweise lösen",
+        "einfache lineare und quadratische Ungleichungen geometrisch interpretieren und mithilfe funktionaler Überlegungen lösen"
+      ]
+    },
+    {
+      "thema": "Leitidee Messen (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Keine Inhalte in den Klassen 7/8"
+      ],
+      "kernkompetenzen": [
+        "Keine spezifischen inhaltsbezogenen Kompetenzen in diesem Bereich für die Klassen 7/8."
+      ]
+    },
+    {
+      "thema": "Leitidee Raum und Form (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "geometrische Figuren untersuchen",
+        "Ortslinien konstruieren und mit Ortslinien arbeiten",
+        "mit zentrischer Streckung und den Strahlensätzen arbeiten"
+      ],
+      "kernkompetenzen": [
+        "Winkelweiten unter Verwendung von Scheitel- und Nebenwinkeln sowie Stufen- und Wechselwinkeln erschließen",
+        "den Winkelsummensatz für Dreiecke begründen",
+        "Winkelweiten und Streckenlängen durch Anwenden des Winkelsummensatzes oder des Basiswinkelsatzes beziehungsweise dessen Kehrsatz erschließen",
+        "den Satz des Thales begründen und anwenden, insbesondere auf Orthogonalität schließen",
+        "die Konstruierbarkeit von Dreiecken unter Verwendung der Dreiecksungleichung und des Winkelsummensatzes beurteilen sowie die Lösungsvielfalt bei Dreieckskonstruktionen untersuchen",
+        "Streckenlängen und Winkelweiten in ebenen Figuren und Körpern durch maßstäbliches Zeichnen erschließen",
+        "die Mittelsenkrechte einer Strecke, die Winkelhalbierende eines Winkels mit Zirkel und Lineal konstruieren",
+        "geometrische Probleme unter Verwendung von Ortslinien (Kreislinie, Mittelsenkrechte, Winkelhalbierende, Mittelparallele, Thaleskreis) zeichnerisch lösen, auch mit dynamischer Geometriesoftware, und die Lösung beschreiben",
+        "den Umkreismittelpunkt und den Inkreismittelpunkt eines Dreiecks mit Zirkel und Lineal konstruieren und die Konstruktion begründen",
+        "Tangenten an Kreise in Punkten auf dem Kreis und von Punkten außerhalb konstruieren",
+        "durch zentrische Streckung (auch negativer Streckfaktor) Figuren maßstäblich vergrößern und verkleinern",
+        "Streckenlängen unter Nutzung der Strahlensätze bestimmen",
+        "die Nichtumkehrbarkeit des zweiten Strahlensatzes durch Angabe eines Gegenbeispiels begründen"
+      ]
+    },
+    {
+      "thema": "Leitidee Funktionaler Zusammenhang (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "funktionale Zusammenhänge darstellen und nutzen",
+        "mit linearen Funktionen umgehen",
+        "mit quadratischen Funktionen umgehen"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge durch Tabellen, Gleichungen, Graphen oder Text darstellen und situationsgerecht zwischen den Darstellungen wechseln",
+        "zu einer gegebenen Funktion eine Sachsituation angeben, die mithilfe dieser Funktion beschrieben werden kann",
+        "alltagsbezogene Sachverhalte aus Darstellungen ablesen (zum Beispiel größte und kleinste Werte, Zunehmen und Abnehmen, Zeitpunkte)",
+        "Proportionalität und Antiproportionalität in verschiedenen Darstellungsformen erkennen und für Berechnungen nutzen, auch in Sachzusammenhängen",
+        "Funktionen als eindeutige Zuordnungen, zum Beispiel von x-Werten zu y-Werten, von nicht eindeutigen Zuordnungen unterscheiden",
+        "eine Gerade mit der Gleichung y = mx + b unter anderem unter Verwendung von Steigung und Steigungsdreiecken zeichnen und einer Geraden eine Gleichung zuordnen",
+        "aus den Koordinaten zweier Punkte zunächst die Steigung, dann den y-Achsenabschnitt der zugehörigen Geraden berechnen und eine Gleichung der Geraden angeben",
+        "bei linearen Funktionen das Änderungsverhalten im Sachzusammenhang mithilfe der Änderungsrate beschreiben",
+        "die Lagebeziehung zweier Geraden anhand ihrer Gleichungen untersuchen",
+        "quadratische Zusammenhänge durch Tabellen und Gleichungen beschreiben und graphisch darstellen",
+        "Eigenschaften von Parabeln angeben",
+        "den Graphen einer quadratischen Funktion mithilfe von Wertetabellen zeichnen oder ausgehend von der Lage des Scheitels skizzieren",
+        "die Wirkung der Parameter a, b, c in der Parabelgleichung y = ax² + bx + c auf den Graphen abbildungsgeometrisch als Streckung, Spiegelung, Verschiebungen deuten",
+        "die allgemeine Parabelgleichung y = ax² + bx + c mithilfe funktionaler oder algebraischer Überlegungen in die Scheitelform überführen",
+        "den Funktionsterm einer quadratischen Funktion mithilfe von Nullstellen in Linearfaktordarstellung angeben",
+        "Anwendungsaufgaben mithilfe quadratischer Funktionen lösen, auch Bestimmung größter und kleinster Werte"
+      ]
+    },
+    {
+      "thema": "Leitidee Daten und Zufall (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Daten aus- und bewerten",
+        "Wahrscheinlichkeiten verstehen und berechnen"
+      ],
+      "kernkompetenzen": [
+        "die Kenngröße Median bestimmen",
+        "zu einer statistischen Fragestellung Daten aus Sekundärquellen entnehmen",
+        "Aussagen, die auf einer Datenanalyse basieren, formulieren und bewerten",
+        "die Bedeutung von Wahrscheinlichkeitsaussagen in alltäglichen Situationen erklären",
+        "die Begriffe Ergebnis und Ereignis bei Zufallsexperimenten erläutern",
+        "Ereignisse in geeigneter Form darstellen (unter anderem in Mengenschreibweise)",
+        "Zufallsexperimente – auch unter Verwendung digitaler Werkzeuge – durchführen und auswerten",
+        "die auftretenden relativen Häufigkeiten bei der Durchführung von Zufallsexperimenten als Schätzwerte von Wahrscheinlichkeiten deuten, die bei wachsendem Stichprobenumfang tendenziell besser werden (Gesetz der großen Zahlen)",
+        "die Anzahl der jeweiligen Möglichkeiten (mögliche und günstige Ergebnisse) in konkreten Situationen durch kombinatorische Überlegungen bestimmen",
+        "Wahrscheinlichkeiten von Ereignissen vergleichen und insbesondere bei Laplace-Experimenten bestimmen",
+        "Wahrscheinlichkeiten unter Verwendung des Gegenereignisses berechnen",
+        "Baumdiagramme zur Darstellung mehrstufiger Zufallsexperimente erstellen",
+        "Wahrscheinlichkeiten bei mehrstufigen Zufallsexperimenten mithilfe der Pfadregeln (Produkt-, Summenregel) bestimmen"
+      ]
+    },
+    {
+      "thema": "Leitidee Zahl – Variable – Operation (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "mit Potenzen umgehen",
+        "Gleichungen lösen",
+        "exponentielles Wachstum anwenden",
+        "mit Vektoren in der Tupeldarstellung arbeiten",
+        "Funktionsterme ableiten"
+      ],
+      "kernkompetenzen": [
+        "Zahlen in Normdarstellung angeben",
+        "Potenzen mit rationalen Exponenten als Wurzel- oder Bruchausdrücke deuten und zwischen den Darstellungsformen wechseln",
+        "die Rechengesetze für das Multiplizieren, Dividieren und Potenzieren von Potenzen begründen und anwenden",
+        "Wurzelgleichungen lösen, bei denen einmaliges Quadrieren zielführend ist",
+        "Potenzgleichungen lösen",
+        "Exponentialgleichungen unter anderem im Zusammenhang mit Wachstumsprozessen lösen",
+        "den Logarithmus einer Zahl als Lösung einer Exponentialgleichung verwenden",
+        "die Methode der Substitution zum Lösen von Gleichungen anwenden, insbesondere bei biquadratischen Gleichungen",
+        "die Begriffe Zinssatz, Anfangskapital, Endkapital, Laufzeit und Zinseszins erläutern",
+        "die Formel K_n = K_0 · q^n unter dem Aspekt des exponentiellen Wachstums für die Berechnung aller Größen anwenden und begründen",
+        "Tupel addieren, mit Skalaren multiplizieren sowie Tupel in einfachen Fällen als Linearkombination anderer Tupel darstellen und die Operationen geometrisch deuten",
+        "die Regel für konstanten Faktor, die Potenzregel sowie die Summenregel zum Ableiten von Funktionstermen anwenden",
+        "die Ableitungsfunktionen der Funktionen f(x) = sin(x) und f(x) = cos(x) mit x ∈ ℝ und f(x) = e^x angeben"
+      ]
+    },
+    {
+      "thema": "Leitidee Messen (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Größen bei Figuren und Körpern berechnen",
+        "Längen in kartesischen Koordinatensystemen berechnen"
+      ],
+      "kernkompetenzen": [
+        "erklären, wie Flächeninhalt und Umfang eines Kreises mithilfe eines Grenzprozesses bestimmt werden",
+        "Winkelweiten sowohl im Grad- als auch im Bogenmaß angeben und nutzen",
+        "die Länge von Kreisbögen und den Flächeninhalt von Kreisausschnitten bestimmen",
+        "die Formeln zur Berechnung von Mantelflächeninhalten (Kegel, Zylinder) herleiten",
+        "die Formeln für das Volumen von Pyramide, Kegel und Kugel durch Plausibilitätsbetrachtung erläutern",
+        "die Formel für das Volumen eines schiefen Körpers mit der Idee des Satzes von Cavalieri anschaulich erklären",
+        "den Oberflächeninhalt und das Volumen von Prisma, Pyramide, Zylinder, Kegel und Kugel berechnen",
+        "Oberflächeninhalte und Volumina bei zusammengesetzten Körpern bestimmen",
+        "den Abstand zweier Punkte bestimmen",
+        "den Betrag eines Vektors berechnen und als Länge deuten"
+      ]
+    },
+    {
+      "thema": "Leitidee Raum und Form (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Körper zeichnerisch darstellen",
+        "geometrische Zusammenhänge beweisen und mit trigonometrischen Beziehungen arbeiten",
+        "mit geometrischen Objekten in kartesischen Koordinatensystemen umgehen"
+      ],
+      "kernkompetenzen": [
+        "Schrägbilder und Netze (von Prismen, Pyramiden, Zylindern und Kegeln) skizzieren und die Darstellungsformen ineinander überführen",
+        "zwei gegebene Figuren mithilfe der jeweiligen Definition auf Ähnlichkeit und Kongruenz untersuchen",
+        "Dreiecke mithilfe ausgewählter Ähnlichkeitsätze (Übereinstimmung in den Längenverhältnissen aller Seiten, Übereinstimmung in zwei Winkelweiten) auf Ähnlichkeit überprüfen",
+        "unter Nutzung des Satzes des Pythagoras Längen von Strecken (Hypotenuse, Katheten) berechnen beziehungsweise mithilfe seines Kehrsatzes auf Orthogonalität schließen",
+        "geometrische Zusammenhänge unter Verwendung bereits bekannter Sätze sowie mithilfe von Ähnlichkeitsbeziehungen und Kongruenzsätzen erschließen, begründen und beweisen, und Größen berechnen",
+        "Streckenlängen und Winkelweiten unter Nutzung der Längenverhältnisse Sinus, Kosinus, Tangens bestimmen",
+        "die Beziehungen sin²(α) + cos²(α) = 1, tan(α) = sin(α)/cos(α) herleiten",
+        "Vektoren in Tupeldarstellung entsprechend ihrer Verwendung geometrisch als Punkt oder Verschiebung interpretieren",
+        "Punkte in das Schrägbild eines dreidimensionalen kartesischen Koordinatensystems eintragen",
+        "den Mittelpunkt einer Strecke berechnen",
+        "Vektoren auf Kollinearität untersuchen",
+        "Geraden und Strecken vektoriell mithilfe von Parametergleichungen beschreiben",
+        "die Lagebeziehung von Geraden untersuchen und gegebenenfalls den Schnittpunkt bestimmen",
+        "Geraden mithilfe von Spurpunkten im Schrägbild eines dreidimensionalen kartesischen Koordinatensystems veranschaulichen"
+      ]
+    },
+    {
+      "thema": "Leitidee Funktionaler Zusammenhang (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "mit Funktionen umgehen",
+        "die Grundidee der Differentialrechnung verstehen und mit Ableitungen umgehen"
+      ],
+      "kernkompetenzen": [
+        "die Graphen der Potenzfunktionen f(x) = x^n mit n ∈ ℕ und n ≥ 2 (auch n ungerade) unter Verwendung charakteristischer Eigenschaften skizzieren",
+        "anhand einer Betrachtung der Graphen von f(x) = x² mit x ≥ 0 und der Wurzelfunktion f(x) = √x mit x ≥ 0 den Funktionsbegriff und dabei auch die Begriffe Definitionsmenge und Wertemenge erläutern",
+        "anhand der Funktion f(x) = x² mit x ≥ 0 und der Wurzelfunktion f(x) = √x mit x ≥ 0 den Begriff der Umkehrfunktion beschreiben, den Zusammenhang ihrer Graphen erläutern und ihre Definitionsmengen und Wertemengen vergleichen",
+        "die Graphen der Exponentialfunktionen f(x) = a^x mit a > 0 und a ≠ 1 unter Verwendung charakteristischer Eigenschaften skizzieren",
+        "Wachstumsvorgänge mithilfe von Exponentialfunktionen beschreiben und Berechnungen durchführen sowie die Bedeutung von Halbwertszeit und Verdopplungszeit erläutern",
+        "die Wirkung von Parametern in Funktionstermen von Potenz-, Exponential- und Wurzelfunktion auf deren Graphen abbildungsgeometrisch als Streckung, Spiegelung, Verschiebungen deuten",
+        "ganzrationale Funktionen auf Nullstellen (auch mehrfache) untersuchen",
+        "Funktionsterme ganzrationaler Funktionen mithilfe von Nullstellen in faktorisierter Form angeben",
+        "die Sinusfunktion der Form f(x) = a · sin(b(x-c)) + d zur Beschreibung periodischer Vorgänge verwenden, insbesondere mithilfe digitaler Mathematikwerkzeuge verwenden",
+        "charakteristische Punkte von Graphen trigonometrischer Funktionen f(x) = a · sin(b(x-c)) + d mit x ∈ ℝ angeben, auch auf ganz ℝ",
+        "die Graphen trigonometrischer Funktionen f(x) = a · sin(b(x-c)) + d mit x ∈ ℝ unter Verwendung charakteristischer Eigenschaften skizzieren und die Wirkung der Parameter a, b, c, d abbildungsgeometrisch als Streckung, Spiegelung, Verschiebungen deuten, auch auf ganz ℝ",
+        "Funktionen auf ihr Verhalten für x → ±∞ und deren Graphen auf Symmetrie (zum Ursprung oder zur y-Achse) untersuchen",
+        "die Definition für Monotonie angeben",
+        "den Unterschied zwischen lokalen und globalen Maxima beziehungsweise Minima erklären",
+        "die mittlere Änderungsrate einer Funktion auf einem Intervall (Differenzenquotient) bestimmen und auch als Sekantensteigung interpretieren",
+        "die momentane Änderungsrate als Ableitung an einer Stelle aus der mittleren Änderungsrate durch Grenzwertüberlegungen bestimmen",
+        "die Ableitung an einer Stelle als Tangentensteigung interpretieren",
+        "die Gleichung der Tangente und der Normale in einem Kurvenpunkt aufstellen",
+        "eine Tangente an einen Graphen als lineare Approximation einer Funktion nutzen",
+        "Steigungswinkel mithilfe der Ableitung berechnen",
+        "die Ableitungsfunktion als funktionale Beschreibung der Ableitung an beliebigen Stellen erklären",
+        "die Faktorregel und die Summenregel anschaulich begründen",
+        "den Monotoniesatz erläutern und dessen Nichtumkehrbarkeit begründen",
+        "die Eigenschaften von Funktionen und deren Graphen mithilfe von Ableitungsfunktionen (auch höheren Ableitungen) untersuchen (Monotonie, Extrempunkte, Krümmungsverhalten, Wendepunkte)",
+        "vom Graphen einer Funktion auf den Graphen ihrer Ableitungsfunktion schließen und umgekehrt",
+        "den Zusammenhang zwischen der Funktion f(x) = e^x mit x ∈ ℝ und ihrer Ableitungsfunktion mit f'(x) = e^x graphisch erläutern"
+      ]
+    },
+    {
+      "thema": "Leitidee Daten und Zufall (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Wahrscheinlichkeiten verstehen und mit Wahrscheinlichkeiten rechnen",
+        "mit Binomialverteilungen umgehen"
+      ],
+      "kernkompetenzen": [
+        "den Begriff bedingte Wahrscheinlichkeit anhand eines Beispiels erläutern",
+        "Vierfeldertafeln erstellen und verwenden, auch zur Berechnung von bedingten Wahrscheinlichkeiten",
+        "Ereignisse auf stochastische Unabhängigkeit untersuchen",
+        "Ereignisse mithilfe von Zufallsgrößen beschreiben",
+        "die Wahrscheinlichkeitsverteilung einer Zufallsgröße angeben und im Sachzusammenhang interpretieren",
+        "den Erwartungswert einer Zufallsgröße bei gegebener Wahrscheinlichkeitsverteilung im Sachkontext erläutern",
+        "den Erwartungswert einer Zufallsgröße bei gegebener Wahrscheinlichkeitsverteilung berechnen, auch unter Verwendung des Summenzeichens Σ",
+        "die Varianz und Standardabweichung einer Zufallsgröße bei gegebener Wahrscheinlichkeitsverteilung berechnen und im Sachkontext erläutern",
+        "die Begriffe Bernoulli-Experiment und Bernoulli-Kette erläutern und Bernoulli-Experimente von anderen Zufallsexperimenten unterscheiden",
+        "die Formel von Bernoulli und die Bedeutung der Binomialkoeffizienten erläutern",
+        "Wahrscheinlichkeiten binomialverteilter Zufallsgrößen berechnen",
+        "Binomialverteilungen in Histogrammen graphisch darstellen und die Wirkung der Parameter n und p beschreiben",
+        "die graphische Darstellung einer Binomialverteilung interpretieren",
+        "bei Binomialverteilungen den jeweils fehlenden Parameter (n, p oder k) mit geeigneten Hilfsmitteln bestimmen",
+        "die Kenngrößen Erwartungswert, Varianz und Standardabweichung einer binomialverteilten Zufallsgröße berechnen und ihren Zusammenhang am Histogramm erläutern"
+      ]
+    },
+    {
+      "thema": "Leitidee Zahl – Variable – Operation (Klassen 11/12 Leistungsfach)",
+      "relevante_unterthemen": [
+        "Zahlenwerte approximieren",
+        "weitere Ableitungsregeln anwenden",
+        "Integrationsregeln verwenden und Integrale berechnen",
+        "Produkte von Vektoren bilden",
+        "Gauß-Algorithmus verwenden"
+      ],
+      "kernkompetenzen": [
+        "die eulersche Zahl e näherungsweise bestimmen",
+        "ein iteratives Verfahren zur näherungsweisen Bestimmung von Nullstellen begründen und durchführen",
+        "die Produkt- und Kettenregel zum Ableiten von Funktionen verwenden",
+        "gebrochenrationale Funktionen durch Verbindung der Ableitungsregeln in einfachen Fällen ableiten (zum Beispiel f(x) = 1/x, nicht jedoch f(x) = 1/x²)",
+        "die Potenzregel, die Regel für konstanten Faktor, die Summenregel sowie das Verfahren der linearen Substitution für die Bestimmung einer Stammfunktion verwenden",
+        "Stammfunktionsterme zu den Funktionstermen f(x) = x^n, f(x) = 1/x, f(x) = sin(x), f(x) = cos(x), f(x) = e^x angeben",
+        "den Hauptsatz der Differential- und Integralrechnung zur Berechnung von bestimmten Integralen nutzen",
+        "uneigentliche Integrale untersuchen",
+        "das Skalarprodukt berechnen, geometrisch interpretieren und bei Berechnungen nutzen",
+        "das Vektorprodukt berechnen, geometrisch interpretieren und bei Berechnungen nutzen",
+        "das Gaußverfahren zum Lösen eines linearen Gleichungssystems als ein Beispiel für ein algorithmisches Verfahren erläutern",
+        "das Gaußverfahren, auch in Matrixschreibweise, zum Lösen eines linearen Gleichungssystems durchführen",
+        "die Lösungsmenge eines linearen 3x3-Gleichungssystems geometrisch interpretieren"
+      ]
+    },
+    {
+      "thema": "Leitidee Messen (Klassen 11/12 Leistungsfach)",
+      "relevante_unterthemen": [
+        "Winkelweiten, Abstände und Flächeninhalte in kartesischen Koordinatensystemen berechnen",
+        "das Integral nutzen"
+      ],
+      "kernkompetenzen": [
+        "die Orthogonalität zweier Vektoren mithilfe des Skalarprodukts überprüfen",
+        "Winkelweiten mithilfe des Skalarprodukts bestimmen",
+        "Schnittwinkel zwischen geometrischen Objekten (Geraden und Ebenen) bestimmen",
+        "die Hesse'sche Normalenform einer Ebenengleichung zur Berechnung des Abstands eines Punktes zu einer Ebene anwenden",
+        "Abstände zwischen den geometrischen Objekten Punkt, Gerade und Ebene (auch zwischen windschiefen Geraden) ermitteln",
+        "das Vektorprodukt zum Ermitteln von Flächeninhalten anwenden",
+        "das bestimmte Integral als Grenzwert einer Summe erläutern und geometrisch deuten",
+        "den Mittelwert einer Funktion auf einem Intervall berechnen",
+        "Flächeninhalte zwischen Graph und x-Achse und zwischen zwei Graphen bestimmen",
+        "das Volumen von Körpern berechnen, die durch Rotation von Flächen um die x-Achse entstehen"
+      ]
+    },
+    {
+      "thema": "Leitidee Raum und Form (Klassen 11/12 Leistungsfach)",
+      "relevante_unterthemen": [
+        "Produkte von Vektoren geometrisch nutzen",
+        "vektorielle Darstellungen zur Beschreibung des Anschauungsraumes verwenden",
+        "vektorielle Darstellungen beim Beweisen nutzen"
+      ],
+      "kernkompetenzen": [
+        "das Skalarprodukt und das Vektorprodukt geometrisch deuten",
+        "einen gemeinsamen orthogonalen Vektor zu zwei Vektoren bestimmen",
+        "Ebenen mithilfe von Spurpunkten und Spurgeraden im Schrägbild eines Koordinatensystems veranschaulichen",
+        "Ebenen mithilfe einer Parameterdarstellung, einer Koordinatengleichung und einer Normalengleichung analytisch beschreiben",
+        "eine Parameterdarstellung einer Ebene in eine Normalengleichung und in eine Koordinatengleichung umrechnen",
+        "zwischen Gerade – Ebene und Ebene – Ebene die Lagebeziehung untersuchen sowie gegebenenfalls die Schnittgebilde rechnerisch bestimmen",
+        "Problemstellungen, wie zum Beispiel Spiegelung eines Punktes an einer Ebene, Spiegelung einer Geraden an einem Punkt, Abstands-, Flächeninhalts- und Volumenberechnungen sowie Untersuchungen geradliniger Bewegungen, im Raum bearbeiten",
+        "einfache mathematische Aussagen und Sätze beweisen, wie zum Beispiel „In einem Trapez ist die Mittellinie parallel zu den Grundseiten“, „Die Seitenmitten eines räumlichen Vierecks bilden die Eckpunkte eines Parallelogramms“, „In einer Raute sind die Diagonalen zueinander orthogonal“, Satz des Thales"
+      ]
+    },
+    {
+      "thema": "Leitidee Funktionaler Zusammenhang (Klassen 11/12 Leistungsfach)",
+      "relevante_unterthemen": [
+        "mit der natürlichen Exponential- und Logarithmusfunktion umgehen",
+        "mit Umkehrfunktionen arbeiten",
+        "mit zusammengesetzten Funktionen umgehen",
+        "Differentialrechnung anwenden",
+        "die Grundidee der Integralrechnung verstehen und mit Integralen umgehen"
+      ],
+      "kernkompetenzen": [
+        "die besondere Bedeutung der Basis e bei Exponentialfunktionen erläutern",
+        "die Graphen der natürlichen Exponential- und Logarithmusfunktion unter Verwendung charakteristischer Eigenschaften skizzieren und die Beziehung zwischen den Graphen beschreiben, auch unter dem Aspekt der Umkehrfunktion",
+        "charakteristische Eigenschaften der Funktion f(x) = ln(x) mit x > 0 beschreiben",
+        "die Ableitungsfunktion und eine Stammfunktion der Funktion f(x) = e^x mit x ∈ ℝ angeben",
+        "die Ableitungsfunktion der Funktion f(x) = ln(x) mit x > 0 angeben",
+        "Definitionsmengen und Wertemengen von Funktionen bestimmen und den Zusammenhang zwischen der Wertemenge einer Funktion und der Definitionsmenge ihrer Umkehrfunktion erläutern",
+        "die strenge Monotonie einer Funktion verwenden, um ihre Umkehrbarkeit nachzuweisen, und die Nichtumkehrbarkeit einer Funktion anhand ihrer charakteristischen Eigenschaften begründen",
+        "zu einer gegebenen umkehrbaren Funktion den Term ihrer Umkehrfunktion bestimmen",
+        "Funktionen verketten und Verkettungen von Funktionen erkennen",
+        "die Graphen von Funktionen in einfachen Fällen auf waagrechte und senkrechte Asymptoten und Nullstellen untersuchen, deren Funktionsterm als Quotient zuvor behandelter Funktionstypen gebildet werden kann",
+        "Graphen von zusammengesetzten Funktionen (Summe, Produkt, Verkettung) untersuchen",
+        "Extremwertprobleme mit Nebenbedingungen lösen",
+        "einen Funktionsterm zu gegebenen Eigenschaften eines Graphen ermitteln",
+        "bei Funktionenscharen einzelne Fragestellungen zu Eigenschaften ihrer Graphen oder zu Zusammenhängen zwischen den Graphen untersuchen",
+        "den Wert des bestimmten Integrals als orientierten Flächeninhalt und als Bestandsveränderung erklären",
+        "Funktionen aus ihren Änderungsraten rekonstruieren",
+        "den Bestand aus Anfangsbestand und Änderungsraten bestimmen",
+        "den Inhalt des Hauptsatzes der Differential- und Integralrechnung angeben",
+        "die Begriffe Integralfunktion und Stammfunktion gegeneinander abgrenzen",
+        "vom Graphen der Funktion auf den Graphen einer Stammfunktion schließen und umgekehrt",
+        "den Hauptsatz der Differential- und Integralrechnung in Begründungszusammenhängen, zum Beispiel zum Nachweis der Linearität des Integrals, nutzen",
+        "die Linearität des Integrals anschaulich begründen und rechenökonomisch nutzen"
+      ]
+    },
+    {
+      "thema": "Leitidee Daten und Zufall (Klassen 11/12 Leistungsfach)",
+      "relevante_unterthemen": [
+        "Hypothesen bei binomialverteilten Zufallsgrößen testen",
+        "mit Normalverteilungen umgehen"
+      ],
+      "kernkompetenzen": [
+        "das Argumentationsmuster erläutern, das dem Testen von Hypothesen zugrunde liegt",
+        "eine Nullhypothese so formulieren, dass sie der Zielsetzung des Tests entspricht",
+        "Ablehnungsbereich und Irrtumswahrscheinlichkeit an einem Histogramm erläutern",
+        "ein- und zweiseitige Hypothesentests durchführen und den Ablehnungsbereich, die Entscheidungsregel und die Irrtumswahrscheinlichkeit angeben",
+        "Signifikanzniveau und Irrtumswahrscheinlichkeit gegeneinander abgrenzen",
+        "Fehler erster und zweiter Art im Kontext eines Hypothesentests erläutern",
+        "den Einfluss des Stichprobenumfangs auf die Wahrscheinlichkeiten für den Fehler erster Art (das Risiko erster Art) und für den Fehler zweiter Art (das Risiko zweiter Art) angeben",
+        "den Unterschied zwischen diskreten und stetigen Zufallsgrößen erläutern, insbesondere am Beispiel binomial- und normalverteilter Zufallsgrößen",
+        "die Dichtefunktion einer normalverteilten Zufallsgröße mithilfe von Erwartungswert und Standardabweichung angeben und die zugehörige Glockenkurve skizzieren",
+        "stochastische Situationen untersuchen, die zu annähernd normalverteilten Zufallsgrößen gehören, und Wahrscheinlichkeiten berechnen"
+      ]
+    },
+    {
+      "thema": "Leitidee Zahl – Variable – Operation (Klassen 11/12 Basisfach)",
+      "relevante_unterthemen": [
+        "den natürlichen Logarithmus nutzen",
+        "weitere Ableitungsregeln anwenden",
+        "Integrationsregeln verwenden und Integrale berechnen",
+        "Produkte von Vektoren bilden",
+        "lineare Gleichungssysteme untersuchen"
+      ],
+      "kernkompetenzen": [
+        "den natürlichen Logarithmus einer Zahl als Lösung einer Exponentialgleichung verwenden",
+        "die Produktregel zum Ableiten von Funktionstermen verwenden",
+        "die Kettenregel zum Ableiten von Funktionstermen verwenden, bei denen die innere Funktion eine lineare Funktion ist",
+        "die Potenzregel, die Regel für konstanten Faktor, die Summenregel sowie das Verfahren der linearen Substitution für die Bestimmung einer Stammfunktion verwenden",
+        "Stammfunktionsterme zu den Funktionstermen f(x) = x^n, f(x) = 1/x, f(x) = sin(x), f(x) = cos(x), f(x) = e^x angeben",
+        "den Hauptsatz der Differential- und Integralrechnung zur Berechnung von bestimmten Integralen nutzen",
+        "das Skalarprodukt berechnen und bei Berechnungen nutzen",
+        "das Vektorprodukt berechnen und bei Berechnungen nutzen",
+        "das Gaußverfahren, auch in Matrixschreibweise, auf lineare Gleichungssysteme ohne Parameter bis zur Stufenform anwenden",
+        "die Lösungsvielfalt linearer Gleichungssysteme ohne Parameter angeben und im Falle eindeutiger Lösbarkeit deren Lösung bestimmen"
+      ]
+    },
+    {
+      "thema": "Leitidee Messen (Klassen 11/12 Basisfach)",
+      "relevante_unterthemen": [
+        "Winkelweiten, Abstände und Flächeninhalte in kartesischen Koordinatensystemen berechnen",
+        "das Integral nutzen"
+      ],
+      "kernkompetenzen": [
+        "die Orthogonalität zweier Vektoren mithilfe des Skalarprodukts überprüfen",
+        "Winkelweiten mithilfe des Skalarprodukts bestimmen",
+        "Schnittwinkel zwischen geometrischen Objekten (Geraden und Ebenen) bestimmen",
+        "den Abstand zwischen den geometrischen Objekten Punkt und Ebene ermitteln",
+        "das Vektorprodukt zum Ermitteln von Flächeninhalten anwenden",
+        "das bestimmte Integral mithilfe eines Grenzprozesses anschaulich beschreiben und geometrisch deuten",
+        "Flächeninhalte zwischen Graph und x-Achse und zwischen zwei Graphen bestimmen"
+      ]
+    },
+    {
+      "thema": "Leitidee Raum und Form (Klassen 11/12 Basisfach)",
+      "relevante_unterthemen": [
+        "Produkte von Vektoren geometrisch nutzen",
+        "vektorielle Darstellungen zur Beschreibung des Anschauungsraumes verwenden"
+      ],
+      "kernkompetenzen": [
+        "das Skalarprodukt und das Vektorprodukt geometrisch deuten",
+        "einen gemeinsamen orthogonalen Vektor zu zwei Vektoren bestimmen",
+        "Ebenen mithilfe von Spurpunkten und Spurgeraden im Schrägbild eines Koordinatensystems veranschaulichen",
+        "Ebenen mithilfe einer Parameterdarstellung und einer Koordinatengleichung analytisch beschreiben",
+        "eine Parameterdarstellung einer Ebene in eine Koordinatengleichung umrechnen",
+        "die Lagebeziehung zwischen einer Geraden und einer Ebene untersuchen und gegebenenfalls deren Schnittpunkt rechnerisch bestimmen",
+        "die Lagebeziehung zwischen zwei Ebenen erkennen und begründen",
+        "Problemstellungen, wie zum Beispiel Spiegelung eines Punktes an einer Ebene, Flächeninhalts- und Volumenberechnungen bearbeiten, sowie geradlinige Bewegungen untersuchen"
+      ]
+    },
+    {
+      "thema": "Leitidee Funktionaler Zusammenhang (Klassen 11/12 Basisfach)",
+      "relevante_unterthemen": [
+        "mit der natürlichen Exponentialfunktion umgehen",
+        "mit zusammengesetzten Funktionen umgehen",
+        "Differentialrechnung anwenden",
+        "die Grundidee der Integralrechnung verstehen und mit Integralen umgehen"
+      ],
+      "kernkompetenzen": [
+        "die besondere Bedeutung der Basis e bei Exponentialfunktionen beschreiben",
+        "charakteristische Eigenschaften der Funktion f(x) = e^x mit x ∈ ℝ beschreiben und deren Graph mit dessen waagrechter Asymptote skizzieren",
+        "die Ableitungsfunktion und eine Stammfunktion der Funktion f(x) = e^x mit x ∈ ℝ angeben",
+        "Verkettungen von Funktionen erkennen, falls die innere Funktion eine lineare Funktion ist",
+        "Graphen von zusammengesetzten Funktionen (Summe, Produkt, Verkettung mit linearer innerer Funktion) untersuchen",
+        "Extremwerte auch in außermathematischen Sachzusammenhängen bestimmen",
+        "einen Funktionsterm ermitteln, falls dieser durch die Eigenschaften eines Graphen eindeutig festgelegt ist",
+        "den Wert des bestimmten Integrals als orientierten Flächeninhalt und als Bestandsveränderung deuten",
+        "Funktionen aus ihren Änderungsraten rekonstruieren",
+        "den Bestand aus Anfangsbestand und Änderungsraten bestimmen",
+        "den Hauptsatz der Differential- und Integralrechnung anwenden",
+        "vom Graphen der Funktion auf den Graphen einer Stammfunktion schließen und umgekehrt",
+        "die Linearität des Integrals anschaulich begründen und rechenökonomisch nutzen"
+      ]
+    },
+    {
+      "thema": "Leitidee Daten und Zufall (Klassen 11/12 Basisfach)",
+      "relevante_unterthemen": [
+        "mit Normalverteilungen umgehen"
+      ],
+      "kernkompetenzen": [
+        "den Unterschied zwischen diskreten und stetigen Zufallsgrößen am Beispiel binomial- und normalverteilter Zufallsgrößen beschreiben",
+        "den Zusammenhang der Kenngrößen Erwartungswert und Standardabweichung einer Normalverteilung und der zugehörigen Glockenkurve beschreiben",
+        "stochastische Situationen untersuchen, die zu annähernd normalverteilten Zufallsgrößen gehören, und Wahrscheinlichkeiten berechnen"
+      ]
+    }
+  ]
+}

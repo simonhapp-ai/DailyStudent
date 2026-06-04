@@ -106,7 +106,7 @@ type Phase = 'setup' | 'loading' | 'exam' | 'correcting' | 'result'
 
 export function ProbeklausurMode4Screen() {
   const navigate = useNavigate()
-  const { profile } = useUser()
+  const { profile, getKc } = useUser()
 
   const userSubjects = subjects.filter((s) => profile?.faecher?.includes(s.id))
   const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
@@ -127,7 +127,7 @@ export function ProbeklausurMode4Screen() {
     setError(null)
     setPhase('loading')
     try {
-      const generated = await generateMode4Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim())
+      const generated = await generateMode4Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined)
       setExam(generated)
       setAnswers({})
       setPhase('exam')

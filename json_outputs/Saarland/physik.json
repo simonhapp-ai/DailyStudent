@@ -1,0 +1,58 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Physik",
+  "zusammenfassung": "Der Lehrplan für den Physik-Grundkurs in der gymnasialen Oberstufe des Saarlandes (Stand 2023) ist modular aufgebaut und erstreckt sich über die gesamte Hauptphase. Er beginnt mit einer methodischen Einführung in den Umgang mit Messdaten, die als Querschnittsthema in allen Feldern Anwendung findet. Die inhaltliche Struktur gliedert sich in vier Hauptthemenfelder: 1. Felder (Gravitations-, elektrisches und magnetisches Feld), 2. Elektromagnetische Induktion, 3. Schwingungen und Wellen (mechanisch und elektromagnetisch, inklusive Wellenmodell des Lichts) sowie 4. Quanten und Atome. Ein zentrales Ziel ist die Vermittlung physikalischer Modellbildung, wobei die Schülerinnen und Schüler lernen, Phänomene durch Feldkonzepte, Wellenmodelle und quantenphysikalische Ansätze zu beschreiben. Der Lehrplan legt großen Wert auf experimentelle Kompetenzen, die Verknüpfung von Theorie und Praxis durch Versuche sowie die Förderung prozessbezogener Kompetenzen wie Erkenntnisgewinnung, Kommunikation und Bewertung. Mathematische Anforderungen (z.B. Differentialrechnung) werden gezielt zur Modellierung physikalischer Zusammenhänge eingesetzt, ohne die physikalische Anschauung zu vernachlässigen.",
+  "hauptthemen": [
+    {
+      "thema": "Felder",
+      "relevante_unterthemen": [
+        "Gravitationsfeld",
+        "Elektrisches Feld",
+        "Magnetisches Feld",
+        "Bewegung von Ladungsträgern in Feldern"
+      ],
+      "kernkompetenzen": [
+        "Feldkonzepte (Gravitation, Elektrostatik, Magnetismus) zur Beschreibung von Kraftwirkungen im Raum anwenden",
+        "Bewegungen geladener Teilchen in elektrischen und magnetischen Feldern unter Nutzung von Energie- und Kräfteansätzen analysieren"
+      ]
+    },
+    {
+      "thema": "Elektromagnetische Induktion",
+      "relevante_unterthemen": [
+        "Induktionsgesetz",
+        "Lenz'sche Regel",
+        "Anwendungen der Induktion"
+      ],
+      "kernkompetenzen": [
+        "Das Induktionsgesetz für lineare Flussänderungen quantitativ anwenden",
+        "Phänomene der Induktion mit der Lenz'schen Regel erklären und technische Anwendungen (z.B. Generator, Trafo) analysieren"
+      ]
+    },
+    {
+      "thema": "Schwingungen und Wellen",
+      "relevante_unterthemen": [
+        "Mechanische Schwingungen und Wellen",
+        "Elektromagnetische Schwingungen und Wellen",
+        "Wellenmodell des Lichts"
+      ],
+      "kernkompetenzen": [
+        "Harmonische Schwingungen mathematisch beschreiben und die Analogie zwischen mechanischen und elektromagnetischen Schwingkreisen nutzen",
+        "Wellenphänomene wie Interferenz, Beugung und Polarisation zur Charakterisierung von Licht und elektromagnetischen Wellen anwenden"
+      ]
+    },
+    {
+      "thema": "Quanten und Atome",
+      "relevante_unterthemen": [
+        "Photoeffekt und Photonenmodell",
+        "Materiewellen",
+        "Wahrscheinlichkeitsverhalten von Quantenobjekten",
+        "Quantenhafte Emission und Absorption",
+        "Quantenmechanisches Atommodell"
+      ],
+      "kernkompetenzen": [
+        "Den Photoeffekt und die Quantelung von Energie mittels des Photonenmodells erklären",
+        "Das quantenmechanische Atommodell zur Deutung von Linienspektren und Energieniveaus anwenden"
+      ]
+    }
+  ]
+}

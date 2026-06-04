@@ -1,0 +1,69 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Englisch",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Niedersachsen zielt auf die Entwicklung einer umfassenden sprachlichen und interkulturellen Handlungsfähigkeit ab. Im Zentrum steht die Befähigung der Schülerinnen und Schüler, in einer globalisierten Welt in Studium, Beruf und Gesellschaft kompetent zu agieren. Der Unterricht ist kompetenzorientiert und integriert funktionale kommunikative Kompetenzen (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung) mit interkultureller kommunikativer Kompetenz, Text- und Medienkompetenz, Sprachbewusstheit und Sprachlernkompetenz. Die Standards orientieren sich am Gemeinsamen europäischen Referenzrahmen (GeR), wobei für die Qualifikationsphase das Niveau B2 (in rezeptiven Bereichen teilweise C1) angestrebt wird. Der Unterricht ist themenorientiert und verknüpft gesellschaftlich relevante Inhalte mit der Auseinandersetzung mit Literatur, Medien und Sachtexten, um kritisches Denken und diskursive Fähigkeiten zu fördern.",
+  "hauptthemen": [
+    {
+      "thema": "Individual and Society",
+      "relevante_unterthemen": [
+        "Identity",
+        "Ethnic, Cultural and Linguistic Diversity",
+        "Gender and Sexual Diversity"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Reflexion von Identitätsbildungsprozessen",
+        "Auseinandersetzung mit Diversität und gesellschaftlichen Normen"
+      ]
+    },
+    {
+      "thema": "Science and Technology",
+      "relevante_unterthemen": [
+        "Chances and Risks",
+        "Visions of the Future",
+        "The Media",
+        "The Digital Revolution"
+      ],
+      "kernkompetenzen": [
+        "Bewertung von technologischem Fortschritt und dessen Auswirkungen",
+        "Kritische Reflexion der Rolle von Medien und digitaler Kommunikation"
+      ]
+    },
+    {
+      "thema": "Globalisation",
+      "relevante_unterthemen": [
+        "Effects on the World of Work",
+        "Impact on Personal Lives",
+        "Global Responsibility",
+        "English as a Global Language"
+      ],
+      "kernkompetenzen": [
+        "Erkennen globaler Zusammenhänge und deren Einfluss auf das Individuum",
+        "Übernahme von Verantwortung in politischen, ökonomischen und ökologischen Kontexten"
+      ]
+    },
+    {
+      "thema": "Beliefs, Values and Norms in Society: Tradition and Change",
+      "relevante_unterthemen": [
+        "Britishness",
+        "The American Experience",
+        "Postcolonial/Neo-Colonial Experiences",
+        "Migration"
+      ],
+      "kernkompetenzen": [
+        "Vergleich und Einordnung kultureller Werte und Traditionen",
+        "Reflexion über postkoloniale Erfahrungen und Migrationsprozesse"
+      ]
+    },
+    {
+      "thema": "Shakespeare (nur erhöhtes Anforderungsniveau)",
+      "relevante_unterthemen": [
+        "The World that Made Him",
+        "Modern Adaptations"
+      ],
+      "kernkompetenzen": [
+        "Analyse klassischer literarischer Texte im historischen Kontext",
+        "Verständnis und Interpretation moderner Adaptationen"
+      ]
+    }
+  ]
+}

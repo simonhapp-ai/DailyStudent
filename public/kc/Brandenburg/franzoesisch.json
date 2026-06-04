@@ -1,0 +1,59 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Rahmenlehrplan für das Fach Französisch in der gymnasialen Oberstufe in Brandenburg zielt auf die Entwicklung einer interkulturellen fremdsprachigen Handlungsfähigkeit ab. Diese wird durch das Zusammenspiel von funktionaler kommunikativer Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung), interkultureller kommunikativer Kompetenz, Text- und Medienkompetenz sowie Sprachbewusstheit und Sprachlernkompetenz erreicht. Der Unterricht bereitet auf die Allgemeine Hochschulreife vor, wobei in der Einführungsphase Grundlagen konsolidiert und in der Qualifikationsphase wissenschaftspropädeutische Arbeitsweisen vertieft werden. Die Inhalte orientieren sich an den Herausforderungen der Gegenwart und Zukunft, wobei die frankofone Welt in ihrer sozialen, politischen, wirtschaftlichen und kulturellen Vielfalt im Mittelpunkt steht. Ein besonderer Fokus liegt auf der Vorbereitung auf direkte Kontakte (Austausch, Beruf) und der Reflexion über die eigene Identität im Vergleich zu frankofonen Kulturen.",
+  "hauptthemen": [
+    {
+      "thema": "Individuum und Gesellschaft",
+      "relevante_unterthemen": [
+        "Lebensläufe in frankofonen Ländern",
+        "Zwischenmenschliche Beziehungen",
+        "Integration und Marginalisierung",
+        "Wendepunkte im Leben"
+      ],
+      "kernkompetenzen": [
+        "Lebenswelten in frankofonen Ländern verstehen und mit der eigenen vergleichen",
+        "Gesellschaftliche Teilhabe und Spannungsfelder zwischen Individuum und Norm analysieren"
+      ]
+    },
+    {
+      "thema": "Nationale und kulturelle Identität",
+      "relevante_unterthemen": [
+        "Immigration und multikulturelle Gesellschaft",
+        "Wendepunkte der französischen Geschichte",
+        "Deutsch-französische Beziehungen",
+        "Regionale und sprachliche Vielfalt"
+      ],
+      "kernkompetenzen": [
+        "Historische Ereignisse für die Selbstdefinition Frankreichs einordnen",
+        "Deutsch-französische Beziehungen im europäischen Kontext bewerten"
+      ]
+    },
+    {
+      "thema": "Eine Welt – globale Fragen",
+      "relevante_unterthemen": [
+        "Globalisierung",
+        "Wirtschaftswachstum und Umweltschutz",
+        "Tourismus",
+        "Die Frankofonie",
+        "Zukunftsvisionen"
+      ],
+      "kernkompetenzen": [
+        "Auswirkungen der Globalisierung kritisch reflektieren",
+        "Bedeutung der historischen und sprachlichen Verflechtungen innerhalb der Frankofonie erkennen"
+      ]
+    },
+    {
+      "thema": "Herausforderungen der Gegenwart",
+      "relevante_unterthemen": [
+        "Arbeitswelt",
+        "Medienlandschaft",
+        "Aktuelle soziale und politische Fragen in frankofonen Ländern"
+      ],
+      "kernkompetenzen": [
+        "Berufliche Orientierung und Arbeitswelt im deutsch-französischen Kontext verstehen",
+        "Chancen und Risiken der Mediennutzung kritisch diskutieren"
+      ]
+    }
+  ]
+}

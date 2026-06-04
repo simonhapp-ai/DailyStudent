@@ -1,0 +1,122 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Vertiefungskurs Deutsch für die 12. Klasse am Gymnasium in Bayern bietet eine flexible und umfassende Auseinandersetzung mit fortgeschrittenen Themen der Literatur, Sprache und Medien. Der Lehrplan ist in zwei Hauptkörbe unterteilt: „Aspekte der Literatur“ und „Sprache und weitere Medien“, wobei jeder Korb vier Module umfasst. Die Lehrkräfte wählen insgesamt vier Module aus, je zwei pro Korb, mit der Vorgabe, dass aus jedem Korb eines der ersten beiden Module (1.1 oder 1.2 bzw. 2.1 oder 2.2) verpflichtend ist. Die Reihenfolge der gewählten Module ist frei wählbar.\n\nIm Korb „Aspekte der Literatur“ vertiefen die Schülerinnen und Schüler ihr Verständnis für Weltliteratur aus dem nicht-deutschsprachigen Raum durch Rezeption, Kontextualisierung und literarische Gespräche. Sie setzen sich intensiv mit Theaterinszenierungen auseinander, analysieren deren Produktionsbedingungen und Gestaltungsmittel und bewerten Aufführungen. Ein weiterer Schwerpunkt liegt auf dem literarischen Schreiben, wo kreative Techniken erlernt, eigene Texte entwickelt, überarbeitet und präsentiert werden. Zudem wird der Literaturbetrieb und die literarische Öffentlichkeit beleuchtet, indem Akteure, Austauschformen und Vermarktungsstrategien analysiert und eigene Beiträge zum literarischen Leben konzipiert werden.\n\nDer Korb „Sprache und weitere Medien“ widmet sich der Semiotik, der Lehre von Zeichen und Zeichensystemen, und ermöglicht die Analyse kommunikativer Wirkungen. Die Sprachgeschichte wird konkret untersucht, wobei sprachliche Phänomene im kulturgeschichtlichen Kontext betrachtet und Ergebnisse dokumentiert werden. Ein Modul zur Rhetorik vermittelt Kenntnisse über die historische Disziplin, analysiert bedeutende Reden und Redeformate und reflektiert die Möglichkeiten der Beeinflussung durch Rhetorik, inklusive der praktischen Anwendung. Schließlich befasst sich das Modul „Filmgenre“ mit der Filmgeschichte, der Analyse exemplarischer Filme eines Genres und der Reflexion ausgewählter Aspekte durch eigene mediale Beiträge. Insgesamt zielt der Vertiefungskurs darauf ab, die analytischen, kreativen und kommunikativen Kompetenzen der Schülerinnen und Schüler in den Bereichen Literatur, Sprache und Medien auf hohem Niveau zu fördern und ihnen individuelle Vertiefungsmöglichkeiten zu bieten.",
+  "hauptthemen": [
+    {
+      "thema": "Weltliteratur aus dem nicht-deutschsprachigen Raum",
+      "relevante_unterthemen": [
+        "Rezeption und individuelle Zugänge zu Weltliteratur",
+        "Kontextualisierung, Rezensionen und Interpretationen",
+        "Einordnung in die Weltliteratur",
+        "Literarisches Gespräch"
+      ],
+      "kernkompetenzen": [
+        "Ein Werk der Weltliteratur aus dem nicht-deutschsprachigen Raum rezipieren und individuelle Zugänge finden",
+        "Textverständnis durch Kontextualisierungen, Rezensionen und Interpretationen vertiefen",
+        "Die Einordnung des Textes in die Weltliteratur reflektieren und ein literarisches Gespräch führen"
+      ]
+    },
+    {
+      "thema": "Theaterinszenierungen",
+      "relevante_unterthemen": [
+        "Produktionsbedingungen und Gestaltungsmittel von Theaterinszenierungen",
+        "Rezeption und Vergleich von Theateraufführungen",
+        "Analyse und Reflexion von Inszenierungen (Gestaltungsmittel, Textgrundlage, Rezensionen)",
+        "Bewertung von Theaterinszenierungen"
+      ],
+      "kernkompetenzen": [
+        "Sich mit Produktionsbedingungen und Gestaltungsmitteln von Theaterinszenierungen auseinandersetzen",
+        "Eine Theateraufführung rezipieren, individuelle Wahrnehmungen und Einschätzungen erläutern und vergleichen",
+        "Theaterinszenierungen analysieren, reflektieren und bewerten"
+      ]
+    },
+    {
+      "thema": "Literarisches Schreiben",
+      "relevante_unterthemen": [
+        "Grundlagen, Techniken und Arbeitsweisen des kreativen Schreibens",
+        "Entwicklung von Schreibideen und Konzeption von Schreibplänen",
+        "Gestaltung literarischer Texte und Ausbildung des eigenen Stils",
+        "Kriteriengeleitete Rückmeldungen und Überarbeitung von Textentwürfen",
+        "Präsentation von Texten und Reflexion des Schreibprozesses und -produkts"
+      ],
+      "kernkompetenzen": [
+        "Sich mit Grundlagen, Techniken und Arbeitsweisen des kreativen Schreibens auseinandersetzen",
+        "Schreibideen entwickeln, Schreibpläne konzipieren und zu literarischen Texten ausgestalten, den eigenen Stil ausbilden",
+        "Kriteriengeleitete Rückmeldungen geben und Textentwürfe überarbeiten",
+        "Texte präsentieren und den Schreibprozess, das Schreibprodukt sowie die gewählte Präsentationsform reflektieren und kommentieren"
+      ]
+    },
+    {
+      "thema": "Literaturbetrieb und literarische Öffentlichkeit",
+      "relevante_unterthemen": [
+        "Akteure im Literaturbetrieb (Autoren, Agenturen, Verlage, Leserschaft)",
+        "Formen des literarischen Austauschs (Lesung, Diskussion, Rezension)",
+        "Vermarktung und Wertung im medialen und organisatorischen Rahmen (Buchmessen, Buchhandel, Literaturpreise)",
+        "Konzeption und Durchführung konkreter Aktivitäten zum literarischen Leben"
+      ],
+      "kernkompetenzen": [
+        "Verschiedene Aspekte des literarischen Lebens, Akteure, Austauschformen, Vermarktung und Wertung unterscheiden und beschreiben",
+        "Sich vertieft mit einem ausgewählten Aspekt auseinandersetzen und dessen Bedeutung reflektieren",
+        "Eine konkrete Aktivität als Beitrag zum literarischen Leben konzipieren und ggf. durchführen"
+      ]
+    },
+    {
+      "thema": "Semiotik",
+      "relevante_unterthemen": [
+        "Zeichentheorie(n) (de Saussure, Peirce, Eco)",
+        "Verschiedene Zeichensysteme (Schriften, Sprachen, Piktogramme, Bildlichkeit, Karten, Zeichen im öffentlichen Raum, jugendspezifische/subkulturelle Zeichen, Mode)",
+        "Analyse von Untersuchungsgegenständen auf semiotischer Basis",
+        "Reflexion der kommunikativen Wirkung von Zeichen"
+      ],
+      "kernkompetenzen": [
+        "Sich mit Zeichentheorie(n) beschäftigen und Grundzüge der Semiotik kennenlernen",
+        "Sich mit verschiedenen Zeichensystemen und deren Besonderheiten auseinandersetzen",
+        "Auf Basis semiotischer Erkenntnisse einen Untersuchungsgegenstand analysieren und dessen kommunikative Wirkung reflektieren"
+      ]
+    },
+    {
+      "thema": "Sprachgeschichte konkret",
+      "relevante_unterthemen": [
+        "Grundzüge der Sprachgeschichte im kulturgeschichtlichen Kontext",
+        "Untersuchung sprachlicher Phänomene (literarische Texte, amtliche Dokumente, private Schriftstücke, Orts-/Personennamen)",
+        "Sprachgeschichtliche Perspektiven (Sprachwandel, Etymologie, regionale Varietäten)",
+        "Dokumentation und Präsentation von Ergebnissen (Sprachkarte, Podcast)"
+      ],
+      "kernkompetenzen": [
+        "Sich mit Grundzügen der Sprachgeschichte, auch im kulturgeschichtlichen Kontext, beschäftigen",
+        "Ausgewählte sprachliche Phänomene unter sprachgeschichtlicher Perspektive untersuchen",
+        "Ergebnisse dokumentieren und präsentieren"
+      ]
+    },
+    {
+      "thema": "Rhetorik",
+      "relevante_unterthemen": [
+        "Rhetorik als historische und wissenschaftliche Disziplin",
+        "Bedeutende Reden und Redeformate (Debatte, politische Rede, wissenschaftlicher Vortrag, Podiumsdiskussion)",
+        "Prinzipien der Rhetorik (Aufbau, Stil, Wirkungsabsicht, Stimmmodulation, Gestik)",
+        "Möglichkeiten der Beeinflussung durch Rhetorik",
+        "Verfertigen und Halten von Kurzvorträgen/Reden",
+        "Analyse publizierter Reden und ihres Vortrags"
+      ],
+      "kernkompetenzen": [
+        "Die Rhetorik als historische und wissenschaftliche Disziplin kennenlernen und sich mit Reden/Redeformaten auseinandersetzen",
+        "Prinzipien der Rhetorik aus Theorien und Reden herausarbeiten und Möglichkeiten der Beeinflussung reflektieren",
+        "Einen Kurzvortrag/eine kurze Rede verfertigen und halten oder eine vollständige (publizierte) Rede und ihren Vortrag analysieren"
+      ]
+    },
+    {
+      "thema": "Filmgenre",
+      "relevante_unterthemen": [
+        "Begriff des Genres vor dem Hintergrund der Filmgeschichte",
+        "Rezeption und Analyse exemplarischer Filme eines Genres (Historie, Entwicklung, Merkmale, strukturelle Besonderheiten, Motive, Subgenres, Varianten)",
+        "Reflexion von Filmgenre-Aspekten durch Konzeption und Ausgestaltung eigener Beiträge (Filmkritik, Podcast, Plakat, Storyboard, Trailer)"
+      ],
+      "kernkompetenzen": [
+        "Sich mit dem Begriff des Genres vor dem Hintergrund der Filmgeschichte auseinandersetzen",
+        "Mindestens drei exemplarische Filme eines Genres rezipieren und analysieren, um dieses genauer zu erschließen",
+        "Ausgewählte Aspekte dieses Filmgenres reflektieren, indem Beiträge konzipiert, ggf. ausgestaltet, präsentiert und kommentiert werden"
+      ]
+    }
+  ]
+}

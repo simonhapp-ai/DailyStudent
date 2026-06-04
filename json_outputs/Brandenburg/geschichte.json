@@ -1,0 +1,72 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Brandenburg zielt auf die Entwicklung eines reflektierten und selbstreflexiven Geschichtsbewusstseins ab. Im Zentrum steht die 'Narrative Kompetenz', die Lernende befähigt, Geschichte kriteriengeleitet zu analysieren, zu deuten und zu beurteilen. Der Unterricht ist problemorientiert gestaltet und fördert die Fähigkeit, historische Sachverhalte multiperspektivisch zu betrachten, Quellen kritisch zu hinterfragen und eigene, begründete Sach- und Werturteile im Rahmen der freiheitlich-demokratischen Grundordnung zu formulieren. Ein besonderer Fokus liegt auf der Verschränkung von Sachkompetenz mit Analyse-, Deutungs- und Urteilskompetenz. Die Qualifikationsphase ist in vier Kurshalbjahre gegliedert, die von Umbrüchen und Transformationen (Q1) über das Spannungsfeld von Demokratie und Diktatur (Q2) bis hin zur Zeitgeschichte nach 1945 (Q3) und der kritischen Auseinandersetzung mit Geschichtskultur (Q4) reichen. Dabei werden auch digitale Handlungskompetenzen und bildungssprachliche Fähigkeiten gezielt gefördert.",
+  "hauptthemen": [
+    {
+      "thema": "Umbrüche, Transformationen und Krisen (Q1)",
+      "relevante_unterthemen": [
+        "Revolutionen (Amerikanische, Französische, 1848/49)",
+        "Industrialisierung und Globalisierung",
+        "Ideengeschichte (Antike bis Aufklärung)",
+        "Wirtschaftsbeziehungen und -krisen",
+        "Krankheit und Gesundheit als transformative Kräfte",
+        "Religion als Referenz für Umbrüche",
+        "Hochimperialismus und kolonialisierte Räume"
+      ],
+      "kernkompetenzen": [
+        "Kausale Zusammenhänge zwischen historischen Ereignissen und Strukturen analysieren",
+        "Geschichtswissenschaftliche Theorien zu wirtschaftlichen und sozialen Prozessen diskutieren",
+        "Positionen zur Sozialen Frage kriteriengeleitet und kontrovers beurteilen"
+      ]
+    },
+    {
+      "thema": "Gesellschaftliche Kräfte und Entwicklung von Staaten (Q2)",
+      "relevante_unterthemen": [
+        "Weimarer Republik (Staat, Gesellschaft, Emanzipationsbewegungen)",
+        "Nationalsozialistische Gewaltherrschaft (Ideologie, Holocaust, Zweiter Weltkrieg)",
+        "Kunst, Kultur und Erziehung in der Zwischenkriegszeit",
+        "Nationalismus, Internationalismus und Pazifismus",
+        "Kommunistische Diktatur in der Sowjetunion",
+        "Europäische Staaten im Spannungsfeld zwischen Demokratie und Diktatur",
+        "Globale Dimensionen der Weltkriege"
+      ],
+      "kernkompetenzen": [
+        "Handlungsspielräume von Akteuren in Diktaturen und Demokratien herausarbeiten",
+        "Kontroversen zur individuellen und kollektiven Verantwortung analysieren",
+        "Ethische und normative Werte in Quellen und Deutungen bewerten"
+      ]
+    },
+    {
+      "thema": "Zeitgeschichte nach 1945 (Q3)",
+      "relevante_unterthemen": [
+        "Vom Kalten Krieg zur polyzentrischen Welt",
+        "Die beiden deutschen Staaten (1945-1990) und Einigungsprozess",
+        "Migration in der deutsch-deutschen Geschichte",
+        "MOEL- und südosteuropäische Staaten nach 1990",
+        "Regionale Konflikte im globalen Kontext (Nahost, China/Taiwan)",
+        "Umwelt- und Artenschutzgeschichte",
+        "Biografische Zugänge zur Zeitgeschichte"
+      ],
+      "kernkompetenzen": [
+        "Verfahren historischen Denkens zur Analyse von Systemkrisen anwenden",
+        "Informationen aus verschiedenen Quellen zur Analyse globaler Konflikte nutzen",
+        "Eigene Zeit- und Standortgebundenheit bei der Deutung von Lebensverhältnissen reflektieren"
+      ]
+    },
+    {
+      "thema": "Geschichtskultur (Q4)",
+      "relevante_unterthemen": [
+        "Erinnern und Gedenken (Kolonialismus, NS, SED-Diktatur)",
+        "Geschichtskultur im internationalen Vergleich",
+        "Historische Personen und Geschichtspolitik",
+        "Darstellungen von Geschichte in Medien (Film, Spiele, Social Media, Comics)"
+      ],
+      "kernkompetenzen": [
+        "Historische Deutungen hinsichtlich Triftigkeit und Perspektivität überprüfen",
+        "Geschichtskulturelle Angebote und deren Interessen analysieren",
+        "Beurteilungsmaßstäbe für Diktaturen auf geschichtskulturelle Deutungen anwenden"
+      ]
+    }
+  ]
+}

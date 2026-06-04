@@ -1,0 +1,59 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Rahmenlehrplan für das Fach Französisch in der gymnasialen Oberstufe in Berlin (in Anlehnung an das Land Brandenburg) zielt auf die Entwicklung einer interkulturellen fremdsprachigen Handlungsfähigkeit ab. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet und bereitet die Schülerinnen und Schüler auf die Anforderungen der Qualifikationsphase und das Abitur vor. Im Zentrum steht der Erwerb funktionaler kommunikativer Kompetenzen (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung) sowie die Vertiefung von Text- und Medienkompetenz, Sprachbewusstheit und Sprachlernkompetenz. Die Schülerinnen und Schüler setzen sich mit authentischen, lebensweltorientierten Materialien auseinander, um ein tieferes Verständnis für die frankofone Welt, ihre kulturellen Besonderheiten und gesellschaftlichen Herausforderungen zu entwickeln. Dabei wird ein Perspektivwechsel gefördert, der zur kritischen Reflexion der eigenen Identität und zur Teilhabe an einer globalisierten Gesellschaft befähigt. Die Qualifikationsphase ist in vier thematische Kurshalbjahre gegliedert, die von individuellen Lebenswelten über nationale Identität und globale Fragen bis hin zu aktuellen gesellschaftspolitischen Herausforderungen reichen.",
+  "hauptthemen": [
+    {
+      "thema": "Individuum und Gesellschaft",
+      "relevante_unterthemen": [
+        "Lebensläufe in frankofonen Ländern",
+        "Zwischenmenschliche Beziehungen",
+        "Verschiedenheit, Integration und Ausgrenzung",
+        "Wendepunkte im Leben"
+      ],
+      "kernkompetenzen": [
+        "Lebenswelten in frankofonen Ländern vergleichen und Unterschiede erläutern",
+        "Gesellschaftliche Teilhabe im Spannungsfeld zwischen Individuum und Norm reflektieren"
+      ]
+    },
+    {
+      "thema": "Nationale und kulturelle Identität",
+      "relevante_unterthemen": [
+        "Einwanderung und multikulturelle Gesellschaft",
+        "Wendepunkte in der Geschichte Frankreichs",
+        "Deutsch-französische Beziehungen",
+        "Regionale und sprachliche Vielfalt"
+      ],
+      "kernkompetenzen": [
+        "Bedeutsame historische Ereignisse für die französische Selbstdefinition einordnen",
+        "Kulturelle Selbstdeutung und das Wechselspiel von nationaler Einheit und regionaler Vielfalt analysieren"
+      ]
+    },
+    {
+      "thema": "Eine Welt – globale Fragen",
+      "relevante_unterthemen": [
+        "Globalisierung (Chancen und Grenzen)",
+        "Wirtschaftswachstum und Umweltschutz",
+        "Tourismus",
+        "Die Frankofonie",
+        "Zukunftsvisionen"
+      ],
+      "kernkompetenzen": [
+        "Auswirkungen der Globalisierung kritisch bewerten",
+        "Historische, politische und sprachliche Verflechtungen innerhalb der Frankofonie verstehen"
+      ]
+    },
+    {
+      "thema": "Herausforderungen der Gegenwart",
+      "relevante_unterthemen": [
+        "Arbeitswelt",
+        "Medienwelt",
+        "Aktuelle soziale und politische Fragen in frankofonen Ländern"
+      ],
+      "kernkompetenzen": [
+        "Chancen und Risiken der Mediennutzung diskutieren",
+        "Aktuelle gesellschaftliche Entwicklungen in Frankreich und anderen frankofonen Ländern im Vergleich zu Deutschland analysieren"
+      ]
+    }
+  ]
+}

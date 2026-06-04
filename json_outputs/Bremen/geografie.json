@@ -1,0 +1,70 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen (Qualifikationsphase) zielt darauf ab, den Raum als Wirklichkeit menschlicher Lebensverhältnisse ganzheitlich und vernetzt zu erschließen. Das Fach Geografie fungiert als Schnittstelle zwischen Natur-, Wirtschafts- und Kulturwissenschaften. Zentrale Ziele sind die Vermittlung eines Verständnisses für ökologische, ökonomische und soziale Herausforderungen auf lokaler bis globaler Ebene sowie die Förderung der Raumverantwortung und nachhaltigen Handlungsfähigkeit. Die Schülerinnen und Schüler sollen komplexe Mensch-Raum-Beziehungen analysieren, bewerten und Lösungsansätze entwickeln. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet und fördert die Studierfähigkeit durch die Anwendung fachspezifischer Methoden (z.B. Raumanalyse, GIS, Interpretation von Daten). Die Standards definieren verbindliche Kompetenzen in den Bereichen Raumkenntnis, -wahrnehmung, -analyse, -bewertung, -bewusstsein und -verantwortung, wobei der Fokus auf der Befähigung zu begründeten Sach- und Werturteilen liegt.",
+  "hauptthemen": [
+    {
+      "thema": "Räume, Strukturen und Prozesse als Grundfragen der Geografie",
+      "relevante_unterthemen": [
+        "Wissenschaftliche Geografie",
+        "Naturgeografische Grundlagen (endogene/exogene Kräfte, Atmosphäre)",
+        "Raumwahrnehmung und -bewertung",
+        "Regionalanalyse"
+      ],
+      "kernkompetenzen": [
+        "Wissenschaftliche Arbeitsweisen und Unterdisziplinen der Geografie erläutern",
+        "Endogene und exogene Prozesse sowie atmosphärische Bedingungen erklären",
+        "Verfahren der Raum- und Regionalanalyse anwenden",
+        "Räumliche Strukturen und Wirkungsgefüge auf verschiedenen Maßstabsebenen analysieren"
+      ]
+    },
+    {
+      "thema": "Stadt- und Wirtschaftsgeografie",
+      "relevante_unterthemen": [
+        "Städtische Räume und Verstädterungsprozesse",
+        "Stadtmodelle",
+        "Wirtschaftssektoren und Strukturwandel",
+        "Standortlehre und Standortfaktoren",
+        "Industrieökologie"
+      ],
+      "kernkompetenzen": [
+        "Stadtmodelle anwenden und Verstädterungsprozesse problematisieren",
+        "Sozialräumliche Strukturen und stadtökologische Fragestellungen bewerten",
+        "Standortfaktoren und deren Bedeutung für den Strukturwandel analysieren",
+        "Nutzungs- und Zielkonflikte unter dem Aspekt der Nachhaltigkeit beurteilen"
+      ]
+    },
+    {
+      "thema": "Globalisierung und Weltwirtschaft",
+      "relevante_unterthemen": [
+        "Sozio-ökonomische Prozesse",
+        "Globalisierung",
+        "Handel und Verkehr",
+        "Weltwirtschaftstheorien und -modelle",
+        "Globale Disparitäten"
+      ],
+      "kernkompetenzen": [
+        "Ursachen und Folgen der Globalisierung analysieren",
+        "Bedeutung von Rohstoffen und deren Verteilung bewerten",
+        "Globale, regionale und lokale Disparitäten untersuchen",
+        "Wirtschaftliche Strategien und Modelle der Weltwirtschaft anwenden"
+      ]
+    },
+    {
+      "thema": "Tragfähigkeit und nachhaltige Entwicklung",
+      "relevante_unterthemen": [
+        "Bevölkerungsentwicklung und demografischer Übergang",
+        "Migration",
+        "Geoökosysteme",
+        "Klimaveränderungen",
+        "Nachhaltigkeitskonzept"
+      ],
+      "kernkompetenzen": [
+        "Bevölkerungsmodelle beschreiben und analysieren",
+        "Interdependenzen zwischen Wachstum und Grundversorgung bewerten",
+        "Gefährdung von Geoökosystemen durch menschliche Eingriffe einschätzen",
+        "Klimaveränderungen und deren Folgen unter Nachhaltigkeitsaspekten beurteilen"
+      ]
+    }
+  ]
+}

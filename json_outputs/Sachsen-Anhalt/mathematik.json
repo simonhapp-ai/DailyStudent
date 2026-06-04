@@ -1,0 +1,64 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Fachlehrplan für das Gymnasium und Berufliche Gymnasium in Sachsen-Anhalt (Stand 2019) zielt auf eine vertiefte mathematische Allgemeinbildung und die Vorbereitung auf die Allgemeine Hochschulreife ab. Er basiert auf einer dualen Kompetenzstruktur: Allgemeine mathematische Kompetenzen (Problemlösen, Modellieren, Argumentieren/Kommunizieren, Darstellungen/Symbole verwenden) werden in enger Verflechtung mit inhaltsbezogenen Kompetenzen (Zahlen und Größen, Raum und Form, Zuordnungen und Funktionen, Daten und Zufall) entwickelt. Ein besonderer Fokus liegt auf der wissenschaftspropädeutischen Arbeitsweise, der Förderung der Studierfähigkeit und der Integration digitaler Mathematikwerkzeuge (z. B. GTR/CAS, DGS, Tabellenkalkulation) als integraler Bestandteil des Unterrichts. Der Lehrplan ist kumulativ aufgebaut, wobei die Anforderungen von der Sekundarstufe I bis zur Qualifikationsphase (Schuljahrgänge 11/12) stetig an Komplexität und Abstraktionsgrad zunehmen. Aufgabenpraktika dienen dazu, die Schülerinnen und Schüler zur selbstständigen Anwendung mathematischer Konzepte in komplexen, inner- und außermathematischen Kontexten zu befähigen.",
+  "hauptthemen": [
+    {
+      "thema": "Zahlen und Größen",
+      "relevante_unterthemen": [
+        "Natürliche, rationale und reelle Zahlen",
+        "Potenzen, Wurzeln und Logarithmen",
+        "Prozent- und Zinsrechnung",
+        "Größen und Einheiten"
+      ],
+      "kernkompetenzen": [
+        "Sicheres Rechnen in verschiedenen Zahlbereichen unter Nutzung von Rechengesetzen",
+        "Anwendung von Potenz- und Logarithmengesetzen",
+        "Sachgerechtes Arbeiten mit Größen und Einheiten in Anwendungsaufgaben"
+      ]
+    },
+    {
+      "thema": "Raum und Form",
+      "relevante_unterthemen": [
+        "Geometrische Grundbegriffe und Abbildungen",
+        "Dreiecke und Vierecke",
+        "Körperberechnungen",
+        "Trigonometrie",
+        "Analytische Geometrie (Vektoren, Geraden, Ebenen)"
+      ],
+      "kernkompetenzen": [
+        "Konstruktion und Berechnung geometrischer Objekte in Ebene und Raum",
+        "Anwendung der Satzgruppe des Pythagoras und trigonometrischer Beziehungen",
+        "Analytische Beschreibung und Untersuchung von Lagebeziehungen mittels Vektoren"
+      ]
+    },
+    {
+      "thema": "Zuordnungen und Funktionen",
+      "relevante_unterthemen": [
+        "Proportionalität",
+        "Lineare Funktionen",
+        "Quadratische Funktionen",
+        "Analysis (Differential- und Integralrechnung)"
+      ],
+      "kernkompetenzen": [
+        "Untersuchung von Funktionsgraphen und deren Eigenschaften",
+        "Anwendung der Differentialrechnung zur Analyse von Änderungsraten und Extremwerten",
+        "Berechnung von Flächeninhalten und Beständen mittels Integralrechnung"
+      ]
+    },
+    {
+      "thema": "Daten und Zufall",
+      "relevante_unterthemen": [
+        "Statistische Datenerfassung und -auswertung",
+        "Wahrscheinlichkeitsrechnung",
+        "Binomial- und Normalverteilung",
+        "Beurteilende Statistik"
+      ],
+      "kernkompetenzen": [
+        "Interpretation von Häufigkeitsverteilungen und statistischen Kenngrößen",
+        "Berechnung von Wahrscheinlichkeiten bei mehrstufigen Zufallsversuchen",
+        "Anwendung stochastischer Modelle zur Prognose und Beurteilung von Sachverhalten"
+      ]
+    }
+  ]
+}

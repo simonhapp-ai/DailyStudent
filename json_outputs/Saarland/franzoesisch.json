@@ -1,0 +1,59 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe im Saarland (Hauptphase) ist kompetenzorientiert und auf die Bildungsstandards für die fortgeführte Fremdsprache ausgerichtet. Ziel ist die Entwicklung einer interkulturellen Handlungsfähigkeit, die über den reinen Spracherwerb hinausgeht und die Schüler auf eine globalisierte Welt vorbereitet. Ein besonderer Fokus liegt auf der geografischen und historischen Nähe des Saarlandes zu Frankreich, was die Bedeutung der Sprache für die Grande-Région unterstreicht. Der Unterricht fördert funktionale kommunikative Kompetenzen (Hören, Lesen, Sprechen, Schreiben, Mediation) sowie Text- und Medienkompetenz, Sprachbewusstheit und Sprachlernkompetenz. Die inhaltliche Gestaltung folgt den Vorgaben des IQB, wobei über vier Halbjahre hinweg acht verbindliche Themenfelder behandelt werden, die von digitalen Medien und der Frankophonie über gesellschaftliche Strukturen und deutsch-französische Beziehungen bis hin zu Globalisierung und beruflicher Orientierung reichen. Die Leistungsmessung ist transparent und kompetenzorientiert, wobei schriftliche Kursarbeiten und Sprechprüfungen durch einheitliche Bewertungsraster (inhaltlich/sprachlich) standardisiert sind.",
+  "hauptthemen": [
+    {
+      "thema": "Communiquer à l’ère du numérique & Vivre dans un monde francophone",
+      "relevante_unterthemen": [
+        "Digitale Medien und Kommunikationstechnologien",
+        "Rolle und Verantwortung der Medien",
+        "Kolonialgeschichte und Dekolonialisierung",
+        "Strukturen der heutigen Frankophonie"
+      ],
+      "kernkompetenzen": [
+        "Reflexion des eigenen Mediennutzungsverhaltens",
+        "Analyse historischer und politischer Zusammenhänge frankophoner Länder"
+      ]
+    },
+    {
+      "thema": "Individu et société & France – Allemagne. Une amitié au sein de l’Europe",
+      "relevante_unterthemen": [
+        "Migration und multikulturelle Gesellschaft",
+        "Laïcité und soziale Integration",
+        "Wandel von Lebensformen und Werten",
+        "Deutsch-französische Beziehungen seit 1945"
+      ],
+      "kernkompetenzen": [
+        "Diskussion kontroverser gesellschaftlicher Themen",
+        "Kritische Auseinandersetzung mit Stereotypen und Vorurteilen"
+      ]
+    },
+    {
+      "thema": "Individu et mondialisation & Trouver sa voie professionnelle",
+      "relevante_unterthemen": [
+        "Umweltpolitik und nachhaltiger Konsum",
+        "Globalisierung der Produktion",
+        "Berufsorientierung und Arbeitswelt der Zukunft",
+        "Digitalisierung und Mobilität"
+      ],
+      "kernkompetenzen": [
+        "Bewertung von Herausforderungen der Globalisierung",
+        "Reflexion über berufliche Anforderungen und Lebensplanung"
+      ]
+    },
+    {
+      "thema": "Valeurs individuelles et collectives & Grandir et trouver sa place dans la société",
+      "relevante_unterthemen": [
+        "Demokratische Werte und individuelle Freiheit",
+        "Suche nach Identität und Glück",
+        "Generationenkonflikte und zwischenmenschliche Beziehungen",
+        "Soziale Verantwortung und Engagement"
+      ],
+      "kernkompetenzen": [
+        "Kritische Reflexion von Werten und Normen",
+        "Analyse von Spannungsfeldern zwischen Individuum und Gesellschaft"
+      ]
+    }
+  ]
+}

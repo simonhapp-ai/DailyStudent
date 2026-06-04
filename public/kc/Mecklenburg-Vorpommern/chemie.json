@@ -1,0 +1,65 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Rahmenplan für die Qualifikationsphase der gymnasialen Oberstufe in Mecklenburg-Vorpommern (Stand 2022) zielt auf eine fundierte wissenschaftspropädeutische Grundbildung ab. Im Zentrum steht der Kompetenzerwerb in den vier Bereichen Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz. Der Unterricht ist kontextorientiert und lebensweltbezogen gestaltet, wobei Basiskonzepte (Stoff-Teilchen, Struktur-Eigenschaft, chemische Reaktion, Energie) als kumulative Lernstruktur dienen. Ein besonderer Fokus liegt auf der Integration digitaler Medien, der Bildung für nachhaltige Entwicklung (BNE) sowie der Förderung von Inklusion und interkultureller Bildung. Der Rahmenplan ist als verbindliches Instrument konzipiert, das ca. 80 % der Unterrichtszeit belegt und Lehrkräften Freiraum für methodische Gestaltung lässt. Die Leistungsbewertung erfolgt kompetenzorientiert über alle drei Anforderungsbereiche, wobei experimentelle Fertigkeiten einen integralen Bestandteil darstellen.",
+  "hauptthemen": [
+    {
+      "thema": "Stoffe, Strukturen und Eigenschaften",
+      "relevante_unterthemen": [
+        "Chemische Bindung und intermolekulare Wechselwirkungen",
+        "Organische Stoffklassen und Reaktionsmechanismen",
+        "Fette (nur LK)",
+        "Proteine",
+        "Kunststoffe"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge zwischen Struktur und Stoffeigenschaften auf Teilchenebene erklären",
+        "Reaktionsmechanismen (Substitution, Addition, Veresterung) unter Verwendung von LEWIS-Formeln darstellen",
+        "Ökologische und ökonomische Aspekte von Kunststoffen und deren Recycling bewerten"
+      ]
+    },
+    {
+      "thema": "Grundlagen chemischer Reaktionen",
+      "relevante_unterthemen": [
+        "Thermodynamik",
+        "Reaktionskinetik",
+        "Chemisches Gleichgewicht",
+        "Massenwirkungsgesetz",
+        "Säure-Base-Gleichgewichte",
+        "Löslichkeitsgleichgewichte (nur LK)"
+      ],
+      "kernkompetenzen": [
+        "Energieumsätze bei chemischen Reaktionen berechnen und interpretieren",
+        "Einflussfaktoren auf das chemische Gleichgewicht (Prinzip von Le Chatelier) anwenden",
+        "Titrationskurven auswerten und pH-Werte berechnen"
+      ]
+    },
+    {
+      "thema": "Elektrochemie",
+      "relevante_unterthemen": [
+        "Atombau und Redoxreaktionen",
+        "Galvanische Elemente",
+        "Elektrolyse"
+      ],
+      "kernkompetenzen": [
+        "Redoxreaktionen als Elektronenübergänge mithilfe von Oxidationszahlen beschreiben",
+        "Funktionsweise galvanischer Zellen und Elektrolysezellen vergleichen",
+        "Elektrochemische Prozesse (Korrosion, Akkumulatoren) unter Nachhaltigkeitsaspekten bewerten"
+      ]
+    },
+    {
+      "thema": "Analyse chemischer Reaktionen",
+      "relevante_unterthemen": [
+        "Qualitative Nachweise",
+        "Quantitative Berechnungen",
+        "Komplexverbindungen (nur LK)",
+        "Chromatographie und Spektroskopie (nur LK)"
+      ],
+      "kernkompetenzen": [
+        "Nachweisreaktionen für Ionen und Gase sicher durchführen und auswerten",
+        "Stoffmengenkonzentrationen und Massen quantitativ bestimmen",
+        "Bedeutung von Komplexverbindungen in Technik und Biologie erläutern"
+      ]
+    }
+  ]
+}

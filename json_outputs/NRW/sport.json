@@ -1,0 +1,59 @@
+{
+  "bundesland": "NRW",
+  "fach": "Sport",
+  "zusammenfassung": "Der Kernlehrplan Sport für die gymnasiale Oberstufe in NRW verfolgt einen kompetenzorientierten Ansatz, der den Paradigmenwechsel von der Input- zur Outputorientierung vollzieht. Ziel ist die Entwicklung einer umfassenden Handlungskompetenz, die es Schülerinnen und Schülern ermöglicht, sich reflektiert mit der Körperlichkeit des Menschen sowie der Bewegungs-, Spiel- und Sportkultur auseinanderzusetzen. Der Unterricht basiert auf einem Doppelauftrag: Entwicklungsförderung durch Bewegung, Spiel und Sport sowie die Erschließung der Sportkultur. Dabei werden sechs pädagogische Perspektiven (z. B. Wahrnehmungsfähigkeit, Leisten, Kooperieren, Gesundheit) integriert. Die fachliche Struktur umfasst vier Kompetenzbereiche (Bewegungs- und Wahrnehmungskompetenz, Sach-, Methoden- und Urteilskompetenz) sowie sechs Inhaltsfelder (z. B. Bewegungsstruktur, Leistung, Gesundheit). Der Lehrplan legt Wert auf eine enge Praxis-Theorie-Verknüpfung und wissenschaftspropädeutisches Arbeiten, insbesondere in der Qualifikationsphase. Die Leistungsbewertung erfolgt prozessbegleitend und punktuell, wobei sowohl sportpraktische Leistungen als auch theoretische Reflexionen (Klausuren/Facharbeiten) in die Bewertung einfließen.",
+  "hauptthemen": [
+    {
+      "thema": "Bewegungsstruktur und Bewegungslernen",
+      "relevante_unterthemen": [
+        "Motorische Lernkonzepte",
+        "Informationsaufnahme und -verarbeitung",
+        "Biomechanische Grundlagen",
+        "Koordinative Fähigkeiten"
+      ],
+      "kernkompetenzen": [
+        "Lernwege und Konzepte des motorischen Lernens beschreiben und beurteilen",
+        "Zusammenhänge von Struktur und Funktion von Bewegungen erläutern"
+      ]
+    },
+    {
+      "thema": "Leistung",
+      "relevante_unterthemen": [
+        "Trainingsplanung und -organisation",
+        "Sportphysiologie und -anatomie",
+        "Leistungsdiagnostik",
+        "Anpassungserscheinungen durch Training"
+      ],
+      "kernkompetenzen": [
+        "Trainingspläne unter Berücksichtigung von Belastungsgrößen entwerfen",
+        "Leistungsbegrenzende Faktoren und physiologische Anpassungsprozesse analysieren"
+      ]
+    },
+    {
+      "thema": "Kooperation und Konkurrenz",
+      "relevante_unterthemen": [
+        "Spielvermittlungsmodelle",
+        "Fairness und Aggression",
+        "Gruppendynamische Prozesse",
+        "Regelstrukturen"
+      ],
+      "kernkompetenzen": [
+        "Taktische Strategien für Spielsituationen umsetzen",
+        "Ambivalenz von Fairness- und Konkurrenzprinzipien theoriegeleitet beurteilen"
+      ]
+    },
+    {
+      "thema": "Gesundheit",
+      "relevante_unterthemen": [
+        "Gesundheitskonzepte",
+        "Fitness als Basis",
+        "Risiken unphysiologischer Leistungssteigerung (Doping)",
+        "Gesundheitlicher Nutzen des Sporttreibens"
+      ],
+      "kernkompetenzen": [
+        "Gesundheitsfördernde und -schädigende Faktoren differenziert erläutern",
+        "Einflüsse von Sport auf Fitness und Wohlbefinden mithilfe von Modellen beurteilen"
+      ]
+    }
+  ]
+}

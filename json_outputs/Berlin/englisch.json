@@ -1,0 +1,62 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Berlin (in Kooperation mit Brandenburg) zielt auf die Entwicklung einer interkulturellen fremdsprachigen Handlungsfähigkeit ab. Die Schülerinnen und Schüler sollen befähigt werden, in einer globalisierten Welt erfolgreich zu kommunizieren, komplexe Texte und Medien zu analysieren und sich kritisch mit anglofonen Kulturen auseinanderzusetzen. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet und fördert die funktionale kommunikative Kompetenz (Hören, Lesen, Sprechen, Schreiben, Sprachmittlung) sowie Sprachbewusstheit und Sprachlernkompetenz. Über vier Kurshalbjahre hinweg werden Themenfelder wie Individuum und Gesellschaft, nationale Identität, globale Fragen und aktuelle Herausforderungen bearbeitet, um die Lernenden auf die Anforderungen der Abiturprüfung und ein Studium oder Berufsleben vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Individuum und Gesellschaft",
+      "relevante_unterthemen": [
+        "Zwischenmenschliche Beziehungen",
+        "Lebensziele und -entwürfe",
+        "Geschlechterrollen im Wandel",
+        "Gesellschaftliche und individuelle Moralvorstellungen"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Beweggründen menschlichen Handelns in sozialen Kontexten",
+        "Reflexion von Lebensentwürfen vor dem Hintergrund der eigenen Lebenswelt",
+        "Entwicklung von Lösungsansätzen für gesellschaftliche Konflikte"
+      ]
+    },
+    {
+      "thema": "Nationale und kulturelle Identität",
+      "relevante_unterthemen": [
+        "Überwindung von Vorurteilen",
+        "Multikulturelle Gesellschaft",
+        "Kunst als Ausdruck kultureller Identität",
+        "Tradition und Wandel anglofoner Gesellschaften"
+      ],
+      "kernkompetenzen": [
+        "Perspektivwechsel zur Relativierung eigener kultureller Konzepte",
+        "Analyse von Lebensbedingungen ethnischer Gruppen",
+        "Verständnis der Rolle des Englischen als Lingua franca"
+      ]
+    },
+    {
+      "thema": "Eine Welt – globale Fragen",
+      "relevante_unterthemen": [
+        "Herausforderungen und Chancen der Globalisierung",
+        "Umweltverantwortung",
+        "Wissenschaft und Technik",
+        "Bedingungen für eine gerechtere Welt"
+      ],
+      "kernkompetenzen": [
+        "Untersuchung globaler Entwicklungstendenzen in Politik, Wirtschaft und Umwelt",
+        "Kritische Stellungnahme zu Zukunftsfragen",
+        "Vernetzung von Wissen über globale Zusammenhänge"
+      ]
+    },
+    {
+      "thema": "Herausforderungen der Gegenwart",
+      "relevante_unterthemen": [
+        "Arbeitswelt und Work-Life-Balance",
+        "Rolle und Wirkung der Massenmedien",
+        "Urbanes, suburbanes und rurales Leben"
+      ],
+      "kernkompetenzen": [
+        "Kritische Auseinandersetzung mit medialer Widerspiegelung der Realität",
+        "Vergleichende Reflexion politischer und sozialer Bedingungen",
+        "Realistische Einschätzung von Handlungsmöglichkeiten in der Gesellschaft"
+      ]
+    }
+  ]
+}

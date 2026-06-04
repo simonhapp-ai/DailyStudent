@@ -1,0 +1,103 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Das Kerncurriculum für Französisch in der gymnasialen Oberstufe (Ausgabe 2024) ist kompetenzorientiert und bereitet auf die Allgemeine Hochschulreife vor. Es basiert auf den KMK-Bildungsstandards und integriert funktionale kommunikative Kompetenzen (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung) mit interkultureller kommunikativer Kompetenz, Text- und Medienkompetenz, Sprachbewusstheit und Sprachlernkompetenz. Das Fach leistet einen Beitrag zur Mehrsprachigkeit und zum Verständnis der frankophonen Welt. Die Inhalte sind in Themenfelder gegliedert, die sowohl für fortgeführte als auch für neu beginnende Fremdsprachen verbindliche Vorgaben für die Qualifikationsphase (Q1-Q4) definieren. Ein besonderer Fokus liegt auf der wissenschaftspropädeutischen Arbeit, der Reflexion über Sprache und der Fähigkeit, in einer globalisierten Welt interkulturell kompetent zu handeln.",
+  "hauptthemen": [
+    {
+      "thema": "Modes de vie en transformation",
+      "relevante_unterthemen": [
+        "Selbstfindung",
+        "Menschliche Beziehungen",
+        "Engagement (sozial, politisch, ökologisch)"
+      ],
+      "kernkompetenzen": [
+        "Lebensentwürfe kritisch hinterfragen",
+        "Eigene Positionen begründet vertreten"
+      ]
+    },
+    {
+      "thema": "Valeurs",
+      "relevante_unterthemen": [
+        "Demokratische Werte im Alltag",
+        "Realisierung von Träumen",
+        "Umgang mit Versuchungen und Herausforderungen"
+      ],
+      "kernkompetenzen": [
+        "Werte einer demokratischen Gesellschaft reflektieren",
+        "Kritischer Umgang mit Diskriminierung und Stereotypen"
+      ]
+    },
+    {
+      "thema": "La France et l’Allemagne au cœur de l’Europe",
+      "relevante_unterthemen": [
+        "Nationale und kulturelle Identitäten",
+        "Deutsch-französische Beziehungen (1870-1945 und seit 1945)",
+        "Europäische Zusammenarbeit"
+      ],
+      "kernkompetenzen": [
+        "Historische Etappen der Beziehungen einordnen",
+        "Zukunft der deutsch-französischen Zusammenarbeit entwerfen"
+      ]
+    },
+    {
+      "thema": "La France et la Francophonie",
+      "relevante_unterthemen": [
+        "Koloniales Erbe",
+        "Beziehungen zu frankophonen Ländern",
+        "Globale Kooperation im frankophonen Raum"
+      ],
+      "kernkompetenzen": [
+        "Historische Zusammenhänge analysieren",
+        "Globale Perspektiven der Frankophonie verstehen"
+      ]
+    },
+    {
+      "thema": "L’individu dans la société",
+      "relevante_unterthemen": [
+        "Lebensentwürfe im 20./21. Jahrhundert",
+        "Multikulturelle Gesellschaft (Migration/Integration)",
+        "Gesellschaftliche Werte"
+      ],
+      "kernkompetenzen": [
+        "Identität im gesellschaftlichen Kontext reflektieren",
+        "Spannungsfelder der Integration analysieren"
+      ]
+    },
+    {
+      "thema": "Le monde du travail",
+      "relevante_unterthemen": [
+        "Studien- und Berufswahl",
+        "Einstieg in die Arbeitswelt",
+        "Berufliche Herausforderungen"
+      ],
+      "kernkompetenzen": [
+        "Berufsorientierung entwickeln",
+        "Notwendigkeit lebenslangen Lernens erkennen"
+      ]
+    },
+    {
+      "thema": "Les médias",
+      "relevante_unterthemen": [
+        "Rolle der Medien in der frankophonen Welt",
+        "Chancen und Risiken der Digitalisierung",
+        "Verantwortung der Medien"
+      ],
+      "kernkompetenzen": [
+        "Medienkompetenz und kritische Informationsbewertung",
+        "Einfluss digitaler Kommunikation reflektieren"
+      ]
+    },
+    {
+      "thema": "Les enjeux de la mondialisation",
+      "relevante_unterthemen": [
+        "Umweltschutz",
+        "Nachhaltiges Wirtschaften",
+        "Kulturelle Besonderheiten im Globalisierungsprozess"
+      ],
+      "kernkompetenzen": [
+        "Globalisierungsprozesse analysieren",
+        "Nachhaltiges Handeln bewerten"
+      ]
+    }
+  ]
+}

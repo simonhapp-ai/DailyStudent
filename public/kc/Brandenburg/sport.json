@@ -1,0 +1,57 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Sport",
+  "zusammenfassung": "Der Rahmenlehrplan für das Fach Sport in der gymnasialen Oberstufe in Brandenburg zielt auf die Entwicklung von Handlungskompetenz durch einen integrativen Praxis-Theorie-Verbund ab. Das Fach leistet einen wesentlichen Beitrag zur Persönlichkeitsentwicklung, indem es Bewegungsmangel entgegenwirkt, soziale Kompetenzen wie Fairness und Kooperation fördert und ein gesundheitsbewusstes Lebensführungskonzept vermittelt. Der Unterricht basiert auf einer Mehrperspektivität (Gesundheit, Leistung, Kooperation, Körpererfahrung, Gestaltung, Wagnis). Die Schülerinnen und Schüler sollen befähigt werden, sportliche Handlungen zu reflektieren, zu analysieren und selbstständig zu organisieren. Dabei wird ein wissenschaftspropädeutisches Verständnis angestrebt, das sportpraktische Erfahrungen mit sporttheoretischen Erkenntnissen aus Disziplinen wie Biologie, Psychologie und Soziologie verknüpft. Während der Grundkurs eine breite Anwendung und Reflexion fördert, zeichnet sich der Leistungskurs durch ein höheres Abstraktionsniveau, eine stärkere wissenschaftliche Systematik und eine vertiefte Theorie-Praxis-Verbindung aus.",
+  "hauptthemen": [
+    {
+      "thema": "Bewegungsfelder",
+      "relevante_unterthemen": [
+        "Laufen, Springen, Werfen",
+        "Spiele (Mannschafts-, Rückschlag- und weitere Spiele)",
+        "Bewegen an und mit Geräten",
+        "Bewegung gymnastisch, rhythmisch und tänzerisch gestalten",
+        "Bewegen im Wasser",
+        "Mit/gegen Partner kämpfen",
+        "Fahren, Rollen, Gleiten",
+        "Fitness"
+      ],
+      "kernkompetenzen": [
+        "Steigerung und Vertiefung koordinativer und konditioneller Fähigkeiten sowie motorischer Fertigkeiten",
+        "Anwendung sportartspezifischer Techniken und taktischer Verhaltensweisen in wettkampfnahen Situationen",
+        "Selbstständige Organisation und Leitung von Sport-, Spiel- und Wettkampfsituationen",
+        "Sicherheitsbewusster Umgang mit Sportgeräten und Partnern"
+      ]
+    },
+    {
+      "thema": "Sporttheorie",
+      "relevante_unterthemen": [
+        "Wissen zur Realisierung des eigenen sportlichen Handelns (Bewegungs-, Trainingswissenschaft, Sportbiologie)",
+        "Wissen zum individuellen sportlichen Handeln im sozialen Kontext (Psychologie, Soziologie)",
+        "Wissen über den Sport im gesellschaftlichen Kontext (Soziologie, Geschichte, Wirtschaft, Politik)"
+      ],
+      "kernkompetenzen": [
+        "Verknüpfung von sportpraktischem Handeln mit sportwissenschaftlichen Erkenntnissen",
+        "Kritische Reflexion von Erscheinungsformen des Sports in der Gesellschaft",
+        "Anwendung wissenschaftlicher Methoden zur Analyse und Bewertung sportlicher Handlungen",
+        "Begründete Stellungnahme zu sporttheoretischen Fragestellungen"
+      ]
+    },
+    {
+      "thema": "Pädagogische Perspektiven und Soziales Handeln",
+      "relevante_unterthemen": [
+        "Gesundheit und Gesundheitsbewusstsein",
+        "Leistung erfahren und reflektieren",
+        "Kooperation und soziale Interaktion",
+        "Körpererfahrung und -wahrnehmung",
+        "Gestaltung und Ausdruck",
+        "Wagnis und Verantwortung"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung von Fairness, Rücksichtnahme und Integrationsfähigkeit",
+        "Konstruktiver Umgang mit Sieg und Niederlage sowie Konfliktlösung",
+        "Übernahme von Verantwortung für die eigene Gesundheit und das Wohlbefinden",
+        "Reflektierter Umgang mit Wagnis und Risiko"
+      ]
+    }
+  ]
+}

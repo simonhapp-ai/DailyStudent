@@ -1,0 +1,60 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen zielt auf die Entwicklung einer umfassenden fremdsprachlichen Handlungsfähigkeit ab, die über rein sprachliche Fertigkeiten hinausgeht. Im Zentrum steht die Integration von kommunikativer, interkultureller und methodischer Kompetenz, um Schülerinnen und Schüler auf private und berufliche Kontakte im frankophonen Raum vorzubereiten. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet und fördert vernetztes Denken sowie die Fähigkeit zum Perspektivwechsel. Die Standards orientieren sich am Gemeinsamen europäischen Referenzrahmen (GER) und fordern ein Niveau zwischen B2 und C1 für fortgesetzte Fremdsprachen. Ein besonderer Fokus liegt auf der Auseinandersetzung mit authentischen Medien, literarischen Texten und aktuellen gesellschaftlichen Entwicklungen, wobei die Schülerinnen und Schüler zu aktivem, selbstständigem Lernen befähigt werden sollen.",
+  "hauptthemen": [
+    {
+      "thema": "Universelle Themen der Menschen (La condition humaine)",
+      "relevante_unterthemen": [
+        "Generationenkonflikte",
+        "Hoffnungen und Ängste",
+        "Umwelt",
+        "Frieden und Krieg",
+        "Grenzerfahrungen"
+      ],
+      "kernkompetenzen": [
+        "Hinterfragen von Eigen- und Fremdbildern",
+        "Herstellung interkultureller Bezüge zu grundlegenden Fragen der menschlichen Existenz"
+      ]
+    },
+    {
+      "thema": "Aktuelle Lebenswirklichkeit in der französischsprachigen Welt",
+      "relevante_unterthemen": [
+        "Alltagsleben",
+        "Politische, soziale und wirtschaftliche Aspekte",
+        "Frankophonie",
+        "Deutsch-französischer Dialog",
+        "Wirtschaft und Arbeit"
+      ],
+      "kernkompetenzen": [
+        "Vergleich fremder Lebenswirklichkeiten mit der eigenen",
+        "Analyse soziokultureller Orientierungswissen über frankophone Länder"
+      ]
+    },
+    {
+      "thema": "Geschichtliche Entwicklungsprozesse",
+      "relevante_unterthemen": [
+        "Stadt und Land",
+        "Revolutionen und gesellschaftlicher Wandel",
+        "Liberté, Égalité, Fraternité"
+      ],
+      "kernkompetenzen": [
+        "Verständnis historischer Weichenstellungen für die Gegenwart",
+        "Einordnung geschichtlicher Prozesse in den Kontext der frankophonen Welt"
+      ]
+    },
+    {
+      "thema": "Mensch und Gesellschaft im Spiegel von Literatur, Kunst und Medien",
+      "relevante_unterthemen": [
+        "Literatur (Roman, Drama, Lyrik)",
+        "Film und Bildende Kunst",
+        "Medienanalyse",
+        "Realität und Imagination"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Interpretation ästhetischer Ausdrucksformen",
+        "Erkennen von Intentionen und Gestaltungsmitteln in mehrfach kodierten Texten"
+      ]
+    }
+  ]
+}

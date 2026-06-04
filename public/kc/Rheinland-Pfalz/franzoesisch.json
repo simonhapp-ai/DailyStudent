@@ -1,0 +1,63 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe in Rheinland-Pfalz (Stand 1998) zielt auf die Vermittlung einer allgemeinen Hochschulreife und Studierfähigkeit ab. Der Französischunterricht ist als integriertes System konzipiert, das Fachkompetenz (Sprache und Inhalte), Methodenkompetenz und Sozialkompetenz verbindet. Im Zentrum steht die Befähigung zur Kommunikation in einer globalisierten Welt, wobei Französisch als Partner- und Weltsprache fungiert. Der Unterricht ist themenorientiert und verzichtet auf eine starre zeitliche Abfolge, um Lehrkräften mehr Gestaltungsspielraum zu geben. Die Lernbereiche umfassen Sprache (Rezeption und Produktion), literarische Inhalte, landeskundliche/kulturübergreifende Themen sowie Französisch in Alltag, Studium und Beruf. Ein besonderer Fokus liegt auf der Handlungs- und Produktionsorientierung, der Förderung interkultureller Kompetenz sowie der Vorbereitung auf lebenslanges Lernen. Fachübergreifendes Arbeiten wird als essenziell für vernetztes Denken angesehen und ist fest im Lehrplan verankert.",
+  "hauptthemen": [
+    {
+      "thema": "Sprache (Rezeption und Produktion)",
+      "relevante_unterthemen": [
+        "Hörverstehen und Leseverstehen",
+        "Mündlicher Ausdruck",
+        "Schriftlicher Ausdruck",
+        "Sinngemäßes Übertragen, Übersetzen und Dolmetschen"
+      ],
+      "kernkompetenzen": [
+        "Sichere Anwendung von Strategien zur Erschließung authentischer Texte",
+        "Differenzierte mündliche und schriftliche Kommunikationsfähigkeit in Alltag und Beruf",
+        "Beherrschung von Techniken zur Sprachproduktion und -vermittlung"
+      ]
+    },
+    {
+      "thema": "Literarische Inhalte",
+      "relevante_unterthemen": [
+        "Individuelle Identität (Qui suis-je?)",
+        "Das Verhältnis zum Anderen (Le regard de l'autre)",
+        "Deutsch-französische Beziehungen",
+        "Ganzschriften und zeitgenössische Literatur"
+      ],
+      "kernkompetenzen": [
+        "Kritische Analyse und Interpretation literarischer Texte",
+        "Kreativer und produktiver Umgang mit Literatur",
+        "Reflexion über existentielle Themen und Wertvorstellungen"
+      ]
+    },
+    {
+      "thema": "Landeskundliche und kulturübergreifende Inhalte",
+      "relevante_unterthemen": [
+        "Kulturelle Vielfalt und Zivilisation",
+        "Natur, Technik und globale Verantwortung",
+        "Politische Strukturen (Cinquième République)",
+        "Frankophonie und Kolonialgeschichte"
+      ],
+      "kernkompetenzen": [
+        "Interkulturelle Kompetenz und Verständnis für fremde Denkmuster",
+        "Problemorientierte Auseinandersetzung mit gesellschaftlichen Gegenwartsfragen",
+        "Fähigkeit zur Vermittlung zwischen Kulturen"
+      ]
+    },
+    {
+      "thema": "Französisch in Alltag, Studium und Beruf",
+      "relevante_unterthemen": [
+        "Begegnungssituationen und Kommunikation",
+        "Berufsvorbereitung (Bewerbung, Praktika)",
+        "Fachsprachliche Grundlagen für Studium und Beruf",
+        "Internationale Kooperation"
+      ],
+      "kernkompetenzen": [
+        "Bewältigung authentischer Kommunikationssituationen",
+        "Anwendung von Techniken zur Informationsbeschaffung und -darstellung",
+        "Sprachliche Handlungsfähigkeit in beruflichen Kontexten"
+      ]
+    }
+  ]
+}

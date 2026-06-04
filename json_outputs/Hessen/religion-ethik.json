@@ -1,0 +1,90 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Evangelische Religion in der gymnasialen Oberstufe zielt auf eine wissenschaftspropädeutische Bildung, die Schülerinnen und Schüler befähigt, sich mit religiösen und ethischen Fragen in einer pluralen Gesellschaft auseinanderzusetzen. Der Unterricht ist als dialogisches Angebot konzipiert, das an die Lebenswelt der Lernenden anknüpft und sie zur Selbstreflexion sowie zur Entwicklung einer eigenen Identität anregt. Zentrale Bildungsziele sind die Wahrnehmung und Deutung religiöser Phänomene, die Urteilsfähigkeit in ethischen Konflikten, die Dialogfähigkeit in einer multireligiösen Welt sowie die Gestaltungskompetenz im Umgang mit religiösen Ausdrucksformen. Das Curriculum ist in sechs Themenbereiche gegliedert (Menschen und Religion, Deutungen der Wirklichkeit, Jesus Christus, Gott, Christliche Menschenbilder und Ethik, Kirche und Christsein), die über die Einführungs- und Qualifikationsphase hinweg systematisch vertieft werden. Dabei wird besonderer Wert auf die Verschränkung von biblisch-theologischem Wissen mit aktuellen gesellschaftlichen Herausforderungen wie Digitalisierung, Bioethik und globaler Gerechtigkeit gelegt.",
+  "hauptthemen": [
+    {
+      "thema": "Menschen und Religion",
+      "relevante_unterthemen": [
+        "Religiöse Sozialisation",
+        "Religionsbegriffe",
+        "Interreligiöser Dialog",
+        "Religiöse Praxis",
+        "Religiös motivierte Konflikte"
+      ],
+      "kernkompetenzen": [
+        "Religiöse Spuren in der Lebenswelt wahrnehmen und beschreiben",
+        "Einen eigenen begründeten Standpunkt zu religiösen Fragen im Kontext der Pluralität einnehmen"
+      ]
+    },
+    {
+      "thema": "Deutungen der Wirklichkeit und die Bibel",
+      "relevante_unterthemen": [
+        "Schöpfung und Evolution",
+        "Hermeneutik biblischer Texte",
+        "Wahrheitsbegriffe",
+        "Lektüre einer biblischen Ganzschrift"
+      ],
+      "kernkompetenzen": [
+        "Biblische Texte methodisch reflektiert auslegen",
+        "Unterschiedliche Menschenbilder in Theologie und Naturwissenschaften beschreiben"
+      ]
+    },
+    {
+      "thema": "Jesus Christus",
+      "relevante_unterthemen": [
+        "Verkündigung des Reiches Gottes",
+        "Kreuz und Auferstehung",
+        "Jesus im jüdischen Kontext",
+        "Christologische Deutungen",
+        "Jesuanische Ethik"
+      ],
+      "kernkompetenzen": [
+        "Biblische Texte zu Leben und Wirken Jesu analysieren",
+        "Den Anspruch Jesu für das eigene Handeln reflektieren"
+      ]
+    },
+    {
+      "thema": "Gott",
+      "relevante_unterthemen": [
+        "Gottesvorstellungen in Bibel und Tradition",
+        "Religionskritik",
+        "Theodizeefrage",
+        "Trinität",
+        "Atheismus"
+      ],
+      "kernkompetenzen": [
+        "Die Frage nach Gott als existentielle Frage verstehen",
+        "Sich urteilend mit religionskritischen und atheistischen Positionen auseinandersetzen"
+      ]
+    },
+    {
+      "thema": "Christliche Menschenbilder und Ethik",
+      "relevante_unterthemen": [
+        "Geschöpflichkeit und Gottebenbildlichkeit",
+        "Medizin- und Bioethik",
+        "Frieden und Gerechtigkeit",
+        "Schöpfungsethik",
+        "Ethische Urteilsbildung"
+      ],
+      "kernkompetenzen": [
+        "Schritte der ethischen Urteilsbildung beispielhaft anwenden",
+        "Die Menschenwürde theologisch begründen und in aktuelle Konflikte einbringen"
+      ]
+    },
+    {
+      "thema": "Kirche und Christsein in der globalen Welt",
+      "relevante_unterthemen": [
+        "Kirche und Reich Gottes",
+        "Kirche und Macht",
+        "Verhältnis von Kirche und Staat",
+        "Spiritualität",
+        "Zukunftsfähigkeit der Kirche"
+      ],
+      "kernkompetenzen": [
+        "Herausforderungen der Kirche in Geschichte und Gegenwart beurteilen",
+        "Kirche auf ihre Zukunftsfähigkeit überprüfen"
+      ]
+    }
+  ]
+}

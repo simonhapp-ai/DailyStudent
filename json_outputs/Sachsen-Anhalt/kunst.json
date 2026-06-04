@@ -1,0 +1,63 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Fachlehrplan Kunst für das Gymnasium in Sachsen-Anhalt zielt auf eine ästhetische Grundbildung ab, die die ganzheitliche Persönlichkeitsentwicklung und Identitätsfindung der Lernenden fördert. Im Zentrum steht die Entwicklung von Bildkompetenz durch die Verzahnung von Wahrnehmung, Gestaltung und Reflexion. Schülerinnen und Schüler lernen, Bilder als komplexe Kommunikationsmittel in einer medial geprägten Welt zu verstehen, zu analysieren und selbstständig zu produzieren. Der Lehrplan integriert dabei aktuelle Schwerpunkte wie Nachhaltigkeit, digitale Bildung und die Stärkung bildungssprachlicher Kompetenzen. Über die Schuljahrgänge hinweg entwickeln die Lernenden vom spielerischen Umgang mit Materialien in der Unterstufe bis hin zur wissenschaftspropädeutischen Arbeitsweise in der Qualifikationsphase ein tiefgreifendes Verständnis für Kunst, Design und Architektur. Ziel ist es, die Lernenden zu einer aktiven, kritischen und kreativen Teilhabe am kulturellen Leben zu befähigen und sie auf die Anforderungen der Hochschulreife sowie auf eine berufs- und studienorientierte Zukunft vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Wahrnehmen und Empfinden",
+      "relevante_unterthemen": [
+        "Sinnliche Wahrnehmung",
+        "Bildanalyse",
+        "Ästhetische Erfahrung",
+        "Kulturelle Offenheit"
+      ],
+      "kernkompetenzen": [
+        "Sinnlich erfahrbare Sachverhalte in der Realität wahrnehmen und beschreiben",
+        "Bild- und Wirklichkeitseindrücke erfassen und Assoziationen entwickeln",
+        "Spezifika von Bildsorten und Bildmedien in Alltagsästhetik und Kunst unterscheiden"
+      ]
+    },
+    {
+      "thema": "Entwickeln und Gestalten",
+      "relevante_unterthemen": [
+        "Bildproduktion",
+        "Gestaltungsmittel",
+        "Analoge und digitale Werkzeuge",
+        "Kreative Problemlösung"
+      ],
+      "kernkompetenzen": [
+        "Individuelle ästhetische Bildkonzepte selbstständig planen und entwickeln",
+        "Umfangreiches Repertoire an Gestaltungsmitteln und Techniken bewusst anwenden",
+        "Verantwortungsbewusstes Handeln unter dem Gedanken der Nachhaltigkeit planen"
+      ]
+    },
+    {
+      "thema": "Reflektieren und Präsentieren",
+      "relevante_unterthemen": [
+        "Bildinterpretation",
+        "Kunstgeschichte",
+        "Medienkritik",
+        "Präsentationsformen"
+      ],
+      "kernkompetenzen": [
+        "Bildwelten im individuellen, zeitlichen und kulturellen Kontext selbstständig reflektieren",
+        "Sachbezogene Gespräche über eigene und fremde Bilder führen",
+        "Arbeitsprozesse dokumentieren und in adäquater Form präsentieren"
+      ]
+    },
+    {
+      "thema": "Bildung in der digitalen Welt",
+      "relevante_unterthemen": [
+        "Digitale Bildbearbeitung",
+        "Medienreflexion",
+        "Rechtliche Aspekte",
+        "Kollaborative Arbeitsformen"
+      ],
+      "kernkompetenzen": [
+        "Digitale Werkzeuge zur Informationsbeschaffung und Gestaltung nutzen",
+        "Manipulationspotenziale digitaler Bilder kritisch hinterfragen",
+        "Sicheres und reflektiertes Agieren in medial geprägten Umgebungen"
+      ]
+    }
+  ]
+}

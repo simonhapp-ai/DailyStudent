@@ -1,0 +1,61 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Lehrplan für das Fach Erdkunde in Rheinland-Pfalz ist Teil eines gesellschaftswissenschaftlichen Fächerverbunds (Erdkunde, Geschichte, Sozialkunde). Er verfolgt das Ziel, Schülerinnen und Schüler zu mündigen Bürgern zu erziehen, die in der Lage sind, komplexe Mensch-Umwelt-Beziehungen zu verstehen und verantwortungsvoll zu handeln. Das zentrale Leitbild ist die Bildung für nachhaltige Entwicklung (BNE) auf Basis der Agenda 2030. Der Lehrplan ist kompetenzorientiert und strukturiert sich in 17 Lernfelder, die über die Sekundarstufe I hinweg kumulativ aufgebaut sind. Dabei werden vier Leitkompetenzen (Orientierungs-, Handlungs-, Gestaltungs- und Demokratiekompetenz) durch fachspezifische Kompetenzbereiche (Fachwissen, Räumliche Orientierung, Erkenntnisgewinnung/Methoden, Kommunikation, Beurteilung/Bewertung) konkretisiert. Ein besonderer Fokus liegt auf der Verzahnung von inhaltlicher Progression und Kompetenzaufbau, wobei die Räumliche Orientierungskompetenz als durchgängiges Prinzip fungiert. Der Lehrplan fordert eine Öffnung von Schule, fächerübergreifendes Arbeiten (insb. Projekte zu Rheinland-Pfalz, Europa, Eine Welt) und die Durchführung eines jährlichen Demokratietages.",
+  "hauptthemen": [
+    {
+      "thema": "Orientierung und Lebensräume",
+      "relevante_unterthemen": [
+        "Orientierung in Rheinland-Pfalz und Deutschland",
+        "Leben in Extremräumen",
+        "Städtische Lebenswelten"
+      ],
+      "kernkompetenzen": [
+        "Verortung der eigenen Lebenswelt in übergeordneten Bezugsräumen",
+        "Untersuchung von Lage, Ausstattungspotenzial und Verletzbarkeit von Lebensräumen",
+        "Analyse von Ursachen und Zusammenhängen von Migration und Verstädterung"
+      ]
+    },
+    {
+      "thema": "Mensch-Umwelt-Systeme und Nachhaltigkeit",
+      "relevante_unterthemen": [
+        "Landwirtschaft",
+        "Geofaktoren als Lebensgrundlage",
+        "Grenzen der Raumnutzung",
+        "Welternährung zwischen Überfluss und Mangel"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Wechselwirkungen zwischen Natur- und Humanfaktoren",
+        "Beurteilung von Eingriffen des Menschen unter Nachhaltigkeitsaspekten",
+        "Entwicklung von Vorschlägen für eine nachhaltigere Nutzung von Ressourcen"
+      ]
+    },
+    {
+      "thema": "Wirtschaft und Globalisierung",
+      "relevante_unterthemen": [
+        "Tourismus und Erholungsräume",
+        "Rohstoffe und Produktion",
+        "Dienstleistungen",
+        "Globalisierte Lebenswelten",
+        "Länder und ihre Entwicklungsmöglichkeiten"
+      ],
+      "kernkompetenzen": [
+        "Untersuchung der Bedeutung von Rohstoffen und deren Verarbeitung",
+        "Bewertung von Auswirkungen touristischer und industrieller Aktivitäten auf Umwelt und Gesellschaft",
+        "Analyse von Raumstrukturen und Entwicklungspotenzialen im globalen Kontext"
+      ]
+    },
+    {
+      "thema": "Raumplanung und politische Dimension",
+      "relevante_unterthemen": [
+        "Möglichkeiten der Raumplanung",
+        "Europa – Lebenswelten, Wirtschaftsräume, Migration"
+      ],
+      "kernkompetenzen": [
+        "Erörterung von Handlungsspielräumen bei Planungsvorhaben",
+        "Reflexion der Bedeutung Europas für die Menschen",
+        "Bewertung von Planungsvorhaben hinsichtlich ihrer Nachhaltigkeit"
+      ]
+    }
+  ]
+}

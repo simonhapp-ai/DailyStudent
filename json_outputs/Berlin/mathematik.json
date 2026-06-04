@@ -1,0 +1,66 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Berlin (in Kooperation mit Brandenburg) zielt darauf ab, mathematische Bildung als Fähigkeit zu etablieren, mathematische Fragestellungen im Alltag zu erkennen, Wissen funktional und flexibel einzusetzen sowie begründete Urteile abzugeben. Der Kompetenzerwerb gliedert sich in sechs allgemeine mathematische Kompetenzen (Argumentieren, Problemlösen, Modellieren, Darstellungen verwenden, mit symbolischen/technischen Elementen umgehen, Kommunizieren) und fünf inhaltsbezogene Leitideen (Algorithmus und Zahl, Messen, Raum und Form, Funktionaler Zusammenhang, Daten und Zufall). Die Qualifikationsphase ist in vier Kurshalbjahre unterteilt, die die Sachgebiete Analysis, Lineare Algebra, Analytische Geometrie und Stochastik abdecken. Ein besonderer Fokus liegt auf der Vernetzung dieser Inhalte, der Integration digitaler Werkzeuge bei gleichzeitiger Beherrschung grundlegender Verfahren ohne Hilfsmittel sowie der Vorbereitung auf ein wissenschaftspropädeutisches Arbeiten für ein mögliches Hochschulstudium.",
+  "hauptthemen": [
+    {
+      "thema": "Analysis",
+      "relevante_unterthemen": [
+        "Funktionsklassen (ganzrational, exponentiell, trigonometrisch, Logarithmus, Wurzel)",
+        "Differentialrechnung (Ableitungsregeln, Änderungsraten, Extrem- und Wendepunkte)",
+        "Integralrechnung (bestimmtes Integral, Flächeninhalte, Rekonstruktion von Beständen)",
+        "Funktionsscharen und Ortskurven (Leistungskurs)"
+      ],
+      "kernkompetenzen": [
+        "Ableitungen als lokale Änderungsraten deuten und berechnen",
+        "Funktionsgraphen analysieren und charakteristische Punkte bestimmen",
+        "Integrale zur Flächen- und Volumenberechnung anwenden",
+        "Zusammenhang zwischen Ableiten und Integrieren (Hauptsatz) verstehen"
+      ]
+    },
+    {
+      "thema": "Lineare Algebra",
+      "relevante_unterthemen": [
+        "Lineare Gleichungssysteme (LGS)",
+        "Gauß-Verfahren",
+        "Vektorrechnung (Grundoperationen, lineare Abhängigkeit)",
+        "Skalarprodukt"
+      ],
+      "kernkompetenzen": [
+        "LGS lösen und Lösbarkeit interpretieren",
+        "Geometrische Sachverhalte in Vektoren übersetzen",
+        "Vektoren zur Beschreibung von Objekten im Raum nutzen"
+      ]
+    },
+    {
+      "thema": "Analytische Geometrie",
+      "relevante_unterthemen": [
+        "Geraden und Ebenen im Raum",
+        "Lagebeziehungen (Punkt, Gerade, Ebene)",
+        "Abstandsberechnungen",
+        "Winkelbestimmungen"
+      ],
+      "kernkompetenzen": [
+        "Geraden und Ebenen in verschiedenen Formen (Parameter, Koordinaten, Normalen) darstellen",
+        "Schnittmengen von geometrischen Objekten berechnen",
+        "Abstände zwischen Punkten, Geraden und Ebenen bestimmen"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Beschreibende Statistik",
+        "Wahrscheinlichkeitsrechnung (Baumdiagramme, Vierfeldertafeln)",
+        "Binomialverteilung",
+        "Hypothesentests (Leistungskurs)",
+        "Normalverteilung (Leistungskurs)"
+      ],
+      "kernkompetenzen": [
+        "Zufallsexperimente modellieren und Wahrscheinlichkeiten berechnen",
+        "Binomialverteilte Zufallsgrößen analysieren",
+        "Statistische Erhebungen planen und kritisch bewerten",
+        "Hypothesentests durchführen und interpretieren (Leistungskurs)"
+      ]
+    }
+  ]
+}

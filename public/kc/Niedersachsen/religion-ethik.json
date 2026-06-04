@@ -1,0 +1,79 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Evangelische Religion in der gymnasialen Oberstufe in Niedersachsen zielt auf eine differenzierte religiöse Bildung ab, die als integraler Bestandteil der allgemeinen Bildung verstanden wird. Der Unterricht soll Schülerinnen und Schülern helfen, die religiöse Dimension des Lebens zu erschließen, existenzielle Sinn- und Wertfragen zu reflektieren und sich in einer pluralistischen Gesellschaft zu orientieren. Dabei steht die Auseinandersetzung mit dem christlichen Glauben in evangelischer Ausprägung im Zentrum, wobei gleichzeitig interreligiöses und interkulturelles Lernen gefördert wird. Das Fach leistet einen Beitrag zur allgemeinen Studierfähigkeit durch die Vermittlung hermeneutischer Kompetenzen, wissenschaftspropädeutisches Arbeiten und die Einübung rationaler Argumentation. Die Kompetenzorientierung gliedert sich in prozessbezogene Kompetenzen (Wahrnehmung, Deutung, Urteil, Dialog, Gestaltung) und inhaltsbezogene Kompetenzbereiche (Mensch, Gott, Jesus Christus, Ethik, Kirche, Religionen). Der Unterricht ist kumulativ angelegt, verbindet biblische Basistexte mit aktuellen gesellschaftlichen Herausforderungen und zielt auf die Befähigung zu verantwortlichem Handeln in Freiheit.",
+  "hauptthemen": [
+    {
+      "thema": "Mensch",
+      "relevante_unterthemen": [
+        "Der Mensch als Geschöpf und Ebenbild Gottes",
+        "Sünde und Rechtfertigung",
+        "Freiheit und Verantwortung"
+      ],
+      "kernkompetenzen": [
+        "Biblische Menschenbilder mit anderen anthropologischen Entwürfen vergleichen",
+        "Sünde und Rechtfertigung theologisch deuten und in Beziehung zur eigenen Freiheit setzen"
+      ]
+    },
+    {
+      "thema": "Gott",
+      "relevante_unterthemen": [
+        "Rede von Gott und Unverfügbarkeit",
+        "Gott in Beziehung (Theodizeefrage)",
+        "Religionskritik"
+      ],
+      "kernkompetenzen": [
+        "Spannung zwischen der Rede von Gott und seiner Unverfügbarkeit erklären",
+        "Theologische Antwortversuche zur Theodizeefrage und Religionskritik beurteilen"
+      ]
+    },
+    {
+      "thema": "Jesus Christus",
+      "relevante_unterthemen": [
+        "Jesus Christus als Grund des Glaubens",
+        "Wirken und Botschaft Jesu (Reich Gottes)",
+        "Kreuz und Auferstehung"
+      ],
+      "kernkompetenzen": [
+        "Bekenntnis zu Jesus Christus als Ausdruck christlichen Gottesverständnisses erklären",
+        "Deutungen von Kreuz und Auferstehung methodisch reflektiert analysieren"
+      ]
+    },
+    {
+      "thema": "Ethik",
+      "relevante_unterthemen": [
+        "Grundfragen christlicher Ethik",
+        "Ethische Urteilsbildung",
+        "Hoffnung und Handeln"
+      ],
+      "kernkompetenzen": [
+        "Biblisch-theologische Grundlagen christlicher Ethik darstellen",
+        "Modelle ethischer Urteilsbildung auf aktuelle Konflikte anwenden"
+      ]
+    },
+    {
+      "thema": "Kirche und Kirchen",
+      "relevante_unterthemen": [
+        "Kirche als Gemeinschaft der Glaubenden",
+        "Kirche und Staat",
+        "Zukunftsfähigkeit der Kirche"
+      ],
+      "kernkompetenzen": [
+        "Grundlegende Aspekte des evangelischen Kirchenverständnisses entfalten",
+        "Auftrag der Kirche zur gesellschaftlichen Mitverantwortung erörtern"
+      ]
+    },
+    {
+      "thema": "Religion und Religionen",
+      "relevante_unterthemen": [
+        "Verhältnis Christentum und Judentum",
+        "Interreligiöser Dialog",
+        "Monotheismus im Vergleich"
+      ],
+      "kernkompetenzen": [
+        "Besonderes Verhältnis zwischen Christentum und Judentum beschreiben",
+        "Möglichkeiten und Grenzen der interreligiösen Verständigung kriteriengeleitet bewerten"
+      ]
+    }
+  ]
+}

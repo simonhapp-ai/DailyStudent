@@ -1,0 +1,77 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Physik",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Berlin (Physik) zielt auf die Entwicklung einer fundierten naturwissenschaftlichen Kompetenz ab, die über reines Fachwissen hinausgeht. Er gliedert sich in vier Kompetenzbereiche: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Diese werden durch vier Basiskonzepte (Erhaltung und Gleichgewicht, Superposition und Komponenten, Mathematisieren und Vorhersagen, Zufall und Determiniertheit) vernetzt. Die Einführungsphase dient der Festigung und Vorbereitung, während die Qualifikationsphase (Q1-Q4) inhaltlich vertiefte Themenfelder wie Felder, Induktion, Schwingungen, Wellen, Quantenobjekte und Atome behandelt. Ein besonderer Fokus liegt auf dem wissenschaftspropädeutischen Arbeiten, der Reflexion über Modelle und deren Grenzen sowie der Anwendung mathematischer Methoden zur Beschreibung physikalischer Phänomene. Der Lehrplan fördert zudem die Fähigkeit, gesellschaftlich relevante Themen (z. B. Energieversorgung, Klimawandel, digitale Medien) physikalisch fundiert zu bewerten.",
+  "hauptthemen": [
+    {
+      "thema": "Mechanik (Einführungsphase)",
+      "relevante_unterthemen": [
+        "Wurfbewegungen",
+        "Kreisbewegungen",
+        "Impuls und Impulserhaltung",
+        "Energie"
+      ],
+      "kernkompetenzen": [
+        "Anwendung physikalischer Bewegungsgesetze auf reale Probleme",
+        "Durchführung von Energiebilanzen und Impulsanalysen",
+        "Mathematische Modellierung von Bewegungsabläufen"
+      ]
+    },
+    {
+      "thema": "Felder",
+      "relevante_unterthemen": [
+        "Gravitationsfeld",
+        "Elektrisches Feld",
+        "Magnetisches Feld",
+        "Bewegung geladener Teilchen in Feldern"
+      ],
+      "kernkompetenzen": [
+        "Beschreibung von Feldphänomenen mittels Feldlinienmodellen",
+        "Berechnung von Kräften und Energien in Feldern",
+        "Analyse der Bewegung geladener Teilchen in elektrischen und magnetischen Feldern"
+      ]
+    },
+    {
+      "thema": "Elektromagnetische Induktion",
+      "relevante_unterthemen": [
+        "Induktionsgesetz",
+        "Selbstinduktion",
+        "Wechselspannung"
+      ],
+      "kernkompetenzen": [
+        "Anwendung des Induktionsgesetzes zur Erklärung technischer Anwendungen",
+        "Verständnis von Selbstinduktionsvorgängen",
+        "Mathematische Beschreibung von Wechselspannungen"
+      ]
+    },
+    {
+      "thema": "Schwingungen und Wellen",
+      "relevante_unterthemen": [
+        "Mechanische Schwingungen",
+        "Elektromagnetische Schwingkreise",
+        "Wellenphänomene",
+        "Wellenoptik"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Schwingungssystemen und Resonanzphänomenen",
+        "Beschreibung von Wellenausbreitung und Interferenz",
+        "Anwendung der Wellenoptik zur Bestimmung physikalischer Größen"
+      ]
+    },
+    {
+      "thema": "Quantenphysik und Atomphysik",
+      "relevante_unterthemen": [
+        "Quantenobjekte",
+        "Fotoeffekt",
+        "Materiewellen",
+        "Atombau",
+        "Röntgenstrahlung"
+      ],
+      "kernkompetenzen": [
+        "Reflexion über den Übergang von klassischer zu moderner Physik",
+        "Interpretation von Quantenphänomenen mittels Wahrscheinlichkeitsaussagen",
+        "Verständnis der diskreten Struktur von Energieniveaus in Atomen"
+      ]
+    }
+  ]
+}

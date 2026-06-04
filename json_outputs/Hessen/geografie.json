@@ -1,0 +1,77 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Geografie",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen zielt auf die Entwicklung einer raumbezogenen Handlungskompetenz ab. Die Lernenden sollen befähigt werden, die Erde als komplexes Mensch-Umwelt-System zu verstehen und als mündige Bürger zukunftsfähige, nachhaltige Entscheidungen zu treffen. Das Curriculum basiert auf drei Basiskonzepten: dem Mensch-Umwelt-System, den vier Raumkonzepten (Realraum, Beziehungsraum, Wahrnehmungsraum, Konstruktionsraum) und dem Leitbild der nachhaltigen Entwicklung (4+2 Modell: Ökologie, Ökonomie, Soziales, Politik sowie Gerechtigkeit weltweit und zwischen Generationen). Der Unterricht ist kompetenzorientiert und wissenschaftspropädeutisch angelegt, wobei die Schüler lernen, raumbezogene Probleme zu analysieren, zu beurteilen und zu bewerten. Dabei sind das Überwältigungsverbot und das Kontroversitätsgebot des Beutelsbacher Konsenses strikt zu beachten. Die Qualifikationsphase vertieft diese Aspekte durch thematische Schwerpunkte wie Rohstoffnutzung, Siedlungsentwicklung, Globalisierung und nachhaltige Zukunftsgestaltung, wobei eine enge Verzahnung von fachlichem Wissen und überfachlichen Kompetenzen (personale, soziale, methodische und kommunikative Kompetenzen) angestrebt wird.",
+  "hauptthemen": [
+    {
+      "thema": "Mensch-Umwelt-System Erde (E-Phase)",
+      "relevante_unterthemen": [
+        "Tourismus in Europa",
+        "Mensch-Umwelt-Beziehungen in den Tropen",
+        "Syndromkonzept",
+        "Klimawandel und glokale Herausforderungen",
+        "Naturrisiken endogener Prozesse"
+      ],
+      "kernkompetenzen": [
+        "Analyse komplexer Wirkungszusammenhänge im Mensch-Umwelt-System",
+        "Anwendung des Syndromansatzes zur Erfassung globaler Herausforderungen",
+        "Beurteilung von Zielkonflikten zwischen ökonomischen, ökologischen und sozialen Aspekten"
+      ]
+    },
+    {
+      "thema": "Nutzung von Rohstoffen (Q1)",
+      "relevante_unterthemen": [
+        "Erschließung und Abbau von Rohstoffen",
+        "Globale Ressourcenverknappung",
+        "Zukunftsfähige Energieversorgung",
+        "Wasser als umkämpfter Rohstoff"
+      ],
+      "kernkompetenzen": [
+        "Bewertung von Rohstoffstrategien anhand des Nachhaltigkeitsleitbildes",
+        "Analyse globaler Verflechtungen von Rohstoffgewinnung und -nutzung",
+        "Erörterung von Konflikten um knappe Ressourcen"
+      ]
+    },
+    {
+      "thema": "Nachhaltige Siedlungsentwicklung und Raumordnung (Q2)",
+      "relevante_unterthemen": [
+        "Raumentwicklung in Deutschland und Europa",
+        "Gentrifizierung und Segregation",
+        "Ländlicher Raum",
+        "Metropolisierung und Stadtmodelle"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Stadtentwicklungsprozessen und Raumordnungsstrategien",
+        "Beurteilung von Maßnahmen zur nachhaltigen Stadtentwicklung",
+        "Verständnis des europäischen Integrationsprozesses durch Raumplanung"
+      ]
+    },
+    {
+      "thema": "Globalisierte Wirtschaft und nachhaltige Entwicklung (Q3)",
+      "relevante_unterthemen": [
+        "Entwicklungszusammenarbeit und Agenda 2030",
+        "Strukturwandel der Weltwirtschaft",
+        "Landwirtschaft in Industrieländern",
+        "Industrie 4.0 und altindustrialisiertes Erbe"
+      ],
+      "kernkompetenzen": [
+        "Bewertung von Entwicklungsstrategien und globalen Disparitäten",
+        "Analyse der Auswirkungen ökonomischer Globalisierungsprozesse",
+        "Positionierung zu Fragen der weltweiten Gerechtigkeit"
+      ]
+    },
+    {
+      "thema": "Nachhaltige Zukunftsgestaltung (Q4)",
+      "relevante_unterthemen": [
+        "Nachhaltigkeit in der Europäischen Union",
+        "Bevölkerung und Migration",
+        "Nachhaltige Nahrungsmittelproduktion"
+      ],
+      "kernkompetenzen": [
+        "Reflexion der eigenen Verantwortung für globale Entwicklungen",
+        "Analyse von Migrationsursachen und -folgen",
+        "Bewertung von Strategien zur Sicherung der Welternährung"
+      ]
+    }
+  ]
+}

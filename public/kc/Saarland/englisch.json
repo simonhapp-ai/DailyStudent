@@ -1,0 +1,106 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe (Hauptphase) im Saarland ist kompetenzorientiert und basiert auf den nationalen Bildungsstandards für die fortgeführte Fremdsprache. Ziel ist die Entwicklung individueller Mehrsprachigkeit und plurikultureller Diskurskompetenz, um den Anforderungen einer globalisierten Welt und internationaler Wissenschafts- und Berufskontexte gerecht zu werden. Der Unterricht fördert die funktionale kommunikative Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Sprachmittlung) sowie transversale Kompetenzen wie Sprachbewusstheit, Sprachlernkompetenz, interkulturelle kommunikative Kompetenz und Text- und Medienkompetenz. Ein besonderer Fokus liegt auf der kritischen Auseinandersetzung mit authentischen Texten, der Nutzung digitaler Medien (Critical Media Literacy) und der Bildung für nachhaltige Entwicklung (SDGs). Die Leistungsbewertung erfolgt integrativ und differenziert zwischen inhaltlicher und sprachlicher Leistung, wobei die sprachliche Korrektheit und Adäquatheit einen hohen Stellenwert einnehmen.",
+  "hauptthemen": [
+    {
+      "thema": "The Individual and Society",
+      "relevante_unterthemen": [
+        "Questions of identity (ambitions, obstacles, conformity vs. individualism)",
+        "Diversity (ethnic, cultural, social, gender, sexual orientation)",
+        "Participation and current social issues (inequality, crime, urbanization)"
+      ],
+      "kernkompetenzen": [
+        "Reflexion über individuelle und kollektive Identität",
+        "Analyse von gesellschaftlichen Teilhabemöglichkeiten und Diversität"
+      ]
+    },
+    {
+      "thema": "The UK: Politics, culture, society",
+      "relevante_unterthemen": [
+        "Empire and Commonwealth",
+        "Postcolonial Britain and multiculturalism",
+        "Political life and Britain's role in the world",
+        "National and regional identities"
+      ],
+      "kernkompetenzen": [
+        "Verständnis historischer und politischer Entwicklungen Großbritanniens",
+        "Analyse aktueller gesellschaftlicher Herausforderungen und Identitätsfragen"
+      ]
+    },
+    {
+      "thema": "The USA: Politics, culture, society",
+      "relevante_unterthemen": [
+        "American ideals vs. realities (American Dream vs. Nightmare)",
+        "Immigration and ethnic diversity",
+        "Political life and partisan politics",
+        "Culture wars and societal division"
+      ],
+      "kernkompetenzen": [
+        "Kritische Auseinandersetzung mit amerikanischen Grundwerten",
+        "Analyse der gesellschaftlichen Spaltung und politischer Diskurse"
+      ]
+    },
+    {
+      "thema": "The Media",
+      "relevante_unterthemen": [
+        "Changing media landscape (analogue to digital)",
+        "Surveillance and privacy",
+        "Advertising and influencing",
+        "Media literacy (fake news, filter bubbles, ethics)"
+      ],
+      "kernkompetenzen": [
+        "Entwicklung von Medienkompetenz und kritischem Medienhandeln",
+        "Reflexion über den Einfluss von Medien auf Individuum und Gesellschaft"
+      ]
+    },
+    {
+      "thema": "Global chances and challenges",
+      "relevante_unterthemen": [
+        "Sustainability (social, environmental, economic)",
+        "Global trade and consumerism",
+        "International relations and migration"
+      ],
+      "kernkompetenzen": [
+        "Bewertung globaler Entwicklungen im Kontext nachhaltiger Entwicklung",
+        "Analyse internationaler Konflikt- und Kooperationsfelder"
+      ]
+    },
+    {
+      "thema": "Science and technology",
+      "relevante_unterthemen": [
+        "Ethical implications of AI, robotics, and biotechnology",
+        "Visions of the future (utopia vs. dystopia)",
+        "Impact of scientific progress on society"
+      ],
+      "kernkompetenzen": [
+        "Diskussion ethischer Implikationen wissenschaftlichen Fortschritts",
+        "Analyse dystopischer Fiktion als Spiegel gesellschaftlicher Ängste"
+      ]
+    },
+    {
+      "thema": "Further anglophone cultures",
+      "relevante_unterthemen": [
+        "Indigenous peoples and ethnic minorities",
+        "Legacy of colonial rule",
+        "Identity and socio-economic developments in selected countries"
+      ],
+      "kernkompetenzen": [
+        "Transkulturelles Lernen durch exemplarische Analyse anglophoner Kulturen",
+        "Einordnung postkolonialer Erfahrungen und hybrider Identitäten"
+      ]
+    },
+    {
+      "thema": "The world of work",
+      "relevante_unterthemen": [
+        "Future of work (automation, AI, remote work)",
+        "Inequalities in the workplace",
+        "English as a lingua franca and global job market"
+      ],
+      "kernkompetenzen": [
+        "Reflexion über Veränderungen der Arbeitswelt",
+        "Vorbereitung auf berufliche Kommunikation in internationalen Kontexten"
+      ]
+    }
+  ]
+}

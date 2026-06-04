@@ -59,7 +59,7 @@ function buildNoteRef(note: GeneratedSmartNote): string {
 
 export function BlurtingScreen() {
   const navigate = useNavigate()
-  const { generatedNotes, userNotes, profile } = useUser()
+  const { generatedNotes, userNotes, profile, getKc } = useUser()
 
   const [phase, setPhase] = useState<'select' | 'notepick' | 'write' | 'loading' | 'feedback'>('select')
   const [selected, setSelected] = useState<SelectedTopic | null>(null)
@@ -179,7 +179,7 @@ export function BlurtingScreen() {
     setPhase('loading')
     setError(null)
     try {
-      const res = await evaluateBlurting(text, selected.referenceContent)
+      const res = await evaluateBlurting(text, selected.referenceContent, getKc(notePickSubject?.id ?? '') ?? undefined)
       setResult(res)
       setPhase('feedback')
     } catch (e) {

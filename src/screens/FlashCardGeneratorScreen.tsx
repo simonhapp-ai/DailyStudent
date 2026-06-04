@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
 import { generateFlashcards } from '../lib/groq'
@@ -8,13 +8,53 @@ import type { FlashCard } from '../types'
 
 type Step = 'fach' | 'note' | 'generating'
 
+interface PrefillState {
+  prefilledSubjectId?: string
+  prefilledNoteId?: string
+}
+
 export function FlashCardGeneratorScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, generatedNotes, saveFlashCards } = useUser()
+  const location = useLocation()
+  const prefill = (location.state as PrefillState | null)
+  const { profile, userNotes, generatedNotes, saveFlashCards, getKc } = useUser()
 
-  const [step, setStep] = useState<Step>('fach')
-  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null)
+  const [step, setStep] = useState<Step>(
+    prefill?.prefilledSubjectId && prefill?.prefilledNoteId ? 'generating' : 'fach'
+  )
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(
+    prefill?.prefilledSubjectId ?? null
+  )
   const [error, setError] = useState('')
+
+  // Auto-generate on mount when prefill is provided from Lernzettel detail
+  useEffect(() => {
+    if (!prefill?.prefilledSubjectId || !prefill?.prefilledNoteId) return
+    const subjectId = prefill.prefilledSubjectId
+    const noteId = prefill.prefilledNoteId
+    const genNote = generatedNotes[noteId]
+    if (!genNote) { setStep('fach'); return }
+
+    void (async () => {
+      try {
+        const pairs = await generateFlashcards(genNote, 7, getKc(subjectId) ?? undefined)
+        const cards: FlashCard[] = pairs.map((p, i) => ({
+          id: `fc-${noteId}-${i}-${Date.now()}`,
+          subjectId,
+          noteId,
+          front: p.front,
+          back: p.back,
+          keywords: p.keywords ?? [],
+          createdAt: new Date().toISOString(),
+        }))
+        saveFlashCards(cards)
+        navigate('/klausurmodus/lernen', { replace: true })
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'Fehler beim Generieren')
+        setStep('fach')
+      }
+    })()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const availableSubjects = subjects.filter((s) => profile?.faecher.includes(s.id))
 
@@ -38,7 +78,7 @@ export function FlashCardGeneratorScreen() {
     setStep('generating')
     setError('')
     try {
-      const pairs = await generateFlashcards(genNote)
+      const pairs = await generateFlashcards(genNote, 7, getKc(selectedSubjectId ?? '') ?? undefined)
       const cards: FlashCard[] = pairs.map((p, i) => ({
         id: `fc-${noteId}-${i}-${Date.now()}`,
         subjectId: selectedSubjectId!,

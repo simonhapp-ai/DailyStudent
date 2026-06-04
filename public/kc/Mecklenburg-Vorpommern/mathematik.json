@@ -1,0 +1,63 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Rahmenplan für die Qualifikationsphase der gymnasialen Oberstufe in Mecklenburg-Vorpommern (2019) fokussiert auf den Erwerb mathematischer Kompetenzen durch eine aktive Auseinandersetzung mit verbindlichen Inhalten. Ziel ist die Vorbereitung auf ein Hochschulstudium oder eine qualifizierte Berufsausbildung durch die Förderung von wissenschaftspropädeutischem Denken, Selbstständigkeit und Problemlösefähigkeit. Der Unterricht basiert auf sechs allgemeinen mathematischen Kompetenzen (Argumentieren, Problemlösen, Modellieren, Darstellen, Umgang mit symbolischen/technischen Elementen, Kommunizieren) und fünf Leitideen (Zahl/Algorithmus, Messen, Raum/Form, Funktionaler Zusammenhang, Daten/Zufall). Ein besonderer Schwerpunkt liegt auf der Integration digitaler Werkzeuge zur Unterstützung von Lernprozessen und der Modellierung komplexer Sachverhalte. Der Plan ist als verbindliches Grundgerüst konzipiert, das Lehrkräften Freiraum für methodisch-didaktische Entscheidungen lässt und Querschnittsthemen wie Medienbildung, nachhaltige Entwicklung und berufliche Orientierung integriert.",
+  "hauptthemen": [
+    {
+      "thema": "Differentialrechnung",
+      "relevante_unterthemen": [
+        "Grenzwerte und Stetigkeit",
+        "Ableitungsbegriff und Ableitungsregeln",
+        "Untersuchung von Funktionen und Graphen",
+        "Anwendungen der Differentialrechnung (Extremwertaufgaben, Rekonstruktion)"
+      ],
+      "kernkompetenzen": [
+        "Ableitungen als lokale Änderungsraten interpretieren und berechnen",
+        "Funktionseigenschaften (Monotonie, Krümmung, Extrema) analysieren",
+        "Mathematische Modelle zur Lösung von Optimierungsproblemen erstellen"
+      ]
+    },
+    {
+      "thema": "Analytische Geometrie",
+      "relevante_unterthemen": [
+        "Vektoren und Matrizen",
+        "Geraden und Ebenen",
+        "Lagebeziehungen, Abstände und Winkel",
+        "Flächen- und Rauminhaltsberechnungen"
+      ],
+      "kernkompetenzen": [
+        "Geometrische Objekte in Koordinatensystemen darstellen und berechnen",
+        "Lagebeziehungen zwischen Punkten, Geraden und Ebenen analysieren",
+        "Vektorrechnung zur Lösung räumlicher Probleme anwenden"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Mehrstufige Zufallsexperimente",
+        "Diskrete Zufallsgrößen",
+        "Binomialverteilung",
+        "Statistische Erhebungen und Hypothesentests"
+      ],
+      "kernkompetenzen": [
+        "Zufallsprozesse modellieren und Wahrscheinlichkeiten berechnen",
+        "Statistische Daten planen, auswerten und interpretieren",
+        "Hypothesentests zur Beurteilung von Sachverhalten durchführen"
+      ]
+    },
+    {
+      "thema": "Integralrechnung",
+      "relevante_unterthemen": [
+        "Stammfunktionen und Integrationsregeln",
+        "Hauptsatz der Differential- und Integralrechnung",
+        "Anwendungen der Integralrechnung (Flächen, Bestandsrekonstruktion)",
+        "Volumen von Rotationskörpern"
+      ],
+      "kernkompetenzen": [
+        "Das bestimmte Integral als rekonstruierten Bestand deuten",
+        "Flächeninhalte zwischen Funktionsgraphen berechnen",
+        "Zusammenhang zwischen Ableitung und Integral (Hauptsatz) anwenden"
+      ]
+    }
+  ]
+}

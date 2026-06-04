@@ -1,0 +1,40 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe (Hauptphase) im Saarland zielt auf die Entwicklung eines reflektierten Geschichtsbewusstseins ab, das zur mündigen Teilhabe an Staat und Gesellschaft befähigt. Im Zentrum steht die 'Fähigkeit zum selbständigen historischen Denken', die durch die Verknüpfung von Sach-, Methoden-, Orientierungs-, Beurteilungs- und Handlungskompetenz erreicht werden soll. Der Unterricht ist als 'Denkfach' konzipiert, das durch Multiperspektivität, Kontroversität und Methodenpluralismus geprägt ist. Inhaltlich fokussiert die Hauptphase auf die Entwicklung von Parlamentarismus und Menschenrechten in Deutschland und Europa sowie auf die Analyse von Konfliktbewältigung zwischen Destruktion und Stabilität. Dabei werden historische Prozesse von der Französischen Revolution bis zur Wiedervereinigung Deutschlands untersucht, wobei ein besonderer Wert auf die Dekonstruktion von Geschichtsbildern und die Reflexion der eigenen historischen Identität gelegt wird.",
+  "hauptthemen": [
+    {
+      "thema": "Parlamentarismus und Menschenrechte in Deutschland und Europa",
+      "relevante_unterthemen": [
+        "Französische Revolution (1789)",
+        "Revolution 1848/49 (Paulskirche)",
+        "Weimarer Republik (1919)",
+        "NS-Diktatur (1933)",
+        "Bundesrepublik Deutschland (1949)",
+        "KSZE-Schlussakte (1975)"
+      ],
+      "kernkompetenzen": [
+        "Analyse der Genese und Durchsetzung von Menschenrechten und parlamentarischen Strukturen",
+        "Vergleich und Beurteilung von Verfassungskonzepten (Paulskirche, Weimar, Grundgesetz)",
+        "Ideologiekritische Auseinandersetzung mit der NS-Diktatur und deren Folgen",
+        "Bewertung der Bedeutung internationaler Abkommen für die Menschenrechtsentwicklung"
+      ]
+    },
+    {
+      "thema": "Konfliktbewältigung zwischen Destruktion und Stabilität",
+      "relevante_unterthemen": [
+        "Punische Kriege (Rom und Karthago)",
+        "Wiener Kongress (1815)",
+        "Versailler Vertrag und Völkerbund (1919)",
+        "Potsdamer Konferenz (1945)",
+        "2+4-Vertrag (1990)"
+      ],
+      "kernkompetenzen": [
+        "Vergleich historischer Friedensordnungen und Konfliktlösungsstrategien",
+        "Analyse von Ursachen und Folgen politischer Systemkonflikte",
+        "Bewertung der Stabilität und Nachhaltigkeit von Friedensverträgen",
+        "Einordnung territorialer Veränderungen in europäische und globale Zusammenhänge"
+      ]
+    }
+  ]
+}

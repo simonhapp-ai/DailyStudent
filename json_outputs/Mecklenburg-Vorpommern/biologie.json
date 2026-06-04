@@ -1,0 +1,93 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Rahmenplan für die gymnasiale Oberstufe in Mecklenburg-Vorpommern (2022) zielt darauf ab, Schülerinnen und Schüler zu einem eigenverantwortlichen, wissenschaftspropädeutischen Arbeiten zu befähigen. Der Unterricht basiert auf acht zentralen Basiskonzepten (z. B. Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation), die ein vernetztes Verständnis biologischer Phänomene ermöglichen. Neben der Vermittlung von Fachwissen liegt ein starker Fokus auf der Entwicklung von vier Kompetenzbereichen: Sachkompetenz, Erkenntnisgewinnungskompetenz, Kommunikationskompetenz und Bewertungskompetenz. Der Lehrplan integriert Querschnittsthemen wie Bildung für nachhaltige Entwicklung (BNE), Medienbildung, Inklusion und berufliche Orientierung. Die Qualifikationsphase bereitet durch eine vertiefte Allgemeinbildung auf die Abiturprüfung vor, wobei zwischen grundlegendem und erhöhtem Anforderungsniveau (Leistungskurs) differenziert wird. Ein besonderer Stellenwert kommt dem experimentellen Arbeiten und der Reflexion des Menschenbildes im Kontext biologischer Erkenntnisse zu.",
+  "hauptthemen": [
+    {
+      "thema": "Zytologie",
+      "relevante_unterthemen": [
+        "Biomembran",
+        "Zelluläre Transportvorgänge",
+        "Zytoplasma",
+        "Plastide"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhang von Bau und Funktion von Membranen erklären",
+        "Selektive Permeabilität als Voraussetzung für Stoffwechselvorgänge interpretieren"
+      ]
+    },
+    {
+      "thema": "Stoffwechselphysiologie",
+      "relevante_unterthemen": [
+        "Enzymatik",
+        "Autotrophe Assimilation (Photosynthese)",
+        "Heterotrophe Assimilation",
+        "Dissimilation (Zellatmung, Gärung)"
+      ],
+      "kernkompetenzen": [
+        "Einfluss von Enzymhemmungen auf Stoffflüsse analysieren",
+        "Lichtabhängige und -unabhängige Reaktionen gegenüberstellen",
+        "Stoffwechselvorgänge in Fließschemata darstellen"
+      ]
+    },
+    {
+      "thema": "Neurophysiologie",
+      "relevante_unterthemen": [
+        "Grundlagen der Nervenzelle",
+        "Erregungsleitung",
+        "Synapsenfunktion",
+        "Zentrales Nervensystem",
+        "Hormonsystem"
+      ],
+      "kernkompetenzen": [
+        "Aktionspotenzial als Informationsleitung beschreiben",
+        "Zusammenwirken von Nerven- und Hormonsystem erläutern",
+        "Auswirkungen von Drogen und Giften auf synaptische Prozesse beurteilen"
+      ]
+    },
+    {
+      "thema": "Ökologie",
+      "relevante_unterthemen": [
+        "Abiotische Umweltfaktoren",
+        "Interspezifische Beziehungen",
+        "Populationsökologie",
+        "Systemökologie",
+        "Gefährdung von Ökosystemen"
+      ],
+      "kernkompetenzen": [
+        "Anpassungen von Organismen an Umweltfaktoren erklären",
+        "Stoff- und Energiekreisläufe analysieren",
+        "Anthropogene Einflüsse auf Ökosysteme und Biodiversität bewerten"
+      ]
+    },
+    {
+      "thema": "Genetik",
+      "relevante_unterthemen": [
+        "Molekulare Grundlagen (DNA, Proteinbiosynthese)",
+        "Zellzyklus",
+        "Vererbungslehre",
+        "Gentechnik"
+      ],
+      "kernkompetenzen": [
+        "Bedeutung von Mitose und Meiose begründen",
+        "Stammbäume analysieren",
+        "Ethische Aspekte der Gentechnik und Pränataldiagnostik reflektieren"
+      ]
+    },
+    {
+      "thema": "Evolution",
+      "relevante_unterthemen": [
+        "Entstehung des Lebens",
+        "Evolutionsfaktoren",
+        "Evolutionstheorien",
+        "Belege der Evolution",
+        "Anthropogenese"
+      ],
+      "kernkompetenzen": [
+        "Endosymbiontentheorie erläutern",
+        "Evolutionstheorien vergleichen",
+        "Stammesgeschichtliche Entwicklung des Menschen analysieren"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "bundesland": "NRW",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Kernlehrplan für die gymnasiale Oberstufe in NRW (Stand 2022) verfolgt das Ziel einer wissenschaftspropädeutischen Bildung, die Schülerinnen und Schüler zur allgemeinen Studierfähigkeit führt. Er ist kompetenzorientiert und verknüpft vier zentrale Kompetenzbereiche (Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz) mit fünf inhaltlichen Feldern (Zellbiologie, Neurobiologie, Stoffwechselphysiologie, Ökologie, Genetik und Evolution). Ein besonderer Fokus liegt auf dem vernetzten Lernen durch Basiskonzepte (z. B. Struktur und Funktion, Stoff- und Energieumwandlung). Der Unterricht ist kontextorientiert und soll Schülerinnen und Schüler befähigen, biologische Phänomene zu analysieren, ethisch zu bewerten und verantwortungsvolle Entscheidungen in einer zunehmend digitalen und wissenschaftlich geprägten Welt zu treffen. Die Leistungsbewertung erfolgt prozess- und ergebnisorientiert, wobei die Abiturprüfung die erworbenen Kompetenzen in komplexen, materialgebundenen Aufgabenformaten überprüft.",
+  "hauptthemen": [
+    {
+      "thema": "Zellbiologie",
+      "relevante_unterthemen": [
+        "Aufbau der Zelle (Prokaryoten/Eukaryoten)",
+        "Genetik der Zelle (Mitose, Meiose, Zellzyklus)",
+        "Biochemie der Zelle (Biomembranen, Enzyme)",
+        "Physiologie der Zelle (Energieumwandlung, Homöostase)"
+      ],
+      "kernkompetenzen": [
+        "Vergleich von Zelltypen und Erläuterung der Kompartimentierung",
+        "Analyse zellulärer Prozesse und deren Regulation"
+      ]
+    },
+    {
+      "thema": "Neurobiologie",
+      "relevante_unterthemen": [
+        "Informationsverarbeitung (Ruhe-/Aktionspotenzial)",
+        "Synaptische Übertragung",
+        "Neuronale Plastizität und Lernen",
+        "Hormonelle und neuronale Steuerung"
+      ],
+      "kernkompetenzen": [
+        "Erklärung der Erregungsleitung und synaptischen Signalübertragung",
+        "Analyse der Verschränkung von neuronalen und hormonellen Systemen"
+      ]
+    },
+    {
+      "thema": "Stoffwechselphysiologie",
+      "relevante_unterthemen": [
+        "Fotosynthese (Primär-/Sekundärreaktionen)",
+        "Zellatmung (Glykolyse, Citratzyklus, Atmungskette)",
+        "Stoffwechselregulation",
+        "Energieumwandlung und ATP-ADP-System"
+      ],
+      "kernkompetenzen": [
+        "Verständnis der energetischen Kopplung von Stoffwechselprozessen",
+        "Analyse funktionaler Angepasstheiten an die fotoautotrophe Lebensweise"
+      ]
+    },
+    {
+      "thema": "Ökologie",
+      "relevante_unterthemen": [
+        "Ökosysteme (Biotop/Biozönose)",
+        "Stoffkreisläufe und Energiefluss",
+        "Populationsdynamik",
+        "Anthropogene Einflüsse und Nachhaltigkeit"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Wechselwirkungen in Ökosystemen",
+        "Bewertung von Maßnahmen zum Biodiversitätsschutz und nachhaltiger Nutzung"
+      ]
+    },
+    {
+      "thema": "Genetik und Evolution",
+      "relevante_unterthemen": [
+        "Molekulargenetik (Replikation, Transkription, Translation)",
+        "Genregulation (Epigenetik)",
+        "Synthetische Evolutionstheorie",
+        "Humanevolution und kulturelle Evolution"
+      ],
+      "kernkompetenzen": [
+        "Erklärung der Genregulation und deren Bedeutung für den Phänotyp",
+        "Anwendung der Synthetischen Evolutionstheorie zur Erklärung von Artwandel und Artbildung"
+      ]
+    }
+  ]
+}

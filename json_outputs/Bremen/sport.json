@@ -1,0 +1,54 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Sport",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen zielt auf eine ganzheitliche Persönlichkeitsentwicklung durch Sport ab. Er verknüpft sportpraktische Handlungsfähigkeit mit theoretischer Reflexion. Der Unterricht basiert auf sechs pädagogischen Perspektiven (u.a. Leisten, Gesundheit, Kooperation, Ausdruck, Wagnis, Wahrnehmung) und verschiedenen Bewegungsfeldern (z.B. Spielen, Leichtathletik, Turnen, Schwimmen). Ein zentrales Anliegen ist die Verbindung von Theorie und Praxis, wobei Schülerinnen und Schüler befähigt werden sollen, sportliche Handlungen zu analysieren, Trainingsprozesse zu steuern und sportwissenschaftliche sowie gesellschaftliche Aspekte (Sportsoziologie, Sportpsychologie, Biomechanik) kritisch zu reflektieren. Die Leistungsbewertung erfolgt sowohl in der Praxis als auch in der Theorie, wobei im Leistungskurs und im vierten Prüfungsfach eine Gewichtung von 1:1 vorgesehen ist.",
+  "hauptthemen": [
+    {
+      "thema": "Sportpraxis und Bewegungsfelder",
+      "relevante_unterthemen": [
+        "Fit sein und fit bleiben",
+        "Spielen (Mannschafts- und Rückschlagspiele)",
+        "Leichtathletik",
+        "Gerätturnen",
+        "Gymnastik, Tanz und Rhythmik",
+        "Schwimmen",
+        "Fahren, Gleiten, Rollen",
+        "Kampfsport"
+      ],
+      "kernkompetenzen": [
+        "Erweiterung des individuellen Bewegungsrepertoires und des Bewegungskönnens",
+        "Anwendung sportartspezifischer Techniken und taktischer Konzepte",
+        "Planung, Durchführung und Auswertung sportlicher Übungs- und Wettkampfformen",
+        "Sicherheitsbewusstes Handeln und Übernahme von Hilfestellungen"
+      ]
+    },
+    {
+      "thema": "Sporttheorie (Trainingslehre und Biologie)",
+      "relevante_unterthemen": [
+        "Trainingsprinzipien und Trainingsmethoden",
+        "Motorische Hauptbeanspruchungsformen (Ausdauer, Kraft, Schnelligkeit, Koordination, Beweglichkeit)",
+        "Anatomisch-physiologische Grundlagen der Adaption",
+        "Ernährungsphysiologie und Gesundheitsförderung"
+      ],
+      "kernkompetenzen": [
+        "Erläuterung und Anwendung von Trainingsmethoden zur Leistungssteigerung",
+        "Analyse physiologischer Leistungsfaktoren und Organsysteme",
+        "Reflexion der Bedeutung von Sport für eine gesunde Lebensführung"
+      ]
+    },
+    {
+      "thema": "Sportwissenschaftliche Reflexion (Psychologie, Soziologie, Biomechanik)",
+      "relevante_unterthemen": [
+        "Bewegungslehre und Biomechanik",
+        "Sportpsychologie (mentales Training, Motive)",
+        "Sportsoziologie (Werte, Normen, gesellschaftliche Bedeutung)",
+        "Sportgeschichte und aktuelle gesellschaftliche Entwicklungen"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Bewegungsabläufen unter biomechanischen Gesichtspunkten",
+        "Erörterung psychologischer und soziologischer Aspekte des Sports",
+        "Kritische Reflexion von Sport im gesellschaftlichen und historischen Kontext"
+      ]
+    }
+  ]
+}

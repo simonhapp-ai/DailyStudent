@@ -1,0 +1,54 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe (Mainzer Studienstufe) in Rheinland-Pfalz zielt auf die Vermittlung einer mathematischen Grundbildung ab, die allgemeine Studierfähigkeit sichert und berufliche Orientierung bietet. Er ist eng an die Bildungsstandards für die allgemeine Hochschulreife angelehnt und gliedert sich in die drei zentralen Bereiche Analysis, Lineare Algebra/Analytische Geometrie sowie Stochastik. Ein besonderer Schwerpunkt liegt auf der Anwendungsorientierung und der Modellbildung, wobei der Prozess des mathematischen Problemlösens als Leitlinie dient. Der Lehrplan betont die Bedeutung des Computers als didaktisches Werkzeug zur Visualisierung, numerischen Berechnung und algorithmischen Problemlösung. Methodisch wird ein problemorientierter Unterricht gefordert, der entdeckendes Lernen fördert und fachübergreifende Zusammenhänge explizit einbezieht. Während im Grundfach die Anwendungsrelevanz dominiert, liegt der Fokus im Leistungsfach auf einem vertieften wissenschaftspropädeutischen Verständnis, einer größeren Methodenvielfalt und einer höheren Strenge in der Beweisführung.",
+  "hauptthemen": [
+    {
+      "thema": "Analysis",
+      "relevante_unterthemen": [
+        "Grenzwerte",
+        "Differentialrechnung",
+        "Integralrechnung",
+        "Exponentialfunktionen",
+        "Weiterführende Differential- und Integralrechnung"
+      ],
+      "kernkompetenzen": [
+        "Ableitungen als lokale Änderungsraten deuten und anwenden",
+        "Bestimmte Integrale als rekonstruierte Bestände interpretieren",
+        "Funktionale Zusammenhänge mittels Ableitungs- und Integralrechnung untersuchen",
+        "Wachstums- und Zerfallsprozesse modellieren"
+      ]
+    },
+    {
+      "thema": "Lineare Algebra / Analytische Geometrie",
+      "relevante_unterthemen": [
+        "Lineare Gleichungssysteme",
+        "Vektoralgebra",
+        "Matrizen in Anwendungen",
+        "Geraden und Ebenen im Raum"
+      ],
+      "kernkompetenzen": [
+        "Lineare Gleichungssysteme aufstellen und algorithmisch lösen",
+        "Geometrische Sachverhalte im Raum koordinatisieren und vektoriell beschreiben",
+        "Matrizen zur Modellierung mehrstufiger Prozesse nutzen",
+        "Lagebeziehungen von Geraden und Ebenen analytisch bestimmen"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Wahrscheinlichkeitsbegriff",
+        "Binomialverteilung",
+        "Simulation von Zufallsexperimenten",
+        "Schätzen von Wahrscheinlichkeiten",
+        "Testen von Hypothesen"
+      ],
+      "kernkompetenzen": [
+        "Stochastische Situationen durch Zufallsgrößen und Wahrscheinlichkeitsverteilungen beschreiben",
+        "Binomialverteilte Zufallsgrößen und deren Kenngrößen anwenden",
+        "Statistische Erhebungen planen und beurteilen",
+        "Hypothesentests durchführen und deren Unsicherheit interpretieren"
+      ]
+    }
+  ]
+}

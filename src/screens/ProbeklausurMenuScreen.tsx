@@ -1,4 +1,11 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+
+interface ProbeklausurPrefill {
+  subjectId: string
+  subjectName: string
+  topics: string[]
+  sourceNoteIds: string[]
+}
 
 const MODES_FULL = [
   {
@@ -63,19 +70,21 @@ const MODES_HALF = [
 
 export function ProbeklausurMenuScreen() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-28">
       {/* Header */}
       <div className="px-5" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
-          onClick={() => navigate('/klausurmodus')}
+          onClick={() => navigate(-1)}
           className="flex items-center gap-1.5 text-accent text-[14px] font-semibold mb-4 press-sm"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-          Klausurenmodus
+          Zurück
         </button>
         <h1 className="text-[28px] font-bold text-text-primary">Probeklausur</h1>
         <p className="text-[13px] text-text-muted mt-0.5">
@@ -85,11 +94,27 @@ export function ProbeklausurMenuScreen() {
 
       <div className="px-5 mt-5 space-y-3">
 
+        {/* Lernzettel context banner */}
+        {prefill && (
+          <div className="bg-[#5AC8FA]/10 border border-[#5AC8FA]/30 rounded-[16px] p-3.5 flex items-start gap-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6M9 13h6M9 17h4" />
+            </svg>
+            <div className="min-w-0">
+              <p className="text-[12px] font-semibold text-[#5AC8FA]">Basierend auf Lernzettel</p>
+              <p className="text-[12px] text-text-secondary mt-0.5">
+                <span className="font-medium">{prefill.subjectName}</span>
+                {prefill.topics.length > 0 && ` · ${prefill.topics.slice(0, 2).join(', ')}${prefill.topics.length > 2 ? ' …' : ''}`}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Full-width cards: Vollständige Klausur + AFB-Aufgabentrainer */}
         {MODES_FULL.map((mode) => (
           <button
             key={mode.id}
-            onClick={() => navigate(mode.route)}
+            onClick={() => navigate(mode.route, { state: prefill ? { prefill } : undefined })}
             className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 text-left press"
           >
             {/* Top row */}
@@ -134,7 +159,7 @@ export function ProbeklausurMenuScreen() {
           {MODES_HALF.map((mode) => (
             <button
               key={mode.id}
-              onClick={() => navigate(mode.route)}
+              onClick={() => navigate(mode.route, { state: prefill ? { prefill } : undefined })}
               className="flex-1 bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-4 flex flex-col text-left press"
             >
               <div

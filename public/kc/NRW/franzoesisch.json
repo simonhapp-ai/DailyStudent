@@ -1,0 +1,86 @@
+{
+  "bundesland": "NRW",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Kernlehrplan für das Fach Französisch in der gymnasialen Oberstufe in NRW (Stand 2023) ist kompetenzorientiert und auf die interkulturelle Handlungsfähigkeit ausgerichtet. Er dient als Grundlage für einen wissenschaftspropädeutischen Unterricht, der zur allgemeinen Studierfähigkeit führt und auf die Berufs- und Arbeitswelt vorbereitet. Das Fach vermittelt sprachlich-kommunikative und interkulturelle Kompetenzen, die für das Verständnis des frankophonen Raums und die deutsch-französische Zusammenarbeit essenziell sind. Der Lehrplan unterscheidet zwischen fortgeführter und neu einsetzender Fremdsprache und definiert für beide Wege klare Kompetenzerwartungen (basierend auf dem GER), die in den Bereichen funktionale kommunikative Kompetenz, interkulturelle kommunikative Kompetenz, Text- und Medienkompetenz, Sprachlernkompetenz und Sprachbewusstheit strukturiert sind. Er bietet Schulen Freiräume für inhaltliche Schwerpunktsetzungen, während er gleichzeitig durch landesweite Standards die Vergleichbarkeit der Abschlüsse (Abitur) sichert. Die Leistungsbewertung umfasst sowohl schriftliche Klausuren als auch sonstige Mitarbeit, wobei die mündliche Kommunikationsfähigkeit einen hohen Stellenwert einnimmt.",
+  "hauptthemen": [
+    {
+      "thema": "Entrer dans le monde du travail",
+      "relevante_unterthemen": [
+        "Schulausbildung",
+        "Praktika",
+        "Berufliche Orientierung",
+        "Perspektiven in der globalisierten und digitalisierten Welt"
+      ],
+      "kernkompetenzen": [
+        "Berufliche Orientierung und Lebensentwürfe in der Zielsprache darstellen",
+        "Kommunikation in berufsorientierten Kontexten bewältigen"
+      ]
+    },
+    {
+      "thema": "Être jeune adulte",
+      "relevante_unterthemen": [
+        "Identität und Diversität",
+        "Geschlechterrollen",
+        "Zwischenmenschliche Beziehungen",
+        "Soziales, politisches und ökologisches Engagement",
+        "Konsumverhalten",
+        "Kultur und Medien"
+      ],
+      "kernkompetenzen": [
+        "Eigene Lebenswelt und Standpunkte differenziert darstellen und kommentieren",
+        "Reflektierter Umgang mit Medien und Konsumverhalten"
+      ]
+    },
+    {
+      "thema": "Vivre dans un pays francophone",
+      "relevante_unterthemen": [
+        "Geografische, politische, kulturelle, soziale und wirtschaftliche Aspekte",
+        "Regionale Diversität",
+        "Leben im urbanen und ländlichen Raum",
+        "Migration, Immigration und Integration",
+        "Kulturelle Identität"
+      ],
+      "kernkompetenzen": [
+        "Soziokulturelles Orientierungswissen über frankophone Länder vernetzen",
+        "Kulturelle Besonderheiten verstehen und interkulturell angemessen handeln"
+      ]
+    },
+    {
+      "thema": "(R-)Évolutions historiques et culturelles",
+      "relevante_unterthemen": [
+        "Deutsch-französische Beziehungen",
+        "Umgang mit dem kolonialen Erbe",
+        "Culture banlieue",
+        "Gesellschaft im Spiegel der Literatur"
+      ],
+      "kernkompetenzen": [
+        "Historische und kulturelle Entwicklungen analysieren und bewerten",
+        "Texte unter Berücksichtigung ihrer historischen Bedingtheit deuten"
+      ]
+    },
+    {
+      "thema": "Identités et questions existentielles",
+      "relevante_unterthemen": [
+        "Lebensentwürfe und -stile",
+        "Wertvorstellungen im Spiegel von Literatur, Medien, Theater- und Filmkunst",
+        "Familienstrukturen im Wandel und Umbruch"
+      ],
+      "kernkompetenzen": [
+        "Literarische und mediale Texte interpretieren",
+        "Eigene Wertvorstellungen reflektieren und begründet Stellung beziehen"
+      ]
+    },
+    {
+      "thema": "Défis et visions de l’avenir",
+      "relevante_unterthemen": [
+        "Deutsch-französische Zusammenarbeit mit Blick auf Europa",
+        "Werte, Haltungen und Demokratieverständnis",
+        "Herausforderungen in der globalisierten Welt (Umwelt, Technologie, Wissenschaft)"
+      ],
+      "kernkompetenzen": [
+        "Komplexe gesellschaftliche Herausforderungen erörtern",
+        "Interkulturellen Diskurs über Chancen und Herausforderungen führen"
+      ]
+    }
+  ]
+}

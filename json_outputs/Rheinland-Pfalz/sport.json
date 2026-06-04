@@ -1,0 +1,47 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Sport",
+  "zusammenfassung": "Der Lehrplan für das Fach Sport in der gymnasialen Oberstufe in Rheinland-Pfalz (Stand 1998) zielt auf die Entwicklung einer umfassenden sportlichen Handlungskompetenz ab. Er verbindet die praktische sportliche Betätigung mit theoretischer Reflexion, um Schülerinnen und Schüler zur Studierfähigkeit und zu einem lebenslangen, gesundheitsbewussten Sporttreiben zu befähigen. Das Fach ist als Pflichtfach konzipiert, wobei im Grundfach die sportliche Praxis und die Verbesserung der Fitness im Vordergrund stehen, während das Leistungsfach Sport wissenschaftspropädeutisch ausgerichtet ist. Der Lehrplan betont die Mehrperspektivität (Gesundheit, Leistung, Kooperation, Körperwahrnehmung) und fordert eine breite sportliche Ausbildung durch die Wahl verschiedener Sportarten aus den Gruppen A (Individualsport), B (Mannschaftsspiele) und C (weitere Sportarten). Ein besonderer Fokus liegt auf der Vermittlung von Methoden- und Sozialkompetenz, um selbstständiges Üben und Organisieren zu ermöglichen. Fachübergreifendes Lernen, insbesondere mit Biologie und Physik, ist explizit verankert.",
+  "hauptthemen": [
+    {
+      "thema": "Sportpraxis (Grund- und Leistungsfach)",
+      "relevante_unterthemen": [
+        "Individualsportarten (Gruppe A: Gymnastik/Tanz, Leichtathletik, Schwimmen, Turnen)",
+        "Mannschaftsspiele (Gruppe B: Basketball, Fußball, Handball, Volleyball)",
+        "Sportarten der Gruppe C (Hockey, Rückschlagspiele, Judo, Rudern, Skilauf)"
+      ],
+      "kernkompetenzen": [
+        "Verbesserung der motorischen Fitness und sportartspezifischer Fertigkeiten",
+        "Erweiterung der sportlichen Handlungskompetenz durch Wahl von mindestens drei (Grundfach) bzw. fünf (Leistungsfach) Sportarten",
+        "Fähigkeit zur selbstständigen Organisation von Sport und Training"
+      ]
+    },
+    {
+      "thema": "Sporttheorie (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Sportliches Training (Trainingslehre, Belastung, Anpassung)",
+        "Bewegungslernen (Biomechanik, sensomotorische Lernprozesse)",
+        "Handeln im Sportspiel (Taktik, Spielbeobachtung, Soziologie)",
+        "Sport und Gesellschaft (Gesundheit, Leistung, Ökologie)"
+      ],
+      "kernkompetenzen": [
+        "Wissenschaftspropädeutische Analyse sportlicher Phänomene",
+        "Anwendung trainingswissenschaftlicher Erkenntnisse auf die eigene Praxis",
+        "Bewegungsanalyse und Anwendung von Vermittlungsverfahren"
+      ]
+    },
+    {
+      "thema": "Methoden- und Sozialkompetenz",
+      "relevante_unterthemen": [
+        "Helfen, Sichern und Erste Hilfe",
+        "Kooperation und Fair Play",
+        "Reflexion von Sport als gesellschaftliches Phänomen"
+      ],
+      "kernkompetenzen": [
+        "Übernahme von Verantwortung für sich und andere im Sport",
+        "Fähigkeit zur kritischen Auseinandersetzung mit kommerziellen Sportangeboten",
+        "Kooperatives Handeln in heterogenen Gruppen"
+      ]
+    }
+  ]
+}

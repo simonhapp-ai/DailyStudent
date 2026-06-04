@@ -1,0 +1,453 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Bildungsplan 2016 für das Fach Biologie am Gymnasium in Baden-Württemberg, in seiner überarbeiteten Fassung von 2022, legt den Fokus auf einen kompetenzorientierten Unterricht. Biologie wird als interdisziplinäre Wissenschaft verstanden, die Phänomene auf verschiedenen Systemebenen – von Molekülen über Zellen und Organismen bis hin zu Ökosystemen und der Biosphäre – erklärt. Ein zentrales Anliegen ist es, den Schülerinnen und Schülern ein fundiertes Selbstverständnis als Teil der lebendigen Natur zu vermitteln und sie zu befähigen, gesellschaftsrelevante Fragestellungen aus den Bereichen Gesundheit, Ernährung, Bio- und Gentechnik, Ökologie und Reproduktionsmedizin kritisch zu bewerten und verantwortungsvolle Entscheidungen im Sinne einer nachhaltigen Entwicklung zu treffen.\n\nDas Curriculum gliedert sich in inhaltsbezogene und prozessbezogene Kompetenzen. Die inhaltsbezogenen Kompetenzen sind entlang der drei Basiskonzepte 'System', 'Struktur und Funktion' sowie 'Entwicklung' (individuell und evolutionär) strukturiert. Diese Konzepte dienen der Vernetzung der Inhalte über die Klassenstufen hinweg und ermöglichen ein spiralförmiges Lernen, das in der Unterstufe bei Organismen und Organen ansetzt, in der Mittelstufe auf Zellen und Ökosysteme erweitert wird und in der Oberstufe eine molekulare Betrachtungsebene erreicht.\n\nDie prozessbezogenen Kompetenzen umfassen die Bereiche 'Erkenntnisgewinnung', 'Kommunikation' und 'Bewertung'. Hierbei lernen die Schülerinnen und Schüler, biologische Fragestellungen durch Beobachtung, hypothesengeleitetes Experimentieren und Modellbildung zu bearbeiten. Sie üben sich im Beschaffen, Aufarbeiten und Austauschen von Informationen unter Verwendung der Fachsprache sowie in der Präsentation von Arbeitsergebnissen. Der Bereich 'Bewertung' schließt die Fähigkeit ein, biologische Sachverhalte multiperspektivisch und ethisch zu beurteilen, Verantwortung zu zeigen und begründete Haltungen zu entwickeln.\n\nDidaktisch wird ein handlungsorientierter Unterricht geförd, der regelmäßige Beobachtungen, Untersuchungen und Experimente einschließt. Die Begeisterungsfähigkeit für das Lebendige soll genutzt werden, um Neugier und Interesse zu wecken. Das Fach leistet zudem wichtige Beiträge zu den Leitperspektiven wie Bildung für nachhaltige Entwicklung, Prävention und Gesundheitsförderung, Verbraucherbildung, Bildung für Toleranz und Akzeptanz von Vielfalt, berufliche Orientierung und Medienbildung, wodurch eine ganzheitliche und zukunftsfähige Bildung gefördert wird.",
+  "hauptthemen": [
+    {
+      "thema": "Organismische Biologie (Klassen 5/6)",
+      "relevante_unterthemen": [
+        "Wirbeltiere",
+        "Wirbellose",
+        "Pflanzen",
+        "Ökologie",
+        "Entwicklung des Menschen",
+        "Artenkenntnis",
+        "Wechselseitige Abhängigkeit von Mensch und Umwelt"
+      ],
+      "kernkompetenzen": [
+        "Betrachtungsweisen und Konzepte der erklärenden Wissenschaft Biologie kennenlernen",
+        "Achtung vor der Natur entwickeln",
+        "Wechselseitige Abhängigkeit von Mensch und Umwelt erkennen",
+        "Für einen verantwortungsvollen Umgang mit der Natur sensibilisiert sein"
+      ]
+    },
+    {
+      "thema": "Zelle und Stoffwechsel (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Bau tierischer und pflanzlicher Zellen",
+        "Zellteilung und Wachstum",
+        "Funktionen von Zellbestandteilen (Zellkern, Zellwand, Zellmembran, Chloroplast, Vakuole, Mitochondrium)",
+        "Bau und Funktion von Organen (z.B. Laubblatt)",
+        "Fotosynthese",
+        "Zellatmung"
+      ],
+      "kernkompetenzen": [
+        "Zellen, Organe und Organismen als Systeme beschreiben",
+        "Strukturelle und funktionelle Gemeinsamkeiten und Unterschiede von tierischen und pflanzlichen Zellen nennen",
+        "Zusammenhang zwischen Struktur und Funktion von Organen und Organsystemen bei der Stoff- und Energieumwandlung beschreiben und erklären",
+        "Bedeutung der Zellteilung für das Wachstum erläutern",
+        "Bau tierischer und pflanzlicher Zellen zeichnen, beschreiben und vergleichen",
+        "Zellteilung als Grundlage für Wachstum beschreiben",
+        "Funktionen von Zellbestandteilen beschreiben",
+        "Bau eines Organs aus verschiedenen Geweben beschreiben und das Zusammenwirken erklären",
+        "Experimente zur Fotosynthese planen, durchführen und auswerten",
+        "Prozesse Fotosynthese und Zellatmung beschreiben und ihre Bedeutung erläutern"
+      ]
+    },
+    {
+      "thema": "Humanbiologie (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Ernährung und Verdauung",
+        "Atmung, Blut und Kreislaufsystem",
+        "Fortpflanzung und Entwicklung",
+        "Informationssysteme (Sinnesorgane, Hormone)"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhang zwischen Struktur und Funktion des Verdauungssystems erläutern",
+        "Verdauung als enzymatische Zerlegung von Nährstoffen beschreiben",
+        "Verständnis für ausgewogene und gesunderhaltende Ernährung erlangen",
+        "Bestandteile der Nahrung nennen",
+        "Bau und Funktion von Kohlenhydraten, Fetten, Eiweißen beschreiben",
+        "Bedeutung von Vitaminen, Mineralstoffen, Ballaststoffen, Wasser beschreiben",
+        "Energiebedarf erläutern und ermitteln",
+        "Informationen über Brennwert von Lebensmitteln auswerten",
+        "Kriterien für gesunderhaltende Ernährung erläutern und Mahlzeiten planen",
+        "Qualitätsmerkmale von Lebensmitteln bewerten",
+        "Essstörungen als Suchtverhalten beschreiben, Ursachen und Folgen erläutern",
+        "Weg der Nahrung und Funktion der Verdauungsorgane beschreiben",
+        "Wirkungsweise von Verdauungsenzymen experimentell untersuchen",
+        "Modelle und Realobjekte zur Veranschaulichung von Struktur und Funktion nutzen",
+        "Messungen am eigenen Körper durchführen",
+        "Zusammenwirken von Organsystemen beschreiben",
+        "Nichtrauchen als zentrale Maßnahme für gesunde Lebensführung begründen",
+        "Weg der Atemluft beschreiben und an der Lunge erklären",
+        "Zusammensetzung des Blutes beschreiben und Funktion der zellulären Bestandteile nennen",
+        "Kreislauf des Blutes beschreiben und Struktur und Funktion von Herz und Blutgefäßen erläutern",
+        "Bau des Herzens untersuchen",
+        "Atmung und Kreislauffunktionen in Abhängigkeit von Parametern untersuchen",
+        "Gesundheitliche Gefahren des Rauchens beschreiben und Nichtrauchen begründen",
+        "Entwicklung des Kindes im Mutterleib bis zur Geburt beschreiben",
+        "Besondere Bedeutung der Fürsorge für ungeborenes Leben verstehen",
+        "Verschiedene Möglichkeiten der Empfängnisverhütung vergleichen und bewerten",
+        "Unterschiedliche Formen der sexuellen Orientierung und geschlechtlichen Identität wertfrei darstellen",
+        "Befruchtung und Entstehung eines Embryos beschreiben",
+        "Wichtigste Entwicklungsschritte der Schwangerschaft und Folgen äußerer Einflüsse beschreiben",
+        "Methoden der Empfängnisverhütung vergleichen und beurteilen",
+        "Bedeutung von Kondomen für Schutz vor sexuell übertragbaren Infektionskrankheiten beschreiben",
+        "Bedeutung der Sexualität für die Partnerschaft beschreiben",
+        "Sinnesorgane des Menschen und ihre Bedeutung für Informationsaufnahme kennen",
+        "Zusammenhänge zwischen Struktur und Funktion am Beispiel Auge erklären",
+        "Fehlsichtigkeiten beschreiben und Korrekturmöglichkeiten begründen",
+        "Wirkungsweise des Hormonsystems beschreiben",
+        "Ursachen für hormonelle Fehlfunktionen kennen und Therapiemaßnahmen erklären",
+        "Reiz-Reaktions-Schema erläutern",
+        "Sinnesorgane adäquaten Reizen zuordnen und Sinneszelle als Signalwandler beschreiben",
+        "Gefahren für Sinnesorgane erläutern und Schutzmaßnahmen nennen",
+        "Bau des Auges beschreiben und Funktion der Bestandteile erläutern",
+        "Anatomische Ursachen für Fehlsichtigkeit beschreiben und Korrekturmöglichkeiten begründen",
+        "Wirkungsweise von Hormonen als Botenstoffe beschreiben",
+        "Hormonelle Regelung des Blutzuckerspiegels an Funktionsmodell beschreiben",
+        "Ursachen von Diabetes mellitus nennen und Therapiemaßnahmen beschreiben",
+        "Biologische Bedeutung der Stressreaktion beschreiben, Stressoren nennen und bewerten, körperliche Auswirkungen bei langanhaltendem Stress nennen und Möglichkeiten der Stressbewältigung beschreiben"
+      ]
+    },
+    {
+      "thema": "Ökologie (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Ökosysteme",
+        "Angepasstheiten an den Lebensraum",
+        "Wechselwirkungen zwischen Lebewesen",
+        "Artenvielfalt",
+        "Einfluss des Menschen auf Ökosysteme",
+        "Nahrungsketten und Nahrungsnetze",
+        "Kohlenstoffkreislauf"
+      ],
+      "kernkompetenzen": [
+        "Ein schulnahes Ökosystem untersuchen und ausgewählte Arten bestimmen",
+        "Angepasstheit von Arten an einen Umweltfaktor erläutern",
+        "Nahrungskette und Nahrungsnetz vergleichend beschreiben und Beziehung zwischen Produzenten, Konsumenten und Destruenten darstellen",
+        "Beziehungen zwischen Lebewesen darstellen (Symbiose, Parasitismus, Konkurrenz)",
+        "Abnahme der Biomasse entlang einer Nahrungskette erläutern",
+        "Kohlenstoffkreislauf beschreiben und Einflüsse des Menschen beurteilen",
+        "Wert von Artenvielfalt darstellen und nachhaltige Maßnahmen zu deren Erhalt entwickeln"
+      ]
+    },
+    {
+      "thema": "Evolution (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Selektionstheorie Darwins",
+        "Angepasstheiten",
+        "Stammesgeschichtliche Entwicklung",
+        "Fossilien und rezente Arten",
+        "Evolution des Menschen"
+      ],
+      "kernkompetenzen": [
+        "Entstehung von Angepasstheiten bei Arten im Sinne der Evolutionstheorie Darwins erläutern",
+        "Stammesgeschichtliche Entwicklung anhand eines Beispiels erläutern",
+        "Belege der stammesgeschichtlichen Verwandtschaft erläutern (Fossilien, Homologie)",
+        "Evolution zum modernen Menschen anhand ausgewählter Fossilfunde darstellen"
+      ]
+    },
+    {
+      "thema": "Genetik (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "DNA-Eigenschaften",
+        "Mitose und Meiose",
+        "Sexuelle Fortpflanzung und Variabilität",
+        "Vererbungsregeln",
+        "Gentechnik (Chancen und Risiken)"
+      ],
+      "kernkompetenzen": [
+        "Chromosomen als Träger der Erbinformation beschreiben",
+        "Entstehung von Tochterzellen mit identischem Chromosomensatz durch Mitose erklären",
+        "Struktur der DNA anhand eines einfachen Modells beschreiben und Eigenschaften erläutern",
+        "Vorgang der Meiose beschreiben und Bedeutung erklären",
+        "Geschlechtsbestimmung beim Menschen erklären",
+        "Ausprägung des Phänotyps und Vererbung über den Genotyp an einfachen Erbgängen erklären und auf Familienstammbäume anwenden",
+        "Mutationen als Veränderungen der genetischen Information beschreiben und Folgen erläutern",
+        "Möglichen Einsatz der Gentechnik beschreiben und bewerten"
+      ]
+    },
+    {
+      "thema": "Immunbiologie (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Immunsystem",
+        "Zusammenwirken von Zellen",
+        "Schlüssel-Schloss-Prinzip",
+        "Impfungen",
+        "Gesunderhaltung des Körpers",
+        "Bakterien und Viren",
+        "Infektionskrankheiten",
+        "Immunabwehr"
+      ],
+      "kernkompetenzen": [
+        "Bau und Vermehrung von Bakterien und Viren beschreiben",
+        "Verlauf einer Infektionskrankheit beschreiben",
+        "Infektionsbarrieren und Mechanismen der angeborenen Immunabwehr beschreiben und Maßnahmen zur Vermeidung erläutern",
+        "Erworbene Immunantwort als Wechselwirkung auf zellulärer Ebene beschreiben und Entstehung von Immunität erklären",
+        "Immunisierung durch Impfung erklären und hinsichtlich ihrer individuellen und gesellschaftlichen Bedeutung bewerten"
+      ]
+    },
+    {
+      "thema": "Zellbiologie (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Pflanzliche und tierische Zellen",
+        "Bakterienzellen",
+        "Zusammenhang von Struktur und Funktion differenzierter Zellen",
+        "Zellorganellen",
+        "Membranvermittelte Vorgänge",
+        "Plasmolyse und Deplasmolyse",
+        "Prokaryotische und eukaryotische Zellen"
+      ],
+      "kernkompetenzen": [
+        "Pflanzliche und tierische Zellen im licht- und elektronenmikroskopischen Bild beschreiben und vergleichen",
+        "Zusammenwirken von Zellorganellen an einem Beispiel beschreiben",
+        "Zusammenhang von Struktur und Funktion am Beispiel von Zellorganellen und differenzierten Zellen darstellen",
+        "Plasmolyse und Deplasmolyse anhand lichtmikroskopischer Untersuchungen beschreiben und durch osmotische Vorgänge erklären",
+        "Prokaryotische und eukaryotische Zellen vergleichen"
+      ]
+    },
+    {
+      "thema": "Biomoleküle und molekulare Genetik (Basisfach)",
+      "relevante_unterthemen": [
+        "Biomembran (Flüssig-Mosaik-Modell, Stoffaustausch, Kompartimentierung)",
+        "Proteine (Bedeutung, Enzymfunktion, Enzymaktivität)",
+        "Nukleinsäuren (DNA-Struktur, Replikation)",
+        "Genetische Information und Merkmalsausprägung",
+        "Genaktivität und Genregulation"
+      ],
+      "kernkompetenzen": [
+        "Bau der Biomembran anhand eines Modells beschreiben",
+        "Transportmechanismen erläutern",
+        "Bau und Funktion der Proteine erläutern",
+        "Bau und Eigenschaften eines Enzyms beschreiben und Vorgänge am aktiven Zentrum darstellen",
+        "Experimente zur Untersuchung der Abhängigkeit der Enzymaktivität planen, durchführen und auswerten",
+        "Hemmung der Enzymaktivität an Beispielen beschreiben",
+        "Bau und Funktion von Nukleinsäuren erläutern und Strukturmerkmale der DNA am Modell erklären",
+        "Semikonservative Replikation der DNA beschreiben und Bedeutung für Zellteilung erklären",
+        "Zusammenhänge zwischen Genen und Merkmalen erläutern",
+        "Proteinbiosynthese beschreiben und genetischen Code anwenden",
+        "Mögliche Auswirkungen von Genmutationen beschreiben",
+        "Differenzielle Genaktivität und Genregulation beschreiben"
+      ]
+    },
+    {
+      "thema": "Stoff- und Energieumwandlung (Basisfach)",
+      "relevante_unterthemen": [
+        "Grundlagen des Stoff- und Energieumwandlung (Fotosynthese, Zellatmung, ATP/ADP-System)",
+        "Aufbauender Stoffwechsel (Fotosynthese, Angepasstheiten, Absorptions- und Wirkungsspektrum, Primär- und Sekundärreaktionen, Abhängigkeit von abiotischen Faktoren)",
+        "Abbauender Stoffwechsel (Dissimilation, Mitochondrien, Zellatmung, Energiebilanz)"
+      ],
+      "kernkompetenzen": [
+        "Stoffwechselprozesse Fotosynthese und Zellatmung als Reaktionsgleichungen beschreiben und Grundprinzipien des Stoffwechsels erläutern",
+        "Angepasstheiten von Pflanzen an die Fotosynthese auf verschiedenen Systemebenen erläutern",
+        "Zusammenhang zwischen Absorptionsspektrum von Chlorophyll und Wirkungsspektrum der Fotosynthese erläutern",
+        "Bedeutung und Zusammenhang von Primär- und Sekundärreaktionen der Fotosynthese darstellen",
+        "Abhängigkeit der Fotosyntheserate von abiotischen Faktoren auf experimenteller Grundlage erläutern",
+        "Struktur und Funktion von Mitochondrien erläutern und mit Chloroplasten vergleichen",
+        "Stoff- und Energiebilanz der Zellatmung und ihrer Teilprozesse darstellen"
+      ]
+    },
+    {
+      "thema": "Evolution (Basisfach)",
+      "relevante_unterthemen": [
+        "Mechanismen der Evolution (synthetische Evolutionstheorie, Allelhäufigkeiten, genetische Variabilität, Selektion, Isolation, Gendrift, Artbildung, Koevolution, adaptiver Wert von Verhalten)",
+        "Stammesgeschichte und Verwandtschaft (Homologie, Konvergenz, Stammbaumhypothesen)",
+        "Abgrenzung von naturwissenschaftlichen und nicht-naturwissenschaftlichen Vorstellungen"
+      ],
+      "kernkompetenzen": [
+        "Änderungen der Allelhäufigkeiten im Genpool einer Population begründen",
+        "Evolutive Anpassungsprozesse nach der synthetischen Evolutionstheorie erklären",
+        "Biologischen Artbegriff erklären und Artbildungsprozesse erläutern",
+        "Koevolution als wechselseitigen Anpassungsprozess darstellen",
+        "Adaptiven Wert von Verhalten begründen",
+        "Merkmale kriteriengeleitet als homolog oder nicht homolog identifizieren und Konvergenzen erklären",
+        "Ursprüngliche und abgeleitete Merkmale identifizieren und zur Prüfung von Stammbaumhypothesen nutzen",
+        "Evolutionstheorie gegenüber nicht-naturwissenschaftlichen Vorstellungen abgrenzen"
+      ]
+    },
+    {
+      "thema": "Ökologie (Basisfach)",
+      "relevante_unterthemen": [
+        "Strukturen und Zusammenhänge in Ökosystemen (Biotop, Biozönose, Umweltfaktoren, ökologische Potenz, Toleranzkurven, Zeigerarten, ökologische Nische, Konkurrenz, Beziehungen zwischen Organismen, trophische Gliederung, Energiefluss)",
+        "Ökosysteme unter dem Einfluss des Menschen (Kohlenstoffkreislauf, Treibhauseffekt, Artenvielfalt, Konflikte zwischen Erhalt und Nutzung, Ökosystemmanagement)"
+      ],
+      "kernkompetenzen": [
+        "An einem Ökosystem Biotop und Biozönose beschreiben und prägende Umweltfaktoren nennen",
+        "Einfluss eines abiotischen Umweltfaktors auf unterschiedliche Arten beschreiben und vergleichen",
+        "Konzept der ökologischen Nische erläutern und Einflüsse von Konkurrenz erklären",
+        "Beziehungen zwischen Organismen vergleichen",
+        "Trophische Gliederung eines Ökosystems beschreiben und aus energetischer Sicht erklären",
+        "Kohlenstoffkreislauf darstellen, ökologische Folgen des Treibhauseffekts beschreiben und Handlungsoptionen erläutern",
+        "Bedeutung von Artenvielfalt in einem Ökosystem erläutern",
+        "Konflikte zwischen Erhalt von Artenvielfalt und menschlicher Nutzung darstellen und Handlungsoptionen bewerten"
+      ]
+    },
+    {
+      "thema": "Neurobiologie (Basisfach)",
+      "relevante_unterthemen": [
+        "Nervensystem (Organsystem, Informationsverarbeitung)",
+        "Zelluläre und molekulare Prozesse",
+        "Reizaufnahme bis Wahrnehmung",
+        "Signalcodierung",
+        "Motoneuron (Struktur und Funktion)",
+        "Ruhepotenzial und Aktionspotenzial",
+        "Erregungsweiterleitung",
+        "Synapsen (Erregungsübertragung, Wirkung von Stoffen)",
+        "Sinneszellen (Reizaufnahme, Transduktion)"
+      ],
+      "kernkompetenzen": [
+        "Am Beispiel des Motoneurons den Zusammenhang zwischen Struktur und Funktion beschreiben",
+        "Ruhepotenzial und Aktionspotenzial erläutern und deren Messung beschreiben",
+        "Kontinuierliche und saltatorische Erregungsweiterleitung vergleichend darstellen",
+        "Übertragung der Erregung an der Synapse erläutern",
+        "Wirkung von Stoffen auf Synapsen an Beispielen erläutern",
+        "An einer Sinneszelle die Reizaufnahme und die Transduktion erläutern"
+      ]
+    },
+    {
+      "thema": "Angewandte Biologie (Basisfach)",
+      "relevante_unterthemen": [
+        "Molekularbiologische Werkzeuge und Methoden",
+        "Herstellung transgener Organismen",
+        "Chancen und Risiken der Gentechnik",
+        "Genetische Beratung",
+        "Somatische Gentherapie"
+      ],
+      "kernkompetenzen": [
+        "Werkzeuge und Verfahren der Molekularbiologie erläutern",
+        "Ein Verfahren zur Herstellung transgener Organismen erläutern",
+        "Chancen und Risiken der Nutzung gentechnisch veränderter Organismen bewerten",
+        "Analyse von Gentests und Familienstammbäumen erläutern und genetische Beratung ableiten",
+        "Möglichkeiten und Grenzen der somatischen Gentherapie erläutern"
+      ]
+    },
+    {
+      "thema": "Biomoleküle und molekulare Genetik (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Bau und Funktion von Biomolekülen (Biomembranmodelle, Transportmechanismen, Proteine, Enzyme, Nukleinsäuren)",
+        "Molekulare Genetik (DNA-Replikation, Gen-Merkmal-Zusammenhang, Proteinbiosynthese bei Pro- und Eukaryoten, Genregulation, Genmutationen, Krebs)"
+      ],
+      "kernkompetenzen": [
+        "Modelle zum Bau der Biomembran mithilfe experimenteller Befunde beurteilen",
+        "Transportmechanismen erläutern",
+        "Bau und Funktion der Proteine erläutern",
+        "Bau und Eigenschaften eines Enzyms beschreiben und Wirkungsweise erklären",
+        "Experimente zur Untersuchung der Abhängigkeit der Enzymaktivität planen, durchführen und auswerten",
+        "Hemmung der Enzymaktivität an Beispielen beschreiben",
+        "Bau und Funktion von Nukleinsäuren erläutern und Strukturmerkmale der DNA am Modell erklären",
+        "Semikonservative Replikation der DNA beschreiben und Bedeutung für Zellteilung erklären",
+        "Zusammenhänge zwischen Genen und Merkmalen erläutern",
+        "Proteinbiosynthese bei Prokaryoten und Eukaryoten beschreiben und genetischen Code anwenden",
+        "Differenzielle Genaktivität und Genregulation bei Prokaryoten und Eukaryoten beschreiben",
+        "Mögliche Auswirkungen von Genmutationen beschreiben",
+        "Krebs auf Mutationen von Kontrollgenen des Zellzyklus zurückführen"
+      ]
+    },
+    {
+      "thema": "Stoff- und Energieumwandlung (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Grundlagen des Stoff- und Energieumwandlung (Fotosynthese, Zellatmung, ATP/ADP-System, Tracer-Methode)",
+        "Aufbauender Stoffwechsel (Fotosynthese, Angepasstheiten, C3-/C4-Pflanzen, Chromatografie, Blattpigmente, Absorptions- und Wirkungsspektrum, Primär- und Sekundärreaktionen, Abhängigkeit von abiotischen Faktoren)",
+        "Abbauender Stoffwechsel (Dissimilation, Mitochondrien, Zellatmung, Energiebilanz, aerober und anaerober Glukoseabbau)"
+      ],
+      "kernkompetenzen": [
+        "Stoffwechselprozesse Fotosynthese und Zellatmung als Reaktionsgleichungen beschreiben und Grundprinzipien des Stoffwechsels erläutern",
+        "Experimentelle Befunde zu Ort und Ablauf eines Stoffwechselweges auswerten",
+        "Angepasstheiten von Pflanzen an die Fotosynthese auf verschiedenen Systemebenen erläutern",
+        "Chromatografie als Trennverfahren und die Bedeutung der Blattpigmente beschreiben",
+        "Zusammenhang zwischen Absorptionsspektrum von Chlorophyll und Wirkungsspektrum der Fotosynthese erläutern",
+        "Bedeutung und Zusammenhang von Primär- und Sekundärreaktionen der Fotosynthese darstellen",
+        "Abhängigkeit der Fotosyntheserate von abiotischen Faktoren auf experimenteller Grundlage analysieren",
+        "Struktur und Funktion von Mitochondrien erläutern und mit Chloroplasten vergleichen",
+        "Stoff- und Energiebilanz der Zellatmung und ihrer Teilprozesse darstellen",
+        "Stoff- und Energiebilanz des aeroben und anaeroben Glukoseabbaus vergleichen"
+      ]
+    },
+    {
+      "thema": "Evolution (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Mechanismen der Evolution (synthetische Evolutionstheorie, Allelhäufigkeiten, genetische Variabilität, Selektion, Isolation, Gendrift, Artbildung, adaptive Radiation, Koevolution, proximate und ultimate Erklärungen, adaptiver Wert von Verhalten)",
+        "Stammesgeschichte und Verwandtschaft (Homologie, Konvergenz, Stammbaumhypothesen)",
+        "Abgrenzung von naturwissenschaftlichen und nicht-naturwissenschaftlichen Vorstellungen",
+        "Evolution des Menschen (Verwandtschaft, Ausbreitung, kulturelle Entwicklungen, Widerlegung des Konzepts der Menschenrassen)"
+      ],
+      "kernkompetenzen": [
+        "Änderungen der Allelhäufigkeiten im Genpool einer Population begründen",
+        "Evolutive Anpassungsprozesse nach der synthetischen Evolutionstheorie erklären",
+        "Biologischen Artbegriff erklären und Artbildungsprozesse erläutern",
+        "Koevolution als wechselseitigen Anpassungsprozess darstellen",
+        "Proximate und ultimate Erklärungen unterscheiden",
+        "Adaptiven Wert von Verhalten begründen",
+        "Merkmale kriteriengeleitet als homolog oder nicht homolog identifizieren und Konvergenzen erklären",
+        "Ursprüngliche und abgeleitete Merkmale identifizieren und zur Prüfung von Stammbaumhypothesen nutzen",
+        "Evolutionstheorie als naturwissenschaftliche Theorie gegenüber nicht-naturwissenschaftlichen Vorstellungen abgrenzen",
+        "Stammesgeschichtliche Verwandtschaft und Ausbreitung von Menschenarten darstellen",
+        "Besonderheiten der Evolution des Menschen erläutern und Bedeutung kultureller Entwicklungen darstellen"
+      ]
+    },
+    {
+      "thema": "Ökologie (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Strukturen und Zusammenhänge in Ökosystemen (Biotop, Biozönose, Umweltfaktoren, ökologische Potenz, Toleranzkurven, Zeigerarten, ökologische Nische, Konkurrenz, Beziehungen zwischen Organismen, Populationsdynamik, trophische Gliederung, Energiefluss)",
+        "Ökosysteme unter dem Einfluss des Menschen (Kohlenstoff- und Stickstoffkreislauf, Treibhauseffekt, Stickstoffeintrag, Biodiversität, Konflikte zwischen Erhalt und Nutzung, Ökosystemmanagement, ökologischer Fußabdruck)"
+      ],
+      "kernkompetenzen": [
+        "An einem Ökosystem Biotop und Biozönose beschreiben und prägende Umweltfaktoren nennen",
+        "Einfluss eines abiotischen Umweltfaktors auf unterschiedliche Arten beschreiben und vergleichen",
+        "Konzept der ökologischen Nische erläutern und Einflüsse von Konkurrenz erklären",
+        "Beziehungen zwischen Organismen vergleichen",
+        "Dynamik von Populationen unter idealisierten und realen Bedingungen erläutern",
+        "Trophische Gliederung eines Ökosystems beschreiben und aus energetischer Sicht erklären",
+        "Kohlenstoff- und Stickstoffkreislauf darstellen, ökologische Folgen menschlicher Eingriffe beschreiben und Handlungsoptionen erläutern",
+        "Bedeutung von Biodiversität auf verschiedenen Systemebenen erläutern",
+        "Konflikte zwischen Erhalt von Biodiversität und menschlicher Nutzung darstellen und Handlungsoptionen bewerten",
+        "Ökologischen Fußabdruck als Maß für nachhaltiges Handeln beschreiben und Möglichkeiten zur Nachsteuerung erläutern"
+      ]
+    },
+    {
+      "thema": "Neurobiologie und Hormone (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Neurobiologie (Nervensystem, Motoneuron, Ruhepotenzial, Aktionspotenzial, Erregungsweiterleitung, Synapsen, Signalverrechnung, Sinneszellen, neuronale Grundlagen des Lernens, Erkrankungen des Nervensystems, Wahrnehmung im Gehirn)",
+        "Hormone (Regulation durch Hormone, Wirkungsmechanismen, Vergleich Hormon- und Nervensystem)"
+      ],
+      "kernkompetenzen": [
+        "Am Beispiel des Motoneurons den Zusammenhang zwischen Struktur und Funktion beschreiben",
+        "Ruhepotenzial und Aktionspotenzial erläutern und deren Messung beschreiben",
+        "Kontinuierliche und saltatorische Erregungsweiterleitung vergleichend darstellen",
+        "Übertragung der Erregung an der Synapse erläutern",
+        "Wirkung von Stoffen auf Synapsen an Beispielen erläutern",
+        "Verrechnung der Signale von erregenden und hemmenden Synapsen beschreiben",
+        "Primäre und sekundäre Sinneszellen unterscheiden und Reizaufnahme und Transduktion erläutern",
+        "Neuronale Grundlagen des Lernens darstellen",
+        "Erkrankungen des menschlichen Nervensystems beschreiben",
+        "Entstehung der Wahrnehmung im Gehirn an einem Beispiel beschreiben",
+        "Regulation durch Hormone an einem Beispiel erläutern",
+        "Unterschiedliche Wirkungsmechanismen von Hormonen auf molekularer Ebene beschreiben",
+        "Hormon- und Nervensystem vergleichen und deren Verschränkung darstellen"
+      ]
+    },
+    {
+      "thema": "Angewandte Biologie (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Molekularbiologische Verfahren und Gentechnik (Werkzeuge, CRISPR/Cas9, Herstellung transgener Organismen, Chancen und Risiken)",
+        "Chancen und Risiken biomedizinischer Verfahren (Pränataldiagnostik, Präimplantationsdiagnostik, Gentests, genetische Beratung, Therapie genetisch bedingter Erkrankungen)"
+      ],
+      "kernkompetenzen": [
+        "Werkzeuge und Verfahren der Molekularbiologie erläutern",
+        "Eine Methode zur gezielten Veränderung von DNA beschreiben",
+        "Ein Verfahren zur Herstellung transgener Organismen erläutern",
+        "Chancen und Risiken der Nutzung gentechnisch veränderter Organismen bewerten",
+        "Pränataldiagnostik und Präimplantationsdiagnostik vergleichen und an einem Fallbeispiel bewerten",
+        "Analyse von Gentests und Familienstammbäumen erläutern und genetische Beratung ableiten",
+        "Möglichkeiten und Grenzen der Therapie genetisch bedingter Erkrankungen erläutern"
+      ]
+    },
+    {
+      "thema": "Immunsystem (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Humorale und zelluläre Immunantwort",
+        "Kooperation von Immunzellen",
+        "Antikörper und Rezeptoren (Vielfalt, somatische Rekombination, klonale Selektion)",
+        "Unterscheidung körpereigen/körperfremd (MHC-System, Allergie, Organtransplantation, Autoimmunerkrankung)",
+        "HIV (Vermehrung, Schwächung Immunsystem, Nachweismethode, Therapieansätze)"
+      ],
+      "kernkompetenzen": [
+        "Humorale und zelluläre Immunantwort am Beispiel einer Infektionskrankheit im Hinblick auf Kooperation von Immunzellen beschreiben",
+        "Vielfalt der Antikörper und Rezeptoren erklären",
+        "Unterscheidung von körpereigen und körperfremd anhand des MHC-Systems erklären und an einem Beispiel erläutern",
+        "Am Beispiel HIV erklären, wie sich Viren vermehren und das Immunsystem schwächen; Nachweismethode beschreiben und Therapieansätze erläutern"
+      ]
+    }
+  ]
+}

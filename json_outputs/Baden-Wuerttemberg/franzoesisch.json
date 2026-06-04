@@ -1,0 +1,121 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Der Bildungsplan für Französisch als erste Fremdsprache in Baden-Württemberg verfolgt das übergeordnete Ziel, Schülerinnen und Schüler zu interkultureller kommunikativer Kompetenz in einer globalisierten und mehrsprachigen Welt zu befähigen. Dies beinhaltet den systematischen Aufbau von prozessbezogenen Kompetenzen wie Sprachbewusstheit, Sprachlernkompetenz und fremdsprachenspezifischer digitaler Kompetenz, sowie inhaltsbezogenen Kompetenzen in interkultureller Kommunikation, funktionaler Kommunikation (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Mediation) und Text- und Medienkompetenz. Französisch wird als zentrale Brückensprache zu anderen romanischen Sprachen und als Ausdruck der deutsch-französischen Freundschaft hervorgehoben, wodurch Toleranz und Verständnis für frankophone Kulturen gefördert werden. Der Unterricht ist aufgabenorientiert und integriert lexikogrammatische Einheiten spiralcurricular. Er berücksichtigt den Übergang von der Grundschule und strebt das GER-Niveau B1+ am Ende der Einführungsphase der Oberstufe und B2 für das Leistungsfach bis zum Abitur an. Ein reflektierter Umgang mit Fehlern und der gezielte Einsatz analoger und digitaler Hilfsmittel sind wesentliche Bestandteile. Das Fach trägt zudem maßgeblich zu den Leitperspektiven wie Bildung für nachhaltige Entwicklung, Toleranz und Akzeptanz von Vielfalt, Berufliche Orientierung und Medienbildung bei.",
+  "hauptthemen": [
+    {
+      "thema": "Leitgedanken zum Kompetenzerwerb",
+      "relevante_unterthemen": [
+        "Bildungswert der modernen Fremdsprachen",
+        "Kompetenzen (Prozessbezogen, Inhaltsbezogen)",
+        "Bildungswert des Faches Französisch",
+        "Didaktische Hinweise"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler entwickeln interkulturelle Handlungsfähigkeit und plurilinguale Kompetenz, um in einer globalisierten Welt zu agieren.",
+        "Sie erwerben Sprachbewusstheit, Sprachlernkompetenz und fremdsprachenspezifische digitale Kompetenz als prozessbezogene Fähigkeiten.",
+        "Sie bauen inhaltsbezogene Kompetenzen in interkultureller, funktionaler Kommunikation (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Mediation) und Text- und Medienkompetenz auf.",
+        "Sie verstehen die Bedeutung des Französischen als Brückensprache und für die deutsch-französische Freundschaft.",
+        "Sie wenden aufgabenorientierte Lernmethoden an und nutzen analoge sowie digitale Hilfsmittel.",
+        "Sie erreichen das GER-Niveau B1+ (Einführungsphase Oberstufe) bzw. B2 (Leistungsfach Abitur)."
+      ]
+    },
+    {
+      "thema": "Prozessbezogene Kompetenzen (Übergreifend)",
+      "relevante_unterthemen": [
+        "Sprachbewusstheit",
+        "Sprachlernkompetenz",
+        "Fremdsprachenspezifische digitale Kompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler reflektieren Sprache als System, erkennen und korrigieren Normverstöße und setzen Stil/Register kultursensibel ein.",
+        "Sie analysieren und gestalten ihr Sprachenlernen selbstständig, nutzen plurilinguale Kompetenz und Sprachvergleich als Lernstrategie.",
+        "Sie nutzen digitale Möglichkeiten und Hilfsmittel für den Spracherwerb und die Kommunikation, reflektieren deren Potenziale und Risiken kritisch."
+      ]
+    },
+    {
+      "thema": "Inhaltsbezogene Kompetenzen - Klassen 5/6",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen / Themen",
+        "Interkulturelle kommunikative Kompetenz",
+        "Funktionale kommunikative Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Mediation, Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler verfügen über elementares soziokulturelles Wissen zu Frankreich (Alltag, Städte, Persönlichkeiten).",
+        "Sie erkennen und wenden grundlegende kulturspezifische Konventionen an und setzen Alltagssituationen in Bezug zur eigenen Lebenswelt.",
+        "Sie verstehen einfache mündliche/schriftliche Texte zu vertrauten Themen und können sich in einfachen Alltagssituationen mündlich und schriftlich äußern.",
+        "Sie können zentrale Informationen zwischen Sprachen übertragen und verfügen über ein elementares lexikalisches und grammatisches Repertoire sowie eine verständliche Aussprache.",
+        "Sie erschließen und produzieren einfache Texte zu ihrer Lebenswelt und nutzen Medien aufgabengerecht."
+      ]
+    },
+    {
+      "thema": "Inhaltsbezogene Kompetenzen - Klassen 7/8",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen / Themen",
+        "Interkulturelle kommunikative Kompetenz",
+        "Funktionale kommunikative Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Mediation, Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler erweitern ihr soziokulturelles Wissen über Frankreich (Schulleben, Feste, Jugendkultur, Regionen, Persönlichkeiten).",
+        "Sie erkennen kulturspezifische Konventionen in ihren Unterschieden/Ähnlichkeiten und können die Perspektive anderer Kulturräume einnehmen.",
+        "Sie verstehen relevante Informationen in vertrauten Alltagssituationen und können didaktisierte/authentische Texte verstehen und deuten.",
+        "Sie können sich in Alltagssituationen verständigen, zentrale Themen zusammenhängend darstellen und syntaktisch einfache Texte verfassen.",
+        "Sie können relevante Inhalte situationsgerecht zwischen Sprachen übertragen und verfügen über ein hinreichendes lexikalisches und grammatisches Repertoire sowie eine weitgehend korrekte Aussprache.",
+        "Sie erschließen und analysieren einfache authentische Texte und produzieren strukturierte Texte."
+      ]
+    },
+    {
+      "thema": "Inhaltsbezogene Kompetenzen - Klassen 9/10",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen / Themen",
+        "Interkulturelle kommunikative Kompetenz",
+        "Funktionale kommunikative Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Mediation, Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler verfügen über differenzierte Kenntnisse der Alltagskultur, Geographie, Politik, Gesellschaft und Geschichte Frankreichs sowie der Frankophonie.",
+        "Sie begegnen verschiedenen kulturellen Perspektiven mit Empathie und Toleranz und können vermittelnd wirken.",
+        "Sie verstehen relevante Informationen und ausgewählte Einzelinformationen bei vertrauten Themen und können adaptierte/authentische Texte verstehen und deuten.",
+        "Sie können an Gesprächen über vertraute Themen teilnehmen, den eigenen Standpunkt vertreten und klar strukturierte Texte verfassen.",
+        "Sie können relevante, überwiegend vertraute Inhalte sach-, situations- und adressatengerecht zwischen Sprachen übertragen und verfügen über ein differenziertes lexikalisches und erweitertes grammatisches Repertoire sowie eine weitgehend korrekte und flüssige Aussprache.",
+        "Sie erschließen und analysieren längere didaktisierte und kürzere authentische Texte und nutzen die Ergebnisse für die eigene Textproduktion."
+      ]
+    },
+    {
+      "thema": "Inhaltsbezogene Kompetenzen - Klassen 11/12 (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen / Themen",
+        "Interkulturelle kommunikative Kompetenz",
+        "Funktionale kommunikative Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Mediation, Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler verfügen über umfassendes soziokulturelles Orientierungswissen zu Frankreich (Gesellschaft, Politik, Wirtschaft, Plurikulturalität, Laizität) und der Frankophonie (Kooperation, koloniales Erbe, globale Herausforderungen).",
+        "Sie reflektieren kulturell geprägte Perspektiven, erklären soziokulturelle/historische Bedingtheit und können in interkulturellen Situationen vermittelnd wirken.",
+        "Sie verstehen relevante Informationen auch bei weniger vertrauten Themen und können nichtfiktionale sowie fiktionale Texte der französischsprachigen Literatur ab dem 17. Jahrhundert verstehen und selbstständig deuten.",
+        "Sie können sich an Gesprächen zu abstrakten und weniger vertrauten Themen situations- und adressatengerecht beteiligen, den eigenen Standpunkt differenziert begründen und klar strukturierte, differenzierte Texte verfassen.",
+        "Sie können auch in anspruchsvollen Mediationssituationen relevante Inhalte sach-, situations- und adressatengerecht übertragen und verfügen über ein umfangreiches lexikalisches und gefestigtes grammatisches Repertoire sowie eine korrekte, flüssige und gestaltende Aussprache.",
+        "Sie erschließen und analysieren authentische Texte zu persönlich und gesellschaftlich relevanten Themen und nutzen die Ergebnisse für die eigene Textproduktion."
+      ]
+    },
+    {
+      "thema": "Inhaltsbezogene Kompetenzen - Klassen 11/12 (Basisfach)",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen / Themen",
+        "Interkulturelle kommunikative Kompetenz",
+        "Funktionale kommunikative Kompetenz (Hör-/Hörsehverstehen, Leseverstehen, Sprechen, Schreiben, Mediation, Lexik, Grammatik, Aussprache)",
+        "Text- und Medienkompetenz"
+      ],
+      "kernkompetenzen": [
+        "Schülerinnen und Schüler verfügen über grundlegende Vertrautheit mit der gesellschaftlichen, kulturellen, politischen und wirtschaftlichen Wirklichkeit Frankreichs und Aspekten der Frankophonie.",
+        "Sie erklären zentrale gesellschaftliche und historische Zusammenhänge frankophoner Kulturen und können in interkulturellen Situationen Missverständnisse vermeiden und vermittelnd wirken.",
+        "Sie verstehen relevante Informationen punktuell auch bei weniger vertrauten Themen und können nichtfiktionale sowie fiktionale Texte der französischsprachigen Literatur verstehen und deuten.",
+        "Sie können sich an Gesprächen zu abstrakten und weniger vertrauten Themen beteiligen, den eigenen Standpunkt differenziert begründen und klar strukturierte, differenzierte Texte verfassen.",
+        "Sie können in anspruchsvollen Mediationssituationen relevante Inhalte sach-, situations- und adressatengerecht übertragen und verfügen über ein erweitertes lexikalisches und gefestigtes grammatisches Repertoire sowie eine korrekte, flüssige und gestaltende Aussprache.",
+        "Sie erschließen und analysieren authentische Texte zu persönlich und gesellschaftlich relevanten Themen und nutzen die Ergebnisse für die eigene Textproduktion."
+      ]
+    }
+  ]
+}

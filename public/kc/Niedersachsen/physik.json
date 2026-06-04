@@ -1,0 +1,85 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Physik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Physik in der gymnasialen Oberstufe in Niedersachsen (2022) verfolgt das Ziel, eine vertiefte Allgemeinbildung mit Wissenschaftspropädeutik, Studierfähigkeit und Berufsorientierung zu vermitteln. Der Unterricht ist konsequent kompetenzorientiert und gliedert sich in prozessbezogene Kompetenzbereiche (z. B. Physikalisch argumentieren, Probleme lösen, Experimentieren, Mathematisieren, Mit Modellen arbeiten) und inhaltsbezogene Kompetenzbereiche (Dynamik, Elektrizität, Schwingungen und Wellen, Quantenobjekte, Atomhülle, Atomkern). Ein zentrales Anliegen ist die Vernetzung von Inhalten durch vier Basiskonzepte: Erhaltung und Gleichgewicht, Superposition und Komponenten, Mathematisieren und Vorhersagen sowie Zufall und Determiniertheit. Der Unterricht soll Lernende zu selbstständigem, experimentellem und theoriegeleitetem Arbeiten befähigen, wobei moderne Medien, digitale Messwerterfassung und mathematische Modellierung (inkl. Differenzengleichungen) eine wesentliche Rolle spielen. Die Leistungsbewertung ist transparent und umfasst neben schriftlichen Klausuren auch vielfältige fachspezifische Leistungen, wobei die Förderung der Kompetenzentwicklung im Vordergrund steht.",
+  "hauptthemen": [
+    {
+      "thema": "Dynamik",
+      "relevante_unterthemen": [
+        "Freier Fall und waagerechter Wurf",
+        "Newtonsche Axiome",
+        "Gleichförmige Kreisbewegung",
+        "Energieerhaltungssatz der Mechanik"
+      ],
+      "kernkompetenzen": [
+        "Bewegungsabläufe mathematisch beschreiben und grafisch darstellen",
+        "Energieerhaltungssatz zur Lösung von Problemen anwenden"
+      ]
+    },
+    {
+      "thema": "Elektrizität",
+      "relevante_unterthemen": [
+        "Elektrische Felder",
+        "Kondensatoren (Auf- und Entladevorgänge)",
+        "Magnetische Felder und Lorentzkraft",
+        "Induktion"
+      ],
+      "kernkompetenzen": [
+        "Elektrische und magnetische Felder analysieren und berechnen",
+        "Induktionsvorgänge erklären und technisch anwenden"
+      ]
+    },
+    {
+      "thema": "Schwingungen und Wellen",
+      "relevante_unterthemen": [
+        "Harmonische Schwingungen",
+        "Elektromagnetischer Schwingkreis",
+        "Wellenphänomene (Interferenz, Beugung, Polarisation)",
+        "Michelson-Interferometer"
+      ],
+      "kernkompetenzen": [
+        "Schwingungen mittels Zeigerdarstellung oder Sinuskurven beschreiben",
+        "Interferenzphänomene deuten und mathematisch herleiten"
+      ]
+    },
+    {
+      "thema": "Quantenobjekte",
+      "relevante_unterthemen": [
+        "Doppelspaltexperiment mit Quantenobjekten",
+        "De-Broglie-Gleichung",
+        "Komplementarität und Nichtlokalität",
+        "Photonenmodell und lichtelektrischer Effekt"
+      ],
+      "kernkompetenzen": [
+        "Stochastische Deutung von Interferenzmustern anwenden",
+        "Quantenphysikalische Konzepte wie Unbestimmtheit und Komplementarität erläutern"
+      ]
+    },
+    {
+      "thema": "Atomhülle",
+      "relevante_unterthemen": [
+        "Potenzialtopfmodell",
+        "Energieniveauschemata",
+        "Franck-Hertz-Versuch",
+        "Fluoreszenz und Spektrallinien"
+      ],
+      "kernkompetenzen": [
+        "Diskrete Energieniveaus in der Atomhülle erklären",
+        "Spektrallinien und Energieübergänge berechnen"
+      ]
+    },
+    {
+      "thema": "Atomkern",
+      "relevante_unterthemen": [
+        "Radioaktiver Zerfall und Halbwertszeit",
+        "Nuklidkarte",
+        "Kernstrahlung (Alpha, Beta, Gamma)",
+        "Energiemessung von Kernstrahlung"
+      ],
+      "kernkompetenzen": [
+        "Zerfallsvorgänge mathematisch modellieren und interpretieren",
+        "Eigenschaften von Kernstrahlung und deren biologische Wirkung beschreiben"
+      ]
+    }
+  ]
+}

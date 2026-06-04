@@ -1,0 +1,51 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Lehrplan für den G-Kurs der gymnasialen Oberstufe im Saarland (2016) zielt darauf ab, mathematische Kompetenzen als Teil der allgemeinen Studierfähigkeit und Persönlichkeitsentwicklung zu fördern. Der Unterricht ist prozessorientiert und vernetzt inhaltsbezogene Leitideen (Algorithmus/Zahl, Messen, Raum/Form, Funktionaler Zusammenhang, Daten/Zufall, Grenzprozesse) mit allgemeinen mathematischen Kompetenzen (Argumentieren, Problemlösen, Modellieren, Darstellen, Umgang mit Symbolen/Technik, Kommunizieren). Die Hauptphase umfasst Analysis (Funktionen, Ableitungen, Integralrechnung, e- und ln-Funktionen), Analytische Geometrie (Vektoren, Lagebeziehungen) und Stochastik (Wahrscheinlichkeiten, Zufallsgrößen). Ein besonderer Fokus liegt auf dem Modellieren von Realsituationen und dem verständigen Umgang mit digitalen Werkzeugen. Der Lehrplan ist spiralförmig aufgebaut, wobei die methodische Gestaltung den Lehrkräften Freiräume für Vertiefungen und fächerübergreifende Bezüge lässt.",
+  "hauptthemen": [
+    {
+      "thema": "Analysis",
+      "relevante_unterthemen": [
+        "Ganzrationale Funktionen",
+        "Ableitungsregeln (Produkt-, Kettenregel)",
+        "Integralrechnung",
+        "e-Funktion und ln-Funktion",
+        "Modellieren von Wachstumsprozessen"
+      ],
+      "kernkompetenzen": [
+        "Ableitungen und Stammfunktionen für verschiedene Funktionstypen bestimmen",
+        "Flächeninhalte zwischen Graphen berechnen und interpretieren",
+        "Realsituationen in mathematische Modelle übersetzen und validieren"
+      ]
+    },
+    {
+      "thema": "Analytische Geometrie",
+      "relevante_unterthemen": [
+        "Vektoren und Vektorraum",
+        "Skalar- und Vektorprodukt",
+        "Geraden- und Ebenengleichungen",
+        "Lagebeziehungen und Abstände",
+        "Kreis und Kugel"
+      ],
+      "kernkompetenzen": [
+        "Geometrische Objekte im Raum analytisch beschreiben",
+        "Lagebeziehungen zwischen Geraden und Ebenen untersuchen",
+        "Abstände und Winkel mithilfe vektorieller Methoden berechnen"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Wahrscheinlichkeitsbegriff (Kolmogorow)",
+        "Bedingte Wahrscheinlichkeit",
+        "Bernoulli-Experimente und Binomialverteilung",
+        "Zufallsgrößen (Erwartungswert, Varianz)"
+      ],
+      "kernkompetenzen": [
+        "Zufallsexperimente modellieren und Wahrscheinlichkeiten berechnen",
+        "Binomialverteilte Zufallsgrößen analysieren und interpretieren",
+        "Statistische Daten auswerten und Prognosen treffen"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "bundesland": "Brandenburg",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Brandenburg (in Kooperation mit Berlin) zielt darauf ab, Schülerinnen und Schüler zu befähigen, raumbezogene Strukturen und Prozesse im Zeitalter des Anthropozäns zu verstehen, zu analysieren und zu bewerten. Das Fach vermittelt ein tiefgreifendes Verständnis für das Mensch-Umwelt-System unter Berücksichtigung physisch- und humangeografischer Aspekte. Zentrale Ziele sind die Stärkung der raumbezogenen Urteils- und Handlungskompetenz, die Förderung nachhaltiger Entwicklung sowie die Vorbereitung auf eine globalisierte Wissensgesellschaft. Die Lernenden sollen komplexe Zusammenhänge auf verschiedenen Maßstabsebenen (lokal bis global) multiperspektivisch betrachten, wissenschaftspropädeutisch arbeiten (u.a. durch Geoinformationssysteme und Feldstudien) und ethische Verantwortung bei der Gestaltung von Räumen übernehmen. Das Curriculum basiert auf sechs Kompetenzbereichen (Geografische Konzepte, Erkenntnisgewinnung, Raumbezogene Orientierung, Kommunikation, Urteilen, Handlung) und nutzt Basiskonzepte wie System, Maßstab und Raum, um eine holistische Analyse zu gewährleisten.",
+  "hauptthemen": [
+    {
+      "thema": "Geoökosysteme im Wandel",
+      "relevante_unterthemen": [
+        "Planetare Grenzen und System Erde",
+        "Klimawandel und Anpassungsstrategien",
+        "Lithosphäre (Rohstoffe)",
+        "Hydrosphäre (Wasser als Ressource)",
+        "Pedosphäre (Boden)",
+        "Kryosphäre (Eishaushalt)",
+        "Biosphäre (Biodiversität)"
+      ],
+      "kernkompetenzen": [
+        "Analyse der Wechselwirkungen innerhalb des Mensch-Umwelt-Systems",
+        "Bewertung von Vulnerabilität und Resilienz gegenüber Naturgefahren",
+        "Anwendung von Nachhaltigkeitsstrategien auf ökologische Herausforderungen"
+      ]
+    },
+    {
+      "thema": "Eine „gerechte“ Welt - Raumbezogene Disparitäten im Wandel",
+      "relevante_unterthemen": [
+        "Entwicklungsbegriffe und Indikatoren",
+        "Strukturwandel in Deutschland und Europa",
+        "Globale Ziele für nachhaltige Entwicklung",
+        "Migration und Demografie",
+        "Tourismus als Veränderungsfaktor",
+        "Energieversorgung"
+      ],
+      "kernkompetenzen": [
+        "Kritische Analyse von Entwicklungsmodellen und Machtasymmetrien",
+        "Bewertung von raumbezogenen Disparitäten anhand sozioökonomischer Indikatoren",
+        "Entwicklung von Handlungsoptionen zum Abbau von Ungleichheiten"
+      ]
+    },
+    {
+      "thema": "Siedlungsräume im Wandel",
+      "relevante_unterthemen": [
+        "Stadtbegriffe und Verstädterungsprozesse",
+        "Stadtökologie (Mikroklima, Schwammstadt)",
+        "Historisch-genetische Stadtentwicklung",
+        "Megacities und Stadtmodelle",
+        "Ländliche Siedlungsentwicklung",
+        "Zukunftsvisionen (Smart City, Urban Health)"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Verstädterungsprozessen und deren Folgen (Gentrifizierung, Segregation)",
+        "Planung nachhaltiger Siedlungsstrukturen unter Berücksichtigung des Klimawandels",
+        "Vergleich von Stadtentwicklungsmodellen in verschiedenen Kulturräumen"
+      ]
+    },
+    {
+      "thema": "Globalisierte Welt im Wandel",
+      "relevante_unterthemen": [
+        "Globalisierung und Regionalisierung",
+        "Globale Warenketten und Transportwege",
+        "Global Cities und Sonderwirtschaftszonen",
+        "Küstenräume",
+        "Globale Ernährungssicherung",
+        "Gesundheit in der globalisierten Welt",
+        "Forschung, Entwicklung und Innovation",
+        "Recycling und Kreislaufwirtschaft"
+      ],
+      "kernkompetenzen": [
+        "Verständnis globaler Verflechtungen und deren Auswirkungen auf lokale Räume",
+        "Bewertung von Standortfaktoren und Innovationsclustern",
+        "Reflexion über globale Herausforderungen wie Ressourcenmanagement und Pandemien"
+      ]
+    }
+  ]
+}

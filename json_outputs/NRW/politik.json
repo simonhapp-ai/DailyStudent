@@ -1,0 +1,135 @@
+{
+  "bundesland": "NRW",
+  "fach": "Politik",
+  "zusammenfassung": "Der Kernlehrplan für die gymnasiale Oberstufe in den Fächern Sozialwissenschaften bzw. Sozialwissenschaften/Wirtschaft zielt auf die Entwicklung einer mündigen und sozial verantwortlichen Persönlichkeit ab. Die Schülerinnen und Schüler sollen befähigt werden, komplexe ökonomische, politische und gesellschaftliche Zusammenhänge strukturiert zu analysieren, Interessen abzuwägen und demokratisch zu handeln. Das Fach ist als Integrationsfach der Disziplinen Wirtschaftswissenschaften, Politikwissenschaften und Soziologie konzipiert. Der Kompetenzerwerb erfolgt spiralcurricular und vernetzt, wobei die Komplexität von der Einführungsphase bis zur Qualifikationsphase stetig zunimmt. Zentrale Kompetenzbereiche sind Sach-, Methoden-, Urteils- und Handlungskompetenz. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet und bereitet auf die Abiturprüfung vor, wobei auch die reflektierte Nutzung digitaler Werkzeuge und generativer KI-Systeme integriert ist.",
+  "hauptthemen": [
+    {
+      "thema": "Gestaltung der Marktwirtschaft",
+      "relevante_unterthemen": [
+        "Grundannahmen der Marktwirtschaft",
+        "Leistungsfähigkeit des Marktes und Marktversagen",
+        "Wettbewerbs- und Ordnungspolitik",
+        "Nachhaltiges Wirtschaften",
+        "Wertpapierhandel (nur Sowi/Wirtschaft)"
+      ],
+      "kernkompetenzen": [
+        "Marktmodell und Preisbildungsprozesse erläutern",
+        "Staatliche Wettbewerbssicherung beurteilen",
+        "Chancen und Herausforderungen nachhaltigen Wirtschaftens erörtern"
+      ]
+    },
+    {
+      "thema": "Sicherung der Demokratie",
+      "relevante_unterthemen": [
+        "Demokratietheoretische Grundkonzepte",
+        "Verfassungsgrundlagen des Grundgesetzes",
+        "Politische Willensbildung und Medien",
+        "Gefährdungen der Demokratie (Populismus, Extremismus)"
+      ],
+      "kernkompetenzen": [
+        "Demokratietheoretische Grundlagen des Grundgesetzes erklären",
+        "Einfluss von Medien und Lobbyismus auf den Willensbildungsprozess bewerten",
+        "Spannungsverhältnis zwischen Freiheit und Sicherheit beurteilen"
+      ]
+    },
+    {
+      "thema": "Individuum in Gruppe und Gesellschaft",
+      "relevante_unterthemen": [
+        "Sozialisationsinstanzen",
+        "Rollentheorie",
+        "Identitätsentwicklung",
+        "Soziale Netzwerke und Gruppen",
+        "Gruppenbezogene Menschenfeindlichkeit"
+      ],
+      "kernkompetenzen": [
+        "Soziale Interaktionen vor dem Hintergrund der Rollentheorie erläutern",
+        "Einfluss von Sozialisationsinstanzen auf das Individuum beurteilen",
+        "Handlungsspielräume unter Beachtung von Genderaspekten und Migrationsbiographien reflektieren"
+      ]
+    },
+    {
+      "thema": "Gestaltungsrahmen der Wirtschaftspolitik",
+      "relevante_unterthemen": [
+        "Wirtschaftspolitische Konzeptionen",
+        "Konjunktur- und Wachstumsschwankungen",
+        "Staatliche Einnahmen und Staatsverschuldung",
+        "Qualitatives Wachstum"
+      ],
+      "kernkompetenzen": [
+        "Angebots- und nachfrageorientierte Konzeptionen vergleichen",
+        "Zielharmonien und -konflikte in der Wirtschaftspolitik erläutern",
+        "Ökonomische, soziale und ökologische Wirkungen wirtschaftspolitischer Maßnahmen erörtern"
+      ]
+    },
+    {
+      "thema": "Sozialstruktur und Werte im Wandel",
+      "relevante_unterthemen": [
+        "Soziale Ungleichheit und Gerechtigkeit",
+        "Wertewandel",
+        "Sozialstrukturmodelle",
+        "Strukturwandel der Arbeitswelt"
+      ],
+      "kernkompetenzen": [
+        "Dimensionen und Ursachen sozialer Ungleichheit beschreiben",
+        "Soziale Ungleichheiten vor dem Hintergrund von Gerechtigkeitsprinzipien bewerten",
+        "Entwicklung der Sozialstruktur unter Rückgriff auf Modelle beurteilen"
+      ]
+    },
+    {
+      "thema": "Aufgaben des Sozialstaats",
+      "relevante_unterthemen": [
+        "Legitimation sozialstaatlichen Handelns",
+        "Wohlfahrtsstaatliche Modelle",
+        "Verteilungspolitik",
+        "Demografischer Wandel"
+      ],
+      "kernkompetenzen": [
+        "Gestaltungs- und Wirkprinzipien des sozialen Sicherungssystems erklären",
+        "Folgen der demografischen Entwicklung für den Sozialstaat erläutern",
+        "Verteilungs- und Steuerungseffekte sozialstaatlicher Maßnahmen bewerten"
+      ]
+    },
+    {
+      "thema": "Entwicklung der Europäischen Union",
+      "relevante_unterthemen": [
+        "Europäische Integration",
+        "Institutionen und Prozesse der EU",
+        "Geldpolitik der EZB",
+        "Wirtschafts- und Fiskalpolitik"
+      ],
+      "kernkompetenzen": [
+        "Aufbau und Zusammenwirken der EU-Institutionen erläutern",
+        "Zukunftsperspektiven der EU vor dem Hintergrund von Integrationstheorien diskutieren",
+        "Strategien zur innereuropäischen Krisenbewältigung beurteilen"
+      ]
+    },
+    {
+      "thema": "Globalisierte ökonomische Strukturen und Prozesse",
+      "relevante_unterthemen": [
+        "Globalisierung (Merkmale und Auswirkungen)",
+        "Internationale Wirtschaftsbeziehungen",
+        "Standortwettbewerb",
+        "Globalisierungskritik"
+      ],
+      "kernkompetenzen": [
+        "Antriebskräfte ökonomischer Globalisierung erläutern",
+        "Ökonomische, politische und ökologische Auswirkungen der Globalisierung bewerten",
+        "Grenzen nationaler Wirtschaftspolitik im globalen Kontext erörtern"
+      ]
+    },
+    {
+      "thema": "Internationale Friedens- und Sicherheitspolitik",
+      "relevante_unterthemen": [
+        "Friedens- und Konfliktforschung",
+        "Theorien internationaler Beziehungen",
+        "Vereinte Nationen",
+        "Menschenrechte"
+      ],
+      "kernkompetenzen": [
+        "Konzeptionen der Friedens- und Konfliktforschung erläutern",
+        "Handlungsmöglichkeiten der Vereinten Nationen bewerten",
+        "Stellenwert von Menschenrechten in internationalen Beziehungen beurteilen"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Berlin (in Anlehnung an die Bildungsstandards für die Allgemeine Hochschulreife) zielt darauf ab, Schülerinnen und Schüler zu einer selbstständigen und kompetenten Teilhabe am kulturellen, gesellschaftlichen und politischen Leben zu befähigen. Das Fach Deutsch fördert dabei die Entwicklung von Sprach-, Literatur- und Medienkompetenz durch ein Spiralcurriculum, das prozessbezogene Kompetenzen (Sprechen/Zuhören, Schreiben, Lesen) mit domänenspezifischen Inhalten (Auseinandersetzung mit Texten/Medien, Reflexion über Sprache) verzahnt. Die Einführungsphase dient der Angleichung von Kompetenzen und der Vorbereitung auf wissenschaftspropädeutisches Arbeiten. In der Qualifikationsphase liegt der Fokus auf der vertieften Analyse, Interpretation und Erörterung komplexer literarischer und pragmatischer Texte sowie der Reflexion über Sprache als historisches und kommunikatives System. Ziel ist die Erlangung der Allgemeinen Hochschulreife durch die Fähigkeit zur ästhetischen Urteilsbildung, argumentativen Reflexion und souveränen Mediennutzung.",
+  "hauptthemen": [
+    {
+      "thema": "Kommunikation und Sprache",
+      "relevante_unterthemen": [
+        "Kommunikationsmodelle",
+        "Sprachvarietäten (Dialekte, Soziolekte, Fachsprache)",
+        "Sprachwandel und Gegenwartssprache",
+        "Persuasive und manipulative Strategien"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Bedingungen gelingender Kommunikation",
+        "Reflexion über Sprache als System und Kommunikationsmedium",
+        "Bewertung von Macht- und Dominanzverhältnissen in der Kommunikation"
+      ]
+    },
+    {
+      "thema": "Literaturgeschichte und Epochen",
+      "relevante_unterthemen": [
+        "Aufklärung, Empfindsamkeit, Sturm und Drang",
+        "Literatur um 1800",
+        "Literatur im 19. Jahrhundert",
+        "Literatur im 20./21. Jahrhundert"
+      ],
+      "kernkompetenzen": [
+        "Analyse und Interpretation literarischer Texte unter Berücksichtigung historischer Kontexte",
+        "Vergleich literarischer Traditionen und Gegenwartsliteratur",
+        "Erfassung von Mehrdeutigkeit als konstitutives Merkmal literarischer Texte"
+      ]
+    },
+    {
+      "thema": "Medien und Film",
+      "relevante_unterthemen": [
+        "Filmisches Erzählen",
+        "Theaterinszenierungen",
+        "Hörtexte und audiovisuelle Medien",
+        "Medienkritik"
+      ],
+      "kernkompetenzen": [
+        "Analyse der spezifischen Gestaltung von Texten unterschiedlicher medialer Form",
+        "Beurteilung der ästhetischen Qualität von Inszenierungen und Filmen",
+        "Produktion eigener medialer Beiträge (Hörtexte, Filme)"
+      ]
+    },
+    {
+      "thema": "Schreiben und Argumentieren",
+      "relevante_unterthemen": [
+        "Materialgestütztes Schreiben",
+        "Wissenschaftspropädeutisches Arbeiten",
+        "Gestaltendes Schreiben",
+        "Erörterung fachlicher Inhalte"
+      ],
+      "kernkompetenzen": [
+        "Verfassen kohärenter, adressatengerechter und normgerechter Texte",
+        "Strukturierung komplexer Schreibprozesse unter Nutzung digitaler Werkzeuge",
+        "Eigenständige Entwicklung und Begründung von Deutungshypothesen"
+      ]
+    }
+  ]
+}

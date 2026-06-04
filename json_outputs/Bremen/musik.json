@@ -1,0 +1,101 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Musik",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen zielt auf eine ganzheitliche musikalische Bildung ab, die Fühlen, Denken und Handeln verbindet. Der Unterricht ist als künstlerisch-wissenschaftliches Fach konzipiert, in dem Produktion, Rezeption und Reflexion gleichwertige Säulen bilden. Ziel ist die Entwicklung von Sensibilität, Kreativität und Urteilsvermögen. Die Qualifikationsphase gliedert sich in vier inhaltliche Themenbereiche (Musik im Wandel, gesellschaftlicher Kontext, Verbindung mit anderen Künsten, Musik des 20./21. Jahrhunderts) sowie drei übergreifende Bereiche (Grundlagen, Analyse/Interpretation, Musikpraxis). Die Standards definieren verbindliche Kompetenzen für das Abitur, wobei der Leistungskurs durch höhere Komplexität und vertiefte wissenschaftliche Durchdringung gekennzeichnet ist. Die Leistungsbewertung umfasst sowohl schriftliche Arbeiten als auch die laufende Unterrichtsarbeit, wobei musikpraktische Leistungen einen wesentlichen Stellenwert einnehmen.",
+  "hauptthemen": [
+    {
+      "thema": "Musik im Wandel der Zeit",
+      "relevante_unterthemen": [
+        "Epochen- und Stilbegriffe",
+        "Umbruchsituationen",
+        "Aufführungspraxis und Rezeptionsgeschichte",
+        "Gattungsgeschichte",
+        "Musikästhetik"
+      ],
+      "kernkompetenzen": [
+        "Charakteristische Merkmale von Epochen, Stilen und Gattungen erkennen und beschreiben",
+        "Musikgeschichtliche Entwicklungen in den historischen und gesellschaftlichen Kontext einordnen"
+      ]
+    },
+    {
+      "thema": "Musik im gesellschaftlichen Kontext",
+      "relevante_unterthemen": [
+        "Politische Musik",
+        "Kirchenmusik",
+        "Musik verschiedener Kulturen",
+        "Institutionen und Wirtschaftsfaktor Musik",
+        "Bedeutung der Medien"
+      ],
+      "kernkompetenzen": [
+        "Musikstücke in ihrem gesellschaftlichen Kontext reflektieren",
+        "Spannungsfeld zwischen autonomem Kunstwerk und gesellschaftlicher Funktionalisierung erkennen"
+      ]
+    },
+    {
+      "thema": "Musik in Verbindung mit anderen Künsten",
+      "relevante_unterthemen": [
+        "Vokalmusik (Wort-Ton-Beziehung)",
+        "Musiktheater",
+        "Programmmusik",
+        "Filmmusik und Videoclip",
+        "Gesamtkunstwerk"
+      ],
+      "kernkompetenzen": [
+        "Verbindungen von Musik mit außermusikalischen Aspekten (Bild, Bewegung, Wort) analysieren",
+        "Interdisziplinäre Bezüge interpretieren"
+      ]
+    },
+    {
+      "thema": "Musik des 20./21. Jahrhunderts",
+      "relevante_unterthemen": [
+        "Entwicklung zur Neuen Musik",
+        "Aktuelle Tendenzen",
+        "Jazz",
+        "Rock/Pop"
+      ],
+      "kernkompetenzen": [
+        "Musikalische Tendenzen der Moderne beschreiben",
+        "Werke des 20./21. Jahrhunderts analysieren und zugrunde liegende Konzepte darstellen"
+      ]
+    },
+    {
+      "thema": "Erweiterte Grundlagen von Musik",
+      "relevante_unterthemen": [
+        "Musikalische Parameter (Melodik, Rhythmik, Harmonik etc.)",
+        "Fachterminologie",
+        "Notationsformen",
+        "Musikpsychologie und Akustik"
+      ],
+      "kernkompetenzen": [
+        "Musiktheoretische Grundlagen sicher anwenden",
+        "Fachterminologie korrekt verwenden"
+      ]
+    },
+    {
+      "thema": "Methoden der Analyse und Interpretation",
+      "relevante_unterthemen": [
+        "Analyse musikalischer Parameter",
+        "Form und Inhalt",
+        "Vergleich von Interpretationen",
+        "Erörterung fachbezogener Texte"
+      ],
+      "kernkompetenzen": [
+        "Musikstücke kriterienorientiert analysieren und interpretieren",
+        "Begründete Urteile über Musik fällen"
+      ]
+    },
+    {
+      "thema": "Musikpraxis",
+      "relevante_unterthemen": [
+        "Vokales und instrumentales Musizieren",
+        "Mediales Produzieren",
+        "Musik und Bewegung",
+        "Improvisation, Arrangement und Komposition"
+      ],
+      "kernkompetenzen": [
+        "Musik instrumental oder vokal in Gruppen oder solo realisieren",
+        "Eigene musikalische Gestaltungsideen entwickeln und umsetzen"
+      ]
+    }
+  ]
+}

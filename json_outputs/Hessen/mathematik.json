@@ -1,0 +1,53 @@
+{
+  "bundesland": "Hessen",
+  "fach": "Mathematik",
+  "zusammenfassung": "Das Kerncurriculum für die gymnasiale Oberstufe in Hessen zielt auf den Erwerb einer allgemeinen Studierfähigkeit und wissenschaftspropädeutischer Kompetenzen ab. Es basiert auf einem kompetenzorientierten Ansatz, der fachliche Inhalte (Analysis, Lineare Algebra/Analytische Geometrie, Stochastik) untrennbar mit sechs allgemeinen mathematischen Kompetenzen (Argumentieren, Problemlösen, Modellieren, Darstellen, symbolisch/technisch Arbeiten, Kommunizieren) verknüpft. Der Unterricht ist in Kurshalbjahre gegliedert, wobei die Analysis eine zentrale Rolle einnimmt. Ein wesentlicher Fokus liegt auf der Nutzung digitaler Mathematikwerkzeuge als Unterstützung für Modellierung und Problemlösung, ohne die händischen Fertigkeiten zu ersetzen. Das Curriculum fördert zudem überfachliche Kompetenzen wie Selbstständigkeit, Medienkompetenz und die Fähigkeit zur Reflexion in einer digitalisierten Welt, um Lernende auf die Anforderungen der Hochschule und des Berufslebens vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Analysis",
+      "relevante_unterthemen": [
+        "Funktionen und ihre Darstellung",
+        "Ableitungsbegriff und Anwendungen",
+        "Integralrechnung",
+        "Exponential- und trigonometrische Funktionen",
+        "Differenzialgleichungen",
+        "Funktionenscharen"
+      ],
+      "kernkompetenzen": [
+        "Veränderungsprozesse mithilfe von Ableitungen und Integralen modellieren und analysieren",
+        "Zusammenhänge zwischen Funktionsgraphen und deren Ableitungen begründen",
+        "Rekonstruktion von Beständen aus Änderungsraten durchführen"
+      ]
+    },
+    {
+      "thema": "Lineare Algebra und Analytische Geometrie",
+      "relevante_unterthemen": [
+        "Vektoren und räumliche Koordinatensysteme",
+        "Geraden und Ebenen im Raum",
+        "Lineare Gleichungssysteme",
+        "Matrizen zur Beschreibung von Übergangsprozessen",
+        "Lineare geometrische Abbildungen"
+      ],
+      "kernkompetenzen": [
+        "Geometrische Objekte im Raum darstellen und Lagebeziehungen untersuchen",
+        "Lineare Gleichungssysteme algorithmisch lösen und geometrisch deuten",
+        "Übergangsprozesse und geometrische Abbildungen mithilfe von Matrizen modellieren"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Grundbegriffe der Wahrscheinlichkeitstheorie",
+        "Binomialverteilung",
+        "Normalverteilung",
+        "Hypothesentests",
+        "Prognose- und Konfidenzintervalle"
+      ],
+      "kernkompetenzen": [
+        "Zufallsexperimente modellieren und Wahrscheinlichkeiten berechnen",
+        "Statistische Daten interpretieren und Schlussfolgerungen ziehen",
+        "Hypothesentests durchführen und Ergebnisse kritisch bewerten"
+      ]
+    }
+  ]
+}

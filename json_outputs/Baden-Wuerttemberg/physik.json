@@ -1,0 +1,503 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Physik",
+  "zusammenfassung": "Der Bildungsplan 2016 für Physik am Gymnasium in Baden-Württemberg, überarbeitet im Jahr 2022, verfolgt einen kompetenzorientierten Ansatz, der Schülerinnen und Schüler befähigen soll, grundlegende physikalische Begriffe, Gesetze, Konzepte und Modelle zu verstehen und anzuwenden. Ziel ist es, eine naturwissenschaftliche Allgemeinbildung zu vermitteln, die eine aktive Teilhabe an gesellschaftlicher Kommunikation und Meinungsbildung in einer hochtechnisierten Welt ermöglicht. Das Fach leistet Beiträge zu Leitperspektiven wie Bildung für nachhaltige Entwicklung, Prävention und Gesundheitsförderung, Berufliche Orientierung, Medienbildung und Verbraucherbildung.\n\nDer Lehrplan unterscheidet zwischen prozessbezogenen und inhaltsbezogenen Kompetenzen. Die prozessbezogenen Kompetenzen, angelehnt an die KMK-Standards, gliedern sich in 'Erkenntnisgewinnung', 'Kommunikation' und 'Bewertung'. Im Bereich der 'Erkenntnisgewinnung' lernen die Schülerinnen und Schüler, Phänomene zu beobachten, Hypothesen aufzustellen, Experimente zielgerichtet zu planen, durchzuführen und auszuwerten (auch digital), mathematische Zusammenhänge herzustellen und Modelle zur Erklärung physikalischer Phänomene zu nutzen. 'Kommunikation' umfasst den Austausch über physikalische Erkenntnisse unter Verwendung der Fachsprache und fachtypischer Darstellungen, das Unterscheiden von Alltags- und Fachsprache, das Dokumentieren von Ergebnissen (Skizzen, Tabellen, Diagramme, Formeln) und das adressatengerechte Präsentieren. Der Bereich 'Bewertung' zielt darauf ab, physikalische Arbeitsweisen zu reflektieren, Experimentergebnisse kritisch zu beurteilen, Chancen und Risiken von Technologien zu diskutieren (auch unter sozialen, ökologischen und ökonomischen Aspekten) und Informationen sowie Quellen kritisch zu prüfen.\n\nDie inhaltsbezogenen Kompetenzen sind spiralcurricular aufgebaut und integrieren die Basiskonzepte der KMK-Bildungsstandards. Sie orientieren sich an der Fachsystematik und bauen auf den physikalischen Aspekten des Fächerverbundes Biologie, Naturphänomene und Technik (BNT) auf. Ein besonderer Fokus liegt auf den 'Physikalischen Denk- und Arbeitsweisen', die nicht nur angewendet, sondern auch erläutert und reflektiert werden sollen. Verbindlich sind die korrekte Verwendung und das Verständnis kursiv geschriebener Fachbegriffe sowie die Kenntnis und Anwendung relevanter Formeln.\n\nDidaktisch wird ein handlungsorientierter Unterricht gefördert, der vom Staunen über Naturphänomene ausgeht und das Experiment in den Mittelpunkt stellt. Die Entwicklung eines präzisen Physikverständnisses ist eng mit dem Erwerb einer angemessenen Fachsprache und der Fähigkeit zur Abstraktion und Modellbildung verbunden, wobei quantitative Beschreibungen und mathematische Methoden zunehmend an Bedeutung gewinnen. Der Unterricht soll lebensweltliche und technische Bezüge herstellen, interdisziplinäre Verknüpfungen aufzeigen und digitale Medien selbstverständlich einbeziehen. Die Berücksichtigung von Schülervorstellungen und Alltagserfahrungen ist entscheidend für einen erfolgreichen Lernprozess.\n\nIn der Oberstufe (Klassen 11/12) können Schülerinnen und Schüler Physik als Basisfach oder Leistungsfach wählen. Beide vermitteln physikalische Inhalte und Denk- und Arbeitsweisen. Das Leistungsfach zeichnet sich durch einen höheren Mathematisierungsgrad, eine größere Themenbreite und eine stärkere Vertiefung aus, während die Basisfächer (mit Schwerpunkten wie Quantenphysik oder Astrophysik) die exemplarische Behandlung von Inhalten und die Arbeit mit Kontexten in den Vordergrund stellen.",
+  "hauptthemen": [
+    {
+      "thema": "Klassen 5/6 (Einführung in BNT)",
+      "relevante_unterthemen": [
+        "Grundlegende naturwissenschaftliche Denk- und Arbeitsweisen",
+        "Propädeutischer Energie- und Dichtebegriff",
+        "Grundgrößen Volumen, Masse, Temperatur",
+        "Physikalische Eigenschaften von Materialien",
+        "Phänomene bei Temperaturänderung",
+        "Thermische Energietransporte"
+      ],
+      "kernkompetenzen": [
+        "Der Physikunterricht in den Klassen 5/6 erfolgt im Fächerverbund Biologie, Naturphänomene und Technik (BNT) und legt die Grundlagen für den späteren Physikunterricht."
+      ]
+    },
+    {
+      "thema": "Denk- und Arbeitsweisen der Physik (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Beobachtung und Erklärung",
+        "Überprüfbarkeit physikalischer Aussagen",
+        "Funktion von Modellen",
+        "SI-Einheitensystem"
+      ],
+      "kernkompetenzen": [
+        "Kriterien für die Unterscheidung zwischen Beobachtung und Erklärung beschreiben (Beobachtung durch Sinneseindrücke und Messungen, Erklärung durch Gesetze und Modelle)",
+        "an Beispielen beschreiben, dass Aussagen in der Physik grundsätzlich überprüfbar sind (Fragestellung, Hypothese, Experiment, Bestätigung beziehungsweise Widerlegung)",
+        "die Funktion von Modellen in der Physik erläutern (zum Beispiel anhand des Lichtstrahlmodells, des Teilchenmodells oder des Elementarmagnetmodells)",
+        "die Funktion des SI-Einheitensystems an Beispielen beschreiben"
+      ]
+    },
+    {
+      "thema": "Optik und Akustik (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Akustische Phänomene (Lautstärke, Tonhöhe, Amplitude, Frequenz)",
+        "Physikalische Aspekte des Seh- und Hörvorgangs",
+        "Hörgewohnheiten und Hörschädigungen",
+        "Lichtausbreitung (Lichtstrahlmodell)",
+        "Schattenphänomene (Kernschatten, Halbschatten)",
+        "Optische Phänomene im Weltall (Mondphasen, Finsternisse)",
+        "Streuung und Absorption",
+        "Reflexion (Reflexionsgesetz, Spiegelbild)",
+        "Brechung (Strahlenverlauf, optische Hebung)",
+        "Bildentstehung bei einer Lochkamera",
+        "Wirkung einer optischen Linse (Sammellinse, Brennpunkt, Bildumkehrung)",
+        "Zerlegung von weißem Licht (Prisma)",
+        "Addition von Farben",
+        "Gemeinsamkeiten und Unterschiede von Licht und Schall"
+      ],
+      "kernkompetenzen": [
+        "akustische Phänomene beschreiben (Lautstärke, Tonhöhe, Amplitude, Frequenz)",
+        "physikalische Aspekte des Sehvorgangs und des Hörvorgangs beschreiben (Sender, Empfänger)",
+        "ihre Hörgewohnheiten in Bezug auf das Risiko möglicher Hörschädigungen bewerten (zum Beispiel Lautstärke von Kopfhörern)",
+        "grundlegende Phänomene der Lichtausbreitung experimentell untersuchen und mithilfe des Lichtstrahlmodells beschreiben",
+        "Schattenphänomene experimentell untersuchen und erklären (Schattenraum und Schattenbild, Kernschatten und Halbschatten)",
+        "optische Phänomene im Weltall erklären (Mondphasen, Sonnenfinsternis, Mondfinsternis)",
+        "Streuung und Absorption phänomenologisch beschreiben",
+        "die Reflexion an ebenen Flächen beschreiben (Reflexionsgesetz, Spiegelbild)",
+        "die Brechung beschreiben (Strahlenverlauf, Wahrnehmungseffekte wie zum Beispiel optische Hebung)",
+        "die Bildentstehung bei einer Lochkamera qualitativ beschreiben",
+        "die Wirkung einer optischen Linse beschreiben (Sammellinse, Brennpunkt, Wahrnehmungseffekte wie zum Beispiel Bildumkehrung)",
+        "einfache Experimente zur Zerlegung von weißem Licht und zur Addition von Farben beschreiben (Prisma)",
+        "Gemeinsamkeiten und Unterschiede von Licht und Schall beschreiben (Sender und Empfänger, Wahrnehmungsbereich, Medium, Ausbreitungsgeschwindigkeit)"
+      ]
+    },
+    {
+      "thema": "Energie (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Grundlegende Eigenschaften der Energie (Energieerhaltung)",
+        "Energieübertragungsketten in Alltag und Technik",
+        "Speicherung von Energie in verschiedenen Energieformen (Lageenergie, Bewegungsenergie, thermische Energie)",
+        "Möglichkeiten der Energieversorgung",
+        "Sorgsamer Umgang mit Energie und Verhaltensregeln",
+        "Berechnung der Lageenergie",
+        "Zusammenhang von Energie und Leistung",
+        "Größenordnungen typischer Leistungen im Alltag",
+        "Zusammenhang von zugeführter Energie, nutzbarer Energie und Wirkungsgrad",
+        "Umwandlung in thermische Energie"
+      ],
+      "kernkompetenzen": [
+        "grundlegende Eigenschaften der Energie beschreiben (unter anderem Energieerhaltung)",
+        "Beispiele für Energieübertragungsketten in Alltag und Technik nennen und qualitativ beschreiben (unter anderem anhand von mechanischer, elektrischer oder thermischer Energieübertragung)",
+        "Beispiele für die Speicherung von Energie in verschiedenen Energieformen in Alltag und Technik nennen und beschreiben (unter anderem Lageenergie, Bewegungsenergie, thermische Energie)",
+        "Möglichkeiten der Energieversorgung mithilfe von Energieübertragungsketten beschreiben (zum Beispiel Wasserkraftwerk, Kohlekraftwerk)",
+        "ihre Umgebung hinsichtlich des sorgsamen Umganges mit Energie untersuchen, bewerten und konkrete technische Maßnahmen (zum Beispiel Wahl des Leuchtmittels) sowie Verhaltensregeln ableiten (zum Beispiel Stand-by-Funktion)",
+        "die Lageenergie berechnen ( , Nullniveau)",
+        "den Zusammenhang von Energie und Leistung beschreiben ( )",
+        "Größenordnungen typischer Leistungen im Alltag ermitteln und vergleichen (zum Beispiel körperliche Tätigkeiten, Handgenerator, Fahrradergometer, Typenschilder, Leistungsmessgerät, PKW, Solarzelle)",
+        "den Zusammenhang von zugeführter Energie, nutzbarer Energie und Wirkungsgrad bei Energieübertragungen beschreiben",
+        "das scheinbare Verschwinden von Energie mit der Umwandlung in thermische Energie erklären"
+      ]
+    },
+    {
+      "thema": "Magnetismus und Elektromagnetismus (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Phänomene des Magnetismus (ferromagnetische Materialien, Magnetpole, Magnetfeld, Feldlinien, Erdmagnetfeld, Kompass)",
+        "Magnetische Wirkung eines stromdurchflossenen Leiters und einer Spule",
+        "Anwendungen des Elektromagnetismus (Elektromagnet, Lautsprecher, Elektromotor)",
+        "Struktur von Magnetfeldern"
+      ],
+      "kernkompetenzen": [
+        "Phänomene des Magnetismus experimentell untersuchen und beschreiben (ferromagnetische Materialien, Magnetpole, Anziehung – Abstoßung, Zusammenwirken mehrerer Magnete, Magnetfeld, Feldlinien, Erdmagnetfeld, Kompass)",
+        "die magnetische Wirkung eines stromdurchflossenen geraden Leiters und einer stromdurchflossenen Spule untersuchen und beschreiben",
+        "eine einfache Anwendung des Elektromagnetismus funktional beschreiben (zum Beispiel Elektromagnet, Lautsprecher, Elektromotor)",
+        "die Struktur von Magnetfeldern beschreiben (Feldlinien, Stabmagnet, Hufeisenmagnet, Spule)"
+      ]
+    },
+    {
+      "thema": "Grundgrößen der Elektrizitätslehre (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Bauteile eines elektrischen Stromkreises (Schaltsymbole)",
+        "Elektrische Leitfähigkeit von Stoffen",
+        "Elektrische Ströme (Antrieb, Widerstände, Stromstärke, Potential, Spannung, Ladung)",
+        "Modelle des Stromkreises",
+        "Aufbau von Stromkreisen und Schaltskizzen",
+        "Messen von Stromstärke und Spannung",
+        "Gesetzmäßigkeiten in Reihen- und Parallelschaltungen (Maschenregel, Knotenregel)",
+        "Energietransport im elektrischen Stromkreis (Stromstärke, Spannung, Leistung, Energie)",
+        "Physikalische Angaben auf Alltagsgeräten",
+        "Thermische und magnetische Wirkung des elektrischen Stroms",
+        "Gefahren des elektrischen Stroms und Schutzmaßnahmen"
+      ],
+      "kernkompetenzen": [
+        "grundlegende Bauteile eines elektrischen Stromkreises benennen und ihre Funktion beschreiben (unter anderem Schaltsymbole)",
+        "die elektrische Leitfähigkeit von Stoffen experimentell untersuchen (Leiter, Nichtleiter)",
+        "qualitativ beschreiben, dass elektrische Ströme einen Antrieb beziehungsweise eine Ursache benötigen und durch Widerstände in ihrer Stärke beeinflusst werden (Stromstärke, Potential, Spannung, Widerstand, Ladung)",
+        "den elektrischen Stromkreis und grundlegende Vorgänge darin mithilfe von Modellen erklären",
+        "den Aufbau eines Stromkreises unter Vorgabe einer Schaltskizze durchführen sowie Stromkreise in Form von Schaltskizzen darstellen",
+        "Stromstärke und Spannung messen",
+        "in einfachen Reihenschaltungen und Parallelschaltungen Gesetzmäßigkeiten für die Stromstärke und die Spannung beschreiben (Maschenregel, Knotenregel)",
+        "den Energietransport im elektrischen Stromkreis und den Zusammenhang zwischen Stromstärke, Spannung, Leistung und Energie beschreiben ( )",
+        "physikalische Angaben auf Alltagsgeräten beschreiben (Spannung, Stromstärke, Leistung)",
+        "die thermische und die magnetische Wirkung des elektrischen Stroms und Anwendungen erläutern",
+        "Gefahren des elektrischen Stroms beschreiben sowie Maßnahmen zum Schutz erklären (zum Beispiel Sicherung, Schutzleiter)"
+      ]
+    },
+    {
+      "thema": "Mechanik: Kinematik (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Bewegungen verbal und mithilfe von Diagrammen beschreiben und klassifizieren (Zeitpunkt, Ort, Richtung, Bahn, Geschwindigkeit, gleichförmig, beschleunigt)",
+        "Bewegungsdiagramme erstellen und interpretieren (s-t-Diagramm)",
+        "Regeln für sicheres Verhalten im Straßenverkehr (Reaktionszeit)",
+        "Quotientenbildung aus Strecke und Zeitspanne bei der Berechnung der Geschwindigkeit"
+      ],
+      "kernkompetenzen": [
+        "Bewegungen verbal und mithilfe von Diagrammen beschreiben und klassifizieren (Zeitpunkt, Ort, Richtung, Form der Bahn, Geschwindigkeit, gleichförmige und beschleunigte Bewegungen)",
+        "Bewegungsdiagramme erstellen und interpretieren (s-t-Diagramm, Richtung der Bewegung)",
+        "aus ihren Kenntnissen der Mechanik Regeln für sicheres Verhalten im Straßenverkehr ableiten (zum Beispiel Reaktionszeit)",
+        "die Quotientenbildung aus Strecke und Zeitspanne bei der Berechnung der Geschwindigkeit erläutern und anwenden ( )"
+      ]
+    },
+    {
+      "thema": "Mechanik: Dynamik (Klassen 7/8)",
+      "relevante_unterthemen": [
+        "Trägheitsprinzip",
+        "Änderungen von Bewegungszuständen als Wirkung von Kräften",
+        "Wechselwirkungsprinzip",
+        "Newtons Prinzipien der Mechanik",
+        "Verformungen als Wirkung von Kräften (Hooke’sches Gesetz, Federkraftmesser)",
+        "Zusammenhang und Unterschied von Masse und Gewichtskraft",
+        "Zusammenwirken von Kräften (resultierende Kraft, Kräftegleichgewicht)",
+        "Regeln für sicheres Verhalten im Straßenverkehr (Sicherheitsgurte)",
+        "Einfache Maschinen (Hebel, Flaschenzug)"
+      ],
+      "kernkompetenzen": [
+        "das Trägheitsprinzip beschreiben",
+        "Änderungen von Bewegungszuständen (Betrag und Richtung) als Wirkung von Kräften beschreiben",
+        "das Wechselwirkungsprinzip beschreiben",
+        "Newtons Prinzipien der Mechanik zur verbalen Beschreibung und Erklärung einfacher Situationen aus Experimenten und aus dem Alltag anwenden",
+        "Verformungen als Wirkung von Kräften beschreiben (zum Beispiel Gummiband, Hooke’sches Gesetz, Federkraftmesser)",
+        "Zusammenhang und Unterschied von Masse und Gewichtskraft erläutern (Ortsfaktor, )",
+        "das Zusammenwirken von Kräften an eindimensionalen Beispielen quantitativ beschreiben (resultierende Kraft, Kräftegleichgewicht)",
+        "aus ihren Kenntnissen der Mechanik Regeln für sicheres Verhalten im Straßenverkehr ableiten (zum Beispiel Sicherheitsgurte)",
+        "eine einfache Maschine und ihre Anwendung im Alltag und in der Technik beschreiben (zum Beispiel Hebel, Flaschenzug)"
+      ]
+    },
+    {
+      "thema": "Denk- und Arbeitsweisen der Physik (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Beobachtung und Erklärung",
+        "Überprüfbarkeit physikalischer Aussagen",
+        "Funktion von Modellen (Teilchenmodell, Atome)",
+        "Bedeutung des SI-Einheitensystems"
+      ],
+      "kernkompetenzen": [
+        "Kriterien für die Unterscheidung zwischen Beobachtung und Erklärung beschreiben (Beobachtung durch Sinneseindrücke und Messungen, Erklärung durch Gesetze und Modelle)",
+        "erläutern, dass Aussagen in der Physik grundsätzlich überprüfbar sind (Fragestellung, Hypothese, Experiment, Bestätigung beziehungsweise Widerlegung)",
+        "die Funktion von Modellen in der Physik erläutern (anhand des Teilchenmodells und der Modellvorstellung von Atomen)",
+        "die Bedeutung des SI-Einheitensystems erläutern"
+      ]
+    },
+    {
+      "thema": "Elektromagnetismus (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Gesetzmäßigkeiten in Reihen- und Parallelschaltungen",
+        "Zusammenhang zwischen Stromstärke und Spannung (Widerstand)",
+        "Kennlinien experimentell aufzeichnen und interpretieren (Eisendraht, Graphit, technischer Widerstand)",
+        "Reihenschaltung und Parallelschaltung zweier Widerstände",
+        "Elektromagnetische Induktion",
+        "Funktionsweise von Generator und Transformator",
+        "Physikalische Aspekte der elektrischen Energieversorgung",
+        "Physikalische Angaben auf Alltagsgeräten",
+        "Einfache elektronische Bauteile (dotierte Halbleiter, Diode, Leuchtdiode, temperaturabhängige Widerstände, lichtabhängige Widerstände)"
+      ],
+      "kernkompetenzen": [
+        "in einfachen Reihenschaltungen und Parallelschaltungen Gesetzmäßigkeiten für Stromstärke und Spannung anwenden und erläutern",
+        "den Zusammenhang zwischen Stromstärke und Spannung untersuchen und erläutern (Widerstand, )",
+        "Kennlinien experimentell aufzeichnen und interpretieren (zum Beispiel Eisendraht, Graphit, technischer Widerstand) sowie die Abhängigkeit des Widerstandes von Länge, Querschnitt und Material beschreiben",
+        "die Reihenschaltung und Parallelschaltung zweier Widerstände untersuchen und beschreiben ( , )",
+        "die elektromagnetische Induktion qualitativ untersuchen und beschreiben",
+        "mithilfe der elektromagnetischen Induktion die Funktionsweise von Generator und Transformator qualitativ erklären",
+        "physikalische Aspekte der elektrischen Energieversorgung beschreiben (Gleichspannung, Wechselspannung, Transformatoren, Stromnetz)",
+        "physikalische Angaben auf Alltagsgeräten beschreiben („Akkuladung“ , Gleichspannung, Wechselspannung)",
+        "einfache elektronische Bauteile untersuchen, mithilfe ihrer Kennlinien funktional beschreiben und Anwendungen erläutern (zum Beispiel dotierte Halbleiter, Diode, Leuchtdiode, temperaturabhängige Widerstände, lichtabhängige Widerstände)"
+      ]
+    },
+    {
+      "thema": "Wärmelehre (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Gemeinsamkeiten und Unterschiede zwischen Celsius-Skala und Kelvin-Skala",
+        "Ausdehnung von Stoffen bei Temperaturerhöhung",
+        "Änderung der thermischen Energie bei Temperaturänderung",
+        "Thermische Energieübertragungsarten (Konvektion, Wärmestrahlung, Wärmeleitung)",
+        "Technische Anwendungen (Dämmung, Heizung, Wärmeschutzverglasung)",
+        "Reversible und irreversible Prozesse",
+        "Natürlicher und anthropogener Treibhauseffekt",
+        "Auswirkungen des Treibhauseffektes auf die Klimaentwicklung",
+        "Sorgsamer und effizienter Umgang mit Energie",
+        "Vergleich und Bewertung verschiedener Arten der Energieversorgung"
+      ],
+      "kernkompetenzen": [
+        "Gemeinsamkeiten und Unterschiede zwischen Celsius-Skala und Kelvin-Skala beschreiben (unter anderem absoluter Nullpunkt)",
+        "beschreiben, dass sich feste, flüssige und gasförmige Stoffe bei Temperaturerhöhung in der Regel ausdehnen",
+        "die Änderung der thermischen Energie bei Temperaturänderung beschreiben ( )",
+        "die drei thermischen Energieübertragungsarten beschreiben (Konvektion, Wärmestrahlung, Wärmeleitung)",
+        "technische Anwendungen mit Bezug auf die thermischen Energieübertragungsarten beschreiben (zum Beispiel Dämmung, Heizung, Wärmeschutzverglasung)",
+        "den Unterschied zwischen reversiblen und irreversiblen Prozessen beschreiben",
+        "ihre physikalischen Kenntnisse zur Beschreibung des natürlichen und anthropogenen Treibhauseffektes anwenden (zum Beispiel Strahlungsbilanz der Erde, Treibhausgase)",
+        "Auswirkungen des Treibhauseffektes auf die Klimaentwicklung beschreiben (zum Beispiel anhand von Diagrammen, Szenarien und Prognosen)",
+        "ihre physikalischen Kenntnisse anwenden, um mit Energie sorgsam und effizient umzugehen (zum Beispiel Klimaschutz, Nachhaltigkeit, Ökonomie)",
+        "verschiedene Arten der Energieversorgung unter physikalischen, ökologischen, ökonomischen und gesellschaftlichen Aspekten vergleichen und bewerten (zum Beispiel fossile Brennstoffe, Kernenergie, Windenergie, Sonnenenergie)"
+      ]
+    },
+    {
+      "thema": "Struktur der Materie (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Struktur der Materie und Aufbau des Atoms (Atomhülle, Atomkern, Elektron, Proton, Neutron, Quarks, Kernladungszahl, Massenzahl, Isotope)",
+        "Kernzerfälle und ionisierende Strahlung (Radioaktivität, α-, β-, γ-Strahlung, Halbwertszeit)",
+        "Biologische Wirkungen, gesundheitliche Folgen und Anwendungen ionisierender Strahlung",
+        "Kernspaltung und Kernfusion",
+        "Nutzen und Risiken der medizinischen und technischen Anwendung von ionisierender Strahlung und Kernspaltung",
+        "Gefahren ionisierender Strahlung und Schutzmaßnahmen"
+      ],
+      "kernkompetenzen": [
+        "die Struktur der Materie im Überblick beschreiben und den Aufbau des Atoms erläutern (Atomhülle, Atomkern, Elektron, Proton, Neutron, Quarks, Kernladungszahl, Massenzahl, Isotope)",
+        "Kernzerfälle und ionisierende Strahlung beschreiben (Radioaktivität, α-Strahlung, β-Strahlung, γ-Strahlung, Halbwertszeit)",
+        "biologische Wirkungen und gesundheitliche Folgen ionisierender Strahlung beschreiben sowie medizinische und technische Anwendungen nennen",
+        "Kernspaltung und Kernfusion beschreiben (zum Beispiel Sterne)",
+        "Nutzen und Risiken der medizinischen und technischen Anwendung von ionisierender Strahlung und Kernspaltung erläutern und bewerten",
+        "Gefahren ionisierender Strahlung für die menschliche Gesundheit und Maßnahmen zum Schutz beschreiben (zum Beispiel Abschirmung ionisierender Strahlung, Endlagerung radioaktiver Abfälle)"
+      ]
+    },
+    {
+      "thema": "Mechanik (vertiefend) (Klassen 9/10)",
+      "relevante_unterthemen": [
+        "Kinematik (Geschwindigkeit, Beschleunigung, Bewegungsdiagramme, zusammengesetzte Bewegungen, Kreisbewegungen)",
+        "Dynamik (Kräfte, Newton'sche Prinzipien, Impuls, Kreisbewegung, Zentripetalkraft)",
+        "Erhaltungssätze (Energieerhaltung, Impulserhaltung)"
+      ],
+      "kernkompetenzen": [
+        "die Geschwindigkeit als Änderungsrate des Ortes ( ) und die Beschleunigung als Änderungsrate der Geschwindigkeit ( ) erklären und berechnen",
+        "geradlinig gleichförmige ( , ) sowie geradlinig gleichmäßig beschleunigte Bewegungen ( , , ) verbal und rechnerisch beschreiben (Zeitpunkt, Ort, Geschwindigkeit, Beschleunigung)",
+        "Bewegungsabläufe experimentell aufzeichnen (zum Beispiel freier Fall, schiefe Ebene), die Messwerte in Diagrammen darstellen und diese Diagramme interpretieren (s-t-Diagramm, v-t-Diagramm, a-t-Diagramm)",
+        "aus einem vorgegebenen Bewegungsdiagramm die jeweils anderen Bewegungsdiagramme ableiten (an eine quantitative Ableitung von s-t-Diagrammen aus a-t-Diagrammen ist nicht gedacht)",
+        "zusammengesetzte Bewegungen beschreiben (zum Beispiel Bootsfahrt über einen Fluss, waagerechter Wurf) und daran den vektoriellen Charakter der Geschwindigkeit erläutern",
+        "gleichförmige Kreisbewegungen untersuchen und beschreiben (Radius, Bahngeschwindigkeit, Periodendauer, Frequenz, )",
+        "das Zusammenwirken beliebig gerichteter Kräfte auf einen Körper beschreiben, dabei gegebenenfalls ein Kräftegleichgewicht oder die resultierende Kraft erkennen (unter anderem schiefe Ebene)",
+        "Bewegungsabläufe beschreiben und erklären. Dazu wenden sie die Newton’schen Prinzipien der Mechanik an und beschreiben sie auch mithilfe des Impulses (Trägheitsprinzip, und , Wechselwirkungsprinzip, , Impulserhaltungssatz)",
+        "die Unterschiede zwischen realen und idealisierten Bewegungen erläutern (unter anderem freier Fall und Fall mit Luftwiderstand)",
+        "zusammengesetzte Bewegungen mithilfe der Newton’schen Prinzipien erklären (unter anderem waagerechter Wurf)",
+        "die gleichförmige Kreisbewegung eines Körpers mithilfe der Zentripetalkraft erklären ( )",
+        "Vorgänge aus Alltag und Technik energetisch beschreiben (Energieerhaltung, Energiespeicherung, Energieübertragung, Energieumwandlung)",
+        "beschreiben, dass mechanische Energieübertragungen mit Kraftwirkungen verbunden sind ( falls )",
+        "die bei mechanischen Prozessen auftretenden Energieformen quantitativ beschreiben ( , , , Nullniveau)",
+        "den Energieerhaltungssatz der Mechanik erläutern und zur quantitativen Beschreibung eines Prozesses anwenden. Dabei wählen sie geeignete Zustände zur Energiebilanzierung aus",
+        "Vorgänge aus Alltag und Technik mithilfe des Impulses beschreiben ( )",
+        "den Impulserhaltungssatz erläutern und zur quantitativen Beschreibung eines Prozesses anwenden (unter anderem inelastischer Stoß, Rückstoßprinzip). Dabei wählen sie geeignete Zustände zur Impulsbilanzierung aus"
+      ]
+    },
+    {
+      "thema": "Klassen 11/12 (Basisfach Quantenphysik)",
+      "relevante_unterthemen": [
+        "Denk- und Arbeitsweisen der Physik (empirische Überprüfbarkeit, Modelle, Naturkonstanten)",
+        "Elektrische und magnetische Felder (Struktur, Kraftwirkungen, Bewegung geladener Teilchen, Kondensator, Spule)",
+        "Elektrodynamik (Induktion, Faraday'sches Gesetz, Selbstinduktion, Anwendungen)",
+        "Schwingungen (mechanische und elektromagnetische, harmonische Schwingungen, Energieumwandlungen)",
+        "Wellen (Eigenschaften, Phänomene, stehende Wellen, Huygens'sches Prinzip, elektromagnetisches Spektrum)",
+        "Wellenoptik (kohärentes Licht, Strahlen- und Wellenmodell, Interferenz, Spektralzerlegung)",
+        "Quantenphysik und Materie (Wellen- und Teilcheneigenschaften, Determinismus, Lichtelektrischer Effekt, Linienspektren, Atommodelle)"
+      ],
+      "kernkompetenzen": [
+        "an Beispielen beschreiben, dass Aussagen in der theoriegeleiteten Physik grundsätzlich empirisch überprüfbar sind (Fragestellung, Hypothese, Experiment, Bestätigung beziehungsweise Widerlegung)",
+        "die Funktion von Modellen in der Physik erläutern (unter anderem anhand der Modellvorstellungen von Licht und Materie)",
+        "die Bedeutung von Naturkonstanten beschreiben (zum Beispiel anhand der Planck’schen Konstanten)",
+        "die Struktur elektrischer und magnetischer Felder beschreiben (Feldbegriff, Feldlinien, homogenes Feld, elektrisches Radialfeld, Dipolfeld, Superposition von Feldern)",
+        "den Zusammenhang zwischen der Kraftwirkung auf eine Probeladung und der elektrischen Feldstärke beschreiben ( )",
+        "die Bewegung geladener Teilchen parallel und senkrecht zu einem homogenen elektrischen Feld qualitativ beschreiben und hierbei ihre Kenntnisse aus der Mechanik anwenden (Newton’sche Prinzipien, potentielle und kinetische Energie, Energieerhaltungssatz, Bahnformen qualitativ)",
+        "den Zusammenhang zwischen der Kraftwirkung auf einen stromdurchflossenen Leiter und der magnetischen Flussdichte beschreiben (magnetische Flussdichte, , , Messung von Flussdichten)",
+        "die Kraftwirkung auf eine elektrische Ladung in einem Magnetfeld erläutern (Lorentzkraft, Drei-Finger-Regel, )",
+        "die Bewegung geladener Teilchen senkrecht zu einem homogenen Magnetfeld qualitativ beschreiben und hierbei ihre Kenntnisse aus der Mechanik anwenden (Newton’sche Prinzipien, Bahnformen qualitativ)",
+        "charakteristische Größen eines Plattenkondensators berechnen ( , , , ) und technische Anwendungen beschreiben (zum Beispiel Standlicht beim Fahrrad)",
+        "den zeitabhängigen Aufladevorgang und Entladevorgang eines Kondensators anhand von I-t-Diagrammen qualitativ erläutern und den Entladevorgang mithilfe der Exponentialfunktion mathematisch beschreiben sowie den Einfluss der Parameter Widerstand und Kapazität beschreiben",
+        "charakteristische Größen einer schlanken Spule berechnen ( , )",
+        "mithilfe der Lorentzkraft erklären, dass in einem Leiter, der senkrecht zu einem Magnetfeld bewegt wird, eine Spannung beziehungsweise ein elektrischer Strom induziert wird",
+        "das Faraday‘sche Induktionsgesetz untersuchen und beschreiben (magnetischer Fluss für Feldlinien des Magnetfeldes , die senkrecht zur Fläche verlaufen, , Lenz’sche Regel)",
+        "Selbstinduktionseffekte an einem Beispiel beschreiben (Induktivität, )",
+        "technische Anwendungen des Induktionsgesetzes qualitativ beschreiben (zum Beispiel Generator, Transformator, Induktionsladegerät, Induktionskochplatte)",
+        "Schwingungen experimentell aufzeichnen und mithilfe charakteristischer Eigenschaften und Größen als zeitlich periodische Bewegungen um eine Gleichgewichtslage beschreiben und klassifizieren (Auslenkung , Amplitude , Periodendauer , Frequenz , Kreisfrequenz )",
+        "ungedämpfte harmonische Schwingungen mathematisch beschreiben ( , , , )",
+        "den Zusammenhang zwischen harmonischen mechanischen Schwingungen und linearer Rückstellkraft an Beispielen beschreiben",
+        "die Schwingung eines Federpendels erklären ( ) und die auftretenden Energieumwandlungen beschreiben",
+        "die Schwingung in einem elektromagnetischen Schwingkreis erklären und die auftretenden Energieumwandlungen beschreiben",
+        "anhand eines Federpendels und eines elektromagnetischen Schwingkreises Gemeinsamkeiten und Unterschiede von mechanischen und elektromagnetischen Schwingungen erläutern",
+        "Wellen mithilfe charakteristischer Eigenschaften und Größen beschreiben (Wellenlänge , Ausbreitungsgeschwindigkeit , Wellenfront, Transversalwelle, Longitudinalwelle, Polarisation)",
+        "grundlegende Wellenphänomene beschreiben (Beugung, Reflexion, Brechung, Interferenz, Energietransport) und in Alltagssituationen erkennen (zum Beispiel Meereswellen, Gegenschall)",
+        "eindimensionale stehende Wellen beschreiben und als Interferenzphänomen erklären (Bäuche, Knoten, Eigenfrequenzen, Stellen konstruktiver beziehungsweise destruktiver Interferenz, Reflexion an festen beziehungsweise losen Enden, Wellenlängenbestimmung mittels Knotenabstand)",
+        "mithilfe des Gangunterschieds die Überlagerung zweidimensionaler kohärenter Wellen qualitativ beschreiben",
+        "grundlegende Wellenphänomene mithilfe des Huygens’schen Prinzips erklären (zum Beispiel Beugung, Reflexion)",
+        "das elektromagnetische Spektrum im Überblick beschreiben",
+        "kohärentes Licht als elektromagnetische Welle beschreiben (unter anderem Lichtgeschwindigkeit)",
+        "das Strahlenmodell und das Wellenmodell des Lichts miteinander vergleichen (Gültigkeitsbereich des Strahlenmodells: zum Beispiel Beugung an einer Blende, Dispersion)",
+        "die Struktur der Interferenzmuster und der Intensitätsverteilung bei Beugung an Doppelspalt und Gitter beschreiben",
+        "die Lage von Interferenzminima beziehungsweise Interferenzmaxima bei ausgewählten Beugungsvorgängen in Fernfeldnäherung berechnen (Maxima beim Doppelspalt, Hauptmaxima beim Gitter)",
+        "die Spektralzerlegung des Lichts polychromatischer Lichtquellen als Interferenzphänomen erklären und am Doppelspalt oder Gitter experimentell untersuchen",
+        "Gemeinsamkeiten und Unterschiede des Verhaltens von klassischen Wellen, klassischen Teilchen und Quantenobjekten am Doppelspalt beschreiben",
+        "erläutern, wie für Quantenobjekte der Determinismus der klassischen Physik durch Wahrscheinlichkeitsaussagen ersetzt wird",
+        "Experimente zur Interferenz einzelner Quantenobjekte anhand von Wahrscheinlichkeitsaussagen beschreiben und den Ausgang der Experimente erklären",
+        "am Beispiel des Doppelspaltexperimentes beschreiben, dass Quantenobjekte zwar stets Wellen- und Teilcheneigenschaften aufweisen, sich diese aber nicht unabhängig voneinander beobachten lassen. Sie können dies anhand der Interferenzfähigkeit und der Welcher-Weg-Information bei einzelnen Quantenobjekten erläutern (Komplementarität)",
+        "den lichtelektrischen Effekt beschreiben und anhand der Einstein’schen Lichtquantenhypothese erklären (Hallwachs-Effekt, Einstein’sche Gleichung , Planck’sche Konstante )",
+        "erläutern, wie sich Quantenobjekte anhand ihrer Energie und anhand ihres Impulses beschreiben lassen ( , , de Broglie-Wellenlänge von Materiewellen)",
+        "erläutern, dass messbare Eigenschaften von Objekten der klassischen Physik bereits vor ihrer Messung real vorliegen und dass der Wert der Messung unabhängig davon ist, ob überhaupt gemessen wurde. Sie können beschreiben, dass diese Aussage für Quantenobjekte im Allgemeinen nicht gilt (Realität, zum Beispiel bei verschränkten Photonen)",
+        "erläutern, dass räumlich getrennte Objekte eines zusammengesetzten Systems aus Objekten der Klassischen Physik alle ihre messbaren Eigenschaften unabhängig voneinander besitzen. Sie können beschreiben, dass diese Aussage für Quantenobjekte im Allgemeinen nicht gilt (Lokalität, zum Beispiel bei verschränkten Photonen)",
+        "Linienspektren von Atomen als Übergänge zwischen diskreten Energieniveaus beschreiben und in einem Energieniveauschema veranschaulichen (Absorption, Emission, Bohr’sche Frequenzbedingung , Energiewerte des Wasserstoffatoms)",
+        "können unterschiedliche atomare Modellvorstellungen im Überblick beschreiben (Rutherford’sches Atommodell, Orbitale des Wasserstoffatoms)"
+      ]
+    },
+    {
+      "thema": "Klassen 11/12 (Basisfach Astrophysik)",
+      "relevante_unterthemen": [
+        "Denk- und Arbeitsweisen der Physik und Astrophysik (empirische Überprüfbarkeit, Astronomie als Beobachtungswissenschaft, Modelle, Naturkonstanten, astronomische Größen)",
+        "Elektrische und magnetische Felder (Struktur, Kraftwirkungen, Bewegung geladener Teilchen, Kondensator, Spule)",
+        "Elektrodynamik (Induktion, Faraday'sches Gesetz, Anwendungen)",
+        "Schwingungen (mechanische und elektromagnetische, harmonische Schwingungen, Energieumwandlungen)",
+        "Wellen (Eigenschaften, Phänomene, stehende Wellen, Huygens'sches Prinzip, Doppler-Effekt, elektromagnetisches Spektrum, Gravitationswellen)",
+        "Wellenoptik (kohärentes Licht, Strahlen- und Wellenmodell, Interferenz, Spektralanalyse)",
+        "Atom- und Kernphysik (lichtelektrischer Effekt, Quantenobjekte, Spektren, Kernfusion in Sternen)",
+        "Astrophysik (Universumsentwicklung, Galaxien, Rotverschiebung, Sternentwicklung, Exoplaneten)"
+      ],
+      "kernkompetenzen": [
+        "an Beispielen beschreiben, dass Aussagen in der theoriegeleiteten Physik grundsätzlich empirisch überprüfbar sind (Fragestellung, Hypothese, Experiment, Bestätigung beziehungsweise Widerlegung)",
+        "die Astronomie als Beobachtungswissenschaft beschreiben, die zur Erklärung beobachteter Phänomene die Gesetze der Physik und Chemie anwendet (unter anderem Bildgebung und Spektroskopie, Instrumente zur Beobachtung: Teleskope, Detektoren)",
+        "die Funktion von Modellen in der Physik und Astrophysik erläutern (unter anderem Modellvorstellungen von Licht und Materie sowie zur Kosmologie und zur zeitlichen Entwicklung des Kosmos, Urknall)",
+        "die Bedeutung von Naturkonstanten beschreiben (zum Beispiel Lichtgeschwindigkeit, Planck’sche Konstante)",
+        "astronomische Objekte mithilfe physikalischer Größen unter Verwendung geeigneter Einheiten beschreiben (zum Beispiel Astronomische Einheit, Lichtjahr, Parsec, Sonnenmasse, Sonnenleuchtkraft)",
+        "die Struktur elektrischer und magnetischer Felder beschreiben (Feldbegriff, Feldlinien, homogenes Feld, elektrisches Radialfeld, Dipolfeld, Superposition von Feldern)",
+        "den Zusammenhang zwischen der Kraftwirkung auf eine Probeladung und der elektrischen Feldstärke beschreiben ( )",
+        "die Bewegung geladener Teilchen parallel und senkrecht zu einem homogenen elektrischen Feld qualitativ beschreiben und hierbei ihre Kenntnisse aus der Mechanik anwenden (Newton’sche Prinzipien, potentielle und kinetische Energie, Energieerhaltungssatz, Bahnformen qualitativ)",
+        "den Zusammenhang zwischen der Kraftwirkung auf einen stromdurchflossenen Leiter und der magnetischen Flussdichte beschreiben (magnetische Flussdichte , , Messung von Flussdichten)",
+        "die Kraftwirkung auf eine elektrische Ladung in einem Magnetfeld erläutern (Lorentzkraft, Drei-Finger-Regel, )",
+        "die Bewegung geladener Teilchen senkrecht zu einem homogenen Magnetfeld qualitativ beschreiben und hierbei ihre Kenntnisse aus der Mechanik anwenden (Newton’sche Prinzipien, Bahnformen qualitativ)",
+        "charakteristische Größen eines Plattenkondensators berechnen ( , , , ) und technische Anwendungen beschreiben (zum Beispiel Standlicht beim Fahrrad)",
+        "den zeitabhängigen Aufladevorgang und Entladevorgang eines Kondensators anhand von I-t-Diagrammen qualitativ erläutern und den Entladevorgang mithilfe der Exponentialfunktion mathematisch beschreiben sowie den Einfluss der Parameter Widerstand und Kapazität beschreiben",
+        "charakteristische Größen einer schlanken Spule berechnen ( )",
+        "mithilfe der Lorentzkraft erklären, dass in einem Leiter, der senkrecht zu einem Magnetfeld bewegt wird, eine Spannung beziehungsweise ein elektrischer Strom induziert wird",
+        "das Faraday’sche Induktionsgesetz untersuchen und beschreiben (magnetischer Fluss für Feldlinien des Magnetfeldes , die senkrecht zur Fläche verlaufen, , Lenz’sche Regel)",
+        "eine technische Anwendung des Induktionsgesetzes qualitativ beschreiben (zum Beispiel Generator, Transformator, Induktionsladegerät, Induktionskochplatte)",
+        "Schwingungen experimentell aufzeichnen und mithilfe charakteristischer Eigenschaften und Größen als zeitlich periodische Bewegungen um eine Gleichgewichtslage beschreiben und klassifizieren (Auslenkung , Amplitude , Periodendauer , Frequenz , Kreisfrequenz )",
+        "ungedämpfte harmonische Schwingungen mathematisch beschreiben ( , , , )",
+        "den Zusammenhang zwischen harmonischen mechanischen Schwingungen und linearer Rückstellkraft an Beispielen beschreiben",
+        "die Schwingung eines Federpendels erklären ( ) und die auftretenden Energieumwandlungen beschreiben",
+        "die Schwingung in einem elektromagnetischen Schwingkreis erklären und die auftretenden Energieumwandlungen beschreiben",
+        "Wellen mithilfe charakteristischer Eigenschaften und Größen beschreiben (Wellenlänge , Ausbreitungsgeschwindigkeit , Wellenfront, Transversalwelle, Longitudinalwelle, Polarisation)",
+        "grundlegende Wellenphänomene beschreiben (Beugung, Reflexion, Brechung, Interferenz, Energietransport)",
+        "eindimensionale stehende Wellen beschreiben und als Interferenzphänomen erklären (Bäuche, Knoten, Eigenfrequenzen, Stellen konstruktiver beziehungsweise destruktiver Interferenz, Reflexion an festen beziehungsweise losen Enden, Wellenlängenbestimmung mittels Knotenabstand)",
+        "mithilfe des Gangunterschieds die Überlagerung zweidimensionaler kohärenter Wellen qualitativ beschreiben",
+        "grundlegende Wellenphänomene mithilfe des Huygens’schen Prinzips erklären (zum Beispiel Beugung, Reflexion)",
+        "erklären, dass ein Beobachter, der sich relativ zu einem Wellensender bewegt, eine andere Frequenz beziehungsweise Wellenlänge wahrnimmt als die von der Quelle erzeugte (Doppler-Effekt, Rotverschiebung und Blauverschiebung)",
+        "das elektromagnetische Spektrum im Überblick beschreiben",
+        "Eigenschaften von elektromagnetischen Wellen und Gravitationswellen vergleichen (zum Beispiel Ausbreitungsgeschwindigkeit, Ausbreitung im Vakuum, Transversalwellen)",
+        "kohärentes Licht als elektromagnetische Welle beschreiben (unter anderem Lichtgeschwindigkeit)",
+        "das Strahlenmodell und das Wellenmodell des Lichts miteinander vergleichen (Gültigkeitsbereich des Strahlenmodells: zum Beispiel Beugung an einer Blende, Dispersion)",
+        "die Struktur der Interferenzmuster und der Intensitätsverteilung bei Beugung an Doppelspalt und Gitter beschreiben",
+        "die Lage von Interferenzmaxima bei ausgewählten Beugungsvorgängen in Fernfeldnäherung berechnen (Maxima beim Doppelspalt, Hauptmaxima beim Gitter)",
+        "die Spektralzerlegung des Lichts polychromatischer Lichtquellen als Interferenzphänomen erklären und am Gitter experimentell untersuchen",
+        "Spektren verschiedener Lichtquellen experimentell untersuchen",
+        "den lichtelektrischen Effekt beschreiben und anhand der Einstein’schen Lichtquantenhypothese erklären (Hallwachs-Effekt, Einstein’sche Gleichung , Planck’sche Konstante )",
+        "erläutern, wie sich Quantenobjekte anhand ihrer Energie und anhand ihres Impulses beschreiben lassen ( , , de Broglie-Wellenlänge von Materiewellen)",
+        "unterschiedliche Arten von Spektren beschreiben (kontinuierliche Spektren, Linienspektren, Emissions- und Absorptionsspektren)",
+        "Linienspektren von Atomen und Molekülen als Übergang zwischen diskreten Energieniveaus beschreiben (Bohr’sche Frequenzbedingung )",
+        "erklären, wie mithilfe von Spektren Informationen über die chemische Zusammensetzung kosmischer Materie gewonnen werden können (zum Beispiel Atmosphären von Sternen und Planeten, interstellares Gas, Molekülwolken)",
+        "die Kernfusion als Energiefreisetzungsprozess in Sternen beschreiben (Bindungsenergie, pp-Kette)",
+        "die Entwicklung des Universums in Grundzügen beschreiben (Kosmologisches Standardmodell: Urknall, kosmische Expansion, Alter des Universums, Hintergrundstrahlung, Entstehung der Atome, Entstehung von Galaxien)",
+        "Galaxien als zusammengesetzte Systeme beschreiben (zum Beispiel Sterne, Planetensysteme, interstellares Gas, Dunkle Materie)",
+        "die entfernungsabhängige Rotverschiebung der Galaxien beschreiben und als Folge der Expansion des Universums interpretieren (Hubble-Relation, , kosmischer Skalenfaktor)",
+        "beschreiben, dass die Stabilität beziehungsweise Instabilität von kosmischen Objekten von den Eigenschaften eines der Gravitation entgegenwirkenden Drucks abhängt",
+        "die Sternentstehung in Grundzügen beschreiben (Vor-Hauptreihenentwicklung, Gravitation und innerer Gasdruck von Molekülwolken, Bedingungen für den Kollaps von Molekülwolken, Energieabstrahlung beim Kollaps, Protostern, Einsetzen von Fusionsprozessen)",
+        "das Hauptreihenstadium beschreiben (Gravitation und innerer Gasdruck, Kernfusion, Energietransport zur Oberfläche, temperaturabhängige Abstrahlung, die Sonne als Stern)",
+        "die Nach-Hauptreihenentwicklung für verschiedene Sternmassen beschreiben (Schalenbrennen, Roter Riese, zukünftige Entwicklung der Sonne, Kriterien für die Stabilität der Endstadien: Weißer Zwerg, Neutronenstern, Schwarzes Loch, Schwarzschildradius )",
+        "Methoden zum Nachweis extrasolarer Planeten beschreiben (zum Beispiel Transitmethode, Radialgeschwindigkeitsmethode, astrometrische Methode, Mikrogravitationslinsenmethode, direkte Abbildung)",
+        "erläutern, wie sich mithilfe der Spektralanalyse die Eigenschaften von Planetenatmosphären bestimmen lassen (zum Beispiel Temperatur, chemische Zusammensetzung, mögliche Hinweise auf Leben)"
+      ]
+    },
+    {
+      "thema": "Klassen 11/12 (Leistungsfach)",
+      "relevante_unterthemen": [
+        "Denk- und Arbeitsweisen der Physik (empirische Überprüfbarkeit, Modelle, Naturkonstanten)",
+        "Elektrisches Feld (Coulomb'sches Gesetz, Feldstärke, Kapazität, Kondensator, Potential, Bewegung geladener Teilchen)",
+        "Magnetisches Feld (Struktur, Kraftwirkungen, Hall-Effekt, Spule, Bewegung geladener Teilchen in Feldern)",
+        "Elektrodynamik (Induktion, Faraday'sches Gesetz, Selbstinduktion, Maxwell-Gleichungen, Wirbelströme)",
+        "Schwingungen (mechanische und elektromagnetische, harmonische Schwingungen, Differentialgleichungen, Resonanz)",
+        "Wellen (Eigenschaften, Phänomene, mathematische Darstellung, stehende Wellen, Huygens'sches Prinzip, elektromagnetisches Spektrum, Hertz'scher Dipol)",
+        "Wellenoptik (kohärentes Licht, Strahlen- und Wellenmodell, Interferenz, Michelson-Interferometer, historische Entwicklung)",
+        "Quantenphysik und Materie (lichtelektrischer Effekt, Quantenobjekte, Determinismus, Unbestimmtheitsrelation, Linienspektren, Röntgenspektrum, Potentialtopf, Atommodelle)",
+        "Vertiefendes Themengebiet (physikalische Forschung, Anwendungen, Fachmethoden)"
+      ],
+      "kernkompetenzen": [
+        "an Beispielen beschreiben, dass Aussagen in der theoriegeleiteten Physik grundsätzlich empirisch überprüfbar sind (Fragestellung, Hypothese, Experiment, Bestätigung beziehungsweise Widerlegung)",
+        "die Funktion von Modellen in der Physik erläutern (unter anderem anhand der Modellvorstellungen von Licht und Materie)",
+        "die Bedeutung von Naturkonstanten beschreiben (zum Beispiel anhand der Planck’schen Konstanten)",
+        "die Kraftwirkungen zwischen elektrisch geladenen Körpern beschreiben (Abstoßung, Anziehung, Coulomb’sches Gesetz, )",
+        "die Struktur elektrischer Felder beschreiben (Feldbegriff, Feldlinien, homogenes Feld, radiales Feld einer Punktladung, Feld eines Dipols, Quelle und Senke, Superposition von elektrischen Feldern)",
+        "das Verhalten von Materie im elektrischen Feld beschreiben (Influenz, Polarisation)",
+        "den Zusammenhang zwischen der Kraftwirkung auf eine Probeladung und der elektrischen Feldstärke anhand eines Experimentes erläutern ( )",
+        "die elektrische Feldstärke eines Plattenkondensators beschreiben ( )",
+        "die Kapazität eines Kondensators erläutern ( )",
+        "die Eigenschaften eines Plattenkondensators beschreiben ( , ), Kondensator als Energiespeicher, Dielektrikum)",
+        "den zeitabhängigen Aufladevorgang und Entladevorgang eines Kondensators anhand von U-t- und I-t-Diagrammen erläutern und mithilfe der Exponentialfunktion mathematisch beschreiben sowie den Einfluss der Parameter Widerstand und Kapazität beschreiben",
+        "den Zusammenhang zwischen Spannung und Potential erläutern (Äquipotentiallinien eines homogenen Feldes sowie des Feldes eines Dipols)",
+        "Gemeinsamkeiten und Unterschiede zwischen elektrischen Feldern und Gravitationsfeldern beschreiben (homogene Felder, Felder einzelner Ladungen beziehungsweise Massen)",
+        "die Bewegung geladener Teilchen parallel und senkrecht zu einem homogenen elektrischen Feld quantitativ beschreiben und hierbei ihre Kenntnisse aus der Mechanik anwenden (Newton’sche Prinzipien, potentielle und kinetische Energie, Energieerhaltungssatz, Bahnformen)",
+        "die Struktur magnetischer Felder beschreiben (Feldlinien, homogenes Feld, einfache nicht-homogene Felder, Feld um einen geraden Leiter, Handregel, Superposition von magnetischen Feldern)",
+        "die Kraftwirkung auf einen stromdurchflossenen Leiter in einem Magnetfeld erläutern (magnetische Flussdichte , )",
+        "die Kraftwirkung auf eine elektrische Ladung in einem Magnetfeld erläutern (Lorentzkraft, Drei-Finger-Regel, ( )",
+        "den Hall-Effekt beschreiben",
+        "das Magnetfeld einer schlanken Spule untersuchen und beschreiben ( )",
+        "die Bewegung geladener Teilchen senkrecht zu einem homogenen Magnetfeld quantitativ beschreiben und hierbei ihre Kenntnisse aus der Mechanik anwenden (Newton’sche Prinzipien, Bahnformen)",
+        "die Bewegung geladener Teilchen in gekreuzten homogenen elektrischen und magnetischen Feldern erklären (zum Beispiel Wien’sches Filter und Massenspektrograph)",
+        "mithilfe der Lorentzkraft erklären, dass in einem Leiter, der senkrecht zu einem Magnetfeld bewegt wird, eine Spannung beziehungsweise ein elektrischer Strom induziert wird",
+        "das Faraday’sche Induktionsgesetz erläutern und anwenden (magnetischer Fluss für Feldlinien des Magnetfeldes , die senkrecht zur Fläche verlaufen, , Lenz’sche Regel)",
+        "technische Anwendungen des Induktionsgesetzes qualitativ beschreiben (zum Beispiel Generator, Transformator, Induktionsladegerät)",
+        "Selbstinduktionseffekte in Stromkreisen bei Ein- und Ausschaltvorgängen erklären (Induktivität, )",
+        "die Eigenschaften einer schlanken Spule beschreiben ( , )",
+        "Ursache und Struktur elektromagnetischer Felder anhand der Aussagen der Maxwell-Gleichungen im Überblick beschreiben",
+        "eine technische Anwendung elektrischer Wirbelströme beschreiben (zum Beispiel Wirbelstrombremse, Induktionskochplatte)",
+        "Schwingungen experimentell aufzeichnen und mithilfe charakteristischer Eigenschaften und Größen als zeitlich periodische Bewegungen um eine Gleichgewichtslage beschreiben und klassifizieren (Auslenkung , Amplitude , Periodendauer , Frequenz , Kreisfrequenz , harmonisch und nicht harmonisch, gedämpft und ungedämpft)",
+        "ungedämpfte harmonische Schwingungen mathematisch beschreiben (unter anderem , , , )",
+        "die zeitlich abnehmende Amplitude einer gedämpften Schwingung mathematisch beschreiben (geschwindigkeitsproportionale Reibung)",
+        "den Zusammenhang zwischen harmonischen mechanischen Schwingungen und linearer Rückstellkraft beschreiben (unter anderem horizontales Federpendel)",
+        "die Schwingungs-Differentialgleichung eines Federpendels durch einen geeigneten Ansatz lösen ( , )",
+        "die Schwingungs-Differentialgleichung eines Fadenpendels durch einen geeigneten Ansatz lösen ( , )",
+        "die Schwingung in einem elektromagnetischen Schwingkreis erklären und die auftretenden Energieumwandlungen erläutern",
+        "die Schwingungs-Differentialgleichung eines elektromagnetischen Schwingkreises durch einen geeigneten Ansatz lösen ( , )",
+        "Gemeinsamkeiten und Unterschiede von mechanischen und elektromagnetischen Schwingungen erläutern (zum Beispiel anhand eines Federpendels und eines elektromagnetischen Schwingkreises)",
+        "Resonanz bei erzwungenen Schwingungen beschreiben (Eigenfrequenz, Erregerfrequenz)",
+        "Wellen mithilfe charakteristischer Eigenschaften und Größen beschreiben (Wellenlänge , Ausbreitungsgeschwindigkeit , Wellenfront, Wellennormale, Polarisation)",
+        "den Unterschied zwischen Longitudinalwellen und Transversalwellen erläutern",
+        "grundlegende Wellenphänomene beschreiben (Beugung, Reflexion, Brechung, Interferenz, Energietransport) und in Alltagssituationen erkennen (zum Beispiel Meereswellen, Gegenschall)",
+        "können die zeitliche und räumliche Entwicklung einer harmonischen eindimensionalen Welle in einer mathematischen Darstellung beschreiben ( )",
+        "eindimensionale stehende Transversalwellen beschreiben und als Interferenzphänomen erklären (Bäuche, Knoten, Eigenfrequenzen, Stellen konstruktiver beziehungsweise destruktiver Interferenz, Reflexion an festen beziehungsweise losen Enden, Wellenlängenbestimmung mittels Knotenabstand)",
+        "mithilfe des Gangunterschieds die Überlagerung zweidimensionaler kohärenter Wellen beschreiben",
+        "Wellenphänomene mithilfe des Huygens’schen Prinzips erklären (zum Beispiel Beugung, Reflexion)",
+        "das elektromagnetische Spektrum im Überblick beschreiben",
+        "den Hertz’schen Dipol als Grenzfall eines elektromagnetischen Schwingkreises erkennen und die daraus entstehende Abstrahlung elektromagnetischer Wellen in Grundzügen beschreiben",
+        "kohärentes Licht als elektromagnetische Welle beschreiben (unter anderem Lichtgeschwindigkeit)",
+        "das Strahlenmodell und das Wellenmodell des Lichts miteinander vergleichen (Gültigkeitsbereich des Strahlenmodells: zum Beispiel Beugung an einer Blende, Dispersion)",
+        "Interferenzphänomene an Einzelspalt, Doppelspalt und Gitter experimentell untersuchen",
+        "Interferenzphänomene am Michelson-Interferometer beschreiben (Strahlteiler)",
+        "die Struktur der Interferenzmuster und der Intensitätsverteilung bei Beugung an Einzelspalt, Doppelspalt und Gitter beschreiben (Unterschied zwischen idealisierten und realen Spalten mit endlicher Breite, Spektralzerlegung des Lichts polychromatischer Lichtquellen)",
+        "die Lage von Interferenzminima beziehungsweise Interferenzmaxima bei ausgewählten Beugungsvorgängen in Fernfeldnäherung berechnen (Minima beim Einzelspalt, Minima und Maxima beim Doppelspalt, Hauptmaxima beim Gitter)",
+        "Interferenzphänomene im Alltag physikalisch beschreiben (zum Beispiel Interferenz an dünnen Schichten, Interferenz an Gitterstrukturen, Laser-Speckle)",
+        "die geschichtliche Entwicklung von Modellvorstellungen des Lichts beschreiben (zum Beispiel Lichtstrahlen, Lichtteilchen, Lichtwellen, elektromagnetische Wellen, Photonen)",
+        "den lichtelektrischen Effekt beschreiben und anhand der Einstein’schen Lichtquantenhypothese erklären (Hallwachs-Effekt, Einstein’sche Gleichung , Planck’sche Konstante)",
+        "erläutern, wie sich Quantenobjekte anhand ihrer Energie und anhand ihres Impulses beschreiben lassen ( , , de Broglie-Wellenlänge von Materiewellen)",
+        "Gemeinsamkeiten und Unterschiede des Verhaltens von klassischen Wellen, klassischen Teilchen und Quantenobjekten am Doppelspalt beschreiben",
+        "erläutern, wie für Quantenobjekte der Determinismus der klassischen Physik durch Wahrscheinlichkeitsaussagen ersetzt wird (Interferenz-Experimente mit einzelnen Quantenobjekten)",
+        "Experimente zur Interferenz einzelner Quantenobjekte anhand von Wahrscheinlichkeitsaussagen beschreiben und den Ausgang der Experimente erklären (quantenmechanische Wellenfunktion, )",
+        "am Beispiel des Doppelspaltexperimentes beschreiben, dass Quantenobjekte zwar stets Wellen- und Teilcheneigenschaften aufweisen, sich diese aber nicht unabhängig voneinander beobachten lassen. Sie können dies anhand der Interferenzfähigkeit und der Welcher-Weg-Information bei einzelnen Quantenobjekten erläutern (Koinzidenzmethode, Komplementarität, Delayed-choice-Variante des Doppelspaltexperimentes)",
+        "erläutern, dass der Ort und der Impuls von Quantenobjekten nicht gleichzeitig beliebig genau messbar sind und begründen, warum der klassische Bahnbegriff und der klassische Determinismus aufgegeben werden müssen (Unbestimmtheitsrelation )",
+        "erläutern, dass messbare Eigenschaften von Objekten der klassischen Physik bereits vor ihrer Messung real vorliegen und dass der Wert der Messung unabhängig davon ist, ob überhaupt gemessen wurde. Sie können beschreiben, dass diese Aussage für Quantenobjekte im Allgemeinen nicht gilt (Realität, zum Beispiel bei verschränkten Photonen)",
+        "erläutern, dass räumlich getrennte Objekte eines zusammengesetzten Systems aus Objekten der Klassischen Physik alle ihre messbaren Eigenschaften unabhängig voneinander besitzen. Sie können beschreiben, dass diese Aussage für Quantenobjekte im Allgemeinen nicht gilt (Lokalität, zum Beispiel bei verschränkten Photonen)",
+        "Linienspektren von Atomen als Übergänge zwischen diskreten Energieniveaus beschreiben und in einem Energieniveauschema veranschaulichen (Absorption, Emission, Bohr’sche Frequenzbedingung , Energiewerte des Wasserstoffatoms , Energiewerte wasserstoffähnlicher Atome)",
+        "können die Entstehung des Röntgenspektrums erklären (charakteristische Röntgenstrahlung, Bremsstrahlung, kurzwellige Grenze des Röntgenspektrums)",
+        "können die Energiewerte eines Elektrons im eindimensionalen Potentialtopf mit unendlich hohen Wänden berechnen sowie die Grenzen dieses Modells zur Beschreibung von Energieniveaus in Atomen beziehungsweise Molekülen erläutern",
+        "können unterschiedliche atomare Modellvorstellungen (Rutherford’sches Atommodell, Orbitale des Wasserstoffatoms) und Mehrelektronensysteme (Pauli-Prinzip) im Überblick beschreiben",
+        "wesentliche Aspekte eines Arbeitsgebietes physikalischer Forschung (zum Beispiel Relativitätstheorie, Atomphysik, Laserphysik, Elementarteilchenphysik, Astrophysik, Kosmologie, Umweltphysik, Halbleiterphysik) beschreiben, ihre Anwendung in Technik oder Alltag erläutern sowie Erkenntnisse aus anderen Bereichen anwenden",
+        "exemplarisch erlernte Fachmethoden in dem ausgewählten Arbeitsgebiet physikalischer Forschung anwenden"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "bundesland": "Baden-Wuerttemberg",
+  "fach": "Kunst",
+  "zusammenfassung": "Der Bildungsplan 2016 für das Fach Bildende Kunst am Gymnasium in Baden-Württemberg verfolgt das übergeordnete Ziel, eine umfassende Bildkompetenz bei Schülerinnen und Schülern zu entwickeln. Dies beinhaltet sowohl die praktische Gestaltung als auch die kritische Rezeption und Reflexion von Bildern. Das Fach fördert schöpferische Kräfte, ästhetische Sensibilität, Wahrnehmung, Imagination und eine ästhetisch-forschende Grundhaltung. Ein zentrales Anliegen ist die kritische Auseinandersetzung mit der sichtbaren und gestalteten Umwelt, historischen und zeitgenössischen Bildmedien sowie deren Konstruktion von Wirklichkeit, um ein modernes Bildverständnis zu etablieren.\n\nDer Kunstunterricht ist ganzheitlich konzipiert, indem er wahrnehmende, kognitive, bildnerische und emotionale Fähigkeiten miteinander verknüpft. Er zeichnet sich durch Handlungs-, Prozess- und Projektorientierung aus, was zur Förderung kommunikativer und sozialer Kompetenzen sowie einer umfassenden Persönlichkeitsentwicklung beiträgt. Schülerinnen und Schüler sollen befähigt werden, Bilder herzustellen, zu erzeugen, weiterzubearbeiten, zu verstehen, zu beurteilen und mittels Bildern zu kommunizieren. Dies schließt die Begegnung mit Originalkunstwerken, das Kennenlernen unterschiedlicher Bildsprachen, die Entwicklung einer eigenen Meinung und die strukturierte, fachsprachlich fundierte Artikulation ein. Durch die Beschäftigung mit Kunstwerken aus verschiedenen historischen, sozialen und kulturellen Kontexten wird zudem interkulturelles Verständnis und eine grundlegende Urteils- und Kritikfähigkeit vermittelt.\n\nDer Lehrplan ist kompetenzorientiert und gliedert sich in prozessbezogene und inhaltsbezogene Kompetenzen. Die prozessbezogenen Kompetenzen sind in vier Handlungsfelder strukturiert: Rezeption (Wahrnehmung und Erschließung von Bildern), Reflexion (differenziertes Hinterfragen von gestalteter Umwelt und bildnerischem Schaffen), Produktion (Entwicklung eigener künstlerischer Ideen und Nutzung bildnerischer Verfahren) und Präsentation (Darstellung und Kommunikation von Bildern und Arbeitsergebnissen). Diese vier Bereiche sind im bildnerischen Prozess untrennbar miteinander verbunden und entfalten ihre Wirkung in Wechselwirkung.\n\nDen inhaltsbezogenen Kompetenzen liegt ein erweiterter Bildbegriff zugrunde, der über die klassische Kunst hinaus auch angewandte Künste, Alltagsästhetik, Design, Architektur, Mode, interaktive Medien, Performance, Illustration, Städtebau und Fotografie umfasst. Diese werden als „Bilder“ verstanden, die zwar über Kulturgrenzen hinweg verständlich sind, aber sprachlicher Auseinandersetzung und Kontextualisierung bedürfen. Die Struktur der inhaltsbezogenen Kompetenzen gliedert sich in die Bereiche „Bild“ (als zentrales Bezugsfeld), „Fläche“ (Grafik, Malerei), „Raum“ (Plastik, Architektur) und „Zeit“ (Medien, Aktion). Diese Bereiche werden über die Klassenstufen 5/6, 7/8, 9/10 bis zur Oberstufe (11/12) progressiv vertieft und erweitert.\n\nDas Fach Bildende Kunst leistet zudem einen wichtigen Beitrag zu den sechs Leitperspektiven des Bildungsplans: Bildung für nachhaltige Entwicklung (BNE), Bildung für Toleranz und Akzeptanz von Vielfalt (BTV), Prävention und Gesundheitsförderung (PG), Berufliche Orientierung (BO), Medienbildung (MB) und Verbraucherbildung (VB). Der Kunstunterricht wird als Handlungsraum verstanden, der spielerische und experimentelle Verfahren sowie individuelle Lösungswege fördert und eine Öffnung zu anderen Fach-, Wissens- und Kompetenzbereichen sowie außerschulischen Institutionen anstrebt, um kulturelle Bildung umfassend zu ermöglichen.",
+  "hauptthemen": [
+    {
+      "thema": "Bild",
+      "relevante_unterthemen": [
+        "Wahrnehmung und Beschreibung von Bildern (Klassen 5/6)",
+        "Analyse und Interpretation von Bildern in Kontexten (Klassen 7/8)",
+        "Umfassende Bildanalyse und Reflexion der Kunstrolle (Klassen 9/10)",
+        "Rezeption, Analyse und Reflexion von Kunstgeschichte und aktueller Kunst (Klassen 11/12)"
+      ],
+      "kernkompetenzen": [
+        "Bilder strukturiert wahrnehmen, beschreiben, analysieren, vergleichen und kommentieren.",
+        "Bilder formal, thematisch, motivisch und funktional erschließen, interpretieren und begründet beurteilen.",
+        "Die enge Verbindung von Bildrezeption und eigener Produktion erkennen, reflektieren und nutzen.",
+        "Bezüge zu kulturellen, historischen, biografischen, stilistischen und soziokulturellen Bedingungen herstellen und reflektieren.",
+        "Erkenntnisse zu Bildern und eigenen Arbeitsprozessen kommunizieren, diskutieren und in geeigneter Form präsentieren.",
+        "Orte und Medien für die Auseinandersetzung mit Bildern gezielt und reflektiert nutzen.",
+        "Methoden der Kunstgeschichte kennenlernen und ein Bewusstsein für kulturelles Erbe entwickeln."
+      ]
+    },
+    {
+      "thema": "Fläche",
+      "relevante_unterthemen": [
+        "Grafik (Grundlagen, Druckverfahren, Schrift als Gestaltungsmittel, Komposition) über alle Klassenstufen (5-12)",
+        "Malerei (Farbeinsatz, Techniken, Farbwirkungen, Räumlichkeit) über alle Klassenstufen (5-12)"
+      ],
+      "kernkompetenzen": [
+        "Grafische Gestaltungselemente (Punkt, Linie, Fläche, Kontur, Struktur, Hell-Dunkel) differenziert erproben und bewusst anwenden.",
+        "Vielfältige grafische Strukturen und Werkspuren mit verschiedenen Materialien und Verfahren einsetzen.",
+        "Raumbeziehungen und Plastizität auf der Bildfläche mit grafischen und perspektivischen Mitteln darstellen.",
+        "Elementare und künstlerische Druckverfahren sowie Schrift als grafisches und semantisches Gestaltungsmittel nutzen.",
+        "Malerische Mittel, Maltechniken und Materialien spielerisch erproben und gezielt einsetzen.",
+        "Grundlegende Farbbeziehungen, Farbwirkungen, Ordnungssysteme und Funktionen von Farbe erkennen und anwenden.",
+        "Farbe als Ausdrucksmittel, zur Formsteigerung und zur Erzeugung von Räumlichkeit und Plastizität nutzen.",
+        "Freie grafische und malerische Ausdrucksformen zwischen Gegenständlichkeit und Abstraktion entwickeln und komplexe, prägnante Gestaltungen erzielen."
+      ]
+    },
+    {
+      "thema": "Raum",
+      "relevante_unterthemen": [
+        "Plastik (Materialien, Techniken, Körper-Raum-Beziehung, Formensprache) über alle Klassenstufen (5-12)",
+        "Architektur (Baukörper, Raumkonzepte, Gestaltungsmittel, Bauweisen, Umweltbezug) über alle Klassenstufen (5-12)"
+      ],
+      "kernkompetenzen": [
+        "Elementare plastische Materialien und Fundstücke erproben und verschiedene Materialeigenschaften nutzen.",
+        "Plastische Verfahren (aufbauend, abtragend, kombinierend) anwenden und haptische sowie ästhetische Erfahrungen umsetzen.",
+        "Beziehungen zwischen Körper und Raum begreifen und plastische Form differenzieren.",
+        "Mittel plastischer Gestaltung (Masse, Volumen, Oberfläche, Proportion) gezielt einsetzen und gegenständliche/ungenständliche Motive in Vollplastik, Relief, Objekt oder Installation realisieren.",
+        "Gebrauchsgegenstände von der Idee bis zum Modell entwickeln und die Qualität plastischer Form reflektieren.",
+        "Räume und deren Wirkungen erleben, vergleichen und mit Materialien/Eingriffen verändern/gestalten.",
+        "Realitätsbezogene oder fantastische Raumvorstellungen in Skizzen, Modellen oder im realen Raum umsetzen.",
+        "Architektonische Gestaltungsmittel (Innen-/Außenbau, Fassade, Material) und elementare Bedingungen (Massiv-/Skelettbau) erkennen und nutzen.",
+        "Bauwerke hinsichtlich Form, Funktion und gesellschaftlicher Dimensionen unterscheiden und eigene architektonische Ideen entwickeln und umsetzen."
+      ]
+    },
+    {
+      "thema": "Zeit",
+      "relevante_unterthemen": [
+        "Medien (Fotografie, Animation, digitale Medien, Internetnutzung, Medienkritik) über alle Klassenstufen (5-12)",
+        "Aktion (Körperwahrnehmung, Emotionen, Improvisation, performative Kunstformen) über alle Klassenstufen (5-12)"
+      ],
+      "kernkompetenzen": [
+        "Medien in ihrer Vielfalt und Bedeutung wahrnehmen und als Dokumentations-, Kommunikations- und Gestaltungsmittel einsetzen.",
+        "Einfache Medienprodukte (Fotografie, Animation, Film, Illustration, Grafik) erstellen, weiterverarbeiten und verfremden.",
+        "Das Internet als Informationsmedium nutzen und verantwortungsvoll mit Chancen, Risiken, Nutzungs- und Urheberrechten umgehen.",
+        "Eigene visuelle Medienprodukte konzipieren, entwickeln und realisieren (z.B. Layout, Werbung, künstlerisches Projekt).",
+        "Körperwahrnehmung und Emotionen in Interaktion und darstellendem Spiel ausdrücken.",
+        "Form, Bewegung, Klang, Sprache und Licht als Ausdrucks- und Gestaltungsmittel in Aktion, Szene oder Spiel umsetzen.",
+        "Spiele und Aktionen entwickeln, planen und improvisieren.",
+        "Performative und interaktive Kunstformen (Aktion, Happening, Performance, Urban-Art, Netzkunst) erschließen, entwickeln und gestalten.",
+        "Intermediale und interdisziplinäre Darstellungsformen reflektiert entwickeln."
+      ]
+    }
+  ]
+}

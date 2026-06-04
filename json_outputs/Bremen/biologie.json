@@ -1,0 +1,80 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Biologie",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen orientiert sich an den KMK-Bildungsstandards für die Allgemeine Hochschulreife. Ziel des Biologieunterrichts ist die Vermittlung eines naturwissenschaftlichen Weltbildes, die Befähigung zur Teilhabe an gesellschaftlichen Diskursen (z.B. Gesundheit, Klima, Gentechnik) sowie die Vorbereitung auf Studium und Beruf. Der Unterricht basiert auf vier Kompetenzbereichen (Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz) und nutzt fünf Basiskonzepte (Struktur und Funktion, Stoff- und Energieumwandlung, Information und Kommunikation, Steuerung und Regelung, Entwicklung) zur Vernetzung der Inhalte. Die Einführungsphase dient der Angleichung heterogener Vorkenntnisse und der Einführung in zellbiologische Grundlagen. In der Qualifikationsphase erfolgt eine vertiefte, problemorientierte Auseinandersetzung mit komplexen biologischen Systemen, wobei digitale Bildung und Bildung für nachhaltige Entwicklung (BNE) integraler Bestandteil sind. Die Leistungsbewertung umfasst sowohl schriftliche Klausuren als auch die laufende Unterrichtsarbeit, wobei der Fokus auf dem Erwerb und der Anwendung fachspezifischer Kompetenzen liegt.",
+  "hauptthemen": [
+    {
+      "thema": "Bau und Leistung von Zellen",
+      "relevante_unterthemen": [
+        "Cytologische Grundlagen",
+        "Makromoleküle",
+        "Stofftransport",
+        "Enzymatik",
+        "Zellatmung",
+        "Fotosynthese",
+        "DNA-Struktur und Replikation"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhang von Struktur und Funktion auf zellulärer Ebene erläutern",
+        "Stoffwechselprozesse (Fotosynthese/Zellatmung) als offene Systeme beschreiben und bilanzieren"
+      ]
+    },
+    {
+      "thema": "Stoffwechsel I und Informationsverarbeitung in Lebewesen",
+      "relevante_unterthemen": [
+        "Chemiosmotische ATP-Bildung",
+        "Neurophysiologie (Ruhe-/Aktionspotenzial, Synapsen)",
+        "Hormonelle Steuerung",
+        "Neuronale Plastizität"
+      ],
+      "kernkompetenzen": [
+        "Elektrochemische Prozesse an Nervenzellen erklären",
+        "Wirkungsweise von Hormonen und Signaltransduktion auf molekularer Ebene erläutern"
+      ]
+    },
+    {
+      "thema": "Stoffwechsel II und Lebewesen in ihrer Umwelt",
+      "relevante_unterthemen": [
+        "Ökologische Faktoren",
+        "Populationsdynamik",
+        "Stoffkreisläufe",
+        "Energiefluss",
+        "Anthropogener Treibhauseffekt",
+        "Nachhaltigkeit"
+      ],
+      "kernkompetenzen": [
+        "Wechselwirkungen zwischen Organismen und Umwelt analysieren",
+        "Folgen menschlicher Eingriffe in Ökosysteme bewerten"
+      ]
+    },
+    {
+      "thema": "Molekulargenetische Grundlagen des Lebens",
+      "relevante_unterthemen": [
+        "Proteinbiosynthese",
+        "Genregulation",
+        "Mutationen",
+        "Gentechnik",
+        "Epigenetik",
+        "Humangenetik"
+      ],
+      "kernkompetenzen": [
+        "Molekulargenetische Verfahren (PCR, Gelelektrophorese) erläutern",
+        "Chancen und Risiken gentechnischer Anwendungen ethisch bewerten"
+      ]
+    },
+    {
+      "thema": "Evolutive Entstehung und Entwicklung der Vielfalt des Lebens",
+      "relevante_unterthemen": [
+        "Stammesgeschichte",
+        "Evolutionsfaktoren",
+        "Synthetische Evolutionstheorie",
+        "Humanevolution",
+        "Sozialverhalten"
+      ],
+      "kernkompetenzen": [
+        "Evolutionsmechanismen auf Populationsebene erklären",
+        "Verwandtschaftsbeziehungen anhand molekularbiologischer Daten analysieren"
+      ]
+    }
+  ]
+}

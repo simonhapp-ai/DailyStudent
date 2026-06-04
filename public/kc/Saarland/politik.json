@@ -1,0 +1,111 @@
+{
+  "bundesland": "Saarland",
+  "fach": "Politik",
+  "zusammenfassung": "Der Lehrplan für das Fach Politik in der gymnasialen Oberstufe des Saarlandes (Hauptphase) verfolgt das Ziel, politische Mündigkeit zu fördern und die Schülerinnen und Schüler zur aktiven Teilhabe an einer demokratischen Gesellschaft zu befähigen. Der Unterricht ist kompetenzorientiert aufgebaut und gliedert sich in fünf vernetzte Bereiche: Sach-, Methoden-, Beurteilungs-, Handlungs- und Orientierungskompetenz. Inhaltlich deckt der Lehrplan zentrale gesellschaftliche, politische und ökonomische Themenfelder ab, darunter den gesellschaftlichen Wandel, die Grundrechte im Grundgesetz, internationale Politik (Frieden, Sicherheit, UNO, NATO), die Europäische Union, wirtschaftspolitische Konzepte sowie Entwicklungszusammenarbeit. Ein variabler Pflichtbereich ermöglicht zudem die vertiefende Analyse politischer Systeme (USA, Frankreich, Russland). Der Lehrplan betont die Bedeutung von Urteilsbildung, die Analyse komplexer Zusammenhänge und die Anwendung fachspezifischer Methoden, um Schülerinnen und Schüler auf die Anforderungen der modernen Welt und die Abiturprüfung vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Gesellschaft im Wandel",
+      "relevante_unterthemen": [
+        "Demografischer Wandel",
+        "Soziale Ungleichheit",
+        "Einkommensverteilung",
+        "Soziale Gerechtigkeit"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Statistiken und Schaubildern zum demografischen Wandel",
+        "Beurteilung von Reformvorschlägen für das Rentensystem",
+        "Bewertung von staatlichen Maßnahmen zur Armutsbekämpfung",
+        "Einordnung von Gerechtigkeitskonzeptionen"
+      ]
+    },
+    {
+      "thema": "Grundrechte in der politischen Ordnung der Bundesrepublik Deutschland",
+      "relevante_unterthemen": [
+        "Menschenwürde und Grundgesetz",
+        "Freiheits-, Gleichheits- und Abwehrrechte",
+        "Freiheitlich demokratische Grundordnung",
+        "Pluralismus und wehrhafte Demokratie"
+      ],
+      "kernkompetenzen": [
+        "Analyse der zentralen Artikel des Grundgesetzes (Art. 1, 20, 79.3)",
+        "Beurteilung des Spannungsfeldes zwischen Sicherheit und Freiheit",
+        "Begründung der Notwendigkeit einer wehrhaften Demokratie",
+        "Erkennen von Pluralismus als Wesensmerkmal der Demokratie"
+      ]
+    },
+    {
+      "thema": "Internationale Politik",
+      "relevante_unterthemen": [
+        "Frieden, Konflikt und Krieg",
+        "Transnationaler Terrorismus",
+        "Flüchtlingsbewegungen",
+        "NATO und Vereinte Nationen (UNO)"
+      ],
+      "kernkompetenzen": [
+        "Analyse internationaler Konflikte nach fachspezifischen Methoden",
+        "Bewertung der Effizienz von UNO und NATO bei der Friedenssicherung",
+        "Diskussion über Ursachen und Bekämpfung von Flucht und Terrorismus",
+        "Beurteilung der Rolle des Sicherheitsrats"
+      ]
+    },
+    {
+      "thema": "Europäische Union",
+      "relevante_unterthemen": [
+        "Institutioneller Aufbau und Funktionsweise",
+        "Binnenmarkt und vier Freiheiten",
+        "Asyl- und Flüchtlingspolitik der EU",
+        "Zukunft der EU (Erweiterung und Vertiefung)"
+      ],
+      "kernkompetenzen": [
+        "Analyse des Gesetzgebungsprozesses und des Mehrebenensystems",
+        "Beurteilung der demokratischen Legitimation der EU-Institutionen",
+        "Erörterung von Chancen und Risiken einer differenzierten Integration",
+        "Bewertung der EU als Werte- und Solidargemeinschaft"
+      ]
+    },
+    {
+      "thema": "Wirtschaft",
+      "relevante_unterthemen": [
+        "Soziale Marktwirtschaft",
+        "Konjunktur und Wirtschaftspolitik",
+        "Angebots- und nachfrageorientierte Wirtschaftspolitik",
+        "Industrie 4.0 und Arbeitswelt"
+      ],
+      "kernkompetenzen": [
+        "Analyse konjunktureller Entwicklungen anhand von Statistiken",
+        "Zuordnung wirtschaftspolitischer Maßnahmen zu Grundkonzeptionen",
+        "Beurteilung der Vereinbarkeit der sozialen Marktwirtschaft mit dem Grundgesetz",
+        "Diskussion über die Auswirkungen der Digitalisierung"
+      ]
+    },
+    {
+      "thema": "Entwicklungszusammenarbeit",
+      "relevante_unterthemen": [
+        "Nachhaltige Entwicklung",
+        "Entwicklungsindikatoren",
+        "Ursachen von Armut",
+        "Agenda 2030"
+      ],
+      "kernkompetenzen": [
+        "Beurteilung der Bedeutung von Good Governance",
+        "Analyse der wirtschaftlichen, politischen und ethischen Dimensionen",
+        "Überprüfung der Umsetzung der Agenda 2030",
+        "Vergleich von Industrie- und Entwicklungsländern"
+      ]
+    },
+    {
+      "thema": "Variabler Pflichtbereich (Politische Systeme)",
+      "relevante_unterthemen": [
+        "Politisches System der USA",
+        "Politisches System Frankreichs",
+        "Politisches System Russlands"
+      ],
+      "kernkompetenzen": [
+        "Vergleich präsidentieller/semipräsidentieller Systeme mit dem parlamentarischen System der BRD",
+        "Analyse von Checks and Balances",
+        "Beurteilung der Machtstellung von Staatspräsidenten",
+        "Kritische Reflexion von Demokratisierungsprozessen und autokratischen Tendenzen"
+      ]
+    }
+  ]
+}

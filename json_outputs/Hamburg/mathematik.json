@@ -1,0 +1,58 @@
+{
+  "bundesland": "Hamburg",
+  "fach": "Mathematik",
+  "zusammenfassung": "Der Bildungsplan für die Studienstufe in Hamburg zielt darauf ab, Schülerinnen und Schülern mathematische Kompetenzen zu vermitteln, die sie befähigen, ihre Umwelt mathematisch zu durchdringen, Probleme zu lösen und sich in einer komplexen, digital geprägten Welt zu orientieren. Der Unterricht basiert auf drei Grunderfahrungen: dem Verständnis von Erscheinungen der Welt, dem Begreifen der Mathematik als deduktiv geordnete Welt und dem Erwerb übertragbarer Problemlösefähigkeiten. Ein zentraler didaktischer Fokus liegt auf dem forschenden Lernen, der Modellierung von Realsituationen und der Nutzung digitaler Werkzeuge als Erkenntnisinstrumente. Dabei wird ein spiralförmiger Kompetenzaufbau verfolgt, der fachliche Inhalte (Analysis, Stochastik, Lineare Algebra/Analytische Geometrie) mit prozessbezogenen Kompetenzen (Argumentieren, Kommunizieren, Modellieren, Darstellen, Problemlösen) verknüpft. Besondere Bedeutung kommt der Sprachbildung, der Werteorientierung und der Bildung für nachhaltige Entwicklung (BNE) zu, wobei Mathematik als Werkzeug zur Analyse globaler Herausforderungen und zur kritischen Reflexion von Daten und Modellen dient.",
+  "hauptthemen": [
+    {
+      "thema": "Analysis",
+      "relevante_unterthemen": [
+        "Von der Änderungsrate zum Bestand",
+        "Ganzrationale, gebrochen-rationale und Wurzelfunktionen",
+        "Sinus- und Kosinusfunktionen",
+        "Exponentialfunktionen (e-Funktion) und ln-Funktion",
+        "Differentialrechnung (Ableitungsregeln, Kurvendiskussion)",
+        "Integralrechnung (Bestandsänderungen, Hauptsatz, Rotationsvolumen)"
+      ],
+      "kernkompetenzen": [
+        "Lokale und mittlere Änderungsraten interpretieren und berechnen",
+        "Funktionale Zusammenhänge modellieren und analysieren",
+        "Optimierungsprobleme lösen",
+        "Bestandsänderungen mittels Integralrechnung bestimmen und interpretieren"
+      ]
+    },
+    {
+      "thema": "Stochastik",
+      "relevante_unterthemen": [
+        "Grundlagen der Statistik und Wahrscheinlichkeitsrechnung",
+        "Zufallsexperimente und Baumdiagramme",
+        "Bedingte Wahrscheinlichkeit und Satz von Bayes",
+        "Binomialverteilung",
+        "Hypothesentests",
+        "Normalverteilung"
+      ],
+      "kernkompetenzen": [
+        "Stochastische Modelle für Zufallsexperimente erstellen",
+        "Wahrscheinlichkeitsverteilungen (Binomial/Normal) anwenden",
+        "Hypothesen kritisch prüfen und Fehlerrisiken bewerten",
+        "Daten kritisch interpretieren und manipulativen Missbrauch erkennen"
+      ]
+    },
+    {
+      "thema": "Lineare Algebra / Analytische Geometrie",
+      "relevante_unterthemen": [
+        "Vektoren und Koordinatengeometrie",
+        "Geraden und Ebenen im Raum",
+        "Lineare Gleichungssysteme (Gauß-Verfahren)",
+        "Matrizenrechnung",
+        "Wachstums- und Umverteilungsprozesse",
+        "Langzeitverhalten von Systemen (Fixvektoren, Grenzmatrizen)"
+      ],
+      "kernkompetenzen": [
+        "Räumliche Objekte mathematisch beschreiben und modellieren",
+        "Lagebeziehungen zwischen geometrischen Objekten analysieren",
+        "Lineare Gleichungssysteme lösen und interpretieren",
+        "Systemdynamiken mittels Matrizen und Übergangsgraphen untersuchen"
+      ]
+    }
+  ]
+}

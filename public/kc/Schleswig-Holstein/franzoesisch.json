@@ -1,0 +1,46 @@
+{
+  "bundesland": "Schleswig-Holstein",
+  "fach": "Franzoesisch",
+  "zusammenfassung": "Die Fachanforderungen für das Fach Französisch in Schleswig-Holstein definieren einen kompetenzorientierten Unterricht für die Sekundarstufen I und II. Das zentrale Ziel ist die Entwicklung funktionaler kommunikativer Kompetenz (Hören, Lesen, Sprechen, Schreiben, Sprachmittlung) sowie interkultureller und methodischer Kompetenzen. Der Unterricht soll Schülerinnen und Schüler befähigen, sich in einer globalisierten Welt in der Zielsprache sicher zu bewegen, wobei die französische Sprache als Brücke zu den frankophonen Kulturen weltweit fungiert. In der Sekundarstufe I liegt der Fokus auf dem Erwerb grundlegender Sprachfertigkeiten und interkultureller Sensibilisierung, während in der Sekundarstufe II die wissenschaftspropädeutische Arbeit, die Diskursfähigkeit und die Vorbereitung auf das Abitur (Niveau B2/B2+) im Vordergrund stehen. Die Leistungsbewertung ist transparent und kriterienorientiert, wobei Unterrichtsbeiträge stärker gewichtet werden als schriftliche Leistungsnachweise. Ein besonderer Schwerpunkt liegt auf der Binnendifferenzierung, der funktionalen Einsprachigkeit und der Förderung von Mehrsprachigkeit.",
+  "hauptthemen": [
+    {
+      "thema": "Ich und die anderen",
+      "relevante_unterthemen": [
+        "Identitätssuche",
+        "Familienstrukturen und Rollenbilder",
+        "Freundschaft und soziale Beziehungen",
+        "Wohnen und Lebensstile"
+      ],
+      "kernkompetenzen": [
+        "Sich und andere in der Fremdsprache vorstellen und beschreiben",
+        "Persönliche Ansichten und Gefühle zu sozialen Themen ausdrücken und begründen"
+      ]
+    },
+    {
+      "thema": "Jugendliche in ihrem unmittelbaren Erfahrungsbereich",
+      "relevante_unterthemen": [
+        "Schule und Ausbildung",
+        "Freizeitgestaltung und Jugendkultur",
+        "Konsumverhalten und Ernährung",
+        "Gesundheit und Lebensführung"
+      ],
+      "kernkompetenzen": [
+        "Über den eigenen Alltag und Interessen berichten",
+        "Informationen zu schulischen und beruflichen Themen austauschen und diskutieren"
+      ]
+    },
+    {
+      "thema": "Gesellschaftliches und kulturelles Leben",
+      "relevante_unterthemen": [
+        "Feste und Traditionen",
+        "Mediennutzung und Medienkritik",
+        "Natur, Umwelt und Nachhaltigkeit",
+        "Frankreich und die Frankophonie (Geografie, Politik, Geschichte)"
+      ],
+      "kernkompetenzen": [
+        "Kulturelle Differenzen wahrnehmen und reflektieren",
+        "Komplexe gesellschaftliche Sachverhalte analysieren und dazu Stellung beziehen"
+      ]
+    }
+  ]
+}

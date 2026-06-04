@@ -1,0 +1,97 @@
+{
+  "bundesland": "NRW",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Kernlehrplan für das Fach Geschichte in der gymnasialen Oberstufe in Nordrhein-Westfalen (2014) vollzieht einen Paradigmenwechsel von der Input- zur Outputorientierung. Ziel des Unterrichts ist die Förderung eines reflektierten Geschichtsbewusstseins, das die Schülerinnen und Schüler befähigt, die Wirklichkeit zu verstehen, eigene Identität zu entwickeln und kompetent am gesellschaftlichen Leben sowie an der Erinnerungskultur teilzuhaben. Der Lehrplan definiert vier Kompetenzbereiche (Sach-, Methoden-, Urteils- und Handlungskompetenz), die in den Qualifikationsphasen (Grund- und Leistungskurs) an verbindliche Inhaltsfelder gebunden sind. Die Leistungsbewertung ist kompetenzorientiert und umfasst neben Klausuren auch sonstige Mitarbeit, wobei die Progression der Anforderungen vom Einführungs- bis zum Abitur-Niveau durch einheitliche Standards gesichert wird.",
+  "hauptthemen": [
+    {
+      "thema": "Erfahrungen mit Fremdsein in weltgeschichtlicher Perspektive",
+      "relevante_unterthemen": [
+        "Germanen in römischer Perspektive",
+        "Mittelalterliche Weltbilder",
+        "Europäische Entdeckungen und Reisen",
+        "Arbeitsmigration im 19. und 20. Jahrhundert"
+      ],
+      "kernkompetenzen": [
+        "Konstruktcharakter von Fremdheitszuschreibungen erklären",
+        "Multiperspektivische Wahrnehmung von Selbst- und Fremdbildern analysieren"
+      ]
+    },
+    {
+      "thema": "Islamische Welt – christliche Welt: Begegnung zweier Kulturen",
+      "relevante_unterthemen": [
+        "Religion und Staat",
+        "Wissenschaft und Kultur",
+        "Kreuzzüge",
+        "Osmanisches Reich und Europa"
+      ],
+      "kernkompetenzen": [
+        "Verhältnis von geistlicher und weltlicher Macht vergleichen",
+        "Kulturbegegnungen und -konflikte multiperspektivisch erörtern"
+      ]
+    },
+    {
+      "thema": "Die Menschenrechte in historischer Perspektive",
+      "relevante_unterthemen": [
+        "Ideengeschichtliche Wurzeln der Aufklärung",
+        "Französische Revolution",
+        "Geltungsbereiche der Menschenrechte"
+      ],
+      "kernkompetenzen": [
+        "Menschenbild und Staatsphilosophie der Aufklärung erläutern",
+        "Universalitätsanspruch der Menschenrechte kritisch bewerten"
+      ]
+    },
+    {
+      "thema": "Die moderne Industriegesellschaft zwischen Fortschritt und Krise",
+      "relevante_unterthemen": [
+        "Zweite Industrielle Revolution",
+        "Hochimperialismus",
+        "Erster Weltkrieg",
+        "Weltwirtschaftskrise 1929"
+      ],
+      "kernkompetenzen": [
+        "Modernisierungsprozesse und deren soziale Folgen analysieren",
+        "Ursachen und Wirkungszusammenhänge von Krisen erläutern"
+      ]
+    },
+    {
+      "thema": "Die Zeit des Nationalsozialismus",
+      "relevante_unterthemen": [
+        "Voraussetzungen und Aufstieg der NSDAP",
+        "Totalitäre Herrschaftsstrukturen",
+        "Widerstand und Anpassung",
+        "Holocaust und Vernichtungskrieg",
+        "Vergangenheitspolitik"
+      ],
+      "kernkompetenzen": [
+        "Strukturen totalitärer Herrschaft erläutern",
+        "Verantwortung und Handlungsspielräume der Zeitgenossen beurteilen"
+      ]
+    },
+    {
+      "thema": "Nationalismus, Nationalstaat und deutsche Identität",
+      "relevante_unterthemen": [
+        "Deutsche Frage im 19. Jahrhundert",
+        "Kaiserreich",
+        "Zweistaatlichkeit nach 1945",
+        "Friedliche Revolution 1989"
+      ],
+      "kernkompetenzen": [
+        "Historische Konstruktion von Nation dekonstruieren",
+        "Bedeutung nationaler Identität im Wandel beurteilen"
+      ]
+    },
+    {
+      "thema": "Friedensschlüsse und Ordnungen des Friedens in der Moderne",
+      "relevante_unterthemen": [
+        "Friedensordnungen von 1648, 1815, 1919 und 1945",
+        "Völkerbund und UNO",
+        "Europäischer Einigungsprozess"
+      ],
+      "kernkompetenzen": [
+        "Stabilität von Friedensordnungen vergleichend beurteilen",
+        "Bedeutung internationaler Friedenspolitik reflektieren"
+      ]
+    }
+  ]
+}

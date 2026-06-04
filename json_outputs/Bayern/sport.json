@@ -1,0 +1,63 @@
+{
+  "bundesland": "Bayern",
+  "fach": "Sport",
+  "zusammenfassung": "Der Lehrplan für Sporttheorie in den Jahrgangsstufen 12/13 am bayerischen Gymnasium verfolgt das Ziel, Schülerinnen und Schüler zu einer fundierten Auseinandersetzung mit sportwissenschaftlichen Grundlagen zu befähigen. Die Inhalte gliedern sich in vier zentrale Lernbereiche: Trainingslehre, Bewegungslehre, Sport und Gesundheit sowie psychologische und gesellschaftspolitische Aspekte. Im Fokus steht dabei stets die Verknüpfung von theoretischem Wissen mit praktischer Anwendung, etwa durch die Planung und Erprobung von Trainingsprogrammen, die Durchführung von Leistungsdiagnostik oder die Analyse sportlicher Bewegungsabläufe. Die Schülerinnen und Schüler erwerben Kompetenzen, um sportliche Leistungen zu verstehen, zu steuern und zu optimieren, gesundheitsorientierte Lebensstile zu entwickeln sowie kritische Reflexionsfähigkeit gegenüber aktuellen sportbezogenen gesellschaftlichen Phänomenen wie Doping, Kommerzialisierung oder ethischen Fragestellungen zu zeigen.",
+  "hauptthemen": [
+    {
+      "thema": "Trainingslehre",
+      "relevante_unterthemen": [
+        "Trainingsprinzipien und -steuerung",
+        "Sportbiologische Grundlagen",
+        "Kraft-, Ausdauer-, Schnelligkeits- und Beweglichkeitstraining",
+        "Weitere Trainingsformen"
+      ],
+      "kernkompetenzen": [
+        "Anwendung von Trainingsprinzipien zur Planung und Steuerung von Trainingseinheiten",
+        "Analyse anatomisch-physiologischer Grundlagen und deren Bedeutung für Anpassungsprozesse",
+        "Planung, Erprobung und Bewertung spezifischer Trainingsmethoden"
+      ]
+    },
+    {
+      "thema": "Bewegungslehre",
+      "relevante_unterthemen": [
+        "Biomechanik",
+        "Motorisches Lernen",
+        "Koordinative Fähigkeiten",
+        "Technik- und Taktiktraining"
+      ],
+      "kernkompetenzen": [
+        "Analyse sportlicher Bewegungen mittels biomechanischer Prinzipien",
+        "Erläuterung motorischer Lernprozesse und neuronaler Steuerung",
+        "Anwendung methodischer Grundsätze zur Optimierung von Technik und Taktik"
+      ]
+    },
+    {
+      "thema": "Sport und Gesundheit",
+      "relevante_unterthemen": [
+        "Gesundheitsmodelle",
+        "Gesundheitsorientierter Sport",
+        "Ernährung",
+        "Doping"
+      ],
+      "kernkompetenzen": [
+        "Erörterung von Gesundheitsmodellen und Ableitung eines gesundheitsorientierten Lebensstils",
+        "Beurteilung der Bedeutung von Ernährung für die Leistungsfähigkeit",
+        "Kritische Auseinandersetzung mit Dopingmitteln, Wirkungsweisen und Risiken"
+      ]
+    },
+    {
+      "thema": "Psychologische, soziale und gesellschaftspolitische Aspekte",
+      "relevante_unterthemen": [
+        "Motivation und Emotion",
+        "Sozialverhalten",
+        "Medien und Kommerzialisierung",
+        "Fairness und Umwelt"
+      ],
+      "kernkompetenzen": [
+        "Bewertung psychologischer Aspekte für den Einzelnen und die Gesellschaft",
+        "Kritische Reflexion gesellschaftspolitischer Entwicklungen im Sport",
+        "Differenzierte Auseinandersetzung mit sozialen Fragestellungen im organisierten und nichtorganisierten Sport"
+      ]
+    }
+  ]
+}

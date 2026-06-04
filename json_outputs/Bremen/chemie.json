@@ -1,0 +1,59 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Chemie",
+  "zusammenfassung": "Der Bildungsplan für die gymnasiale Oberstufe in Bremen zielt auf eine vertiefte allgemeine Bildung, Wissenschaftspropädeutik und Studierfähigkeit ab. Er orientiert sich an den KMK-Bildungsstandards für die Allgemeine Hochschulreife und gliedert sich in die vier Kompetenzbereiche Sach-, Erkenntnisgewinnungs-, Kommunikations- und Bewertungskompetenz. Der Unterricht ist experimentell orientiert und nutzt Basiskonzepte (Stoff-Teilchen-Konzept, Donator-Akzeptor-Konzept, Energiekonzept) zur Vernetzung fachlicher Inhalte. Die Einführungsphase dient der Wiederholung und Vertiefung, während die Qualifikationsphase in vier Themenbereichen (Ablauf/Steuerung von Reaktionen, Naturstoffe/nachwachsende Rohstoffe, Energie/Energiespeicherung, Chemie verändert die Welt) auf das Abitur vorbereitet. Ein besonderer Fokus liegt auf der Integration digitaler Kompetenzen und der Bildung für nachhaltige Entwicklung.",
+  "hauptthemen": [
+    {
+      "thema": "Ablauf und Steuerung chemischer Reaktionen",
+      "relevante_unterthemen": [
+        "Grundlagen des chemischen Gleichgewichts",
+        "Protolysegleichgewichte",
+        "Reaktionskinetik und Katalyse"
+      ],
+      "kernkompetenzen": [
+        "Anwendung des Massenwirkungsgesetzes auf Gleichgewichte",
+        "Interpretation von pH-Titrationskurven",
+        "Einfluss von Reaktionsbedingungen auf die Reaktionsgeschwindigkeit"
+      ]
+    },
+    {
+      "thema": "Organische Naturstoffe und nachwachsende Rohstoffe",
+      "relevante_unterthemen": [
+        "Kohlenhydrate",
+        "Aminosäuren und Proteine",
+        "Fette und Öle"
+      ],
+      "kernkompetenzen": [
+        "Vergleich von Strukturen und Eigenschaften von Biomolekülen",
+        "Anwendung stereochemischer Konzepte",
+        "Bewertung der Nutzung nachwachsender Rohstoffe"
+      ]
+    },
+    {
+      "thema": "Energie und Energiespeicherung",
+      "relevante_unterthemen": [
+        "Energetik",
+        "Elektrochemie",
+        "Nachwachsende Rohstoffe und Klimawandel"
+      ],
+      "kernkompetenzen": [
+        "Berechnung von Reaktionsenthalpien",
+        "Verständnis von galvanischen Zellen und Elektrolyse",
+        "Bewertung von Treibstoffen im Kontext des Klimawandels"
+      ]
+    },
+    {
+      "thema": "Chemie verändert die Welt",
+      "relevante_unterthemen": [
+        "Kunststoffe",
+        "Pflanzliche und synthetische Farbstoffe",
+        "Aromatische Systeme"
+      ],
+      "kernkompetenzen": [
+        "Verständnis von Polymerisationsreaktionen und Recycling",
+        "Erklärung von Farbigkeit durch Wechselwirkung von Strahlung und Materie",
+        "Analyse aromatischer Verbindungen und Wirkstoffsynthese"
+      ]
+    }
+  ]
+}

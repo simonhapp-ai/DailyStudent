@@ -1,0 +1,63 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Englisch",
+  "zusammenfassung": "Der Bildungsplan für das Fach Englisch an Bremer Oberschulen (Sekundarstufe I, Jahrgänge 5-10) zielt auf die systematische Entwicklung kommunikativer Kompetenz und interkultureller Handlungsfähigkeit ab. Er orientiert sich am Gemeinsamen Europäischen Referenzrahmen (CEFR) und den Bildungsstandards der Kultusministerkonferenz. Der Unterricht ist handlungsorientiert gestaltet und fördert ausgewogen die Fertigkeiten Hör-/Sehverstehen, Leseverstehen, Sprechen und Schreiben sowie Sprachmittlung. Ein besonderer Fokus liegt auf der Entwicklung methodischer Kompetenzen für selbstständiges Lernen, der Nutzung von Medien und der Reflexion über kulturelle Differenzen. Der Bildungsplan ist spiralförmig aufgebaut: Während in den Jahrgängen 5/6 die spielerische Sprachaneignung und Grundlagen im Vordergrund stehen, verschiebt sich der Fokus in 7/8 auf inhaltliche Vertiefung und in 9/10 auf die Festigung und Anwendung in komplexeren, interkulturellen Kontexten, inklusive einer Vorbereitung auf die gymnasiale Oberstufe oder den Mittleren Schulabschluss.",
+  "hauptthemen": [
+    {
+      "thema": "Funktionale kommunikative Kompetenzen",
+      "relevante_unterthemen": [
+        "Hör- und Hör-/Sehverstehen",
+        "Leseverstehen",
+        "Sprechen (Interaktion und zusammenhängendes Sprechen)",
+        "Schreiben",
+        "Sprachmittlung"
+      ],
+      "kernkompetenzen": [
+        "Verstehen und Interpretieren von auditiven und visuellen Botschaften in verschiedenen Kontexten",
+        "Sicheres Anwenden von Wortschatz, Grammatik, Aussprache und Orthographie zur Realisierung kommunikativer Absichten",
+        "Sinngemäßes Übertragen von Inhalten zwischen Deutsch und Englisch in Alltagssituationen"
+      ]
+    },
+    {
+      "thema": "Interkulturelle Kompetenzen",
+      "relevante_unterthemen": [
+        "Soziokulturelles Orientierungswissen",
+        "Umgang mit kultureller Differenz",
+        "Bewältigung interkultureller Begegnungssituationen"
+      ],
+      "kernkompetenzen": [
+        "Erkennen und Abbauen von Klischeevorstellungen",
+        "Aufgeschlossener und respektvoller Umgang mit fremden Denkweisen und kulturellen Missverständnissen",
+        "Anwendung von Kommunikationsmustern aus dem englischsprachigen Raum"
+      ]
+    },
+    {
+      "thema": "Methodische Kompetenzen",
+      "relevante_unterthemen": [
+        "Lernstrategien und -techniken",
+        "Mediennutzung und Präsentation",
+        "Selbstständige Lernorganisation",
+        "Texterschließung"
+      ],
+      "kernkompetenzen": [
+        "Selbstständiges Nutzen von Wörterbüchern und anderen Hilfsmitteln",
+        "Anwendung von Strategien zur Textrezeption und -produktion",
+        "Eigenständige Planung des Lernprozesses und Dokumentation im Sprachenportfolio"
+      ]
+    },
+    {
+      "thema": "Thematische Inhaltsbereiche",
+      "relevante_unterthemen": [
+        "Alltagsleben (z.B. Haushalt, Schule, Freizeit, Berufe)",
+        "Soziales Umfeld (z.B. Familie, Freunde, Traditionen)",
+        "Umgebung und Landeskunde (z.B. Großbritannien, USA, globale Welt)",
+        "Medien, Kunst und Kultur"
+      ],
+      "kernkompetenzen": [
+        "Verknüpfung von Sachthemen mit sprachpraktischen Fertigkeiten",
+        "Reflexion über gesellschaftliche und kulturelle Themen der englischsprachigen Welt",
+        "Anwendung der Sprache in berufsorientierten und globalen Kontexten"
+      ]
+    }
+  ]
+}

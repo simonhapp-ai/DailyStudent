@@ -1,0 +1,53 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Sport",
+  "zusammenfassung": "Der Rahmenlehrplan für das Fach Sport in der gymnasialen Oberstufe zielt auf die Entwicklung umfassender Handlungskompetenz durch einen integrativen Praxis-Theorie-Verbund ab. Sportunterricht wird als Lern- und Erfahrungsfeld verstanden, das über die reine motorische Ausbildung hinausgeht und die Persönlichkeitsentwicklung fördert. Zentrale pädagogische Perspektiven wie Gesundheit, Leistung, Kooperation, Körpererfahrung, Gestaltung und Wagnis bilden den Orientierungsrahmen. Die Schülerinnen und Schüler sollen befähigt werden, sportliche Handlungen zu reflektieren, zu analysieren und zu bewerten. Dabei wird ein besonderer Fokus auf die Verknüpfung von sportpraktischen Bewegungsfeldern (z.B. Laufen/Springen/Werfen, Spiele, Fitness) mit sporttheoretischen Inhalten gelegt, um wissenschaftspropädeutisches Arbeiten zu ermöglichen. Der Unterricht fördert soziale Kompetenzen, Gesundheitsbewusstsein und eine lebenslange Sportmotivation. Während der Grundkurs die Anwendung und Reflexion in den Vordergrund stellt, zeichnet sich der Leistungskurs durch ein höheres Abstraktionsniveau, eine stärkere wissenschaftliche Systematik und eine vertiefte Theorie-Praxis-Verknüpfung aus.",
+  "hauptthemen": [
+    {
+      "thema": "Bewegungsfelder",
+      "relevante_unterthemen": [
+        "Laufen, Springen, Werfen",
+        "Spiele (Mannschafts-, Rückschlag-, weitere Spiele)",
+        "Bewegen an und mit Geräten",
+        "Bewegung gymnastisch, rhythmisch und tänzerisch gestalten",
+        "Bewegen im Wasser",
+        "Mit/gegen Partner kämpfen",
+        "Fahren, Rollen, Gleiten",
+        "Fitness"
+      ],
+      "kernkompetenzen": [
+        "Steigerung und Vertiefung koordinativer und konditioneller Fähigkeiten sowie motorischer Fertigkeiten",
+        "Anwendung sportartspezifischer Techniken und taktischer Verhaltensweisen in variablen Situationen",
+        "Sicheres und verantwortungsbewusstes Handeln im Umgang mit Sportgeräten und Partnern",
+        "Entwicklung von Gesundheitsbewusstsein und Fitness durch reflektiertes Training"
+      ]
+    },
+    {
+      "thema": "Sporttheorie",
+      "relevante_unterthemen": [
+        "Wissen zur Realisierung des eigenen sportlichen Handelns (Bewegungs-, Trainingswissenschaft, Biologie, Psychologie)",
+        "Wissen zum individuellen sportlichen Handeln im sozialen Kontext (Psychologie, Soziologie)",
+        "Wissen über den Sport im gesellschaftlichen Kontext (Soziologie, Geschichte, Wirtschaft, Politik)"
+      ],
+      "kernkompetenzen": [
+        "Theoriegeleitete Analyse und Bewertung von Bewegungsabläufen und sportlichen Handlungen",
+        "Anwendung sportwissenschaftlicher Erkenntnisse auf die eigene Sportpraxis",
+        "Kritische Reflexion von Erscheinungsformen des Sports in der Gesellschaft",
+        "Wissenschaftspropädeutisches Arbeiten, einschließlich der Nutzung von Fachsprache und Medien"
+      ]
+    },
+    {
+      "thema": "Soziale und methodische Kompetenzen",
+      "relevante_unterthemen": [
+        "Soziales Handeln (Kooperation, Fairness, Konfliktlösung)",
+        "Selbstständiges Handeln (Organisation, Zielsetzung, Reflexion)",
+        "Situationsangemessener Umgang mit Sprache, Wissen und Können"
+      ],
+      "kernkompetenzen": [
+        "Übernahme von Verantwortung in sportlichen Situationen (z.B. Schiedsrichter, Helfen und Sichern)",
+        "Entwicklung von Strategien zur Lösung von Bewegungsproblemen",
+        "Reflektierte Gestaltung und Organisation von Unterrichtssequenzen und Wettkämpfen"
+      ]
+    }
+  ]
+}

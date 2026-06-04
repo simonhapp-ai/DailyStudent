@@ -1,0 +1,58 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Musik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Musik in der gymnasialen Oberstufe in Niedersachsen zielt auf die Entwicklung eines vertieften Musikverständnisses durch die Verknüpfung von künstlerischer Praxis und wissenschaftspropädeutischer Reflexion. Im Zentrum steht das 'erfahrende Erschließen' von Musik, das die Kompetenzbereiche Musik gestalten, Musik hören und beschreiben sowie Musik untersuchen und deuten umfasst. Diese Kompetenzen werden in vier zentralen Arbeitsfeldern erworben: Gestaltung von Musik, Musik in ihren Strukturen und Gestaltungsformen, Musik in Verbindung mit anderen Kunstformen (Sprache, Szene, Bild, Film) sowie Musik in ihren historischen, gesellschaftlichen und kulturellen Bezügen. Der Unterricht orientiert sich an der Lebenswelt der Schülerinnen und Schüler und fördert durch den Einsatz neuer Medien, die Öffnung zu außerschulischen Partnern und die Reflexion über Musik eine mündige kulturelle Teilhabe, Toleranz und ästhetische Urteilsbildung. Die Leistungsbewertung erfolgt kriteriengestützt und berücksichtigt sowohl praktische als auch analytische Leistungen, wobei die Fachkonferenzen einen großen Gestaltungsspielraum bei der inhaltlichen Ausformung der Kursthemen haben.",
+  "hauptthemen": [
+    {
+      "thema": "Gestaltung von Musik",
+      "relevante_unterthemen": [
+        "Musikalische Praxis (Singen, Instrumentalspiel)",
+        "Improvisation und Experimentieren",
+        "Arrangieren und Komponieren",
+        "Präsentation musikalischer Ergebnisse"
+      ],
+      "kernkompetenzen": [
+        "Musik praktisch umsetzen und kreativ gestalten",
+        "Eigene musikalische Arbeit kritisch reflektieren und präsentieren"
+      ]
+    },
+    {
+      "thema": "Musik in ihren Strukturen und Gestaltungsformen",
+      "relevante_unterthemen": [
+        "Differenziertes Hören und Beschreiben",
+        "Analyse musikalischer Strukturen (z.B. Form, Harmonik, Rhythmik)",
+        "Interpretation auf Basis von Notationen",
+        "Fachsprachliche Kommunikation über Musik"
+      ],
+      "kernkompetenzen": [
+        "Musikalische Abläufe fachsprachlich präzise beschreiben",
+        "Musikalische Strukturen analysieren und interpretieren"
+      ]
+    },
+    {
+      "thema": "Musik in Verbindung mit Sprache, Szene, Bild, Film und Programm",
+      "relevante_unterthemen": [
+        "Verhältnis von Musik und Sprache",
+        "Musik in Bühnenwerken und Film",
+        "Beziehungen zwischen Musik und außermusikalischen Vorstellungen"
+      ],
+      "kernkompetenzen": [
+        "Ästhetische Wechselbeziehungen zwischen Musik und anderen Kunstformen analysieren",
+        "Nachvollziehbare Interpretationsansätze für mediale Verbindungen formulieren"
+      ]
+    },
+    {
+      "thema": "Musik in ihren historischen, gesellschaftlichen und kulturellen Bezügen",
+      "relevante_unterthemen": [
+        "Historischer Kontext und Funktionen von Musik",
+        "Ökonomische Bedingungen und Mediennutzung",
+        "Interkulturelle Vergleiche",
+        "Musik, Identität und Rollenbilder"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge zwischen Musik und ihrem Kontext untersuchen und reflektieren",
+        "Wechselwirkungen zwischen Musik, Gesellschaft und Individuum kritisch bewerten"
+      ]
+    }
+  ]
+}

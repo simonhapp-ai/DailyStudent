@@ -1,0 +1,68 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Fachlehrplan Deutsch für das Gymnasium in Sachsen-Anhalt (Stand 2022) verfolgt das Ziel, Schülerinnen und Schüler zur aktiven Teilhabe am gesellschaftlichen, kulturellen und politischen Leben zu befähigen. Der Unterricht ist kompetenzorientiert und gliedert sich in fünf zentrale Bereiche: Sprechen und Zuhören, Schreiben, Lesen, Sich mit Texten und Medien auseinandersetzen sowie Sprache und Sprachgebrauch reflektieren. Ein besonderer Schwerpunkt liegt auf der wissenschaftspropädeutischen Ausrichtung in der gymnasialen Oberstufe, die auf die allgemeine Hochschulreife vorbereitet. Der Lehrplan integriert moderne Anforderungen wie Medienkompetenz, Bildung in der digitalen Welt und Bildung für nachhaltige Entwicklung. Während in der Sekundarstufe I grundlegende Wissensbestände und methodische Grundlagen systematisch erworben werden, fungiert der 10. Schuljahrgang als Gelenkphase zur Qualifikationsphase. In den Jahrgängen 11 und 12 liegt der Fokus auf der vertieften Analyse komplexer literarischer und pragmatischer Texte, der Reflexion über Sprache als System sowie der Ausbildung einer eigenständigen, argumentativ fundierten Urteilsfähigkeit. Dabei wird zwischen grundlegendem und erhöhtem Anforderungsniveau differenziert, wobei letzteres einen höheren Grad an Selbstständigkeit und theoriegestützter Reflexion erfordert.",
+  "hauptthemen": [
+    {
+      "thema": "Sprechen und Zuhören",
+      "relevante_unterthemen": [
+        "Redebeiträge und Präsentationen",
+        "Gesprächsführung und Moderation",
+        "Argumentation und Diskursfähigkeit"
+      ],
+      "kernkompetenzen": [
+        "Sachbezogenes, situationsangemessenes und adressatengerechtes Sprechen",
+        "Verstehendes Zuhören und kritische Reflexion von Gesprächsbeiträgen"
+      ]
+    },
+    {
+      "thema": "Schreiben",
+      "relevante_unterthemen": [
+        "Schreibprozessplanung",
+        "Textproduktion (informierend, argumentierend, gestaltend)",
+        "Wissenschaftliches Arbeiten und Zitiertechnik"
+      ],
+      "kernkompetenzen": [
+        "Planvolle Gestaltung von Schreibprozessen",
+        "Sichere Anwendung von Orthografie und Grammatik",
+        "Adressatengerechte und kohärente Textgestaltung"
+      ]
+    },
+    {
+      "thema": "Lesen und Textanalyse",
+      "relevante_unterthemen": [
+        "Lesestrategien und -techniken",
+        "Literarische Texte (Epik, Lyrik, Dramatik)",
+        "Pragmatische Texte und Sachtexte"
+      ],
+      "kernkompetenzen": [
+        "Sinnerfassendes Lesen komplexer Texte",
+        "Analytischer und interpretatorischer Umgang mit literarischen und pragmatischen Texten"
+      ]
+    },
+    {
+      "thema": "Sprache und Sprachgebrauch reflektieren",
+      "relevante_unterthemen": [
+        "Sprache als System",
+        "Sprachwandel und Sprachvarietäten",
+        "Kommunikationsmodelle"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Sprachstrukturen und -funktionen",
+        "Reflexion über Bedingungen gelingender und misslingender Kommunikation"
+      ]
+    },
+    {
+      "thema": "Medienkompetenz",
+      "relevante_unterthemen": [
+        "Digitale Medien und Kommunikation",
+        "Medienanalyse und -kritik",
+        "Film und Theaterinszenierungen"
+      ],
+      "kernkompetenzen": [
+        "Reflektierter Umgang mit digitalen Medien",
+        "Analyse medialer Ausdrucksmittel und deren Wirkung"
+      ]
+    }
+  ]
+}

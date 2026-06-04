@@ -1,0 +1,67 @@
+{
+  "bundesland": "Rheinland-Pfalz",
+  "fach": "Musik",
+  "zusammenfassung": "Der Lehrplan für die gymnasiale Oberstufe in Rheinland-Pfalz (Stand 1998) zielt auf die Vermittlung allgemeiner Studierfähigkeit und kultureller Teilhabe ab. Er basiert auf den drei Säulen 'Hören, Handeln und Wissen'. Der Unterricht ist handlungsorientiert gestaltet, wobei Musik als lebendiges Kulturgut und Ausdrucksform des Menschen verstanden wird. Ein besonderer Fokus liegt auf der Verbindung von künstlerisch-praktischem Tun (Musikpraxis) mit wissenschaftlicher Reflexion (Musikgeschichte/Musiklehre). Der Lehrplan bietet Flexibilität durch Wahlpflichtthemen und betont die Bedeutung fachübergreifenden Lernens, um vernetztes Denken zu fördern. Die gymnasiale Oberstufe wird als inhaltliche Einheit betrachtet, wobei die Schüler befähigt werden sollen, Musik in ihrer historischen Bedingtheit zu verstehen und aktiv am kulturellen Leben teilzunehmen.",
+  "hauptthemen": [
+    {
+      "thema": "Musikpraxis (Hören-Handeln-Wissen)",
+      "relevante_unterthemen": [
+        "Gruppenimprovisation",
+        "Komponieren, Notieren und Realisieren",
+        "Musik und Bewegung",
+        "Singen und Spielen"
+      ],
+      "kernkompetenzen": [
+        "Musik als Mittel menschlichen Ausdrucks spontan und geplant gestalten",
+        "Klang- und Ausdrucksmöglichkeiten von Instrument und Stimme spielend erforschen",
+        "Musik durch Bewegung interpretieren",
+        "Soziale Kompetenz durch gemeinsames Musizieren im Ensemble entwickeln"
+      ]
+    },
+    {
+      "thema": "Musikgeschichte und Epochen",
+      "relevante_unterthemen": [
+        "Musik bis 1600",
+        "Barock (1600-1750)",
+        "Wiener Klassik",
+        "19. Jahrhundert (Romantik)",
+        "Musik ab 1900 (Avantgarde, Rock/Pop/Jazz)"
+      ],
+      "kernkompetenzen": [
+        "Historische Bedingtheit von Musik in verschiedenen Kulturen verstehen",
+        "Stilmerkmale und Gattungen (z.B. Sonate, Fuge, Musikdrama) analysieren",
+        "Wandel von Tonalität und Formstrukturen nachvollziehen",
+        "Zusammenhang zwischen gesellschaftlichem Wandel und musikalischer Entwicklung erkennen"
+      ]
+    },
+    {
+      "thema": "Musiklehre und Analyse",
+      "relevante_unterthemen": [
+        "Musikalisches Material",
+        "Form in der Musik",
+        "Musik und Sprache",
+        "Außermusikalische Bedeutung von Musik"
+      ],
+      "kernkompetenzen": [
+        "Grundlagen der Musiktheorie (Harmonik, Rhythmik, Metrik) beherrschen",
+        "Musikwerke nach Noten und Gehör analysieren",
+        "Formprinzipien (Wiederholung, Kontrast, Entwicklung) identifizieren",
+        "Wechselwirkungen zwischen Musik und außermusikalischen Inhalten (z.B. Werbung, Film, Ideologie) reflektieren"
+      ]
+    },
+    {
+      "thema": "Fachübergreifendes Lernen und Projektarbeit",
+      "relevante_unterthemen": [
+        "Projektunterricht",
+        "Interdisziplinäre Themen (z.B. Akustik, Literatur, Geschichte)",
+        "Mediennutzung (Computer als Tonstudio)"
+      ],
+      "kernkompetenzen": [
+        "Komplexe Problemstellungen durch vernetztes Denken bearbeiten",
+        "Organisationskompetenz bei der Durchführung von Projekten zeigen",
+        "Ergebnisse strukturiert präsentieren",
+        "Methodenvielfalt zur Lösung realitätsnaher Aufgaben anwenden"
+      ]
+    }
+  ]
+}

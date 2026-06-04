@@ -1,0 +1,60 @@
+{
+  "bundesland": "Sachsen-Anhalt",
+  "fach": "Geschichte",
+  "zusammenfassung": "Der Fachlehrplan Geschichte für das Gymnasium in Sachsen-Anhalt zielt auf die Entwicklung eines reflektierten Geschichtsbewusstseins ab, das als Voraussetzung und Ziel des Unterrichts fungiert. Die Schülerinnen und Schüler sollen befähigt werden, menschliches Handeln in der Vergangenheit zu erklären und kompetent an der Geschichtskultur teilzuhaben. Der Lehrplan ist kompetenzorientiert strukturiert und fokussiert auf drei Kernbereiche: Interpretationskompetenz (Quellenarbeit), narrative Kompetenz (sinnbildende Darstellung von Geschichte) und geschichtskulturelle Kompetenz (Umgang mit Erinnerungskultur, Inszenierungen und Geschichtspolitik). Ein besonderer Schwerpunkt liegt auf dem wissenschaftspropädeutischen Arbeiten, der Förderung von Fach- und Bildungssprache sowie der Integration digitaler Medienkompetenz. Über die Schuljahrgänge hinweg erfolgt eine kumulative Kompetenzentwicklung, die durch verpflichtende Fachpraktika handlungsorientiert vertieft wird. Dabei werden historische Erkenntnisse stets mit gegenwärtigen Problemstellungen verknüpft, um Orientierung für die Zukunft zu bieten und die Schüler auf die Hochschulreife sowie gesellschaftliche Teilhabe vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Antike und Mittelalter (Schuljahrgänge 5/6)",
+      "relevante_unterthemen": [
+        "Frühgeschichte",
+        "Ägyptische Hochkultur",
+        "Polis Athen und Römisches Weltreich",
+        "Dreiteilung der Mittelmeerwelt",
+        "Mittelalterliche Machtstrukturen",
+        "Grundherrschaft und Lehnswesen",
+        "Mittelalterliche Stadt"
+      ],
+      "kernkompetenzen": [
+        "Gattungsgerechte Interpretation schriftlicher, bildlicher und gegenständlicher Quellen",
+        "Zeitliche und räumliche Einordnung historischer Ereignisse",
+        "Beschreibung und Beurteilung von Objektivationen der Geschichtskultur"
+      ]
+    },
+    {
+      "thema": "Frühe Neuzeit bis Imperialismus (Schuljahrgänge 7/8)",
+      "relevante_unterthemen": [
+        "Europäische Entdeckung der Welt",
+        "Reformation",
+        "Absolutismus",
+        "Französische Revolution",
+        "Nationalbewegung und 1848/49",
+        "Industrielle Revolution",
+        "Nationalstaatsgründung",
+        "Imperialismus und Kolonialismus"
+      ],
+      "kernkompetenzen": [
+        "Ideologiekritische Analyse von Quellen",
+        "Sinnbildende Darstellung historischer Verlaufsformen",
+        "Bewertung von Geschichtsinszenierungen und Erinnerungskultur"
+      ]
+    },
+    {
+      "thema": "20. Jahrhundert und Zeitgeschichte (Schuljahrgänge 9-12)",
+      "relevante_unterthemen": [
+        "Erster Weltkrieg",
+        "Weimarer Republik",
+        "Nationalsozialismus",
+        "Geteiltes Deutschland",
+        "Deutsche Einheit",
+        "Kalter Krieg",
+        "Moderne Konflikte"
+      ],
+      "kernkompetenzen": [
+        "Multiperspektivische Analyse von Quellen und Darstellungen",
+        "Reflektierte Einbindung von Zeitzeugenaussagen",
+        "Abwägende Beurteilung von Deutungsangeboten der Geschichtsschreibung",
+        "Kritische Reflexion digitaler Geschichtsdokumentationen"
+      ]
+    }
+  ]
+}

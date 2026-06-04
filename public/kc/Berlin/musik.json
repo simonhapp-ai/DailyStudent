@@ -1,0 +1,85 @@
+{
+  "bundesland": "Berlin",
+  "fach": "Musik",
+  "zusammenfassung": "Der Rahmenlehrplan für die gymnasiale Oberstufe in Berlin definiert Musik als ein künstlerisch-wissenschaftliches Fach, das die Einheit von Denken, Fühlen und Handeln fördert. Ziel ist die Befähigung der Schülerinnen und Schüler zur selbstbestimmten und verantwortungsvollen Teilnahme am Musikleben. Der Unterricht basiert auf drei zentralen Kompetenzbereichen: 'Wahrnehmen und deuten', 'Gestalten und aufführen' sowie 'Reflektieren und kontextualisieren'. Diese Bereiche sind eng miteinander verzahnt, wobei sowohl praktische musikalische Erfahrungen (Singen, Musizieren, Komponieren) als auch theoretische Analysen und die Einordnung in historische sowie gesellschaftliche Kontexte gleichrangig behandelt werden. Der Lehrplan legt Wert auf eine breite musikalische Bildung, die von klassischer Musik über Jazz bis hin zu aktueller Popmusik und außereuropäischen Kulturen reicht. Die Einführungsphase dient der Angleichung von Kompetenzen, während die Qualifikationsphase auf eine vertiefte wissenschaftspropädeutische Arbeit und die Vorbereitung auf das Abitur ausgerichtet ist.",
+  "hauptthemen": [
+    {
+      "thema": "Musik im Wandel der Zeit",
+      "relevante_unterthemen": [
+        "Vokal- und Instrumentalmusik verschiedener Epochen",
+        "Problematisierung des Epochenbegriffs",
+        "Musikgeschichte als Problemgeschichte",
+        "Musikästhetik"
+      ],
+      "kernkompetenzen": [
+        "Stilistische Merkmale von Musikstücken untersuchen und einordnen",
+        "Musikgeschichtliche Entwicklungen in einen geistesgeschichtlichen Kontext setzen"
+      ]
+    },
+    {
+      "thema": "Musik im gesellschaftlichen Kontext",
+      "relevante_unterthemen": [
+        "Verhältnis von Komponist und Publikum",
+        "Musik im politischen Spannungsfeld",
+        "Musik und Religion",
+        "Rolle der Medien und Wirtschaftsfaktor Musik"
+      ],
+      "kernkompetenzen": [
+        "Soziale, politische und wirtschaftliche Rahmenbedingungen von Musik reflektieren",
+        "Funktionalisierung von Musik kritisch hinterfragen"
+      ]
+    },
+    {
+      "thema": "Musik verschiedener Kulturen",
+      "relevante_unterthemen": [
+        "Musik unterschiedlicher Kulturkreise",
+        "Verhältnis von Volks- und Kunstmusik",
+        "Tonmaterial und rhythmische Strukturen",
+        "Interkulturelle Verschmelzungsprozesse"
+      ],
+      "kernkompetenzen": [
+        "Musik als Ausdruck spezifischer Lebensformen und Religionen begreifen",
+        "Toleranz und Respekt gegenüber fremden Musikkulturen entwickeln"
+      ]
+    },
+    {
+      "thema": "Musik in Verbindung mit anderen Künsten und Ausdrucksformen",
+      "relevante_unterthemen": [
+        "Wort-Ton-Bezug",
+        "Musiktheater und Musical",
+        "Programmmusik",
+        "Filmmusik und Musikvideo"
+      ],
+      "kernkompetenzen": [
+        "Musik in andere Ausdrucksformen wie Tanz, Bild oder Szene übertragen",
+        "Die Rolle der Musik in multimedialen Zusammenhängen analysieren"
+      ]
+    },
+    {
+      "thema": "Musik als gestaltete Ordnung",
+      "relevante_unterthemen": [
+        "Methoden der Analyse und Interpretation",
+        "Motivisch-thematische Arbeit",
+        "Formmodelle",
+        "Serialismus, Aleatorik und experimentelle Musik"
+      ],
+      "kernkompetenzen": [
+        "Musik als geordnetes Gefüge aus Tönen und Klängen analysieren",
+        "Musikalische Regeln produktiv beim Komponieren anwenden"
+      ]
+    },
+    {
+      "thema": "Grundlagen von Musik",
+      "relevante_unterthemen": [
+        "Akustik und Klangerzeugung",
+        "Tonsysteme und Stimmungen",
+        "Neurobiologische Grundlagen",
+        "Musikpsychologie und Musiktherapie"
+      ],
+      "kernkompetenzen": [
+        "Physikalische, physiologische und psychologische Grundlagen von Musik verstehen",
+        "Wahrnehmung für Klangphänomene sensibilisieren"
+      ]
+    }
+  ]
+}

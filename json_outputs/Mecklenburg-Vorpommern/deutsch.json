@@ -1,0 +1,77 @@
+{
+  "bundesland": "Mecklenburg-Vorpommern",
+  "fach": "Deutsch",
+  "zusammenfassung": "Der Rahmenplan für die Qualifikationsphase der gymnasialen Oberstufe in Mecklenburg-Vorpommern (2019) zielt darauf ab, Schülerinnen und Schüler zu einer eigenverantwortlichen Lebensführung und zur Teilhabe an einer globalisierten, digitalisierten Gesellschaft zu befähigen. Der Fokus liegt nicht auf einer bloßen Stoffvermittlung, sondern auf dem Erwerb fachspezifischer Kompetenzen in den Bereichen Sprechen und Zuhören, Schreiben, Lesen, Sich mit Texten und Medien auseinandersetzen sowie Sprache und Sprachgebrauch reflektieren. Der Unterricht ist wissenschaftspropädeutisch ausgerichtet und bereitet auf die Abiturprüfung vor, wobei er gleichzeitig Freiräume für methodisch-didaktische Entscheidungen lässt. Querschnittsthemen wie Demokratieerziehung, Bildung für nachhaltige Entwicklung, Medienbildung und berufliche Orientierung sind integraler Bestandteil. Ein besonderer Schwerpunkt liegt auf der Integration digitaler Medien und der Förderung der Verbundenheit mit der Region Mecklenburg-Vorpommern. Die Leistungsbewertung erfolgt kriteriengeleitet und umfasst sowohl mündliche als auch schriftliche Formate, die zunehmend an die Anforderungen der Abiturprüfung angepasst werden.",
+  "hauptthemen": [
+    {
+      "thema": "Epochenumbruch 18./19. Jahrhundert",
+      "relevante_unterthemen": [
+        "Weimarer Klassik",
+        "Romantik",
+        "Frührealismus",
+        "Dramentheorien"
+      ],
+      "kernkompetenzen": [
+        "Analyse von epischen, dramatischen und lyrischen Texten",
+        "Vergleich von Stoffen und Motiven",
+        "Anwendung literaturgeschichtlicher Kenntnisse zur Textdeutung"
+      ]
+    },
+    {
+      "thema": "Epochenumbruch 19./20. Jahrhundert",
+      "relevante_unterthemen": [
+        "Realismus",
+        "Naturalismus",
+        "Expressionismus",
+        "Niederdeutsche Sprache und Literatur"
+      ],
+      "kernkompetenzen": [
+        "Analyse gesellschaftlicher Bedingtheit von Literatur",
+        "Interpretation von Romananfängen und Lyrik",
+        "Vergleich von Texten unter Einbeziehung von Sekundärliteratur"
+      ]
+    },
+    {
+      "thema": "Literatur von der Weimarer Republik bis in die Gegenwart",
+      "relevante_unterthemen": [
+        "Literatur der Weimarer Republik",
+        "Exilliteratur",
+        "Episches Theater",
+        "Nachkriegs- und Gegenwartsliteratur"
+      ],
+      "kernkompetenzen": [
+        "Analyse von politischer Lyrik und Dramatik",
+        "Vergleich von historischen und aktuellen Reden",
+        "Kritische Auseinandersetzung mit Fremdheitserfahrungen"
+      ]
+    },
+    {
+      "thema": "Stoffe und Motive",
+      "relevante_unterthemen": [
+        "Begriffsdefinition Stoff vs. Motiv",
+        "Intertextualität",
+        "Intermedialität",
+        "Figurenkonzeption"
+      ],
+      "kernkompetenzen": [
+        "Vergleichende Textinterpretation",
+        "Analyse der Gestaltung von Stoffen in verschiedenen Medien",
+        "Einordnung in den historisch-gesellschaftlichen Kontext"
+      ]
+    },
+    {
+      "thema": "Sprache und Medien",
+      "relevante_unterthemen": [
+        "Sprachtheorie",
+        "Rhetorik",
+        "Mehrsprachigkeit",
+        "Medienanalyse (Film, Internet, Theater)"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Kommunikationsstrategien und Manipulation",
+        "Verfassen und Halten von Reden",
+        "Reflexion über Sprachwandel und digitale Medien"
+      ]
+    }
+  ]
+}

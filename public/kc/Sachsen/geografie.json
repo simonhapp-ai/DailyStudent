@@ -1,0 +1,66 @@
+{
+  "bundesland": "Sachsen",
+  "fach": "Geografie",
+  "zusammenfassung": "Der Geografie-Lehrplan für das Gymnasium in Sachsen verfolgt einen integrativen Ansatz, der natur- und gesellschaftswissenschaftliche Perspektiven verbindet. Ziel ist es, Schülern ein Verständnis für die Erde als verletzliche Lebensgrundlage zu vermitteln und sie zu verantwortungsbewusstem Handeln zu erziehen. Der Lehrplan ist nach dem Prinzip der räumlichen Nähe (Deutschland/Sachsen) zur Ferne (Welt) strukturiert und nutzt das Prinzip des Maßstabwechsels. Zentrale Kernziele sind der Erwerb von Wissen über Raumstrukturen und -prozesse, die Entwicklung raumbezogener Handlungskompetenz, räumliche Orientierungsfähigkeit sowie die Beherrschung geographischer Denk- und Arbeitsweisen. Ein besonderer Schwerpunkt liegt auf der Bildung für nachhaltige Entwicklung, der Förderung von Medienkompetenz und der Fähigkeit zum vernetzten Denken. In der gymnasialen Oberstufe wird der Fokus auf wissenschaftspropädeutisches Arbeiten, Systemdenken und die Analyse komplexer globaler Disparitäten und städtischer Ökosysteme gelegt.",
+  "hauptthemen": [
+    {
+      "thema": "Physische Geographie und Geodynamik",
+      "relevante_unterthemen": [
+        "Plattentektonik",
+        "Atmosphärische Prozesse",
+        "Klimazonen",
+        "Gesteinskreislauf",
+        "Naturgefahren"
+      ],
+      "kernkompetenzen": [
+        "Zusammenhänge zwischen endogenen und exogenen Prozessen erklären",
+        "Klimadiagramme und Wetterkarten interpretieren",
+        "Systemdenken auf geologische und atmosphärische Prozesse anwenden"
+      ]
+    },
+    {
+      "thema": "Wirtschaftsgeographie und Globalisierung",
+      "relevante_unterthemen": [
+        "Globale Disparitäten",
+        "Wirtschaftssektoren",
+        "Ressourcennutzung",
+        "Entwicklungszusammenarbeit",
+        "Globalisierung"
+      ],
+      "kernkompetenzen": [
+        "Wirtschaftliche Entwicklungsdefizite analysieren",
+        "Globale Verflechtungen und geopolitische Probleme bewerten",
+        "Nachhaltigkeit von Nutzungsformen beurteilen"
+      ]
+    },
+    {
+      "thema": "Siedlungsgeographie und Stadtentwicklung",
+      "relevante_unterthemen": [
+        "Stadtstrukturen",
+        "Verstädterung und Metropolisierung",
+        "Stadtökologie",
+        "Stadt-Umland-Beziehungen"
+      ],
+      "kernkompetenzen": [
+        "Stadt als urbanes Ökosystem analysieren",
+        "Funktionswandel von Städten beschreiben",
+        "Maßnahmen für eine nachhaltige Stadtentwicklung bewerten"
+      ]
+    },
+    {
+      "thema": "Regionalgeographie",
+      "relevante_unterthemen": [
+        "Deutschland und Sachsen",
+        "Europa",
+        "Afrika",
+        "Asien",
+        "Amerika"
+      ],
+      "kernkompetenzen": [
+        "Räumliche Orientierung in verschiedenen Maßstabsebenen",
+        "Regionale Identität entwickeln",
+        "Raumanalysen unter Anwendung fachspezifischer Methoden durchführen"
+      ]
+    }
+  ]
+}

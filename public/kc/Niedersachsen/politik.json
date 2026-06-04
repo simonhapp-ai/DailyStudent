@@ -1,0 +1,85 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Politik",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Politik-Wirtschaft in der gymnasialen Oberstufe in Niedersachsen verfolgt das Ziel, Schülerinnen und Schüler zu mündigen, entscheidungs- und interventionsfähigen Bürgern in einer demokratischen Gesellschaft zu erziehen. Der Unterricht ist kompetenzorientiert und folgt dem Spiralcurriculum, wobei Sach-, Methoden- und Urteilskompetenz kumulativ aufgebaut werden. Ein zentrales Element ist die Arbeit an gesellschaftlich relevanten Problemstellungen, die mithilfe von drei Basiskonzepten (Motive und Anreize, Interaktionen und Entscheidungen, Ordnungen und Systeme) sowie fachspezifischen Fachkonzepten strukturiert werden. Der Unterricht wahrt die Prinzipien des Beutelsbacher Konsenses (Überwältigungsverbot, Kontroversitätsgebot, Schülerorientierung) und integriert ökonomische sowie politische Perspektiven. Neben der fachlichen Bildung leistet das Fach einen Beitrag zur Berufs- und Studienorientierung. Die Leistungsbewertung erfolgt durch Klausuren und Mitarbeit, wobei die Anforderungen in der Qualifikationsphase wissenschaftspropädeutisch vertieft werden, um auf das Zentralabitur vorzubereiten.",
+  "hauptthemen": [
+    {
+      "thema": "Wandel der Arbeitswelt in der globalisierten Gesellschaft",
+      "relevante_unterthemen": [
+        "Beschäftigungs- und Produktionsstruktur",
+        "Digitalisierung und technologischer Wandel",
+        "Internationale Arbeitsteilung",
+        "Berufs- und Studienorientierung"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Beschäftigungsstrukturen mittels Drei-Sektoren-Hypothese",
+        "Erörterung von Chancen und Risiken der digitalisierten und globalisierten Arbeitswelt"
+      ]
+    },
+    {
+      "thema": "Globale politische und ökonomische Prozesse",
+      "relevante_unterthemen": [
+        "Internationaler Wettbewerb",
+        "Internationaler Handel",
+        "UNO als Akteur",
+        "Agenda 2030"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Internationalisierungsstrategien von Unternehmen",
+        "Erörterung von Möglichkeiten und Grenzen internationaler Kooperationen"
+      ]
+    },
+    {
+      "thema": "Politische Partizipation zwischen Anspruch und Wirklichkeit",
+      "relevante_unterthemen": [
+        "Formen politischer Partizipation",
+        "Funktionen der Medien",
+        "Willensbildungs- und Entscheidungsprozesse",
+        "Demokratietheorien"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Partizipationsformen hinsichtlich Legitimität und Effizienz",
+        "Bewertung des Einflusses medialer Kommunikation auf politische Prozesse"
+      ]
+    },
+    {
+      "thema": "Soziale Marktwirtschaft zwischen Anspruch und Wirklichkeit",
+      "relevante_unterthemen": [
+        "Einkommens- und Vermögensverteilung",
+        "Prinzipien der sozialen Marktwirtschaft",
+        "Wirtschaftspolitische Maßnahmen",
+        "Umweltprobleme als Marktversagen"
+      ],
+      "kernkompetenzen": [
+        "Erörterung von Verteilungsgerechtigkeit und Zielkonflikten",
+        "Analyse staatlichen Handelns im Rahmen des magischen Sechsecks"
+      ]
+    },
+    {
+      "thema": "Friedenssicherung als nationale und internationale Herausforderung",
+      "relevante_unterthemen": [
+        "Internationale Konflikte und Kriege",
+        "Internationaler Terrorismus",
+        "UNO-Friedenssicherung",
+        "Deutsche Außen- und Sicherheitspolitik"
+      ],
+      "kernkompetenzen": [
+        "Analyse von Konfliktursachen und Lösungsansätzen",
+        "Erörterung der Rolle Deutschlands in Systemen kollektiver Sicherheit"
+      ]
+    },
+    {
+      "thema": "Chancen und Risiken weltwirtschaftlicher Verflechtungen",
+      "relevante_unterthemen": [
+        "Ökonomische Globalisierung",
+        "Außenhandelspolitik",
+        "Handelsregime",
+        "Entwicklung von Schwellen- und Entwicklungsländern"
+      ],
+      "kernkompetenzen": [
+        "Analyse von internationalem Handel mittels ökonomischer Erklärungsansätze",
+        "Erörterung von Zukunftsperspektiven von Schwellen- und Entwicklungsländern"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "bundesland": "Bremen",
+  "fach": "Religion-Ethik",
+  "zusammenfassung": "Der Bildungsplan für das Fach Religion in Bremen ist als bekenntnismäßig nicht gebundener Unterricht auf allgemein christlicher Grundlage konzipiert. Er reagiert auf die zunehmende Säkularisierung und religiöse Pluralisierung der Gesellschaft. Ziel ist es nicht, zu einem bestimmten Glauben hinzuführen, sondern Schülerinnen und Schüler zur Bildung in religiösen Fragen zu befähigen. Der Unterricht fördert die Orientierung in einer heterogenen Lebenswelt, die Auseinandersetzung mit Sinnfragen, Ethik und Menschenwürde sowie den Dialog zwischen verschiedenen Religionen und Weltanschauungen. Dabei werden die drei monotheistischen Weltreligionen (Judentum, Christentum, Islam) sowie weitere Religionen exemplarisch behandelt. Der Plan basiert auf fünf Kompetenzbereichen (Wahrnehmung, Deutung, Urteils- und Reflexionskompetenz, Dialogkompetenz, Darstellungskompetenz), die über alle Jahrgangsstufen hinweg verbindlich sind, während die inhaltliche Ausgestaltung den Schulen Freiräume zur Profilbildung lässt.",
+  "hauptthemen": [
+    {
+      "thema": "Gott und Mensch in den Religionen",
+      "relevante_unterthemen": [
+        "Einmaligkeit des Menschen",
+        "Fragen nach Gott",
+        "Leben und Tod",
+        "Propheten",
+        "Lebenssinn und Beruf",
+        "Gottesvorstellungen und Menschenbilder"
+      ],
+      "kernkompetenzen": [
+        "Religiöse Ausdrucksformen und letzte Fragen des Lebens wahrnehmen und einordnen",
+        "Religiöse Sprachformen und Heilige Schriften analysieren und deuten",
+        "Eigene Positionen in religiösen Fragen begründet vertreten"
+      ]
+    },
+    {
+      "thema": "Ethik und Religion",
+      "relevante_unterthemen": [
+        "Ich und Du",
+        "Verantwortung und Gerechtigkeit",
+        "Kulturelle Vielfalt",
+        "Gelingendes Leben und Miteinander",
+        "Ethische Konzeptionen im Vergleich"
+      ],
+      "kernkompetenzen": [
+        "Ethisches Verhalten in Konfliktsituationen reflektieren und beurteilen",
+        "Religiöse Normen und Weisungen auf die eigene Lebenssituation beziehen",
+        "Verantwortungsvolles Handeln auf Basis ethischer Konzeptionen erörtern"
+      ]
+    },
+    {
+      "thema": "Glaube und Religionsgemeinschaften",
+      "relevante_unterthemen": [
+        "Feste in den Religionen",
+        "Heilige Räume",
+        "Jesus",
+        "Abraham, Moses und Mohammed",
+        "Weltreligionen im Vergleich",
+        "Aufgaben von Religionsgemeinschaften"
+      ],
+      "kernkompetenzen": [
+        "Religiöse Phänomene und Praktiken in ihrer Bedeutung für Gläubige nachvollziehen",
+        "Gemeinsamkeiten und Unterschiede von Religionen benennen und kommunizieren",
+        "Religiöse Traditionen historisch und gesellschaftlich einordnen"
+      ]
+    },
+    {
+      "thema": "Glaubensfreiheit und Religionskritik",
+      "relevante_unterthemen": [
+        "Schöpfung",
+        "Anfang und Zukunft der Welt",
+        "Glaube und Naturwissenschaft",
+        "Theodizee",
+        "Religionskritik (philosophisch, soziologisch, psychologisch)",
+        "Gegenwartsthemen der Gesellschaft"
+      ],
+      "kernkompetenzen": [
+        "Unterschiede zwischen wissenschaftlichen und religiösen Aussagen erläutern",
+        "Positionen der Religionskritik und des Atheismus vergleichen und bewerten",
+        "Das theologische Problem der Theodizee problemgeschichtlich einordnen"
+      ]
+    }
+  ]
+}

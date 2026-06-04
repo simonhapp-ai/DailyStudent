@@ -1,0 +1,62 @@
+{
+  "bundesland": "Niedersachsen",
+  "fach": "Sport",
+  "zusammenfassung": "Das Kerncurriculum für das Fach Sport in der gymnasialen Oberstufe in Niedersachsen verfolgt einen ganzheitlichen Bildungsauftrag, der auf der Entwicklung sportlicher Handlungskompetenz und einer selbstverantwortlichen Werthaltung basiert. Der Unterricht ist durch einen Praxis-Theorie-Verbund geprägt, der Bewegung als Kern des Lernens begreift und durch Reflexion wissenschaftspropädeutisch vertieft. Die Kompetenzorientierung gliedert sich in prozessbezogene Bereiche (Methoden-, Sozial- und Selbstkompetenz) und inhaltsbezogene Bereiche, die in sieben Bewegungsfeldern (z.B. Schwimmen, Turnen, Laufen/Springen/Werfen, Spielen, Kämpfen) konkretisiert werden. In der Qualifikationsphase wird zwischen dem Ergänzungsfach und dem Prüfungsfach (auf grundlegendem oder erhöhtem Anforderungsniveau) unterschieden, wobei letzteres eine systematische Verknüpfung von Praxis und Theorie zur Vorbereitung auf das Abitur erfordert. Der Unterricht soll durch Mehrperspektivität, Binnendifferenzierung und die Einbindung aktueller gesellschaftlicher Themen (Gesundheit, Doping, Ethik) die Schülerinnen und Schüler zur Lebensgestaltung und zur Bewältigung beruflicher Anforderungen befähigen.",
+  "hauptthemen": [
+    {
+      "thema": "Bewegungsanalyse und Bewegungslernen",
+      "relevante_unterthemen": [
+        "Biomechanische Grundlagen",
+        "Phasenmodelle der Bewegung",
+        "Informationsaufnahme und -verarbeitung",
+        "Fehlerkorrektur und Techniktraining"
+      ],
+      "kernkompetenzen": [
+        "Bewegungsabläufe kriterienorientiert analysieren und bewerten",
+        "Lernarrangements zur Optimierung motorischer Lernprozesse entwickeln"
+      ]
+    },
+    {
+      "thema": "Sportbiologie und Trainingswissenschaft",
+      "relevante_unterthemen": [
+        "Anatomisch-physiologische Grundlagen (Muskulatur, Herz-Kreislauf)",
+        "Energiebereitstellung",
+        "Trainingsprinzipien und -methoden",
+        "Konditionelle und koordinative Fähigkeiten"
+      ],
+      "kernkompetenzen": [
+        "Trainingspläne für spezifische Leistungsfaktoren erstellen und steuern",
+        "Anpassungsprozesse des Körpers physiologisch begründen"
+      ]
+    },
+    {
+      "thema": "Sport und Gesellschaft",
+      "relevante_unterthemen": [
+        "Funktionen und Dysfunktionen des Sports",
+        "Sportökonomie, -politik und Medien",
+        "Sport, Ernährung und Doping",
+        "Aggression und Gewalt im Sport"
+      ],
+      "kernkompetenzen": [
+        "Wechselwirkungen zwischen Sport und gesellschaftlichen Phänomenen reflektieren",
+        "Ethische Fragestellungen im Sport (z.B. Doping) kritisch erörtern"
+      ]
+    },
+    {
+      "thema": "Sportpraxis (Bewegungsfelder)",
+      "relevante_unterthemen": [
+        "Schwimmen, Tauchen, Wasserspringen",
+        "Turnen und Bewegungskünste",
+        "Gymnastisches und tänzerisches Bewegen",
+        "Laufen, Springen, Werfen",
+        "Bewegen auf rollenden/gleitenden Geräten",
+        "Kämpfen",
+        "Spielen (Zielschuss- und Rückschlagspiele)"
+      ],
+      "kernkompetenzen": [
+        "Sportmotorische Fertigkeiten in verschiedenen Bewegungsfeldern demonstrieren",
+        "Taktische Strategien in Spielsituationen situationsgerecht anwenden"
+      ]
+    }
+  ]
+}
