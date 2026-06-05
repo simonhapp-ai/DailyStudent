@@ -242,6 +242,87 @@ export interface Lernzettel {
   folderId: string         // 'folder-lernzettel-{subjectId}'
 }
 
+/* ─── Lernplan ──────────────────────────────────────────────── */
+
+export type LernplanType = 'einzel' | 'vollstaendig' | 'abitur'
+export type LernMethode = 'karteikarten' | 'blurting' | 'lernzettel' | 'probeklausur' | 'lesen' | 'wiederholen'
+export type LernDayType = 'lern' | 'pause' | 'klausur' | 'puffer'
+
+export interface LernplanBlockedTime {
+  id: string
+  label: string           // "Sport", "Familie", "Mittagspause"
+  dayOfWeek: number[]     // 0=Mo..6=So; empty array = every day
+  startTime: string       // "HH:MM"
+  endTime: string
+}
+
+export interface LernplanSession {
+  subjectId: string
+  subjectName: string
+  topic: string
+  durationMin: number
+  method: LernMethode
+  isLK: boolean
+  priority: 'hoch' | 'mittel' | 'niedrig'
+}
+
+export interface LernplanDay {
+  date: string            // "YYYY-MM-DD"
+  sessions: LernplanSession[]
+  totalMin: number
+  dayType: LernDayType
+  note?: string
+}
+
+export interface LernplanExam {
+  date: string
+  subjectId: string
+  subjectName: string
+  topic?: string
+}
+
+export interface Lernplan {
+  id: string
+  title: string
+  planType: LernplanType
+  createdAt: string
+  startDate: string
+  endDate: string
+  days: LernplanDay[]
+  summary: string
+  examSchedule: LernplanExam[]
+  isActive: boolean
+  config: {
+    dailyStudyHours: number
+    targetGrade: string
+    blockedTimes: LernplanBlockedTime[]
+    weaknesses: Array<{ subjectId: string; topics: string[] }>
+    lkFaecher: string[]
+  }
+}
+
+export interface LernplanGeneratorInput {
+  planType: LernplanType
+  startDate: string
+  planDurationDays: number
+  klausurtermine: Array<{
+    subjectId: string
+    subjectName: string
+    date: string
+    topic?: string
+    isLK: boolean
+  }>
+  dailyStudyHours: number
+  targetGrade: string
+  blockedTimes: LernplanBlockedTime[]
+  weaknesses: Array<{ subjectId: string; topics: string[] }>
+  kcContext?: string
+  schulform: string
+  klasse: string
+  studyTimePreference: 'morgen' | 'abend' | 'beides'
+  includeWeekends: boolean
+}
+
 /* ─── SmartNote (generated) ─────────────────────────────────── */
 
 export interface GeneratedSmartNote {

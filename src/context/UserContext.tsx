@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { type ReactNode } from 'react'
-import type { FlashCard, GeneratedSmartNote, Lernzettel, SavedProbeklausur, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AppStats, ExamScoreRecord } from '../types'
+import type { FlashCard, GeneratedSmartNote, Lernzettel, Lernplan, SavedProbeklausur, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AppStats, ExamScoreRecord } from '../types'
 import { subjects, topics, halfYears } from '../data/mockData'
 import { loadKcForUser, type KcSubjectData } from '../data/kcLoader'
 
@@ -46,6 +46,7 @@ export interface UserProfile {
   schultyp?: 'g8' | 'g9'
   abiGesamtpunkte?: number | null  // computed Abi score — synced from AbiRechnerScreen for stats
   abiGesamtnote?: string            // computed Abi grade string — synced from AbiRechnerScreen for stats
+  lkFaecher?: string[]
 }
 
 export type AppTheme = 'light' | 'dark' | 'system'
@@ -73,6 +74,7 @@ interface StorageData {
   appStats?: AppStats
   lernzettel?: Lernzettel[]
   savedProbeklausuren?: SavedProbeklausur[]
+  lernplaene?: Lernplan[]
 }
 
 interface UserContextValue {
@@ -119,6 +121,9 @@ interface UserContextValue {
   savedProbeklausuren: SavedProbeklausur[]
   saveProbeklausur: (pk: SavedProbeklausur) => void
   deleteSavedProbeklausur: (id: string) => void
+  lernplaene: Lernplan[]
+  saveLernplan: (plan: Lernplan) => void
+  deleteLernplan: (id: string) => void
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -256,6 +261,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [kcFallbacks, setKcFallbacks] = useState<string[]>([])
   const [lernzettel, setLernzettel] = useState<Lernzettel[]>(stored.lernzettel ?? [])
   const [savedProbeklausuren, setSavedProbeklausuren] = useState<SavedProbeklausur[]>(stored.savedProbeklausuren ?? [])
+  const [lernplaene, setLernplaene] = useState<Lernplan[]>(stored.lernplaene ?? [])
 
   const [userFolders, setUserFolders] = useState<UserFolder[]>(() => {
     if (stored.userFolders && stored.userFolders.length > 0) return stored.userFolders
@@ -465,6 +471,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
     saveStorage({ ...loadStorage(), savedProbeklausuren: updated })
   }
 
+  const saveLernplan = (plan: Lernplan) => {
+    const deactivated = lernplaene.map((p) => ({ ...p, isActive: false }))
+    const existing = deactivated.findIndex((p) => p.id === plan.id)
+    const updated = existing >= 0
+      ? deactivated.map((p) => p.id === plan.id ? { ...plan, isActive: true } : p)
+      : [...deactivated, { ...plan, isActive: true }]
+    setLernplaene(updated)
+    saveStorage({ ...loadStorage(), lernplaene: updated })
+  }
+
+  const deleteLernplan = (id: string) => {
+    const updated = lernplaene.filter((p) => p.id !== id)
+    setLernplaene(updated)
+    saveStorage({ ...loadStorage(), lernplaene: updated })
+  }
+
   const completeHomework = (id: string) => {
     const updated = [...completedHomeworkIds, id]
     setCompletedHomeworkIds(updated)
@@ -589,6 +611,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
         savedProbeklausuren,
         saveProbeklausur,
         deleteSavedProbeklausur,
+        lernplaene,
+        saveLernplan,
+        deleteLernplan,
       }}
     >
       {children}

@@ -50,6 +50,8 @@ import { FaecherEditScreen } from '../screens/FaecherEditScreen'
 import { LernzettelScreen } from '../screens/LernzettelScreen'
 import { LernzettelGeneratorScreen } from '../screens/LernzettelGeneratorScreen'
 import { ProbeklausurRetroScreen } from '../screens/ProbeklausurRetroScreen'
+import { LernplanKonfiguratorScreen } from '../screens/LernplanKonfiguratorScreen'
+import { LernplanDetailScreen } from '../screens/LernplanDetailScreen'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -96,9 +98,11 @@ function Layout() {
   const hideNav =
     location.pathname === '/klausurmodus/karteikarten/neu' ||
     location.pathname === '/klausurmodus/lernzettel/neu' ||
+    location.pathname === '/klausurmodus/lernplan/neu' ||
     location.pathname === '/klausurmodus/blurting' ||
     location.pathname.endsWith('/neue-notiz') ||
-    location.pathname.startsWith('/klausurmodus/probeklausur/')
+    location.pathname.startsWith('/klausurmodus/probeklausur/') ||
+    location.pathname.startsWith('/klausurmodus/lernplan/')
 
   return (
     <div className="max-w-lg mx-auto relative min-h-screen">
@@ -130,6 +134,8 @@ function Layout() {
         <Route path="/klausurmodus/blurting" element={<BlurtingScreen />} />
         <Route path="/klausurmodus/lernzettel" element={<LernzettelScreen />} />
         <Route path="/klausurmodus/lernzettel/neu" element={<LernzettelGeneratorScreen />} />
+        <Route path="/klausurmodus/lernplan/neu" element={<LernplanKonfiguratorScreen />} />
+        <Route path="/klausurmodus/lernplan/:id" element={<LernplanDetailScreen />} />
         <Route path="/profil" element={<ProfilScreen />} />
         <Route path="/profil/faecher" element={<FaecherEditScreen />} />
         <Route path="/insights" element={<InsightsScreen />} />

@@ -1,6 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BottomSheet } from '../components/ui/BottomSheet'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import { endnoteForEntry } from './AbiRechnerScreen'
@@ -24,11 +23,7 @@ function zielnoteToNP(z: string): number {
   return 17 - parseFloat(z.replace(',', '.')) * 3
 }
 
-const LERNPLAN_DAYS = [
-  { label: 'Mo', date: '2. Jun', topic: 'Integralrechnung', done: true },
-  { label: 'Di', date: '3. Jun', topic: 'Stochastik',       done: false },
-  { label: 'Mi', date: '4. Jun', topic: 'Vektoren',         done: false },
-]
+const WEEKDAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
 
 // ── Icon-Gradienten ──────────────────────────────────────────────────────────
 const G = {
@@ -69,9 +64,7 @@ function Chevron() {
 
 export function KlausurphasenScreen() {
   const navigate = useNavigate()
-  const { generatedFlashCards, profile, appStats } = useUser()
-  const [hasLernplan, setHasLernplan] = useState(false)
-  const [showLernplanModal, setShowLernplanModal] = useState(false)
+  const { generatedFlashCards, profile, appStats, lernplaene } = useUser()
 
   const totalCards = generatedFlashCards.length
   const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
@@ -111,6 +104,16 @@ export function KlausurphasenScreen() {
     return weakest
   }, [profile?.abiHalbjahre, profile?.faecher])
 
+  // Active Lernplan: find the active one, compute next 3 upcoming lern/puffer days
+  const activePlan = lernplaene.find((p) => p.isActive)
+  const upcomingDays = useMemo(() => {
+    if (!activePlan) return []
+    const today = new Date().toISOString().slice(0, 10)
+    return activePlan.days
+      .filter((d) => d.date >= today && (d.dayType === 'lern' || d.dayType === 'puffer') && d.sessions.length > 0)
+      .slice(0, 3)
+  }, [activePlan])
+
   // Progress toward zielnote (for the "Vorbereitung" bar)
   const prepPct = useMemo(() => {
     const note = profile?.abiGesamtnote
@@ -138,8 +141,11 @@ export function KlausurphasenScreen() {
       <div className="px-4 mt-5 space-y-3">
 
         {/* ── 1. Lernplan ─────────────────────────────────────────────── */}
-        {hasLernplan ? (
-          <div className="bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5">
+        {activePlan && upcomingDays.length > 0 ? (
+          <button
+            onClick={() => navigate(`/klausurmodus/lernplan/${activePlan.id}`)}
+            className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 text-left press"
+          >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -151,28 +157,30 @@ export function KlausurphasenScreen() {
                 </svg>
                 <p className="text-text-primary font-bold text-[15px]">Lernplan</p>
               </div>
-              <button onClick={() => console.log('edit lernplan')} className="text-[13px] font-medium press-sm" style={{ color: '#C07700' }}>
-                Bearbeiten
-              </button>
+              <span className="text-[12px] font-medium" style={{ color: '#C07700' }}>Details →</span>
             </div>
             <div className="flex gap-2.5">
-              {LERNPLAN_DAYS.map((day) => (
-                <button
-                  key={day.label}
-                  onClick={() => console.log('day tapped', day.label)}
-                  className="flex-1 bg-background rounded-[14px] p-3 text-center press-sm"
-                >
-                  <p className="text-text-muted text-[10px] font-semibold uppercase tracking-wide">{day.label}</p>
-                  <p className="text-text-secondary text-[11px] mt-0.5">{day.date}</p>
-                  <div className={`mt-2 mx-auto w-1.5 h-1.5 rounded-full ${day.done ? 'bg-success' : 'bg-border'}`} />
-                  <p className="text-text-secondary text-[11px] font-medium mt-1.5 leading-tight">{day.topic}</p>
-                </button>
-              ))}
+              {upcomingDays.map((day) => {
+                const d = new Date(day.date)
+                const mainTopic = day.sessions[0]?.topic ?? '—'
+                const subjectName = day.sessions[0]?.subjectName ?? ''
+                return (
+                  <div key={day.date} className="flex-1 bg-background rounded-[14px] p-3 text-center">
+                    <p className="text-text-muted text-[10px] font-semibold uppercase tracking-wide">{WEEKDAY_SHORT[d.getDay()]}</p>
+                    <p className="text-text-secondary text-[11px] mt-0.5">{d.getDate()}. {['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][d.getMonth()]}</p>
+                    <div className="mt-2 mx-auto w-6 h-6 rounded-btn flex items-center justify-center text-base">
+                      {SUBJECT_INFO[day.sessions[0]?.subjectId]?.icon ?? '📚'}
+                    </div>
+                    <p className="text-text-muted text-[10px] font-medium mt-1 leading-tight">{subjectName}</p>
+                    <p className="text-text-secondary text-[10px] font-medium mt-0.5 leading-tight line-clamp-2">{mainTopic}</p>
+                  </div>
+                )
+              })}
             </div>
-          </div>
+          </button>
         ) : (
           <button
-            onClick={() => setShowLernplanModal(true)}
+            onClick={() => navigate('/klausurmodus/lernplan/neu')}
             className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 press"
           >
             <div className="flex items-center gap-4">
@@ -385,37 +393,6 @@ export function KlausurphasenScreen() {
 
       </div>
 
-      {/* ── Lernplan Modal ───────────────────────────────────────────────── */}
-      <BottomSheet isOpen={showLernplanModal} onClose={() => setShowLernplanModal(false)}>
-        <div className="px-5 pb-4">
-          <p className="text-[20px] font-bold text-text-primary mb-1">Lernplan erstellen</p>
-          <p className="text-text-muted text-[13px] mb-6">
-            Die KI berechnet automatisch einen Lernplan für {nextExam?.info?.name ?? 'deine Klausur'} — basierend auf deinen Smart Notes und dem Klausurdatum.
-          </p>
-          <div className="space-y-2.5 mb-6">
-            {[
-              { icon: '📅', label: 'Klausurdatum', value: nextExam ? new Date(nextExam.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Noch kein Termin' },
-              { icon: '📚', label: 'Lernmaterial', value: 'Aus deinen Smart Notes' },
-              { icon: '⏱', label: 'Täglich', value: '~30 Min geplant' },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center justify-between bg-background rounded-card px-4 py-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-[18px]">{item.icon}</span>
-                  <p className="text-text-secondary text-[14px]">{item.label}</p>
-                </div>
-                <p className="text-text-primary text-[14px] font-semibold">{item.value}</p>
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={() => { setHasLernplan(true); setShowLernplanModal(false) }}
-            className="w-full py-3.5 rounded-card text-white text-[15px] font-semibold press hover:opacity-90 transition-opacity"
-            style={{ background: G.lernplan }}
-          >
-            Lernplan generieren
-          </button>
-        </div>
-      </BottomSheet>
 
     </div>
   )

@@ -1,4 +1,4 @@
-import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, TaskCorrection } from '../types'
+import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, TaskCorrection, LernplanDay, LernplanExam, LernplanGeneratorInput } from '../types'
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent'
@@ -445,5 +445,113 @@ export async function suggestImportDestination(
     folderId: matchFolder?.id,
     folderName: matchFolder?.name,
     reason: parsed.reason ?? '',
+  }
+}
+
+// ── Lernplan Generation ───────────────────────────────────────────────────────
+
+export async function generateLernplan(input: LernplanGeneratorInput): Promise<{
+  title: string
+  summary: string
+  days: LernplanDay[]
+  examSchedule: LernplanExam[]
+}> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string | undefined
+  if (!apiKey) throw new Error('VITE_GEMINI_API_KEY fehlt in .env')
+
+  const examsText = [...input.klausurtermine]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((k) => `- ${k.subjectName} (${k.isLK ? 'LK' : 'GK'}): ${k.date}${k.topic ? ' — ' + k.topic : ''}`)
+    .join('\n')
+
+  const blockedText = input.blockedTimes.length > 0
+    ? input.blockedTimes.map((b) => {
+        const days = b.dayOfWeek.length === 0 ? 'täglich' : b.dayOfWeek.map((d) => ['Mo','Di','Mi','Do','Fr','Sa','So'][d]).join(', ')
+        return `- ${b.label}: ${days}, ${b.startTime}–${b.endTime}`
+      }).join('\n')
+    : 'Keine speziellen Blockierungen.'
+
+  const weaknessText = input.weaknesses.length > 0
+    ? input.weaknesses.map((w) => `- ${w.subjectId}: ${w.topics.join(', ')}`).join('\n')
+    : 'Keine angegeben.'
+
+  const systemPrompt = `Du bist ein professioneller Lernplaner für deutsche Gymnasiasten (Klasse 10–13) und Abiturienten. Erstelle einen strukturierten, realistischen Lernplan als JSON.
+
+REGELN:
+- LK-Fächer erhalten ~40% mehr Lernzeit als GK-Fächer und höhere Priorität.
+- Das nächste Klausur-Fach hat die höchste Priorität pro Tag.
+- 1 Tag VOR jeder Klausur: dayType="puffer", nur Wiederholung dieses Fachs, keine neuen Themen.
+- Am Klausurtag selbst: dayType="klausur", sessions=[], note="Klausur [Fachname]".
+- Nach je 4–5 Lerntagen mindestens 1 Pausentag (dayType="pause", sessions=[]).
+- Blockierte Zeiten werden NICHT für Lernen genutzt.
+- Schwächen in bestimmten Themen bekommen mehr Sessions.
+- Methoden-Rotation: möglichst keine 2× identische Methode hintereinander.
+- Session-Dauer: 25–90 Minuten. Max. ${input.dailyStudyHours}h Gesamtlernzeit pro Tag.
+- Bei Zielnote ≤ 2: mehr Probeklausuren und Wiederholungen einplanen.
+${input.planType === 'abitur' ? '- ABITUR-MODUS: Kein regulärer Schulunterricht. Volle Tage verfügbar. LK-Fächer haben 2× Gewichtung. Q1–Q4 Inhalte aller Prüfungsfächer abdecken.' : ''}
+
+Antworte NUR mit validem JSON (kein Markdown), exakt diese Struktur:
+{"title":"...","summary":"...","days":[{"date":"YYYY-MM-DD","dayType":"lern","sessions":[{"subjectId":"...","subjectName":"...","topic":"...","durationMin":60,"method":"karteikarten","isLK":false,"priority":"hoch"}],"totalMin":60,"note":null}],"examSchedule":[{"date":"YYYY-MM-DD","subjectId":"...","subjectName":"...","topic":"..."}]}`
+
+  const userPrompt = `Plantyp: ${input.planType === 'einzel' ? 'Einzelfach-Lernplan' : input.planType === 'vollstaendig' ? 'Vollständiger Klausurenplan' : 'Abitur-Lernplan'}
+Klasse: ${input.klasse} | Schulform: ${input.schulform}
+Startdatum: ${input.startDate}
+Planungszeitraum: ${input.planDurationDays} Tage
+
+KLAUSURTERMINE:
+${examsText}
+
+LERNKAPAZITÄT:
+- ${input.dailyStudyHours} Stunden Lernzeit pro Tag
+- Lernzeit bevorzugt: ${input.studyTimePreference === 'morgen' ? 'Morgens' : input.studyTimePreference === 'abend' ? 'Abends' : 'Flexibel'}
+- Wochenende einplanen: ${input.includeWeekends ? 'Ja' : 'Nein — Sa+So sind Pausentage'}
+- Zielnote: ${input.targetGrade}
+
+BLOCKIERTE ZEITEN:
+${blockedText}
+
+SCHWÄCHEN (mehr Sessions):
+${weaknessText}
+${input.kcContext ? `\nKERNCURRICULUM:\n${input.kcContext}` : ''}
+
+Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${input.startDate}. Jeder Tag muss im days-Array enthalten sein.`
+
+  const res = await fetch(`${EXAM_API_URL}?key=${encodeURIComponent(apiKey)}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: systemPrompt }] },
+      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 16384,
+        responseMimeType: 'application/json',
+      },
+    }),
+  })
+
+  if (!res.ok) {
+    let msg = `Gemini Fehler ${res.status}`
+    try { msg = ((await res.json()) as { error?: { message?: string } }).error?.message ?? msg } catch { /* keep */ }
+    throw new Error(msg)
+  }
+
+  const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] }
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+  const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
+  if (!cleaned) throw new Error('Gemini hat keinen Lernplan zurückgegeben.')
+
+  const raw = JSON.parse(cleaned) as {
+    title?: string
+    summary?: string
+    days?: LernplanDay[]
+    examSchedule?: LernplanExam[]
+  }
+
+  return {
+    title: String(raw.title ?? 'Mein Lernplan'),
+    summary: String(raw.summary ?? ''),
+    days: Array.isArray(raw.days) ? raw.days : [],
+    examSchedule: Array.isArray(raw.examSchedule) ? raw.examSchedule : [],
   }
 }

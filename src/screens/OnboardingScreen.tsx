@@ -28,7 +28,7 @@ const BUNDESLAENDER = [
   { id: 'th', name: 'Thüringen' },
 ]
 
-const SCHULFORMEN = ['Gymnasium', 'FOS', 'Gesamtschule']
+const SCHULFORMEN = ['Gymnasium', 'Gesamtschule', 'FOS', 'Universität']
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
@@ -39,6 +39,7 @@ const DEV_PROFILE: UserProfile = {
   bundesland: 'Niedersachsen',
   bundeslandId: 'ni',
   faecher: ['deutsch', 'mathematik', 'englisch', 'biologie', 'physik', 'politik', 'religion', 'sport'],
+  lkFaecher: ['mathematik', 'biologie'],
   klausurtermine: [{ subjectId: 'mathematik', date: '2026-06-06' }],
   folderSortMode: 'halbjahr',
   schultyp: 'g9',
@@ -97,6 +98,7 @@ export function OnboardingScreen() {
   const [zielnote, setZielnote] = useState('')
   const [bundeslandId, setBundeslandId] = useState('')
   const [faecher, setFaecher] = useState<string[]>([])
+  const [lkFaecher, setLkFaecher] = useState<string[]>([])
   const [folderSortMode, setFolderSortMode] = useState<'manual' | 'halbjahr' | 'themen'>('halbjahr')
   const [stundenplanSlots, setStundenplanSlots] = useState<StundenplanSlot[]>([])
   const [klausurSubject, setKlausurSubject] = useState('')
@@ -105,9 +107,13 @@ export function OnboardingScreen() {
 
   const progress = (step / 9) * 100
 
+  const isOberstufe = schulform !== 'Universität' && schultyp !== '' && (
+    schultyp === 'g8' ? parseInt(klasse) >= 11 : parseInt(klasse) >= 12
+  )
+
   const canNext: Record<Step, boolean> = {
     1: true,
-    2: name.trim().length > 0 && klasse !== '' && schulform !== '' && schultyp !== '',
+    2: name.trim().length > 0 && klasse !== '' && schulform !== '' && (schultyp !== '' || schulform === 'Universität'),
     3: true,
     4: bundeslandId !== '',
     5: faecher.length > 0,
@@ -126,7 +132,17 @@ export function OnboardingScreen() {
   }
 
   const toggleFach = (id: string) => {
-    setFaecher((prev) =>
+    setFaecher((prev) => {
+      if (prev.includes(id)) {
+        setLkFaecher((lk) => lk.filter((f) => f !== id))
+        return prev.filter((f) => f !== id)
+      }
+      return [...prev, id]
+    })
+  }
+
+  const toggleLK = (id: string) => {
+    setLkFaecher((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
     )
   }
@@ -148,6 +164,7 @@ export function OnboardingScreen() {
       zielnote: zielnote || undefined,
       folderSortMode,
       schultyp: (schultyp || undefined) as 'g8' | 'g9' | undefined,
+      lkFaecher: lkFaecher.length > 0 ? lkFaecher : undefined,
       stundenplan: stundenplanSlots.length > 0
         ? { slots: stundenplanSlots, createdAt: new Date().toISOString() }
         : undefined,
@@ -211,7 +228,7 @@ export function OnboardingScreen() {
           <StepBundesland selected={bundeslandId} onSelect={setBundeslandId} />
         )}
         {step === 5 && (
-          <StepFaecher selected={faecher} onToggle={toggleFach} />
+          <StepFaecher selected={faecher} onToggle={toggleFach} lkFaecher={lkFaecher} onToggleLK={toggleLK} isOberstufe={isOberstufe} />
         )}
         {step === 6 && (
           <StepFolderSort sortMode={folderSortMode} setSortMode={setFolderSortMode} klasse={klasse} schultyp={schultyp} />
@@ -640,11 +657,18 @@ function StepPersonal({
 
       {/* Schulform */}
       <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Schulform</p>
-      <div className="flex flex-col gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {SCHULFORMEN.map((sf) => (
           <button
             key={sf}
-            onClick={() => setSchulform(sf)}
+            onClick={() => {
+              setSchulform(sf)
+              if (sf === 'Universität') {
+                setSchultyp('g9')
+                setKlasse('13')
+                setShowMittelstufePicker(false)
+              }
+            }}
             className={`py-3 rounded-card text-sm font-medium border transition-all duration-150 ${
               schulform === sf
                 ? 'grad-accent border-transparent text-white'
@@ -711,13 +735,29 @@ function StepBundesland({ selected, onSelect }: { selected: string; onSelect: (i
 
 /* ─── Step 5: Fächer ──────────────────────────────────────── */
 
-function StepFaecher({ selected, onToggle }: { selected: string[]; onToggle: (id: string) => void }) {
+function StepFaecher({
+  selected,
+  onToggle,
+  lkFaecher,
+  onToggleLK,
+  isOberstufe,
+}: {
+  selected: string[]
+  onToggle: (id: string) => void
+  lkFaecher: string[]
+  onToggleLK: (id: string) => void
+  isOberstufe: boolean
+}) {
   return (
     <div>
       <h2 className="text-2xl font-bold text-text-primary mb-1">Deine Fächer</h2>
-      <p className="text-text-muted text-sm mb-5">
+      <p className="text-text-muted text-sm mb-1">
         Wähle alle Fächer, die du lernst. <span className="text-accent font-medium">{selected.length} ausgewählt</span>
       </p>
+      {isOberstufe && (
+        <p className="text-[11px] text-text-muted mb-4">Tippe auf <span className="font-bold text-accent">LK</span> um Leistungskurse zu markieren.</p>
+      )}
+      {!isOberstufe && <div className="mb-5" />}
 
       <div className="space-y-5">
         {SUBJECT_GROUPS.map((group) => (
@@ -729,6 +769,7 @@ function StepFaecher({ selected, onToggle }: { selected: string[]; onToggle: (id
               {group.ids.map((id) => {
                 const subject = SUBJECT_INFO[id]
                 const active = selected.includes(id)
+                const isLK = lkFaecher.includes(id)
                 return (
                   <button
                     key={id}
@@ -743,16 +784,27 @@ function StepFaecher({ selected, onToggle }: { selected: string[]; onToggle: (id
                     >
                       {subject.icon}
                     </div>
-                    <p className={`text-xs font-semibold leading-tight ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
+                    <p className={`text-xs font-semibold leading-tight flex-1 min-w-0 ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
                       {subject.name}
                     </p>
-                    {active && (
+                    {active && isOberstufe ? (
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onToggleLK(id) }}
+                        className={`absolute top-2 right-2 px-1.5 py-0.5 rounded text-[9px] font-black tracking-wide transition-all ${
+                          isLK
+                            ? 'bg-accent text-white'
+                            : 'bg-accent/15 text-accent border border-accent/30'
+                        }`}
+                      >
+                        LK
+                      </button>
+                    ) : active ? (
                       <div className="absolute top-2 right-2 w-4 h-4 rounded-full grad-accent flex items-center justify-center shrink-0">
                         <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
                           <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
-                    )}
+                    ) : null}
                   </button>
                 )
               })}
