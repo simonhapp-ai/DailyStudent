@@ -5,7 +5,7 @@ import { MathRenderer } from '../components/ui/MathRenderer'
 import { useUser } from '../context/UserContext'
 import { explainKeyword, extractTextFromImage, generateFlashcards, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
-import { lessons, smartNotes, subjects } from '../data/mockData'
+import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { FlashCard, GeneratedSmartNote, UserNote } from '../types'
 
 function CollapsibleSection({
@@ -43,18 +43,16 @@ export function SmartNotesScreen() {
   const navigate = useNavigate()
   const { generatedNotes, userNotes, completedHomeworkIds, saveGeneratedNote, updateUserNote, saveFlashCards, getKc } = useUser()
 
-  const subject = subjects.find((s) => s.id === id)
-  const mockLesson = lessons.find((l) => l.id === lessonId)
+  const subject = SUBJECT_INFO[id ?? '']
   const userNote = userNotes.find((n) => n.id === lessonId)
 
-  const lessonTitle = mockLesson?.topic ?? userNote?.title ?? 'Notiz'
+  const lessonTitle = userNote?.title ?? 'Notiz'
   const generatedNote = generatedNotes[lessonId ?? '']
 
-  const mockNote = mockLesson ? (smartNotes.find((n) => n.lessonId === lessonId) ?? smartNotes[0]) : null
   const note = {
-    summary: generatedNote?.summary ?? mockNote?.summary ?? null,
-    keywords: generatedNote?.keywords ?? mockNote?.keywords ?? [],
-    examTopics: generatedNote?.examTopics ?? mockNote?.examTopics ?? [],
+    summary: generatedNote?.summary ?? null,
+    keywords: generatedNote?.keywords ?? [],
+    examTopics: generatedNote?.examTopics ?? [],
     solution: generatedNote?.solution,
     tasks: generatedNote?.tasks,
   }

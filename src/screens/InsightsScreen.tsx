@@ -577,10 +577,7 @@ export function InsightsScreen() {
                   {s.unit && <span className="text-text-muted text-[12px] font-normal ml-1">{s.unit}</span>}
                 </p>
               </div>
-              <p className="text-text-muted text-[12px] mb-2">{s.label}</p>
-              <div className="h-1 rounded-pill" style={{ background: `${s.color}25` }}>
-                <div className="h-full rounded-pill" style={{ background: s.color, width: '35%' }} />
-              </div>
+              <p className="text-text-muted text-[12px]">{s.label}</p>
             </div>
           ))}
         </div>

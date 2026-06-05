@@ -32,8 +32,6 @@ import { LessonScreen } from '../screens/LessonScreen'
 import { SmartNotesScreen } from '../screens/SmartNotesScreen'
 import { KlausurphasenScreen } from '../screens/KlausurphasenScreen'
 import { LearnModeScreen } from '../screens/LearnModeScreen'
-import { ExamModeScreen } from '../screens/ExamModeScreen'
-import { ExamResultScreen } from '../screens/ExamResultScreen'
 import { NoteCreateScreen } from '../screens/NoteCreateScreen'
 import { FolderScreen } from '../screens/FolderScreen'
 import { ProfilScreen } from '../screens/ProfilScreen'
@@ -96,7 +94,6 @@ function Layout() {
   }
 
   const hideNav =
-    location.pathname === '/klausurmodus/klausur' ||
     location.pathname === '/klausurmodus/karteikarten/neu' ||
     location.pathname === '/klausurmodus/lernzettel/neu' ||
     location.pathname === '/klausurmodus/blurting' ||
@@ -124,8 +121,6 @@ function Layout() {
         <Route path="/klausurmodus" element={<KlausurphasenScreen />} />
         <Route path="/klausurmodus/lernen" element={<LearnModeScreen />} />
         <Route path="/klausurmodus/karteikarten/neu" element={<FlashCardGeneratorScreen />} />
-        <Route path="/klausurmodus/klausur" element={<ExamModeScreen />} />
-        <Route path="/klausurmodus/klausur/ergebnis" element={<ExamResultScreen />} />
         <Route path="/klausurmodus/probeklausur" element={<ProbeklausurMenuScreen />} />
         <Route path="/klausurmodus/probeklausur/retrospektive" element={<ProbeklausurRetroScreen />} />
         <Route path="/klausurmodus/probeklausur/afb-trainer" element={<ProbeklausurMode1Screen />} />

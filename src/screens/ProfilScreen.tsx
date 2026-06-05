@@ -64,44 +64,46 @@ export function ProfilScreen() {
             <p className="text-text-primary font-bold text-[18px] truncate">{profile?.name ?? 'Max Müller'}</p>
             <p className="text-text-muted text-[13px] mt-0.5 truncate">{subtitle}</p>
           </div>
-          <Badge color="muted">Free</Badge>
+          <Badge color={isPro ? 'success' : 'muted'}>{isPro ? 'Pro' : 'Free'}</Badge>
         </div>
 
-        {/* ── Pro upgrade ────────────────────────────────────────── */}
-        <div
-          className="rounded-card p-5 border border-accent/20"
-          style={{ background: 'linear-gradient(140deg, rgba(0,122,255,0.08) 0%, rgba(0,122,255,0.02) 100%)' }}
-        >
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <p className="text-accent font-bold text-[17px]">Pro freischalten</p>
-              <p className="text-text-secondary text-[13px] mt-0.5">Alle KI-Features. Kein Limit.</p>
+        {/* ── Pro upgrade (nur sichtbar wenn nicht Pro) ──────────── */}
+        {!isPro && (
+          <div
+            className="rounded-card p-5 border border-accent/20"
+            style={{ background: 'linear-gradient(140deg, rgba(0,122,255,0.08) 0%, rgba(0,122,255,0.02) 100%)' }}
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <p className="text-accent font-bold text-[17px]">Pro freischalten</p>
+                <p className="text-text-secondary text-[13px] mt-0.5">Alle KI-Features. Kein Limit.</p>
+              </div>
+              <div className="text-right">
+                <p className="text-text-primary font-bold text-[20px]">€7,99<span className="text-text-muted text-[13px] font-normal">/Mo</span></p>
+                <p className="text-text-muted text-[11px]">jährlich</p>
+              </div>
             </div>
-            <div className="text-right">
-              <p className="text-text-primary font-bold text-[20px]">€5<span className="text-text-muted text-[13px] font-normal">/Mo</span></p>
-              <p className="text-text-muted text-[11px]">jährlich</p>
-            </div>
+            <ul className="space-y-2.5 mb-5">
+              {[
+                'KI-Zusammenfassungen aus Foto-Scans',
+                'Unbegrenzte Karteikarten (FSRS)',
+                'KI-Rotstift-Korrektur',
+                'Persönlicher Lernplan',
+              ].map((f) => (
+                <li key={f} className="flex items-center gap-2.5 text-[14px] text-text-secondary">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success shrink-0">
+                    <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <button className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold hover:opacity-90 press transition-all">
+              Pro freischalten · €59,99/Jahr
+            </button>
+            <p className="text-center text-[12px] text-text-muted mt-2.5">Abi-Schnitt unserer Pro-Nutzer: Ø 1.7</p>
           </div>
-          <ul className="space-y-2.5 mb-5">
-            {[
-              'KI-Zusammenfassungen aus Foto-Scans',
-              'Unbegrenzte Karteikarten (FSRS)',
-              'KI-Rotstift-Korrektur',
-              'Persönlicher Lernplan',
-            ].map((f) => (
-              <li key={f} className="flex items-center gap-2.5 text-[14px] text-text-secondary">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success shrink-0">
-                  <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                {f}
-              </li>
-            ))}
-          </ul>
-          <button className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold hover:opacity-90 press transition-all">
-            Pro freischalten · €59,99/Jahr
-          </button>
-          <p className="text-center text-[12px] text-text-muted mt-2.5">Abi-Schnitt unserer Pro-Nutzer: Ø 1.7</p>
-        </div>
+        )}
 
         {/* ── Stats ──────────────────────────────────────────────── */}
         <div>
