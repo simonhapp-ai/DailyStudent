@@ -516,19 +516,21 @@ ${input.kcContext ? `\nKERNCURRICULUM:\n${input.kcContext}` : ''}
 
 Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${input.startDate}. Jeder Tag muss im days-Array enthalten sein.`
 
-  const res = await fetch(`${EXAM_API_URL}?key=${encodeURIComponent(apiKey)}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      systemInstruction: { parts: [{ text: systemPrompt }] },
-      contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-      generationConfig: {
-        temperature: 0.3,
-        maxOutputTokens: 16384,
-        responseMimeType: 'application/json',
-      },
-    }),
+  const lernplanBody = JSON.stringify({
+    systemInstruction: { parts: [{ text: systemPrompt }] },
+    contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+    generationConfig: { temperature: 0.3, maxOutputTokens: 16384, responseMimeType: 'application/json' },
   })
+
+  // On 503 (model overloaded), fall back to flash-lite immediately
+  let res = await fetch(`${EXAM_API_URL}?key=${encodeURIComponent(apiKey)}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lernplanBody,
+  })
+  if (res.status === 503) {
+    res = await fetch(`${API_URL}?key=${encodeURIComponent(apiKey)}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: lernplanBody,
+    })
+  }
 
   if (!res.ok) {
     let msg = `Gemini Fehler ${res.status}`

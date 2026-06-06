@@ -3,6 +3,12 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
 
+// Emails die den Pro-Toggle in den Dev-Tools sehen
+const PRO_TOGGLE_ALLOWLIST = [
+  'simon.happ@gmx.de',
+  // 'weitere@email.de',
+]
+
 const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
   { value: 'light', label: 'Hell' },
   { value: 'dark', label: 'Dunkel' },
@@ -19,7 +25,7 @@ function getCurrentStreak(streak: number, lastStudyDate: string | null): number 
 
 export function ProfilScreen() {
   const navigate = useNavigate()
-  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser } = useUser()
   const [proToast, setProToast] = useState(false)
 
   const handleProToggle = () => {
@@ -170,7 +176,7 @@ export function ProfilScreen() {
         </div>
 
         {/* ── Dev: Pro Toggle (nur im Dev-Modus sichtbar) ─────────── */}
-        {profile?.isDevMode && (
+        {PRO_TOGGLE_ALLOWLIST.includes(authUser?.email ?? '') && (
           <div>
             <h2 className="section-label mb-2">Dev-Tools</h2>
             <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
@@ -194,6 +200,34 @@ export function ProfilScreen() {
                   />
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Account ────────────────────────────────────────────── */}
+        {authUser && (
+          <div>
+            <h2 className="section-label mb-2">Account</h2>
+            <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+              <div className="px-4 py-3.5 flex items-center justify-between border-b border-border/50">
+                <span className="text-text-muted text-[13px]">E-Mail</span>
+                <span className="text-text-primary text-[13px] font-medium truncate max-w-[200px]">{authUser.email}</span>
+              </div>
+              <div className="px-4 py-3.5 flex items-center justify-between border-b border-border/50">
+                <span className="text-text-muted text-[13px]">Anmeldemethode</span>
+                <span className="text-text-primary text-[13px] font-medium">
+                  {authUser.app_metadata?.provider === 'google' ? 'Google' : 'E-Mail'}
+                </span>
+              </div>
+              <button
+                onClick={() => void signOut()}
+                className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm"
+              >
+                <span className="text-danger text-[15px]">Abmelden</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
+                  <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
             </div>
           </div>
         )}

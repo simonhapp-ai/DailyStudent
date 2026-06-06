@@ -1,8 +1,23 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 import { type ReactNode } from 'react'
+import type { User } from '@supabase/supabase-js'
 import type { FlashCard, GeneratedSmartNote, Lernzettel, Lernplan, SavedProbeklausur, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AppStats, ExamScoreRecord } from '../types'
 import { subjects, topics, halfYears } from '../data/mockData'
 import { loadKcForUser, type KcSubjectData } from '../data/kcLoader'
+import { supabase } from '../lib/supabase'
+import {
+  loadUserDataFromSupabase, migrateToSupabase,
+  syncProfile, syncAppStats,
+  syncFolder, syncFoldersBatch, deleteFoldersFromDB,
+  syncNote, syncNotesBatch, deleteNotesFromDB,
+  syncSmartNote,
+  syncFlashCardsBatch,
+  syncLernzettel,
+  syncProbeklausur, deleteProbeklausurFromDB,
+  syncLernplaeneBatch, deleteLernplanFromDB,
+  syncEntry, syncEntriesBatch, deleteEntryFromDB,
+  syncHomeworkBatch, syncCompletedHomework,
+} from '../lib/supabaseSync'
 
 export interface StandaloneHomeworkItem {
   id: string
@@ -124,6 +139,9 @@ interface UserContextValue {
   lernplaene: Lernplan[]
   saveLernplan: (plan: Lernplan) => void
   deleteLernplan: (id: string) => void
+  authUser: User | null
+  authLoading: boolean
+  signOut: () => Promise<void>
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -245,6 +263,101 @@ const UserContext = createContext<UserContextValue | null>(null)
 export function UserProvider({ children }: { children: ReactNode }) {
   const stored = loadStorage()
 
+  const [authUser, setAuthUser] = useState<User | null>(null)
+  const [authLoading, setAuthLoading] = useState(true)
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('[Auth]', event, session?.user?.email ?? 'no user')
+      setAuthUser(session?.user ?? null)
+      setAuthLoading(false)
+
+      if (event === 'SIGNED_IN' && session?.user) {
+        const userId = session.user.id
+
+        // Immediately populate from localStorage for instant UI
+        const s = loadStorage()
+        setProfile(s.profile ?? null)
+        setThemeState(s.theme ?? 'dark')
+        setIsProState(s.isPro ?? false)
+        setPersonalEntries(s.personalEntries ?? [])
+        setGeneratedNotes(s.generatedNotes ?? {})
+        setUserNotes(s.userNotes ?? [])
+        setGeneratedFlashCards(s.generatedFlashCards ?? [])
+        setCompletedHomeworkIds(s.completedHomeworkIds ?? [])
+        setStandaloneHomework(s.standaloneHomework ?? [])
+        setAppStats(s.appStats ?? DEFAULT_APP_STATS)
+        setLernzettel(s.lernzettel ?? [])
+        setSavedProbeklausuren(s.savedProbeklausuren ?? [])
+        setLernplaene(s.lernplaene ?? [])
+        let folders = s.userFolders ?? []
+        if (folders.length === 0 && s.profile) {
+          folders = generateDefaultFolders(s.profile)
+          saveStorage({ ...s, userFolders: folders })
+        }
+        setUserFolders(folders)
+
+        // Async: load from Supabase (authoritative) or migrate if empty
+        void (async () => {
+          const supabaseData = await loadUserDataFromSupabase(userId)
+          if (supabaseData) {
+            // Supabase has data → use it (supports multi-device)
+            setProfile(supabaseData.profile)
+            setThemeState(supabaseData.theme)
+            setIsProState(supabaseData.isPro)
+            setPersonalEntries(supabaseData.personalEntries)
+            setGeneratedNotes(supabaseData.generatedNotes)
+            setUserNotes(supabaseData.userNotes)
+            setUserFolders(supabaseData.userFolders)
+            setGeneratedFlashCards(supabaseData.generatedFlashCards)
+            setCompletedHomeworkIds(supabaseData.completedHomeworkIds)
+            setStandaloneHomework(supabaseData.standaloneHomework)
+            setAppStats(supabaseData.appStats)
+            setLernzettel(supabaseData.lernzettel)
+            setSavedProbeklausuren(supabaseData.savedProbeklausuren)
+            setLernplaene(supabaseData.lernplaene)
+            // Cache Supabase data in localStorage
+            saveStorage({
+              profile: supabaseData.profile,
+              theme: supabaseData.theme,
+              isPro: supabaseData.isPro,
+              appStats: supabaseData.appStats,
+              userFolders: supabaseData.userFolders,
+              userNotes: supabaseData.userNotes,
+              generatedNotes: supabaseData.generatedNotes,
+              generatedFlashCards: supabaseData.generatedFlashCards,
+              lernzettel: supabaseData.lernzettel,
+              savedProbeklausuren: supabaseData.savedProbeklausuren,
+              lernplaene: supabaseData.lernplaene,
+              personalEntries: supabaseData.personalEntries,
+              standaloneHomework: supabaseData.standaloneHomework,
+              completedHomeworkIds: supabaseData.completedHomeworkIds,
+            })
+          } else if (s.profile && s.profile.faecher?.length) {
+            // Supabase empty, localStorage has onboarded data → migrate once
+            await migrateToSupabase(userId, {
+              profile: s.profile,
+              theme: s.theme ?? 'dark',
+              isPro: s.isPro ?? false,
+              appStats: s.appStats ?? DEFAULT_APP_STATS,
+              userFolders: folders,
+              userNotes: s.userNotes ?? [],
+              generatedNotes: s.generatedNotes ?? {},
+              generatedFlashCards: s.generatedFlashCards ?? [],
+              lernzettel: s.lernzettel ?? [],
+              savedProbeklausuren: s.savedProbeklausuren ?? [],
+              lernplaene: s.lernplaene ?? [],
+              personalEntries: s.personalEntries ?? [],
+              standaloneHomework: s.standaloneHomework ?? [],
+              completedHomeworkIds: s.completedHomeworkIds ?? [],
+            })
+          }
+        })()
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
   const [profile, setProfile] = useState<UserProfile | null>(stored.profile ?? null)
   const [theme, setThemeState] = useState<AppTheme>(stored.theme ?? 'dark')
   const [isPro, setIsProState] = useState<boolean>(stored.isPro ?? false)
@@ -286,11 +399,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const setTheme = (t: AppTheme) => {
     setThemeState(t)
     persist(profile, personalEntries, generatedNotes, userNotes, userFolders, t)
+    if (authUser && profile) void syncProfile(authUser.id, profile, t, isPro)
   }
 
   const setIsPro = (v: boolean) => {
     setIsProState(v)
     saveStorage({ ...loadStorage(), isPro: v })
+    if (authUser && profile) void syncProfile(authUser.id, profile, theme, v)
   }
 
   const loadKcData = useCallback(async (targetProfile?: UserProfile) => {
@@ -326,6 +441,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserFolders(merged)
     persist(p, personalEntries, generatedNotes, userNotes, merged)
     void loadKcData(p)
+    if (authUser) {
+      void syncProfile(authUser.id, p, theme, isPro)
+      if (merged.length) void syncFoldersBatch(authUser.id, merged)
+    }
   }
 
   const updateProfile = (data: Partial<UserProfile>) => {
@@ -333,24 +452,28 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated = { ...profile, ...data }
     setProfile(updated)
     persist(updated, personalEntries, generatedNotes, userNotes, userFolders)
+    if (authUser) void syncProfile(authUser.id, updated, theme, isPro)
   }
 
   const addEntry = (entry: PersonalEntry) => {
     const updated = [...personalEntries, entry]
     setPersonalEntries(updated)
     persist(profile, updated, generatedNotes, userNotes, userFolders)
+    if (authUser) void syncEntry(authUser.id, entry)
   }
 
   const removeEntry = (id: string) => {
     const updated = personalEntries.filter((e) => e.id !== id)
     setPersonalEntries(updated)
     persist(profile, updated, generatedNotes, userNotes, userFolders)
+    if (authUser) void deleteEntryFromDB(authUser.id, id)
   }
 
   const saveGeneratedNote = (lessonId: string, note: GeneratedSmartNote) => {
     const updated = { ...generatedNotes, [lessonId]: note }
     setGeneratedNotes(updated)
     persist(profile, personalEntries, updated, userNotes, userFolders)
+    if (authUser) void syncSmartNote(authUser.id, lessonId, note)
   }
 
   const addUserNote = (note: UserNote) => {
@@ -358,6 +481,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
     recordStudyDay()
+    if (authUser) void syncNote(authUser.id, note)
   }
 
   const saveNote = (note: UserNote, generated?: GeneratedSmartNote) => {
@@ -369,30 +493,30 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (generated) setGeneratedNotes(updatedGenerated)
     persist(profile, personalEntries, updatedGenerated, updatedNotes, userFolders)
     recordStudyDay()
+    if (authUser) {
+      void syncNote(authUser.id, note)
+      if (generated) void syncSmartNote(authUser.id, note.id, generated)
+    }
   }
 
   const updateUserNote = (note: UserNote) => {
     const updated = userNotes.map((n) => (n.id === note.id ? note : n))
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
+    if (authUser) void syncNote(authUser.id, note)
   }
 
   const addFolder = (folder: UserFolder) => {
     const updated = [...userFolders, folder]
     setUserFolders(updated)
     persist(profile, personalEntries, generatedNotes, userNotes, updated)
+    if (authUser) void syncFolder(authUser.id, folder)
   }
 
   const saveToOhneFachFolder = (note: UserNote, generated?: GeneratedSmartNote) => {
     const folderExists = userFolders.some((f) => f.id === 'folder-no-subject')
-    const updatedFolders = folderExists
-      ? userFolders
-      : [...userFolders, {
-          id: 'folder-no-subject',
-          subjectId: 'ohne-fach',
-          name: 'Schnellnotizen',
-          createdAt: new Date().toISOString(),
-        }]
+    const newFolder: UserFolder = { id: 'folder-no-subject', subjectId: 'ohne-fach', name: 'Schnellnotizen', createdAt: new Date().toISOString() }
+    const updatedFolders = folderExists ? userFolders : [...userFolders, newFolder]
     const updatedNotes = [...userNotes, note]
     const updatedGenerated = generated
       ? { ...generatedNotes, [note.id]: generated }
@@ -401,6 +525,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserNotes(updatedNotes)
     if (generated) setGeneratedNotes(updatedGenerated)
     persist(profile, personalEntries, updatedGenerated, updatedNotes, updatedFolders)
+    if (authUser) {
+      if (!folderExists) void syncFolder(authUser.id, newFolder)
+      void syncNote(authUser.id, note)
+      if (generated) void syncSmartNote(authUser.id, note.id, generated)
+    }
   }
 
   const addKlausurtermin = (termin: KlausurTermin) => {
@@ -408,6 +537,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated = { ...profile, klausurtermine: [...(profile.klausurtermine ?? []), termin] }
     setProfile(updated)
     persist(updated, personalEntries, generatedNotes, userNotes, userFolders)
+    if (authUser) void syncProfile(authUser.id, updated, theme, isPro)
   }
 
   const removeKlausurtermin = (subjectId: string, date: string) => {
@@ -415,6 +545,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated = { ...profile, klausurtermine: (profile.klausurtermine ?? []).filter((k) => !(k.subjectId === subjectId && k.date === date)) }
     setProfile(updated)
     persist(updated, personalEntries, generatedNotes, userNotes, userFolders)
+    if (authUser) void syncProfile(authUser.id, updated, theme, isPro)
   }
 
   const saveFlashCards = (newCards: FlashCard[]) => {
@@ -424,23 +555,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setGeneratedFlashCards(updated)
     saveStorage({ ...loadStorage(), generatedFlashCards: updated })
     recordStudyDay()
+    if (authUser) void syncFlashCardsBatch(authUser.id, updated)
   }
 
   const saveLernzettel = (lz: Lernzettel) => {
     const folderId = `folder-lernzettel-${lz.subjectId}`
     const folderExists = userFolders.some((f) => f.id === folderId)
-    const updatedFolders = folderExists
-      ? userFolders
-      : [
-          ...userFolders,
-          {
-            id: folderId,
-            subjectId: lz.subjectId,
-            name: 'Lernzettel',
-            createdAt: lz.generatedAt,
-            isAutoGenerated: false,
-          } satisfies UserFolder,
-        ]
+    const newFolder: UserFolder = { id: folderId, subjectId: lz.subjectId, name: 'Lernzettel', createdAt: lz.generatedAt, isAutoGenerated: false }
+    const updatedFolders = folderExists ? userFolders : [...userFolders, newFolder]
     const note: UserNote = {
       id: lz.userNoteId,
       subjectId: lz.subjectId,
@@ -456,6 +578,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setLernzettel(updatedLernzettel)
     saveStorage({ ...loadStorage(), userFolders: updatedFolders, userNotes: updatedNotes, lernzettel: updatedLernzettel })
     recordStudyDay()
+    if (authUser) {
+      if (!folderExists) void syncFolder(authUser.id, newFolder)
+      void syncNote(authUser.id, note)
+      void syncLernzettel(authUser.id, lz)
+    }
   }
 
   const saveProbeklausur = (pk: SavedProbeklausur) => {
@@ -463,12 +590,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setSavedProbeklausuren(updated)
     saveStorage({ ...loadStorage(), savedProbeklausuren: updated })
     recordExam({ id: pk.id, date: pk.completedAt, subjectId: pk.subjectId, gradeLabel: pk.gradeLabel, totalNP: pk.totalNP, source: 'probeklausur' })
+    if (authUser) void syncProbeklausur(authUser.id, pk)
   }
 
   const deleteSavedProbeklausur = (id: string) => {
     const updated = savedProbeklausuren.filter((p) => p.id !== id)
     setSavedProbeklausuren(updated)
     saveStorage({ ...loadStorage(), savedProbeklausuren: updated })
+    if (authUser) void deleteProbeklausurFromDB(authUser.id, id)
   }
 
   const saveLernplan = (plan: Lernplan) => {
@@ -479,18 +608,37 @@ export function UserProvider({ children }: { children: ReactNode }) {
       : [...deactivated, { ...plan, isActive: true }]
     setLernplaene(updated)
     saveStorage({ ...loadStorage(), lernplaene: updated })
+    if (authUser) void syncLernplaeneBatch(authUser.id, updated)
+  }
+
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    setProfile(null)
+    setPersonalEntries([])
+    setGeneratedNotes({})
+    setUserNotes([])
+    setUserFolders([])
+    setGeneratedFlashCards([])
+    setCompletedHomeworkIds([])
+    setStandaloneHomework([])
+    setAppStats(DEFAULT_APP_STATS)
+    setLernzettel([])
+    setSavedProbeklausuren([])
+    setLernplaene([])
   }
 
   const deleteLernplan = (id: string) => {
     const updated = lernplaene.filter((p) => p.id !== id)
     setLernplaene(updated)
     saveStorage({ ...loadStorage(), lernplaene: updated })
+    if (authUser) void deleteLernplanFromDB(authUser.id, id)
   }
 
   const completeHomework = (id: string) => {
     const updated = [...completedHomeworkIds, id]
     setCompletedHomeworkIds(updated)
     saveStorage({ ...loadStorage(), completedHomeworkIds: updated })
+    if (authUser) void syncCompletedHomework(authUser.id, [id])
   }
 
   const recordStudyDay = () => {
@@ -504,6 +652,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated: AppStats = { ...appStats, streak: newStreak, lastStudyDate: today, studiedDays }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })
+    if (authUser) void syncAppStats(authUser.id, updated)
   }
 
   const recordExam = (score: ExamScoreRecord) => {
@@ -514,6 +663,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })
+    if (authUser) void syncAppStats(authUser.id, updated)
     recordStudyDay()
   }
 
@@ -521,6 +671,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated: AppStats = { ...appStats, scanCount: appStats.scanCount + 1 }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })
+    if (authUser) void syncAppStats(authUser.id, updated)
   }
 
   const addStandaloneHomework = (item: Omit<StandaloneHomeworkItem, 'id' | 'createdAt'>) => {
@@ -532,27 +683,35 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated = [...standaloneHomework, newItem]
     setStandaloneHomework(updated)
     saveStorage({ ...loadStorage(), standaloneHomework: updated })
+    if (authUser) void syncHomeworkBatch(authUser.id, [newItem])
   }
 
   const deleteFolder = (folderId: string) => {
+    const childIds = userFolders.filter((f) => f.parentFolderId === folderId).map((f) => f.id)
+    const deletedNoteIds = userNotes.filter((n) => n.folderId === folderId).map((n) => n.id)
     const updatedFolders = userFolders.filter((f) => f.id !== folderId && f.parentFolderId !== folderId)
     const updatedNotes = userNotes.filter((n) => n.folderId !== folderId)
     setUserFolders(updatedFolders)
     setUserNotes(updatedNotes)
     persist(profile, personalEntries, generatedNotes, updatedNotes, updatedFolders)
+    if (authUser) {
+      void deleteFoldersFromDB(authUser.id, [folderId, ...childIds])
+      if (deletedNoteIds.length) void deleteNotesFromDB(authUser.id, deletedNoteIds)
+    }
   }
 
   const applyFaecherChanges = (newFaecher: string[], deletedFaecherIds: string[]) => {
     if (!profile) return
-    // Collect folder IDs that belong to deleted subjects
     const deletedFolderIds = new Set(
       userFolders.filter((f) => deletedFaecherIds.includes(f.subjectId)).map((f) => f.id)
     )
+    const deletedNoteIds = userNotes
+      .filter((n) => deletedFaecherIds.includes(n.subjectId ?? '') || deletedFolderIds.has(n.folderId ?? ''))
+      .map((n) => n.id)
     const updatedFolders = userFolders.filter((f) => !deletedFolderIds.has(f.id))
     const updatedNotes = userNotes.filter(
       (n) => !deletedFaecherIds.includes(n.subjectId ?? '') && !deletedFolderIds.has(n.folderId ?? '')
     )
-    // Generate folders for newly added subjects only
     const addedSubjects = newFaecher.filter((id) => !profile.faecher.includes(id))
     const newFolders = addedSubjects.length > 0
       ? generateDefaultFolders({ ...profile, faecher: addedSubjects })
@@ -563,6 +722,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserFolders(finalFolders)
     setUserNotes(updatedNotes)
     persist(updatedProfile, personalEntries, generatedNotes, updatedNotes, finalFolders)
+    if (authUser) {
+      void syncProfile(authUser.id, updatedProfile, theme, isPro)
+      if (deletedFolderIds.size) void deleteFoldersFromDB(authUser.id, [...deletedFolderIds])
+      if (deletedNoteIds.length) void deleteNotesFromDB(authUser.id, deletedNoteIds)
+      if (newFolders.length) void syncFoldersBatch(authUser.id, newFolders)
+    }
   }
 
   return (
@@ -614,6 +779,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
         lernplaene,
         saveLernplan,
         deleteLernplan,
+        authUser,
+        authLoading,
+        signOut,
       }}
     >
       {children}

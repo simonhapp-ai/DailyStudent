@@ -52,6 +52,7 @@ import { LernzettelGeneratorScreen } from '../screens/LernzettelGeneratorScreen'
 import { ProbeklausurRetroScreen } from '../screens/ProbeklausurRetroScreen'
 import { LernplanKonfiguratorScreen } from '../screens/LernplanKonfiguratorScreen'
 import { LernplanDetailScreen } from '../screens/LernplanDetailScreen'
+import { AuthScreen } from '../screens/AuthScreen'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -81,15 +82,24 @@ function ThemeApplier() {
 }
 
 function Layout() {
-  const { isOnboarded, recordStudyDay } = useUser()
+  const { isOnboarded, recordStudyDay, authUser, authLoading } = useUser()
   const location = useLocation()
 
-  // Record every calendar day the user opens the app as a study day.
-  // recordStudyDay is idempotent for the same calendar day, so this is safe
-  // to call on every mount / every time onboarding completes.
   useEffect(() => {
     if (isOnboarded) recordStudyDay()
   }, [isOnboarded]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+      </div>
+    )
+  }
+
+  if (!authUser) {
+    return <AuthScreen />
+  }
 
   if (!isOnboarded) {
     return <OnboardingScreen />

@@ -192,7 +192,7 @@ export function SmartNotesScreen() {
   }
 
   // ── Guard ────────────────────────────────────────────────────────────────
-  if (!mockLesson && !userNote) {
+  if (!userNote) {
     return <div className="p-4 text-text-secondary">Notiz nicht gefunden.</div>
   }
 

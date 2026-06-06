@@ -30,11 +30,12 @@ Die App bietet keinen einzelnen Lernweg, sondern einen **vernetzten Mix aus Lern
 | Styling | Tailwind CSS |
 | Build Tool | Vite |
 | Routing | React Router |
-| Persistenz (aktuell) | localStorage (`lernapp_v1`) |
+| Persistenz | localStorage (`lernapp_v1`) → Supabase DB (Phase 3 in Arbeit) |
 | KI Text + Vision | Groq API — Llama 3.3 70B (Text) + Llama 4 Scout Vision (Bilder/Scans) |
-| KI Probeklausuren | Google Gemini — `gemini-2.5-flash` (Klausurgenerierung + Korrektur) |
-| Auth + DB (Phase 3) | Supabase |
-| Payments (Phase 3) | Stripe |
+| KI Probeklausuren + Lernplan | Google Gemini — `gemini-2.5-flash` |
+| Auth | Supabase Auth — Email/Passwort + Google OAuth (gebaut, noch nicht in App verdrahtet) |
+| DB | Supabase PostgreSQL — Schema + RLS fertig (`supabase/migrations/001_initial_schema.sql`) |
+| Payments | Stripe (Phase 3, noch nicht begonnen) |
 | Dev Server | localhost:5174 |
 | Repo | https://github.com/simonhapp-ai/DailyStudent.git |
 | Projektordner | C:\Users\simon\OneDrive\Desktop\Claude App |
@@ -54,11 +55,11 @@ Alles in der App baut auf **Smart Notes** auf. Eine Smart Note entsteht durch:
 
 ```
 Smart Notes
-    ├── Karteikarten      → generateFlashcards() via Groq → LearnModeScreen
-    ├── Blurting          → evaluateBlurting() via Groq → BlurtingScreen
-    ├── Probeklausur      → generateMode1-4Exam() via Gemini → ProbeklausurMode1-4Screen
-    ├── Lernzettel        → generateLernzettel() via Groq → LernzettelScreen ✓ FERTIG
-    └── Lernplan          → [FEHLT] generateLernplan() via Groq → KlausurphasenScreen
+    ├── Karteikarten      → generateFlashcards() via Groq → LearnModeScreen ✓
+    ├── Blurting          → evaluateBlurting() via Groq → BlurtingScreen ✓
+    ├── Probeklausur      → generateMode1-4Exam() via Gemini → ProbeklausurMode1-4Screen ✓
+    ├── Lernzettel        → generateLernzettel() via Groq → LernzettelScreen ✓
+    └── Lernplan          → generateLernplan() via Gemini → LernplanKonfiguratorScreen ✓
 ```
 
 ### Klausurenmodus-Screen als Hub
@@ -66,9 +67,9 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 fast fertig (Stand: 05.06.2026)
+## Aktueller Stand — Phase 2 vollständig, Phase 3 in Arbeit (Stand: 06.06.2026)
 
-### Was vollständig funktioniert (echte KI, kein Mock):
+### Phase 2 — vollständig funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
 - **Unterricht-Screen:** Fach-Tree mit Ordnern, Notizen erstellen, Foto-Import per Gemini KI mit auto-Ziel-Vorschlag
 - **Smart Notes:** Foto/PDF/Text → Groq OCR → Groq Analyse → `GeneratedSmartNote` mit Summary, Keywords, Klausurthemen, Lösungsschritte
@@ -76,27 +77,41 @@ Smart Notes
 - **Karteikarten:** `generateFlashcards()` via Groq aus Smart Note → `LearnModeScreen` mit Deck-Verwaltung
 - **Blurting:** `evaluateBlurting()` via Groq — echter KI-Vergleich mit Smart Note Inhalt
 - **Probeklausur 4 Modi:** `generateMode1-4Exam()` via Gemini `gemini-2.5-flash` — echt generiert, echt korrigiert
-- **Lernzettel:** `generateLernzettel()` via Groq — `LernzettelScreen` + `LernzettelGeneratorScreen` vollständig implementiert
-- **KC-Daten:** 196 JSON-Dateien in `public/kc/` für 15 Bundesländer, `kcLoader.ts` vollständig implementiert, Fallback auf Niedersachsen
-- **Stundenplan-Scanner:** `parseStundenplanFromImage()` via Groq Vision — liest Foto/PDF ein
-- **Stats:** Streak (echt), scanCount, examCount, studiedDays — alles live in localStorage
-- **InsightsScreen:** Notenverlauf-Chart, Fachvergleich, Wochenaktivität, KI-Lerntipps — alle Daten live aus UserContext
+- **Lernzettel:** `generateLernzettel()` via Groq — `LernzettelScreen` + `LernzettelGeneratorScreen` vollständig
+- **Lernplan:** `generateLernplan()` via Gemini — 6-Schritt-Konfigurator (`LernplanKonfiguratorScreen`), Detailansicht (`LernplanDetailScreen`), 3 Plantypen (Einzel/Vollständig/Abitur), LK-Gewichtung, Kalender-Export, Print/PDF. Paywall: Einzel → erste 3 Tage frei, Rest blur; Vollständig + Abitur → Pro ab Schritt 1
+- **KC-Daten:** 196 JSON-Dateien in `public/kc/` für 15 Bundesländer, `kcLoader.ts` vollständig, Fallback auf Niedersachsen
+- **Stundenplan-Scanner:** `parseStundenplanFromImage()` via Groq Vision
+- **Stats:** Streak (echt), scanCount, examCount, studiedDays — live in localStorage
+- **InsightsScreen:** Notenverlauf-Chart, Fachvergleich, Wochenaktivität, KI-Lerntipps — alle Daten live
 - **AbiRechnerScreen:** NP-Rechner mit Zielnote-Vergleich
 - **KlausurplanScreen, HausaufgabenheftScreen, KalenderScreen** — funktionsfähig
 - **FaecherEditScreen:** Fächer nachträglich hinzufügen/entfernen mit Ordner-Sync
 - **FolderSystem:** Ordner, Unterordner, auto-generiert nach Halbjahr/Quartal
 - **Theme:** Hell/Dunkel/System
-- **isPro-Flag:** Toggle im Profil (Dev-Mode) — schaltet alle KI-Features + Paywalls app-weit; Pro-Banner im Profil verschwindet bei aktivem Pro
+- **isPro-Flag:** Toggle im Profil (Dev-Mode) — schaltet alle KI-Features + Paywalls app-weit
 
-### Was noch Mock/Placeholder ist:
+### Was noch Placeholder ist (bewusst, Phase-3-Aufgaben):
 | Was | Datei | Notiz |
 |-----|-------|-------|
-| `LERNPLAN_DAYS` | `KlausurphasenScreen.tsx:27` | 3 hardcoded Tage — Lernplan-Button öffnet Modal aber generiert nichts |
-| Einstellungs-Buttons | `ProfilScreen.tsx` | "Bundesland & Lehrplan", "Benachrichtigungen", "Datenschutz", "Account" — Buttons ohne onClick, Phase-3-Platzhalter |
+| Einstellungs-Buttons | `ProfilScreen.tsx` | "Bundesland & Lehrplan", "Benachrichtigungen", "Datenschutz", "Account" — Buttons ohne onClick |
 | "Abi-Schnitt Ø 1.7" | `ProfilScreen.tsx` | Hardcoded Marketing-Text im Pro-Banner |
+| isPro via Stripe | `UserContext.tsx` | Aktuell localStorage-Flag; wird durch Stripe-Webhook + Supabase ersetzt |
 
-### Was komplett fehlt (letztes Feature vor Phase 3):
-1. **Lernplan** — echter KI-generierter Tagesplan (Groq) basierend auf Klausurdatum + Smart Notes + KC. UI-Skeleton in KlausurphasenScreen vorhanden, aber kein API-Call, keine `generateLernplan()`-Funktion.
+### Phase 3 — Was Jan bereits gebaut hat:
+- **`src/lib/supabase.ts`** — Supabase Client (braucht `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` in `.env`)
+- **`src/screens/AuthScreen.tsx`** — Login/Signup Screen mit Google OAuth + Email/Passwort, deutsche Fehlermeldungen
+- **`UserContext.tsx`** — `authUser`, `authLoading`, `signOut` State + `supabase.auth.onAuthStateChange` Listener
+- **`supabase/migrations/001_initial_schema.sql`** — Vollständiges DB-Schema: 12 Tabellen (profiles, app_stats, user_folders, user_notes, generated_smart_notes, flashcards, lernzettel, saved_probeklausuren, lernplaene, personal_entries, standalone_homework, subscriptions), RLS für alle Tabellen, Trigger für auto-Profile-Erstellung + updated_at, Indexes
+
+### Phase 3 — Was noch fehlt:
+1. **AuthScreen in App.tsx einbinden** — Routing: unauthenticated → AuthScreen, authenticated + onboarded → App
+2. **Daten-Sync localStorage → Supabase** — alle CRUD-Operationen in UserContext auf Supabase umstellen
+3. **Migration bestehender localStorage-Daten** — beim ersten Login nach Supabase hochladen
+4. **KI-API-Calls serverseitig** — Supabase Edge Functions, API-Keys raus aus dem Browser
+5. **Stripe Payments** — Pro-Subscription, Webhook → `subscriptions` Tabelle → `isPro` setzen
+6. **Push-Benachrichtigungen** für Lernplan-Erinnerungen
+7. **Deployment** (Vercel/Netlify)
+8. **Studentenadaption** (Uni-Fächer, kein KC aber Syllabus-Upload)
 
 ---
 
@@ -113,62 +128,30 @@ KC-Daten liegen als JSON-Dateien in `public/kc/{Bundesland}/{fach}.json`.
 - `loadKcForUser(bundeslandId, faecher[])` — lädt alle Fächer parallel
 - `buildKcPromptContext(kc, stufe)` — baut kompakten KC-String für Prompt-Injection
 
-**JSON-Struktur:**
-```json
-{
-  "bundesland": "NRW",
-  "fach": "geschichte",
-  "zusammenfassung": "...",
-  "hauptthemen": [
-    {
-      "thema": "Weimarer Republik",
-      "relevante_unterthemen": ["Novemberrevolution", "Verfassung 1919"],
-      "kernkompetenzen": ["Quellen analysieren", "historisch urteilen"]
-    }
-  ]
-}
-```
-
----
-
-## Roadmap
-
-### NÄCHSTER SCHRITT — Lernplan Feature (einziges fehlendes Phase-2-Feature)
-- [ ] `src/lib/groq.ts`: `generateLernplan(profile, klausurtermin, userNotes, kcData)` — gibt Tagesplan als JSON zurück
-- [ ] Struktur: `{ days: [{ date, topic, kcRef, durationMin, method: 'karteikarten'|'blurting'|'lernzettel'|'probeklausur' }] }`
-- [ ] `KlausurphasenScreen`: "Lernplan generieren" Button ruft echte Funktion auf, speichert Plan in localStorage
-- [ ] `LERNPLAN_DAYS` durch echte Plan-Daten ersetzen
-- [ ] Free-User: erster Tag sichtbar, Rest blur → Pro required
-
-### Phase 3 — Backend (NACH Lernplan)
-- Supabase Auth + DB (User-Daten, Notes, Flashcards in Cloud)
-- Stripe Payments (Pro-Subscription, Webhook)
-- KI-API-Calls serverseitig (API-Keys nicht mehr im Client)
-- Push-Benachrichtigungen für Lernplan-Erinnerungen
-- Deployment (Vercel/Netlify)
-- Studentenadaption (Uni-Fächer, kein KC aber Syllabus-Upload)
-
 ---
 
 ## Architektur-Entscheidungen (nicht ändern ohne Rückfrage)
 
-- **localStorage Key:** `lernapp_v1` — Schema nicht brechen, Migration schreiben wenn nötig
-- **isPro-Flag:** in `UserContext` als `isPro: boolean` — bleibt so bis Stripe kommt; im Profil-Screen manuell togglebar (Dev-Mode); schaltet alle Paywalls und den Pro-Banner app-weit
-- **Kein eigener Backend-Server** — alles Client-Side bis Phase 3; Groq + Gemini direkt aus dem Browser
+- **localStorage Key:** `lernapp_v1` — bleibt als lokale Fallback-Schicht; Schema nicht brechen
+- **`persist()` in UserContext:** IMMER mit `{ ...loadStorage(), ...fields }` — niemals direkt ohne Merge, sonst Datenverlust (Bug wurde 06.06.2026 gefixt)
+- **isPro-Flag:** aktuell `isPro: boolean` in UserContext aus localStorage; wird durch Stripe + Supabase `subscriptions` Tabelle ersetzt
 - **Groq für Text/Vision** — Llama 3.3 70B + Llama 4 Scout Vision: Kosten, Geschwindigkeit, kein Rate-Limit für Prototyp
-- **Gemini für Probeklausuren** — `gemini-2.5-flash` hat bessere längere Reasoning-Qualität für strukturierte Klausurgenerierung; `gemini-2.5-flash-lite` für File-Import (günstiger)
+- **Gemini für Probeklausuren + Lernplan** — `gemini-2.5-flash`: bessere Reasoning-Qualität für strukturierte Outputs; `gemini-2.5-flash-lite` für File-Import (günstiger)
 - **Blur-Paywall Pattern** — für alle KI-Features bei Free-Usern beibehalten
 - **TypeScript strict** — keine `any` Types einbauen
 - **KlausurphasenScreen bleibt Hub** — kein Feature-Screen, nur Einstieg in die Lernmethoden
 - **HomeScreen = UnterrichtScreen** — kein separater HomeScreen; `/` redirectet direkt zu `/unterricht`
+- **Supabase DB-Schema:** alle User-Daten haben `user_id UUID REFERENCES profiles(id)` + RLS `auth.uid() = user_id`; subscriptions nur server-seitig schreibbar (Webhook)
 
 ---
 
 ## Umgebungsvariablen
 
 ```
-VITE_GROQ_API_KEY=gsk_...        # Groq API Key (Text + Vision) — gültig
-VITE_GEMINI_API_KEY=AIzaSy...    # Google Gemini API Key — gültig (neu generiert 05.06.2026)
+VITE_GROQ_API_KEY=gsk_...           # Groq API Key (Text + Vision) — gültig
+VITE_GEMINI_API_KEY=AIzaSy...       # Google Gemini API Key — gültig (neu generiert 05.06.2026)
+VITE_SUPABASE_URL=https://...       # Supabase Project URL — für Phase 3
+VITE_SUPABASE_ANON_KEY=eyJ...       # Supabase Anon Key — für Phase 3
 ```
 
 `.env` liegt im Root-Verzeichnis. Nie in Git committen (ist in `.gitignore`).
@@ -212,24 +195,26 @@ src/
 │   │   └── AIFeedbackCard.tsx
 │   └── ui/                       # Button, Card, Badge, BottomNav, Header, ProModal, BottomSheet, ...
 ├── context/
-│   └── UserContext.tsx            # Zentraler State + localStorage Persistenz
+│   └── UserContext.tsx            # Zentraler State + localStorage + Supabase Auth State
 ├── data/
-│   ├── mockData.ts                # NUR NOCH: halfYears[], topics[], subjects[] — kein Legacy-Mock mehr
+│   ├── mockData.ts                # NUR NOCH: halfYears[], topics[], subjects[] — kein Legacy-Mock
 │   ├── subjectInfo.ts             # SUBJECT_INFO + SUBJECT_GROUPS (Name, Icon, Farbe pro Fach)
 │   └── kcLoader.ts                # loadKcForSubject/User(), buildKcPromptContext()
 ├── lib/
 │   ├── groq.ts                    # Alle Groq API Calls (OCR, SmartNote, Flashcards, Blurting, Lernzettel, ...)
-│   ├── gemini.ts                  # Gemini API Calls (Probeklausur-Generierung + Korrektur, File-Import)
+│   ├── gemini.ts                  # Gemini API Calls (Probeklausur + Lernplan Generierung, File-Import)
+│   ├── supabase.ts                # Supabase Client (createClient mit URL + AnonKey aus .env)
 │   └── pdf.ts                     # PDF → Bilder Konvertierung (pdfjs)
 ├── screens/                       # Ein Screen pro Route
 │   ├── OnboardingScreen.tsx       # Enthält DEV_PROFILE für Skip-Button
+│   ├── AuthScreen.tsx             # Login/Signup — Email + Google OAuth (noch nicht in App.tsx geroutet)
 │   ├── KalenderScreen.tsx
 │   ├── UnterrichtScreen.tsx       # Fach-Tree, Ordner, Foto-Import mit KI-Zielvorschlag
 │   ├── LessonScreen.tsx
 │   ├── FolderScreen.tsx
 │   ├── SmartNotesScreen.tsx       # Notiz-Detail + KI-Analyse + Keyword-Erklärung + FC-Generator
 │   ├── NoteCreateScreen.tsx
-│   ├── KlausurphasenScreen.tsx    # Hub für alle Lernmethoden — LERNPLAN_DAYS noch hardcoded
+│   ├── KlausurphasenScreen.tsx    # Hub für alle Lernmethoden
 │   ├── LearnModeScreen.tsx        # Karteikarten-Bibliothek + Lern-Session
 │   ├── FlashCardGeneratorScreen.tsx
 │   ├── BlurtingScreen.tsx         # Blurting + KI-Bewertung
@@ -241,27 +226,28 @@ src/
 │   ├── ProbeklausurRetroScreen.tsx
 │   ├── LernzettelScreen.tsx       # Lernzettel-Bibliothek + Detail-Ansicht
 │   ├── LernzettelGeneratorScreen.tsx  # Lernzettel generieren via Groq
+│   ├── LernplanKonfiguratorScreen.tsx # 6-Schritt-Konfigurator → generateLernplan() via Gemini
+│   ├── LernplanDetailScreen.tsx   # Lernplan-Ansicht: Tage, Sessions, Kalender-Export, Print
 │   ├── KlausurplanScreen.tsx
 │   ├── HausaufgabenheftScreen.tsx
 │   ├── AbiRechnerScreen.tsx
 │   ├── InsightsScreen.tsx         # Statistiken, Charts, Lerntipps — alle Daten live
 │   ├── ProfilScreen.tsx           # Pro-Banner nur bei !isPro sichtbar
-│   ├── FaecherEditScreen.tsx
-│   └── SubjectListScreen.tsx
+│   └── FaecherEditScreen.tsx      # Fächer hinzufügen/entfernen (Route: /profil/faecher)
 └── types/
     └── index.ts                   # Alle TypeScript-Typen
 public/
 └── kc/                            # KC-JSONs: 15 Bundesländer × ~14 Fächer = ~196 Dateien
-    ├── NRW/
-    ├── Bayern/
-    ├── Niedersachsen/
-    └── ...
+supabase/
+└── migrations/
+    └── 001_initial_schema.sql     # Vollständiges DB-Schema + RLS + Trigger + Indexes
 ```
 
 **Gelöschte Screens (nicht mehr vorhanden):**
 - `HomeScreen.tsx` — war ungeroutet, komplett toter Screen
-- `ExamModeScreen.tsx` — Legacy Mock-Klausur (hardcoded Geschichte-Fragen), von Probeklausur-4-Modi ersetzt
+- `ExamModeScreen.tsx` — Legacy Mock-Klausur, von Probeklausur-4-Modi ersetzt
 - `ExamResultScreen.tsx` — Legacy Mock-Ergebnis, von Probeklausur-Korrektur ersetzt
+- `SubjectListScreen.tsx` — Legacy Mock mit `mockData.subjects`, nie geroutet (gelöscht 06.06.2026)
 
 ---
 
@@ -331,26 +317,28 @@ Leerzustände zeigen: Icon (groß, Gradient-Container) + Headline + kurze Erklä
 
 ## Developer-Kontext
 
-- **Entwickler:** Simon, kein Coding-Background — arbeitet mit Claude Code in VS Code
+- **Entwickler:** Simon (kein Coding-Background, arbeitet mit Claude Code in VS Code) + Jan (baut Supabase/Backend)
 - **Workflow:** Claude Code baut, Simon reviewed im Browser (localhost:5174), dann git commit + push
 - **Git:** `git add . && git commit -m "..." && git push`
 - **Wichtig:** Immer erklären was du gebaut hast und warum — keine stillen Änderungen
 
 ---
 
-## Letzte Session (05.06.2026)
+## Letzte Session (06.06.2026)
 
 **Was gemacht wurde:**
-- Gemini API Key repariert (neuer gültiger Key eingesetzt, getestet ✓)
-- Dev-Profil aktualisiert: echter Stundenplan (29 Slots Mo–Fr), Fächer auf 8 erweitert (Deutsch, Mathe, Englisch, Bio, Physik, Politik, Religion, Sport)
-- `HomeScreen.tsx`, `ExamModeScreen.tsx`, `ExamResultScreen.tsx` gelöscht — waren Mock-Inseln ohne echte Funktion
-- `mockData.ts` bereinigt: `lessons[]`, `smartNotes[]`, `flashCards[]`, `examQuestions[]`, `mockExamResult` entfernt — nur noch `halfYears[]`, `topics[]`, `subjects[]`
-- `SmartNotesScreen.tsx` auf `SUBJECT_INFO` + `userNotes` umgestellt, keine mockData-Abhängigkeit mehr
-- `ProfilScreen.tsx`: Badge zeigt dynamisch "Pro"/"Free", Preis €7,99/Mo, Pro-Banner verschwindet bei aktivem isPro
-- `InsightsScreen.tsx`: hardcoded 35%-Decorationbars entfernt
-- `App.tsx`: Routen und Imports für gelöschte Screens entfernt
+- Phase-2-Vollständigkeits-Review durchgeführt
+- **Bug gefixt:** `persist()` in `UserContext.tsx` hat bei jedem Aufruf `generatedFlashCards`, `appStats`, `lernzettel`, `savedProbeklausuren`, `lernplaene` aus dem localStorage gelöscht → Fix: `{ ...loadStorage(), ...fields }` Merge-Pattern
+- `SubjectListScreen.tsx` gelöscht — war Legacy-Code mit `mockData.subjects`, nie geroutet, nie importiert
+- CLAUDE.md aktualisiert: Phase 2 als abgeschlossen markiert, Phase 3 Stand dokumentiert
 
-**Nächster Schritt: Lernplan Feature implementieren**
-- `generateLernplan()` in `src/lib/groq.ts`
-- Echter Button in `KlausurphasenScreen` ersetzt `LERNPLAN_DAYS`
-- Paywall: erster Tag frei, Rest blur für Free-User
+**Was Jan in Jans PR gebaut hat (Phase 3 Start):**
+- `src/lib/supabase.ts` — Supabase Client
+- `src/screens/AuthScreen.tsx` — vollständiger Auth-Screen (Email + Google OAuth)
+- `UserContext.tsx` erweitert um `authUser`, `authLoading`, `signOut` + Auth State Listener
+- `supabase/migrations/001_initial_schema.sql` — komplettes DB-Schema
+
+**Nächster Schritt: Phase 3 weiterbauen**
+1. `AuthScreen` in `App.tsx` einbinden (Route-Guard: kein Auth → AuthScreen)
+2. Daten-Sync: UserContext-Operationen auf Supabase umstellen
+3. Migration: bestehende localStorage-Daten beim ersten Login hochladen

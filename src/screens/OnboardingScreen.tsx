@@ -212,7 +212,7 @@ export function OnboardingScreen() {
 
       {/* Step content */}
       <div className="flex-1 px-6 pt-20 pb-10">
-        {step === 1 && <StepWelcome onNext={next} onSkip={() => { completeOnboarding(DEV_PROFILE, generateKcFolders(DEV_PROFILE)); navigate('/unterricht') }} />}
+        {step === 1 && <StepWelcome onNext={next} />}
         {step === 2 && (
           <StepPersonal
             name={name} setName={setName}
@@ -285,7 +285,7 @@ export function OnboardingScreen() {
 
 /* ─── Step 1: Welcome ─────────────────────────────────────── */
 
-function StepWelcome({ onNext, onSkip }: { onNext: () => void; onSkip: () => void }) {
+function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col justify-between min-h-[calc(100vh-80px)]">
       <div className="flex-1 flex flex-col justify-center">
@@ -318,12 +318,6 @@ function StepWelcome({ onNext, onSkip }: { onNext: () => void; onSkip: () => voi
         <Button variant="primary" fullWidth size="lg" onClick={onNext}>
           Los geht's
         </Button>
-        <button
-          onClick={onSkip}
-          className="w-full py-2 text-xs text-text-muted hover:text-text-secondary transition-colors"
-        >
-          Dev: Mit Demo-Profil überspringen
-        </button>
       </div>
     </div>
   )
