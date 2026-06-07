@@ -1,7 +1,8 @@
 import { useUser, type AppTheme } from '../context/UserContext'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
+import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 
 // Emails die den Pro-Toggle in den Dev-Tools sehen
 const PRO_TOGGLE_ALLOWLIST = [
@@ -25,8 +26,35 @@ function getCurrentStreak(streak: number, lastStudyDate: string | null): number 
 
 export function ProfilScreen() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser } = useUser()
   const [proToast, setProToast] = useState(false)
+  const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
+  const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
+
+  useEffect(() => {
+    if (searchParams.get('payment') !== 'success') return
+    setSearchParams({}, { replace: true })
+    setPaymentToast('success')
+    // Webhook is async — poll once after 2s to confirm isPro
+    setTimeout(async () => {
+      const isNowPro = await fetchIsProFromSupabase()
+      if (isNowPro) setIsPro(true)
+    }, 2000)
+    setTimeout(() => setPaymentToast(null), 6000)
+  }, [])
+
+  const handleUpgrade = async (plan: 'monthly' | 'yearly') => {
+    try {
+      setCheckoutLoading(plan)
+      const url = await createCheckoutSession(plan)
+      window.location.href = url
+    } catch {
+      setCheckoutLoading(null)
+      setPaymentToast('error')
+      setTimeout(() => setPaymentToast(null), 4000)
+    }
+  }
 
   const handleProToggle = () => {
     const next = !isPro
@@ -104,10 +132,20 @@ export function ProfilScreen() {
                 </li>
               ))}
             </ul>
-            <button className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold hover:opacity-90 press transition-all">
-              Pro freischalten · €59,99/Jahr
+            <button
+              onClick={() => handleUpgrade('yearly')}
+              disabled={checkoutLoading !== null}
+              className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
+            >
+              {checkoutLoading === 'yearly' ? 'Wird geladen…' : 'Pro freischalten · €59,99/Jahr'}
             </button>
-            <p className="text-center text-[12px] text-text-muted mt-2.5">Abi-Schnitt unserer Pro-Nutzer: Ø 1.7</p>
+            <button
+              onClick={() => handleUpgrade('monthly')}
+              disabled={checkoutLoading !== null}
+              className="w-full py-2 text-[13px] text-text-muted hover:text-text-secondary transition-colors disabled:opacity-60"
+            >
+              {checkoutLoading === 'monthly' ? 'Wird geladen…' : 'Oder monatlich: €7,99/Monat'}
+            </button>
           </div>
         )}
 
@@ -281,6 +319,16 @@ export function ProfilScreen() {
           <p className="text-text-primary text-[13px] font-semibold whitespace-nowrap">
             {isPro ? '⭐ Pro aktiviert' : '🔒 Pro deaktiviert'}
           </p>
+        </div>
+      )}
+      {paymentToast === 'success' && (
+        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-pill bg-success/10 border border-success/30 shadow-float animate-fade-in">
+          <p className="text-success text-[13px] font-semibold whitespace-nowrap">Zahlung erfolgreich! Pro wird aktiviert…</p>
+        </div>
+      )}
+      {paymentToast === 'error' && (
+        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-pill bg-destructive/10 border border-destructive/30 shadow-float animate-fade-in">
+          <p className="text-destructive text-[13px] font-semibold whitespace-nowrap">Fehler beim Checkout. Bitte erneut versuchen.</p>
         </div>
       )}
     </div>

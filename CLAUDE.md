@@ -103,16 +103,20 @@ Smart Notes
 - **`UserContext.tsx`** — `authUser`, `authLoading`, `signOut` State + `supabase.auth.onAuthStateChange` Listener
 - **`supabase/migrations/001_initial_schema.sql`** — Vollständiges DB-Schema: 12 Tabellen (profiles, app_stats, user_folders, user_notes, generated_smart_notes, flashcards, lernzettel, saved_probeklausuren, lernplaene, personal_entries, standalone_homework, subscriptions), RLS für alle Tabellen, Trigger für auto-Profile-Erstellung + updated_at, Indexes
 
+### Phase 3 — Was Simon gebaut hat (07.06.2026):
+- **`supabase/functions/groq-proxy/index.ts`** — Edge Function: proxied alle Groq API Calls serverseitig. `GROQ_API_KEY` als Supabase Secret gesetzt. `src/lib/groq.ts` nutzt jetzt `supabase.functions.invoke('groq-proxy')` statt direktem Fetch.
+- **`supabase/functions/gemini-proxy/index.ts`** — Edge Function: proxied alle Gemini API Calls serverseitig (flash + flash-lite). `GEMINI_API_KEY` als Supabase Secret gesetzt. `src/lib/gemini.ts` nutzt jetzt `geminiProxy()` Helper statt direktem Fetch. 503-Fallback (flash→flash-lite) bleibt erhalten.
+- **Verifiziert:** API-Keys aus `.env` auskommentiert → App funktioniert weiter → Backend bestätigt.
+
 ### Phase 3 — Was noch fehlt:
 1. **AuthScreen in App.tsx einbinden** — Routing: unauthenticated → AuthScreen, authenticated + onboarded → App
 2. **Daten-Sync localStorage → Supabase** — alle CRUD-Operationen in UserContext auf Supabase umstellen
 3. **Migration bestehender localStorage-Daten** — beim ersten Login nach Supabase hochladen
-4. **KI-API-Calls serverseitig** — Supabase Edge Functions, API-Keys raus aus dem Browser
-5. **Stripe Payments** — Pro-Subscription, Webhook → `subscriptions` Tabelle → `isPro` setzen
-6. **Push-Benachrichtigungen** für Lernplan-Erinnerungen
-7. **Responsive Layouts (iPad + Laptop) — VOR LAUNCH ZWINGEND** — Primäre Zielgruppe nutzt App im Unterricht auf iPad und in Vorlesungen auf Laptop. Handy ist sekundär (immer erreichbar). Umsetzung: Tailwind Breakpoints (`md:` iPad, `lg:` Laptop), Sidebar-Navigation statt BottomNav ab `md:`, 2-Column-Layouts wo sinnvoll. Nach Phase 3 als erste große UI-Iteration.
-8. **Deployment** (Vercel/Netlify)
-9. **Studentenadaption** (Uni-Fächer, kein KC aber Syllabus-Upload)
+4. **Stripe Payments** — Pro-Subscription, Webhook → `subscriptions` Tabelle → `isPro` setzen
+5. **Push-Benachrichtigungen** für Lernplan-Erinnerungen
+6. **Responsive Layouts (iPad + Laptop) — VOR LAUNCH ZWINGEND** — Primäre Zielgruppe nutzt App im Unterricht auf iPad und in Vorlesungen auf Laptop. Handy ist sekundär (immer erreichbar). Umsetzung: Tailwind Breakpoints (`md:` iPad, `lg:` Laptop), Sidebar-Navigation statt BottomNav ab `md:`, 2-Column-Layouts wo sinnvoll. Nach Phase 3 als erste große UI-Iteration.
+7. **Deployment** (Vercel/Netlify)
+8. **Studentenadaption** (Uni-Fächer, kein KC aber Syllabus-Upload)
 
 ---
 
