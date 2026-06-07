@@ -280,7 +280,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setAuthUser(session?.user ?? null)
       setAuthLoading(false)
 
-      if (event === 'SIGNED_IN' && session?.user) {
+      if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
         const userId = session.user.id
 
         // Only use localStorage cache if it belongs to this user

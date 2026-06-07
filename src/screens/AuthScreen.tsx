@@ -48,7 +48,7 @@ export function AuthScreen() {
     setError(null)
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin },
+      options: { redirectTo: `${window.location.origin}/` },
     })
     if (error) {
       setError(translateError(error.message))

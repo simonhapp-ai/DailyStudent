@@ -1201,7 +1201,7 @@ export function NoteCreateScreen() {
         {/* Add more blocks */}
         <div className="mx-4 mb-4">
           <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Weitere Felder</p>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={addTextBlock}
               className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-accent hover:bg-accent/5 transition-all active:scale-95"

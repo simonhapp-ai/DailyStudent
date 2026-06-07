@@ -20,6 +20,11 @@ function daysUntil(dateStr: string): number {
 }
 
 
+// Converts Zielnote (1,0–3,0) to Notenpunkte (15–6) — reserved for future Zielnote-Tracking UI
+function _zielnoteToNP(z: string): number {
+  return 17 - parseFloat(z.replace(',', '.')) * 3
+}
+
 const WEEKDAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
 
 // ── Icon-Gradienten ──────────────────────────────────────────────────────────
@@ -108,7 +113,7 @@ export function KlausurphasenScreen() {
     const today = new Date().toISOString().slice(0, 10)
     return activePlan.days
       .filter((d) => d.date >= today && (d.dayType === 'lern' || d.dayType === 'puffer') && d.sessions.length > 0)
-      .slice(0, 3)
+      .slice(0, 2)
   }, [activePlan])
 
   // Progress toward zielnote (for the "Vorbereitung" bar)
