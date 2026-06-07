@@ -9,13 +9,13 @@ import {
   loadUserDataFromSupabase, migrateToSupabase,
   syncProfile, syncAppStats,
   syncFolder, syncFoldersBatch, deleteFoldersFromDB,
-  syncNote, syncNotesBatch, deleteNotesFromDB,
+  syncNote, deleteNotesFromDB,
   syncSmartNote,
   syncFlashCardsBatch,
   syncLernzettel,
   syncProbeklausur, deleteProbeklausurFromDB,
   syncLernplaeneBatch, deleteLernplanFromDB,
-  syncEntry, syncEntriesBatch, deleteEntryFromDB,
+  syncEntry, deleteEntryFromDB,
   syncHomeworkBatch, syncCompletedHomework,
 } from '../lib/supabaseSync'
 

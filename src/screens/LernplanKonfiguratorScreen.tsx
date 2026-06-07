@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { generateLernplan } from '../lib/gemini'
@@ -69,7 +69,7 @@ export function LernplanKonfiguratorScreen() {
   // Step 6: Generation
   const [generating, setGenerating] = useState(false)
   const [genError, setGenError] = useState('')
-  const abortRef = useRef<AbortController | null>(null)
+
 
   const selectedTermine = allTermine.filter((k) =>
     selectedTermineKeys.includes(`${k.subjectId}|${k.date}`)

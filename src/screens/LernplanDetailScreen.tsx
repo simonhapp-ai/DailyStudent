@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useUser, type PersonalEntry } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
-import type { LernplanDay, LernplanSession, LernDayType, LernMethode } from '../types'
+import type { LernplanSession, LernDayType, LernMethode } from '../types'
 
 const METHOD_ICONS: Record<LernMethode, string> = {
   karteikarten: '🃏',
@@ -90,7 +90,6 @@ export function LernplanDetailScreen() {
     )
   }
 
-  const today = new Date().toISOString().slice(0, 10)
   const totalStudyDays = plan.days.filter((d) => d.dayType === 'lern' || d.dayType === 'puffer').length
   const totalMinutes = plan.days.reduce((sum, d) => sum + d.totalMin, 0)
 

@@ -206,9 +206,6 @@ export function KalenderScreen() {
   const calWeekDays = getWeekDays(today)
   const calDow = today.getDay()
   const calSpIdx = calDow >= 1 && calDow <= 5 ? calDow - 1 : -1
-  const calTodaySlots = calSpIdx >= 0
-    ? (profile?.stundenplan?.slots ?? []).filter((s) => s.day === calSpIdx).sort((a, b) => a.startTime.localeCompare(b.startTime))
-    : []
   type CPill = { time: string; label: string; color: string; icon: string }
   const calPills: CPill[] = [
     ...personalEntries.filter((e) => e.date === todayStr).map((e) => ({ time: e.time || '', label: e.title, color: TYPE_CONFIG[e.type].color, icon: TYPE_CONFIG[e.type].icon })),
@@ -870,7 +867,7 @@ interface CollapsedProps {
   onExpand: () => void
 }
 
-function CalendarCollapsed({ today, todayStr, stundenplan, personalEntries, klausurtermine, onExpand }: CollapsedProps) {
+function _CalendarCollapsed({ today, todayStr, stundenplan, personalEntries, klausurtermine, onExpand }: CollapsedProps) {
   const weekDays = getWeekDays(today)
   const dow = today.getDay()
   const spIdx = dow >= 1 && dow <= 5 ? dow - 1 : -1
@@ -1424,7 +1421,7 @@ function HausaufgabenWidget({ userNotes, completedHomeworkIds, standaloneHomewor
 
 const SP_DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'] as const
 
-function StundenplanMiniWidget({ stundenplan, onOpen }: { stundenplan: Stundenplan; onOpen: () => void }) {
+function _StundenplanMiniWidget({ stundenplan, onOpen }: { stundenplan: Stundenplan; onOpen: () => void }) {
   // Find max slots across any day for preview height
   const byDay = SP_DAYS.map((_, i) =>
     stundenplan.slots.filter((s) => s.day === i).sort((a, b) => a.startTime.localeCompare(b.startTime))

@@ -19,9 +19,6 @@ function daysUntil(dateStr: string): number {
   return Math.ceil((target.getTime() - today.getTime()) / 86400000)
 }
 
-function zielnoteToNP(z: string): number {
-  return 17 - parseFloat(z.replace(',', '.')) * 3
-}
 
 const WEEKDAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
 

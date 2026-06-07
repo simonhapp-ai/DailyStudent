@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
-import { useUser, generateKcFolders } from '../context/UserContext'
+import { useUser } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
 import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS } from '../lib/gemini'
 import type { UserNote, StundenplanSlot } from '../types'
@@ -31,59 +31,6 @@ const BUNDESLAENDER = [
 const SCHULFORMEN = ['Gymnasium', 'Gesamtschule', 'FOS', 'Universität']
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-
-const DEV_PROFILE: UserProfile = {
-  name: 'Simon Happ',
-  klasse: '13',
-  schulform: 'Gymnasium',
-  bundesland: 'Niedersachsen',
-  bundeslandId: 'ni',
-  faecher: ['deutsch', 'mathematik', 'englisch', 'biologie', 'physik', 'politik', 'religion', 'sport'],
-  lkFaecher: ['mathematik', 'biologie'],
-  klausurtermine: [{ subjectId: 'mathematik', date: '2026-06-06' }],
-  folderSortMode: 'halbjahr',
-  schultyp: 'g9',
-  isDevMode: true,
-  stundenplan: {
-    createdAt: new Date().toISOString(),
-    slots: [
-      // Montag
-      { id: 'dev-s01', day: 0, startTime: '07:45', endTime: '08:30', subjectId: 'physik' },
-      { id: 'dev-s02', day: 0, startTime: '11:30', endTime: '12:15', subjectId: 'englisch' },
-      { id: 'dev-s03', day: 0, startTime: '12:20', endTime: '13:05', subjectId: 'englisch' },
-      { id: 'dev-s04', day: 0, startTime: '13:50', endTime: '14:35', subjectId: 'religion' },
-      { id: 'dev-s05', day: 0, startTime: '14:35', endTime: '15:20', subjectId: 'religion' },
-      // Dienstag
-      { id: 'dev-s06', day: 1, startTime: '08:35', endTime: '09:20', subjectId: 'mathematik' },
-      // Mittwoch
-      { id: 'dev-s07', day: 2, startTime: '07:45', endTime: '08:30', subjectId: 'mathematik' },
-      { id: 'dev-s08', day: 2, startTime: '08:35', endTime: '09:20', subjectId: 'mathematik' },
-      { id: 'dev-s09', day: 2, startTime: '09:40', endTime: '10:25', subjectId: 'biologie' },
-      { id: 'dev-s10', day: 2, startTime: '10:25', endTime: '11:10', subjectId: 'biologie' },
-      { id: 'dev-s11', day: 2, startTime: '11:30', endTime: '12:15', subjectId: 'englisch' },
-      { id: 'dev-s12', day: 2, startTime: '12:20', endTime: '13:05', subjectId: 'politik' },
-      { id: 'dev-s13', day: 2, startTime: '13:50', endTime: '14:35', subjectId: 'deutsch' },
-      { id: 'dev-s14', day: 2, startTime: '14:35', endTime: '15:20', subjectId: 'deutsch' },
-      // Donnerstag
-      { id: 'dev-s15', day: 3, startTime: '07:45', endTime: '08:30', subjectId: 'politik' },
-      { id: 'dev-s16', day: 3, startTime: '08:35', endTime: '09:20', subjectId: 'politik' },
-      { id: 'dev-s17', day: 3, startTime: '09:40', endTime: '10:25', subjectId: 'biologie' },
-      { id: 'dev-s18', day: 3, startTime: '10:25', endTime: '11:10', subjectId: 'biologie' },
-      { id: 'dev-s19', day: 3, startTime: '11:30', endTime: '12:15', subjectId: 'religion' },
-      { id: 'dev-s20', day: 3, startTime: '12:20', endTime: '13:05', subjectId: 'deutsch' },
-      { id: 'dev-s21', day: 3, startTime: '13:50', endTime: '14:35', subjectId: 'physik' },
-      { id: 'dev-s22', day: 3, startTime: '14:35', endTime: '15:20', subjectId: 'physik' },
-      // Freitag
-      { id: 'dev-s23', day: 4, startTime: '07:45', endTime: '08:30', subjectId: 'englisch' },
-      { id: 'dev-s24', day: 4, startTime: '08:35', endTime: '09:20', subjectId: 'englisch' },
-      { id: 'dev-s25', day: 4, startTime: '09:40', endTime: '10:25', subjectId: 'mathematik' },
-      { id: 'dev-s26', day: 4, startTime: '10:25', endTime: '11:10', subjectId: 'mathematik' },
-      { id: 'dev-s27', day: 4, startTime: '11:30', endTime: '12:15', subjectId: 'biologie' },
-      { id: 'dev-s28', day: 4, startTime: '13:50', endTime: '14:35', subjectId: 'sport' },
-      { id: 'dev-s29', day: 4, startTime: '14:35', endTime: '15:20', subjectId: 'sport' },
-    ],
-  },
-}
 
 export function OnboardingScreen() {
   const { completeOnboarding } = useUser()
