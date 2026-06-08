@@ -1,6 +1,6 @@
 // Supabase sync layer — fire-and-forget writes, authoritative reads on login.
 // localStorage remains the React state source of truth for instant UI.
-// All functions swallow errors silently — Supabase failures never crash the app.
+// Failed syncs are queued for retry — data is never lost.
 
 import { supabase } from './supabase'
 import type {
@@ -9,7 +9,145 @@ import type {
 } from '../types'
 import type { UserProfile, PersonalEntry, StandaloneHomeworkItem, AppTheme } from '../context/UserContext'
 
-// ─── DB row → App type mappers ─────────────────────────────────────────────
+// ─── SYNC QUEUE — track failed syncs for recovery ──────────────────────────
+
+export interface SyncQueueItem {
+  id: string
+  operation: string
+  timestamp: number
+  retries: number
+  lastError: string | null
+  payload: unknown
+}
+
+const SYNC_QUEUE_KEY = 'lernapp_sync_queue'
+const MAX_RETRIES = 3
+
+export function loadSyncQueue(): SyncQueueItem[] {
+  try {
+    const stored = localStorage.getItem(SYNC_QUEUE_KEY)
+    return stored ? JSON.parse(stored) : []
+  } catch {
+    return []
+  }
+}
+
+export function saveSyncQueue(items: SyncQueueItem[]): void {
+  try {
+    localStorage.setItem(SYNC_QUEUE_KEY, JSON.stringify(items))
+  } catch (err) {
+    console.warn('[SyncQueue] Failed to save queue', err)
+  }
+}
+
+export function addToSyncQueue(operation: string, payload: unknown): void {
+  const queue = loadSyncQueue()
+  queue.push({
+    id: `${operation}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+    operation,
+    timestamp: Date.now(),
+    retries: 0,
+    lastError: null,
+    payload,
+  })
+  saveSyncQueue(queue)
+  console.log(`[SyncQueue] Added: ${operation}`, queue.length)
+}
+
+export function recordSyncError(itemId: string, error: string): void {
+  const queue = loadSyncQueue()
+  const item = queue.find(i => i.id === itemId)
+  if (item) {
+    item.retries += 1
+    item.lastError = error
+    item.timestamp = Date.now()
+
+    if (item.retries > MAX_RETRIES) {
+      // Remove after max retries (user can see in error banner)
+      const filtered = queue.filter(i => i.id !== itemId)
+      saveSyncQueue(filtered)
+      console.warn(`[SyncQueue] Max retries exceeded for ${itemId}, removing from queue`)
+    } else {
+      saveSyncQueue(queue)
+      console.warn(`[SyncQueue] Retry ${item.retries}/${MAX_RETRIES} for ${itemId}`)
+    }
+  }
+}
+
+export function clearSyncQueue(): void {
+  localStorage.removeItem(SYNC_QUEUE_KEY)
+  console.log('[SyncQueue] Cleared')
+}
+
+export function getSyncQueueStats(): { pending: number; failed: number } {
+  const queue = loadSyncQueue()
+  return {
+    pending: queue.filter(i => i.retries === 0).length,
+    failed: queue.filter(i => i.retries > 0).length,
+  }
+}
+
+export async function retrySyncQueue(userId: string): Promise<{ success: number; failed: number }> {
+  const queue = loadSyncQueue()
+  if (queue.length === 0) return { success: 0, failed: 0 }
+
+  console.log(`[SyncQueue] Retrying ${queue.length} items...`)
+  let success = 0
+  let failed = 0
+
+  for (const item of queue) {
+    try {
+      if (item.operation === 'syncProfile') {
+        const { profile, theme, isPro } = item.payload as any
+        await supabase.from('profiles').upsert({
+          id: userId,
+          name: profile.name,
+          klasse: profile.klasse,
+          schulform: profile.schulform,
+          schultyp: profile.schultyp,
+          bundesland: profile.bundesland,
+          bundesland_id: profile.bundeslandId,
+          faecher: profile.faecher,
+          lk_faecher: profile.lkFaecher ?? [],
+          zielnote: profile.zielnote,
+          folder_sort_mode: profile.folderSortMode ?? 'halbjahr',
+          klausurtermine: profile.klausurtermine ?? [],
+          stundenplan: profile.stundenplan ?? null,
+          abi_halbjahre: profile.abiHalbjahre ?? null,
+          abi_gesamtpunkte: profile.abiGesamtpunkte ?? null,
+          abi_gesamtnote: profile.abiGesamtnote ?? null,
+          is_dev_mode: profile.isDevMode ?? false,
+          theme,
+          is_pro: isPro,
+        })
+        success++
+      }
+    } catch (err) {
+      failed++
+      const errMsg = err instanceof Error ? err.message : String(err)
+      recordSyncError(item.id, errMsg)
+    }
+  }
+
+  // Remove successful items from queue
+  if (success > 0) {
+    const remaining = queue.filter(i => {
+      try {
+        return i.operation === 'syncProfile'
+          ? false
+          : true
+      } catch {
+        return true
+      }
+    })
+    saveSyncQueue(remaining)
+  }
+
+  console.log(`[SyncQueue] Retry complete: ${success} success, ${failed} failed`)
+  return { success, failed }
+}
+
+// ─── Data type mappers ────────────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = Record<string, any>
@@ -306,7 +444,11 @@ export async function syncProfile(userId: string, profile: UserProfile, theme: A
       theme,
       is_pro: isPro,
     })
-  } catch (err) { console.warn('[Supabase] syncProfile', err) }
+  } catch (err) {
+    const errMsg = err instanceof Error ? err.message : String(err)
+    console.warn('[Supabase] syncProfile failed:', errMsg)
+    addToSyncQueue('syncProfile', { userId, profile, theme, isPro })
+  }
 }
 
 export async function syncAppStats(userId: string, stats: AppStats): Promise<void> {

@@ -25,6 +25,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: string |
 }
 import { BottomNav } from '../components/ui/BottomNav'
 import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSidebar'
+import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
 import { UserProvider, useUser } from '../context/UserContext'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { KalenderScreen } from '../screens/KalenderScreen'
@@ -190,8 +191,9 @@ function Layout() {
       <div className="flex h-screen bg-background overflow-hidden">
         <DesktopSidebar />
         <DesktopSidebarWide />
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto relative">
           <AppRoutes />
+          <SyncErrorBanner />
         </main>
       </div>
     )
@@ -202,6 +204,7 @@ function Layout() {
     <div className="max-w-lg mx-auto relative min-h-screen">
       <AppRoutes />
       {!hideNav && <BottomNav />}
+      <SyncErrorBanner />
     </div>
   )
 }

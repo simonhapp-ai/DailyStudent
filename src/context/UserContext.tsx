@@ -17,6 +17,7 @@ import {
   syncLernplaeneBatch, deleteLernplanFromDB,
   syncEntry, syncEntriesBatch, deleteEntryFromDB,
   syncHomeworkBatch, syncCompletedHomework,
+  retrySyncQueue, getSyncQueueStats,
 } from '../lib/supabaseSync'
 
 export interface StandaloneHomeworkItem {
@@ -157,6 +158,8 @@ interface UserContextValue {
   authLoading: boolean
   supabaseDataLoading: boolean
   signOut: () => Promise<void>
+  syncQueueStatus: { pending: number; failed: number }
+  retrySyncQueue: () => Promise<void>
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -403,6 +406,25 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [appStats, setAppStats] = useState<AppStats>(stored.appStats ?? DEFAULT_APP_STATS)
   const [kcCache, setKcCache] = useState<Record<string, KcSubjectData>>({})
   const [kcFallbacks, setKcFallbacks] = useState<string[]>([])
+  const [syncQueueStatus, setSyncQueueStatus] = useState({ pending: 0, failed: 0 })
+
+  // Check sync queue status on mount
+  useEffect(() => {
+    setSyncQueueStatus(getSyncQueueStats())
+  }, [])
+
+  // Retry sync queue when auth user changes
+  useEffect(() => {
+    if (authUser) {
+      void (async () => {
+        const result = await retrySyncQueue(authUser.id)
+        setSyncQueueStatus(getSyncQueueStats())
+        if (result.success > 0 || result.failed > 0) {
+          console.log(`[Sync] Queue retry: ${result.success} success, ${result.failed} failed`)
+        }
+      })()
+    }
+  }, [authUser?.id])
   const [lernzettel, setLernzettel] = useState<Lernzettel[]>(stored.lernzettel ?? [])
   const [savedProbeklausuren, setSavedProbeklausuren] = useState<SavedProbeklausur[]>(stored.savedProbeklausuren ?? [])
   const [inProgressProbeklausuren, setInProgressProbeklausuren] = useState<InProgressProbeklausur[]>(stored.inProgressProbeklausuren ?? [])
@@ -802,6 +824,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const manualRetrySyncQueue = async () => {
+    if (!authUser) return
+    console.log('[Sync] Manual retry initiated')
+    const result = await retrySyncQueue(authUser.id)
+    setSyncQueueStatus(getSyncQueueStats())
+    console.log(`[Sync] Manual retry: ${result.success} success, ${result.failed} failed`)
+  }
+
   return (
     <UserContext.Provider
       value={{
@@ -860,6 +890,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         authLoading,
         supabaseDataLoading,
         signOut,
+        syncQueueStatus,
+        retrySyncQueue: manualRetrySyncQueue,
       }}
     >
       {children}
