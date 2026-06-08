@@ -529,7 +529,7 @@ export function DashboardScreen() {
       className="min-h-screen bg-background pb-20"
       style={{ paddingTop: 'max(40px, calc(env(safe-area-inset-top, 0px) + 20px))' }}
     >
-      <div className="max-w-[1120px] mx-auto px-6 md:px-8">
+      <div className="px-6 md:px-8">
 
         {/* ── Greeting ─────────────────────────────────────────────────── */}
         <div className="mb-8">

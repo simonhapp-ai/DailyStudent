@@ -1,0 +1,22 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - img "DailyStudent" [ref=e5]
+    - heading "DailyStudent" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Dein KI-Lernassistent
+  - generic [ref=e8]:
+    - heading "Willkommen zurück" [level=2] [ref=e9]
+    - button "Mit Google anmelden" [ref=e10] [cursor=pointer]:
+      - img [ref=e11]
+      - generic [ref=e16]: Mit Google anmelden
+    - generic [ref=e19]: oder
+    - generic [ref=e21]:
+      - textbox "E-Mail-Adresse" [ref=e22]
+      - generic [ref=e23]:
+        - textbox "Passwort" [ref=e24]
+        - button [ref=e25] [cursor=pointer]:
+          - img [ref=e26]
+      - button "Anmelden" [ref=e29] [cursor=pointer]
+    - paragraph [ref=e30]:
+      - text: Noch kein Konto?
+      - button "Registrieren" [ref=e31] [cursor=pointer]
+  - paragraph [ref=e32]: Mit der Anmeldung stimmst du unseren Nutzungsbedingungen und der Datenschutzerklärung zu.

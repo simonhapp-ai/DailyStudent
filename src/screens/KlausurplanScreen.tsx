@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SUBJECT_INFO, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 
 function toDateStr(d: Date): string {
@@ -184,7 +184,7 @@ export function KlausurplanScreen() {
                   type="text"
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
-                  placeholder="z.B. Weimarer Republik"
+                  placeholder={getTopicPlaceholder(subjectId)}
                   className="w-full bg-background border border-border rounded-[12px] px-3 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
                 />
               </div>

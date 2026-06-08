@@ -56,6 +56,7 @@ import { LernzettelGeneratorScreen } from '../screens/LernzettelGeneratorScreen'
 import { ProbeklausurRetroScreen } from '../screens/ProbeklausurRetroScreen'
 import { LernplanKonfiguratorScreen } from '../screens/LernplanKonfiguratorScreen'
 import { LernplanDetailScreen } from '../screens/LernplanDetailScreen'
+import { LernplanListScreen } from '../screens/LernplanListScreen'
 import { AuthScreen } from '../screens/AuthScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
 
@@ -129,6 +130,7 @@ function AppRoutes() {
       <Route path="/klausurmodus/blurting" element={<BlurtingScreen />} />
       <Route path="/klausurmodus/lernzettel" element={<LernzettelScreen />} />
       <Route path="/klausurmodus/lernzettel/neu" element={<LernzettelGeneratorScreen />} />
+      <Route path="/klausurmodus/lernplan" element={<LernplanListScreen />} />
       <Route path="/klausurmodus/lernplan/neu" element={<LernplanKonfiguratorScreen />} />
       <Route path="/klausurmodus/lernplan/:id" element={<LernplanDetailScreen />} />
       <Route path="/profil" element={<ProfilScreen />} />
@@ -142,14 +144,14 @@ function AppRoutes() {
 }
 
 function Layout() {
-  const { isOnboarded, recordStudyDay, authUser, authLoading, supabaseDataLoading } = useUser()
+  const { isOnboarded, recordStudyDay, authUser, authLoading } = useUser()
   const location = useLocation()
 
   useEffect(() => {
     if (isOnboarded) recordStudyDay()
   }, [isOnboarded]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (authLoading || (authUser && supabaseDataLoading)) {
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />

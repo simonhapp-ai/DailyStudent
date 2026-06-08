@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { generateLernplan } from '../lib/gemini'
 import { buildKcPromptContext } from '../data/kcLoader'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SUBJECT_INFO, getTopicPlaceholder, getTopicsPlaceholder } from '../data/subjectInfo'
 import { ProModal } from '../components/ui/ProModal'
 import type { LernplanType, LernplanBlockedTime, Lernplan, LernplanGeneratorInput } from '../types'
 
@@ -47,6 +47,7 @@ export function LernplanKonfiguratorScreen() {
   const [selectedTermineKeys, setSelectedTermineKeys] = useState<string[]>(() =>
     allTermine.map((k) => `${k.subjectId}|${k.date}`)
   )
+  const [examTopics, setExamTopics] = useState<Record<string, string>>({})
 
   // Step 3: Zeit & Blockierungen
   const [startDate, setStartDate] = useState(TODAY)
@@ -148,7 +149,7 @@ export function LernplanKonfiguratorScreen() {
           subjectId: k.subjectId,
           subjectName: SUBJECT_INFO[k.subjectId]?.name ?? k.subjectId,
           date: k.date,
-          topic: k.topic,
+          topic: examTopics[`${k.subjectId}|${k.date}`] || k.topic,
           isLK: lkFaecher.includes(k.subjectId),
         })),
         dailyStudyHours,
@@ -191,6 +192,7 @@ export function LernplanKonfiguratorScreen() {
               topics: text.split(',').map((t) => t.trim()).filter(Boolean),
             })),
           lkFaecher,
+          studyTimePreference,
         },
       }
 
@@ -243,6 +245,8 @@ export function LernplanKonfiguratorScreen() {
             allTermine={allTermine}
             selectedKeys={selectedTermineKeys}
             onToggle={toggleTermin}
+            examTopics={examTopics}
+            onTopicChange={(key, value) => setExamTopics((prev) => ({ ...prev, [key]: value }))}
           />
         )}
         {step === 3 && (
@@ -399,6 +403,15 @@ function StepPlanType({ planType, onSelect }: { planType: LernplanType; onSelect
           )
         })}
       </div>
+      {planType === 'einzel' && (
+        <div className="mt-4 flex items-start gap-3 p-3.5 rounded-[16px] border border-amber-500/20" style={{ background: 'rgba(245,158,11,0.07)' }}>
+          <span className="shrink-0 mt-0.5">💡</span>
+          <p className="text-[12px] text-text-secondary leading-relaxed">
+            <strong className="text-text-primary">Hinweis:</strong> Bist du mitten in einer Klausurenphase mit mehreren Klausuren, empfehlen wir den{' '}
+            <strong className="text-text-primary">Vollständigen Lernplan</strong> – er koordiniert alle Fächer gleichzeitig.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
@@ -410,11 +423,15 @@ function StepKlausurtermine({
   allTermine,
   selectedKeys,
   onToggle,
+  examTopics,
+  onTopicChange,
 }: {
   planType: LernplanType
   allTermine: { subjectId: string; date: string; topic?: string }[]
   selectedKeys: string[]
   onToggle: (key: string) => void
+  examTopics: Record<string, string>
+  onTopicChange: (key: string, value: string) => void
 }) {
   if (allTermine.length === 0) {
     return (
@@ -450,43 +467,60 @@ function StepKlausurtermine({
           const subj = SUBJECT_INFO[k.subjectId]
           const days = daysUntil(k.date)
           return (
-            <button
+            <div
               key={key}
-              onClick={() => onToggle(key)}
-              className={`w-full flex items-center gap-3 p-4 rounded-[20px] border text-left transition-all duration-150 active:scale-[0.98] ${
-                active ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'
+              className={`w-full rounded-[20px] border transition-all duration-150 ${
+                active ? 'border-accent bg-accent-soft' : 'border-border bg-surface'
               }`}
             >
               <div
-                className="w-11 h-11 rounded-[14px] flex items-center justify-center text-xl shrink-0"
-                style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
+                role="button"
+                tabIndex={0}
+                onClick={() => onToggle(key)}
+                onKeyDown={(e) => e.key === 'Enter' && onToggle(key)}
+                className="w-full flex items-center gap-3 p-4 cursor-pointer hover:bg-white/[0.02] active:scale-[0.98] transition-all select-none"
               >
-                {subj?.icon ?? '📚'}
+                <div
+                  className="w-11 h-11 rounded-[14px] flex items-center justify-center text-xl shrink-0"
+                  style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
+                >
+                  {subj?.icon ?? '📚'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-[15px] text-text-primary">
+                    {subj?.name ?? k.subjectId}
+                  </p>
+                  <p className="text-text-muted text-[12px] mt-0.5">
+                    {formatDate(k.date)}
+                  </p>
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-pill ${
+                    days <= 3 ? 'bg-danger/15 text-danger' : days <= 7 ? 'bg-orange-500/15 text-orange-400' : 'bg-border text-text-muted'
+                  }`}>
+                    {days === 0 ? 'Heute' : days === 1 ? 'Morgen' : `${days}d`}
+                  </span>
+                  {active && (
+                    <div className="w-5 h-5 rounded-full grad-accent flex items-center justify-center">
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                        <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className={`font-bold text-[15px] ${active ? 'text-text-primary' : 'text-text-primary'}`}>
-                  {subj?.name ?? k.subjectId}
-                </p>
-                <p className="text-text-muted text-[12px] mt-0.5">
-                  {formatDate(k.date)}
-                  {k.topic ? ` · ${k.topic}` : ''}
-                </p>
-              </div>
-              <div className="flex flex-col items-end gap-1 shrink-0">
-                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-pill ${
-                  days <= 3 ? 'bg-danger/15 text-danger' : days <= 7 ? 'bg-orange-500/15 text-orange-400' : 'bg-border text-text-muted'
-                }`}>
-                  {days === 0 ? 'Heute' : days === 1 ? 'Morgen' : `${days}d`}
-                </span>
-                {active && (
-                  <div className="w-5 h-5 rounded-full grad-accent flex items-center justify-center">
-                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-                      <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-            </button>
+              {active && (
+                <div className="px-4 pb-3">
+                  <input
+                    type="text"
+                    value={examTopics[key] ?? ''}
+                    onChange={(e) => onTopicChange(key, e.target.value)}
+                    placeholder={`Thema der Klausur (${getTopicPlaceholder(k.subjectId)})`}
+                    className="w-full bg-background border border-border rounded-[12px] px-3 py-2 text-text-primary text-[13px] placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+                  />
+                </div>
+              )}
+            </div>
           )
         })}
       </div>
@@ -836,7 +870,7 @@ function StepSchwerpunkte({
               <textarea
                 value={weaknesses[id] ?? ''}
                 onChange={(e) => onWeaknessChange(id, e.target.value)}
-                placeholder="z.B. Integralrechnung, Vektoren, Stochastik (kommagetrennt)"
+                placeholder={getTopicsPlaceholder(id)}
                 rows={2}
                 className="w-full bg-background border border-border rounded-card px-3 py-2.5 text-text-primary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors resize-none"
               />

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser, type EntryType, type PersonalEntry, type KlausurTermin } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SUBJECT_INFO, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 import type { StundenplanSlot, Stundenplan, AbiHalbjahr, UserNote } from '../types'
 import type { StandaloneHomeworkItem } from '../context/UserContext'
@@ -129,10 +129,27 @@ export function KalenderScreen() {
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const todayStr = toDateStr(today)
 
+  // Desktop detection (responsive layout)
+  const [isDesktop, setIsDesktop] = useState(() => window.innerWidth >= 1024)
+  useEffect(() => {
+    const handler = () => setIsDesktop(window.innerWidth >= 1024)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
+
   // Calendar
-  const [calOpen, setCalOpen]   = useState(false)
+  const [calOpen, setCalOpen]   = useState(() => window.innerWidth >= 1024)
   const [calView, setCalView]   = useState<'twoday' | 'month' | 'year'>('twoday')
   const [viewDate, setViewDate] = useState(new Date(today))
+  const [showStundenplan, setShowStundenplan] = useState<boolean>(() => {
+    const v = localStorage.getItem('lernapp_stundenplan_visible')
+    return v === null ? true : v === 'true'
+  })
+  const toggleStundenplan = () => {
+    const next = !showStundenplan
+    setShowStundenplan(next)
+    localStorage.setItem('lernapp_stundenplan_visible', String(next))
+  }
 
   // Add-entry modal (FAB)
   type FormType = EntryType | 'klausur'
@@ -214,10 +231,10 @@ export function KalenderScreen() {
 
   // ── Render ──────────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28">
+    <div className="flex flex-col min-h-screen bg-background pb-28 lg:h-screen lg:overflow-hidden lg:pb-0">
 
       {/* ── Header ──────────────────────────────────────────── */}
-      <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+      <div className="px-4 lg:px-6 shrink-0" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <div className="flex items-start justify-between">
           <div>
             <p className="text-[13px] text-text-muted">
@@ -234,15 +251,19 @@ export function KalenderScreen() {
         </div>
       </div>
 
-      <div className="px-4 space-y-4 mt-5">
+      {/* ── 2-column layout on desktop ──────────────────────── */}
+      <div className="px-4 mt-5 lg:flex lg:gap-5 lg:flex-1 lg:min-h-0 lg:px-6 lg:overflow-hidden lg:pb-6">
+
+        {/* ── RIGHT COLUMN (desktop) / TOP (mobile): Calendar ── */}
+        <div className="lg:flex-1 lg:order-2 lg:overflow-hidden lg:flex lg:flex-col">
 
         {/* ── Kalender Widget (inline accordion) ──────────────── */}
-        <div className="bg-surface border border-border/60 rounded-2xl shadow-card-adaptive overflow-hidden">
+        <div className="bg-surface border border-border/60 rounded-2xl shadow-card-adaptive overflow-hidden lg:flex-1 lg:flex lg:flex-col lg:overflow-hidden">
 
-          {/* Collapsed header — always visible */}
+          {/* Collapsed header — mobile only */}
           <button
             onClick={() => setCalOpen((o) => !o)}
-            className="w-full px-4 pt-4 pb-3 text-left transition-colors hover:bg-surface-hover"
+            className="w-full px-4 pt-4 pb-3 text-left transition-colors hover:bg-surface-hover lg:hidden"
           >
             <p className="text-[13px] font-semibold text-text-muted mb-3">
               {today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -291,15 +312,15 @@ export function KalenderScreen() {
             </div>
           </button>
 
-          {/* Expandable section — slides down in-place */}
+          {/* Expandable section */}
           <div
-            className="overflow-hidden"
+            className={`overflow-hidden${isDesktop ? ' flex-1 min-h-0' : ''}`}
             style={{
-              maxHeight: calOpen ? '540px' : '0',
-              transition: 'max-height 0.38s cubic-bezier(0.4,0,0.2,1)',
+              maxHeight: isDesktop ? 'none' : calOpen ? '540px' : '0',
+              transition: isDesktop ? 'none' : 'max-height 0.38s cubic-bezier(0.4,0,0.2,1)',
             }}
           >
-            <div className="border-t border-border/30 flex flex-col" style={{ height: 540 }}>
+            <div className="border-t border-border/30 flex flex-col" style={{ height: isDesktop ? '100%' : 540 }}>
 
               {/* View toggle + collapse button */}
               <div className="flex items-center justify-between px-4 pt-3 pb-2 shrink-0">
@@ -319,23 +340,40 @@ export function KalenderScreen() {
                     </button>
                   ))}
                 </div>
-                <button
-                  onClick={() => {
-                    const now = new Date()
-                    const h = now.getMinutes() >= 30 ? Math.min(now.getHours() + 1, 23) : now.getHours()
-                    openFab(todayStr, `${String(h).padStart(2, '0')}:00`)
-                  }}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-[11px] text-[12px] font-bold press-sm"
-                  style={{
-                    background: 'linear-gradient(135deg, #7C3AED, #9F5FFA, #7C3AED)',
-                    backgroundSize: '200% 200%',
-                    color: 'white',
-                    boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
-                    border: '1px solid rgba(159,95,250,0.5)',
-                  }}
-                >
-                  + Eintrag
-                </button>
+                <div className="flex items-center gap-2">
+                  {calView === 'twoday' && (
+                    <button
+                      onClick={toggleStundenplan}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-[9px] text-[11px] font-bold transition-all press-sm"
+                      style={showStundenplan ? {
+                        background: 'rgba(var(--color-accent), 0.12)',
+                        color: 'rgb(var(--color-accent))',
+                      } : {
+                        background: 'rgba(var(--color-border), 0.5)',
+                        color: 'rgb(var(--color-text-muted))',
+                      }}
+                    >
+                      📅 Stundenplan
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      const now = new Date()
+                      const h = now.getMinutes() >= 30 ? Math.min(now.getHours() + 1, 23) : now.getHours()
+                      openFab(todayStr, `${String(h).padStart(2, '0')}:00`)
+                    }}
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-[11px] text-[12px] font-bold press-sm"
+                    style={{
+                      background: 'linear-gradient(135deg, #7C3AED, #9F5FFA, #7C3AED)',
+                      backgroundSize: '200% 200%',
+                      color: 'white',
+                      boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
+                      border: '1px solid rgba(159,95,250,0.5)',
+                    }}
+                  >
+                    + Eintrag
+                  </button>
+                </div>
               </div>
 
               {/* Date strip (2T only) */}
@@ -358,6 +396,7 @@ export function KalenderScreen() {
                     personalEntries={personalEntries}
                     klausurtermine={profile?.klausurtermine ?? []}
                     calOpen={calOpen}
+                    showStundenplan={showStundenplan}
                     onSlotPress={(dateStr, time) => openFab(dateStr, time)}
                     onEntryPress={openDetail}
                   />
@@ -404,52 +443,36 @@ export function KalenderScreen() {
             </div>
           </div>
         </div>
+        </div>{/* end right column */}
 
-        {/* ── Stundenplan heute + Hausaufgaben (2-col) ─────────── */}
+        {/* ── LEFT COLUMN (desktop) / BELOW calendar (mobile) ── */}
+        <div className="space-y-3 mt-4 lg:mt-0 lg:w-[40%] lg:min-w-[360px] lg:shrink-0 lg:order-1 lg:overflow-y-auto lg:pb-4">
+
+        {/* ── Row 1: Hausaufgaben + Klausuren ──────────────────── */}
         <div className="grid grid-cols-2 gap-3">
-          {hasStundenplan ? (
-            <StundenplanTodayWidget
-              stundenplan={profile!.stundenplan!}
-              onOpen={() => setSpViewOpen(true)}
-            />
-          ) : (
-            <StundenplanSetupCard onSetup={() => setSpEditOpen(true)} />
-          )}
           <HausaufgabenWidget
             userNotes={userNotes}
             completedHomeworkIds={completedHomeworkIds}
             standaloneHomework={standaloneHomework}
           />
+          <KlausurterminWidget klausurtermine={profile?.klausurtermine ?? []} />
         </div>
 
-        {/* ── 2-column widgets: Klausuren + Abi-Schnitt ────────── */}
+        {/* ── Row 2: Lernplan + Notenrechner ───────────────────── */}
         <div className="grid grid-cols-2 gap-3">
-          <KlausurterminWidget klausurtermine={profile?.klausurtermine ?? []} />
+          <LernplanWidget />
           <AbiRechnerWidget abiHalbjahre={profile?.abiHalbjahre} zielnote={profile?.zielnote} />
         </div>
 
-        {/* ── Lernplan ─────────────────────────────────────────── */}
-        <button
-          onClick={() => navigate('/klausurmodus/lernplan/neu')}
-          className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive p-4 flex items-center gap-4 w-full text-left press-sm hover:bg-surface-hover transition-colors"
-        >
-          <div
-            className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0"
-            style={{ background: 'linear-gradient(145deg,#FFD060,#C07700)', boxShadow: '0 4px 14px rgba(192,119,0,0.4)' }}
-          >
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
-              <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" strokeWidth="2.5" />
-            </svg>
-          </div>
-          <div className="flex-1">
-            <p className="text-text-primary font-bold text-[15px]">Lernplan erstellen</p>
-            <p className="text-text-muted text-[12px] mt-0.5">KI-Lernplan für deine Klausuren</p>
-          </div>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
-            <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
+        {/* ── Stundenplan (full week, full-width) ──────────────── */}
+        {hasStundenplan ? (
+          <StundenplanWeekWidget
+            stundenplan={profile!.stundenplan!}
+            onOpen={() => setSpViewOpen(true)}
+          />
+        ) : (
+          <StundenplanSetupCard onSetup={() => setSpEditOpen(true)} fullWidth />
+        )}
 
         {/* ── KI-Lernvorschlag ─────────────────────────────────── */}
         <section>
@@ -475,25 +498,9 @@ export function KalenderScreen() {
           </div>
         </section>
 
-      </div>
+        </div>{/* end left column */}
 
-      {/* ══════════════════════════════════════════════════════════
-          FAB — always visible when modal is closed
-         ══════════════════════════════════════════════════════════ */}
-      {!fabOpen && (
-        <button
-          onClick={() => openFab()}
-          className="fixed bottom-[100px] right-5 w-14 h-14 rounded-full flex items-center justify-center z-[40] press-sm"
-          style={{
-            background: 'linear-gradient(145deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.75))',
-            boxShadow: '0 8px 24px rgba(var(--color-accent),0.45), 0 2px 8px rgba(0,0,0,0.2)',
-          }}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-            <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-          </svg>
-        </button>
-      )}
+      </div>{/* end 2-column container */}
 
       {/* ══════════════════════════════════════════════════════════
           FAB Modal — pops from button, top-anchored for keyboard stability
@@ -981,12 +988,12 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
 interface TwoDayProps {
   viewDate: Date; todayStr: string; stundenplan: Stundenplan | undefined
   personalEntries: PersonalEntry[]; klausurtermine: { subjectId: string; date: string }[]
-  calOpen: boolean
+  calOpen: boolean; showStundenplan: boolean
   onSlotPress: (dateStr: string, time: string) => void
   onEntryPress: (entry: PersonalEntry) => void
 }
 
-function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurtermine, calOpen, onSlotPress, onEntryPress }: TwoDayProps) {
+function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurtermine, calOpen, showStundenplan, onSlotPress, onEntryPress }: TwoDayProps) {
   const days = [viewDate, addDays(viewDate, 1)]
   const gridHeight = TOTAL_H * PX_PER_HOUR
   const hours = Array.from({ length: TOTAL_H }, (_, i) => START_H + i)
@@ -1072,7 +1079,7 @@ function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurt
                 })}
 
                 {/* Stundenplan blocks */}
-                {spSlots.map((slot) => {
+                {showStundenplan && spSlots.map((slot) => {
                   const subj = SUBJECT_INFO[slot.subjectId]
                   const topPx = toPx(slot.startTime)
                   const startMin = slot.startTime.split(':').map(Number).reduce((h, m) => h * 60 + m)
@@ -1090,13 +1097,14 @@ function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurt
                 {/* Personal entries */}
                 {dayEntries.map((entry) => {
                   const cfg = TYPE_CONFIG[entry.type]
+                  const entryColor = (entry.type === 'lerneinheit' && entry.color) ? entry.color : cfg.color
                   const startMin = timeToMin(entry.time)
                   const endMin = entry.endTime ? timeToMin(entry.endTime) : startMin + 60
                   const heightPx = Math.max(durToPx(Math.max(endMin - startMin, 15)), 24)
                   return (
-                    <div key={entry.id} className="absolute left-0.5 right-0.5 rounded-[7px] flex flex-col justify-center px-2 overflow-hidden cursor-pointer press-sm" style={{ top: toPx(entry.time), height: heightPx, background: `linear-gradient(135deg, ${cfg.color}40, ${cfg.color}25)`, borderLeft: `2.5px solid ${cfg.color}` }} onClick={(e) => { e.stopPropagation(); onEntryPress(entry) }}>
-                      <span className="text-[9px] font-bold truncate leading-tight" style={{ color: cfg.color }}>{cfg.icon} {entry.title}</span>
-                      {heightPx > 36 && entry.endTime && <span className="text-[7px] truncate" style={{ color: cfg.color, opacity: 0.7 }}>{entry.time}–{entry.endTime}</span>}
+                    <div key={entry.id} className="absolute left-0.5 right-0.5 rounded-[7px] flex flex-col justify-center px-2 overflow-hidden cursor-pointer press-sm" style={{ top: toPx(entry.time), height: heightPx, background: `linear-gradient(135deg, ${entryColor}40, ${entryColor}25)`, borderLeft: `2.5px solid ${entryColor}` }} onClick={(e) => { e.stopPropagation(); onEntryPress(entry) }}>
+                      <span className="text-[9px] font-bold truncate leading-tight" style={{ color: entryColor }}>{cfg.icon} {entry.title}</span>
+                      {heightPx > 36 && entry.endTime && <span className="text-[7px] truncate" style={{ color: entryColor, opacity: 0.7 }}>{entry.time}–{entry.endTime}</span>}
                     </div>
                   )
                 })}
@@ -1336,12 +1344,12 @@ function StundenplanTodayWidget({ stundenplan, onOpen }: { stundenplan: Stundenp
 
 // ─── Stundenplan Setup Card (half-width, no SP set yet) ───────────────────────
 
-function StundenplanSetupCard({ onSetup }: { onSetup: () => void }) {
+function StundenplanSetupCard({ onSetup, fullWidth }: { onSetup: () => void; fullWidth?: boolean }) {
   return (
     <button
       onClick={onSetup}
-      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm text-left"
-      style={{ minHeight: 152 }}
+      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm text-left w-full"
+      style={{ minHeight: fullWidth ? undefined : 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
         <AppIconPill gradient="linear-gradient(145deg,#5AC8FA,#0080B8)" shadow="0 4px 14px rgba(0,128,184,0.5)">
@@ -1715,6 +1723,89 @@ function AbiRechnerWidget({ abiHalbjahre, zielnote }: { abiHalbjahre?: AbiHalbja
   )
 }
 
+// ─── Lernplan Widget (half-width) ────────────────────────────────────────────
+
+function LernplanWidget() {
+  const navigate = useNavigate()
+  return (
+    <button
+      onClick={() => navigate('/klausurmodus/lernplan')}
+      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm text-left"
+      style={{ minHeight: 152 }}
+    >
+      <div className="flex items-start justify-between px-3.5 pt-3.5">
+        <AppIconPill gradient="linear-gradient(145deg,#FFD060,#C07700)" shadow="0 4px 14px rgba(192,119,0,0.4)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+            <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" strokeWidth="2.5" />
+          </svg>
+        </AppIconPill>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted mt-1 shrink-0">
+          <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+      <div className="flex-1 px-3.5 pb-3.5 pt-2.5 flex flex-col justify-end">
+        <p className="text-[14px] font-bold text-text-primary leading-tight">Lernplan</p>
+        <p className="text-[11px] text-text-muted mt-0.5">KI-Lernplan</p>
+      </div>
+    </button>
+  )
+}
+
+// ─── Stundenplan Week Widget (full-width) ────────────────────────────────────
+
+const WEEK_DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr']
+
+function StundenplanWeekWidget({ stundenplan, onOpen }: { stundenplan: Stundenplan; onOpen: () => void }) {
+  const daySlots = WEEK_DAYS.map((_, i) =>
+    stundenplan.slots
+      .filter((s) => s.day === i)
+      .sort((a, b) => a.startTime.localeCompare(b.startTime))
+  )
+
+  return (
+    <button
+      onClick={onOpen}
+      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm text-left w-full"
+    >
+      <div className="flex items-center gap-2.5 px-3.5 pt-3.5 pb-2.5">
+        <AppIconPill gradient="linear-gradient(145deg,#5AC8FA,#0080B8)" shadow="0 4px 14px rgba(0,128,184,0.5)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+          </svg>
+        </AppIconPill>
+        <span className="text-[13px] font-bold text-text-primary leading-tight flex-1">Stundenplan</span>
+        <span className="text-[11px] font-semibold" style={{ color: '#5AC8FA' }}>Bearbeiten →</span>
+      </div>
+      <div className="grid grid-cols-5 gap-1.5 px-3 pb-3.5">
+        {WEEK_DAYS.map((label, i) => (
+          <div key={label} className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-text-muted text-center mb-0.5">{label}</span>
+            {daySlots[i].length === 0 ? (
+              <span className="text-[10px] text-text-muted text-center">–</span>
+            ) : (
+              daySlots[i].map((slot) => {
+                const subj = SUBJECT_INFO[slot.subjectId]
+                const color = subj?.color ?? '#5AC8FA'
+                return (
+                  <div
+                    key={slot.id}
+                    className="flex items-center gap-1 px-1.5 py-1 rounded-[7px] text-[9px] font-bold leading-none"
+                    style={{ background: `${color}20`, border: `1px solid ${color}35` }}
+                  >
+                    <span className="shrink-0" style={{ fontSize: 9 }}>{subj?.icon ?? '📚'}</span>
+                    <span className="truncate" style={{ color }}>{(subj?.name ?? slot.subjectId).split(' ')[0]}</span>
+                  </div>
+                )
+              })
+            )}
+          </div>
+        ))}
+      </div>
+    </button>
+  )
+}
+
 // ─── Klausur Form Fields (shared by FAB + standalone modal) ──────────────────
 
 function KlausurFormFields({
@@ -1796,7 +1887,7 @@ function KlausurFormFields({
           type="text"
           value={topic}
           onChange={(e) => onTopic(e.target.value)}
-          placeholder="z.B. Weimarer Republik"
+          placeholder={getTopicPlaceholder(subjectId)}
           className="w-full bg-background border border-border rounded-[12px] px-3 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
         />
       </div>

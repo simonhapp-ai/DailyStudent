@@ -77,12 +77,7 @@ export function DesktopSidebar() {
     >
       {/* Logo */}
       <div className="flex justify-center pt-7 pb-5 px-2">
-        <div
-          className="w-9 h-9 rounded-[12px] flex items-center justify-center text-white text-[13px] font-black shrink-0 select-none"
-          style={{ background: 'linear-gradient(145deg, #A78BFA 0%, #7C3AED 55%, #6D28D9 100%)', boxShadow: '0 3px 12px rgba(109,40,217,0.4)' }}
-        >
-          DS
-        </div>
+        <img src="/logo.png" alt="DailyStudent" className="w-9 h-9 rounded-[12px] object-cover shrink-0" />
       </div>
 
       {/* Nav */}
@@ -182,12 +177,7 @@ export function DesktopSidebarWide() {
     >
       {/* Logo + wordmark */}
       <div className="flex items-center gap-3 px-5 pt-7 pb-5">
-        <div
-          className="w-9 h-9 rounded-[12px] flex items-center justify-center text-white text-[13px] font-black shrink-0 select-none"
-          style={{ background: 'linear-gradient(145deg, #A78BFA 0%, #7C3AED 55%, #6D28D9 100%)', boxShadow: '0 3px 12px rgba(109,40,217,0.4)' }}
-        >
-          DS
-        </div>
+        <img src="/logo.png" alt="DailyStudent" className="w-9 h-9 rounded-[12px] object-cover shrink-0" />
         <div>
           <p className="text-[14px] font-bold text-text-primary leading-tight">DailyStudent</p>
           <p className="text-[10px] text-text-muted leading-tight">Lernökosystem</p>

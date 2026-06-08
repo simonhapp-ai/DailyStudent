@@ -140,7 +140,7 @@ export function KlausurphasenScreen() {
         </p>
       </div>
 
-      <div className="px-4 mt-5 space-y-3">
+      <div className="px-4 mt-5 space-y-3 lg:px-6">
 
         {/* ── 1. Lernplan ─────────────────────────────────────────────── */}
         {activePlan && upcomingDays.length > 0 ? (
@@ -182,7 +182,7 @@ export function KlausurphasenScreen() {
           </button>
         ) : (
           <button
-            onClick={() => navigate('/klausurmodus/lernplan/neu')}
+            onClick={() => navigate('/klausurmodus/lernplan')}
             className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 press"
           >
             <div className="flex items-center gap-4">
@@ -215,12 +215,12 @@ export function KlausurphasenScreen() {
         {/* ── 2. Auswendig lernen ──────────────────────────────────────── */}
         <div>
           <p className="section-label px-1 mb-2.5">Auswendig lernen</p>
-          <div className="flex gap-3">
+          <div className="flex gap-3 lg:gap-4">
 
             {/* Karteikarten */}
             <button
               onClick={() => navigate(totalCards > 0 ? '/klausurmodus/lernen' : '/klausurmodus/karteikarten/neu')}
-              className="flex-1 aspect-square bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-4 flex flex-col justify-between text-left press"
+              className="flex-1 aspect-square lg:aspect-auto lg:h-44 bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-4 flex flex-col justify-between text-left press"
             >
               <div className="flex items-start justify-between w-full">
                 <GradientIcon gradient={G.karteikarten} glow="glow-purple">
@@ -247,7 +247,7 @@ export function KlausurphasenScreen() {
             {/* Blurting */}
             <button
               onClick={() => navigate('/klausurmodus/blurting')}
-              className="flex-1 aspect-square bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-4 flex flex-col justify-between text-left press"
+              className="flex-1 aspect-square lg:aspect-auto lg:h-44 bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-4 flex flex-col justify-between text-left press"
             >
               <div className="flex items-start justify-between w-full">
                 <GradientIcon gradient={G.blurting} glow="glow-pink">
@@ -275,23 +275,27 @@ export function KlausurphasenScreen() {
         {/* ── 3. Tiefer lernen ─────────────────────────────────────────── */}
         <div>
           <p className="section-label px-1 mb-2.5">Tiefer lernen</p>
-          <div className="space-y-3">
+          <div className="space-y-3 lg:flex lg:gap-3 lg:space-y-0">
 
             {/* Probeklausur */}
             <button
               onClick={() => navigate('/klausurmodus/probeklausur')}
-              className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 flex items-center gap-4 text-left press"
+              className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 flex items-center gap-4 text-left press
+                lg:flex-1 lg:h-44 lg:flex-col lg:justify-between lg:p-4 lg:gap-0"
             >
-              <GradientIcon gradient={G.probeklausur} glow="glow-cyan">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white"
-                  strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M12 6v6l4 2" />
-                </svg>
-              </GradientIcon>
-              <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between w-auto lg:w-full">
+                <GradientIcon gradient={G.probeklausur} glow="glow-cyan">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white"
+                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 6v6l4 2" />
+                  </svg>
+                </GradientIcon>
+                <span className="hidden lg:block"><Chevron /></span>
+              </div>
+              <div className="flex-1 min-w-0 lg:flex-none">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-text-primary font-bold text-[16px]">Probeklausur</p>
+                  <p className="text-text-primary font-bold text-[16px] lg:text-[15px]">Probeklausur</p>
                   <span
                     className="px-2 py-0.5 rounded-pill text-[11px] font-semibold shrink-0"
                     style={{ background: 'rgba(248,113,113,0.15)', color: '#F87171' }}
@@ -299,31 +303,35 @@ export function KlausurphasenScreen() {
                     KI-Korrektur
                   </span>
                 </div>
-                <p className="text-text-muted text-[13px] mt-0.5">AFB I–III · 45 Minuten</p>
+                <p className="text-text-muted text-[13px] mt-0.5">AFB I–III · 45 Min</p>
               </div>
-              <Chevron />
+              <span className="lg:hidden"><Chevron /></span>
             </button>
 
             {/* Lernzettel */}
             <button
               onClick={() => navigate('/klausurmodus/lernzettel')}
-              className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 flex items-center gap-4 text-left press"
+              className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 flex items-center gap-4 text-left press
+                lg:flex-1 lg:h-44 lg:flex-col lg:justify-between lg:p-4 lg:gap-0"
             >
-              <GradientIcon gradient={G.lernzettel} glow="glow-teal">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white"
-                  strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                  <path d="M14 2v6h6" />
-                  <path d="M9 13h6M9 17h4" />
-                </svg>
-              </GradientIcon>
-              <div className="flex-1 min-w-0">
-                <p className="text-text-primary font-bold text-[16px]">Lernzettel</p>
+              <div className="flex items-start justify-between w-auto lg:w-full">
+                <GradientIcon gradient={G.lernzettel} glow="glow-teal">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white"
+                    strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                    <path d="M14 2v6h6" />
+                    <path d="M9 13h6M9 17h4" />
+                  </svg>
+                </GradientIcon>
+                <span className="hidden lg:block"><Chevron /></span>
+              </div>
+              <div className="flex-1 min-w-0 lg:flex-none">
+                <p className="text-text-primary font-bold text-[16px] lg:text-[15px]">Lernzettel</p>
                 <p className="text-text-muted text-[13px] mt-0.5 leading-snug">
-                  KI-generierte Zusammenfassung deiner Smart Notes
+                  KI-Zusammenfassung deiner Smart Notes
                 </p>
               </div>
-              <Chevron />
+              <span className="lg:hidden"><Chevron /></span>
             </button>
 
           </div>

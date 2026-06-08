@@ -298,6 +298,7 @@ export interface Lernplan {
     blockedTimes: LernplanBlockedTime[]
     weaknesses: Array<{ subjectId: string; topics: string[] }>
     lkFaecher: string[]
+    studyTimePreference: 'morgen' | 'abend' | 'beides'
   }
 }
 

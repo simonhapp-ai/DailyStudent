@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
 import { generateLernzettel } from '../lib/groq'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SUBJECT_INFO, getTopicPlaceholder } from '../data/subjectInfo'
 import type { Lernzettel } from '../types'
 
 const G_LERNZETTEL = 'linear-gradient(145deg, #5AC8FA, #007BB8)'
@@ -234,7 +234,7 @@ export function LernzettelGeneratorScreen() {
                           setCustomTopicInput('')
                         }
                       }}
-                      placeholder="z.B. Weimarer Republik …"
+                      placeholder={getTopicPlaceholder(selectedSubjectId)}
                       className="flex-1 bg-surface border border-border rounded-[14px] px-3.5 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-[#5AC8FA] transition-colors"
                     />
                     <button

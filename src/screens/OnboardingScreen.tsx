@@ -5,7 +5,7 @@ import { useUser } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
 import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS } from '../lib/gemini'
 import type { UserNote, StundenplanSlot } from '../types'
-import { SUBJECT_INFO, SUBJECT_GROUPS } from '../data/subjectInfo'
+import { SUBJECT_INFO, SUBJECT_GROUPS, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 import { parseStundenplanFromImage } from '../lib/groq'
 
@@ -1689,7 +1689,7 @@ function StepKlausur({
             type="text"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            placeholder="z.B. Weimarer Republik (optional)"
+            placeholder={`${getTopicPlaceholder(subject)} (optional)`}
             className="w-full bg-surface border border-border rounded-card px-4 py-3.5 text-text-primary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
           />
         </>

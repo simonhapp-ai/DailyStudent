@@ -26,6 +26,46 @@ export const SUBJECT_INFO: Record<string, { name: string; icon: string; color: s
   wirtschaft:     { name: 'Wirtschaft',        icon: '📊', color: '#FB923C' },
 }
 
+export const SUBJECT_TOPIC_EXAMPLES: Record<string, [string, string]> = {
+  deutsch:        ['Effi Briest', 'Faust – Gretchentragödie'],
+  mathematik:     ['Integralrechnung', 'Stochastik – Hypothesentest'],
+  englisch:       ['The Great Gatsby', 'Climate Change Essay'],
+  franzoesisch:   ['Le Petit Prince', 'Subjonctif présent'],
+  latein:         ['Caesar – De Bello Gallico', 'Cicero – Pro Archia'],
+  spanisch:       ['Don Quijote', 'Konjunktiv Imperfecto'],
+  russisch:       ['Gogol – Der Mantel', 'Perfektive Verben'],
+  italienisch:    ['Dante – Divina Commedia', 'Passato prossimo'],
+  griechisch:     ['Homer – Odyssee', 'Optativ Aorist'],
+  japanisch:      ['Hiragana & Katakana', 'Te-Form der Verben'],
+  biologie:       ['Photosynthese', 'Genetik – Mendel'],
+  chemie:         ['Redoxreaktionen', 'Organische Chemie – Alkane'],
+  physik:         ['Elektrodynamik', 'Quantenmechanik – Photoeffekt'],
+  geschichte:     ['Weimarer Republik', 'Kalter Krieg'],
+  politik:        ['Gewaltenteilung', 'EU-Institutionen'],
+  geographie:     ['Plattentektonik', 'Klimazonen Afrikas'],
+  philosophie:    ['Kants Kategorischer Imperativ', 'Platons Höhlengleichnis'],
+  ethik:          ['Utilitarismus', 'Tierethik'],
+  werteUndNormen: ['Menschenwürde', 'Soziale Gerechtigkeit'],
+  kunst:          ['Impressionismus', 'Bildanalyse – Picasso'],
+  musik:          ['Harmonielehre', 'Beethoven – Sonate op. 13'],
+  sport:          ['Biomechanik', 'Trainingslehre'],
+  religion:       ['Theodizee', 'Bergpredigt'],
+  informatik:     ['Sortieralgorithmen', 'OOP – Vererbung'],
+  wirtschaft:     ['Marktgleichgewicht', 'Wirtschaftskreislauf'],
+}
+
+export function getTopicPlaceholder(subjectId?: string | null): string {
+  const ex = subjectId ? SUBJECT_TOPIC_EXAMPLES[subjectId] : undefined
+  if (!ex) return 'z.B. Thema eingeben…'
+  return `z.B. ${ex[0]}`
+}
+
+export function getTopicsPlaceholder(subjectId?: string | null): string {
+  const ex = subjectId ? SUBJECT_TOPIC_EXAMPLES[subjectId] : undefined
+  if (!ex) return 'z.B. Themen kommagetrennt eingeben…'
+  return `z.B. ${ex[0]}, ${ex[1]} (kommagetrennt)`
+}
+
 export const SUBJECT_GROUPS = [
   { label: 'Kernfächer',            ids: ['deutsch', 'mathematik', 'englisch'] },
   { label: 'Sprachen',              ids: ['franzoesisch', 'latein', 'spanisch', 'russisch', 'italienisch', 'griechisch', 'japanisch'] },

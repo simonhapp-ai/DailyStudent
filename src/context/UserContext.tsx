@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import { type ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
 import type { FlashCard, GeneratedSmartNote, Lernzettel, Lernplan, SavedProbeklausur, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AppStats, ExamScoreRecord } from '../types'
@@ -15,7 +15,7 @@ import {
   syncLernzettel,
   syncProbeklausur, deleteProbeklausurFromDB,
   syncLernplaeneBatch, deleteLernplanFromDB,
-  syncEntry, deleteEntryFromDB,
+  syncEntry, syncEntriesBatch, deleteEntryFromDB,
   syncHomeworkBatch, syncCompletedHomework,
 } from '../lib/supabaseSync'
 
@@ -36,6 +36,8 @@ export interface PersonalEntry {
   date: string
   time: string
   endTime?: string
+  color?: string
+  lernplanId?: string
 }
 
 export interface KlausurTermin {
@@ -113,11 +115,13 @@ interface UserContextValue {
   completeOnboarding: (profile: UserProfile, prebuiltFolders?: UserFolder[]) => void
   updateProfile: (data: Partial<UserProfile>) => void
   addEntry: (entry: PersonalEntry) => void
+  addEntries: (entries: PersonalEntry[]) => void
   removeEntry: (id: string) => void
   saveGeneratedNote: (lessonId: string, note: GeneratedSmartNote) => void
   addUserNote: (note: UserNote) => void
   saveNote: (note: UserNote, generated?: GeneratedSmartNote) => void
   updateUserNote: (note: UserNote) => void
+  deleteUserNote: (noteId: string) => void
   addFolder: (folder: UserFolder) => void
   deleteFolder: (folderId: string) => void
   saveToOhneFachFolder: (note: UserNote, generated?: GeneratedSmartNote) => void
@@ -273,6 +277,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [authUser, setAuthUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
   const [supabaseDataLoading, setSupabaseDataLoading] = useState(false)
+  // Guard: only load Supabase data once per user session, not on every token refresh
+  const loadedForUserId = useRef<string | null>(null)
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -282,6 +288,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
         const userId = session.user.id
+        // Skip if we already loaded data for this user (e.g. background token refresh)
+        if (loadedForUserId.current === userId) return
+        loadedForUserId.current = userId
 
         // Only use localStorage cache if it belongs to this user
         const s = loadStorage()
@@ -483,6 +492,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) void syncEntry(authUser.id, entry)
   }
 
+  const addEntries = (newEntries: PersonalEntry[]) => {
+    const updated = [...personalEntries, ...newEntries]
+    setPersonalEntries(updated)
+    saveStorage({ ...loadStorage(), personalEntries: updated })
+    if (authUser) void syncEntriesBatch(authUser.id, newEntries)
+  }
+
   const removeEntry = (id: string) => {
     const updated = personalEntries.filter((e) => e.id !== id)
     setPersonalEntries(updated)
@@ -525,6 +541,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
     if (authUser) void syncNote(authUser.id, note)
+  }
+
+  const deleteUserNote = (noteId: string) => {
+    const updatedNotes = userNotes.filter((n) => n.id !== noteId)
+    const updatedGenerated = { ...generatedNotes }
+    delete updatedGenerated[noteId]
+    setUserNotes(updatedNotes)
+    setGeneratedNotes(updatedGenerated)
+    persist(profile, personalEntries, updatedGenerated, updatedNotes, userFolders)
+    if (authUser) void deleteNotesFromDB(authUser.id, [noteId])
   }
 
   const addFolder = (folder: UserFolder) => {
@@ -622,11 +648,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const saveLernplan = (plan: Lernplan) => {
-    const deactivated = lernplaene.map((p) => ({ ...p, isActive: false }))
-    const existing = deactivated.findIndex((p) => p.id === plan.id)
+    const existing = lernplaene.findIndex((p) => p.id === plan.id)
     const updated = existing >= 0
-      ? deactivated.map((p) => p.id === plan.id ? { ...plan, isActive: true } : p)
-      : [...deactivated, { ...plan, isActive: true }]
+      ? lernplaene.map((p) => p.id === plan.id ? plan : p)
+      : [...lernplaene, plan]
     setLernplaene(updated)
     saveStorage({ ...loadStorage(), lernplaene: updated })
     if (authUser) void syncLernplaeneBatch(authUser.id, updated)
@@ -634,6 +659,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut()
+    loadedForUserId.current = null
     localStorage.removeItem(STORAGE_KEY)
     setProfile(null)
     setIsProState(false)
@@ -652,10 +678,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const deleteLernplan = (id: string) => {
-    const updated = lernplaene.filter((p) => p.id !== id)
-    setLernplaene(updated)
-    saveStorage({ ...loadStorage(), lernplaene: updated })
-    if (authUser) void deleteLernplanFromDB(authUser.id, id)
+    const updatedPlans = lernplaene.filter((p) => p.id !== id)
+    const removedEntryIds = personalEntries.filter((e) => e.lernplanId === id).map((e) => e.id)
+    const updatedEntries = personalEntries.filter((e) => e.lernplanId !== id)
+    setLernplaene(updatedPlans)
+    setPersonalEntries(updatedEntries)
+    saveStorage({ ...loadStorage(), lernplaene: updatedPlans, personalEntries: updatedEntries })
+    if (authUser) {
+      void deleteLernplanFromDB(authUser.id, id)
+      removedEntryIds.forEach((eid) => void deleteEntryFromDB(authUser.id, eid))
+    }
   }
 
   const completeHomework = (id: string) => {
@@ -771,11 +803,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
         completeOnboarding,
         updateProfile,
         addEntry,
+        addEntries,
         removeEntry,
         saveGeneratedNote,
         addUserNote,
         saveNote,
         updateUserNote,
+        deleteUserNote,
         addFolder,
         deleteFolder,
         applyFaecherChanges,

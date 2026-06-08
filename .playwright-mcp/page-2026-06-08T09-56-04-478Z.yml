@@ -1,0 +1,18 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - generic [ref=e7]: 🎓
+    - heading "Smarter lernen. Besser abschneiden." [level=1] [ref=e8]:
+      - text: Smarter lernen.
+      - text: Besser abschneiden.
+    - paragraph [ref=e9]: Die KI, die deinen echten Unterricht kennt — personalisiert auf deinen Lehrplan.
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: 📸
+        - paragraph [ref=e13]: Tafelbilder scannen → fertige Lernnotiz in Sekunden
+      - generic [ref=e14]:
+        - generic [ref=e15]: 📝
+        - paragraph [ref=e16]: Probeklausuren genau wie im Unterricht (AFB I–III)
+      - generic [ref=e17]:
+        - generic [ref=e18]: 🎯
+        - paragraph [ref=e19]: KI-Feedback wie vom Lehrer — mit Erwartungshorizont
+  - button "Los geht's" [ref=e21] [cursor=pointer]

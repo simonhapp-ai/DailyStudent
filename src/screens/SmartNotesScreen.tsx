@@ -41,7 +41,7 @@ type AnalysisStatus = 'idle' | 'analyzing' | 'done' | 'error'
 export function SmartNotesScreen() {
   const { id, lessonId } = useParams<{ id: string; lessonId: string }>()
   const navigate = useNavigate()
-  const { generatedNotes, userNotes, completedHomeworkIds, saveGeneratedNote, updateUserNote, saveFlashCards, getKc } = useUser()
+  const { generatedNotes, userNotes, completedHomeworkIds, saveGeneratedNote, updateUserNote, deleteUserNote, saveFlashCards, getKc } = useUser()
 
   const subject = SUBJECT_INFO[id ?? '']
   const userNote = userNotes.find((n) => n.id === lessonId)
@@ -56,6 +56,9 @@ export function SmartNotesScreen() {
     solution: generatedNote?.solution,
     tasks: generatedNote?.tasks,
   }
+
+  // ── Delete confirmation state ─────────────────────────────────────────────
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   // ── Edit mode state ──────────────────────────────────────────────────────
   const [isEditing, setIsEditing] = useState(false)
@@ -357,16 +360,30 @@ export function SmartNotesScreen() {
         showBack
         right={
           userNote ? (
-            <button
-              onClick={startEdit}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-btn bg-surface border border-border text-text-secondary text-xs font-medium hover:bg-surface-hover transition-colors"
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Bearbeiten
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="w-8 h-8 flex items-center justify-center rounded-btn bg-surface border border-border text-text-muted hover:text-danger hover:bg-danger/5 hover:border-danger/30 transition-colors"
+                title="Notiz löschen"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                  <path d="M10 11v6M14 11v6" />
+                  <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                </svg>
+              </button>
+              <button
+                onClick={startEdit}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-btn bg-surface border border-border text-text-secondary text-xs font-medium hover:bg-surface-hover transition-colors"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Bearbeiten
+              </button>
+            </div>
           ) : undefined
         }
       />
@@ -714,6 +731,54 @@ export function SmartNotesScreen() {
             </svg>
           </button>
         </div>
+      )}
+
+      {/* ── Delete Confirmation Modal ─────────────────────────────────────── */}
+      {showDeleteConfirm && (
+        <>
+          <div className="fixed inset-0 z-[60] bg-black/50" onClick={() => setShowDeleteConfirm(false)} />
+          <div
+            className="fixed inset-x-5 z-[61] bg-surface rounded-2xl shadow-float overflow-hidden"
+            style={{ top: '30%', maxWidth: 380, margin: '0 auto' }}
+          >
+            <div className="px-5 pt-5 pb-4">
+              <div className="flex items-center justify-center w-12 h-12 rounded-[14px] mx-auto mb-4"
+                style={{ background: 'rgba(var(--color-danger), 0.12)' }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                  strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgb(var(--color-danger))' }}>
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                  <path d="M10 11v6M14 11v6" />
+                  <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                </svg>
+              </div>
+              <h2 className="text-[17px] font-bold text-text-primary text-center">Notiz löschen?</h2>
+              <p className="text-[13px] text-text-muted text-center mt-2 leading-relaxed">
+                Diese Notiz wird unwiderruflich gelöscht. Smart Notes, Fotos und alle zugehörigen Daten gehen verloren.
+              </p>
+            </div>
+            <div className="px-5 pb-5 flex gap-2.5">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 py-3 rounded-[12px] bg-surface-hover border border-border text-text-secondary text-[14px] font-semibold press-sm"
+              >
+                Abbrechen
+              </button>
+              <button
+                onClick={() => {
+                  if (lessonId) {
+                    deleteUserNote(lessonId)
+                    navigate(-1)
+                  }
+                }}
+                className="flex-1 py-3 rounded-[12px] text-white text-[14px] font-bold press-sm"
+                style={{ background: 'linear-gradient(135deg, #FF453A, #CC2E28)', boxShadow: '0 4px 12px rgba(255,69,58,0.35)' }}
+              >
+                Löschen
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   )

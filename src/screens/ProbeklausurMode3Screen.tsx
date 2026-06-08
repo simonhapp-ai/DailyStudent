@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { subjects, topics } from '../data/mockData'
+import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode3Exam, correctExam } from '../lib/gemini'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur } from '../types'
@@ -245,7 +246,7 @@ export function ProbeklausurMode3Screen() {
                 type="text"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
-                placeholder="z.B. Enzymkinetik, Kondensator…"
+                placeholder={getTopicPlaceholder(subjectId)}
                 className="w-full bg-surface border border-border rounded-[14px] px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent"
               />
               {subjectTopics.length > 0 && (

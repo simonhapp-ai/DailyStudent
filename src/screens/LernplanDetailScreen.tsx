@@ -76,7 +76,7 @@ function uid() {
 export function LernplanDetailScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { lernplaene, deleteLernplan, addEntry, isPro } = useUser()
+  const { lernplaene, deleteLernplan, addEntries, isPro } = useUser()
 
   const plan = lernplaene.find((p) => p.id === id)
 
@@ -94,31 +94,84 @@ export function LernplanDetailScreen() {
   const totalMinutes = plan.days.reduce((sum, d) => sum + d.totalMin, 0)
 
   const addToCalendar = () => {
-    let baseMinutes = 9 * 60 // default start 09:00
+    const timeToMin = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + m }
+    const pad = (n: number) => String(n).padStart(2, '0')
+    const pref = plan.config.studyTimePreference ?? 'beides'
+    const baseMin = pref === 'morgen' ? 420 : pref === 'abend' ? 1020 : 540
+
+    const getDow = (dateStr: string) => {
+      const d = new Date(dateStr).getDay()
+      return d === 0 ? 6 : d - 1
+    }
+
+    const advancePastBlocks = (dateStr: string, cursor: number, dur: number): number => {
+      const dow = getDow(dateStr)
+      let c = cursor
+      let changed = true
+      while (changed) {
+        changed = false
+        for (const bt of plan.config.blockedTimes) {
+          const applies = bt.dayOfWeek.length === 0 || bt.dayOfWeek.includes(dow)
+          if (!applies) continue
+          const bs = timeToMin(bt.startTime)
+          const be = timeToMin(bt.endTime)
+          if (c < be && c + dur > bs) { c = be; changed = true }
+        }
+      }
+      return c
+    }
+
     const entries: PersonalEntry[] = []
-    for (const day of plan.days) {
-      if (day.sessions.length === 0) continue
-      let cursor = baseMinutes
-      for (const session of day.sessions) {
-        const startH = Math.floor(cursor / 60)
-        const startM = cursor % 60
-        const endCursor = cursor + session.durationMin
-        const endH = Math.floor(endCursor / 60)
-        const endM = endCursor % 60
-        const pad = (n: number) => String(n).padStart(2, '0')
+    const skipped: string[] = []
+
+    plan.days.forEach((day) => {
+      if (!day.sessions.length) return
+      let cursor = baseMin
+      day.sessions.forEach((session) => {
+        cursor = advancePastBlocks(day.date, cursor, session.durationMin)
+        if (cursor + session.durationMin > 23 * 60) {
+          skipped.push(`${session.subjectName} (${day.date})`)
+          return
+        }
+        const end = cursor + session.durationMin
         entries.push({
           id: uid(),
           title: `${session.subjectName} – ${session.topic}`,
           type: 'lerneinheit',
           date: day.date,
-          time: `${pad(startH)}:${pad(startM)}`,
-          endTime: `${pad(endH % 24)}:${pad(endM)}`,
+          time: `${pad(Math.floor(cursor / 60))}:${pad(cursor % 60)}`,
+          endTime: `${pad(Math.floor(end / 60))}:${pad(end % 60)}`,
+          lernplanId: plan.id,
+          color: SUBJECT_INFO[session.subjectId]?.color ?? '#34C759',
         })
-        cursor = endCursor + 15 // 15 min break between sessions
-      }
+        cursor = end + 15
+      })
+    })
+
+    addEntries(entries)
+    let msg = `${entries.length} Lernblöcke wurden zum Kalender hinzugefügt.`
+    if (skipped.length) msg += `\n\n${skipped.length} Session(s) konnten nicht eingeplant werden (nach 23:00): ${skipped.join(', ')}`
+    alert(msg)
+  }
+
+  const handlePrint = () => {
+    const prevTitle = document.title
+    const planTypeLabel = plan.planType === 'einzel' ? 'Einzel Lernplan'
+      : plan.planType === 'abitur' ? 'Abitur Lernplan'
+      : 'Vollständiger Plan'
+    let suffix: string
+    if (plan.planType === 'einzel' && plan.examSchedule.length === 1) {
+      const exam = plan.examSchedule[0]
+      const info = SUBJECT_INFO[exam.subjectId]
+      const abbrev = info?.name?.slice(0, 3) ?? exam.subjectId
+      suffix = exam.topic ? `${abbrev} ${exam.topic}` : abbrev
+    } else {
+      const abbrevs = [...new Set(plan.examSchedule.map((e) => SUBJECT_INFO[e.subjectId]?.name?.slice(0, 3) ?? e.subjectId))]
+      suffix = abbrevs.join(', ')
     }
-    entries.forEach((e) => addEntry(e))
-    alert(`${entries.length} Lernblöcke wurden zum Kalender hinzugefügt.`)
+    document.title = `Lernapp – ${planTypeLabel} – ${suffix}`
+    window.print()
+    setTimeout(() => { document.title = prevTitle }, 500)
   }
 
   const handleDelete = () => {
@@ -160,7 +213,7 @@ export function LernplanDetailScreen() {
             </div>
             <div className="flex items-center gap-1">
               <button
-                onClick={() => window.print()}
+                onClick={handlePrint}
                 className="w-9 h-9 flex items-center justify-center rounded-btn text-text-secondary hover:bg-surface-hover transition-colors"
                 title="Drucken / Als PDF speichern"
               >

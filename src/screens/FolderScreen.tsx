@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/Badge'
 import { useUser } from '../context/UserContext'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { subjects } from '../data/mockData'
+import { getTopicPlaceholder } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import type { UserFolder } from '../types'
 
@@ -253,7 +254,7 @@ export function FolderScreen() {
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && createFolder()}
-            placeholder="z.B. Integralrechnung, Vektoren…"
+            placeholder={getTopicPlaceholder(subject?.id)}
             className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary placeholder-text-muted mb-4 focus:outline-none focus:border-accent transition-colors"
           />
           <button
