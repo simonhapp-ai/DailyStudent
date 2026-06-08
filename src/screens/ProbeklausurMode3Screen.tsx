@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useRef, useMemo } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode3Exam, correctExam } from '../lib/gemini'
 import { BottomSheet } from '../components/ui/BottomSheet'
-import type { GeneratedExam, ExamCorrection, SavedProbeklausur } from '../types'
+import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
 
 const AFB_COLORS: Record<string, string> = {
   I:   'bg-blue-500/15 text-blue-400',
@@ -120,16 +120,20 @@ type Phase = 'setup' | 'loading' | 'exam' | 'correcting' | 'result'
 
 export function ProbeklausurMode3Screen() {
   const navigate = useNavigate()
-  const { profile, getKc, saveProbeklausur } = useUser()
+  const location = useLocation()
+  const resume = (location.state as { resume?: InProgressProbeklausur } | null)?.resume ?? null
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur } = useUser()
+  const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
+  const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
   const userSubjects = subjects.filter((s) => profile?.faecher?.includes(s.id))
   const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
 
-  const [phase, setPhase] = useState<Phase>('setup')
-  const [subjectId, setSubjectId] = useState(displaySubjects[0]?.id ?? '')
-  const [topic, setTopic] = useState('')
-  const [exam, setExam] = useState<GeneratedExam | null>(null)
-  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [phase, setPhase] = useState<Phase>(resume ? 'exam' : 'setup')
+  const [subjectId, setSubjectId] = useState(resume?.subjectId ?? displaySubjects[0]?.id ?? '')
+  const [topic, setTopic] = useState(resume?.topic ?? '')
+  const [exam, setExam] = useState<GeneratedExam | null>(resume?.exam ?? null)
+  const [answers, setAnswers] = useState<Record<string, string>>(resume?.userAnswers ?? {})
   const [correction, setCorrection] = useState<ExamCorrection | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showExitWarning, setShowExitWarning] = useState(false)
@@ -145,6 +149,7 @@ export function ProbeklausurMode3Screen() {
       const generated = await generateMode3Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined)
       setExam(generated)
       setAnswers({})
+      inProgressIdRef.current = `ip-3-${subjectId}-${Date.now()}`
       setPhase('exam')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unbekannter Fehler')
@@ -175,6 +180,7 @@ export function ProbeklausurMode3Screen() {
         completedAt: new Date().toISOString(),
       }
       saveProbeklausur(pk)
+      if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unbekannter Fehler')
       setPhase('exam')
@@ -407,11 +413,19 @@ export function ProbeklausurMode3Screen() {
             <p className="text-[18px] font-bold text-text-primary">Klausur verlassen?</p>
             <p className="text-[13px] text-text-secondary leading-snug">Du verlässt gerade eine laufende Klausur.<br />Deine Antworten gehen verloren.</p>
           </div>
-          <button onClick={() => setShowExitWarning(false)} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press">
-            Klausur pausieren
+          <button
+            onClick={() => {
+              if (!exam || !inProgressIdRef.current) { navigate(-1); return }
+              saveInProgressProbeklausur({ id: inProgressIdRef.current, mode: 3, subjectId: exam.subjectId, subjectName: exam.subject, topic: exam.topic, exam, userAnswers: answers, startedAt: resumeStartedAt })
+              setShowExitWarning(false)
+              navigate(-1)
+            }}
+            className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press"
+          >
+            Klausur pausieren — Fortschritt gespeichert
           </button>
-          <button onClick={() => { setShowExitWarning(false); navigate(-1) }} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'linear-gradient(145deg, #FF453A, #C0392B)' }}>
-            Klausur beenden (Ergebnis gelöscht)
+          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'linear-gradient(145deg, #FF453A, #C0392B)' }}>
+            Klausur beenden (Fortschritt gelöscht)
           </button>
         </div>
       </BottomSheet>

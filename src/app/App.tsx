@@ -144,12 +144,8 @@ function AppRoutes() {
 }
 
 function Layout() {
-  const { isOnboarded, recordStudyDay, authUser, authLoading } = useUser()
+  const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
-
-  useEffect(() => {
-    if (isOnboarded) recordStudyDay()
-  }, [isOnboarded]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if (authLoading) {
     return (
@@ -161,6 +157,16 @@ function Layout() {
 
   if (!authUser) {
     return <AuthScreen />
+  }
+
+  // While Supabase is loading data for a freshly authenticated user, show spinner
+  // to avoid flickering the OnboardingScreen for users who are already onboarded.
+  if (supabaseDataLoading && !isOnboarded) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+      </div>
+    )
   }
 
   if (!isOnboarded) {

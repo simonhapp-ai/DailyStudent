@@ -5,7 +5,7 @@ import { generateLernplan } from '../lib/gemini'
 import { buildKcPromptContext } from '../data/kcLoader'
 import { SUBJECT_INFO, getTopicPlaceholder, getTopicsPlaceholder } from '../data/subjectInfo'
 import { ProModal } from '../components/ui/ProModal'
-import type { LernplanType, LernplanBlockedTime, Lernplan, LernplanGeneratorInput } from '../types'
+import type { LernplanType, LernplanBlockedTime, Lernplan, LernplanGeneratorInput, LernMethode } from '../types'
 
 const TODAY = new Date().toISOString().slice(0, 10)
 
@@ -36,7 +36,7 @@ export function LernplanKonfiguratorScreen() {
   const navigate = useNavigate()
 
   const [step, setStep] = useState(1)
-  const TOTAL_STEPS = 6
+  const TOTAL_STEPS = 7
 
   // Step 1: Plan type
   const [planType, setPlanType] = useState<LernplanType>('vollstaendig')
@@ -64,10 +64,14 @@ export function LernplanKonfiguratorScreen() {
   const [targetGrade, setTargetGrade] = useState(profile?.zielnote ?? '')
   const [lkFaecher, setLkFaecher] = useState<string[]>(profile?.lkFaecher ?? [])
 
-  // Step 5: Schwerpunkte
+  // Step 5: Methoden
+  const ALL_METHODEN: LernMethode[] = ['karteikarten', 'blurting', 'lernzettel', 'probeklausur', 'lesen', 'wiederholen']
+  const [preferredMethods, setPreferredMethods] = useState<LernMethode[]>([...ALL_METHODEN])
+
+  // Step 6: Schwerpunkte
   const [weaknesses, setWeaknesses] = useState<Record<string, string>>({}) // subjectId → free text
 
-  // Step 6: Generation
+  // Step 7: Generation
   const [generating, setGenerating] = useState(false)
   const [genError, setGenError] = useState('')
   const _abortRef = useRef<AbortController | null>(null)
@@ -81,8 +85,9 @@ export function LernplanKonfiguratorScreen() {
     2: planType === 'einzel' ? selectedTermineKeys.length === 1 : selectedTermineKeys.length >= 1,
     3: true,
     4: true,
-    5: true,
+    5: preferredMethods.length >= 1,
     6: true,
+    7: true,
   }
 
   const handleNext = () => {
@@ -166,6 +171,7 @@ export function LernplanKonfiguratorScreen() {
         klasse: profile?.klasse ?? '12',
         studyTimePreference,
         includeWeekends,
+        preferredMethods: preferredMethods.length < ALL_METHODEN.length ? preferredMethods : undefined,
       }
 
       const result = await generateLernplan(input)
@@ -193,6 +199,7 @@ export function LernplanKonfiguratorScreen() {
             })),
           lkFaecher,
           studyTimePreference,
+          preferredMethods: preferredMethods.length < ALL_METHODEN.length ? preferredMethods : undefined,
         },
       }
 
@@ -280,14 +287,22 @@ export function LernplanKonfiguratorScreen() {
           />
         )}
         {step === 5 && (
+          <StepMethoden
+            selectedMethods={preferredMethods}
+            onToggle={(m) => setPreferredMethods((prev) =>
+              prev.includes(m) ? (prev.length > 1 ? prev.filter((x) => x !== m) : prev) : [...prev, m]
+            )}
+          />
+        )}
+        {step === 6 && (
           <StepSchwerpunkte
             subjectIds={[...new Set(selectedTermine.map((k) => k.subjectId))]}
             weaknesses={weaknesses}
             onWeaknessChange={(id, text) => setWeaknesses((prev) => ({ ...prev, [id]: text }))}
-            onSkip={() => setStep(6)}
+            onSkip={() => setStep(7)}
           />
         )}
-        {step === 6 && (
+        {step === 7 && (
           <StepZusammenfassung
             planType={planType}
             selectedTermine={selectedTermine}
@@ -315,9 +330,9 @@ export function LernplanKonfiguratorScreen() {
           >
             {step === TOTAL_STEPS - 1 ? 'Weiter zur Zusammenfassung' : 'Weiter'}
           </button>
-          {step === 5 && (
+          {step === 6 && (
             <button
-              onClick={() => setStep(6)}
+              onClick={() => setStep(7)}
               className="w-full mt-2 py-3 text-sm text-text-muted hover:text-text-secondary transition-colors"
             >
               Schritt überspringen
@@ -835,7 +850,67 @@ function StepLernkapazitaet({
   )
 }
 
-/* ─── Step 5: Schwerpunkte ─────────────────────────────────────── */
+/* ─── Step 5: Methoden ─────────────────────────────────────────── */
+
+const METHODEN_META: Record<LernMethode, { label: string; emoji: string; desc: string }> = {
+  karteikarten: { label: 'Karteikarten', emoji: '🎴', desc: 'Fragen & Antworten üben' },
+  blurting:     { label: 'Blurting',     emoji: '🧠', desc: 'Alles aus dem Gedächtnis aufschreiben' },
+  lernzettel:   { label: 'Lernzettel',   emoji: '📄', desc: 'Zusammenfassung lesen & merken' },
+  probeklausur: { label: 'Probeklausur', emoji: '📋', desc: 'Unter echten Bedingungen üben' },
+  lesen:        { label: 'Lesen',        emoji: '📖', desc: 'Notizen & Lernzettel durchlesen' },
+  wiederholen:  { label: 'Wiederholen',  emoji: '🔁', desc: 'Gelerntes kurz rekapitulieren' },
+}
+
+function StepMethoden({
+  selectedMethods,
+  onToggle,
+}: {
+  selectedMethods: LernMethode[]
+  onToggle: (m: LernMethode) => void
+}) {
+  const ALL: LernMethode[] = ['karteikarten', 'blurting', 'lernzettel', 'probeklausur', 'lesen', 'wiederholen']
+  return (
+    <div className="space-y-5 pt-2">
+      <div>
+        <h2 className="text-[22px] font-bold text-text-primary">Lernmethoden</h2>
+        <p className="text-[14px] text-text-muted mt-1">Welche Methoden magst du? Der KI-Plan bevorzugt diese bei der Session-Planung.</p>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        {ALL.map((m) => {
+          const meta = METHODEN_META[m]
+          const active = selectedMethods.includes(m)
+          return (
+            <button
+              key={m}
+              onClick={() => onToggle(m)}
+              className={`flex flex-col gap-1.5 p-4 rounded-[16px] border text-left transition-all press ${
+                active
+                  ? 'border-accent bg-accent/10'
+                  : 'border-border/60 bg-surface'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-2xl">{meta.emoji}</span>
+                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                  active ? 'border-accent bg-accent' : 'border-border'
+                }`}>
+                  {active && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                </div>
+              </div>
+              <span className={`text-[14px] font-semibold ${active ? 'text-accent' : 'text-text-primary'}`}>{meta.label}</span>
+              <span className="text-[11px] text-text-muted leading-tight">{meta.desc}</span>
+            </button>
+          )
+        })}
+      </div>
+      {selectedMethods.length === 0 && (
+        <p className="text-[13px] text-red-400 text-center">Mindestens eine Methode auswählen</p>
+      )}
+    </div>
+  )
+}
+
+/* ─── Step 6: Schwerpunkte ─────────────────────────────────────── */
 
 function StepSchwerpunkte({
   subjectIds,

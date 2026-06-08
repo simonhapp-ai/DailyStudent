@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import { type ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
-import type { FlashCard, GeneratedSmartNote, Lernzettel, Lernplan, SavedProbeklausur, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AppStats, ExamScoreRecord } from '../types'
+import type { FlashCard, GeneratedSmartNote, Lernzettel, Lernplan, SavedProbeklausur, InProgressProbeklausur, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AppStats, ExamScoreRecord } from '../types'
 import { subjects, topics, halfYears } from '../data/mockData'
 import { loadKcForUser, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from '../lib/supabase'
@@ -97,6 +97,7 @@ interface StorageData {
   appStats?: AppStats
   lernzettel?: Lernzettel[]
   savedProbeklausuren?: SavedProbeklausur[]
+  inProgressProbeklausuren?: InProgressProbeklausur[]
   lernplaene?: Lernplan[]
 }
 
@@ -146,6 +147,9 @@ interface UserContextValue {
   savedProbeklausuren: SavedProbeklausur[]
   saveProbeklausur: (pk: SavedProbeklausur) => void
   deleteSavedProbeklausur: (id: string) => void
+  inProgressProbeklausuren: InProgressProbeklausur[]
+  saveInProgressProbeklausur: (pk: InProgressProbeklausur) => void
+  deleteInProgressProbeklausur: (id: string) => void
   lernplaene: Lernplan[]
   saveLernplan: (plan: Lernplan) => void
   deleteLernplan: (id: string) => void
@@ -310,6 +314,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           setAppStats(s.appStats ?? DEFAULT_APP_STATS)
           setLernzettel(s.lernzettel ?? [])
           setSavedProbeklausuren(s.savedProbeklausuren ?? [])
+          setInProgressProbeklausuren(s.inProgressProbeklausuren ?? [])
           setLernplaene(s.lernplaene ?? [])
           let folders = s.userFolders ?? []
           if (folders.length === 0 && s.profile) {
@@ -400,6 +405,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [kcFallbacks, setKcFallbacks] = useState<string[]>([])
   const [lernzettel, setLernzettel] = useState<Lernzettel[]>(stored.lernzettel ?? [])
   const [savedProbeklausuren, setSavedProbeklausuren] = useState<SavedProbeklausur[]>(stored.savedProbeklausuren ?? [])
+  const [inProgressProbeklausuren, setInProgressProbeklausuren] = useState<InProgressProbeklausur[]>(stored.inProgressProbeklausuren ?? [])
   const [lernplaene, setLernplaene] = useState<Lernplan[]>(stored.lernplaene ?? [])
 
   const [userFolders, setUserFolders] = useState<UserFolder[]>(() => {
@@ -517,7 +523,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated = [...userNotes, note]
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
-    recordStudyDay()
     if (authUser) void syncNote(authUser.id, note)
   }
 
@@ -529,7 +534,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserNotes(updatedNotes)
     if (generated) setGeneratedNotes(updatedGenerated)
     persist(profile, personalEntries, updatedGenerated, updatedNotes, userFolders)
-    recordStudyDay()
     if (authUser) {
       void syncNote(authUser.id, note)
       if (generated) void syncSmartNote(authUser.id, note.id, generated)
@@ -601,7 +605,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const updated = [...kept, ...newCards]
     setGeneratedFlashCards(updated)
     saveStorage({ ...loadStorage(), generatedFlashCards: updated })
-    recordStudyDay()
     if (authUser) void syncFlashCardsBatch(authUser.id, updated)
   }
 
@@ -624,7 +627,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserNotes(updatedNotes)
     setLernzettel(updatedLernzettel)
     saveStorage({ ...loadStorage(), userFolders: updatedFolders, userNotes: updatedNotes, lernzettel: updatedLernzettel })
-    recordStudyDay()
     if (authUser) {
       if (!folderExists) void syncFolder(authUser.id, newFolder)
       void syncNote(authUser.id, note)
@@ -645,6 +647,20 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setSavedProbeklausuren(updated)
     saveStorage({ ...loadStorage(), savedProbeklausuren: updated })
     if (authUser) void deleteProbeklausurFromDB(authUser.id, id)
+  }
+
+  const saveInProgressProbeklausur = (pk: InProgressProbeklausur) => {
+    const updated = inProgressProbeklausuren.some((p) => p.id === pk.id)
+      ? inProgressProbeklausuren.map((p) => p.id === pk.id ? pk : p)
+      : [...inProgressProbeklausuren, pk]
+    setInProgressProbeklausuren(updated)
+    saveStorage({ ...loadStorage(), inProgressProbeklausuren: updated })
+  }
+
+  const deleteInProgressProbeklausur = (id: string) => {
+    const updated = inProgressProbeklausuren.filter((p) => p.id !== id)
+    setInProgressProbeklausuren(updated)
+    saveStorage({ ...loadStorage(), inProgressProbeklausuren: updated })
   }
 
   const saveLernplan = (plan: Lernplan) => {
@@ -834,6 +850,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
         savedProbeklausuren,
         saveProbeklausur,
         deleteSavedProbeklausur,
+        inProgressProbeklausuren,
+        saveInProgressProbeklausur,
+        deleteInProgressProbeklausur,
         lernplaene,
         saveLernplan,
         deleteLernplan,

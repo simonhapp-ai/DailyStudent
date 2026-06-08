@@ -124,6 +124,8 @@ export interface AbiGradeEntry {
   isLK: boolean
   smRatio?: number           // schriftlich share: 0.5 = 50/50, 0.6 = 60/40 … default 0.5
   endnoteOverride?: number | null  // manual override of the rounded Endnote (1–15)
+  notBelegt?: boolean        // subject not taken this semester (Abdecker/2-of-4 subjects)
+  subjectType?: 'normal' | 'seminarfach' | 'excluded'  // Seminarfach etc. not in Abi calc
 }
 
 export interface AbiHalbjahr {
@@ -175,6 +177,19 @@ export interface ExamCorrection {
   totalNP: number
   gradeLabel: string   // 'Sehr gut', 'Gut', etc.
   overallJustification: string
+}
+
+/* ─── In-Progress Probeklausur (pausiert) ──────────────────── */
+
+export interface InProgressProbeklausur {
+  id: string                          // 'ip-{mode}-{subjectId}-{timestamp}'
+  mode: 1 | 2 | 3 | 4
+  subjectId: string
+  subjectName: string
+  topic: string
+  exam: GeneratedExam
+  userAnswers: Record<string, string>  // taskId → answer text
+  startedAt: string                    // ISO
 }
 
 /* ─── Saved Probeklausur ────────────────────────────────────── */
@@ -299,6 +314,7 @@ export interface Lernplan {
     weaknesses: Array<{ subjectId: string; topics: string[] }>
     lkFaecher: string[]
     studyTimePreference: 'morgen' | 'abend' | 'beides'
+    preferredMethods?: LernMethode[]
   }
 }
 
@@ -322,6 +338,7 @@ export interface LernplanGeneratorInput {
   klasse: string
   studyTimePreference: 'morgen' | 'abend' | 'beides'
   includeWeekends: boolean
+  preferredMethods?: LernMethode[]
 }
 
 /* ─── SmartNote (generated) ─────────────────────────────────── */

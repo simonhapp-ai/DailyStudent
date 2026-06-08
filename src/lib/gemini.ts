@@ -491,7 +491,7 @@ ${blockedText}
 
 SCHWÄCHEN (mehr Sessions):
 ${weaknessText}
-${input.kcContext ? `\nKERNCURRICULUM:\n${input.kcContext}` : ''}
+${input.preferredMethods && input.preferredMethods.length > 0 && input.preferredMethods.length < 6 ? `\nBEVORZUGTE LERNMETHODEN (bevorzuge diese bei der Session-Planung):\n${input.preferredMethods.join(', ')}` : ''}${input.kcContext ? `\nKERNCURRICULUM:\n${input.kcContext}` : ''}
 
 Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${input.startDate}. Jeder Tag muss im days-Array enthalten sein.`
 

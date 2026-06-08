@@ -33,9 +33,9 @@ Die App bietet keinen einzelnen Lernweg, sondern einen **vernetzten Mix aus Lern
 | Persistenz | localStorage (`lernapp_v1`) → Supabase DB (Phase 3 in Arbeit) |
 | KI Text + Vision | Groq API — Llama 3.3 70B (Text) + Llama 4 Scout Vision (Bilder/Scans) |
 | KI Probeklausuren + Lernplan | Google Gemini — `gemini-2.5-flash` |
-| Auth | Supabase Auth — Email/Passwort + Google OAuth (gebaut, noch nicht in App verdrahtet) |
+| Auth | Supabase Auth — Email/Passwort + Google OAuth ✅ (vollständig implementiert + geroutet) |
 | DB | Supabase PostgreSQL — Schema + RLS fertig (`supabase/migrations/001_initial_schema.sql`) |
-| Payments | Stripe (Phase 3, noch nicht begonnen) |
+| Payments | Stripe (Scaffold existiert, Edge Function + checkout code vorhanden, aber untested) |
 | Dev Server | localhost:5174 |
 | Repo | https://github.com/simonhapp-ai/DailyStudent.git |
 | Projektordner | C:\Users\simon\OneDrive\Desktop\Claude App |
@@ -67,9 +67,9 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 vollständig, Phase 3 in Arbeit (Stand: 06.06.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu 70% in Arbeit (Stand: 08.06.2026)
 
-### Phase 2 — vollständig funktioniert (echte KI, kein Mock):
+### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
 - **Unterricht-Screen:** Fach-Tree mit Ordnern, Notizen erstellen, Foto-Import per Gemini KI mit auto-Ziel-Vorschlag
 - **Smart Notes:** Foto/PDF/Text → Groq OCR → Groq Analyse → `GeneratedSmartNote` mit Summary, Keywords, Klausurthemen, Lösungsschritte
@@ -90,33 +90,49 @@ Smart Notes
 - **Theme:** Hell/Dunkel/System
 - **isPro-Flag:** Toggle im Profil (Dev-Mode) — schaltet alle KI-Features + Paywalls app-weit
 
-### Was noch Placeholder ist (bewusst, Phase-3-Aufgaben):
-| Was | Datei | Notiz |
-|-----|-------|-------|
-| Einstellungs-Buttons | `ProfilScreen.tsx` | "Bundesland & Lehrplan", "Benachrichtigungen", "Datenschutz", "Account" — Buttons ohne onClick |
-| "Abi-Schnitt Ø 1.7" | `ProfilScreen.tsx` | Hardcoded Marketing-Text im Pro-Banner |
-| isPro via Stripe | `UserContext.tsx` | Aktuell localStorage-Flag; wird durch Stripe-Webhook + Supabase ersetzt |
+### Phase 3 — Was bereits fertig ist (NICHT wie dokumentiert):
+- **`src/lib/supabase.ts`** ✅ — Supabase Client vollständig
+- **`src/screens/AuthScreen.tsx`** ✅ — Login/Signup mit Email + Google OAuth + deutsche Fehlermeldungen — **ALREADY INTEGRATED IN APP.TX ROUTING** (Docs waren falsch)
+- **`UserContext.tsx`** ✅ — `authUser`, `authLoading`, `signOut`, Auth State Listener bereits implementiert
+- **`supabase/migrations/001_initial_schema.sql`** ✅ — Vollständiges DB-Schema mit 12 Tabellen, RLS, Trigger
+- **`supabase/functions/groq-proxy/index.ts`** ✅ — Groq API über Edge Functions proxied, API-Keys in Supabase Secrets
+- **`supabase/functions/gemini-proxy/index.ts`** ✅ — Gemini API über Edge Functions proxied (flash + flash-lite mit Fallback)
+- **`supabase/functions/create-checkout-session`** ⚠️ — Stripe Edge Function existiert, aber **NICHT vollständig getestet**
+- **`AbiRechnerScreen.tsx` Datenspeicherung** ✅ — Noten werden zu Supabase gespeichert, Sync-Status-Feedback für User (08.06.2026)
+- **`BundeslandScreen.tsx` Fehlerbehandlung** ✅ — Profil-Updates mit Error-Handling + User-Feedback (08.06.2026)
 
-### Phase 3 — Was Jan bereits gebaut hat:
-- **`src/lib/supabase.ts`** — Supabase Client (braucht `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` in `.env`)
-- **`src/screens/AuthScreen.tsx`** — Login/Signup Screen mit Google OAuth + Email/Passwort, deutsche Fehlermeldungen
-- **`UserContext.tsx`** — `authUser`, `authLoading`, `signOut` State + `supabase.auth.onAuthStateChange` Listener
-- **`supabase/migrations/001_initial_schema.sql`** — Vollständiges DB-Schema: 12 Tabellen (profiles, app_stats, user_folders, user_notes, generated_smart_notes, flashcards, lernzettel, saved_probeklausuren, lernplaene, personal_entries, standalone_homework, subscriptions), RLS für alle Tabellen, Trigger für auto-Profile-Erstellung + updated_at, Indexes
+### Phase 3 — Known Issues & Bugs (Audit 08.06.2026):
 
-### Phase 3 — Was Simon gebaut hat (07.06.2026):
-- **`supabase/functions/groq-proxy/index.ts`** — Edge Function: proxied alle Groq API Calls serverseitig. `GROQ_API_KEY` als Supabase Secret gesetzt. `src/lib/groq.ts` nutzt jetzt `supabase.functions.invoke('groq-proxy')` statt direktem Fetch.
-- **`supabase/functions/gemini-proxy/index.ts`** — Edge Function: proxied alle Gemini API Calls serverseitig (flash + flash-lite). `GEMINI_API_KEY` als Supabase Secret gesetzt. `src/lib/gemini.ts` nutzt jetzt `geminiProxy()` Helper statt direktem Fetch. 503-Fallback (flash→flash-lite) bleibt erhalten.
-- **Verifiziert:** API-Keys aus `.env` auskommentiert → App funktioniert weiter → Backend bestätigt.
+**KRITISCH (Launch-Blocker):**
+1. **Responsive Layouts NOT ready** — nur `DashboardScreen` ist responsive (`md:`/`lg:` Breakpoints). Alle anderen Screens sind mobile-only. CLAUDE.md sagt "VOR LAUNCH ZWINGEND" aber nur ~10% implementiert. **FIX NEEDED:** Alle Screens mit `md:` (iPad) + `lg:` (Laptop) Layouts updaten, 2-Column-Layouts wo sinnvoll, Sidebar-Navigation ab `md:`
+2. **Supabase Sync fires-and-forgets** — Alle `sync*()` Funktionen in `UserContext.tsx` catchen errors silently mit `console.warn()`. Wenn Sync fehlschlägt, bekommt der User keine Benachrichtigung → stille Datenverluste möglich. **FIX NEEDED:** Error-Handling + Retry-Logik
+3. **Stripe `create-checkout-session` Edge Function untested** — Code existiert, aber kein Test, kein Production-Webhook. **FIX NEEDED:** Vollständig implementieren + testen vor Launch
 
-### Phase 3 — Was noch fehlt:
-1. **AuthScreen in App.tsx einbinden** — Routing: unauthenticated → AuthScreen, authenticated + onboarded → App
-2. **Daten-Sync localStorage → Supabase** — alle CRUD-Operationen in UserContext auf Supabase umstellen
-3. **Migration bestehender localStorage-Daten** — beim ersten Login nach Supabase hochladen
-4. **Stripe Payments** — Pro-Subscription, Webhook → `subscriptions` Tabelle → `isPro` setzen
-5. **Push-Benachrichtigungen** für Lernplan-Erinnerungen
-6. **Responsive Layouts (iPad + Laptop) — VOR LAUNCH ZWINGEND** — Primäre Zielgruppe nutzt App im Unterricht auf iPad und in Vorlesungen auf Laptop. Handy ist sekundär (immer erreichbar). Umsetzung: Tailwind Breakpoints (`md:` iPad, `lg:` Laptop), Sidebar-Navigation statt BottomNav ab `md:`, 2-Column-Layouts wo sinnvoll. Nach Phase 3 als erste große UI-Iteration.
-7. **Deployment** (Vercel/Netlify)
-8. **Studentenadaption** (Uni-Fächer, kein KC aber Syllabus-Upload)
+**MAJOR (vor Launch fixen):**
+4. **7 TypeScript `noUnusedLocals` Warnungen:**
+   - `KalenderScreen.tsx`: `navigate`, `calSpIdx`, `_CalendarCollapsed`, `StundenplanTodayWidget`, `_StundenplanMiniWidget` (5 unused)
+   - `KlausurphasenScreen.tsx`: `_zielnoteToNP` (1 unused)
+   - `LernplanKonfiguratorScreen.tsx`: `_abortRef` (1 unused)
+   **FIX NEEDED:** Entfernen oder verwenden
+
+5. **Audio Transcription NOT implemented** — `AudioRecorderWidget.tsx` hat `// TODO: connect to Web Audio API + Whisper`. Feature ist nicht fertig. **FIX NEEDED:** Entfernen aus UI oder implementieren
+6. **Note Editor NOT connected** — `NoteEditor.tsx` hat `// TODO: connect to real note editing with auto-save`. **FIX NEEDED:** Entfernen oder implementieren
+7. **AbiRechnerScreen Daten-Verlust** ⚠️ **PARTIALLY FIXED (08.06.2026)** — Grades werden jetzt zu Supabase gespeichert mit Sync-Status-Feedback. Aber: Fehlerbehandlung muss noch in UserContext verbesert werden für stille Fehler.
+
+**MINOR (sollte gefixed werden, aber nicht Launch-blocker):**
+7. **Settings Screens sind Stubs** — `BenachrichtigungenScreen`, `DatenschutzScreen`, `BundeslandScreen` existieren aber sind minimal implementiert (buttons navigieren dahin, aber Screens zeigen fast nichts)
+8. **Console Logs** — 20+ `console.log()` + `console.warn()` statements für Debug; sollten vor Production entfernt/reduziert werden
+
+### Phase 3 — Was noch zu tun ist:
+1. **Responsive Layouts — URGENTLY** — Alle Screens müssen `md:` (iPad) + `lg:` (Laptop) Support haben
+2. **Supabase Sync Error Handling** — Retry-Logik, User-Feedback für Fehler
+3. **Stripe Testing** — `create-checkout-session` Edge Function testen + Webhook validieren
+4. **TypeScript Cleanup** — 7 unused variables entfernen
+5. **Audio/Note Features** — Entweder implementieren oder UI entfernen
+6. **Settings Screens** — Placeholder-Screens mit echtem Inhalt füllen oder entfernen
+7. **Push-Benachrichtigungen** für Lernplan-Erinnerungen
+8. **Deployment** (Vercel/Netlify)
+9. **Studentenadaption** (Uni-Fächer, kein KC aber Syllabus-Upload)
 
 ---
 
@@ -329,21 +345,26 @@ Leerzustände zeigen: Icon (groß, Gradient-Container) + Headline + kurze Erklä
 
 ---
 
-## Letzte Session (06.06.2026)
+## Letzte Session (08.06.2026)
 
-**Was gemacht wurde:**
-- Phase-2-Vollständigkeits-Review durchgeführt
-- **Bug gefixt:** `persist()` in `UserContext.tsx` hat bei jedem Aufruf `generatedFlashCards`, `appStats`, `lernzettel`, `savedProbeklausuren`, `lernplaene` aus dem localStorage gelöscht → Fix: `{ ...loadStorage(), ...fields }` Merge-Pattern
-- `SubjectListScreen.tsx` gelöscht — war Legacy-Code mit `mockData.subjects`, nie geroutet, nie importiert
-- CLAUDE.md aktualisiert: Phase 2 als abgeschlossen markiert, Phase 3 Stand dokumentiert
+**Comprehensive App Audit durchgeführt:**
+- Alle 40+ Screens reviewd auf echte Fertigstellung vs. CLAUDE.md Claims
+- Befund: Phase 2 AI Features 100% funktional, aber Phase 3 hat große Lücken
+- **Critical Issues:** Responsive Layouts NOT ready (nur DashboardScreen responsive), Supabase-Sync errors silently fail, Stripe untested
+- Docs waren teilweise falsch (Auth IS integrated, nicht "noch nicht begonnen")
 
-**Was Jan in Jans PR gebaut hat (Phase 3 Start):**
-- `src/lib/supabase.ts` — Supabase Client
-- `src/screens/AuthScreen.tsx` — vollständiger Auth-Screen (Email + Google OAuth)
-- `UserContext.tsx` erweitert um `authUser`, `authLoading`, `signOut` + Auth State Listener
-- `supabase/migrations/001_initial_schema.sql` — komplettes DB-Schema
+**Fixes implementiert (08.06.2026):**
+1. **AbiRechnerScreen** — Noten speichern jetzt zu Supabase mit visueller Bestätigung:
+   - Added syncStatus state: 'saving' | 'saved' | 'error' | null
+   - Header zeigt Sync-Status: "Speichern..." → "✓ Gespeichert" → auto-clear nach 2s
+   - Grades werden zu `profile.abiHalbjahre` gepersisted via `updateProfile()` → Supabase
+2. **BundeslandScreen** — Profil-Updates mit Error-Handling:
+   - try/catch um handleSave() mit Fehler-Feedback für User
+   - Button zeigt "✕ Fehler" wenn Exception auftritt
+   - Error-Nachricht angezeigt: "Fehler beim Speichern. Bitte versuchen Sie es später erneut."
 
-**Nächster Schritt: Phase 3 weiterbauen**
-1. `AuthScreen` in `App.tsx` einbinden (Route-Guard: kein Auth → AuthScreen)
-2. Daten-Sync: UserContext-Operationen auf Supabase umstellen
-3. Migration: bestehende localStorage-Daten beim ersten Login hochladen
+**CLAUDE.md aktualisiert:**
+- Auth Integration Status korrigiert (war: "noch nicht begonnen", ist: ✅ DONE)
+- Stripe Status korrigiert (war: "noch nicht begonnen", ist: ⚠️ scaffolded but untested)
+- Responsive Layout Status korrigiert (nur 10% implementiert, nicht "ready")
+- 9 Known Issues + Fixes dokumentiert

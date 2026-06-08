@@ -18,6 +18,11 @@ function resolveGrades(arr: (number | null)[] | undefined, single: number | null
 
 // ── Calculation helpers (exported for widget use) ────────────────────────────
 
+// Entry counts toward the Abi if not marked absent and not a special excluded type
+function isEntryActive(e: AbiGradeEntry): boolean {
+  return !e.notBelegt && (!e.subjectType || e.subjectType === 'normal')
+}
+
 export function subjectAvgAbi(e: AbiGradeEntry): number | null {
   const r = e.smRatio ?? 0.5
   const s = avgGrades(resolveGrades(e.schriftlichGrades, e.schriftlich))
@@ -40,6 +45,7 @@ export function effectiveWeightAbi(e: AbiGradeEntry): number {
 
 export function overallPunkteAbi(entries: AbiGradeEntry[]): number | null {
   const valid = entries
+    .filter(isEntryActive)
     .map((e) => ({ en: endnoteForEntry(e), w: effectiveWeightAbi(e) }))
     .filter((e): e is { en: number; w: number } => e.en !== null)
   if (valid.length === 0) return null
@@ -63,6 +69,7 @@ export function totalPunkteAllHalbjahre(halbjahre: AbiHalbjahr[]): number | null
   const subjectMap = new Map<string, { endnotes: number[]; isLK: boolean }>()
   for (const hj of halbjahre) {
     for (const entry of hj.entries) {
+      if (!isEntryActive(entry)) continue
       const en = endnoteForEntry(entry)
       if (en === null) continue
       const ex = subjectMap.get(entry.subjectId)
@@ -106,7 +113,8 @@ function getValueColor(v: number): string {
 
 // ── Wheel picker ──────────────────────────────────────────────────────────────
 
-const CELL_W = 26
+// Wider cells → less distance needed per note → smoother on PC
+const CELL_W = 38
 
 function WheelPicker({
   value,
@@ -116,37 +124,39 @@ function WheelPicker({
   onChange: (v: number) => void
 }) {
   const [local, setLocal] = useState(value ?? 10)
-  const [dragOffset, setDragOffset] = useState(0)
-  const isDragging = useRef(false)
-  const dragStart = useRef({ x: 0, value: 0 })
+  // Continuous sub-cell visual offset in px — provides smooth gliding during drag
+  const [visualOffset, setVisualOffset] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartRef = useRef({ x: 0, startLocal: 0 })
 
-  // Sync when the parent changes value externally (e.g. +/- buttons)
   useEffect(() => {
-    if (value !== null && value !== local) setLocal(value)
+    if (value !== null && value !== local) { setLocal(value); setVisualOffset(0) }
   }, [value]) // eslint-disable-line
 
   const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    isDragging.current = true
-    dragStart.current = { x: e.clientX, value: local }
-    setDragOffset(0)
+    dragStartRef.current = { x: e.clientX, startLocal: local }
+    setIsDragging(true)
+    setVisualOffset(0)
     e.currentTarget.setPointerCapture(e.pointerId)
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDragging.current) return
-    const dx = e.clientX - dragStart.current.x
-    const rawV = dragStart.current.value - dx / CELL_W
-    const v = Math.max(0, Math.min(15, Math.round(rawV)))
-    // Sub-cell pixel offset for smooth visual during drag
-    const clampedRaw = Math.max(0, Math.min(15, rawV))
-    const frac = (clampedRaw - Math.round(clampedRaw)) * CELL_W
-    setDragOffset(frac)
-    if (v !== local) { setLocal(v); onChange(v) }
+    if (!isDragging) return
+    const dx = e.clientX - dragStartRef.current.x
+    const rawVal = Math.max(0, Math.min(15, dragStartRef.current.startLocal - dx / CELL_W))
+    const discreteVal = Math.round(rawVal)
+    // Sub-cell fractional offset gives continuous visual glide without waiting for snap
+    const subCell = (rawVal - discreteVal) * CELL_W
+    setVisualOffset(subCell)
+    if (discreteVal !== local) { setLocal(discreteVal); onChange(discreteVal) }
   }
 
-  const onPointerUp = () => {
-    isDragging.current = false
-    setDragOffset(0) // snap to exact position with CSS transition
+  const onPointerUp = () => { setIsDragging(false); setVisualOffset(0) }
+
+  const onWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const v = Math.max(0, Math.min(15, local + Math.sign(e.deltaY)))
+    setLocal(v); onChange(v)
   }
 
   const color = getValueColor(local)
@@ -156,18 +166,18 @@ function WheelPicker({
     <div className="w-full select-none">
       <div
         className="relative overflow-hidden touch-none"
-        style={{ height: 48, cursor: 'grab' }}
+        style={{ height: 48, cursor: isDragging ? 'grabbing' : 'grab' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
+        onWheel={onWheel}
       >
         {Array.from({ length: 16 }, (_, i) => {
-          const xOffset = (i - local) * CELL_W + dragOffset
-          // Don't render items that are far outside the visible area
-          if (Math.abs(xOffset) > 180) return null
-          const dist = Math.abs(i - local)
-          const isCenter = dist === 0
+          const xOffset = (i - local) * CELL_W + visualOffset
+          if (Math.abs(xOffset) > 220) return null
+          const dist = Math.abs(i - local - visualOffset / CELL_W)
+          const isCenter = Math.abs(i - local) === 0
           const c = getValueColor(i)
           return (
             <div
@@ -177,35 +187,33 @@ function WheelPicker({
                 width: CELL_W,
                 top: 0,
                 bottom: 0,
-                // CSS calc(50%) centers the selected item without any JS measurement
-                left: 'calc(50% - 13px)',
+                left: `calc(50% - ${CELL_W / 2}px)`,
                 transform: `translateX(${xOffset}px)`,
-                transition: isDragging.current ? 'none' : 'transform 0.12s ease-out',
+                // No transition while dragging — prevents the "snap per note" feel
+                transition: isDragging ? 'none' : 'transform 0.1s ease-out',
                 gap: 3,
               }}
             >
-              {/* Wheel spoke */}
               <div
                 style={{
                   width: 1.5,
-                  height: isCenter ? 13 : dist === 1 ? 8 : 5,
+                  height: isCenter ? 13 : dist <= 1.5 ? 8 : 5,
                   borderRadius: 1,
                   background: isCenter
                     ? (isSet ? color : 'rgb(var(--color-text-secondary))')
                     : 'rgba(var(--color-border), 1)',
-                  opacity: isCenter ? 1 : dist === 1 ? 0.6 : dist === 2 ? 0.35 : 0.15,
+                  opacity: isCenter ? 1 : dist <= 1.5 ? 0.6 : dist <= 2.5 ? 0.35 : 0.15,
                   flexShrink: 0,
                 }}
               />
-              {/* Number — selected cell is noticeably larger */}
               <span
                 style={{
-                  fontSize: isCenter ? 20 : dist === 1 ? 12 : 10,
+                  fontSize: isCenter ? 20 : dist <= 1.5 ? 12 : 10,
                   fontWeight: isCenter ? 900 : 700,
                   color: isSet ? c : (isCenter ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))'),
-                  opacity: isCenter ? 1 : dist === 1 ? 0.5 : dist === 2 ? 0.27 : 0.1,
+                  opacity: isCenter ? 1 : dist <= 1.5 ? 0.5 : dist <= 2.5 ? 0.27 : 0.1,
                   lineHeight: 1,
-                  transition: 'font-size 0.08s ease',
+                  transition: isDragging ? 'none' : 'font-size 0.08s ease',
                 }}
               >
                 {i}
@@ -214,17 +222,15 @@ function WheelPicker({
           )
         })}
 
-        {/* Edge fades */}
         <div
-          className="absolute inset-y-0 left-0 w-8 pointer-events-none"
+          className="absolute inset-y-0 left-0 w-10 pointer-events-none"
           style={{ background: 'linear-gradient(to right, rgb(var(--color-surface)) 15%, transparent)' }}
         />
         <div
-          className="absolute inset-y-0 right-0 w-8 pointer-events-none"
+          className="absolute inset-y-0 right-0 w-10 pointer-events-none"
           style={{ background: 'linear-gradient(to left, rgb(var(--color-surface)) 15%, transparent)' }}
         />
 
-        {/* Center bracket */}
         <div
           className="absolute inset-y-1 left-1/2 -translate-x-1/2 pointer-events-none"
           style={{
@@ -374,9 +380,11 @@ const SM_RATIOS = [
 function SubjectCard({
   entry,
   onChange,
+  onLkChange,
 }: {
   entry: AbiGradeEntry
   onChange: (e: AbiGradeEntry) => void
+  onLkChange?: (subjectId: string, isLK: boolean) => void
 }) {
   const subj = SUBJECT_INFO[entry.subjectId]
   const ratio = entry.smRatio ?? 0.5
@@ -408,8 +416,11 @@ function SubjectCard({
     })
   }
 
+  const isExcluded = entry.notBelegt || (entry.subjectType && entry.subjectType !== 'normal')
+  const subjectTypeLabel = entry.subjectType === 'seminarfach' ? 'Seminarfach' : entry.subjectType === 'excluded' ? 'Ausgeschlossen' : null
+
   return (
-    <div className="bg-surface border border-border/60 rounded-[18px] overflow-hidden">
+    <div className={`bg-surface border border-border/60 rounded-[18px] overflow-hidden transition-opacity ${isExcluded ? 'opacity-50' : ''}`}>
 
       {/* ── Top bar: icon · name · LK toggle · Endnote ── */}
       <div className="flex items-center justify-between px-4 py-3">
@@ -420,25 +431,48 @@ function SubjectCard({
           >
             {subj?.icon ?? '📚'}
           </div>
-          <span className="font-semibold text-[14px] text-text-primary truncate">
-            {subj?.name ?? entry.subjectId}
-          </span>
+          <div className="min-w-0">
+            <span className="font-semibold text-[14px] text-text-primary truncate block">
+              {subj?.name ?? entry.subjectId}
+            </span>
+            {subjectTypeLabel && (
+              <span className="text-[10px] text-text-muted font-medium">{subjectTypeLabel} · nicht eingerechnet</span>
+            )}
+          </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0 ml-2">
-          {/* LK 2× toggle */}
+        <div className="flex items-center gap-1.5 shrink-0 ml-2">
+          {/* Nicht belegt toggle */}
           <button
-            onClick={() => onChange({ ...entry, isLK: !entry.isLK })}
-            className="px-2.5 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
+            onClick={() => onChange({ ...entry, notBelegt: !entry.notBelegt })}
+            className="px-2 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
             style={
-              entry.isLK
-                ? { background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)', border: '1px solid transparent' }
-                : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
+              entry.notBelegt
+                ? { background: 'rgba(var(--color-danger),0.15)', color: 'rgb(var(--color-danger))', border: '1px solid rgba(var(--color-danger),0.3)' }
+                : { background: 'rgba(var(--color-border),0.3)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
             }
           >
-            LK 2×
+            {entry.notBelegt ? '✕ Nicht belegt' : '— Nicht belegt'}
           </button>
+          {/* LK 2× toggle */}
+          {!entry.notBelegt && (
+            <button
+              onClick={() => {
+                const next = !entry.isLK
+                if (onLkChange) onLkChange(entry.subjectId, next)
+                else onChange({ ...entry, isLK: next })
+              }}
+              className="px-2.5 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
+              style={
+                entry.isLK
+                  ? { background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)', border: '1px solid transparent' }
+                  : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
+              }
+            >
+              LK 2×
+            </button>
+          )}
           {/* Endnote with +/- override */}
-          {endnote !== null && (
+          {endnote !== null && !entry.notBelegt && (
             <EndnoteControl
               endnote={endnote}
               isOverride={isOverride}
@@ -450,7 +484,10 @@ function SubjectCard({
         </div>
       </div>
 
-      {/* ── Body: Schriftlich | Mündlich columns ── */}
+      {/* ── Body: hidden when not belegt ── */}
+      {!entry.notBelegt && (
+      <>
+      {/* ── Schriftlich | Mündlich columns ── */}
       <div className="flex border-t border-border/30">
         <GradeColumn
           title="Schriftlich"
@@ -483,8 +520,33 @@ function SubjectCard({
         />
       </div>
 
-      {/* ── Bottom bar: S/M weight (shown when both sides set) ── */}
-      {bothEntered && (
+      {/* ── SubjectType row (Seminarfach / Ausschließen) ── */}
+      <div className="px-4 pb-2.5 pt-2 border-t border-border/20 bg-background/30 flex items-center gap-1.5">
+        <span className="text-[9px] text-text-muted uppercase tracking-wider font-bold mr-1">Typ</span>
+        {(['normal', 'seminarfach', 'excluded'] as const).map((t) => {
+          const label = t === 'normal' ? 'Normal' : t === 'seminarfach' ? 'Seminarfach' : 'Ausschließen'
+          const active = (!entry.subjectType || entry.subjectType === 'normal') ? t === 'normal' : entry.subjectType === t
+          return (
+            <button
+              key={t}
+              onClick={() => onChange({ ...entry, subjectType: t })}
+              className="px-2 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
+              style={
+                active
+                  ? { background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', color: 'white', boxShadow: '0 1px 6px rgba(124,58,237,0.35)' }
+                  : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-muted))' }
+              }
+            >
+              {label}
+            </button>
+          )
+        })}
+      </div>
+      </>
+      )}
+
+      {/* ── Bottom bar: S/M weight (shown when both sides set and not excluded) ── */}
+      {bothEntered && !entry.notBelegt && (
         <div className="px-4 py-3 border-t border-border/30 bg-background/40 space-y-2.5">
           <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">S / M Gewichtung</p>
 
@@ -564,7 +626,7 @@ function ChevronLeft({ size = 16 }: { size?: number }) {
 }
 
 export function AbiRechnerScreen() {
-  const { profile, updateProfile } = useUser()
+  const { profile, updateProfile, authUser } = useUser()
   const navigate = useNavigate()
 
   const faecher = profile?.faecher ?? []
@@ -603,6 +665,7 @@ export function AbiRechnerScreen() {
   })
 
   const [activeId, setActiveId] = useState<string>(halbjahre[0]?.id ?? '')
+  const [syncStatus, setSyncStatus] = useState<'saving' | 'saved' | 'error' | null>(null)
 
   const activeHj = halbjahre.find((hj) => hj.id === activeId) ?? halbjahre[0]
   const activeEntries = activeHj?.entries ?? []
@@ -610,11 +673,23 @@ export function AbiRechnerScreen() {
   const persist = (updated: AbiHalbjahr[]) => {
     setHalbjahre(updated)
     const gesamtPunkte = totalPunkteAllHalbjahre(updated)
+
+    setSyncStatus('saving')
     updateProfile({
       abiHalbjahre: updated,
       abiGesamtpunkte: gesamtPunkte,
       abiGesamtnote: gesamtPunkte !== null ? pktToNoteAbi(gesamtPunkte) : undefined,
     })
+
+    // Give visual feedback that save was attempted (will be cleared after 2s)
+    setTimeout(() => {
+      if (authUser) {
+        setSyncStatus('saved')
+        setTimeout(() => setSyncStatus(null), 2000)
+      } else {
+        setSyncStatus(null)
+      }
+    }, 500)
   }
 
   const updateEntry = (updatedEntry: AbiGradeEntry) => {
@@ -624,6 +699,16 @@ export function AbiRechnerScreen() {
           ? { ...hj, entries: hj.entries.map((e) => e.subjectId === updatedEntry.subjectId ? updatedEntry : e) }
           : hj,
       ),
+    )
+  }
+
+  // In Oberstufe (Q1–Q4): propagate LK flag to all quarters for the same subject
+  const updateLkAcrossHalbjahre = (subjectId: string, isLK: boolean) => {
+    persist(
+      halbjahre.map((hj) => ({
+        ...hj,
+        entries: hj.entries.map((e) => e.subjectId === subjectId ? { ...e, isLK } : e),
+      }))
     )
   }
 
@@ -663,6 +748,38 @@ export function AbiRechnerScreen() {
             }
           </p>
         </div>
+        {syncStatus && (
+          <div
+            className="px-2.5 py-1 rounded-pill text-[10px] font-bold flex items-center gap-1.5 shrink-0"
+            style={{
+              background: syncStatus === 'saved' ? 'rgba(52, 199, 89, 0.15)' : syncStatus === 'error' ? 'rgba(255, 59, 48, 0.15)' : 'rgba(124, 58, 237, 0.15)',
+              color: syncStatus === 'saved' ? '#34C759' : syncStatus === 'error' ? '#FF3B30' : '#7C3AED',
+            }}
+          >
+            {syncStatus === 'saving' && (
+              <>
+                <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'currentColor' }} />
+                Speichern...
+              </>
+            )}
+            {syncStatus === 'saved' && (
+              <>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+                Gespeichert
+              </>
+            )}
+            {syncStatus === 'error' && (
+              <>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+                Fehler
+              </>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="px-4 pt-4 pb-8 space-y-4">
@@ -844,6 +961,7 @@ export function AbiRechnerScreen() {
                 key={`${activeId}-${entry.subjectId}`}
                 entry={entry}
                 onChange={updateEntry}
+                onLkChange={isOberstufe ? updateLkAcrossHalbjahre : undefined}
               />
             ))}
           </div>

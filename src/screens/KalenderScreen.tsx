@@ -7,6 +7,7 @@ import type { StundenplanSlot, Stundenplan, AbiHalbjahr, UserNote } from '../typ
 import type { StandaloneHomeworkItem } from '../context/UserContext'
 import { totalPunkteAllHalbjahre, pktToNoteAbi, noteColorAbi } from './AbiRechnerScreen'
 import { parseStundenplanFromImage } from '../lib/groq'
+import { LernvorschlagWidget } from '../components/ui/LernvorschlagWidget'
 
 function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
   if (!lastStudyDate) return 0
@@ -476,26 +477,8 @@ export function KalenderScreen() {
 
         {/* ── KI-Lernvorschlag ─────────────────────────────────── */}
         <section>
-          <h2 className="section-label mb-3">KI-Lernvorschlag</h2>
-          <div className="relative overflow-hidden bg-surface rounded-card shadow-card-adaptive border border-border/60 p-5">
-            <div className="filter blur-sm pointer-events-none select-none">
-              <p className="text-text-primary font-semibold text-[15px] mb-1">Heute: Mathematik — 45 Min</p>
-              <p className="text-text-secondary text-[13px]">Fokus Integralrechnung · 3 Karteikarten · 1 Aufgabe</p>
-              <div className="mt-3 flex gap-2">
-                <div className="h-8 w-28 bg-accent/10 rounded-btn" />
-                <div className="h-8 w-20 bg-surface-hover rounded-btn" />
-              </div>
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex items-center gap-2 bg-surface/95 border border-border rounded-[14px] px-4 py-2.5 shadow-float">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0110 0v4" strokeLinecap="round" />
-                </svg>
-                <span className="text-accent text-[13px] font-semibold">Pro freischalten</span>
-              </div>
-            </div>
-          </div>
+          <h2 className="section-label mb-3">Lernvorschlag für heute</h2>
+          <LernvorschlagWidget />
         </section>
 
         </div>{/* end left column */}

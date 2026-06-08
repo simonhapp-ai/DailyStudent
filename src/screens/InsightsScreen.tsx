@@ -428,7 +428,7 @@ function SubjectBarChart({ items }: { items: BarItem[] }) {
 
 export function InsightsScreen() {
   const navigate = useNavigate()
-  const { profile, appStats, userNotes, generatedFlashCards, savedProbeklausuren } = useUser()
+  const { profile, appStats, userNotes, generatedFlashCards, savedProbeklausuren, lernzettel } = useUser()
 
   const halbjahre = profile?.abiHalbjahre ?? []
   const faecher = profile?.faecher ?? []
@@ -559,19 +559,25 @@ export function InsightsScreen() {
         <p className="text-[13px] text-text-muted mt-0.5">Dein Lernfortschritt auf einen Blick</p>
       </div>
 
-      <div className="px-4 mt-5 space-y-4">
+      <div className="px-4 mt-5 lg:px-8">
+        <div className="lg:grid lg:grid-cols-[1fr_380px] lg:gap-6 lg:items-start">
+
+        {/* ── LEFT COLUMN ──────────────────────────────────────────────── */}
+        <div className="space-y-4">
 
         {/* ── Quick Stats ──────────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           {([
-            { icon: '🔥', value: activeStreak.toString(), unit: 'Tage', label: 'Streak', color: '#FF9500' },
-            { icon: '📝', value: userNotes.length.toString(), unit: '', label: 'Notizen', color: '#6366F1' },
-            { icon: '📸', value: totalPhotos.toString(), unit: '', label: 'Fotos', color: '#38BDF8' },
-            { icon: '⭐', value: abiGesamtnote ?? '—', unit: '', label: 'Ø Note', color: '#34C759' },
+            { icon: '🔥', value: activeStreak.toString(), unit: 'Tage', label: 'Streak' },
+            { icon: '📝', value: userNotes.length.toString(), unit: '', label: 'Notizen' },
+            { icon: '📸', value: totalPhotos.toString(), unit: '', label: 'Fotos' },
+            { icon: '📋', value: savedProbeklausuren.length.toString(), unit: '', label: 'Probeklausuren' },
+            { icon: '📄', value: lernzettel.length.toString(), unit: '', label: 'Lernzettel' },
+            { icon: '🎴', value: generatedFlashCards.length.toString(), unit: '', label: 'Karteikarten' },
           ] as const).map((s) => (
-            <div key={s.label} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4">
+            <div key={s.label} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 lg:p-5">
               <div className="flex items-start justify-between mb-1.5">
-                <span className="text-[22px]">{s.icon}</span>
+                <span className="text-[22px] lg:text-[26px]">{s.icon}</span>
                 <p className="text-text-primary font-bold text-[22px] leading-none">
                   {s.value}
                   {s.unit && <span className="text-text-muted text-[12px] font-normal ml-1">{s.unit}</span>}
@@ -667,103 +673,6 @@ export function InsightsScreen() {
           <GradeChart lines={chartLines} zielnoteNP={zielnoteNP} />
         </div>
 
-        {/* ── Fächer-Übersicht ──────────────────────────────────────────── */}
-        <div>
-          <h2 className="section-label mb-3">Fächer-Übersicht</h2>
-          {sortedGrades.length > 0 ? (
-            <div className="grid grid-cols-2 gap-3">
-              {sortedGrades.map((s) => (
-                <div key={s.subjectId} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[22px]">{s.info.icon}</span>
-                      {s.isLK && (
-                        <span
-                          className="px-1.5 py-0.5 rounded text-[9px] font-bold"
-                          style={{ background: s.info.color + '25', color: s.info.color }}
-                        >
-                          LK
-                        </span>
-                      )}
-                    </div>
-                    {s.quarter && <span className="text-text-muted text-[10px]">{s.quarter}</span>}
-                  </div>
-                  <p className="text-text-secondary text-[12px] truncate mb-1">{s.info.name}</p>
-                  {s.np !== null ? (
-                    <>
-                      <div className="flex items-baseline gap-1.5">
-                        <p className="font-bold text-[22px] text-text-primary leading-none">{npToLabel(s.np)}</p>
-                        <p className="text-text-muted text-[12px]">{s.np} NP</p>
-                      </div>
-                      <div className="h-1.5 bg-border/40 rounded-pill mt-2.5">
-                        <div
-                          className="h-full rounded-pill transition-all"
-                          style={{ width: `${(s.np / 15) * 100}%`, background: npToBarColor(s.np) }}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <div>
-                      <p className="text-text-muted text-[13px] mt-1">—</p>
-                      <div className="h-1.5 bg-border/30 rounded-pill mt-2.5" />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="bg-surface rounded-card border border-border/60 p-5 text-center">
-              <p className="text-text-muted text-[14px]">Füge Fächer im Onboarding hinzu.</p>
-            </div>
-          )}
-        </div>
-
-        {/* ── Fachvergleich ─────────────────────────────────────────────── */}
-        {barChartItems.length > 0 && (
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-5">
-            <div className="mb-4">
-              <p className="text-text-primary font-bold text-[16px]">Fachvergleich</p>
-              <p className="text-text-muted text-[12px] mt-0.5">Aktuelle NP aller Fächer im Überblick</p>
-            </div>
-            <SubjectBarChart items={barChartItems} />
-          </div>
-        )}
-
-        {/* ── Nächste Klausuren ─────────────────────────────────────────── */}
-        {upcomingExams.length > 0 && (
-          <div>
-            <h2 className="section-label mb-3">Nächste Klausuren</h2>
-            <div className="space-y-2">
-              {upcomingExams.map((exam) => {
-                const urgencyColor = exam.days <= 7 ? '#EF4444' : exam.days <= 14 ? '#F97316' : '#007AFF'
-                return (
-                  <div
-                    key={`${exam.subjectId}-${exam.date}`}
-                    className="bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-3.5 flex items-center gap-4"
-                  >
-                    <div
-                      className="w-11 h-11 rounded-[12px] flex items-center justify-center shrink-0 text-[20px]"
-                      style={{ background: exam.info.color + '20' }}
-                    >
-                      {exam.info.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-text-primary font-semibold text-[15px] truncate">{exam.info.name}</p>
-                      <p className="text-text-muted text-[12px] mt-0.5">{fmtDate(exam.date)}</p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="font-bold text-[24px] leading-none" style={{ color: urgencyColor }}>
-                        {exam.days}
-                      </p>
-                      <p className="text-text-muted text-[11px] mt-0.5">Tage</p>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
-
         {/* ── Wochenaktivität ───────────────────────────────────────────── */}
         <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-5">
           <div className="flex items-center justify-between mb-4">
@@ -813,7 +722,6 @@ export function InsightsScreen() {
                 : `Noch ${7 - daysStudiedThisWeek} ${7 - daysStudiedThisWeek === 1 ? 'Tag' : 'Tage'} für eine perfekte Woche`}
             </p>
           </div>
-          {/* Weekly detail stats */}
           {(notesThisWeek > 0 || examsThisWeek > 0) && (
             <div className="flex gap-3 mt-4 pt-4 border-t border-border/50">
               {notesThisWeek > 0 && (
@@ -886,20 +794,120 @@ export function InsightsScreen() {
           </div>
         </div>
 
+        </div>{/* ── end left column ── */}
+
+        {/* ── RIGHT COLUMN ─────────────────────────────────────────────── */}
+        <div className="space-y-4 mt-4 lg:mt-0">
+
+        {/* ── Fachvergleich ─────────────────────────────────────────────── */}
+        {barChartItems.length > 0 && (
+          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-5">
+            <div className="mb-4">
+              <p className="text-text-primary font-bold text-[16px]">Fachvergleich</p>
+              <p className="text-text-muted text-[12px] mt-0.5">Aktuelle NP aller Fächer im Überblick</p>
+            </div>
+            <SubjectBarChart items={barChartItems} />
+          </div>
+        )}
+
+        {/* ── Fächer-Übersicht ──────────────────────────────────────────── */}
+        <div>
+          <h2 className="section-label mb-3">Fächer-Übersicht</h2>
+          {sortedGrades.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3">
+              {sortedGrades.map((s) => (
+                <div key={s.subjectId} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[22px]">{s.info.icon}</span>
+                      {s.isLK && (
+                        <span
+                          className="px-1.5 py-0.5 rounded text-[9px] font-bold"
+                          style={{ background: s.info.color + '25', color: s.info.color }}
+                        >
+                          LK
+                        </span>
+                      )}
+                    </div>
+                    {s.quarter && <span className="text-text-muted text-[10px]">{s.quarter}</span>}
+                  </div>
+                  <p className="text-text-secondary text-[12px] truncate mb-1">{s.info.name}</p>
+                  {s.np !== null ? (
+                    <>
+                      <div className="flex items-baseline gap-1.5">
+                        <p className="font-bold text-[22px] text-text-primary leading-none">{npToLabel(s.np)}</p>
+                        <p className="text-text-muted text-[12px]">{s.np} NP</p>
+                      </div>
+                      <div className="h-1.5 bg-border/40 rounded-pill mt-2.5">
+                        <div
+                          className="h-full rounded-pill transition-all"
+                          style={{ width: `${(s.np / 15) * 100}%`, background: npToBarColor(s.np) }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div>
+                      <p className="text-text-muted text-[13px] mt-1">—</p>
+                      <div className="h-1.5 bg-border/30 rounded-pill mt-2.5" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-surface rounded-card border border-border/60 p-5 text-center">
+              <p className="text-text-muted text-[14px]">Füge Fächer im Onboarding hinzu.</p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Nächste Klausuren ─────────────────────────────────────────── */}
+        {upcomingExams.length > 0 && (
+          <div>
+            <h2 className="section-label mb-3">Nächste Klausuren</h2>
+            <div className="space-y-2">
+              {upcomingExams.map((exam) => {
+                const urgencyColor = exam.days <= 7 ? '#EF4444' : exam.days <= 14 ? '#F97316' : '#007AFF'
+                return (
+                  <div
+                    key={`${exam.subjectId}-${exam.date}`}
+                    className="bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-3.5 flex items-center gap-4"
+                  >
+                    <div
+                      className="w-11 h-11 rounded-[12px] flex items-center justify-center shrink-0 text-[20px]"
+                      style={{ background: exam.info.color + '20' }}
+                    >
+                      {exam.info.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-text-primary font-semibold text-[15px] truncate">{exam.info.name}</p>
+                      <p className="text-text-muted text-[12px] mt-0.5">{fmtDate(exam.date)}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="font-bold text-[24px] leading-none" style={{ color: urgencyColor }}>
+                        {exam.days}
+                      </p>
+                      <p className="text-text-muted text-[11px] mt-0.5">Tage</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
         {/* ── Klausurergebnisse ──────────────────────────────────────────── */}
         {savedProbeklausuren.length > 0 && (() => {
           const recent = [...savedProbeklausuren]
             .sort((a, b) => b.completedAt.localeCompare(a.completedAt))
             .slice(0, 5)
 
-          // Per-subject last 2 scores for trend
           const subjectScores: Record<string, number[]> = {}
           for (const pk of [...savedProbeklausuren].sort((a, b) => a.completedAt.localeCompare(b.completedAt))) {
             if (!subjectScores[pk.subjectId]) subjectScores[pk.subjectId] = []
             subjectScores[pk.subjectId].push(pk.totalNP)
           }
 
-          // AFB weakness: average NP < 7 for a given AFB across last 5 exams
           const afbScores: Record<string, number[]> = { I: [], II: [], III: [] }
           for (const pk of recent) {
             for (const t of pk.taskResults) {
@@ -926,8 +934,6 @@ export function InsightsScreen() {
           return (
             <div>
               <p className="section-label px-1 mb-2.5">Klausurergebnisse</p>
-
-              {/* Last 5 exams */}
               <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden mb-3">
                 {recent.map((pk, i) => (
                   <div key={pk.id} className={`flex items-center gap-3 px-4 py-3 ${i < recent.length - 1 ? 'border-b border-border/40' : ''}`}>
@@ -935,7 +941,6 @@ export function InsightsScreen() {
                       <p className="text-[14px] font-semibold text-text-primary truncate">{pk.topic}</p>
                       <p className="text-[11px] text-text-muted">{pk.subjectName} · {new Date(pk.completedAt).toLocaleDateString('de-DE', { day: '2-digit', month: 'short' })}</p>
                     </div>
-                    {/* Trend arrow */}
                     {(() => {
                       const scores = subjectScores[pk.subjectId] ?? []
                       const idx = scores.lastIndexOf(pk.totalNP)
@@ -956,8 +961,6 @@ export function InsightsScreen() {
                   </div>
                 ))}
               </div>
-
-              {/* AFB weakness hint */}
               {weakAfb.length > 0 && (
                 <div className="bg-amber-500/10 border border-amber-500/30 rounded-[16px] p-4 flex items-start gap-3">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
@@ -973,6 +976,9 @@ export function InsightsScreen() {
           )
         })()}
 
+        </div>{/* ── end right column ── */}
+
+        </div>{/* ── end grid ── */}
       </div>
     </div>
   )

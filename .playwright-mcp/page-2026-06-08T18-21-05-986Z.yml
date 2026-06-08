@@ -1,0 +1,26 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - img "DailyStudent" [ref=e5]
+    - heading "DailyStudent" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Dein KI-Lernassistent
+  - generic [ref=e8]:
+    - heading "Willkommen zurück" [level=2] [ref=e9]
+    - generic [ref=e10]:
+      - button "Google" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+        - generic [ref=e17]: Google
+      - button "Apple" [ref=e18] [cursor=pointer]:
+        - img [ref=e19]
+        - generic [ref=e21]: Apple
+    - generic [ref=e24]: oder
+    - generic [ref=e26]:
+      - textbox "E-Mail-Adresse" [ref=e27]
+      - generic [ref=e28]:
+        - textbox "Passwort" [ref=e29]
+        - button [ref=e30] [cursor=pointer]:
+          - img [ref=e31]
+      - button "Anmelden" [ref=e34] [cursor=pointer]
+    - paragraph [ref=e35]:
+      - text: Noch kein Konto?
+      - button "Registrieren" [ref=e36] [cursor=pointer]
+  - paragraph [ref=e37]: Mit der Anmeldung stimmst du unseren Nutzungsbedingungen und der Datenschutzerklärung zu.

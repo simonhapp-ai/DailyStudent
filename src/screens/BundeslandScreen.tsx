@@ -31,6 +31,7 @@ export function BundeslandScreen() {
   const [schulform, setSchulform] = useState(profile?.schulform ?? 'Gymnasium')
   const [schultyp, setSchultyp] = useState<'g8' | 'g9'>(profile?.schultyp ?? 'g9')
   const [saved, setSaved] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const showSchultyp = schulform === 'Gymnasium' || schulform === 'Gesamtschule'
   const bundesland = BUNDESLAENDER.find((b) => b.id === bundeslandId)
@@ -41,15 +42,22 @@ export function BundeslandScreen() {
     (showSchultyp && schultyp !== profile?.schultyp)
 
   const handleSave = async () => {
-    updateProfile({
-      bundesland: bundesland?.name ?? bundeslandId,
-      bundeslandId,
-      schulform,
-      ...(showSchultyp ? { schultyp } : {}),
-    })
-    await loadKcData()
-    setSaved(true)
-    setTimeout(() => navigate('/profil'), 900)
+    try {
+      setError(null)
+      updateProfile({
+        bundesland: bundesland?.name ?? bundeslandId,
+        bundeslandId,
+        schulform,
+        ...(showSchultyp ? { schultyp } : {}),
+      })
+      await loadKcData()
+      setSaved(true)
+      setTimeout(() => navigate('/profil'), 900)
+    } catch (err) {
+      setError('Fehler beim Speichern. Bitte versuchen Sie es später erneut.')
+      console.warn('[BundeslandScreen]', err)
+      setTimeout(() => setSaved(false), 2000)
+    }
   }
 
   return (
@@ -169,8 +177,14 @@ export function BundeslandScreen() {
             boxShadow: changed && !saved ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',
           }}
         >
-          {saved ? '✓ Gespeichert' : 'Speichern'}
+          {saved ? '✓ Gespeichert' : error ? '✕ Fehler' : 'Speichern'}
         </button>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-card px-4 py-3">
+            <p className="text-red-700 text-[13px]">{error}</p>
+          </div>
+        )}
 
       </div>
     </div>

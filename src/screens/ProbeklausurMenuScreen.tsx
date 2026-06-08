@@ -1,4 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useUser } from '../context/UserContext'
+import { SUBJECT_INFO } from '../data/subjectInfo'
 
 interface ProbeklausurPrefill {
   subjectId: string
@@ -68,10 +70,37 @@ const MODES_HALF = [
   },
 ]
 
+const MODE_ROUTE: Record<number, string> = {
+  1: '/klausurmodus/probeklausur/afb-trainer',
+  2: '/klausurmodus/probeklausur/vollstaendige-klausur',
+  3: '/klausurmodus/probeklausur/materialklausur',
+  4: '/klausurmodus/probeklausur/ohne-material',
+}
+
+const MODE_LABEL: Record<number, string> = {
+  1: 'AFB-Trainer',
+  2: 'Vollständige Klausur',
+  3: 'Materialklausur',
+  4: 'Ohne Material',
+}
+
+function fmtDate(iso: string) {
+  return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: '2-digit' })
+}
+
+function npColor(np: number): string {
+  if (np >= 13) return '#34D399'
+  if (np >= 10) return '#60A5FA'
+  if (np >= 7) return '#FACC15'
+  if (np >= 4) return '#FB923C'
+  return '#F87171'
+}
+
 export function ProbeklausurMenuScreen() {
   const navigate = useNavigate()
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
+  const { inProgressProbeklausuren, deleteInProgressProbeklausur, savedProbeklausuren, deleteSavedProbeklausur } = useUser()
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-28">
@@ -208,6 +237,109 @@ export function ProbeklausurMenuScreen() {
             Alle Modi folgen den Niedersächsischen Abitur-Regeln: Operatoren, BE-Angaben, AFB-Progression und fachspezifische Aufgabentypen.
           </p>
         </div>
+
+        {/* ── Angefangene Klausuren ─────────────────────────────────────── */}
+        {inProgressProbeklausuren.length > 0 && (
+          <div>
+            <p className="section-label px-1 mb-2.5">Angefangene Klausuren</p>
+            <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden">
+              {inProgressProbeklausuren.map((pk, i) => {
+                const info = SUBJECT_INFO[pk.subjectId]
+                const answerCount = Object.values(pk.userAnswers).filter(Boolean).length
+                const totalTasks = pk.exam.tasks.length
+                return (
+                  <div
+                    key={pk.id}
+                    className={`flex items-center gap-3 px-4 py-3.5 ${i < inProgressProbeklausuren.length - 1 ? 'border-b border-border/40' : ''}`}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 text-[19px]"
+                      style={{ background: (info?.color ?? '#7C3AED') + '20' }}
+                    >
+                      {info?.icon ?? '📋'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-text-primary font-semibold text-[14px] truncate">{pk.subjectName}</p>
+                      <p className="text-text-muted text-[11px] mt-0.5">
+                        {MODE_LABEL[pk.mode]} · {answerCount}/{totalTasks} bearbeitet · {fmtDate(pk.startedAt)}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={() => deleteInProgressProbeklausur(pk.id)}
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-text-muted press-sm"
+                        style={{ background: 'rgba(239,68,68,0.1)' }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => navigate(MODE_ROUTE[pk.mode], { state: { resume: pk } })}
+                        className="px-3 py-1.5 rounded-pill text-white text-[12px] font-semibold press-sm"
+                        style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)' }}
+                      >
+                        Fortfahren →
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* ── Erledigte Klausuren ───────────────────────────────────────── */}
+        {savedProbeklausuren.length > 0 && (
+          <div>
+            <p className="section-label px-1 mb-2.5">Erledigte Klausuren</p>
+            <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden">
+              {[...savedProbeklausuren]
+                .sort((a, b) => b.completedAt.localeCompare(a.completedAt))
+                .map((pk, i, arr) => {
+                  const info = SUBJECT_INFO[pk.subjectId]
+                  return (
+                    <div
+                      key={pk.id}
+                      className={`flex items-center gap-3 px-4 py-3.5 ${i < arr.length - 1 ? 'border-b border-border/40' : ''}`}
+                    >
+                      <div
+                        className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 text-[19px]"
+                        style={{ background: (info?.color ?? '#7C3AED') + '20' }}
+                      >
+                        {info?.icon ?? '📋'}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-text-primary font-semibold text-[13px] truncate">{pk.topic}</p>
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-bold text-emerald-400 bg-emerald-400/10 shrink-0">
+                            Erledigt
+                          </span>
+                        </div>
+                        <p className="text-text-muted text-[11px] mt-0.5">
+                          {pk.subjectName} · {MODE_LABEL[pk.mode]} · {fmtDate(pk.completedAt)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <div className="px-2.5 py-1 rounded-full text-white text-[11px] font-bold" style={{ background: npColor(pk.totalNP) }}>
+                          {pk.totalNP}/15
+                        </div>
+                        <button
+                          onClick={() => deleteSavedProbeklausur(pk.id)}
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted press-sm"
+                          style={{ background: 'rgba(239,68,68,0.1)' }}
+                        >
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import { endnoteForEntry } from './AbiRechnerScreen'
+import { LernvorschlagWidget } from '../components/ui/LernvorschlagWidget'
 
 function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
   if (!lastStudyDate) return 0
@@ -399,6 +400,12 @@ export function KlausurphasenScreen() {
               <p className="text-text-muted text-[11px] mt-1.5">Alle Details →</p>
             </div>
           </button>
+        </div>
+
+        {/* ── 5. KI-Lernvorschlag ───────────────────────────────────────── */}
+        <div>
+          <p className="section-label px-1 mb-2.5">Lernvorschlag für heute</p>
+          <LernvorschlagWidget />
         </div>
 
       </div>

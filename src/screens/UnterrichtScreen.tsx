@@ -404,7 +404,12 @@ export function UnterrichtScreen() {
       {/* ── Add folder modal ────────────────────────────────────── */}
       <BottomSheet isOpen={!!addFolderFor} onClose={() => setAddFolderFor(null)}>
         <div className="px-5 pb-2">
-          <h2 className="text-[20px] font-bold text-text-primary mb-4">Neuen Ordner erstellen</h2>
+          <h2 className="text-[20px] font-bold text-text-primary mb-1">Neuen Ordner erstellen</h2>
+          {addFolderFor && (
+            <p className="text-text-muted text-[13px] mb-4">
+              {subjects.find((s) => s.id === addFolderFor)?.name ?? addFolderFor}
+            </p>
+          )}
           <input
             type="text"
             value={newFolderName}

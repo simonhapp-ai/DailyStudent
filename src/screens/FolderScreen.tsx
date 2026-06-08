@@ -11,6 +11,19 @@ import type { UserFolder } from '../types'
 
 const NO_SUBJECT_FOLDER_ID = 'folder-no-subject'
 
+function buildFolderPath(currentFolder: UserFolder, allFolders: UserFolder[], subjectName: string): string {
+  const parts: string[] = [currentFolder.name]
+  let f = currentFolder
+  while (f.parentFolderId) {
+    const parent = allFolders.find((x) => x.id === f.parentFolderId)
+    if (!parent) break
+    parts.unshift(parent.name)
+    f = parent
+  }
+  parts.unshift(subjectName)
+  return parts.join(' › ')
+}
+
 export function FolderScreen() {
   const { id, folderId } = useParams<{ id: string; folderId: string }>()
   const navigate = useNavigate()
@@ -248,7 +261,7 @@ export function FolderScreen() {
       <BottomSheet isOpen={showNewFolderModal} onClose={() => setShowNewFolderModal(false)}>
         <div className="px-5 pb-2">
           <h2 className="text-[20px] font-bold text-text-primary mb-1">Neuer Unterordner</h2>
-          <p className="text-text-muted text-[13px] mb-4">in: {folderName}</p>
+          <p className="text-text-muted text-[13px] mb-4">{buildFolderPath(folder, userFolders, isNoSubject ? 'Schnellnotizen' : (subject?.name ?? ''))}</p>
           <input
             type="text"
             value={newFolderName}
