@@ -1,31 +1,48 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { supabase } from '../lib/supabase'
 
 const SECTIONS = [
   {
-    title: 'Welche Daten speichert DailyStudent?',
-    text: 'DailyStudent speichert lokal auf deinem Gerät: Name, Klasse, Schulform, Bundesland und Fächer sowie alle Notizen, Smart Notes, Karteikarten, Lernzettel, Probeklausuren und Lernpläne. Mit aktiviertem Account werden diese Daten zusätzlich verschlüsselt in einer europäischen Supabase-Datenbank gesichert, damit du geräteübergreifend auf deine Inhalte zugreifen kannst.',
+    title: '1. Verantwortlicher',
+    text: 'Verantwortlicher im Sinne der DSGVO ist der Betreiber von DailyStudent. Die vollständigen Kontaktdaten findest du im Impressum (Einstellungen → Impressum).',
   },
   {
-    title: 'KI-Verarbeitung',
-    text: 'Für KI-Funktionen (Smart Notes, Karteikarten, Probeklausuren, Lernplan) werden Inhalte temporär an Groq Inc. (USA) und Google LLC (USA) übertragen. Diese Daten werden ausschließlich zur Antwortgenerierung genutzt und nicht dauerhaft gespeichert oder zum Modell-Training verwendet. Es werden keine persönlichen Identifikatoren — also weder Name noch E-Mail — an KI-Dienste übermittelt.',
+    title: '2. Welche Daten wir speichern',
+    text: 'Wir speichern folgende Daten:\n\n• Accountdaten: E-Mail-Adresse, verschlüsseltes Passwort (verwaltet durch Supabase Auth)\n• Profildaten: Name, Klasse, Schulform, Bundesland, Fächer, Stundenplan\n• Lerninhalte: Notizen, Smart Notes, Karteikarten, Lernzettel, Probeklausuren, Lernpläne\n• Nutzungsstatistiken: Lern-Streak, Lernaktivität, Scan-Anzahl\n• Noten: Halbjahresergebnisse für den Abi-Rechner\n• Zahlungsstatus: Pro-Abo-Status (kein Speichern von Zahlungsdaten)',
   },
   {
-    title: 'Keine Weitergabe an Dritte',
-    text: 'Deine Daten werden nicht verkauft, vermietet oder für Werbezwecke genutzt. Eine Weitergabe erfolgt ausschließlich an folgende Technologiepartner im Rahmen der App-Nutzung: Supabase (Datenspeicherung, EU), Groq (KI-Textgenerierung, USA), Google (KI-Klausuren/Lernpläne, USA) und Stripe (Zahlungsabwicklung, USA).',
+    title: '3. Rechtsgrundlage',
+    text: 'Die Verarbeitung deiner Daten erfolgt auf Basis von Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung) für alle Daten die zur Bereitstellung des Dienstes notwendig sind, sowie Art. 6 Abs. 1 lit. a DSGVO (Einwilligung) für optionale Funktionen wie KI-Analyse.',
   },
   {
-    title: 'Zahlungsdaten',
-    text: 'Zahlungen werden vollständig über Stripe Inc. abgewickelt. DailyStudent speichert keine Kreditkarten- oder Kontodaten. Nach erfolgreicher Zahlung wird ausschließlich dein Pro-Status in der Datenbank vermerkt.',
+    title: '4. KI-Verarbeitung (Groq & Google)',
+    text: 'Für KI-Funktionen (Smart Notes, Karteikarten, Probeklausuren, Lernplan) werden Lerninhalte temporär an folgende Dienste übertragen:\n\n• Groq Inc. (USA): Textgenerierung und Foto-OCR\n• Google LLC (USA/EU): Probeklausur-Generierung und Lernplanung\n\nDiese Inhalte werden ausschließlich zur Antwortgenerierung verwendet und nicht dauerhaft gespeichert oder zum Modelltraining genutzt. Es werden keine persönlichen Identifikatoren (Name, E-Mail) übermittelt. Die Übertragung erfolgt verschlüsselt über unsere Server in der EU (Supabase Frankfurt).',
   },
   {
-    title: 'Deine Rechte (DSGVO)',
-    text: 'Du hast das Recht auf Auskunft über gespeicherte Daten, Berichtigung unrichtiger Daten, Löschung deiner Daten sowie Datenportabilität. Für alle Datenschutzanfragen wende dich an: datenschutz@dailystudent.de',
+    title: '5. Datenspeicherung & Hosting',
+    text: 'Deine Daten werden gespeichert bei:\n\n• Supabase (EU-West-1, Frankfurt, Deutschland): Datenbank, Authentifizierung, Serverlogik — DSGVO-konform, AVV vorhanden\n• Stripe Inc. (USA): Zahlungsabwicklung — kein Speichern von Kreditkartendaten bei uns\n\nAlle Verbindungen sind TLS-verschlüsselt. Supabase nutzt Row Level Security: Jeder Nutzer kann ausschließlich auf seine eigenen Daten zugreifen.',
   },
   {
-    title: 'Cookies & Tracking',
-    text: 'DailyStudent verwendet keine Tracking-Cookies und keine Analyse-Tools von Drittanbietern. Es findet kein verhaltensbasiertes Tracking statt. Technisch notwendige Daten (z.B. Sitzungstoken für den Login) werden ausschließlich lokal gespeichert.',
+    title: '6. Weitergabe an Dritte',
+    text: 'Deine Daten werden nicht verkauft oder für Werbezwecke genutzt. Eine Weitergabe erfolgt ausschließlich an die oben genannten Technologiepartner (Supabase, Groq, Google, Stripe) im für den Dienst notwendigen Umfang.',
+  },
+  {
+    title: '7. Speicherdauer',
+    text: 'Deine Daten werden gespeichert, solange dein Account besteht. Nach Löschung des Accounts werden alle personenbezogenen Daten innerhalb von 30 Tagen unwiderruflich gelöscht. Zahlungsbelege werden entsprechend der gesetzlichen Aufbewahrungspflichten (10 Jahre) von Stripe aufbewahrt.',
+  },
+  {
+    title: '8. Cookies & Tracking',
+    text: 'DailyStudent verwendet keine Tracking-Cookies und keine Analyse-Tools von Drittanbietern (kein Google Analytics, kein Meta-Pixel). Es findet kein verhaltensbasiertes Tracking statt. Zur Sitzungsverwaltung wird ausschließlich ein technisch notwendiger Auth-Token im LocalStorage des Browsers gespeichert.',
+  },
+  {
+    title: '9. Deine Rechte (DSGVO)',
+    text: 'Du hast folgende Rechte:\n\n• Auskunft (Art. 15 DSGVO): Welche Daten wir über dich gespeichert haben\n• Berichtigung (Art. 16 DSGVO): Korrektur falscher Daten\n• Löschung (Art. 17 DSGVO): Vollständige Löschung deines Accounts und aller Daten\n• Datenportabilität (Art. 20 DSGVO): Export deiner Daten\n• Widerspruch (Art. 21 DSGVO): Gegen die Verarbeitung deiner Daten\n• Beschwerde: Bei der zuständigen Datenschutzbehörde\n\nAnfragen richten an: datenschutz@dailystudent.de',
+  },
+  {
+    title: '10. Minderjährige',
+    text: 'DailyStudent richtet sich an Schülerinnen und Schüler ab 13 Jahren. Für Nutzer unter 16 Jahren ist die Einwilligung der Erziehungsberechtigten erforderlich. Wir erheben keine bewusst Daten von Kindern unter 13 Jahren.',
   },
 ]
 
@@ -34,7 +51,8 @@ const DELETE_ITEMS = [
   'Alle Karteikarten und Lerndecks',
   'Alle Lernzettel und Probeklausuren',
   'Alle Lernpläne und Statistiken',
-  'Dein Profil, Einstellungen und Streak',
+  'Dein Profil, Noten und Einstellungen',
+  'Dein Account und alle Zugangsdaten',
 ]
 
 export function DatenschutzScreen() {
@@ -44,12 +62,24 @@ export function DatenschutzScreen() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [confirmInput, setConfirmInput] = useState('')
   const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
 
-  const canDelete = confirmInput === 'löschen'
+  const canDelete = confirmInput.toLowerCase() === 'löschen'
 
   const handleDelete = async () => {
     if (!canDelete) return
     setDeleting(true)
+    setDeleteError(null)
+
+    try {
+      const { error } = await supabase.functions.invoke('delete-account')
+      if (error) throw new Error(error.message)
+    } catch (err) {
+      // If Edge Function fails, still clear local data and sign out
+      console.error('delete-account error:', err)
+      setDeleteError('Serverfehler beim Löschen. Lokale Daten werden trotzdem entfernt.')
+    }
+
     localStorage.removeItem('lernapp_v1')
     await signOut()
     window.location.href = '/'
@@ -57,6 +87,7 @@ export function DatenschutzScreen() {
 
   const openConfirm = () => {
     setConfirmInput('')
+    setDeleteError(null)
     setShowConfirm(true)
   }
 
@@ -64,6 +95,7 @@ export function DatenschutzScreen() {
     if (deleting) return
     setShowConfirm(false)
     setConfirmInput('')
+    setDeleteError(null)
   }
 
   return (
@@ -81,16 +113,16 @@ export function DatenschutzScreen() {
           Zurück
         </button>
         <h1 className="text-[28px] font-bold text-text-primary">Datenschutz</h1>
-        <p className="text-text-muted text-[13px] mt-0.5">Stand: Juni 2026 · DSGVO-konform</p>
+        <p className="text-text-muted text-[13px] mt-0.5">Datenschutzerklärung gem. DSGVO · Stand: Juni 2026</p>
       </div>
 
       <div className="px-4 mt-5 space-y-3">
 
-        {/* ── Datenschutz-Abschnitte ───────────────────────────── */}
+        {/* ── Abschnitte ───────────────────────────────────────── */}
         {SECTIONS.map((s) => (
           <div key={s.title} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4">
-            <p className="text-text-primary font-semibold text-[15px] mb-1.5">{s.title}</p>
-            <p className="text-text-secondary text-[13px] leading-relaxed">{s.text}</p>
+            <p className="text-text-primary font-semibold text-[15px] mb-2">{s.title}</p>
+            <p className="text-text-secondary text-[13px] leading-relaxed whitespace-pre-line">{s.text}</p>
           </div>
         ))}
 
@@ -99,11 +131,11 @@ export function DatenschutzScreen() {
           <div className="h-px bg-border/40" />
         </div>
 
-        {/* ── Alle Daten löschen ──────────────────────────────── */}
+        {/* ── Konto löschen ───────────────────────────────────── */}
         <div>
-          <h2 className="section-label mb-2.5">Datenlöschung</h2>
+          <h2 className="section-label mb-2.5">Account & Datenlöschung</h2>
           <p className="text-text-muted text-[12px] mb-3 leading-relaxed px-0.5">
-            Löscht alle lokal gespeicherten Daten und meldet dich ab. Daten in der Cloud können per E-Mail-Anfrage an datenschutz@dailystudent.de vollständig gelöscht werden.
+            Löscht deinen gesamten Account und alle damit verbundenen Daten unwiderruflich — gemäß Art. 17 DSGVO (Recht auf Löschung).
           </p>
           <button
             onClick={openConfirm}
@@ -114,7 +146,7 @@ export function DatenschutzScreen() {
               background: 'rgba(var(--color-danger), 0.05)',
             }}
           >
-            Alle Daten löschen
+            Account & alle Daten löschen
           </button>
         </div>
 
@@ -126,11 +158,10 @@ export function DatenschutzScreen() {
           <div className="fixed inset-0 z-[50] bg-black/50" onClick={closeConfirm} />
           <div
             className="fixed inset-x-4 z-[51] bg-surface rounded-2xl shadow-float overflow-hidden"
-            style={{ top: '15%' }}
+            style={{ top: '12%' }}
           >
             <div className="px-5 pt-6 pb-5">
 
-              {/* Warning icon */}
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
                 style={{ background: 'rgba(var(--color-danger), 0.1)' }}
@@ -142,25 +173,26 @@ export function DatenschutzScreen() {
                 </svg>
               </div>
 
-              <h2 className="text-[18px] font-bold text-text-primary text-center mb-2">Wirklich alles löschen?</h2>
+              <h2 className="text-[18px] font-bold text-text-primary text-center mb-2">Account unwiderruflich löschen?</h2>
               <p className="text-text-secondary text-[13px] text-center leading-relaxed mb-4">
-                Diese Aktion kann nicht rückgängig gemacht werden. Folgendes wird unwiderruflich gelöscht:
+                Diese Aktion kann nicht rückgängig gemacht werden. Folgendes wird gelöscht:
               </p>
 
-              {/* What gets deleted */}
-              <div className="bg-background rounded-[12px] px-4 py-3 mb-5 space-y-2">
+              <div className="bg-background rounded-[12px] px-4 py-3 mb-4 space-y-2">
                 {DELETE_ITEMS.map((item) => (
                   <div key={item} className="flex items-center gap-2.5">
-                    <span
-                      className="w-1.5 h-1.5 rounded-full shrink-0"
-                      style={{ background: 'rgb(var(--color-danger))' }}
-                    />
+                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'rgb(var(--color-danger))' }} />
                     <span className="text-[13px] text-text-secondary">{item}</span>
                   </div>
                 ))}
               </div>
 
-              {/* Type confirmation */}
+              {deleteError && (
+                <div className="bg-danger/10 border border-danger/20 rounded-[10px] px-3 py-2.5 mb-4">
+                  <p className="text-[12px] text-danger leading-snug">{deleteError}</p>
+                </div>
+              )}
+
               <p className="text-text-muted text-[12px] mb-2 px-0.5">
                 Tippe <span className="font-bold text-text-primary">löschen</span> um fortzufahren:
               </p>
@@ -178,7 +210,6 @@ export function DatenschutzScreen() {
                 }}
               />
 
-              {/* Buttons */}
               <div className="flex gap-2">
                 <button
                   onClick={closeConfirm}

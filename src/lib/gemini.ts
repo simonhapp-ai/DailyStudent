@@ -466,7 +466,7 @@ REGELN:
 - Schwächen in bestimmten Themen bekommen mehr Sessions.
 - Methoden-Rotation: möglichst keine 2× identische Methode hintereinander.
 - Session-Dauer: 25–90 Minuten. Max. ${input.dailyStudyHours}h Gesamtlernzeit pro Tag.
-- Bei Zielnote ≤ 2: mehr Probeklausuren und Wiederholungen einplanen.
+- Bei Zielnote ≥ 13 NP (sehr gut): mehr Probeklausuren und Wiederholungen einplanen.
 ${input.planType === 'abitur' ? '- ABITUR-MODUS: Kein regulärer Schulunterricht. Volle Tage verfügbar. LK-Fächer haben 2× Gewichtung. Q1–Q4 Inhalte aller Prüfungsfächer abdecken.' : ''}
 
 Antworte NUR mit validem JSON (kein Markdown), exakt diese Struktur:
@@ -484,14 +484,14 @@ LERNKAPAZITÄT:
 - ${input.dailyStudyHours} Stunden Lernzeit pro Tag
 - Lernzeit bevorzugt: ${input.studyTimePreference === 'morgen' ? 'Morgens' : input.studyTimePreference === 'abend' ? 'Abends' : 'Flexibel'}
 - Wochenende einplanen: ${input.includeWeekends ? 'Ja' : 'Nein — Sa+So sind Pausentage'}
-- Zielnote: ${input.targetGrade}
+- Zielnote: ${input.targetGrade} NP (0–15 Notenpunkte-Skala)
 
 BLOCKIERTE ZEITEN:
 ${blockedText}
 
 SCHWÄCHEN (mehr Sessions):
 ${weaknessText}
-${input.preferredMethods && input.preferredMethods.length > 0 && input.preferredMethods.length < 6 ? `\nBEVORZUGTE LERNMETHODEN (bevorzuge diese bei der Session-Planung):\n${input.preferredMethods.join(', ')}` : ''}${input.kcContext ? `\nKERNCURRICULUM:\n${input.kcContext}` : ''}
+${input.preferredMethods && input.preferredMethods.length > 0 && input.preferredMethods.length < 6 ? `\nBEVORZUGTE LERNMETHODEN (bevorzuge diese bei der Session-Planung):\n${input.preferredMethods.join(', ')}` : ''}${input.smartNotesContext ? `\nBEREITS BEHANDELTE INHALTE (Smart Notes des Schülers — nutze diese um konkrete Themen als Session-Topics zu setzen):\n${input.smartNotesContext}` : ''}${input.kcContext ? `\nKERNCURRICULUM:\n${input.kcContext}` : ''}
 
 Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${input.startDate}. Jeder Tag muss im days-Array enthalten sein.`
 

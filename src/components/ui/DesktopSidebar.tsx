@@ -126,13 +126,9 @@ export function DesktopSidebar() {
           {/* Avatar circle */}
           <div
             className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
-            style={{
-              background: isProfilActive
-                ? 'linear-gradient(145deg, #A78BFA, #7C3AED)'
-                : 'rgba(var(--color-text-muted), 0.3)',
-            }}
+            style={{ background: profile?.avatarBg ?? 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
           >
-            {initial}
+            {profile?.avatarEmoji ?? initial}
           </div>
           <span className="text-[9px] font-semibold leading-none" style={{ fontWeight: isProfilActive ? 700 : 500 }}>
             Profil
@@ -226,10 +222,10 @@ export function DesktopSidebarWide() {
           }}
         >
           <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[12px] font-bold shrink-0"
-            style={{ background: isProfilActive ? 'linear-gradient(145deg, #A78BFA, #7C3AED)' : 'rgba(var(--color-text-muted), 0.25)' }}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[14px] font-bold shrink-0"
+            style={{ background: profile?.avatarBg ?? 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
           >
-            {initial}
+            {profile?.avatarEmoji ?? initial}
           </div>
           <div className="flex-1 overflow-hidden text-left">
             <p className="text-[13px] font-semibold text-text-primary leading-tight truncate">

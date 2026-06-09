@@ -121,17 +121,7 @@ export function HausaufgabenheftScreen() {
             <p className="text-[12px] text-text-muted">{pending.length} offen</p>
           )}
         </div>
-        <button
-          onClick={() => setShowAddForm((v) => !v)}
-          className="w-9 h-9 rounded-full flex items-center justify-center press-sm shrink-0"
-          style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))' }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-            {showAddForm
-              ? <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-              : <><path d="M12 5v14M5 12h14" strokeLinecap="round" /></>}
-          </svg>
-        </button>
+        <div className="w-9 h-9 shrink-0" />
       </div>
 
       <div className="px-4 pt-4 space-y-3">
@@ -214,7 +204,7 @@ export function HausaufgabenheftScreen() {
                 onClick={handleAdd}
                 disabled={!addDescription.trim() || !addSubjectId}
                 className="w-full py-3 rounded-card text-white text-sm font-bold disabled:opacity-40 transition-all press-sm"
-                style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))' }}
+                style={{ background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', boxShadow: '0 3px 12px rgba(124,58,237,0.4)' }}
               >
                 Hinzufügen
               </button>
@@ -325,6 +315,22 @@ export function HausaufgabenheftScreen() {
           )
         })}
       </div>
+
+      {/* FAB */}
+      <button
+        onClick={() => setShowAddForm((v) => !v)}
+        className="fixed bottom-28 right-5 w-14 h-14 rounded-full flex items-center justify-center z-40 press transition-transform"
+        style={{
+          background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)',
+          boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
+        }}
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+          {showAddForm
+            ? <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+            : <path d="M12 5v14M5 12h14" strokeLinecap="round" />}
+        </svg>
+      </button>
     </div>
   )
 }

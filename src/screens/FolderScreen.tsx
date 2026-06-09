@@ -11,7 +11,7 @@ import type { UserFolder } from '../types'
 
 const NO_SUBJECT_FOLDER_ID = 'folder-no-subject'
 
-function buildFolderPath(currentFolder: UserFolder, allFolders: UserFolder[], subjectName: string): string {
+function buildFolderPathParts(currentFolder: UserFolder, allFolders: UserFolder[], subjectName: string): string[] {
   const parts: string[] = [currentFolder.name]
   let f = currentFolder
   while (f.parentFolderId) {
@@ -21,7 +21,30 @@ function buildFolderPath(currentFolder: UserFolder, allFolders: UserFolder[], su
     f = parent
   }
   parts.unshift(subjectName)
-  return parts.join(' › ')
+  return parts
+}
+
+function FolderBreadcrumb({ parts, className = 'mb-4' }: { parts: string[]; className?: string }) {
+  return (
+    <div className={`flex items-center gap-1.5 flex-wrap ${className}`}>
+      {parts.map((part, i) => (
+        <div key={i} className="flex items-center gap-1.5">
+          <span className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold ${
+            i === parts.length - 1
+              ? 'bg-accent/10 text-accent'
+              : 'bg-surface-hover border border-border/60 text-text-muted'
+          }`}>
+            {part}
+          </span>
+          {i < parts.length - 1 && (
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted/40 shrink-0">
+              <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export function FolderScreen() {
@@ -85,6 +108,9 @@ export function FolderScreen() {
     isNoSubject ? `/unterricht/ohne-fach/ordner/${subId}` : `/unterricht/${id}/ordner/${subId}`
 
   const isEmpty = subFolders.length === 0 && folderNotes.length === 0
+  const pathParts = isNoSubject && !folder.parentFolderId
+    ? []
+    : buildFolderPathParts(folder, userFolders, isNoSubject ? 'Schnellnotizen' : (subject?.name ?? ''))
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-32">
@@ -109,6 +135,13 @@ export function FolderScreen() {
           )
         }
       />
+
+      {/* Path breadcrumb */}
+      {pathParts.length > 0 && (
+        <div className="px-5 pt-3 pb-0">
+          <FolderBreadcrumb parts={pathParts} className="" />
+        </div>
+      )}
 
       <div className="px-5 mt-2 space-y-2.5">
         {/* Subfolders */}
@@ -260,8 +293,8 @@ export function FolderScreen() {
       {/* New folder modal */}
       <BottomSheet isOpen={showNewFolderModal} onClose={() => setShowNewFolderModal(false)}>
         <div className="px-5 pb-2">
-          <h2 className="text-[20px] font-bold text-text-primary mb-1">Neuer Unterordner</h2>
-          <p className="text-text-muted text-[13px] mb-4">{buildFolderPath(folder, userFolders, isNoSubject ? 'Schnellnotizen' : (subject?.name ?? ''))}</p>
+          <h2 className="text-[20px] font-bold text-text-primary mb-2">Neuer Unterordner</h2>
+          <FolderBreadcrumb parts={buildFolderPathParts(folder, userFolders, isNoSubject ? 'Schnellnotizen' : (subject?.name ?? ''))} />
           <input
             type="text"
             value={newFolderName}

@@ -99,7 +99,9 @@ export function BottomNav() {
                 style={active ? {
                   background: 'linear-gradient(145deg, rgba(196,181,253,0.45), rgba(109,40,217,0.2))',
                   boxShadow: '0 0 20px rgba(124,58,237,0.28), 0 0 8px rgba(124,58,237,0.16)',
-                } : undefined}
+                } : {
+                  background: 'rgba(var(--color-border), 0.28)',
+                }}
               >
                 {item.icon(active)}
               </div>

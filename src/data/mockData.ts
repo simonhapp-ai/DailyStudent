@@ -98,5 +98,6 @@ export const subjects: Subject[] = [
   { id: 'musik',        name: 'Musik',              color: '#EC4899', lessonCount: 0, nextExam: null, icon: '🎵' },
   { id: 'sport',        name: 'Sport',              color: '#F472B6', lessonCount: 0, nextExam: null, icon: '🏃' },
   { id: 'religion',     name: 'Religion / Ethik',   color: '#5AC8FA', lessonCount: 0, nextExam: null, icon: '🙏' },
+  { id: 'seminarfach',  name: 'Seminarfach',         color: '#E879F9', lessonCount: 0, nextExam: null, icon: '📋' },
 ]
 

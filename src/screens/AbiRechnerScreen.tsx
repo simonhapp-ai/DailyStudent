@@ -121,7 +121,7 @@ function GradePicker({
   onChange: (v: number) => void
 }) {
   return (
-    <div className="grid grid-cols-4 gap-1">
+    <div className="flex flex-wrap gap-1.5">
       {Array.from({ length: 16 }, (_, i) => {
         const isSelected = value === i
         const color = getValueColor(i)
@@ -129,11 +129,11 @@ function GradePicker({
           <button
             key={i}
             onClick={() => onChange(i)}
-            className="rounded-[6px] py-1.5 press-sm transition-all text-center"
+            className="w-9 h-9 rounded-[10px] press-sm transition-all flex items-center justify-center shrink-0"
             style={
               isSelected
-                ? { background: `${color}25`, color, border: `1.5px solid ${color}70`, fontWeight: 800, fontSize: 13 }
-                : { background: 'rgba(var(--color-border),0.18)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent', fontWeight: 600, fontSize: 12 }
+                ? { background: `${color}22`, color, border: `2px solid ${color}`, fontWeight: 800, fontSize: 14, boxShadow: `0 2px 8px ${color}40` }
+                : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-secondary))', border: '1.5px solid transparent', fontWeight: 600, fontSize: 13 }
             }
           >
             {i}

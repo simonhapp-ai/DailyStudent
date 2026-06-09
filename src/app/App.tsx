@@ -1,4 +1,4 @@
-import { Component, useEffect } from 'react'
+import { Component, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
@@ -52,6 +52,7 @@ import { FaecherEditScreen } from '../screens/FaecherEditScreen'
 import { BundeslandScreen } from '../screens/BundeslandScreen'
 import { BenachrichtigungenScreen } from '../screens/BenachrichtigungenScreen'
 import { DatenschutzScreen } from '../screens/DatenschutzScreen'
+import { ImpressumScreen } from '../screens/ImpressumScreen'
 import { LernzettelScreen } from '../screens/LernzettelScreen'
 import { LernzettelGeneratorScreen } from '../screens/LernzettelGeneratorScreen'
 import { ProbeklausurRetroScreen } from '../screens/ProbeklausurRetroScreen'
@@ -60,6 +61,9 @@ import { LernplanDetailScreen } from '../screens/LernplanDetailScreen'
 import { LernplanListScreen } from '../screens/LernplanListScreen'
 import { AuthScreen } from '../screens/AuthScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
+import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
+import { TwoFactorSetupScreen } from '../screens/TwoFactorSetupScreen'
+import { supabase } from '../lib/supabase'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -139,6 +143,8 @@ function AppRoutes() {
       <Route path="/profil/bundesland" element={<BundeslandScreen />} />
       <Route path="/profil/benachrichtigungen" element={<BenachrichtigungenScreen />} />
       <Route path="/profil/datenschutz" element={<DatenschutzScreen />} />
+      <Route path="/profil/impressum" element={<ImpressumScreen />} />
+      <Route path="/profil/2fa" element={<TwoFactorSetupScreen />} />
       <Route path="/insights" element={<InsightsScreen />} />
     </Routes>
   )
@@ -147,8 +153,23 @@ function AppRoutes() {
 function Layout() {
   const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
+  const [needsMfa, setNeedsMfa] = useState(false)
+  const [mfaChecked, setMfaChecked] = useState(false)
 
-  if (authLoading) {
+  useEffect(() => {
+    if (!authUser) {
+      setNeedsMfa(false)
+      setMfaChecked(false)
+      return
+    }
+    void (async () => {
+      const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+      setNeedsMfa(data?.nextLevel === 'aal2' && data?.currentLevel !== 'aal2')
+      setMfaChecked(true)
+    })()
+  }, [authUser?.id])
+
+  if (authLoading || (authUser && !mfaChecked)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
@@ -158,6 +179,10 @@ function Layout() {
 
   if (!authUser) {
     return <AuthScreen />
+  }
+
+  if (needsMfa) {
+    return <TwoFactorVerifyScreen onVerified={() => setNeedsMfa(false)} />
   }
 
   // While Supabase is loading data for a freshly authenticated user, show spinner

@@ -70,6 +70,8 @@ export interface UserProfile {
     lernplanReminder: boolean
     streakReminder: boolean
   }
+  avatarEmoji?: string
+  avatarBg?: string
 }
 
 export type AppTheme = 'light' | 'dark' | 'system'

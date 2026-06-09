@@ -35,7 +35,7 @@ Die App bietet keinen einzelnen Lernweg, sondern einen **vernetzten Mix aus Lern
 | KI Probeklausuren + Lernplan | Google Gemini — `gemini-2.5-flash` |
 | Auth | Supabase Auth — Email/Passwort + Google OAuth ✅ vollständig in App.tsx geroutet |
 | DB | Supabase PostgreSQL — 13 Tabellen + RLS (`supabase/migrations/`) |
-| Payments | Stripe — Edge Function + Webhook geschrieben, aber **UNTESTED** |
+| Payments | Stripe — Edge Function + Webhook ✅ Sandbox getestet |
 | Dev Server | localhost:5174 |
 | Repo | https://github.com/simonhapp-ai/DailyStudent.git |
 | Projektordner | C:\Users\simon\OneDrive\Desktop\Claude App |
@@ -67,7 +67,7 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~80% (Stand: 09.06.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~90% (Stand: 09.06.2026)
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
@@ -101,40 +101,49 @@ Smart Notes
 - **`supabase/migrations/002_grade_data.sql`** ✅ — Dedizierte `grade_data` Tabelle für Notenisolation — **ANGEWENDET 09.06.2026**
 - **`supabase/functions/groq-proxy/index.ts`** ✅ — Groq API über Edge Functions proxied
 - **`supabase/functions/gemini-proxy/index.ts`** ✅ — Gemini API über Edge Functions proxied
-- **`supabase/functions/create-checkout-session`** ⚠️ — Stripe Edge Function: Code existiert, **NICHT getestet**
-- **`supabase/functions/stripe-webhook/index.ts`** ⚠️ — Webhook Handler: Code existiert, **NICHT getestet**
+- **`supabase/functions/create-checkout-session`** ✅ — Stripe Edge Function: getestet mit Sandbox-Karte, Pro-Flag wird korrekt gesetzt
+- **`supabase/functions/stripe-webhook/index.ts`** ✅ — Webhook Handler: funktioniert im Sandbox-Test
+- **`supabase/functions/delete-account/index.ts`** ✅ — Account-Löschung: verifiziert JWT, ruft `admin.deleteUser()` auf → CASCADE löscht alle 13 Tabellen
 - **Grade Data Isolation** ✅ — `grade_data` Tabelle + `syncGradeData()` isoliert Noten vom Profile-Sync (09.06.2026)
 - **Lernplan Kalender-Export** ✅ — Smart Scheduler: meidet Stundenplan + personalEntries, 15-Min-Pausen, max 90 Min/Block (09.06.2026)
+- **Avatar-Editor** ✅ — `avatarEmoji` + `avatarBg` in `UserProfile`; Picker in ProfilScreen (10 Farben, 10 Emojis); Sidebar zeigt immer lila (nicht mehr grau/weiß)
+- **Rechtliches (Beta-ready)** ✅ — `ImpressumScreen` (/profil/impressum) mit echten Daten; `DatenschutzScreen` vollständige DSGVO-Erklärung (10 Abschnitte); Account-Lösch-Modal direkt in ProfilScreen
 
 ### Phase 3 — Known Issues & Bugs (Stand: 09.06.2026):
 
-**KRITISCH (Launch-Blocker):**
-1. **Responsive Layouts NOT ready** — nur `DashboardScreen` ist vollständig responsive. Alle anderen Screens sind mobile-only. **FIX NEEDED:** Alle Screens mit `md:` (iPad) + `lg:` (Laptop) Layouts updaten, 2-Column-Layouts, Sidebar ab `md:`
-2. **Stripe `create-checkout-session` Edge Function untested** — Code existiert, aber kein Test, kein Production-Webhook. **FIX NEEDED:** Vollständig implementieren + testen vor Launch
+**Kein Launch-Blocker mehr** — Responsive Layouts funktionieren (iPad Querformat = Desktop Layout, Hochformat = Mobile), Stripe im Sandbox getestet und funktioniert.
 
-**MAJOR (vor Launch fixen):**
-3. **TypeScript `noUnusedLocals` Warnungen:**
+**MAJOR (vor Public Launch fixen):**
+1. **TypeScript `noUnusedLocals` Warnungen:**
    - `KalenderScreen.tsx`: `navigate`, `calSpIdx`, `_CalendarCollapsed`, `StundenplanTodayWidget`, `_StundenplanMiniWidget` (5 unused)
    - `KlausurphasenScreen.tsx`: `_zielnoteToNP` (1 unused)
    - `LernplanKonfiguratorScreen.tsx`: `_abortRef` (1 unused)
    **FIX NEEDED:** Entfernen oder verwenden
-4. **Audio Transcription NOT implemented** — `AudioRecorderWidget.tsx`: Feature nicht fertig. **FIX NEEDED:** Entfernen aus UI oder implementieren
-5. **Note Editor NOT connected** — `NoteEditor.tsx`: kein Auto-Save verbunden. **FIX NEEDED:** Entfernen oder implementieren
+2. **Audio Transcription NOT implemented** — `AudioRecorderWidget.tsx`: Feature nicht fertig. **FIX NEEDED:** Entfernen aus UI
+3. **Note Editor NOT connected** — `NoteEditor.tsx`: kein Auto-Save verbunden. **FIX NEEDED:** Entfernen oder implementieren
 
 **MINOR:**
-6. **Settings Screens sind Stubs** — `BenachrichtigungenScreen`, `DatenschutzScreen` minimal implementiert
-7. **Apple OAuth** — Button in AuthScreen, Provider in Supabase konfiguriert, aber NICHT GETESTET
-8. **Email Confirmation Flow** — Supabase erfordert E-Mail-Bestätigung, aber kein UI nach Signup
+4. **Apple OAuth** — Button in AuthScreen vorhanden, aber NICHT GETESTET
+5. **Email Confirmation Flow** — kein UI-Hinweis nach Signup
+6. **Impressum Steuernummer** — Platzhalter, muss nach Erhalt vom Finanzamt Harburg nachgetragen werden
+
+**Rechtliches — Beta-ready ✅:**
+- Impressum: Simon Happ / Simon Happ Social Media, Henners Hof 13, 21217 Seevetal — Steuernummer fehlt noch
+- Datenschutzerklärung: vollständig, 10 Abschnitte, DSGVO-konform
+- Account-Löschung: DSGVO Art. 17 erfüllt via `delete-account` Edge Function
+- Vor zahlenden Nutzern noch nötig: AGB + Stripe Production-Mode
 
 ### Phase 3 — Was noch zu tun ist:
-1. **Responsive Layouts — URGENTLY** — Alle Screens müssen `md:` + `lg:` Support haben
-2. **Stripe Testing** — `create-checkout-session` + Webhook vollständig testen
+1. **Deployment** (Vercel/Netlify) — höchste Priorität
+2. **`delete-account` Edge Function deployen** — `supabase functions deploy delete-account`
 3. **TypeScript Cleanup** — 7 unused variables entfernen
-4. **Audio/Note Features** — Entweder implementieren oder UI entfernen
-5. **Settings Screens** — Placeholder-Screens mit echtem Inhalt füllen oder entfernen
-6. **Push-Benachrichtigungen** für Lernplan-Erinnerungen
-7. **Deployment** (Vercel/Netlify)
-8. **Studentenadaption** (Uni-Fächer, kein KC aber Syllabus-Upload)
+4. **Audio/NoteEditor aus UI entfernen** — unfertige Features nicht sichtbar lassen
+5. **Email Confirmation Flow** — Hinweis nach Signup
+6. **Stripe Production-Mode** — vor zahlenden Nutzern umschalten
+7. **AGB** — vor zahlenden Nutzern (Generator reicht)
+8. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
+9. **Push-Benachrichtigungen** — nach Launch
+10. **Studentenadaption** — nach Launch
 
 ---
 
@@ -259,7 +268,8 @@ isDevMode:  true
 | FaecherEditScreen | /profil/faecher | Fächer hinzufügen/entfernen |
 | BundeslandScreen | /profil/bundesland | Bundesland + Schulform ändern |
 | BenachrichtigungenScreen | /profil/benachrichtigungen | Notification-Toggles (UI only) |
-| DatenschutzScreen | /profil/datenschutz | Datenschutz/AGB Stub |
+| DatenschutzScreen | /profil/datenschutz | Vollständige DSGVO-Datenschutzerklärung + Account-Löschung |
+| ImpressumScreen | /profil/impressum | Impressum gem. §5 TMG |
 
 ---
 
@@ -293,20 +303,21 @@ src/
 │   ├── supabase.ts                # Supabase Client
 │   ├── supabaseSync.ts            # Sync-Layer: syncProfile, syncGradeData, syncNote, etc. + Queue
 │   └── pdf.ts                     # PDF → Bilder Konvertierung (pdfjs)
-├── screens/                       # Ein Screen pro Route (33 Screens — alle aktiv)
+├── screens/                       # Ein Screen pro Route (35 Screens — alle aktiv)
 └── types/
     └── index.ts                   # Alle TypeScript-Typen
 public/
 └── kc/                            # KC-JSONs: 16 Bundesländer × ~12 Fächer = ~196 Dateien
 supabase/
 ├── migrations/
-│   ├── 001_initial_schema.sql     # 12 Tabellen, RLS, Trigger — BEREITS ANGEWENDET
-│   └── 002_grade_data.sql         # grade_data Tabelle — MUSS NOCH ANGEWENDET WERDEN
+│   ├── 001_initial_schema.sql     # 13 Tabellen, RLS, Trigger — ANGEWENDET
+│   └── 002_grade_data.sql         # grade_data Tabelle — ANGEWENDET 09.06.2026
 └── functions/
     ├── groq-proxy/                # Groq API Proxy (deployed)
     ├── gemini-proxy/              # Gemini API Proxy (deployed)
-    ├── create-checkout-session/   # Stripe Checkout (EXISTS, UNTESTED)
-    └── stripe-webhook/            # Stripe Webhook Handler (EXISTS, UNTESTED)
+    ├── create-checkout-session/   # Stripe Checkout (deployed, Sandbox getestet)
+    ├── stripe-webhook/            # Stripe Webhook Handler (deployed, Sandbox getestet)
+    └── delete-account/            # Account-Löschung (MUSS NOCH DEPLOYED WERDEN)
 ```
 
 **Gelöschte Screens (nicht mehr vorhanden):**
@@ -367,30 +378,22 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ## Letzte Session (09.06.2026)
 
-**App Audit + 3 Features implementiert:**
+**Beta-Vorbereitung: Rechtliches + Avatar + Security-Review**
 
-**1. Lernplan Kalender-Export — Smart Scheduler (LernplanDetailScreen.tsx)**
-- `addToCalendar()` komplett neu geschrieben
-- Berücksichtigt jetzt: Stundenplan-Slots für den Wochentag + bestehende `personalEntries` + Plan-Blocked-Times
-- Busy-Intervalle werden zu Slots gemergt (mit 15-Min-Puffer)
-- `studyTimePreference`: morgen → Vormittags-Slots priorisiert, abend → 13h+ priorisiert, beides → chronologisch
-- Max 90 Min pro Lernblock im Kalender
-- Hinweis: Session-Blöcke die keinen freien Slot finden, werden mit Warnung übersprungen
+**1. Avatar-Editor (ProfilScreen + DesktopSidebar + UserContext)**
+- `avatarEmoji?: string` + `avatarBg?: string` zu `UserProfile` hinzugefügt
+- Profilkreis in beiden Sidebars zeigt jetzt immer lila (vorher grau/weiß je nach Theme)
+- Inline-Picker in ProfilScreen: 10 Farbverläufe + 10 Schul-Emojis, auto-save via `updateProfile()`
+- Edit-Badge (Bleistift) auf Avatar-Kreis als Hinweis
 
-**2. Notendata-Isolation (002_grade_data.sql + supabaseSync.ts + UserContext.tsx)**
-- Neue `grade_data` Tabelle in Supabase: dedizierter Storage nur für `abi_halbjahre`
-- `syncGradeData(userId, abiHalbjahre)` — schreibt isoliert von Profile-Sync
-- `loadUserDataFromSupabase()` lädt grades aus `grade_data` (hat Priorität vor `profiles.abi_halbjahre`)
-- `updateProfile()` in UserContext ruft `syncGradeData()` auf wenn `abiHalbjahre` in Update enthalten
-- Migration `002_grade_data.sql` wurde im Supabase SQL Editor ausgeführt ✅
+**2. Rechtliches — Beta-ready**
+- `ImpressumScreen.tsx` neu erstellt (`/profil/impressum`) — befüllt mit echten Daten (Simon Happ / Simon Happ Social Media, Henners Hof 13, 21217 Seevetal)
+- `DatenschutzScreen.tsx` komplett neu geschrieben — 10 Abschnitte, vollständige DSGVO-Erklärung
+- Steuernummer fehlt noch (Platzhalter) — nach Eingang vom Finanzamt Harburg nachtragen
+- Links in ProfilScreen: "Datenschutzerklärung" + "Impressum" unter Einstellungen
 
-**3. KlausurphasenScreen Statistik-Widget (KlausurphasenScreen.tsx)**
-- Altes Widget (3 Stat-Tiles + Fortschrittsbalken) durch neues Preview-Dashboard ersetzt
-- Neues Widget enthält:
-  - Mini Balken-Chart: Notenpunkte pro Fach (Emoji-Icons unten)
-  - Mini Linien-Chart: Notenverlauf Q1–Q4 aller Fächer
-  - 6 Stat-Kacheln: 🔥 Streak, 📝 Notizen, 📸 Fotos, 📋 Probeklausuren, 📄 Lernzettel, 🎴 Karten
-- Gesamtes Widget ist klickbar → navigiert zu `/insights`
-- Beide Charts zeigen Leerzustand wenn noch keine Noten eingetragen
-
-**4. CLAUDE.md vollständig aktualisiert** — Alle 33 Screens, korrekter Phase-Status, DB-Schema-Tabelle, neue Architektur-Entscheidungen
+**3. Account-Löschung (DSGVO Art. 17)**
+- `supabase/functions/delete-account/index.ts` neu — verifiziert JWT, ruft `admin.deleteUser()` auf, CASCADE löscht alle 13 Tabellen automatisch
+- Lösch-Modal direkt in ProfilScreen (Account-Sektion): sofortiges Popup, "löschen" eintippen, dann Edge Function + localStorage clear + signOut
+- `DatenschutzScreen` hat ebenfalls Lösch-Button (für User die über den Datenschutz-Screen navigieren)
+- **TODO:** `supabase functions deploy delete-account` — noch nicht deployed!

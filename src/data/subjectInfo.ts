@@ -24,7 +24,7 @@ export const SUBJECT_INFO: Record<string, { name: string; icon: string; color: s
   religion:       { name: 'Religion',          icon: '🙏', color: '#D97706' },
   informatik:     { name: 'Informatik',        icon: '💻', color: '#60A5FA' },
   wirtschaft:     { name: 'Wirtschaft',        icon: '📊', color: '#FB923C' },
-  seminarfach:    { name: 'Seminarfach',       icon: '📋', color: '#F59E0B' },
+  seminarfach:    { name: 'Seminarfach',       icon: '📋', color: '#E879F9' },
 }
 
 export const SUBJECT_TOPIC_EXAMPLES: Record<string, [string, string]> = {

@@ -616,7 +616,7 @@ export function KalenderScreen() {
 
               {/* ── Recurring toggle — only for regular entries */}
               {addForm.type !== 'klausur' && <div>
-                <div className="flex gap-2 mb-3 p-1 bg-background rounded-[12px]">
+                <div className="flex gap-1.5 mb-3 p-1 bg-background rounded-[12px]">
                   {([false, true] as const).map((val) => {
                     const active = isRecurring === val
                     return (
@@ -625,12 +625,12 @@ export function KalenderScreen() {
                         onClick={() => setIsRecurring(val)}
                         className="flex-1 py-2.5 rounded-[9px] text-[12px] font-bold transition-all duration-200 press-sm"
                         style={active ? {
-                          background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.78))',
+                          background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)',
                           color: 'white',
-                          boxShadow: '0 3px 10px rgba(var(--color-accent),0.38)',
+                          boxShadow: '0 3px 10px rgba(124,58,237,0.38)',
                         } : {
-                          color: 'rgb(var(--color-text-muted))',
-                          background: 'transparent',
+                          color: 'rgb(var(--color-text-secondary))',
+                          background: 'rgba(var(--color-border),0.35)',
                         }}
                       >
                         {val ? '🔁 Wiederkehrend' : '📌 Einmalig'}
@@ -2017,9 +2017,9 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
                     <button key={d} onClick={() => { setActiveDay(i); setAddingSlot(false) }}
                       className="flex-1 flex flex-col items-center py-2 rounded-[12px] transition-all duration-200 border"
                       style={activeDay === i ? {
-                        background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
+                        background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)',
                         borderColor: 'transparent',
-                        boxShadow: '0 2px 8px rgba(var(--color-accent),0.3)',
+                        boxShadow: '0 2px 8px rgba(124,58,237,0.35)',
                       } : { background: 'rgb(var(--color-background))', borderColor: 'rgba(var(--color-border),0.6)' }}>
                       <span className={`text-[10px] font-semibold ${activeDay === i ? 'text-white/80' : 'text-text-muted'}`}>{d}</span>
                       <span className={`text-[12px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-accent' : 'text-text-muted/30'}`}>{count > 0 ? count : '·'}</span>
@@ -2077,7 +2077,7 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
                   <input type="text" value={newSlot.room} onChange={(e) => setNewSlot((n) => ({ ...n, room: e.target.value }))} placeholder="Raum (optional)" className="w-full bg-surface border border-border rounded-[10px] px-2.5 py-2 text-text-primary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors" />
                   <div className="flex gap-2">
                     <button onClick={() => { setAddingSlot(false); setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '' }) }} className="flex-1 py-2 rounded-[10px] border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors">Abbrechen</button>
-                    <button onClick={commitSlot} disabled={!newSlot.subjectId} className="flex-1 py-2 rounded-[10px] text-white text-sm font-bold disabled:opacity-40 active:scale-95 transition-all" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))' }}>Hinzufügen</button>
+                    <button onClick={commitSlot} disabled={!newSlot.subjectId} className="flex-1 py-2 rounded-[10px] text-white text-sm font-bold disabled:opacity-40 active:scale-95 transition-all" style={{ background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}>Hinzufügen</button>
                   </div>
                 </div>
               )}

@@ -91,15 +91,12 @@ export function BundeslandScreen() {
                 <button
                   key={bl.id}
                   onClick={() => { setBundeslandId(bl.id); setSaved(false) }}
-                  className="py-2.5 px-1 rounded-[12px] text-center press-sm transition-all duration-200 border"
+                  className={`py-2.5 px-1 rounded-[12px] text-center press-sm transition-all duration-200 border ${active ? 'text-accent' : 'text-text-secondary'}`}
                   style={active ? {
-                    background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
-                    borderColor: 'transparent',
-                    color: 'white',
-                    boxShadow: '0 4px 12px rgba(var(--color-accent),0.4)',
+                    background: 'rgba(var(--color-accent),0.08)',
+                    borderColor: 'rgba(var(--color-accent),0.5)',
                   } : {
                     borderColor: 'rgba(var(--color-border),0.6)',
-                    color: 'rgb(var(--color-text-secondary))',
                     background: 'rgb(var(--color-surface))',
                   }}
                 >

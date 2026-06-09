@@ -334,6 +334,7 @@ export interface LernplanGeneratorInput {
   blockedTimes: LernplanBlockedTime[]
   weaknesses: Array<{ subjectId: string; topics: string[] }>
   kcContext?: string
+  smartNotesContext?: string
   schulform: string
   klasse: string
   studyTimePreference: 'morgen' | 'abend' | 'beides'

@@ -15,6 +15,10 @@ const gradientLevel: Record<string, Level> = {
   englisch: 'c', geschichte: 'c', informatik: 'c', wirtschaft: 'c', franzoesisch: 'c', spanisch: 'c',
 }
 
+const customGradients: Record<string, { from: string; to: string }> = {
+  seminarfach: { from: '#E879F9', to: '#A21CAF' },
+}
+
 const sizeConfig: Record<Size, { cls: string; px: number }> = {
   sm: { cls: 'w-8 h-8', px: 14 },
   md: { cls: 'w-10 h-10', px: 18 },
@@ -150,6 +154,14 @@ const icons: Record<string, ReactNode> = {
       <line x1="6.04" y1="17.96" x2="3.87" y2="20.13" />
     </>
   ),
+  seminarfach: (
+    <>
+      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+      <rect x="9" y="3" width="6" height="4" rx="1" />
+      <line x1="9" y1="12" x2="15" y2="12" />
+      <line x1="9" y1="16" x2="13" y2="16" />
+    </>
+  ),
 }
 
 const fallbackIcon = (
@@ -159,8 +171,9 @@ const fallbackIcon = (
 export function SubjectIcon({ subjectId, size = 'md', className = '' }: SubjectIconProps) {
   const lvl = gradientLevel[subjectId] ?? 'a'
   const { cls, px } = sizeConfig[size]
-  const from = `rgb(var(--si-${lvl}-from))`
-  const to = `rgb(var(--si-${lvl}-to))`
+  const custom = customGradients[subjectId]
+  const from = custom ? custom.from : `rgb(var(--si-${lvl}-from))`
+  const to   = custom ? custom.to   : `rgb(var(--si-${lvl}-to))`
 
   return (
     <div

@@ -32,7 +32,7 @@ function formatDate(dateStr: string): string {
 }
 
 export function LernplanKonfiguratorScreen() {
-  const { profile, isPro, saveLernplan, getKc } = useUser()
+  const { profile, isPro, saveLernplan, getKc, generatedNotes, userNotes } = useUser()
   const navigate = useNavigate()
 
   const [step, setStep] = useState(1)
@@ -61,7 +61,7 @@ export function LernplanKonfiguratorScreen() {
   const [dailyStudyHours, setDailyStudyHours] = useState(4)
   const [studyTimePreference, setStudyTimePreference] = useState<'morgen' | 'abend' | 'beides'>('beides')
   const [includeWeekends, setIncludeWeekends] = useState(false)
-  const [targetGrade, setTargetGrade] = useState(profile?.zielnote ?? '')
+  const [targetGrade, setTargetGrade] = useState('')
   const [lkFaecher, setLkFaecher] = useState<string[]>(profile?.lkFaecher ?? [])
 
   // Step 5: Methoden
@@ -136,13 +136,29 @@ export function LernplanKonfiguratorScreen() {
       const lastExamDate = [...selectedTermine].sort((a, b) => b.date.localeCompare(a.date))[0]?.date ?? TODAY
       const planDurationDays = Math.max(1, daysUntil(lastExamDate))
 
-      // Build KC context for selected subjects
+      // Build KC + Smart Notes context for selected subjects
       const subjectIds = [...new Set(selectedTermine.map((k) => k.subjectId))]
       const kcParts: string[] = []
+      const notesParts: string[] = []
       for (const subjectId of subjectIds) {
         const kc = getKc(subjectId)
         if (kc) {
           kcParts.push(`[${SUBJECT_INFO[subjectId]?.name ?? subjectId}]\n${buildKcPromptContext(kc, 'oberstufe')}`)
+        }
+        const subjectSmartNotes = userNotes
+          .filter((n) => n.subjectId === subjectId)
+          .map((n) => generatedNotes[n.id])
+          .filter(Boolean)
+        if (subjectSmartNotes.length > 0) {
+          const subjectName = SUBJECT_INFO[subjectId]?.name ?? subjectId
+          const lines = subjectSmartNotes.map((gn) => {
+            const parts: string[] = []
+            if (gn.summary) parts.push(gn.summary)
+            if (gn.keywords?.length) parts.push(`Begriffe: ${gn.keywords.slice(0, 8).join(', ')}`)
+            if (gn.examTopics?.length) parts.push(`Klausurthemen: ${gn.examTopics.slice(0, 5).join(', ')}`)
+            return parts.join(' | ')
+          })
+          notesParts.push(`[${subjectName}]\n${lines.join('\n')}`)
         }
       }
 
@@ -158,7 +174,7 @@ export function LernplanKonfiguratorScreen() {
           isLK: lkFaecher.includes(k.subjectId),
         })),
         dailyStudyHours,
-        targetGrade: targetGrade || '2,0',
+        targetGrade: targetGrade || '10',
         blockedTimes,
         weaknesses: Object.entries(weaknesses)
           .filter(([, text]) => text.trim())
@@ -167,6 +183,7 @@ export function LernplanKonfiguratorScreen() {
             topics: text.split(',').map((t) => t.trim()).filter(Boolean),
           })),
         kcContext: kcParts.length > 0 ? kcParts.join('\n\n') : undefined,
+        smartNotesContext: notesParts.length > 0 ? notesParts.join('\n\n') : undefined,
         schulform: profile?.schulform ?? 'Gymnasium',
         klasse: profile?.klasse ?? '12',
         studyTimePreference,
@@ -189,7 +206,7 @@ export function LernplanKonfiguratorScreen() {
         isActive: true,
         config: {
           dailyStudyHours,
-          targetGrade: targetGrade || '2,0',
+          targetGrade: targetGrade || '10',
           blockedTimes,
           weaknesses: Object.entries(weaknesses)
             .filter(([, text]) => text.trim())
@@ -809,14 +826,29 @@ function StepLernkapazitaet({
       </div>
 
       {/* Target grade */}
-      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Zielnote</p>
-      <input
-        type="text"
-        value={targetGrade}
-        onChange={(e) => onGradeChange(e.target.value)}
-        placeholder="z.B. 1,5 oder 2,0"
-        className="w-full bg-surface border border-border rounded-card px-4 py-3.5 text-text-primary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors mb-4"
-      />
+      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Zielnote (Notenpunkte)</p>
+      <div className="bg-surface border border-border/60 rounded-[20px] p-5 mb-4">
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-text-primary font-bold text-[16px]">
+            {targetGrade ? `${targetGrade} NP` : '— NP'}
+          </p>
+          <span className="text-[12px] text-text-muted">
+            {!targetGrade ? 'Optional' : parseInt(targetGrade) >= 13 ? 'Sehr gut' : parseInt(targetGrade) >= 11 ? 'Gut' : parseInt(targetGrade) >= 8 ? 'Befriedigend' : parseInt(targetGrade) >= 5 ? 'Ausreichend' : 'Unterpunkt'}
+          </span>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="15"
+          step="1"
+          value={targetGrade ? parseInt(targetGrade) : 10}
+          onChange={(e) => onGradeChange(e.target.value)}
+          className="w-full accent-accent"
+        />
+        <div className="flex justify-between text-[10px] text-text-muted mt-1">
+          <span>0</span><span>5</span><span>10</span><span>15</span>
+        </div>
+      </div>
 
       {/* LK subjects */}
       {isOberstufe && selectedSubjectIds.length > 0 && (
@@ -1011,7 +1043,7 @@ function StepZusammenfassung({
         <SummaryRow icon="⏱️" label="Planungszeitraum" value={`${planDays} Tage`} />
         <SummaryRow icon="🕐" label="Lernzeit/Tag" value={`${dailyStudyHours}h`} />
         <SummaryRow icon="📅" label="Wochenende" value={includeWeekends ? 'Eingeschlossen' : 'Pausentage'} />
-        {targetGrade && <SummaryRow icon="🎯" label="Zielnote" value={targetGrade} />}
+        {targetGrade && <SummaryRow icon="🎯" label="Zielnote" value={`${targetGrade} NP`} />}
         {lkFaecher.length > 0 && (
           <SummaryRow
             icon="⭐"
