@@ -418,6 +418,15 @@ export function ProfilScreen() {
               </svg>
             </button>
             <button
+              onClick={() => navigate('/profil/agb')}
+              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
+            >
+              <span className="text-text-primary text-[15px]">Nutzungsbedingungen (AGB)</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button
               onClick={() => navigate('/profil/datenschutz')}
               className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
             >

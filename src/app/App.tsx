@@ -52,6 +52,7 @@ import { InsightsScreen } from '../screens/InsightsScreen'
 import { FaecherEditScreen } from '../screens/FaecherEditScreen'
 import { BundeslandScreen } from '../screens/BundeslandScreen'
 import { BenachrichtigungenScreen } from '../screens/BenachrichtigungenScreen'
+import { AGBScreen } from '../screens/AGBScreen'
 import { DatenschutzScreen } from '../screens/DatenschutzScreen'
 import { ImpressumScreen } from '../screens/ImpressumScreen'
 import { LernzettelScreen } from '../screens/LernzettelScreen'
@@ -145,6 +146,7 @@ function AppRoutes() {
       <Route path="/profil/faecher" element={<FaecherEditScreen />} />
       <Route path="/profil/bundesland" element={<BundeslandScreen />} />
       <Route path="/profil/benachrichtigungen" element={<BenachrichtigungenScreen />} />
+      <Route path="/profil/agb" element={<AGBScreen />} />
       <Route path="/profil/datenschutz" element={<DatenschutzScreen />} />
       <Route path="/profil/impressum" element={<ImpressumScreen />} />
       <Route path="/schreibblock" element={<DrawingCanvasScreen />} />
