@@ -347,7 +347,7 @@ export function LernplanDetailScreen() {
 
         {/* Days */}
         <div className="px-4 space-y-3">
-          {plan.days.map((day, idx) => {
+          {plan.days.map((day) => {
             const { weekday, day: dayNum, month } = formatDay(day.date)
             const todayMark = isToday(day.date)
             const pastMark = isPast(day.date)
