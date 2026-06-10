@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, explainKeyword, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
+import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
 import type { HomeworkItem } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
 import { MathRenderer } from '../components/ui/MathRenderer'

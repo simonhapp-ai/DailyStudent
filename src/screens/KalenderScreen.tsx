@@ -123,7 +123,6 @@ function CloseIcon({ size = 14 }: { size?: number }) {
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export function KalenderScreen() {
-  const navigate = useNavigate()
   const { profile, personalEntries, addEntry, removeEntry, updateProfile, addKlausurtermin, userNotes, completedHomeworkIds, standaloneHomework, appStats } = useUser()
   const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
 
@@ -222,8 +221,6 @@ export function KalenderScreen() {
 
   // ── Pre-compute collapsed calendar data ──────────────────────
   const calWeekDays = getWeekDays(today)
-  const calDow = today.getDay()
-  const calSpIdx = calDow >= 1 && calDow <= 5 ? calDow - 1 : -1
   type CPill = { time: string; label: string; color: string; icon: string }
   const calPills: CPill[] = [
     ...personalEntries.filter((e) => e.date === todayStr).map((e) => ({ time: e.time || '', label: e.title, color: TYPE_CONFIG[e.type].color, icon: TYPE_CONFIG[e.type].icon })),
@@ -849,73 +846,6 @@ export function KalenderScreen() {
   )
 }
 
-// ─── Calendar Collapsed ───────────────────────────────────────────────────────
-
-interface CollapsedProps {
-  today: Date; todayStr: string; stundenplan: Stundenplan | undefined
-  personalEntries: PersonalEntry[]; klausurtermine: { subjectId: string; date: string }[]
-  onExpand: () => void
-}
-
-function _CalendarCollapsed({ today, todayStr, stundenplan, personalEntries, klausurtermine, onExpand }: CollapsedProps) {
-  const weekDays = getWeekDays(today)
-  const dow = today.getDay()
-  const spIdx = dow >= 1 && dow <= 5 ? dow - 1 : -1
-  const todaySpSlots = spIdx >= 0
-    ? (stundenplan?.slots ?? []).filter((s) => s.day === spIdx).sort((a, b) => a.startTime.localeCompare(b.startTime))
-    : []
-  const todayPersonal = personalEntries.filter((e) => e.date === todayStr).sort((a, b) => (a.time || '').localeCompare(b.time || ''))
-  const todayKlausur = klausurtermine.filter((k) => k.date === todayStr)
-
-  type Pill = { time: string; label: string; color: string; icon: string }
-  const pills: Pill[] = [
-    ...todaySpSlots.map((s) => ({ time: s.startTime, label: SUBJECT_INFO[s.subjectId]?.name ?? s.subjectId, color: SUBJECT_INFO[s.subjectId]?.color ?? '#6366F1', icon: SUBJECT_INFO[s.subjectId]?.icon ?? '📚' })),
-    ...todayPersonal.map((e) => ({ time: e.time || '', label: e.title, color: TYPE_CONFIG[e.type].color, icon: TYPE_CONFIG[e.type].icon })),
-    ...todayKlausur.map((k) => ({ time: '', label: `Klausur: ${SUBJECT_INFO[k.subjectId]?.name ?? k.subjectId}`, color: '#FF3B30', icon: '📝' })),
-  ].sort((a, b) => (a.time || '99:99').localeCompare(b.time || '99:99')).slice(0, 3)
-
-  return (
-    <button
-      onClick={onExpand}
-      className="w-full bg-surface border border-border/60 rounded-2xl shadow-card-adaptive p-4 text-left hover:bg-surface-hover active:scale-[0.99] transition-all duration-200"
-    >
-      <p className="text-[13px] font-semibold text-text-muted mb-3">
-        {today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}
-      </p>
-      <div className="flex gap-1 mb-3">
-        {weekDays.map((d, i) => {
-          const isToday = toDateStr(d) === todayStr
-          const hasEntry = personalEntries.some((e) => e.date === toDateStr(d)) || klausurtermine.some((k) => k.date === toDateStr(d))
-          return (
-            <div key={i} className={`flex-1 flex flex-col items-center py-2 rounded-[12px] relative ${isToday ? 'grad-accent' : ''}`}>
-              <span className={`text-[10px] font-semibold ${isToday ? 'text-white/80' : 'text-text-muted'}`}>{DAY_LABELS[i]}</span>
-              <span className={`text-[14px] font-bold mt-0.5 leading-none ${isToday ? 'text-white' : 'text-text-secondary'}`}>{d.getDate()}</span>
-              {hasEntry && <span className="absolute bottom-1 w-1 h-1 rounded-full" style={{ backgroundColor: isToday ? 'rgba(255,255,255,0.7)' : 'rgb(var(--color-accent))' }} />}
-            </div>
-          )
-        })}
-      </div>
-      {pills.length === 0 ? (
-        <p className="text-text-muted text-[12px] italic">Heute keine Einträge</p>
-      ) : (
-        <div className="space-y-1.5">
-          {pills.map((p, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <span className="text-sm shrink-0">{p.icon}</span>
-              <span className="text-[13px] font-medium text-text-primary truncate flex-1">{p.label}</span>
-              {p.time && <span className="text-[11px] text-text-muted shrink-0 tabular-nums">{p.time}</span>}
-            </div>
-          ))}
-        </div>
-      )}
-      <div className="flex justify-end items-center gap-1 mt-2.5 text-text-muted">
-        <span className="text-[11px]">Aufklappen</span>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-      </div>
-    </button>
-  )
-}
-
 // ─── Date Strip ───────────────────────────────────────────────────────────────
 
 interface DateStripProps {
@@ -1259,72 +1189,6 @@ function AppIconPill({ gradient, shadow, children }: { gradient: string; shadow:
   )
 }
 
-// ─── Stundenplan Today Widget (half-width) ────────────────────────────────────
-
-function StundenplanTodayWidget({ stundenplan, onOpen }: { stundenplan: Stundenplan; onOpen: () => void }) {
-  const today = new Date()
-  const dow = today.getDay()
-  const isWeekend = dow === 0 || dow === 6
-  const spDayIdx = dow === 0 ? -1 : dow - 1
-  const todaySlots = isWeekend
-    ? []
-    : stundenplan.slots.filter((s) => s.day === spDayIdx).sort((a, b) => a.startTime.localeCompare(b.startTime))
-
-  return (
-    <button
-      onClick={onOpen}
-      className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm text-left"
-      style={{ minHeight: 152 }}
-    >
-      {/* Icon + Name */}
-      <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill gradient="linear-gradient(145deg,#5AC8FA,#0080B8)" shadow="0 4px 14px rgba(0,128,184,0.5)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
-          </svg>
-        </AppIconPill>
-        <span className="text-[13px] font-bold text-text-primary leading-tight">Stundenplan</span>
-      </div>
-
-      {/* Subject pills — vertical stack, first lesson on top, left-aligned */}
-      <div className="flex-1 px-3.5 pb-3.5 pt-2.5 flex flex-col justify-end gap-1.5">
-        {isWeekend ? (
-          <>
-            <p className="text-[16px] font-black text-text-primary leading-tight">Wochenende</p>
-            <p className="text-[12px] font-bold mt-0.5" style={{ color: '#30D158' }}>🎉 Frei!</p>
-          </>
-        ) : todaySlots.length === 0 ? (
-          <>
-            <p className="text-[16px] font-black text-text-muted">–</p>
-            <p className="text-[11px] text-text-muted mt-0.5">Keine Stunden</p>
-          </>
-        ) : (
-          <>
-            {todaySlots.slice(0, 3).map((slot) => {
-              const subj = SUBJECT_INFO[slot.subjectId]
-              const color = subj?.color ?? '#5AC8FA'
-              return (
-                <div
-                  key={slot.id}
-                  className="inline-flex items-center gap-1.5 self-start px-2 py-1 rounded-[8px] text-[10px] font-bold leading-none"
-                  style={{ background: `${color}20`, border: `1px solid ${color}35` }}
-                >
-                  <span className="shrink-0">{subj?.icon ?? '📚'}</span>
-                  <span style={{ color }}>{(subj?.name ?? slot.subjectId).split(' ')[0]}</span>
-                  <span className="tabular-nums" style={{ color, opacity: 0.65 }}>{slot.startTime}</span>
-                </div>
-              )
-            })}
-            {todaySlots.length > 3 && (
-              <p className="text-[9px] text-text-muted">+{todaySlots.length - 3} mehr</p>
-            )}
-          </>
-        )}
-      </div>
-    </button>
-  )
-}
-
 // ─── Stundenplan Setup Card (half-width, no SP set yet) ───────────────────────
 
 function StundenplanSetupCard({ onSetup, fullWidth }: { onSetup: () => void; fullWidth?: boolean }) {
@@ -1411,76 +1275,6 @@ function HausaufgabenWidget({ userNotes, completedHomeworkIds, standaloneHomewor
 // ─── Stundenplan Mini Widget ──────────────────────────────────────────────────
 
 const SP_DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'] as const
-
-function _StundenplanMiniWidget({ stundenplan, onOpen }: { stundenplan: Stundenplan; onOpen: () => void }) {
-  // Find max slots across any day for preview height
-  const byDay = SP_DAYS.map((_, i) =>
-    stundenplan.slots.filter((s) => s.day === i).sort((a, b) => a.startTime.localeCompare(b.startTime))
-  )
-  const maxRows = Math.max(...byDay.map((d) => d.length), 1)
-
-  return (
-    <button
-      onClick={onOpen}
-      className="w-full bg-surface border border-border/60 rounded-2xl shadow-card-adaptive overflow-hidden press-sm active:scale-[0.99] transition-all duration-200"
-    >
-      {/* Widget header */}
-      <div className="flex items-center justify-between px-4 pt-3.5 pb-2.5">
-        <div className="flex items-center gap-2">
-          <div
-            className="w-7 h-7 rounded-[8px] flex items-center justify-center text-sm"
-            style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.75))' }}
-          >
-            <span className="text-white text-xs">📅</span>
-          </div>
-          <span className="text-[14px] font-bold text-text-primary">Stundenplan</span>
-        </div>
-        <div className="flex items-center gap-1 text-text-muted">
-          <span className="text-[10px]">Details</span>
-          <ChevronRight size={11} />
-        </div>
-      </div>
-
-      {/* Mini 5-column grid */}
-      <div className="px-3 pb-3.5">
-        {/* Day headers */}
-        <div className="grid grid-cols-5 gap-1 mb-1.5">
-          {SP_DAYS.map((d) => (
-            <div key={d} className="text-center text-[9px] font-bold text-text-muted/70">{d}</div>
-          ))}
-        </div>
-        {/* Slot rows */}
-        <div className="grid grid-cols-5 gap-1">
-          {SP_DAYS.map((_, dayIdx) => (
-            <div key={dayIdx} className="flex flex-col gap-1">
-              {byDay[dayIdx].slice(0, maxRows).map((slot) => {
-                const subj = SUBJECT_INFO[slot.subjectId]
-                const color = subj?.color ?? '#6366F1'
-                return (
-                  <div
-                    key={slot.id}
-                    className="rounded-[6px] px-1 py-1 flex items-center justify-center overflow-hidden"
-                    style={{ background: `linear-gradient(135deg, ${color}28, ${color}15)`, border: `1px solid ${color}40` }}
-                  >
-                    <span className="text-[8px] font-bold truncate leading-tight" style={{ color }}>
-                      {subj?.icon ?? ''}{subj?.name?.slice(0, 3) ?? slot.subjectId.slice(0, 3)}
-                    </span>
-                  </div>
-                )
-              })}
-              {/* Empty rows to keep uniform height */}
-              {Array.from({ length: maxRows - byDay[dayIdx].length }, (_, i) => (
-                <div key={`empty-${i}`} className="rounded-[6px] py-1" style={{ background: 'rgba(var(--color-border),0.15)' }}>
-                  <div className="h-[10px]" />
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-    </button>
-  )
-}
 
 // ─── Stundenplan Full View ────────────────────────────────────────────────────
 

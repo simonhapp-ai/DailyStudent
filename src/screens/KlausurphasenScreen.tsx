@@ -22,13 +22,7 @@ function daysUntil(dateStr: string): number {
 }
 
 
-// Converts Zielnote (1,0–3,0) to Notenpunkte (15–6) — reserved for future Zielnote-Tracking UI
-function _zielnoteToNP(z: string): number {
-  return 17 - parseFloat(z.replace(',', '.')) * 3
-}
-
 const WEEKDAY_SHORT = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
-const QUARTERS = ['Q1', 'Q2', 'Q3', 'Q4'] as const
 
 // ── Grade helpers ─────────────────────────────────────────────────────────────
 
@@ -99,72 +93,6 @@ function MiniBarChart({ halbjahre, faecher }: { halbjahre: AbiHalbjahr[]; faeche
         })}
       </div>
     </div>
-  )
-}
-
-// ── Mini line chart (Notenverlauf Q1–Q4) ─────────────────────────────────────
-
-function MiniLineChart({ halbjahre, faecher }: { halbjahre: AbiHalbjahr[]; faecher: string[] }) {
-  const lines = faecher.flatMap(id => {
-    const info = SUBJECT_INFO[id]
-    if (!info) return []
-    const data = QUARTERS.map(q => {
-      const hj = halbjahre.find(h => h.label === q)
-      const entry = hj?.entries.find(e => e.subjectId === id)
-      return entry ? endnoteForEntry(entry) : null
-    })
-    if (data.every(d => d === null)) return []
-    return [{ id, color: info.color, data }]
-  })
-
-  if (lines.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-4 gap-1">
-        <span className="text-[22px]">📈</span>
-        <p className="text-text-muted text-[10px] text-center leading-tight">Notenverlauf<br/>erscheint hier</p>
-      </div>
-    )
-  }
-
-  const W = 120, H = 72, PL = 14, PR = 6, PT = 6, PB = 16
-  const cW = W - PL - PR, cH = H - PT - PB
-  const xPos = (i: number) => PL + (i / 3) * cW
-  const yPos = (np: number) => PT + cH - (np / 15) * cH
-
-  return (
-    <>
-      <p className="text-text-muted text-[9px] font-semibold uppercase tracking-wide mb-1 shrink-0">Notenverlauf</p>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{ flex: 1, display: 'block', minHeight: 0 }} preserveAspectRatio="none">
-        {[5, 10].map(np => (
-          <line key={np} x1={PL} y1={yPos(np)} x2={W - PR} y2={yPos(np)}
-            strokeWidth="0.5" strokeDasharray="2 2" style={{ stroke: 'rgb(var(--color-border))' }} />
-        ))}
-        {QUARTERS.map((q, i) => (
-          <text key={q} x={xPos(i)} y={H - 3} fontSize="7" textAnchor="middle" style={{ fill: 'rgb(var(--color-text-muted))' }}>{q}</text>
-        ))}
-        {[0, 5, 10, 15].map(np => (
-          <text key={np} x={PL - 3} y={yPos(np) + 2.5} fontSize="6" textAnchor="end" style={{ fill: 'rgb(var(--color-text-muted))' }}>{np}</text>
-        ))}
-        {lines.map(l => {
-          let path = ''
-          let penUp = true
-          l.data.forEach((np, i) => {
-            if (np === null) { penUp = true; return }
-            path += (penUp ? 'M' : ' L') + `${xPos(i).toFixed(1)},${yPos(np).toFixed(1)}`
-            penUp = false
-          })
-          if (!path) return null
-          return (
-            <g key={l.id}>
-              <path d={path} fill="none" stroke={l.color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              {l.data.map((np, i) => np !== null ? (
-                <circle key={i} cx={xPos(i)} cy={yPos(np)} r="2" fill={l.color} style={{ stroke: 'rgb(var(--color-surface))' }} strokeWidth="0.8" />
-              ) : null)}
-            </g>
-          )
-        })}
-      </svg>
-    </>
   )
 }
 
