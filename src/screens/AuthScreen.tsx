@@ -261,6 +261,7 @@ export function AuthScreen() {
             <span>Apple</span>
           </button>
         </div>
+        <p className="text-[11px] text-red-500 text-center -mt-2 mb-1">Apple Login wird bald hinzugefügt</p>
 
         {/* Divider */}
         <div className="flex items-center gap-3 mb-4">
