@@ -1,7 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const MONTHLY_PRICE_ID = 'price_1TfgfTBf3QpDemCCftZe0RlX'
-const YEARLY_PRICE_ID = 'price_1TfgfTBf3QpDemCCPG43QAyJ'
+const MONTHLY_PRICE_ID = 'price_1TgpJMPbROOB2TaONDo2xdrg'
+const YEARLY_PRICE_ID = 'price_1TgpJvPbROOB2TaOOWXjtNbS'
 
 const STRIPE_TIMESTAMP_TOLERANCE_SEC = 300 // 5 minutes
 

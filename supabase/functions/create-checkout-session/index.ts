@@ -39,8 +39,8 @@ Deno.serve(async (req) => {
     const { priceId, successUrl, cancelUrl } = await req.json()
 
     const ALLOWED_PRICE_IDS = [
-      'price_1TfgfTBf3QpDemCCftZe0RlX', // monthly €7,99
-      'price_1TfgfTBf3QpDemCCPG43QAyJ', // yearly €59,99
+      'price_1TgpJMPbROOB2TaONDo2xdrg', // monthly €7,99
+      'price_1TgpJvPbROOB2TaOOWXjtNbS', // yearly €59,99
     ]
     if (!ALLOWED_PRICE_IDS.includes(priceId)) {
       return new Response(JSON.stringify({ error: 'Ungültige Preis-ID' }), {

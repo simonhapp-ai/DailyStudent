@@ -1,8 +1,8 @@
 import { supabase } from './supabase'
 
 export const PRICE_IDS = {
-  monthly: 'price_1TfgfTBf3QpDemCCftZe0RlX',
-  yearly: 'price_1TfgfTBf3QpDemCCPG43QAyJ',
+  monthly: 'price_1TgpJMPbROOB2TaONDo2xdrg',
+  yearly: 'price_1TgpJvPbROOB2TaOOWXjtNbS',
 } as const
 
 export async function createCheckoutSession(plan: 'monthly' | 'yearly'): Promise<string> {
