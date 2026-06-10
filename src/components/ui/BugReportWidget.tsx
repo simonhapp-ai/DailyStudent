@@ -108,7 +108,7 @@ export function BugReportWidget() {
       <button
         onClick={() => setOpen(true)}
         title="Bug melden"
-        className="fixed top-4 right-4 z-50 w-8 h-8 rounded-full flex items-center justify-center text-white text-[13px] font-black shadow-lg press-sm select-none"
+        className="fixed bottom-20 right-4 lg:bottom-6 z-50 w-8 h-8 rounded-full flex items-center justify-center text-white text-[13px] font-black shadow-lg press-sm select-none"
         style={{ background: 'linear-gradient(135deg, #FF453A, #FF6B5B)' }}
         aria-label="Bug melden"
       >

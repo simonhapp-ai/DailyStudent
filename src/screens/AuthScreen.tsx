@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
-type Mode = 'login' | 'signup'
+type Mode = 'login' | 'signup' | 'forgot' | 'reset'
 
 function translateError(msg: string): string {
   if (msg.includes('Invalid login credentials')) return 'E-Mail oder Passwort falsch.'
@@ -17,12 +17,25 @@ export function AuthScreen() {
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [appleLoading, setAppleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setMode('reset')
+        setError(null)
+        setSuccessMsg(null)
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,6 +84,41 @@ export function AuthScreen() {
     }
   }
 
+  const handleForgot = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setSuccessMsg(null)
+    setLoading(true)
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`,
+      })
+      if (error) throw error
+      setSuccessMsg('Link gesendet! Bitte prüfe dein Postfach und klicke auf den Link.')
+    } catch (err: unknown) {
+      setError(translateError(err instanceof Error ? err.message : 'Ein Fehler ist aufgetreten'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleReset = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword })
+      if (error) throw error
+      setMode('login')
+      setNewPassword('')
+      setSuccessMsg('Passwort erfolgreich geändert! Du kannst dich jetzt anmelden.')
+    } catch (err: unknown) {
+      setError(translateError(err instanceof Error ? err.message : 'Ein Fehler ist aufgetreten'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const switchMode = () => {
     setMode(m => m === 'login' ? 'signup' : 'login')
     setError(null)
@@ -94,10 +142,91 @@ export function AuthScreen() {
       {/* Card */}
       <div className="w-full max-w-sm bg-surface rounded-2xl shadow-card-adaptive border border-border/60 p-6">
         <h2 className="text-xl font-bold text-foreground mb-5 text-left">
-          {mode === 'login' ? 'Willkommen zurück' : 'Konto erstellen'}
+          {mode === 'login' ? 'Willkommen zurück'
+            : mode === 'signup' ? 'Konto erstellen'
+            : mode === 'forgot' ? 'Passwort zurücksetzen'
+            : 'Neues Passwort'}
         </h2>
 
-        {/* OAuth buttons */}
+        {/* ── Forgot password form ── */}
+        {mode === 'forgot' && (
+          <form onSubmit={handleForgot} className="space-y-3">
+            <p className="text-xs text-muted text-left -mt-2 mb-1">
+              Gib deine E-Mail ein. Wir schicken dir einen Link zum Zurücksetzen.
+            </p>
+            <input
+              type="email"
+              placeholder="E-Mail-Adresse"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+            />
+            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>}
+            {successMsg && <p className="text-xs text-green-500 bg-green-500/10 rounded-xl px-3 py-2 text-left">{successMsg}</p>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+            >
+              {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Link senden'}
+            </button>
+            <button type="button" onClick={() => { setMode('login'); setError(null); setSuccessMsg(null) }}
+              className="w-full text-xs text-muted text-center mt-1 hover:text-foreground transition-colors">
+              ← Zurück zur Anmeldung
+            </button>
+          </form>
+        )}
+
+        {/* ── Reset password form ── */}
+        {mode === 'reset' && (
+          <form onSubmit={handleReset} className="space-y-3">
+            <p className="text-xs text-muted text-left -mt-2 mb-1">
+              Wähle ein neues Passwort (mindestens 6 Zeichen).
+            </p>
+            <div className="relative">
+              <input
+                type={showNewPassword ? 'text' : 'password'}
+                placeholder="Neues Passwort"
+                value={newPassword}
+                onChange={e => setNewPassword(e.target.value)}
+                required
+                minLength={6}
+                autoComplete="new-password"
+                className="w-full bg-background border border-border rounded-xl px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+              />
+              <button type="button" onClick={() => setShowNewPassword(v => !v)} tabIndex={-1}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors">
+                {showNewPassword ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
+                    <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
+            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+            >
+              {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Passwort speichern'}
+            </button>
+          </form>
+        )}
+
+        {/* OAuth buttons + form — nur bei login/signup */}
+        {(mode === 'login' || mode === 'signup') && <>
         <div className="flex gap-2 mb-4">
           <button
             onClick={handleGoogle}
@@ -183,6 +312,18 @@ export function AuthScreen() {
             </button>
           </div>
 
+          {mode === 'login' && (
+            <div className="flex justify-end -mt-1">
+              <button
+                type="button"
+                onClick={() => { setMode('forgot'); setError(null); setSuccessMsg(null) }}
+                className="text-xs text-accent hover:underline"
+              >
+                Passwort vergessen?
+              </button>
+            </div>
+          )}
+
           {error && (
             <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>
           )}
@@ -211,6 +352,7 @@ export function AuthScreen() {
             {mode === 'login' ? 'Registrieren' : 'Anmelden'}
           </button>
         </p>
+        </>}
       </div>
 
       <p className="text-xs text-muted mt-6 text-center max-w-xs leading-relaxed">
