@@ -259,7 +259,7 @@ export function LernplanKonfiguratorScreen() {
       {/* Content */}
       <div className="flex-1 px-4 pb-4 overflow-y-auto">
         {step === 1 && (
-          <StepPlanType planType={planType} onSelect={setPlanType} />
+          <StepPlanType planType={planType} onSelect={setPlanType} isPro={isPro} onShowPro={() => setShowProModal(true)} />
         )}
         {step === 2 && (
           <StepKlausurtermine
@@ -369,7 +369,7 @@ export function LernplanKonfiguratorScreen() {
 
 /* ─── Step 1: Plan Type ────────────────────────────────────────── */
 
-function StepPlanType({ planType, onSelect }: { planType: LernplanType; onSelect: (t: LernplanType) => void }) {
+function StepPlanType({ planType, onSelect, isPro, onShowPro }: { planType: LernplanType; onSelect: (t: LernplanType) => void; isPro: boolean; onShowPro: () => void }) {
   const options: { id: LernplanType; icon: string; title: string; desc: string; badge?: string }[] = [
     {
       id: 'einzel',
@@ -403,7 +403,10 @@ function StepPlanType({ planType, onSelect }: { planType: LernplanType; onSelect
           return (
             <button
               key={opt.id}
-              onClick={() => onSelect(opt.id)}
+              onClick={() => {
+                if (opt.badge && !isPro) { onShowPro(); return }
+                onSelect(opt.id)
+              }}
               className={`w-full flex items-start gap-4 p-4 rounded-[20px] border text-left transition-all duration-150 active:scale-[0.98] ${
                 active ? 'grad-accent border-transparent' : 'bg-surface border-border hover:bg-surface-hover'
               }`}
@@ -414,7 +417,7 @@ function StepPlanType({ planType, onSelect }: { planType: LernplanType; onSelect
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className={`font-bold text-[16px] ${active ? 'text-white' : 'text-text-primary'}`}>{opt.title}</p>
-                  {opt.badge && (
+                  {opt.badge && !isPro && (
                     <span className={`px-2 py-0.5 rounded-pill text-[10px] font-black ${active ? 'bg-white/25 text-white' : 'bg-accent/15 text-accent'}`}>
                       {opt.badge}
                     </span>
