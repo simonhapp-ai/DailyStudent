@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { ProModal } from '../components/ui/ProModal'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 
 interface ProbeklausurPrefill {
@@ -104,7 +106,13 @@ export function ProbeklausurMenuScreen() {
   const navigate = useNavigate()
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
-  const { inProgressProbeklausuren, deleteInProgressProbeklausur, savedProbeklausuren, deleteSavedProbeklausur } = useUser()
+  const { inProgressProbeklausuren, deleteInProgressProbeklausur, savedProbeklausuren, deleteSavedProbeklausur, isPro } = useUser()
+  const [showProModal, setShowProModal] = useState(false)
+
+  const handleModeClick = (mode: typeof MODES_FULL[0] | typeof MODES_HALF[0]) => {
+    if (!isPro && mode.id !== 2) { setShowProModal(true); return }
+    navigate(mode.route, { state: prefill ? { prefill } : undefined })
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-28">
@@ -160,7 +168,7 @@ export function ProbeklausurMenuScreen() {
         {MODES_FULL.map((mode) => (
           <button
             key={mode.id}
-            onClick={() => navigate(mode.route, { state: prefill ? { prefill } : undefined })}
+            onClick={() => handleModeClick(mode)}
             className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 text-left press"
           >
             {/* Top row */}
@@ -207,7 +215,7 @@ export function ProbeklausurMenuScreen() {
           {MODES_HALF.map((mode) => (
             <button
               key={mode.id}
-              onClick={() => navigate(mode.route, { state: prefill ? { prefill } : undefined })}
+              onClick={() => handleModeClick(mode)}
               className="flex-1 bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-4 flex flex-col text-left press"
             >
               <div
@@ -350,6 +358,8 @@ export function ProbeklausurMenuScreen() {
         )}
 
       </div>
+
+      <ProModal feature="probeklausur" isOpen={showProModal} onClose={() => setShowProModal(false)} />
     </div>
   )
 }

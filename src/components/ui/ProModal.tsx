@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button } from './Button'
+import { createCheckoutSession } from '../../lib/stripe'
 
 type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel' | 'probeklausur'
 
@@ -62,10 +62,21 @@ interface ProModalProps {
 
 export function ProModal({ feature, isOpen, onClose }: ProModalProps) {
   const [plan, setPlan] = useState<'annual' | 'monthly'>('annual')
+  const [loading, setLoading] = useState(false)
 
   if (!isOpen) return null
 
   const content = featureContent[feature]
+
+  const handleCheckout = async () => {
+    try {
+      setLoading(true)
+      const url = await createCheckoutSession(plan === 'annual' ? 'yearly' : 'monthly')
+      window.location.href = url
+    } catch {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end">
@@ -117,9 +128,13 @@ export function ProModal({ feature, isOpen, onClose }: ProModalProps) {
           </button>
         </div>
 
-        <Button variant="primary" fullWidth className="mb-3">
-          Pro freischalten · {plan === 'annual' ? '€59,99/Jahr' : '€7,99/Monat'}
-        </Button>
+        <button
+          onClick={handleCheckout}
+          disabled={loading}
+          className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3"
+        >
+          {loading ? 'Wird geladen…' : `Pro freischalten · ${plan === 'annual' ? '€59,99/Jahr' : '€7,99/Monat'}`}
+        </button>
 
         <button
           onClick={onClose}
