@@ -134,16 +134,34 @@ Smart Notes
 - Vor zahlenden Nutzern noch nötig: AGB + Stripe Production-Mode
 
 ### Phase 3 — Was noch zu tun ist:
-1. **Deployment** (Vercel/Netlify) — höchste Priorität
+1. ~~**Deployment** (Vercel) — höchste Priorität~~ ✅ deployed auf dailystudent.de (10.06.2026)
 2. **`delete-account` Edge Function deployen** — `supabase functions deploy delete-account`
-3. **TypeScript Cleanup** — 7 unused variables entfernen
+3. ~~**TypeScript Cleanup**~~ ✅ erledigt (10.06.2026)
 4. **Audio/NoteEditor aus UI entfernen** — unfertige Features nicht sichtbar lassen
 5. **Email Confirmation Flow** — Hinweis nach Signup
-6. **Stripe Production-Mode** — vor zahlenden Nutzern umschalten
+6. ~~**Stripe Production-Mode**~~ ✅ Live-Keys + Live-Preise gesetzt (10.06.2026)
 7. **AGB** — vor zahlenden Nutzern (Generator reicht)
 8. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
 9. **Push-Benachrichtigungen** — nach Launch
 10. **Studentenadaption** — nach Launch
+11. **Import-Funktion prüfen** — vollständigen Import-Flow testen und Bugs fixen
+
+---
+
+## Upcoming Features (Roadmap)
+
+### Kurzfristig (nächste Wochen)
+- **Pro Lernzettel Preview** — neuer Screen in der Lernzettel-Konfiguration der Pro-Lernzettel vorschaut (Claude Haiku, beiger Hintergrund, SVG-Diagramme, Flip-Cards)
+- **Schreibscreen Update** — mehr Stifte, mehr Auswahl, cleaneres UI
+
+### Mittelfristig (2–3 Monate)
+- **Referral-Promo: 5 Freunde = 30 Tage Pro gratis** — eigener Referral-Code pro User, bei 5 erfolgreichen Signups bekommt Einlader 30 Tage Pro automatisch freigeschaltet (ohne Stripe-Verbindung). Braucht: `referrals` Tabelle in Supabase, Referral-Code-Generator, Tracking-Logik
+- **14-Tage-Pro für neue User** — bei Signup automatisch 14 Tage Pro ohne Kreditkarte. Braucht: `trial_ends_at` Feld in `profiles`, Ablauf-Check in `isPro`-Logik
+- **Working Streak-Animation** — sichtbare Animation wenn Streak-Meilensteine erreicht werden (z.B. 7, 30, 100 Tage)
+- **Screen-Transition-Animation** — sanfte Übergangsanimation zwischen Klausurmodus und Unterrichtsmodus
+
+### Langfristig (nach Launch)
+- **Studentenadaption** — Uni-spezifische Features, ECTS, Semesterplanung
 
 ---
 
@@ -369,7 +387,7 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ## Developer-Kontext
 
-- **Entwickler:** Simon (kein Coding-Background, arbeitet mit Claude Code in VS Code) + Jan (Supabase/Backend)
+- **Entwickler:** Simon (kein Coding-Background, arbeitet mit Claude Code in VS Code) + Jan (Simons Helfer)
 - **Workflow:** Claude Code baut, Simon reviewed im Browser (localhost:5174), dann git commit + push
 - **Git:** `git add . && git commit -m "..." && git push`
 - **Wichtig:** Immer erklären was gebaut wurde und warum — keine stillen Änderungen

@@ -66,6 +66,7 @@ import { DrawingCanvasScreen } from '../screens/DrawingCanvasScreen'
 import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
 import { TwoFactorSetupScreen } from '../screens/TwoFactorSetupScreen'
 import { supabase } from '../lib/supabase'
+import { Analytics } from '@vercel/analytics/react'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -247,6 +248,7 @@ export function App() {
         <BrowserRouter>
           <Layout />
         </BrowserRouter>
+        <Analytics />
       </UserProvider>
     </ErrorBoundary>
   )
