@@ -154,9 +154,10 @@ export function SmartNotesScreen() {
     setAnalysisError('')
     try {
       let rawText = editContent.trim()
-      for (const img of editAttachments) {
+      const allImages = [...editAttachments, ...(userNote?.drawingAttachments ?? [])]
+      for (const img of allImages) {
         const ocrText = await extractTextFromImage(img)
-        rawText = rawText ? `${rawText}\n\n${ocrText}` : ocrText
+        if (ocrText.trim()) rawText = rawText ? `${rawText}\n\n${ocrText}` : ocrText
       }
       if (!rawText) throw new Error('Kein Text zum Analysieren gefunden.')
       const newNote = await generateSmartNote(rawText, subjectName, lessonId ?? '', getKc(id ?? '') ?? undefined)
@@ -199,7 +200,9 @@ export function SmartNotesScreen() {
     return <div className="p-4 text-text-secondary">Notiz nicht gefunden.</div>
   }
 
-  const photos = isEditing ? editAttachments : (userNote?.attachments ?? [])
+  const drawingSet = new Set(userNote?.drawingAttachments ?? [])
+  const photos = isEditing ? editAttachments : (userNote?.attachments ?? []).filter(url => !drawingSet.has(url))
+  const drawings = userNote?.drawingAttachments ?? []
 
   // ── Edit mode ────────────────────────────────────────────────────────────
   if (isEditing && userNote) {
@@ -403,6 +406,30 @@ export function SmartNotesScreen() {
                     src={src}
                     alt={`Seite ${i + 1}`}
                     className="w-28 h-28 object-cover rounded-card border border-border hover:opacity-90 transition-opacity"
+                  />
+                  <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1.5 py-0.5">
+                    <span className="text-[10px] text-text-muted font-medium">{i + 1}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-text-muted mt-2">Antippen zum Vergrößern</p>
+          </CollapsibleSection>
+        )}
+
+        {/* Schreibnotizen (canvas drawing thumbnails) */}
+        {drawings.length > 0 && (
+          <CollapsibleSection
+            title="✏️ Schreibnotizen"
+            badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{drawings.length}</span>}
+          >
+            <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
+              {drawings.map((src, i) => (
+                <button key={i} onClick={() => setLightbox(src)} className="relative shrink-0 focus:outline-none">
+                  <img
+                    src={src}
+                    alt={`Seite ${i + 1}`}
+                    className="w-28 h-36 object-cover rounded-card border border-border hover:opacity-90 transition-opacity"
                   />
                   <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1.5 py-0.5">
                     <span className="text-[10px] text-text-muted font-medium">{i + 1}</span>

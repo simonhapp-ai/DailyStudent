@@ -26,6 +26,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: string |
 import { BottomNav } from '../components/ui/BottomNav'
 import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSidebar'
 import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
+import { BugReportWidget } from '../components/ui/BugReportWidget'
 import { UserProvider, useUser } from '../context/UserContext'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { KalenderScreen } from '../screens/KalenderScreen'
@@ -61,6 +62,7 @@ import { LernplanDetailScreen } from '../screens/LernplanDetailScreen'
 import { LernplanListScreen } from '../screens/LernplanListScreen'
 import { AuthScreen } from '../screens/AuthScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
+import { DrawingCanvasScreen } from '../screens/DrawingCanvasScreen'
 import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
 import { TwoFactorSetupScreen } from '../screens/TwoFactorSetupScreen'
 import { supabase } from '../lib/supabase'
@@ -144,6 +146,7 @@ function AppRoutes() {
       <Route path="/profil/benachrichtigungen" element={<BenachrichtigungenScreen />} />
       <Route path="/profil/datenschutz" element={<DatenschutzScreen />} />
       <Route path="/profil/impressum" element={<ImpressumScreen />} />
+      <Route path="/schreibblock" element={<DrawingCanvasScreen />} />
       <Route path="/profil/2fa" element={<TwoFactorSetupScreen />} />
       <Route path="/insights" element={<InsightsScreen />} />
     </Routes>
@@ -220,6 +223,7 @@ function Layout() {
           <AppRoutes />
           <SyncErrorBanner />
         </main>
+        <BugReportWidget />
       </div>
     )
   }
@@ -230,6 +234,7 @@ function Layout() {
       <AppRoutes />
       {!hideNav && <BottomNav />}
       <SyncErrorBanner />
+      <BugReportWidget />
     </div>
   )
 }

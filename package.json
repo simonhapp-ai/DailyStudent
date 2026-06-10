@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@supabase/supabase-js": "^2.107.0",
+    "jspdf": "^4.2.1",
     "katex": "^0.17.0",
     "pdfjs-dist": "^5.7.284",
     "perfect-freehand": "^1.2.3",

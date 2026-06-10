@@ -1,21 +1,15 @@
 import { useRef, useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { classifyContent, solveTasksFromText, analyzeTextBlock, answerQuestion, explainKeyword, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, explainKeyword, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
 import type { HomeworkItem } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
 import { MathRenderer } from '../components/ui/MathRenderer'
-import { DrawingCanvas } from '../components/ui/DrawingCanvas'
+import type { CanvasPageData } from '../components/ui/DrawingCanvas'
 import { useUser } from '../context/UserContext'
 import { subjects, halfYears } from '../data/mockData'
 import type { GeneratedSmartNote, UserNote } from '../types'
 
 // ── Local block types ────────────────────────────────────────────────────────
-
-interface TextBlockAIResult {
-  additionalKeywords: string[]
-  suggestExplain: string[]
-  summary: string
-}
 
 interface PhotoBlockAIResult {
   transcription: string
@@ -34,10 +28,7 @@ interface TextBlock {
   content: string
   aiStatus: BlockAIStatus
   aiError: string
-  aiResult: TextBlockAIResult | null
-  explainLoading: string | null
-  explanations: Record<string, string>
-  selectedTerm: string | null
+  aiResult: PhotoBlockAIResult | null
 }
 
 interface PhotoBlock {
@@ -57,6 +48,11 @@ interface DrawingBlock {
   id: string
   type: 'drawing'
   dataUrl: string | null
+  pages: CanvasPageData[]
+  aiStatus: 'idle' | 'transcribing' | 'analyzing' | 'done' | 'error'
+  aiError: string
+  transcription: string | null
+  aiResult: PhotoBlockAIResult | null
 }
 
 interface HomeworkBlock {
@@ -72,13 +68,17 @@ interface HomeworkBlock {
 type NoteBlock = TextBlock | PhotoBlock | DrawingBlock | HomeworkBlock
 
 function makeTextBlock(id: string): TextBlock {
-  return { id, type: 'text', content: '', aiStatus: 'idle', aiError: '', aiResult: null, explainLoading: null, explanations: {}, selectedTerm: null }
+  return { id, type: 'text', content: '', aiStatus: 'idle', aiError: '', aiResult: null }
 }
 function makePhotoBlock(id: string): PhotoBlock {
   return { id, type: 'photo', attachments: [], pdfFile: null, pdfLoading: false, aiStatus: 'idle', aiError: '', aiResult: null, transcriptionOpen: false, aiMessage: '' }
 }
 function makeDrawingBlock(id: string): DrawingBlock {
-  return { id, type: 'drawing', dataUrl: null }
+  return {
+    id, type: 'drawing', dataUrl: null,
+    pages: [{ id: 'p0', background: { type: 'white' }, strokes: [], images: [] }],
+    aiStatus: 'idle', aiError: '', transcription: null, aiResult: null,
+  }
 }
 function makeHomeworkBlock(id: string): HomeworkBlock {
   return { id, type: 'homework', subjectId: '', description: '', dueDate: '', aiHelp: null, aiLoading: false }
@@ -111,6 +111,7 @@ function getNextLessonDate(subjectId: string, stundenplan: { slots: { day: numbe
 export function NoteCreateScreen() {
   const { id, folderId } = useParams<{ id?: string; folderId?: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
   const { profile, saveNote, userFolders, userNotes, saveToOhneFachFolder, addFolder } = useUser()
 
   const [noteId] = useState(() => {
@@ -123,6 +124,10 @@ export function NoteCreateScreen() {
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>(id ?? '')
   const [showSaveModal, setShowSaveModal] = useState(false)
   const [selectedFolderId, setSelectedFolderId] = useState<string>(folderId ?? '')
+  const [showSmartNotePrompt, setShowSmartNotePrompt] = useState(false)
+  const [smartNoteLoading, setSmartNoteLoading] = useState(false)
+  const [smartNoteError, setSmartNoteError] = useState('')
+  const [pendingSave, setPendingSave] = useState<{ subjectId: string; folderId: string } | null>(null)
   const subject = subjects.find((s) => s.id === selectedSubjectId) ?? null
 
   const [title, setTitle] = useState(subjectFromUrl ? `${subjectFromUrl.name}: ` : '')
@@ -153,27 +158,39 @@ export function NoteCreateScreen() {
   // Per-photo-block file refs (keyed by block id)
   const photoRefs = useRef<Record<string, { camera: HTMLInputElement | null; file: HTMLInputElement | null }>>({})
 
-  // Fullscreen block state for DrawingBlock
-  const [fullscreenBlockId, setFullscreenBlockId] = useState<string | null>(null)
-  const [isLandscape, setIsLandscape] = useState(window.innerWidth > window.innerHeight)
-
+  // Handle returning from DrawingCanvasScreen with updated block data
   useEffect(() => {
-    const handleResize = () => {
-      setIsLandscape(window.innerWidth > window.innerHeight)
+    const st = location.state as Record<string, unknown> | null
+    if (!st?.updatedBlock) return
+    const upd = st.updatedBlock as {
+      blockId?: string
+      pages?: CanvasPageData[]
+      dataUrl?: string | null
+      aiStatus?: DrawingBlock['aiStatus']
+      aiError?: string
+      transcription?: string | null
+      aiResult?: DrawingBlock['aiResult']
     }
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  useEffect(() => {
-    const handleFsChange = () => {
-      if (!document.fullscreenElement) {
-        setFullscreenBlockId(null)
+    if (!upd.blockId) return
+    setBlocks(prev => prev.map(b => {
+      if (b.id !== upd.blockId || b.type !== 'drawing') return b
+      const patch: Partial<DrawingBlock> = {
+        pages: upd.pages ?? (b as DrawingBlock).pages,
+        dataUrl: upd.dataUrl ?? (b as DrawingBlock).dataUrl,
       }
-    }
-    document.addEventListener('fullscreenchange', handleFsChange)
-    return () => document.removeEventListener('fullscreenchange', handleFsChange)
-  }, [])
+      if (upd.aiStatus && upd.aiStatus !== 'idle') {
+        patch.aiStatus     = upd.aiStatus
+        patch.aiError      = upd.aiError ?? ''
+        patch.transcription = upd.transcription ?? null
+        patch.aiResult     = upd.aiResult ?? null
+      }
+      return { ...b, ...patch } as DrawingBlock
+    }))
+    // Clear router state to prevent re-firing
+    navigate(location.pathname, { replace: true, state: null })
+  // location.state changes are what we watch; navigate/pathname are stable
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state])
 
   const profileSubjects = (profile?.faecher ?? [])
     .map((sid) => subjects.find((s) => s.id === sid))
@@ -211,29 +228,18 @@ export function NoteCreateScreen() {
     if (!block.content.trim()) return
     updateBlock(block.id, { aiStatus: 'analyzing', aiError: '' })
     try {
-      const result = await analyzeTextBlock(block.content, subject?.name ?? 'Allgemein')
+      const smartNote = await generateSmartNote(block.content, subject?.name ?? 'Allgemein', block.id)
+      const result: PhotoBlockAIResult = {
+        transcription: block.content,
+        contentType: smartNote.contentType ?? 'info',
+        summary: smartNote.summary,
+        keywords: smartNote.keywords,
+        examTopics: smartNote.examTopics,
+        tasks: smartNote.tasks ?? [],
+      }
       updateBlock(block.id, { aiStatus: 'done', aiResult: result })
     } catch (e) {
       updateBlock(block.id, { aiStatus: 'error', aiError: e instanceof Error ? e.message : 'Fehler' })
-    }
-  }
-
-  const handleTermClick = async (block: TextBlock, term: string) => {
-    if (block.selectedTerm === term) { updateBlock(block.id, { selectedTerm: null }); return }
-    updateBlock(block.id, { selectedTerm: term })
-    if (block.explanations[term] !== undefined) return
-    updateBlock(block.id, { explainLoading: term })
-    try {
-      const text = await explainKeyword(term, subject?.name ?? 'Allgemein', block.content.slice(0, 300))
-      setBlocks((prev) => prev.map((b) => {
-        if (b.id !== block.id || b.type !== 'text') return b
-        return { ...b, explanations: { ...b.explanations, [term]: text }, explainLoading: null }
-      }))
-    } catch {
-      setBlocks((prev) => prev.map((b) => {
-        if (b.id !== block.id || b.type !== 'text') return b
-        return { ...b, explanations: { ...b.explanations, [term]: 'Erklärung konnte nicht geladen werden.' }, explainLoading: null }
-      }))
     }
   }
 
@@ -358,10 +364,15 @@ export function NoteCreateScreen() {
     const photoAttachments = blocks
       .filter((b): b is PhotoBlock => b.type === 'photo')
       .flatMap(b => b.attachments)
-    const drawingAttachments = blocks
+    // Use page thumbnails (always generated) as primary, fall back to full dataUrl export
+    const drawingImages = blocks
       .filter((b): b is DrawingBlock => b.type === 'drawing')
-      .flatMap(b => b.dataUrl ? [b.dataUrl] : [])
-    const allAttachments = [...photoAttachments, ...drawingAttachments]
+      .flatMap(b => {
+        const thumbs = b.pages.flatMap(p => p.thumbnail ? [p.thumbnail] : [])
+        if (thumbs.length > 0) return thumbs
+        return b.dataUrl ? [b.dataUrl] : []
+      })
+    const allAttachments = [...photoAttachments, ...drawingImages]
     const pdfNames = blocks
       .filter((b): b is PhotoBlock => b.type === 'photo')
       .filter(b => b.pdfFile !== null)
@@ -383,6 +394,7 @@ export function NoteCreateScreen() {
       title: title.trim() || 'Neue Notiz',
       content: textContent,
       attachments: allAttachments.length > 0 ? allAttachments : undefined,
+      drawingAttachments: drawingImages.length > 0 ? drawingImages : undefined,
       pdfAttachments: pdfNames.length > 0 ? pdfNames : undefined,
       homeworkItems: homeworkBlocks.length > 0 ? homeworkBlocks : undefined,
       qa: qaItems.length > 0 ? qaItems.map(({ q, a }) => ({ q, a })) : undefined,
@@ -391,21 +403,115 @@ export function NoteCreateScreen() {
   }
 
   const buildGeneratedNote = (): GeneratedSmartNote | undefined => {
-    const photoBlock = blocks.find((b): b is PhotoBlock => b.type === 'photo' && b.aiResult !== null) as PhotoBlock | undefined
-    if (!photoBlock?.aiResult) return undefined
-    const r = photoBlock.aiResult
-    return {
-      lessonId: noteId,
-      rawText: r.transcription,
-      contentType: r.contentType,
-      summary: r.summary,
-      keywords: r.keywords,
-      examTopics: r.examTopics ?? [],
-      solution: r.tasks[0] ? { steps: r.tasks[0].steps, answer: r.tasks[0].answer, proof: r.tasks[0].proof } : undefined,
-      tasks: r.tasks.length > 0 ? r.tasks : undefined,
-      generatedAt: new Date().toISOString(),
-      subjectName: subject?.name ?? 'Allgemein',
+    const photoResults = blocks
+      .filter((b): b is PhotoBlock => b.type === 'photo' && b.aiResult !== null)
+      .map(b => b.aiResult!)
+    const drawingResults = blocks
+      .filter((b): b is DrawingBlock => b.type === 'drawing' && b.aiResult !== null)
+      .map(b => b.aiResult!)
+    const textResults = blocks
+      .filter((b): b is TextBlock => b.type === 'text' && b.aiResult !== null)
+      .map(b => b.aiResult!)
+
+    const allRich = [...photoResults, ...drawingResults]
+    const primary = allRich[0]
+
+    if (primary) {
+      const keywords = [...new Set(allRich.flatMap(r => r.keywords))]
+      const examTopics = [...new Set(allRich.flatMap(r => r.examTopics))]
+      return {
+        lessonId: noteId,
+        rawText: primary.transcription,
+        contentType: primary.contentType,
+        summary: primary.summary,
+        keywords,
+        examTopics,
+        solution: primary.tasks[0] ? { steps: primary.tasks[0].steps, answer: primary.tasks[0].answer, proof: primary.tasks[0].proof } : undefined,
+        tasks: primary.tasks.length > 0 ? primary.tasks : undefined,
+        generatedAt: new Date().toISOString(),
+        subjectName: subject?.name ?? 'Allgemein',
+      }
     }
+
+    // Fallback: TextBlock results only
+    if (textResults.length > 0) {
+      const rawText = blocks
+        .filter((b): b is TextBlock => b.type === 'text')
+        .map(b => b.content.trim()).filter(Boolean).join('\n\n')
+      return {
+        lessonId: noteId,
+        rawText,
+        contentType: textResults[0].contentType,
+        summary: textResults[0].summary,
+        keywords: [...new Set(textResults.flatMap(r => r.keywords))],
+        examTopics: [...new Set(textResults.flatMap(r => r.examTopics))],
+        generatedAt: new Date().toISOString(),
+        subjectName: subject?.name ?? 'Allgemein',
+      }
+    }
+
+    return undefined
+  }
+
+  const hasAnalyzableContent = () =>
+    blocks.some(b =>
+      (b.type === 'text' && b.content.trim().length > 5) ||
+      (b.type === 'photo' && (b.attachments.length > 0 || !!b.pdfFile)) ||
+      (b.type === 'drawing' && (b.dataUrl !== null || b.pages.some(p => p.thumbnail)))
+    )
+
+  const hasAnyAnalysis = () =>
+    blocks.some(b => (b.type === 'text' || b.type === 'photo' || b.type === 'drawing') && b.aiResult !== null)
+
+  const doSave = (subjectId: string, resolvedFolderId: string, generatedNote?: GeneratedSmartNote) => {
+    saveNote(buildNote(subjectId, resolvedFolderId), generatedNote ?? buildGeneratedNote())
+    setShowSaveModal(false)
+    if (resolvedFolderId && subjectId) navigate(`/unterricht/${subjectId}/ordner/${resolvedFolderId}`, { replace: true })
+    else if (subjectId) navigate(`/unterricht/${subjectId}`, { replace: true })
+    else navigate('/unterricht', { replace: true })
+  }
+
+  const runSmartNoteAndSave = async () => {
+    if (!pendingSave) return
+    setSmartNoteLoading(true)
+    setSmartNoteError('')
+    let generatedNote: GeneratedSmartNote | undefined
+    try {
+      let combinedText = blocks.filter((b): b is TextBlock => b.type === 'text').map(b => b.content.trim()).filter(Boolean).join('\n\n')
+      for (const b of blocks.filter((b): b is PhotoBlock => b.type === 'photo')) {
+        for (const img of b.attachments) {
+          const t = await extractTextFromImage(img)
+          if (t.trim()) combinedText = combinedText ? `${combinedText}\n\n${t}` : t
+        }
+      }
+      for (const b of blocks.filter((b): b is DrawingBlock => b.type === 'drawing')) {
+        const src = b.dataUrl ?? b.pages.find(p => p.thumbnail)?.thumbnail ?? null
+        if (src) {
+          const t = await extractTextFromImage(src)
+          if (t.trim()) combinedText = combinedText ? `${combinedText}\n\n${t}` : t
+        }
+      }
+      if (combinedText.trim()) {
+        const smartNote = await generateSmartNote(combinedText, subject?.name ?? 'Allgemein', noteId)
+        generatedNote = {
+          lessonId: noteId,
+          rawText: combinedText,
+          contentType: (smartNote.contentType as GeneratedSmartNote['contentType']) ?? 'info',
+          summary: smartNote.summary,
+          keywords: smartNote.keywords,
+          examTopics: smartNote.examTopics,
+          generatedAt: new Date().toISOString(),
+          subjectName: subject?.name ?? 'Allgemein',
+        }
+      }
+    } catch {
+      // Save anyway even if analysis fails
+    }
+    setSmartNoteLoading(false)
+    setShowSmartNotePrompt(false)
+    const saved = pendingSave
+    setPendingSave(null)
+    doSave(saved.subjectId, saved.folderId, generatedNote)
   }
 
   const confirmSave = (finalFolderId: string) => {
@@ -424,11 +530,13 @@ export function NoteCreateScreen() {
       }
       resolvedFolderId = notizenId
     }
-    saveNote(buildNote(selectedSubjectId, resolvedFolderId), buildGeneratedNote())
-    setShowSaveModal(false)
-    if (resolvedFolderId && selectedSubjectId) navigate(`/unterricht/${selectedSubjectId}/ordner/${resolvedFolderId}`, { replace: true })
-    else if (selectedSubjectId) navigate(`/unterricht/${selectedSubjectId}`, { replace: true })
-    else navigate('/unterricht', { replace: true })
+    if (hasAnalyzableContent() && !hasAnyAnalysis()) {
+      setPendingSave({ subjectId: selectedSubjectId, folderId: resolvedFolderId })
+      setShowSaveModal(false)
+      setShowSmartNotePrompt(true)
+      return
+    }
+    doSave(selectedSubjectId, resolvedFolderId)
   }
 
   const openNoSubjectModal = async () => {
@@ -488,11 +596,11 @@ export function NoteCreateScreen() {
 
   // ── Render helpers ───────────────────────────────────────────────────────
 
-  // Collect unique keywords from all analyzed photo blocks — used for text suggestions
-  const photoKeywordSuggestions = [
+  // Collect unique keywords from all analyzed blocks — used as text suggestions
+  const analysisKeywordSuggestions = [
     ...new Set(
       blocks
-        .filter((b): b is PhotoBlock => b.type === 'photo' && b.aiResult !== null)
+        .filter((b): b is PhotoBlock | DrawingBlock => (b.type === 'photo' || b.type === 'drawing') && b.aiResult !== null)
         .flatMap((b) => b.aiResult!.keywords)
     ),
   ]
@@ -562,77 +670,48 @@ export function NoteCreateScreen() {
         {/* Text KI result */}
         {block.aiResult && (
           <div className="border-t border-border px-4 py-3 space-y-3 bg-accent/3">
-
-            {block.aiResult.additionalKeywords.length > 0 && (
+            {block.aiResult.keywords.length > 0 && (
               <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Weitere Begriffe</p>
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Schlüsselbegriffe</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {block.aiResult.additionalKeywords.map((kw) => (
-                    <span key={kw} className="px-2.5 py-1 rounded-pill text-xs font-medium bg-surface border border-border text-text-secondary">
-                      {kw}
-                    </span>
+                  {block.aiResult.keywords.map((kw) => (
+                    <span key={kw} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold"
+                      style={{ background: 'rgba(var(--color-accent),0.1)', color: 'rgb(var(--color-accent))' }}>{kw}</span>
                   ))}
                 </div>
               </div>
             )}
-
-            {block.aiResult.suggestExplain.length > 0 && (
+            {block.aiResult.examTopics.length > 0 && (
               <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Erklärungen anbieten</p>
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Klausurthemen</p>
                 <div className="flex flex-wrap gap-1.5">
-                  {block.aiResult.suggestExplain.map((term) => {
-                    const isSelected = block.selectedTerm === term
-                    const isLoading = block.explainLoading === term
-                    return (
-                      <button
-                        key={term}
-                        onClick={() => void handleTermClick(block, term)}
-                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-xs font-medium border transition-all active:scale-95 ${
-                          isSelected ? 'grad-accent text-white border-transparent' : 'bg-surface border-border text-text-secondary hover:border-accent/50'
-                        }`}
-                      >
-                        {isLoading && <div className="w-2.5 h-2.5 border-2 border-current/40 border-t-current rounded-full animate-spin" />}
-                        {term}
-                      </button>
-                    )
-                  })}
+                  {block.aiResult.examTopics.map((t) => (
+                    <span key={t} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold"
+                      style={{ background: 'rgba(16,185,129,0.08)', color: '#059669', border: '1px solid rgba(16,185,129,0.2)' }}>{t}</span>
+                  ))}
                 </div>
-                {block.selectedTerm && (
-                  <div className="mt-2 px-3 py-2 bg-accent/5 border border-accent/15 rounded-card">
-                    <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-1">{block.selectedTerm}</p>
-                    {block.explainLoading === block.selectedTerm ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                        <p className="text-text-muted text-xs">KI erklärt…</p>
-                      </div>
-                    ) : (
-                      <p className="text-text-secondary text-sm leading-relaxed">{block.explanations[block.selectedTerm]}</p>
-                    )}
-                  </div>
-                )}
               </div>
             )}
-
             {block.aiResult.summary && (
               <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Kontext</p>
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Zusammenfassung</p>
                 <p className="text-text-secondary text-sm leading-relaxed">{block.aiResult.summary}</p>
               </div>
             )}
           </div>
         )}
 
-        {/* Photo→Text keyword suggestions (shown when a photo block has been analyzed) */}
-        {photoKeywordSuggestions.length > 0 && (
+        {/* Keyword suggestions from all analyzed blocks */}
+        {analysisKeywordSuggestions.length > 0 && (
           <div className="border-t border-border/60 px-4 py-2.5">
             <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1">
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-accent">
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              Vorschläge aus Fotoblock
+              Vorschläge aus Analyse
             </p>
             <div className="flex flex-wrap gap-1.5">
-              {photoKeywordSuggestions.slice(0, 8).map((kw) => (
+              {analysisKeywordSuggestions.slice(0, 8).map((kw) => (
                 <button
                   key={kw}
                   onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${kw}` : kw })}
@@ -878,105 +957,224 @@ export function NoteCreateScreen() {
     )
   }
 
-  const toggleDrawingFullscreen = (blockId: string) => {
-    if (fullscreenBlockId === blockId) {
-      setFullscreenBlockId(null)
-      try {
-        if (document.fullscreenElement && document.exitFullscreen) {
-          document.exitFullscreen().catch(() => {});
-        }
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
-      } catch {}
-    } else {
-      setFullscreenBlockId(blockId)
-      const element = document.getElementById(`drawing-container-${blockId}`)
-      if (element && element.requestFullscreen) {
-        element.requestFullscreen().then(() => {
-          if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(() => {});
-          }
-        }).catch(() => {});
-      }
-    }
-  }
-
   const renderDrawingBlock = (block: DrawingBlock, isDefault: boolean) => {
-    const isFullscreen = fullscreenBlockId === block.id
-
-    // Style configuration to handle vertical screens when rotated landscape is forced
-    const fsContainerStyle: React.CSSProperties = isFullscreen && !isLandscape
-      ? {
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          width: '100vh',
-          height: '100vw',
-          transform: 'translate(-50%, -50%) rotate(90deg)',
-          transformOrigin: 'center',
-          zIndex: 9999,
-        }
-      : {}
-
-    const containerClass = isFullscreen
-      ? isLandscape
-        ? "fixed inset-0 z-[60] bg-[#0D0D0F] flex flex-col w-full h-full"
-        : "fixed z-[60] bg-[#0D0D0F] flex flex-col"
-      : "mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden"
+    const openCanvas = () => {
+      navigate('/schreibblock', {
+        state: {
+          blockId:      block.id,
+          initialPages: block.pages,
+          subjectName:  subject?.name ?? 'Allgemein',
+          returnTo:     location.pathname + (location.search ?? ''),
+        },
+      })
+    }
 
     return (
-      <div
-        key={block.id}
-        id={`drawing-container-${block.id}`}
-        className={containerClass}
-        style={fsContainerStyle}
-      >
+      <div key={block.id} className="mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border bg-surface shrink-0">
+        <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border">
+          <span className="section-label">✏️ Schreibblock</span>
           <div className="flex items-center gap-2">
-            <span className="section-label">✏️ Schreibblock {isFullscreen && '(Vollbild)'}</span>
-            {isFullscreen && !isLandscape && (
-              <span className="text-[9px] bg-accent/15 text-accent px-1.5 py-0.5 rounded font-semibold whitespace-nowrap">Querformat erzwungen</span>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            {isFullscreen ? (
-              <button
-                onClick={() => toggleDrawingFullscreen(block.id)}
-                className="p-1 rounded-btn hover:bg-surface-hover transition-colors press-sm"
-                title="Vollbild beenden"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-text-secondary">
-                  <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M10 14l-7 7" strokeLinecap="round" strokeLinejoin="round" />
+            {!isDefault && (
+              <button onClick={() => removeBlock(block.id)} className="p-1 rounded-btn hover:bg-danger/10 transition-colors press-sm">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger">
+                  <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                 </svg>
               </button>
-            ) : (
-              <>
-                <button
-                  onClick={() => toggleDrawingFullscreen(block.id)}
-                  className="p-1 rounded-btn hover:bg-surface-hover transition-colors press-sm"
-                  title="Vollbild"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="text-text-secondary">
-                    <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-                {!isDefault && (
-                  <button onClick={() => removeBlock(block.id)} className="p-1 rounded-btn hover:bg-danger/10 transition-colors press-sm">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger">
-                      <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-                    </svg>
-                  </button>
-                )}
-              </>
             )}
           </div>
         </div>
-        <DrawingCanvas
-          isFullscreen={isFullscreen}
-          onChange={(dataUrl) => updateBlock(block.id, { dataUrl } as Partial<NoteBlock>)}
-        />
+
+        {/* Page thumbnails strip (visible if pages have thumbnails or if multiple pages) */}
+        {block.pages.some(p => p.thumbnail) && (
+          <div
+            className="flex gap-2 px-3 py-2.5 overflow-x-auto border-b border-border/50 bg-surface"
+            style={{ scrollbarWidth: 'none' }}
+          >
+            {block.pages.map((page, i) => (
+              <button
+                key={page.id}
+                onClick={openCanvas}
+                className="relative shrink-0 rounded-lg overflow-hidden press-sm transition-shadow"
+                style={{
+                  width: 68,
+                  height: 96,
+                  background: '#fff',
+                  border: '1.5px solid rgba(0,0,0,0.1)',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                }}
+                title={`Seite ${i + 1} öffnen`}
+              >
+                {page.thumbnail ? (
+                  <img
+                    src={page.thumbnail}
+                    alt={`Seite ${i + 1}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-white">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C7C7CC" strokeWidth="1.8">
+                      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                )}
+                <div
+                  className="absolute bottom-0 left-0 right-0 flex items-center justify-center"
+                  style={{ background: 'rgba(0,0,0,0.38)', height: 16 }}
+                >
+                  <span style={{ color: 'white', fontSize: 9, fontWeight: 600 }}>{i + 1}</span>
+                </div>
+              </button>
+            ))}
+            {/* Add page tile */}
+            <button
+              onClick={openCanvas}
+              className="shrink-0 rounded-lg flex flex-col items-center justify-center gap-1 press-sm"
+              style={{
+                width: 68, height: 96,
+                border: '1.5px dashed rgba(var(--color-border),0.7)',
+                color: 'rgb(var(--color-text-muted))',
+                background: 'transparent',
+              }}
+              title="Neue Seite im Schreibblock"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+              </svg>
+              <span style={{ fontSize: 9, fontWeight: 600 }}>Seite</span>
+            </button>
+          </div>
+        )}
+
+        {/* Preview or placeholder — only shown when no thumbnails yet */}
+        {!block.pages.some(p => p.thumbnail) && (
+          <button
+            onClick={openCanvas}
+            className="w-full group press-sm transition-opacity"
+            style={{ display: 'block', textAlign: 'left' }}
+          >
+            {block.dataUrl ? (
+              <div className="relative">
+                <img
+                  src={block.dataUrl}
+                  alt="Schreibblock"
+                  className="w-full"
+                  style={{ maxHeight: 200, objectFit: 'contain', backgroundColor: 'rgb(var(--color-surface))', display: 'block' }}
+                />
+                <div
+                  className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ backgroundColor: 'rgba(0,0,0,0.04)' }}
+                >
+                  <span className="px-3 py-1.5 rounded-full text-[12px] font-semibold" style={{ background: 'rgba(0,0,0,0.55)', color: 'white' }}>
+                    Bearbeiten
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-2 py-8" style={{ backgroundColor: 'rgb(var(--color-surface))' }}>
+                <div className="w-11 h-11 rounded-[14px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#7C3AED,#5B21B6)' }}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <p className="text-[13px] font-semibold text-text-primary">Schreibblock öffnen</p>
+                <p className="text-[11px] text-text-muted">Mit Stift schreiben, Fotos einfügen, KI-Analyse</p>
+              </div>
+            )}
+          </button>
+        )}
+
+        {/* Footer: page count + edit */}
+        {block.pages.some(p => p.thumbnail) && (
+          <div className="flex items-center justify-between px-4 py-2.5 border-t border-border/50">
+            <span className="text-[11px] text-text-muted font-medium">
+              {block.pages.length} {block.pages.length === 1 ? 'Seite' : 'Seiten'}
+            </span>
+            <button
+              onClick={openCanvas}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[11px] font-semibold press-sm"
+              style={{ background: 'rgba(var(--color-accent),0.1)', border: '1px solid rgba(var(--color-accent),0.3)', color: 'rgb(var(--color-accent))' }}
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Bearbeiten
+            </button>
+          </div>
+        )}
+
+        {/* KI-Mitschrift Analyse */}
+        {block.aiStatus !== 'idle' && (
+          <div className="border-t border-border/60">
+            {(block.aiStatus === 'transcribing' || block.aiStatus === 'analyzing') && (
+              <div className="flex items-center gap-3 px-4 py-3">
+                <div className="w-4 h-4 rounded-full border-2 border-accent border-t-transparent animate-spin shrink-0" />
+                <span className="text-[12px] text-text-secondary">
+                  {block.aiStatus === 'transcribing' ? 'Handschrift wird transkribiert…' : 'Smart Note wird erstellt…'}
+                </span>
+              </div>
+            )}
+            {block.aiStatus === 'error' && (
+              <div className="flex items-start gap-2.5 px-4 py-3">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2.2" className="shrink-0 mt-0.5">
+                  <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" strokeLinecap="round" />
+                </svg>
+                <span className="text-[12px] text-danger">{block.aiError}</span>
+              </div>
+            )}
+            {block.aiStatus === 'done' && block.aiResult && (
+              <div className="px-4 py-3 space-y-3">
+                <div className="flex items-start gap-2 rounded-xl px-3 py-2.5" style={{ backgroundColor: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" className="shrink-0 mt-0.5">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><path d="M12 9v4M12 17h.01" strokeLinecap="round" />
+                  </svg>
+                  <span className="text-[11px] font-medium" style={{ color: '#B45309' }}>
+                    KI-Transkription kann Fehler enthalten — mit Handschrift vergleichen
+                  </span>
+                </div>
+                <details className="group">
+                  <summary className="flex items-center justify-between cursor-pointer list-none">
+                    <span className="section-label">Transkribierter Text</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted transition-transform group-open:rotate-180">
+                      <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </summary>
+                  <p className="mt-2 text-[12px] text-text-secondary leading-relaxed whitespace-pre-wrap font-mono bg-surface-hover rounded-lg px-3 py-2.5">
+                    {block.transcription}
+                  </p>
+                </details>
+                {block.aiResult.summary && (
+                  <div>
+                    <p className="section-label mb-1.5">Zusammenfassung</p>
+                    <p className="text-[13px] text-text-secondary leading-relaxed">{block.aiResult.summary}</p>
+                  </div>
+                )}
+                {block.aiResult.keywords.length > 0 && (
+                  <div>
+                    <p className="section-label mb-1.5">Schlüsselwörter</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {block.aiResult.keywords.map((k) => (
+                        <span key={k} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold"
+                          style={{ background: 'rgba(var(--color-accent),0.1)', color: 'rgb(var(--color-accent))' }}>{k}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {block.aiResult.examTopics.length > 0 && (
+                  <div>
+                    <p className="section-label mb-1.5">Klausurthemen</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {block.aiResult.examTopics.map((t) => (
+                        <span key={t} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold"
+                          style={{ background: 'rgba(16,185,129,0.08)', color: '#059669', border: '1px solid rgba(16,185,129,0.2)' }}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     )
   }
@@ -1203,6 +1401,13 @@ export function NoteCreateScreen() {
           <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Weitere Felder</p>
           <div className="flex flex-wrap gap-2">
             <button
+              onClick={addHomeworkBlock}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-accent hover:bg-accent/5 transition-all active:scale-95"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" strokeLinecap="round" strokeLinejoin="round" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+              Hausaufgaben
+            </button>
+            <button
               onClick={addTextBlock}
               className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-accent hover:bg-accent/5 transition-all active:scale-95"
             >
@@ -1222,13 +1427,6 @@ export function NoteCreateScreen() {
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" /></svg>
               Schreibnotiz
-            </button>
-            <button
-              onClick={addHomeworkBlock}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-accent hover:bg-accent/5 transition-all active:scale-95"
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" strokeLinecap="round" strokeLinejoin="round" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
-              Hausaufgaben
             </button>
           </div>
         </div>
@@ -1540,6 +1738,52 @@ export function NoteCreateScreen() {
           </div>
         )
       })()}
+
+      {/* SMART NOTE PROMPT MODAL */}
+      {showSmartNotePrompt && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="absolute inset-0 bg-black/50" onClick={() => { if (!smartNoteLoading) { setShowSmartNotePrompt(false); pendingSave && doSave(pendingSave.subjectId, pendingSave.folderId); setPendingSave(null) } }} />
+          <div className="relative w-full max-w-lg bg-surface rounded-t-2xl px-5 pt-5 pb-8 shadow-2xl">
+            <div className="w-10 h-1 rounded-full bg-border mx-auto mb-4" />
+            <div className="flex items-start gap-3 mb-4">
+              <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg,#7C3AED,#5B21B6)' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                  <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-base font-bold text-text-primary">Smart Note mit KI erstellen?</p>
+                <p className="text-sm text-text-secondary mt-0.5 leading-relaxed">KI analysiert deine Notiz und erstellt Schlüsselbegriffe, Zusammenfassung und mögliche Klausurthemen.</p>
+              </div>
+            </div>
+            {smartNoteError.length > 0 && (
+              <p className="text-xs text-danger mb-3">{smartNoteError}</p>
+            )}
+            <div className="flex gap-3">
+              <button
+                onClick={() => { if (!smartNoteLoading) { setShowSmartNotePrompt(false); pendingSave && doSave(pendingSave.subjectId, pendingSave.folderId); setPendingSave(null) } }}
+                disabled={smartNoteLoading}
+                className="flex-1 py-3 rounded-card border border-border text-sm font-semibold text-text-secondary hover:bg-surface-hover active:scale-[0.98] transition-all disabled:opacity-40"
+              >
+                Überspringen
+              </button>
+              <button
+                onClick={runSmartNoteAndSave}
+                disabled={smartNoteLoading}
+                className="flex-1 py-3 rounded-card text-sm font-bold text-white flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-60"
+                style={{ background: 'linear-gradient(135deg,#7C3AED,#5B21B6)' }}
+              >
+                {smartNoteLoading ? (
+                  <>
+                    <div className="w-3.5 h-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                    KI analysiert…
+                  </>
+                ) : 'Erstellen'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

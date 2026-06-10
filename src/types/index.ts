@@ -95,6 +95,7 @@ export interface UserNote {
   title: string
   content: string
   attachments?: string[]
+  drawingAttachments?: string[]
   pdfAttachments?: { name: string }[]
   homeworkItems?: HomeworkItem[]
   qa?: { q: string; a: string }[]
