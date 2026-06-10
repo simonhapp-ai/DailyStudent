@@ -71,13 +71,16 @@ export function LernzettelScreen() {
   const [activeLz, setActiveLz] = useState<Lernzettel | null>(null)
   const [showPro, setShowPro] = useState(false)
 
+  const today = new Date().toISOString().slice(0, 10)
+  const createdToday = lernzettel.filter(lz => lz.createdAt?.slice(0, 10) === today).length
+
   const handleOpenDetail = (lz: Lernzettel) => {
     setActiveLz(lz)
     setView('detail')
   }
 
   const handleNew = () => {
-    if (!isPro) { setShowPro(true); return }
+    if (!isPro && createdToday >= 1) { setShowPro(true); return }
     navigate('/klausurmodus/lernzettel/neu')
   }
 

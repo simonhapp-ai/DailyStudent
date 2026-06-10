@@ -76,7 +76,7 @@ function uid() {
 export function LernplanDetailScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { lernplaene, deleteLernplan, addEntries, isPro, personalEntries, profile } = useUser()
+  const { lernplaene, deleteLernplan, addEntries, personalEntries, profile } = useUser()
 
   const plan = lernplaene.find((p) => p.id === id)
 
@@ -352,9 +352,6 @@ export function LernplanDetailScreen() {
             const todayMark = isToday(day.date)
             const pastMark = isPast(day.date)
 
-            // Paywall: Free Einzel users see only first 3 days
-            const isBlurred = !isPro && plan.planType === 'einzel' && idx >= 3
-
             return (
               <div
                 key={day.date}
@@ -412,20 +409,10 @@ export function LernplanDetailScreen() {
 
                 {/* Sessions */}
                 {day.sessions.length > 0 && (
-                  <div className={`px-4 pb-4 space-y-2 ${isBlurred ? 'filter blur-[4px] pointer-events-none select-none' : ''}`}>
+                  <div className="px-4 pb-4 space-y-2">
                     {day.sessions.map((session, sIdx) => (
                       <SessionCard key={sIdx} session={session} />
                     ))}
-                  </div>
-                )}
-
-                {/* Paywall overlay */}
-                {isBlurred && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center bg-background/40 backdrop-blur-[2px] rounded-[20px]">
-                    <div className="bg-surface border border-border rounded-[14px] px-4 py-3 text-center shadow-lg">
-                      <p className="text-text-primary font-bold text-[13px]">Pro freischalten</p>
-                      <p className="text-text-muted text-[11px] mt-0.5">Vollständigen Plan sehen</p>
-                    </div>
                   </div>
                 )}
               </div>

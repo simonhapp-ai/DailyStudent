@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from './Button'
 
-type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel'
+type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel' | 'probeklausur'
 
 const featureContent: Record<ProFeature, { headline: string; bullets: string[] }> = {
   'ki-zusammenfassung': {
@@ -37,11 +37,19 @@ const featureContent: Record<ProFeature, { headline: string; bullets: string[] }
     ],
   },
   'lernzettel': {
-    headline: 'KI-Lernzettel freischalten',
+    headline: 'Unbegrenzte Lernzettel',
     bullets: [
-      'KI erstellt strukturierte Zusammenfassungen aus deinen Smart Notes',
-      'Themen aus dem Kerncurriculum deines Bundeslandes',
-      'Wird automatisch als Notiz in deinem Unterrichtsmodus gespeichert',
+      'Free-Nutzer: 1 Lernzettel pro Tag',
+      'Pro: Unbegrenzt für alle Fächer',
+      'KI nutzt dein Kerncurriculum für optimale Vorbereitung',
+    ],
+  },
+  'probeklausur': {
+    headline: 'Unbegrenzte Probeklausuren',
+    bullets: [
+      'Free-Nutzer: 1 vollständige Klausur pro Tag',
+      'Pro: Unbegrenzt üben für alle Fächer',
+      'Inkl. vollständiger KI-Korrektur mit Fehlern & Lücken',
     ],
   },
 }

@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { ProModal } from '../components/ui/ProModal'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode4Exam, correctExam } from '../lib/gemini'
@@ -110,7 +111,7 @@ export function ProbeklausurMode4Screen() {
   const navigate = useNavigate()
   const location = useLocation()
   const resume = (location.state as { resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
@@ -125,6 +126,7 @@ export function ProbeklausurMode4Screen() {
   const [correction, setCorrection] = useState<ExamCorrection | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showExitWarning, setShowExitWarning] = useState(false)
+  const [showProModal, setShowProModal] = useState(false)
 
   const selectedSubject = subjects.find((s) => s.id === subjectId)
   const subjectTopics = topics.filter((t) => t.subjectId === subjectId).slice(0, 6)
@@ -322,18 +324,65 @@ export function ProbeklausurMode4Screen() {
               <p className="text-white text-[48px] font-black leading-none">{correction.totalNP}</p>
               <p className="text-white/80 text-[13px] mt-1">von 15 Notenpunkten · {correction.gradeLabel}</p>
             </div>
-            {correction.overallJustification && (
-              <div className="bg-surface rounded-[14px] border border-border/60 p-4 mb-4">
-                <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-1.5">Gesamtbewertung</p>
-                <p className="text-text-secondary text-[13px] leading-relaxed">{correction.overallJustification}</p>
+            {isPro ? (
+              <>
+                {correction.overallJustification && (
+                  <div className="bg-surface rounded-[14px] border border-border/60 p-4 mb-4">
+                    <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-1.5">Gesamtbewertung</p>
+                    <p className="text-text-secondary text-[13px] leading-relaxed">{correction.overallJustification}</p>
+                  </div>
+                )}
+                <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-2.5">Details pro Aufgabe</p>
+                {exam.tasks.map((t) => {
+                  const c = correction.taskCorrections.find((tc) => tc.taskId === t.id)
+                  if (!c) return null
+                  return <CorrectionCard key={t.id} task={t} correction={c} />
+                })}
+              </>
+            ) : (
+              <div className="mt-2 rounded-[18px] border border-accent/20 overflow-hidden" style={{ background: 'rgba(124,58,237,0.04)' }}>
+                <div className="p-5 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: 'rgba(124,58,237,0.15)' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-[15px] font-bold text-text-primary">KI-Korrektur freischalten</p>
+                      <p className="text-[12px] text-text-muted">Pro-Feature · Sieh genau was gefehlt hat</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {[
+                      { icon: '🔴', label: 'Fehleranalyse', desc: 'Konkrete Fehler in deiner Antwort' },
+                      { icon: '🟡', label: 'Lücken', desc: 'Welche Inhalte noch gefehlt haben' },
+                      { icon: '💬', label: 'Formulierungshilfen', desc: 'Bessere Formulierungen für die Klausur' },
+                      { icon: '📊', label: 'Gesamtbewertung', desc: 'Detailliertes Fazit der KI pro Aufgabe' },
+                    ].map(item => (
+                      <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-[12px]" style={{ background: 'var(--color-surface)' }}>
+                        <span className="text-[15px]">{item.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[13px] font-semibold text-text-primary">{item.label}</p>
+                          <p className="text-[11px] text-text-muted">{item.desc}</p>
+                        </div>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
+                          <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setShowProModal(true)}
+                    className="w-full py-3 rounded-[14px] text-white text-[14px] font-bold press-sm"
+                    style={{ background: 'linear-gradient(135deg, #7C3AED, #6D28D9)' }}
+                  >
+                    Pro freischalten · €5/Mo
+                  </button>
+                </div>
               </div>
             )}
-            <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-2.5">Details pro Aufgabe</p>
-            {exam.tasks.map((t) => {
-              const c = correction.taskCorrections.find((tc) => tc.taskId === t.id)
-              if (!c) return null
-              return <CorrectionCard key={t.id} task={t} correction={c} />
-            })}
+            <ProModal feature="ki-korrektur" isOpen={showProModal} onClose={() => setShowProModal(false)} />
           </div>
         )}
       </div>
