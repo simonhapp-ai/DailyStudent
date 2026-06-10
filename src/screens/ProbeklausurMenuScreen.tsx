@@ -17,7 +17,8 @@ const MODES_FULL = [
     title: 'Vollständige Klausur',
     subtitle: 'Realistische Klausur-Simulation',
     description: 'Eine komplette 90-Minuten-Klausur mit AFB I–III, 2–3 Materialien und echter Zeitgrenzen — genau wie im echten Abitur.',
-    badges: ['90 Minuten', '3–5 Aufgaben', 'KI-Korrektur'],
+    badges: ['90 Minuten', '3–5 Aufgaben'],
+    proBadge: 'KI-Korrektur',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
@@ -31,7 +32,8 @@ const MODES_FULL = [
     title: 'AFB-Aufgabentrainer',
     subtitle: 'Einzelne Aufgabe gezielt üben',
     description: 'Du wählst das AFB-Level (I, II oder III) und bekommst genau eine präzise Abituraufgabe auf diesem Niveau — mit passenden Materialien wenn nötig.',
-    badges: ['1 Aufgabe', 'AFB I / II / III', 'KI-Korrektur'],
+    badges: ['1 Aufgabe', 'AFB I / II / III'],
+    proBadge: 'KI-Korrektur',
     icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
@@ -47,7 +49,8 @@ const MODES_HALF = [
     gradient: 'linear-gradient(145deg, #059669, #064E3B)',
     title: 'Materialklausur',
     subtitle: 'Alle drei AFB zu einem Material',
-    badges: ['1–3 Materialien', 'AFB I + II + III', 'KI-Korrektur'],
+    badges: ['1–3 Materialien', 'AFB I + II + III'],
+    proBadge: 'KI-Korrektur',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" />
@@ -60,7 +63,8 @@ const MODES_HALF = [
     gradient: 'linear-gradient(145deg, #DB2777, #9D174D)',
     title: 'Ohne Material',
     subtitle: 'Alles aus dem Kopf',
-    badges: ['Kein Material', 'AFB I + II + III', 'KI-Korrektur'],
+    badges: ['Kein Material', 'AFB I + II + III'],
+    proBadge: 'KI-Korrektur',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" /><circle cx="12" cy="17" r="0.5" fill="white" />
@@ -185,13 +189,15 @@ export function ProbeklausurMenuScreen() {
             {/* Badges */}
             <div className="flex flex-wrap gap-1.5">
               {mode.badges.map((badge) => (
-                <span
-                  key={badge}
-                  className="px-2.5 py-1 rounded-pill text-[11px] font-semibold bg-background text-text-secondary"
-                >
+                <span key={badge} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold bg-background text-text-secondary">
                   {badge}
                 </span>
               ))}
+              {mode.proBadge && (
+                <span className="px-2.5 py-1 rounded-pill text-[11px] font-black bg-accent/15 text-accent">
+                  ✦ {mode.proBadge} · Pro
+                </span>
+              )}
             </div>
           </button>
         ))}
@@ -214,13 +220,15 @@ export function ProbeklausurMenuScreen() {
               <p className="text-text-muted text-[12px] mt-1 leading-snug flex-1">{mode.subtitle}</p>
               <div className="mt-3 flex flex-wrap gap-1">
                 {mode.badges.map((badge) => (
-                  <span
-                    key={badge}
-                    className="px-2 py-0.5 rounded-pill text-[10px] font-semibold bg-background text-text-secondary"
-                  >
+                  <span key={badge} className="px-2 py-0.5 rounded-pill text-[10px] font-semibold bg-background text-text-secondary">
                     {badge}
                   </span>
                 ))}
+                {mode.proBadge && (
+                  <span className="px-2 py-0.5 rounded-pill text-[10px] font-black bg-accent/15 text-accent">
+                    ✦ Pro
+                  </span>
+                )}
               </div>
             </button>
           ))}
