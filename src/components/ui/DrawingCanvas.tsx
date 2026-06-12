@@ -980,28 +980,31 @@ export function DrawingCanvas({
             <div
               className="rounded-2xl overflow-hidden"
               style={{
-                background: 'var(--color-surface, #fff)',
-                border: '1px solid rgba(0,0,0,0.09)',
-                boxShadow: '0 12px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)',
+                background: '#2C2C2E',
+                border: '1px solid rgba(255,255,255,0.08)',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.3)',
               }}
             >
               {/* Vorlage wechseln */}
               <button
                 onClick={() => setShowBgPicker(v => !v)}
-                className="w-full flex items-center gap-3 px-4 py-3 transition-all hover:bg-surface-hover text-left"
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
+                style={{ '--hover-bg': 'rgba(255,255,255,0.06)' } as React.CSSProperties}
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(124,58,237,0.1)' }}>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }}>
                   <BgIcon type={currentBgType} size={15} />
                 </div>
-                <span className="text-[13px] font-semibold text-text-primary">Vorlage wechseln</span>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="ml-auto text-text-muted">
+                <span className="text-[14px] font-semibold" style={{ color: 'rgba(255,255,255,0.92)' }}>Vorlage wechseln</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="2.2" className="ml-auto">
                   <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
 
               {/* Background sub-menu */}
               {showBgPicker && (
-                <div className="px-4 pb-3 flex flex-wrap gap-1.5" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                <div className="px-4 pb-3 flex flex-wrap gap-1.5" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
                   {BG_OPTIONS.map(({ type, label }) => (
                     <button
                       key={type}
@@ -1009,8 +1012,8 @@ export function DrawingCanvas({
                       className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all press-sm mt-2"
                       style={
                         currentBgType === type
-                          ? { background: 'rgba(124,58,237,0.12)', border: '1.5px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
-                          : { background: 'rgba(0,0,0,0.04)', border: '1.5px solid transparent', color: 'rgb(var(--color-text-secondary))' }
+                          ? { background: 'rgba(124,58,237,0.3)', border: '1.5px solid rgba(124,58,237,0.7)', color: '#C4B5FD' }
+                          : { background: 'rgba(255,255,255,0.08)', border: '1.5px solid transparent', color: 'rgba(255,255,255,0.7)' }
                       }
                     >
                       <BgIcon type={type} size={11} />
@@ -1022,8 +1025,8 @@ export function DrawingCanvas({
                     className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all press-sm mt-2"
                     style={
                       currentBgType === 'image'
-                        ? { background: 'rgba(124,58,237,0.12)', border: '1.5px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
-                        : { background: 'rgba(0,0,0,0.04)', border: '1.5px solid transparent', color: 'rgb(var(--color-text-secondary))' }
+                        ? { background: 'rgba(124,58,237,0.3)', border: '1.5px solid rgba(124,58,237,0.7)', color: '#C4B5FD' }
+                        : { background: 'rgba(255,255,255,0.08)', border: '1.5px solid transparent', color: 'rgba(255,255,255,0.7)' }
                     }
                   >
                     <BgIcon type="image" size={11} />
@@ -1033,27 +1036,28 @@ export function DrawingCanvas({
                 </div>
               )}
 
-              <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', margin: '0 16px' }} />
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '0 16px' }} />
 
               {/* Seite drehen */}
               <button
-                onClick={() => { /* rotation: coming soon */ setShowSettings(false) }}
-                className="w-full flex items-center gap-3 px-4 py-3 transition-all hover:bg-surface-hover text-left opacity-50"
+                onClick={() => { setShowSettings(false) }}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left"
                 disabled
+                style={{ opacity: 0.38 }}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(90,200,250,0.12)' }}>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(90,200,250,0.15)' }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" strokeWidth="2.2">
                     <path d="M1 4v6h6" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M3.51 15a9 9 0 1 0 .49-4.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
                 <div>
-                  <span className="text-[13px] font-semibold text-text-primary">Seite drehen</span>
-                  <span className="block text-[10px] text-text-muted">Kommt bald</span>
+                  <span className="text-[14px] font-semibold" style={{ color: 'rgba(255,255,255,0.92)' }}>Seite drehen</span>
+                  <span className="block text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>Kommt bald</span>
                 </div>
               </button>
 
-              <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', margin: '0 16px' }} />
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '0 16px' }} />
 
               {/* Nur Stift */}
               <button
@@ -1062,48 +1066,50 @@ export function DrawingCanvas({
                   setPenOnlyMode(next)
                   localStorage.setItem(PEN_ONLY_KEY, next ? '1' : '0')
                 }}
-                className="w-full flex items-center gap-3 px-4 py-3 transition-all hover:bg-surface-hover text-left"
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: penOnlyMode ? 'rgba(124,58,237,0.15)' : 'rgba(0,0,0,0.05)' }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={penOnlyMode ? '#7C3AED' : 'currentColor'} strokeWidth="2.2">
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: penOnlyMode ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.1)' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={penOnlyMode ? '#C4B5FD' : 'rgba(255,255,255,0.7)'} strokeWidth="2.2">
                     <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <span className="text-[13px] font-semibold" style={{ color: penOnlyMode ? '#7C3AED' : 'rgb(var(--color-text-primary))' }}>
-                  Nur Stift
-                </span>
-                {/* Toggle indicator */}
+                <span className="text-[14px] font-semibold" style={{ color: 'rgba(255,255,255,0.92)' }}>Nur Stift</span>
+                {/* Toggle */}
                 <div
                   className="ml-auto flex items-center"
                   style={{
-                    width: 36, height: 22, borderRadius: 11,
-                    background: penOnlyMode ? '#7C3AED' : 'rgba(0,0,0,0.15)',
-                    padding: 3, transition: 'background 0.2s',
+                    width: 40, height: 24, borderRadius: 12,
+                    background: penOnlyMode ? '#7C3AED' : 'rgba(255,255,255,0.18)',
+                    padding: 3, transition: 'background 0.22s',
                   }}
                 >
                   <div style={{
-                    width: 16, height: 16, borderRadius: '50%', background: 'white',
-                    marginLeft: penOnlyMode ? 14 : 0,
-                    transition: 'margin-left 0.2s',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    width: 18, height: 18, borderRadius: '50%', background: 'white',
+                    marginLeft: penOnlyMode ? 16 : 0,
+                    transition: 'margin-left 0.22s',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.35)',
                   }} />
                 </div>
               </button>
 
-              <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', margin: '0 16px' }} />
+              <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '0 16px' }} />
 
               {/* Seite löschen */}
               <button
                 onClick={() => { setShowSettings(false); if (hasContent) setShowClearConfirm(true) }}
-                className="w-full flex items-center gap-3 px-4 py-3 transition-all hover:bg-surface-hover text-left"
-                style={{ opacity: hasContent ? 1 : 0.4 }}
+                className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
+                style={{ opacity: hasContent ? 1 : 0.35 }}
+                onMouseEnter={e => { if (hasContent) e.currentTarget.style.background = 'rgba(255,59,48,0.12)' }}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,59,48,0.1)' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2.2">
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,59,48,0.18)' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" strokeWidth="2.2">
                     <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
                   </svg>
                 </div>
-                <span className="text-[13px] font-semibold" style={{ color: '#FF3B30' }}>Seite löschen</span>
+                <span className="text-[14px] font-semibold" style={{ color: '#FF6B6B' }}>Seite löschen</span>
               </button>
             </div>
           </div>
@@ -1125,13 +1131,16 @@ export function DrawingCanvas({
       )}
 
       {/* ── Main toolbar (icon-only) ── */}
-      <div className="flex items-center gap-0.5 px-2 py-1.5 border-t border-border bg-surface shrink-0">
+      <div
+        className="flex items-center gap-0.5 px-3 border-b border-border/30 bg-surface shrink-0"
+        style={{ paddingTop: 'max(env(safe-area-inset-top), 10px)', paddingBottom: 10 }}
+      >
 
         {/* Back */}
         {isFullscreen && onBack && (
           <button
             onClick={onBack}
-            className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
             style={{ color: 'rgb(var(--color-text-secondary))' }}
             title="Zurück"
           >
@@ -1145,7 +1154,7 @@ export function DrawingCanvas({
         <button
           ref={settingsBtnRef}
           onClick={() => { setShowSettings(v => !v); if (showSettings) setShowBgPicker(false) }}
-          className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
           style={showSettings
             ? { background: 'rgba(124,58,237,0.12)', color: '#7C3AED' }
             : { color: 'rgb(var(--color-text-muted))' }}
@@ -1157,13 +1166,13 @@ export function DrawingCanvas({
         </button>
 
         {/* Undo / Redo */}
-        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0 ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Rückgängig">
+        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0 ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Rückgängig">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
             <path d="M3 7v6h6" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
-        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0 ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Wiederholen">
+        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0 ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Wiederholen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
             <path d="M21 7v6h-6" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7" strokeLinecap="round" strokeLinejoin="round" />
@@ -1175,51 +1184,84 @@ export function DrawingCanvas({
 
         {/* ── Tool icons ── */}
 
-        {/* Pen */}
-        <button onClick={() => setTool('pen')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'pen' ? { background: 'rgba(124,58,237,0.14)', color: '#7C3AED' } : { color: 'rgb(var(--color-text-muted))' }} title="Stift">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Pen — fountain pen nib */}
+        <button onClick={() => setTool('pen')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'pen' ? { background: 'rgba(124,58,237,0.14)', color: '#7C3AED' } : { color: 'rgb(var(--color-text-muted))' }} title="Stift">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            {/* Body */}
+            <path d="M19 2C20.1 2 21.5 3 21.5 4.5C21.5 5.2 21.2 5.8 20.7 6.3L8.5 18.5L4.5 20L6 16L18.2 3.8C18.7 3.2 19 2 19 2Z" strokeWidth="1.65"/>
+            {/* Nib joint */}
+            <path d="M16.5 5L19 7.5" strokeWidth="1.4"/>
+            {/* Ink tip */}
+            <path d="M5.2 16.8L4.5 20" strokeWidth="1.65"/>
+            {/* Ink dot */}
+            <circle cx="4.5" cy="20" r="0.7" fill="currentColor" stroke="none"/>
           </svg>
         </button>
 
-        {/* Marker */}
-        <button onClick={() => setTool('highlighter')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'highlighter' ? { background: 'rgba(250,204,21,0.15)', color: '#CA8A04' } : { color: 'rgb(var(--color-text-muted))' }} title="Marker">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M2 22l4-4" strokeLinecap="round" strokeWidth="2.5" />
+        {/* Marker — chisel-tip highlighter */}
+        <button onClick={() => setTool('highlighter')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'highlighter' ? { background: 'rgba(250,204,21,0.15)', color: '#CA8A04' } : { color: 'rgb(var(--color-text-muted))' }} title="Marker">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            {/* Marker body (fatter than pen) */}
+            <path d="M19 3C20.7 3 22 4.3 22 5.5C22 6.2 21.6 6.8 21 7.5L10 18.5L6 20L7.5 16L18.5 5C18.9 4.1 19 3 19 3Z" strokeWidth="1.75"/>
+            {/* Cap/body separator */}
+            <path d="M17.5 5.5L21 9" strokeWidth="1.4"/>
+            {/* Chisel tip (flat angled cut) */}
+            <path d="M7.5 16L10.5 18.5" strokeWidth="1.65"/>
+            {/* Wide highlight mark at bottom */}
+            <path d="M3 22L10 22" strokeWidth="2.8" strokeLinecap="round"/>
           </svg>
         </button>
 
-        {/* Eraser */}
-        <button onClick={() => setTool('eraser')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'eraser' ? { background: 'rgba(255,59,48,0.11)', color: '#FF3B30' } : { color: 'rgb(var(--color-text-muted))' }} title="Radierer">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-            <path d="M20 20H7L3 16l9-9 5 5-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M6.5 17.5L3 14l4.5-4.5" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Eraser — 3D block eraser */}
+        <button onClick={() => setTool('eraser')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'eraser' ? { background: 'rgba(255,59,48,0.11)', color: '#FF3B30' } : { color: 'rgb(var(--color-text-muted))' }} title="Radierer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            {/* Top face of block eraser (parallelogram) */}
+            <path d="M3 17L7 11L21 11L17 17Z" strokeWidth="1.65"/>
+            {/* Left side face */}
+            <path d="M3 17L2.5 21" strokeWidth="1.55"/>
+            {/* Bottom edge */}
+            <path d="M2.5 21L16.5 21" strokeWidth="1.65"/>
+            {/* Right side face */}
+            <path d="M17 17L16.5 21" strokeWidth="1.55"/>
+            {/* Rubber/cap separator band (~⅓ from left) */}
+            <path d="M9.5 17L13.5 11" strokeWidth="1.4"/>
           </svg>
         </button>
 
-        {/* Geometry pen (stub) */}
-        <button onClick={() => setTool('geometry')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'geometry' ? { background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' } : { color: 'rgb(var(--color-text-muted))' }} title="Geometrie-Stift (bald)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-            <polygon points="12 2 22 20 2 20" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Geometry pen — pen + ruler */}
+        <button onClick={() => setTool('geometry')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'geometry' ? { background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' } : { color: 'rgb(var(--color-text-muted))' }} title="Geometrie-Stift (bald)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            {/* Ruler bar */}
+            <rect x="2" y="17" width="20" height="5" rx="1.5" strokeWidth="1.65"/>
+            {/* Ruler tick marks */}
+            <path d="M7 17L7 19.5M12 17L12 19.5M17 17L17 19.5" strokeWidth="1.2"/>
+            {/* Pen above ruler */}
+            <path d="M15.5 3.5C16.3 2.7 17.8 2.7 18 4L18 4.5C18 5.5 17.3 6.5 16.4 7.4L10.5 13.3L8 15L8.8 12.5L14.5 6.5C15 5.5 15.5 3.5 15.5 3.5Z" strokeWidth="1.65"/>
+            {/* Pen nib joint */}
+            <path d="M14 6L16 8" strokeWidth="1.3"/>
           </svg>
         </button>
 
-        {/* Lasso (stub) */}
-        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl (bald)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-            <path d="M6 12a6 6 0 1 0 12 0" strokeLinecap="round" />
-            <path d="M18 12v3a3 3 0 0 1-3 3h-1" strokeLinecap="round" />
+        {/* Lasso — dashed selection oval */}
+        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl (bald)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round">
+            {/* Dashed selection oval */}
+            <ellipse cx="13" cy="10" rx="8.5" ry="6" strokeWidth="1.75" strokeDasharray="2.8 2"/>
+            {/* Lasso tail (dashed, connecting back) */}
+            <path d="M4.5 11C3.2 13.5 3.8 16.5 6.5 16.5L9 16.5" strokeWidth="1.65" strokeDasharray="2.8 2"/>
+            {/* Arrow end of lasso */}
+            <path d="M9 16.5L9 20" strokeWidth="1.65" strokeLinejoin="round"/>
+            <path d="M7 18.2L9 20.5L11 18.2" strokeWidth="1.55" strokeLinejoin="round"/>
           </svg>
         </button>
 
         {/* Foto hinzufügen */}
         {isFullscreen && (
-          <button onClick={() => canvasImgInputRef.current?.click()} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={{ color: 'rgb(var(--color-text-muted))' }} title="Foto einfügen">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-              <rect x="3" y="3" width="18" height="18" rx="2.5" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <path d="M21 15l-5-5L5 21" strokeLinecap="round" strokeLinejoin="round" />
+          <button onClick={() => canvasImgInputRef.current?.click()} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={{ color: 'rgb(var(--color-text-muted))' }} title="Foto einfügen">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2.5" y="4" width="19" height="16" rx="2.5" />
+              <circle cx="8.5" cy="9.5" r="2" />
+              <path d="M2.5 17L8 12L12.5 16.5L15.5 13.5L21.5 19" />
             </svg>
           </button>
         )}
@@ -1238,7 +1280,7 @@ export function DrawingCanvas({
                   : (isActive ? colors[activeColorIdx] : colors[activeColorIdx] + '55')
                 return (
                   <button key={sIdx} onClick={() => setCurrentSizeIdx(sIdx)}
-                    className="flex items-center justify-center w-8 h-8 rounded-full transition-all press-sm"
+                    className="flex items-center justify-center w-10 h-10 rounded-full transition-all press-sm"
                     style={{ background: isActive ? 'rgba(124,58,237,0.1)' : 'transparent', border: `1.5px solid ${isActive ? 'rgba(124,58,237,0.4)' : 'transparent'}` }}
                   >
                     <div style={{ width: visualSz, height: visualSz, borderRadius: '50%', background: dotColor }} />
@@ -1281,21 +1323,17 @@ export function DrawingCanvas({
         {/* KI-Analyse */}
         {isFullscreen && onAnalyzeRequest && (
           <button onClick={handleAnalyzeRequest}
-            className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0"
-            style={{ color: '#059669' }}
+            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
             title="KI-Analyse"
           >
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-              <path d="M8 12h4m0 0V8m0 4l3 3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <span style={{ fontSize: 13, fontWeight: 800, color: '#059669', letterSpacing: '-0.3px' }}>KI</span>
           </button>
         )}
 
         {/* PDF export */}
         {isFullscreen && (
           <button onClick={handleExportPDF} disabled={isExporting}
-            className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
             style={{ color: '#7C3AED', opacity: isExporting ? 0.5 : 1 }}
             title="Als PDF exportieren"
           >
