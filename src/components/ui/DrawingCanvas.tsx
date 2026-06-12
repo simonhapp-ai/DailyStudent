@@ -16,11 +16,18 @@ export interface CanvasImageData {
   h: number
 }
 
+type GeomShape =
+  | { kind: 'line';    x1: number; y1: number; x2: number; y2: number }
+  | { kind: 'rect';    x: number;  y: number;  w: number;  h: number  }
+  | { kind: 'ellipse'; cx: number; cy: number; rx: number; ry: number }
+
 interface StrokeRecord {
+  id?: string
   points: number[][]
   tool: Exclude<Tool, 'select'>
   colorHex: string
   size: number
+  shape?: GeomShape
 }
 
 export interface CanvasPageData {
@@ -192,6 +199,132 @@ function drawCanvasImages(
   }
 }
 
+// ── Geometry helpers ──────────────────────────────────────────────────────────
+
+function detectGeomShape(pts: number[][]): GeomShape {
+  if (pts.length < 2) return { kind: 'line', x1: pts[0][0], y1: pts[0][1], x2: pts[0][0], y2: pts[0][1] }
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1])
+  const minX = Math.min(...xs), maxX = Math.max(...xs)
+  const minY = Math.min(...ys), maxY = Math.max(...ys)
+  const bw = maxX - minX, bh = maxY - minY
+  const diag = Math.hypot(bw, bh)
+  const first = pts[0], last = pts[pts.length - 1]
+  const closeDist = Math.hypot(last[0] - first[0], last[1] - first[1])
+  const isClosed = closeDist < diag * 0.28 && pts.length > 10
+
+  // Line: very thin bounding box
+  if (!isClosed && Math.min(bw, bh) < diag * 0.18)
+    return { kind: 'line', x1: first[0], y1: first[1], x2: last[0], y2: last[1] }
+
+  if (isClosed) {
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2
+    // Circularity: how close are points to equidistant from center?
+    const expR = (bw + bh) / 4
+    let dev = 0
+    for (const p of pts) dev += Math.abs(Math.hypot(p[0] - cx, p[1] - cy) - expR) / expR
+    const avgDev = dev / pts.length
+    if (avgDev < 0.32 && bw / bh < 2.8 && bh / bw < 2.8)
+      return { kind: 'ellipse', cx, cy, rx: bw / 2, ry: bh / 2 }
+    return { kind: 'rect', x: minX, y: minY, w: bw, h: bh }
+  }
+  return { kind: 'line', x1: first[0], y1: first[1], x2: last[0], y2: last[1] }
+}
+
+function paintGeomShape(
+  ctx: CanvasRenderingContext2D,
+  shape: GeomShape,
+  colorHex: string,
+  strokePx: number,
+) {
+  ctx.save()
+  ctx.strokeStyle = colorHex
+  ctx.lineWidth   = Math.max(1.5, strokePx * 0.6)
+  ctx.lineCap     = 'round'
+  ctx.lineJoin    = 'round'
+  ctx.beginPath()
+  if (shape.kind === 'line') {
+    ctx.moveTo(shape.x1, shape.y1); ctx.lineTo(shape.x2, shape.y2)
+  } else if (shape.kind === 'rect') {
+    ctx.rect(shape.x, shape.y, shape.w, shape.h)
+  } else {
+    ctx.ellipse(shape.cx, shape.cy, Math.abs(shape.rx), Math.abs(shape.ry), 0, 0, Math.PI * 2)
+  }
+  ctx.stroke(); ctx.restore()
+}
+
+function paintStrokeRecord(ctx: CanvasRenderingContext2D, s: StrokeRecord) {
+  if (s.shape) paintGeomShape(ctx, s.shape, s.colorHex, s.size)
+  else         paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
+}
+
+type GeomHandle = { x: number; y: number; idx: number }
+function getGeomHandles(shape: GeomShape): GeomHandle[] {
+  if (shape.kind === 'line')
+    return [{ x: shape.x1, y: shape.y1, idx: 0 }, { x: shape.x2, y: shape.y2, idx: 1 }]
+  if (shape.kind === 'rect')
+    return [
+      { x: shape.x,          y: shape.y,          idx: 0 },
+      { x: shape.x + shape.w, y: shape.y,          idx: 1 },
+      { x: shape.x + shape.w, y: shape.y + shape.h, idx: 2 },
+      { x: shape.x,          y: shape.y + shape.h, idx: 3 },
+    ]
+  // ellipse: 4 cardinal handles
+  return [
+    { x: shape.cx,          y: shape.cy - shape.ry, idx: 0 },
+    { x: shape.cx + shape.rx, y: shape.cy,          idx: 1 },
+    { x: shape.cx,          y: shape.cy + shape.ry, idx: 2 },
+    { x: shape.cx - shape.rx, y: shape.cy,          idx: 3 },
+  ]
+}
+
+function hitTestGeomShape(
+  shape: GeomShape, px: number, py: number, handleR: number, bodyT: number,
+): { type: 'handle'; idx: number } | { type: 'body' } | null {
+  for (const h of getGeomHandles(shape))
+    if (Math.hypot(px - h.x, py - h.y) < handleR) return { type: 'handle', idx: h.idx }
+
+  if (shape.kind === 'line') {
+    const dx = shape.x2 - shape.x1, dy = shape.y2 - shape.y1
+    const len2 = dx * dx + dy * dy
+    if (len2 < 0.001) return Math.hypot(px - shape.x1, py - shape.y1) < bodyT ? { type: 'body' } : null
+    const t = clamp(((px - shape.x1) * dx + (py - shape.y1) * dy) / len2, 0, 1)
+    return Math.hypot(px - (shape.x1 + t * dx), py - (shape.y1 + t * dy)) < bodyT ? { type: 'body' } : null
+  }
+  if (shape.kind === 'rect') {
+    const inside = px > shape.x - bodyT && px < shape.x + shape.w + bodyT && py > shape.y - bodyT && py < shape.y + shape.h + bodyT
+    const nearBorder = px < shape.x + bodyT || px > shape.x + shape.w - bodyT || py < shape.y + bodyT || py > shape.y + shape.h - bodyT
+    return inside && nearBorder ? { type: 'body' } : null
+  }
+  // ellipse
+  const dx2 = (px - shape.cx) / shape.rx, dy2 = (py - shape.cy) / shape.ry
+  return Math.abs(Math.sqrt(dx2 * dx2 + dy2 * dy2) - 1) < bodyT / Math.max(shape.rx, shape.ry) * 2 ? { type: 'body' } : null
+}
+
+function applyHandleDrag(shape: GeomShape, idx: number, dx: number, dy: number): GeomShape {
+  if (shape.kind === 'line')
+    return idx === 0
+      ? { ...shape, x1: shape.x1 + dx, y1: shape.y1 + dy }
+      : { ...shape, x2: shape.x2 + dx, y2: shape.y2 + dy }
+  if (shape.kind === 'rect') {
+    const { x, y, w, h } = shape
+    if (idx === 0) return { kind: 'rect', x: x + dx, y: y + dy, w: Math.max(10, w - dx), h: Math.max(10, h - dy) }
+    if (idx === 1) return { kind: 'rect', x, y: y + dy, w: Math.max(10, w + dx), h: Math.max(10, h - dy) }
+    if (idx === 2) return { kind: 'rect', x, y, w: Math.max(10, w + dx), h: Math.max(10, h + dy) }
+    return { kind: 'rect', x: x + dx, y, w: Math.max(10, w - dx), h: Math.max(10, h + dy) }
+  }
+  // ellipse cardinal handles
+  if (idx === 0) return { ...shape, ry: Math.max(8, shape.ry - dy) }
+  if (idx === 1) return { ...shape, rx: Math.max(8, shape.rx + dx) }
+  if (idx === 2) return { ...shape, ry: Math.max(8, shape.ry + dy) }
+  return { ...shape, rx: Math.max(8, shape.rx - dx) }
+}
+
+function moveGeomShape(shape: GeomShape, dx: number, dy: number): GeomShape {
+  if (shape.kind === 'line') return { ...shape, x1: shape.x1 + dx, y1: shape.y1 + dy, x2: shape.x2 + dx, y2: shape.y2 + dy }
+  if (shape.kind === 'rect') return { ...shape, x: shape.x + dx, y: shape.y + dy }
+  return { ...shape, cx: shape.cx + dx, cy: shape.cy + dy }
+}
+
 function resizeCanvas(canvas: HTMLCanvasElement, cssW: number, cssH: number) {
   const dpr = window.devicePixelRatio || 1
   canvas.width  = Math.round(cssW * dpr)
@@ -313,6 +446,19 @@ export function DrawingCanvas({
   const [canRedo,  setCanRedo]  = useState(false)
   const [hasContent, setHasContent] = useState(false)
   const mountedRef = useRef(false)
+
+  // Geometry snap
+  const GEOM_HOLD_MS = 900
+  const geomHoldTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [selectedGeomId, setSelectedGeomId] = useState<string | null>(null)
+  const selectedGeomIdRef = useRef<string | null>(null)
+  const geomDragRef = useRef<{
+    type: 'move' | 'handle'
+    strokeId: string
+    handleIdx?: number
+    startCX: number; startCY: number
+    origShape: GeomShape
+  } | null>(null)
 
   // ── Color helpers ─────────────────────────────────────────────────────────
 
@@ -444,7 +590,7 @@ export function DrawingCanvas({
     const ctx = c.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
     ctx.clearRect(0, 0, w, h)
-    for (const s of strokes) paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
+    for (const s of strokes) paintStrokeRecord(ctx, s)
   }, [getCSS])
 
   const exportAndNotify = useCallback(() => {
@@ -689,29 +835,72 @@ export function DrawingCanvas({
     ]
   }
 
+  const snapCurrentStroke = () => {
+    if (geomHoldTimerRef.current) { clearTimeout(geomHoldTimerRef.current); geomHoldTimerRef.current = null }
+    const active = activeRef.current
+    if (!active || active.points.length < 3) {
+      // Too few points — just clear
+      activeRef.current = null
+      const fg = fgCanvasRef.current
+      if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+      return
+    }
+    const shape = detectGeomShape(active.points)
+    const newId = `g${Date.now()}`
+    const snap: StrokeRecord = { id: newId, points: active.points, tool: 'geometry', colorHex: active.colorHex, size: active.size, shape }
+    // Paint shape to sk canvas
+    const sk = skCanvasRef.current
+    if (sk) { const ctx = sk.getContext('2d'); if (ctx) paintGeomShape(ctx, shape, active.colorHex, active.size) }
+    // Clear fg
+    const fg = fgCanvasRef.current
+    if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+    activeRef.current = null
+    undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
+    redoStackRef.current = []
+    strokesRef.current = [...strokesRef.current, snap]
+    updateHistoryState(); exportAndNotify(); notifyPagesChanged()
+    selectedGeomIdRef.current = newId
+    setSelectedGeomId(newId)
+  }
+
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (tool === 'select') return
 
-    // Track whether we've ever seen an Apple Pencil / stylus
-    if (e.pointerType === 'pen') {
-      hasSeenPenRef.current = true
-      penIsActiveRef.current = true
-    }
-
-    // Pen-only mode: only pencil draws; finger/mouse ignored
+    if (e.pointerType === 'pen') { hasSeenPenRef.current = true; penIsActiveRef.current = true }
     if (penOnlyModeRef.current && e.pointerType !== 'pen') return
-
-    // Auto palm rejection: once a pen has been used, ignore all finger touches
     if (!penOnlyModeRef.current && hasSeenPenRef.current && e.pointerType === 'touch') return
 
-    activePointerIdsRef.current.add(e.pointerId)
-    // Block drawing if pinching or more than 1 active pointer
-    if (isPinchingRef.current || activePointerIdsRef.current.size > 1) {
-      activeRef.current = null
-      return
+    // Geometry tool: check if tapping an existing snapped shape
+    if (tool === 'geometry') {
+      const [cx, cy] = getXY(e)
+      const scale = viewTransformRef.current.scale
+      const handleR = 18 / scale
+      const bodyT   = 14 / scale
+      for (let i = strokesRef.current.length - 1; i >= 0; i--) {
+        const s = strokesRef.current[i]
+        if (!s.shape || !s.id) continue
+        const hit = hitTestGeomShape(s.shape, cx, cy, handleR, bodyT)
+        if (!hit) continue
+        e.currentTarget.setPointerCapture(e.pointerId)
+        selectedGeomIdRef.current = s.id
+        setSelectedGeomId(s.id)
+        geomDragRef.current = {
+          type: hit.type === 'handle' ? 'handle' : 'move',
+          strokeId: s.id,
+          handleIdx: hit.type === 'handle' ? hit.idx : undefined,
+          startCX: cx, startCY: cy,
+          origShape: { ...s.shape } as GeomShape,
+        }
+        return
+      }
+      // Clicked empty — deselect
+      selectedGeomIdRef.current = null
+      setSelectedGeomId(null)
     }
+
+    activePointerIdsRef.current.add(e.pointerId)
+    if (isPinchingRef.current || activePointerIdsRef.current.size > 1) { activeRef.current = null; return }
     e.currentTarget.setPointerCapture(e.pointerId)
-    // geometry + lasso are stubs — draw as pen until implemented
     const drawTool: Exclude<Tool, 'select' | 'geometry' | 'lasso'> =
       (tool === 'geometry' || tool === 'lasso') ? 'pen' : tool as Exclude<Tool, 'select' | 'geometry' | 'lasso'>
     activeRef.current = {
@@ -723,33 +912,50 @@ export function DrawingCanvas({
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    // Always track eraser cursor position (even when not actively drawing)
     if (tool === 'eraser') {
       const rect = fgCanvasRef.current!.getBoundingClientRect()
       const scale = viewTransformRef.current.scale
       setEraserCursorPos({ x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale })
     }
 
+    // Geometry shape drag / resize
+    if (geomDragRef.current) {
+      const drag = geomDragRef.current
+      const [cx, cy] = getXY(e)
+      const dx = cx - drag.startCX, dy = cy - drag.startCY
+      strokesRef.current = strokesRef.current.map(s => {
+        if (s.id !== drag.strokeId || !s.shape) return s
+        const newShape = drag.type === 'handle' && drag.handleIdx !== undefined
+          ? applyHandleDrag(drag.origShape, drag.handleIdx, dx, dy)
+          : moveGeomShape(drag.origShape, dx, dy)
+        return { ...s, shape: newShape }
+      })
+      redrawStrokeCanvas(strokesRef.current)
+      return
+    }
+
     if (!activeRef.current || e.buttons === 0) return
     if (isPinchingRef.current || activePointerIdsRef.current.size > 1) return
-
-    // Palm rejection on move too
     if (hasSeenPenRef.current && e.pointerType === 'touch') return
 
     activeRef.current.points.push(getXY(e))
 
+    // Geometry: reset hold timer on every move (snap fires after stillness)
+    if (tool === 'geometry') {
+      if (geomHoldTimerRef.current) clearTimeout(geomHoldTimerRef.current)
+      geomHoldTimerRef.current = setTimeout(snapCurrentStroke, GEOM_HOLD_MS)
+    }
+
     if (activeRef.current.tool === 'eraser') {
-      // Real-time erase: repaint sk with all strokes + partial eraser applied
       const sk = skCanvasRef.current; if (!sk) return
       const ctx = sk.getContext('2d'); if (!ctx) return
       const { w, h } = getCSS()
       ctx.clearRect(0, 0, w, h)
-      for (const s of strokesRef.current) paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
+      for (const s of strokesRef.current) paintStrokeRecord(ctx, s)
       paintStroke(ctx, activeRef.current.points, 'eraser', activeRef.current.colorHex, activeRef.current.size)
       return
     }
 
-    // Regular tools: paint to fg canvas (temporary)
     const fg = fgCanvasRef.current; if (!fg) return
     const ctx = fg.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
@@ -760,19 +966,34 @@ export function DrawingCanvas({
   const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (e.pointerType === 'pen') penIsActiveRef.current = false
     activePointerIdsRef.current.delete(e.pointerId)
+
+    // Geometry drag commit
+    if (geomDragRef.current) {
+      geomDragRef.current = null
+      exportAndNotify(); notifyPagesChanged()
+      return
+    }
+
     const stroke = activeRef.current
     activeRef.current = null
+
+    // Geometry hold timer: user released early — cancel snap, discard the freehand preview
+    if (tool === 'geometry') {
+      if (geomHoldTimerRef.current) { clearTimeout(geomHoldTimerRef.current); geomHoldTimerRef.current = null }
+      // If released early (no snap yet) just clear fg and don't commit freehand
+      const fg = fgCanvasRef.current
+      if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+      return
+    }
+
     if (!stroke || stroke.points.length === 0) return
 
     if (stroke.tool !== 'eraser') {
-      // Commit pen/highlighter stroke to sk canvas
       const sk = skCanvasRef.current
       if (sk) { const ctx = sk.getContext('2d'); if (ctx) paintStroke(ctx, stroke.points, stroke.tool, stroke.colorHex, stroke.size) }
-      // Clear fg
       const fg = fgCanvasRef.current
       if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
     }
-    // Eraser: sk already shows correct state from real-time updates in onPointerMove
 
     undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
     redoStackRef.current = []
@@ -909,7 +1130,7 @@ export function DrawingCanvas({
         ctx.scale(dpr, dpr)
         drawBackground(ctx, w, h, page.background, imgCacheRef.current)
         drawCanvasImages(ctx, w, h, page.images ?? [], imgCacheRef.current)
-        for (const s of page.strokes) paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
+        for (const s of page.strokes) paintStrokeRecord(ctx, s)
         doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297)
       }
       doc.save('notiz.pdf')
@@ -1198,33 +1419,31 @@ export function DrawingCanvas({
           </svg>
         </button>
 
-        {/* Marker — chisel-tip highlighter */}
+        {/* Marker — flat chisel-tip highlighter */}
         <button onClick={() => setTool('highlighter')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'highlighter' ? { background: 'rgba(250,204,21,0.15)', color: '#CA8A04' } : { color: 'rgb(var(--color-text-muted))' }} title="Marker">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-            {/* Marker body (fatter than pen) */}
-            <path d="M19 3C20.7 3 22 4.3 22 5.5C22 6.2 21.6 6.8 21 7.5L10 18.5L6 20L7.5 16L18.5 5C18.9 4.1 19 3 19 3Z" strokeWidth="1.75"/>
-            {/* Cap/body separator */}
-            <path d="M17.5 5.5L21 9" strokeWidth="1.4"/>
-            {/* Chisel tip (flat angled cut) */}
-            <path d="M7.5 16L10.5 18.5" strokeWidth="1.65"/>
-            {/* Wide highlight mark at bottom */}
-            <path d="M3 22L10 22" strokeWidth="2.8" strokeLinecap="round"/>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            {/* Wide marker barrel */}
+            <path d="M20.5 3.5C21.3 4.3 21.3 5.7 20.5 6.5L9.5 17.5L6 18.5L7 15L18 4C18.8 3.2 20.5 3.5 20.5 3.5Z" strokeWidth="1.8"/>
+            {/* Cap band near top */}
+            <path d="M17.5 5L20.5 8" strokeWidth="1.4"/>
+            {/* Chisel tip — flat angled end at bottom-left */}
+            <path d="M6 18.5L9.5 17.5" strokeWidth="2.8"/>
+            {/* Wide highlight stroke below (shows it's a highlighter) */}
+            <path d="M2.5 22L12 22" strokeWidth="3.5" strokeOpacity="0.45"/>
           </svg>
         </button>
 
-        {/* Eraser — 3D block eraser */}
+        {/* Eraser — rectangular block eraser, slightly tilted */}
         <button onClick={() => setTool('eraser')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'eraser' ? { background: 'rgba(255,59,48,0.11)', color: '#FF3B30' } : { color: 'rgb(var(--color-text-muted))' }} title="Radierer">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-            {/* Top face of block eraser (parallelogram) */}
-            <path d="M3 17L7 11L21 11L17 17Z" strokeWidth="1.65"/>
-            {/* Left side face */}
-            <path d="M3 17L2.5 21" strokeWidth="1.55"/>
-            {/* Bottom edge */}
-            <path d="M2.5 21L16.5 21" strokeWidth="1.65"/>
-            {/* Right side face */}
-            <path d="M17 17L16.5 21" strokeWidth="1.55"/>
-            {/* Rubber/cap separator band (~⅓ from left) */}
-            <path d="M9.5 17L13.5 11" strokeWidth="1.4"/>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+            <g transform="rotate(-10, 12, 14)">
+              {/* Eraser block */}
+              <rect x="2" y="9" width="20" height="10" rx="2" strokeWidth="1.75"/>
+              {/* Cap / rubber separator */}
+              <line x1="14" y1="9" x2="14" y2="19" strokeWidth="1.45"/>
+              {/* Erasing-marks above (lines being erased) */}
+              <path d="M3.5 5.5L10 5.5M4.5 7.2L9 7.2" strokeWidth="1.2" strokeOpacity="0.5"/>
+            </g>
           </svg>
         </button>
 
@@ -1467,6 +1686,50 @@ export function DrawingCanvas({
               })()}
             </div>
           </div>
+
+          {/* Geometry shape handles overlay */}
+          {tool === 'geometry' && selectedGeomId && (() => {
+            const s = strokesRef.current.find(s => s.id === selectedGeomId)
+            if (!s?.shape) return null
+            const handles = getGeomHandles(s.shape)
+            const { tx, ty, scale } = viewTransform
+            // Bounding-box highlight
+            let bx: number, by: number, bw2: number, bh2: number
+            if (s.shape.kind === 'line') {
+              const mx = Math.min(s.shape.x1, s.shape.x2), my = Math.min(s.shape.y1, s.shape.y2)
+              bx = tx + mx * scale; by = ty + my * scale
+              bw2 = Math.abs(s.shape.x2 - s.shape.x1) * scale; bh2 = Math.abs(s.shape.y2 - s.shape.y1) * scale
+            } else if (s.shape.kind === 'rect') {
+              bx = tx + s.shape.x * scale; by = ty + s.shape.y * scale
+              bw2 = s.shape.w * scale; bh2 = s.shape.h * scale
+            } else {
+              bx = tx + (s.shape.cx - s.shape.rx) * scale; by = ty + (s.shape.cy - s.shape.ry) * scale
+              bw2 = s.shape.rx * 2 * scale; bh2 = s.shape.ry * 2 * scale
+            }
+            return (
+              <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 8 }}>
+                {/* Dashed selection outline */}
+                <div style={{
+                  position: 'absolute', left: bx - 4, top: by - 4, width: bw2 + 8, height: bh2 + 8,
+                  border: '1.5px dashed rgba(124,58,237,0.6)', borderRadius: 4, pointerEvents: 'none',
+                }} />
+                {/* Drag handles */}
+                {handles.map(h => (
+                  <div
+                    key={h.idx}
+                    style={{
+                      position: 'absolute',
+                      left: tx + h.x * scale - 8, top: ty + h.y * scale - 8,
+                      width: 16, height: 16, borderRadius: '50%',
+                      background: 'white', border: '2px solid #7C3AED',
+                      boxShadow: '0 1px 6px rgba(0,0,0,0.25)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                ))}
+              </div>
+            )
+          })()}
 
           {/* Page strip — outside transform wrapper so it stays fixed at bottom */}
           <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none" style={{ zIndex: 10 }}>
