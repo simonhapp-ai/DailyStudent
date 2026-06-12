@@ -3,7 +3,7 @@ import { getStroke } from 'perfect-freehand'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type Tool = 'pen' | 'highlighter' | 'eraser' | 'select'
+type Tool = 'pen' | 'highlighter' | 'eraser' | 'select' | 'geometry' | 'lasso'
 type BackgroundType = 'white' | 'lined' | 'grid' | 'dotted'
 type Background = { type: BackgroundType } | { type: 'image'; dataUrl: string }
 
@@ -252,6 +252,26 @@ export function DrawingCanvas({
   // Active pointer tracking (to block drawing when 2 fingers down)
   const activePointerIdsRef = useRef(new Set<number>())
 
+  // Palm rejection: once a pen pointer is seen, ignore finger touches
+  const hasSeenPenRef = useRef(false)
+  // True while the pencil is physically pressed — blocks ALL touch events during active stroke
+  const penIsActiveRef = useRef(false)
+
+  // Pen-only mode: fingers navigate (pan), only pencil draws
+  const PEN_ONLY_KEY = 'sb_pen_only_v1'
+  const [penOnlyMode, setPenOnlyMode] = useState(() => localStorage.getItem(PEN_ONLY_KEY) === '1')
+  const penOnlyModeRef = useRef(penOnlyMode)
+  useEffect(() => { penOnlyModeRef.current = penOnlyMode }, [penOnlyMode])
+
+  // Single-finger pan state (used in pen-only mode)
+  const singleTouchRef = useRef<{
+    startTx: number; startTy: number
+    startCx: number; startCy: number
+  } | null>(null)
+
+  // Eraser cursor position in canvas coordinates (null = not over canvas)
+  const [eraserCursorPos, setEraserCursorPos] = useState<{x: number; y: number} | null>(null)
+
   // Pages
   const pagesRef  = useRef<CanvasPageData[]>([{ id: 'p0', background: { type: 'white' }, strokes: [], images: [] }])
   const curIdxRef = useRef(0)
@@ -285,6 +305,8 @@ export function DrawingCanvas({
   })
   const [activeColorIdx,   setActiveColorIdx]   = useState(0)
   const [showBgPicker,     setShowBgPicker]     = useState(false)
+  const [showSettings,     setShowSettings]     = useState(false)
+  const settingsBtnRef = useRef<HTMLButtonElement>(null)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [isExporting,      setIsExporting]      = useState(false)
   const [canUndo,  setCanUndo]  = useState(false)
@@ -318,9 +340,9 @@ export function DrawingCanvas({
   const getActiveColor = (): string => colors[activeColorIdx]
 
   const getActiveSize = useCallback((): number => {
-    if (tool === 'pen')        return PEN_SIZES[penSizeIdx]
     if (tool === 'highlighter') return MARKER_SIZES[hlSizeIdx]
-    return ERASER_SIZES[erSizeIdx]
+    if (tool === 'eraser')      return ERASER_SIZES[erSizeIdx]
+    return PEN_SIZES[penSizeIdx]  // pen, geometry, lasso all use pen sizes
   }, [tool, penSizeIdx, hlSizeIdx, erSizeIdx])
 
   // ── Image helpers ─────────────────────────────────────────────────────────
@@ -535,30 +557,57 @@ export function DrawingCanvas({
     return () => ro.disconnect()
   }, [isFullscreen, redrawBgCanvas, redrawStrokeCanvas])
 
-  // ── 2-finger pinch zoom + pan ─────────────────────────────────────────────
+  // ── Touch zoom + pan (2-finger pinch / 1-finger pan in pen-only mode) ────────
 
   useEffect(() => {
     const container = containerRef.current
     if (!container || !isFullscreen) return
 
     function onTouchStart(e: TouchEvent) {
+      // While pencil is actively drawing, block all touch input (palm rejection)
+      if (penIsActiveRef.current) { e.preventDefault(); return }
+
       if (e.touches.length >= 2) {
         e.preventDefault()
+        singleTouchRef.current = null
         isPinchingRef.current = true
-        activeRef.current = null // cancel any active stroke
+        activeRef.current = null
         const t1 = e.touches[0], t2 = e.touches[1]
         const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY)
         const mx = (t1.clientX + t2.clientX) / 2
         const my = (t1.clientY + t2.clientY) / 2
         const { scale, tx, ty } = viewTransformRef.current
         pinchRef.current = { initDist: dist, initScale: scale, initTx: tx, initTy: ty, initMx: mx, initMy: my }
+      } else if (e.touches.length === 1 && penOnlyModeRef.current) {
+        // Single finger in pen-only mode = pan
+        e.preventDefault()
+        const t = e.touches[0]
+        const { tx, ty } = viewTransformRef.current
+        singleTouchRef.current = { startTx: tx, startTy: ty, startCx: t.clientX, startCy: t.clientY }
       } else {
         isPinchingRef.current = false
         pinchRef.current = null
+        singleTouchRef.current = null
       }
     }
 
     function onTouchMove(e: TouchEvent) {
+      if (penIsActiveRef.current) { e.preventDefault(); return }
+
+      // 1-finger pan (pen-only mode)
+      if (singleTouchRef.current && e.touches.length === 1) {
+        e.preventDefault()
+        const t = e.touches[0]
+        const { startTx, startTy, startCx, startCy } = singleTouchRef.current
+        const { scale } = viewTransformRef.current
+        const newTx = startTx + (t.clientX - startCx)
+        const newTy = startTy + (t.clientY - startCy)
+        viewTransformRef.current = { scale, tx: newTx, ty: newTy }
+        setViewTransform({ scale, tx: newTx, ty: newTy })
+        return
+      }
+
+      // 2-finger pinch/zoom
       if (!pinchRef.current || e.touches.length < 2) return
       e.preventDefault()
       const t1 = e.touches[0], t2 = e.touches[1]
@@ -571,7 +620,6 @@ export function DrawingCanvas({
       const newScale = Math.max(0.25, Math.min(10, rawScale))
       const sf = newScale / initScale
 
-      // Keep initM fixed, then add pan delta
       const newTx = initMx - (initMx - initTx) * sf + (mx - initMx)
       const newTy = initMy - (initMy - initTy) * sf + (my - initMy)
 
@@ -580,10 +628,38 @@ export function DrawingCanvas({
     }
 
     function onTouchEnd(e: TouchEvent) {
-      if (e.touches.length < 2) {
+      if (e.touches.length === 0) {
+        singleTouchRef.current = null
         pinchRef.current = null
-        // Small delay before allowing drawing again to avoid accidental strokes
         setTimeout(() => { isPinchingRef.current = false }, 80)
+      } else if (e.touches.length < 2) {
+        pinchRef.current = null
+        setTimeout(() => { isPinchingRef.current = false }, 80)
+      }
+    }
+
+    // Mouse wheel: scroll = pan, Ctrl+scroll = zoom
+    function onWheel(e: WheelEvent) {
+      e.preventDefault()
+      const { scale, tx, ty } = viewTransformRef.current
+      if (e.ctrlKey || e.metaKey) {
+        // Zoom centred on cursor
+        const factor = e.deltaY < 0 ? 1.1 : 0.9
+        const newScale = Math.max(0.25, Math.min(10, scale * factor))
+        const rect = container!.getBoundingClientRect()
+        const mx = e.clientX - rect.left
+        const my = e.clientY - rect.top
+        const sf = newScale / scale
+        const newTx = mx - (mx - tx) * sf
+        const newTy = my - (my - ty) * sf
+        viewTransformRef.current = { scale: newScale, tx: newTx, ty: newTy }
+        setViewTransform({ scale: newScale, tx: newTx, ty: newTy })
+      } else {
+        // Pan
+        const newTx = tx - e.deltaX
+        const newTy = ty - e.deltaY
+        viewTransformRef.current = { scale, tx: newTx, ty: newTy }
+        setViewTransform({ scale, tx: newTx, ty: newTy })
       }
     }
 
@@ -591,11 +667,13 @@ export function DrawingCanvas({
     container.addEventListener('touchmove',  onTouchMove,  { passive: false })
     container.addEventListener('touchend',   onTouchEnd)
     container.addEventListener('touchcancel', onTouchEnd)
+    container.addEventListener('wheel',      onWheel,      { passive: false })
     return () => {
       container.removeEventListener('touchstart', onTouchStart)
       container.removeEventListener('touchmove',  onTouchMove)
       container.removeEventListener('touchend',   onTouchEnd)
       container.removeEventListener('touchcancel', onTouchEnd)
+      container.removeEventListener('wheel',      onWheel)
     }
   }, [isFullscreen])
 
@@ -613,25 +691,65 @@ export function DrawingCanvas({
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (tool === 'select') return
+
+    // Track whether we've ever seen an Apple Pencil / stylus
+    if (e.pointerType === 'pen') {
+      hasSeenPenRef.current = true
+      penIsActiveRef.current = true
+    }
+
+    // Pen-only mode: only pencil draws; finger/mouse ignored
+    if (penOnlyModeRef.current && e.pointerType !== 'pen') return
+
+    // Auto palm rejection: once a pen has been used, ignore all finger touches
+    if (!penOnlyModeRef.current && hasSeenPenRef.current && e.pointerType === 'touch') return
+
     activePointerIdsRef.current.add(e.pointerId)
-    // Block drawing if pinching or more than 1 finger
+    // Block drawing if pinching or more than 1 active pointer
     if (isPinchingRef.current || activePointerIdsRef.current.size > 1) {
       activeRef.current = null
       return
     }
     e.currentTarget.setPointerCapture(e.pointerId)
+    // geometry + lasso are stubs — draw as pen until implemented
+    const drawTool: Exclude<Tool, 'select' | 'geometry' | 'lasso'> =
+      (tool === 'geometry' || tool === 'lasso') ? 'pen' : tool as Exclude<Tool, 'select' | 'geometry' | 'lasso'>
     activeRef.current = {
       points: [getXY(e)],
-      tool: tool as Exclude<Tool, 'select'>,
+      tool: drawTool,
       colorHex: getActiveColor(),
       size: getActiveSize(),
     }
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    // Always track eraser cursor position (even when not actively drawing)
+    if (tool === 'eraser') {
+      const rect = fgCanvasRef.current!.getBoundingClientRect()
+      const scale = viewTransformRef.current.scale
+      setEraserCursorPos({ x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale })
+    }
+
     if (!activeRef.current || e.buttons === 0) return
     if (isPinchingRef.current || activePointerIdsRef.current.size > 1) return
+
+    // Palm rejection on move too
+    if (hasSeenPenRef.current && e.pointerType === 'touch') return
+
     activeRef.current.points.push(getXY(e))
+
+    if (activeRef.current.tool === 'eraser') {
+      // Real-time erase: repaint sk with all strokes + partial eraser applied
+      const sk = skCanvasRef.current; if (!sk) return
+      const ctx = sk.getContext('2d'); if (!ctx) return
+      const { w, h } = getCSS()
+      ctx.clearRect(0, 0, w, h)
+      for (const s of strokesRef.current) paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
+      paintStroke(ctx, activeRef.current.points, 'eraser', activeRef.current.colorHex, activeRef.current.size)
+      return
+    }
+
+    // Regular tools: paint to fg canvas (temporary)
     const fg = fgCanvasRef.current; if (!fg) return
     const ctx = fg.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
@@ -640,18 +758,32 @@ export function DrawingCanvas({
   }
 
   const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (e.pointerType === 'pen') penIsActiveRef.current = false
     activePointerIdsRef.current.delete(e.pointerId)
     const stroke = activeRef.current
     activeRef.current = null
     if (!stroke || stroke.points.length === 0) return
-    const sk = skCanvasRef.current
-    if (sk) { const ctx = sk.getContext('2d'); if (ctx) paintStroke(ctx, stroke.points, stroke.tool, stroke.colorHex, stroke.size) }
-    const fg = fgCanvasRef.current
-    if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+
+    if (stroke.tool !== 'eraser') {
+      // Commit pen/highlighter stroke to sk canvas
+      const sk = skCanvasRef.current
+      if (sk) { const ctx = sk.getContext('2d'); if (ctx) paintStroke(ctx, stroke.points, stroke.tool, stroke.colorHex, stroke.size) }
+      // Clear fg
+      const fg = fgCanvasRef.current
+      if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+    }
+    // Eraser: sk already shows correct state from real-time updates in onPointerMove
+
     undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
     redoStackRef.current = []
     strokesRef.current = [...strokesRef.current, stroke]
     updateHistoryState(); exportAndNotify(); notifyPagesChanged()
+  }
+
+  const onPointerLeave = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (e.pointerType === 'pen') penIsActiveRef.current = false
+    setEraserCursorPos(null)
+    onPointerUp(e)
   }
 
   // ── Image pointer events ──────────────────────────────────────────────────
@@ -826,165 +958,288 @@ export function DrawingCanvas({
   return (
     <div className={`flex flex-col ${isFullscreen ? 'h-full w-full' : ''}`}>
 
-      {/* ── Background picker panel ── */}
-      {showBgPicker && (
-        <div className="flex items-center gap-1.5 px-3 py-2 border-t border-border bg-surface shrink-0 flex-wrap">
-          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider mr-1 shrink-0">Hintergrund</span>
-          {BG_OPTIONS.map(({ type, label }) => (
-            <button
-              key={type}
-              onClick={() => setPageBackground({ type })}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-[11px] font-semibold border transition-all press-sm"
-              style={
-                currentBgType === type
-                  ? { background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
-                  : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }
-              }
-            >
-              <BgIcon type={type} size={12} />
-              {label}
-            </button>
-          ))}
-          <button
-            onClick={() => bgInputRef.current?.click()}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-[11px] font-semibold border border-border/60 text-text-secondary transition-all press-sm"
-            style={
-              currentBgType === 'image'
-                ? { background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
-                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }
-            }
+      {/* ── Settings popup (dropdown over canvas) ── */}
+      {showSettings && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0"
+            style={{ zIndex: 48 }}
+            onClick={() => { setShowSettings(false); setShowBgPicker(false) }}
+          />
+          {/* Popup card */}
+          <div
+            className="fixed"
+            style={{
+              zIndex: 49,
+              top: (() => { const r = settingsBtnRef.current?.getBoundingClientRect(); return r ? r.bottom + 8 : 60 })(),
+              left: (() => { const r = settingsBtnRef.current?.getBoundingClientRect(); return r ? r.left : 12 })(),
+              minWidth: 220,
+            }}
           >
-            <BgIcon type="image" size={12} />
-            Bild laden
-          </button>
-          <input ref={bgInputRef} type="file" accept="image/*" className="hidden" onChange={handleBgImageUpload} />
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{
+                background: 'var(--color-surface, #fff)',
+                border: '1px solid rgba(0,0,0,0.09)',
+                boxShadow: '0 12px 40px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)',
+              }}
+            >
+              {/* Vorlage wechseln */}
+              <button
+                onClick={() => setShowBgPicker(v => !v)}
+                className="w-full flex items-center gap-3 px-4 py-3 transition-all hover:bg-surface-hover text-left"
+              >
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(124,58,237,0.1)' }}>
+                  <BgIcon type={currentBgType} size={15} />
+                </div>
+                <span className="text-[13px] font-semibold text-text-primary">Vorlage wechseln</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="ml-auto text-text-muted">
+                  <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+
+              {/* Background sub-menu */}
+              {showBgPicker && (
+                <div className="px-4 pb-3 flex flex-wrap gap-1.5" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                  {BG_OPTIONS.map(({ type, label }) => (
+                    <button
+                      key={type}
+                      onClick={() => { setPageBackground({ type }); setShowBgPicker(false) }}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all press-sm mt-2"
+                      style={
+                        currentBgType === type
+                          ? { background: 'rgba(124,58,237,0.12)', border: '1.5px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
+                          : { background: 'rgba(0,0,0,0.04)', border: '1.5px solid transparent', color: 'rgb(var(--color-text-secondary))' }
+                      }
+                    >
+                      <BgIcon type={type} size={11} />
+                      {label}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => { bgInputRef.current?.click(); setShowBgPicker(false) }}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all press-sm mt-2"
+                    style={
+                      currentBgType === 'image'
+                        ? { background: 'rgba(124,58,237,0.12)', border: '1.5px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
+                        : { background: 'rgba(0,0,0,0.04)', border: '1.5px solid transparent', color: 'rgb(var(--color-text-secondary))' }
+                    }
+                  >
+                    <BgIcon type="image" size={11} />
+                    Bild
+                  </button>
+                  <input ref={bgInputRef} type="file" accept="image/*" className="hidden" onChange={handleBgImageUpload} />
+                </div>
+              )}
+
+              <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', margin: '0 16px' }} />
+
+              {/* Seite drehen */}
+              <button
+                onClick={() => { /* rotation: coming soon */ setShowSettings(false) }}
+                className="w-full flex items-center gap-3 px-4 py-3 transition-all hover:bg-surface-hover text-left opacity-50"
+                disabled
+              >
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(90,200,250,0.12)' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" strokeWidth="2.2">
+                    <path d="M1 4v6h6" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M3.51 15a9 9 0 1 0 .49-4.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="text-[13px] font-semibold text-text-primary">Seite drehen</span>
+                  <span className="block text-[10px] text-text-muted">Kommt bald</span>
+                </div>
+              </button>
+
+              <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', margin: '0 16px' }} />
+
+              {/* Nur Stift */}
+              <button
+                onClick={() => {
+                  const next = !penOnlyMode
+                  setPenOnlyMode(next)
+                  localStorage.setItem(PEN_ONLY_KEY, next ? '1' : '0')
+                }}
+                className="w-full flex items-center gap-3 px-4 py-3 transition-all hover:bg-surface-hover text-left"
+              >
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: penOnlyMode ? 'rgba(124,58,237,0.15)' : 'rgba(0,0,0,0.05)' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={penOnlyMode ? '#7C3AED' : 'currentColor'} strokeWidth="2.2">
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <span className="text-[13px] font-semibold" style={{ color: penOnlyMode ? '#7C3AED' : 'rgb(var(--color-text-primary))' }}>
+                  Nur Stift
+                </span>
+                {/* Toggle indicator */}
+                <div
+                  className="ml-auto flex items-center"
+                  style={{
+                    width: 36, height: 22, borderRadius: 11,
+                    background: penOnlyMode ? '#7C3AED' : 'rgba(0,0,0,0.15)',
+                    padding: 3, transition: 'background 0.2s',
+                  }}
+                >
+                  <div style={{
+                    width: 16, height: 16, borderRadius: '50%', background: 'white',
+                    marginLeft: penOnlyMode ? 14 : 0,
+                    transition: 'margin-left 0.2s',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                  }} />
+                </div>
+              </button>
+
+              <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', margin: '0 16px' }} />
+
+              {/* Seite löschen */}
+              <button
+                onClick={() => { setShowSettings(false); if (hasContent) setShowClearConfirm(true) }}
+                className="w-full flex items-center gap-3 px-4 py-3 transition-all hover:bg-surface-hover text-left"
+                style={{ opacity: hasContent ? 1 : 0.4 }}
+              >
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,59,48,0.1)' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2.2">
+                    <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
+                  </svg>
+                </div>
+                <span className="text-[13px] font-semibold" style={{ color: '#FF3B30' }}>Seite löschen</span>
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Clear confirm overlay */}
+      {showClearConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center" style={{ zIndex: 60, background: 'rgba(0,0,0,0.4)' }}>
+          <div className="rounded-2xl px-6 py-5 flex flex-col gap-3" style={{ background: 'var(--color-surface, #fff)', boxShadow: '0 16px 48px rgba(0,0,0,0.2)', minWidth: 240 }}>
+            <p className="text-[15px] font-bold text-text-primary text-center">Seite löschen?</p>
+            <p className="text-[12px] text-text-secondary text-center">Alle Striche auf dieser Seite werden entfernt.</p>
+            <div className="flex gap-2 mt-1">
+              <button onClick={() => setShowClearConfirm(false)} className="flex-1 py-2 rounded-xl text-[13px] font-semibold transition-all press-sm" style={{ background: 'rgba(0,0,0,0.07)', color: 'rgb(var(--color-text-secondary))' }}>Abbrechen</button>
+              <button onClick={handleClear} className="flex-1 py-2 rounded-xl text-[13px] font-bold transition-all press-sm" style={{ background: '#FF3B30', color: 'white' }}>Löschen</button>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* ── Main toolbar ── */}
-      <div className="flex items-center gap-2 px-3 py-2.5 border-t border-border bg-surface shrink-0 flex-wrap">
+      {/* ── Main toolbar (icon-only) ── */}
+      <div className="flex items-center gap-0.5 px-2 py-1.5 border-t border-border bg-surface shrink-0">
 
         {/* Back */}
         {isFullscreen && onBack && (
-          <>
-            <button
-              onClick={onBack}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
-              style={{ background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Zurück
-            </button>
-            <div className="w-px h-4 bg-border/60 shrink-0" />
-          </>
+          <button
+            onClick={onBack}
+            className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0"
+            style={{ color: 'rgb(var(--color-text-secondary))' }}
+            title="Zurück"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+              <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
         )}
 
-        {/* Background toggle */}
+        {/* Settings / 3-dots */}
         <button
-          onClick={() => setShowBgPicker(v => !v)}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
-          style={
-            showBgPicker
-              ? { background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
-              : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
-          }
+          ref={settingsBtnRef}
+          onClick={() => { setShowSettings(v => !v); if (showSettings) setShowBgPicker(false) }}
+          className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0"
+          style={showSettings
+            ? { background: 'rgba(124,58,237,0.12)', color: '#7C3AED' }
+            : { color: 'rgb(var(--color-text-muted))' }}
+          title="Einstellungen"
         >
-          <BgIcon type={currentBgType} size={11} />
-          Seite
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="5" cy="12" r="1.8" /><circle cx="12" cy="12" r="1.8" /><circle cx="19" cy="12" r="1.8" />
+          </svg>
         </button>
 
-        <div className="w-px h-4 bg-border/60 shrink-0" />
+        {/* Undo / Redo */}
+        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0 ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Rückgängig">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+            <path d="M3 7v6h6" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0 ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Wiederholen">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+            <path d="M21 7v6h-6" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
 
-        {/* Tool pills */}
-        <div className="flex items-center gap-1.5">
-          {/* Select */}
-          <button
-            onClick={() => setTool('select')}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
-            style={
-              tool === 'select'
-                ? { background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
-                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
-            }
-          >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M5 3l14 9-7 1-4 6-3-16z" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Divider */}
+        <div className="w-px h-6 bg-border/50 mx-1.5 shrink-0" />
+
+        {/* ── Tool icons ── */}
+
+        {/* Pen */}
+        <button onClick={() => setTool('pen')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'pen' ? { background: 'rgba(124,58,237,0.14)', color: '#7C3AED' } : { color: 'rgb(var(--color-text-muted))' }} title="Stift">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+
+        {/* Marker */}
+        <button onClick={() => setTool('highlighter')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'highlighter' ? { background: 'rgba(250,204,21,0.15)', color: '#CA8A04' } : { color: 'rgb(var(--color-text-muted))' }} title="Marker">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M2 22l4-4" strokeLinecap="round" strokeWidth="2.5" />
+          </svg>
+        </button>
+
+        {/* Eraser */}
+        <button onClick={() => setTool('eraser')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'eraser' ? { background: 'rgba(255,59,48,0.11)', color: '#FF3B30' } : { color: 'rgb(var(--color-text-muted))' }} title="Radierer">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+            <path d="M20 20H7L3 16l9-9 5 5-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.5 17.5L3 14l4.5-4.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+
+        {/* Geometry pen (stub) */}
+        <button onClick={() => setTool('geometry')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'geometry' ? { background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' } : { color: 'rgb(var(--color-text-muted))' }} title="Geometrie-Stift (bald)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+            <polygon points="12 2 22 20 2 20" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+
+        {/* Lasso (stub) */}
+        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl (bald)">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+            <path d="M6 12a6 6 0 1 0 12 0" strokeLinecap="round" />
+            <path d="M18 12v3a3 3 0 0 1-3 3h-1" strokeLinecap="round" />
+          </svg>
+        </button>
+
+        {/* Foto hinzufügen */}
+        {isFullscreen && (
+          <button onClick={() => canvasImgInputRef.current?.click()} className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0" style={{ color: 'rgb(var(--color-text-muted))' }} title="Foto einfügen">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+              <rect x="3" y="3" width="18" height="18" rx="2.5" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <path d="M21 15l-5-5L5 21" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
+        )}
+        <input ref={canvasImgInputRef} type="file" accept="image/*" className="hidden" onChange={handleCanvasImageUpload} />
 
-          {/* Stift — explicit purple pill */}
-          <button
-            onClick={() => setTool('pen')}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
-            style={
-              tool === 'pen'
-                ? { background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.55)', color: '#7C3AED' }
-                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
-            }
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Stift
-          </button>
-
-          {/* Marker */}
-          <button
-            onClick={() => setTool('highlighter')}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
-            style={
-              tool === 'highlighter'
-                ? { background: 'rgba(250,204,21,0.15)', border: '1px solid rgba(250,204,21,0.55)', color: '#CA8A04' }
-                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
-            }
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M2 22l4-4" strokeLinecap="round" />
-            </svg>
-            Marker
-          </button>
-
-          {/* Radier */}
-          <button
-            onClick={() => setTool('eraser')}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
-            style={
-              tool === 'eraser'
-                ? { background: 'rgba(255,59,48,0.12)', border: '1px solid rgba(255,59,48,0.45)', color: '#FF3B30' }
-                : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
-            }
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M20 20H7L3 16l9-9 5 5-3.5 3.5" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M6.5 17.5L3 14l4.5-4.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Radier
-          </button>
-        </div>
-
-        {/* Size picker — S/M/L dots for drawing tools */}
-        {(tool === 'pen' || tool === 'highlighter' || tool === 'eraser') && (
+        {/* Size picker — S/M/L dots (only for drawing tools) */}
+        {(tool === 'pen' || tool === 'highlighter' || tool === 'eraser' || tool === 'geometry') && (
           <>
-            <div className="w-px h-4 bg-border/60 shrink-0" />
+            <div className="w-px h-6 bg-border/40 mx-1 shrink-0" />
             <div className="flex items-center gap-0.5">
               {([0, 1, 2] as const).map(sIdx => {
                 const isActive = currentSizeIdx === sIdx
                 const visualSz = [5, 8, 12][sIdx]
                 const dotColor = tool === 'eraser'
                   ? (isActive ? '#888' : '#bbb')
-                  : (isActive ? colors[activeColorIdx] : colors[activeColorIdx] + '66')
+                  : (isActive ? colors[activeColorIdx] : colors[activeColorIdx] + '55')
                 return (
-                  <button
-                    key={sIdx}
-                    onClick={() => setCurrentSizeIdx(sIdx)}
-                    className="flex items-center justify-center w-7 h-7 rounded-full transition-all press-sm"
-                    style={{
-                      background: isActive ? 'rgba(124,58,237,0.1)' : 'transparent',
-                      border: `1.5px solid ${isActive ? 'rgba(124,58,237,0.45)' : 'transparent'}`,
-                    }}
+                  <button key={sIdx} onClick={() => setCurrentSizeIdx(sIdx)}
+                    className="flex items-center justify-center w-8 h-8 rounded-full transition-all press-sm"
+                    style={{ background: isActive ? 'rgba(124,58,237,0.1)' : 'transparent', border: `1.5px solid ${isActive ? 'rgba(124,58,237,0.4)' : 'transparent'}` }}
                   >
                     <div style={{ width: visualSz, height: visualSz, borderRadius: '50%', background: dotColor }} />
                   </button>
@@ -994,145 +1249,66 @@ export function DrawingCanvas({
           </>
         )}
 
-        {/* Image upload — fullscreen only */}
-        {isFullscreen && (
-          <>
-            <div className="w-px h-4 bg-border/60 shrink-0" />
-            <button
-              onClick={() => canvasImgInputRef.current?.click()}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
-              style={{ background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }}
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <path d="M21 15l-5-5L5 21" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Foto
-            </button>
-            <input ref={canvasImgInputRef} type="file" accept="image/*" className="hidden" onChange={handleCanvasImageUpload} />
-          </>
+        {/* ── Prominent separator ── */}
+        <div className="w-px h-7 mx-2 shrink-0" style={{ background: 'rgba(0,0,0,0.12)' }} />
+
+        {/* 6 Color dots */}
+        {(tool === 'pen' || tool === 'highlighter' || tool === 'geometry') && (
+          <div className="flex items-center gap-1.5 shrink-0">
+            {colors.map((hex, idx) => {
+              const isActive = activeColorIdx === idx
+              const displayHex = tool === 'highlighter' ? hex + '99' : hex
+              return (
+                <button key={idx} onClick={() => handleColorDotClick(idx)}
+                  className="transition-all press-sm shrink-0"
+                  style={{
+                    width: isActive ? 22 : 16, height: isActive ? 22 : 16,
+                    borderRadius: '50%', backgroundColor: displayHex,
+                    border: isActive ? '2.5px solid white' : '2px solid transparent',
+                    boxShadow: isActive ? `0 0 0 2.5px ${hex}90` : 'none',
+                    opacity: isActive ? 1 : 0.65,
+                  }}
+                  title={isActive ? 'Farbe ändern' : 'Farbe wählen'}
+                />
+              )
+            })}
+            <input ref={colorInputRef} type="color" className="opacity-0 absolute pointer-events-none" style={{ width: 0, height: 0 }} onChange={handleColorPickerChange} />
+          </div>
         )}
-
-        <div className="w-px h-4 bg-border/60 shrink-0" />
-
-        {/* 6 Color dots — tap to select, tap selected to edit */}
-        {(tool === 'pen' || tool === 'highlighter') && (
-          <>
-            <div className="flex items-center gap-1.5">
-              {colors.map((hex, idx) => {
-                const isActive = activeColorIdx === idx
-                const displayHex = tool === 'highlighter' ? hex + '99' : hex
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => handleColorDotClick(idx)}
-                    className="transition-all press-sm shrink-0 relative"
-                    style={{
-                      width: isActive ? 20 : 15,
-                      height: isActive ? 20 : 15,
-                      borderRadius: '50%',
-                      backgroundColor: displayHex,
-                      border: isActive ? '2.5px solid white' : '2px solid transparent',
-                      boxShadow: isActive ? `0 0 0 2px ${hex}90` : 'none',
-                      opacity: isActive ? 1 : 0.6,
-                    }}
-                    title={isActive ? 'Farbe ändern' : 'Farbe wählen'}
-                  />
-                )
-              })}
-            </div>
-            {/* Hidden native color picker */}
-            <input
-              ref={colorInputRef}
-              type="color"
-              className="opacity-0 absolute pointer-events-none"
-              style={{ width: 0, height: 0 }}
-              onChange={handleColorPickerChange}
-            />
-            <div className="w-px h-4 bg-border/60 shrink-0" />
-          </>
-        )}
-
-        {/* Undo / Redo */}
-        <div className="flex items-center gap-1">
-          <button
-            onClick={handleUndo} disabled={!canUndo}
-            className={`p-1.5 rounded-pill border border-border/60 hover:bg-surface-hover transition-all press-sm shrink-0 ${!canUndo ? 'opacity-30 cursor-not-allowed text-text-muted' : 'text-text-secondary'}`}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M3 7v6h6" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-          <button
-            onClick={handleRedo} disabled={!canRedo}
-            className={`p-1.5 rounded-pill border border-border/60 hover:bg-surface-hover transition-all press-sm shrink-0 ${!canRedo ? 'opacity-30 cursor-not-allowed text-text-muted' : 'text-text-secondary'}`}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M21 7v6h-6" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </div>
 
         <div className="flex-1" />
 
-        {/* Clear — fullscreen only */}
-        {isFullscreen && (
-          showClearConfirm ? (
-            <div className="flex items-center gap-1.5 shrink-0">
-              <span className="text-[11px] font-semibold text-text-secondary">Seite löschen?</span>
-              <button onClick={handleClear} className="px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm" style={{ background: 'rgba(255,59,48,0.12)', border: '1px solid rgba(255,59,48,0.45)', color: '#FF3B30' }}>Ja</button>
-              <button onClick={() => setShowClearConfirm(false)} className="px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm" style={{ background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}>Nein</button>
-            </div>
-          ) : (
-            <button
-              onClick={() => hasContent && setShowClearConfirm(true)} disabled={!hasContent}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
-              style={hasContent ? { background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.35)', color: '#FF3B30' } : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', opacity: 0.4, cursor: 'not-allowed' }}
-            >
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
-              </svg>
-              Löschen
-            </button>
-          )
-        )}
-
         {/* KI-Analyse */}
-        {isFullscreen && !showClearConfirm && onAnalyzeRequest && (
-          <button
-            onClick={handleAnalyzeRequest}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
-            style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.4)', color: '#059669' }}
+        {isFullscreen && onAnalyzeRequest && (
+          <button onClick={handleAnalyzeRequest}
+            className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0"
+            style={{ color: '#059669' }}
+            title="KI-Analyse"
           >
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
-              <path d="M12 8v4l3 3" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+              <path d="M8 12h4m0 0V8m0 4l3 3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            KI-Analyse
           </button>
         )}
 
         {/* PDF export */}
-        {isFullscreen && !showClearConfirm && (
-          <button
-            onClick={handleExportPDF} disabled={isExporting}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0 ml-1"
-            style={{ background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.45)', color: '#7C3AED', opacity: isExporting ? 0.6 : 1, cursor: isExporting ? 'not-allowed' : 'pointer' }}
+        {isFullscreen && (
+          <button onClick={handleExportPDF} disabled={isExporting}
+            className="flex items-center justify-center w-9 h-9 rounded-xl transition-all press-sm shrink-0"
+            style={{ color: '#7C3AED', opacity: isExporting ? 0.5 : 1 }}
+            title="Als PDF exportieren"
           >
             {isExporting ? (
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="animate-spin">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" className="animate-spin">
                 <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" strokeLinecap="round" />
               </svg>
             ) : (
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
                 <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             )}
-            {isExporting ? 'Erstellt…' : 'PDF'}
           </button>
         )}
       </div>
@@ -1144,6 +1320,7 @@ export function DrawingCanvas({
           className="flex-1 relative overflow-hidden"
           style={{ backgroundColor: '#E2E4E9', ...noSelectStyle }}
           onContextMenu={(e) => e.preventDefault()}
+          onDoubleClick={(e) => e.preventDefault()}
         >
           {/* Transform wrapper — this is what gets zoomed/panned */}
           <div
@@ -1199,16 +1376,39 @@ export function DrawingCanvas({
                 className="absolute inset-0 w-full h-full"
                 style={{
                   zIndex: 4,
-                  cursor: tool === 'eraser' ? 'cell' : tool === 'select' ? 'default' : 'crosshair',
+                  cursor: tool === 'eraser' ? 'none' : tool === 'select' ? 'default' : 'crosshair',
                   pointerEvents: tool === 'select' ? 'none' : 'auto',
                   touchAction: 'none',
                 }}
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}
-                onPointerLeave={onPointerUp}
-                onPointerCancel={onPointerUp}
+                onPointerLeave={onPointerLeave}
+                onPointerCancel={onPointerLeave}
+                onDoubleClick={(e) => e.preventDefault()}
               />
+
+              {/* Eraser circle cursor */}
+              {tool === 'eraser' && eraserCursorPos && (() => {
+                const r = ERASER_SIZES[erSizeIdx] * 2
+                return (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: eraserCursorPos.x - r,
+                      top:  eraserCursorPos.y - r,
+                      width:  r * 2,
+                      height: r * 2,
+                      borderRadius: '50%',
+                      border: '1.5px solid rgba(80,80,80,0.75)',
+                      background: 'rgba(255,255,255,0.35)',
+                      pointerEvents: 'none',
+                      zIndex: 6,
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                )
+              })()}
 
               {/* selection handles */}
               {tool === 'select' && selectedImg && (() => {
