@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { getStroke } from 'perfect-freehand'
 
-// ── Types (exported for DrawingCanvasScreen + NoteCreateScreen) ───────────────
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 type Tool = 'pen' | 'highlighter' | 'eraser' | 'select'
 type BackgroundType = 'white' | 'lined' | 'grid' | 'dotted'
@@ -10,10 +10,10 @@ type Background = { type: BackgroundType } | { type: 'image'; dataUrl: string }
 export interface CanvasImageData {
   id: string
   dataUrl: string
-  x: number  // relative 0-1 of page width
-  y: number  // relative 0-1 of page height
-  w: number  // relative 0-1 of page width
-  h: number  // relative 0-1 of page height
+  x: number
+  y: number
+  w: number
+  h: number
 }
 
 interface StrokeRecord {
@@ -28,19 +28,19 @@ export interface CanvasPageData {
   background: Background
   strokes: StrokeRecord[]
   images: CanvasImageData[]
-  thumbnail?: string  // small PNG preview, updated when leaving or saving
+  thumbnail?: string
 }
 
 type ImageInteractionAction = 'drag' | 'resize-right' | 'resize-bottom' | 'resize-corner'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const COLORS = [
-  { id: 'black'  as const, hex: '#111827' },
-  { id: 'blue'   as const, hex: '#2563EB' },
-  { id: 'red'    as const, hex: '#DC2626' },
-]
-type ColorId = (typeof COLORS)[number]['id']
+const PEN_SIZES    = [2, 4, 8]
+const MARKER_SIZES = [8, 14, 24]
+const ERASER_SIZES = [10, 20, 36]
+
+const DEFAULT_COLORS = ['#111827', '#2563EB', '#DC2626', '#16A34A', '#7C3AED', '#F97316']
+const COLORS_KEY = 'sb_palette_v1'
 
 const BG_OPTIONS: { type: BackgroundType; label: string }[] = [
   { type: 'white',  label: 'Weiß'      },
@@ -172,7 +172,7 @@ function drawBackground(
         ctx.beginPath(); ctx.arc(x, y, 1.2, 0, Math.PI * 2); ctx.fill()
       }
   } else if (bg.type === 'image') {
-    const img = imgCache.get(bg.dataUrl)
+    const img = imgCache.get((bg as { dataUrl: string }).dataUrl)
     if (img?.complete && img.naturalWidth > 0) ctx.drawImage(img, 0, 0, w, h)
   }
 }
@@ -219,11 +219,12 @@ export function DrawingCanvas({
   onPagesChange?: (pages: CanvasPageData[]) => void
   onBack?: () => void
 }) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const pageRef      = useRef<HTMLDivElement>(null)
-  const bgCanvasRef  = useRef<HTMLCanvasElement>(null)
-  const skCanvasRef  = useRef<HTMLCanvasElement>(null)
-  const fgCanvasRef  = useRef<HTMLCanvasElement>(null)
+  const containerRef  = useRef<HTMLDivElement>(null)
+  const pageWrapRef   = useRef<HTMLDivElement>(null)
+  const pageRef       = useRef<HTMLDivElement>(null)
+  const bgCanvasRef   = useRef<HTMLCanvasElement>(null)
+  const skCanvasRef   = useRef<HTMLCanvasElement>(null)
+  const fgCanvasRef   = useRef<HTMLCanvasElement>(null)
 
   const activeRef    = useRef<StrokeRecord | null>(null)
   const strokesRef   = useRef<StrokeRecord[]>([])
@@ -232,37 +233,95 @@ export function DrawingCanvas({
   const imgCacheRef  = useRef(new Map<string, HTMLImageElement>())
   const bgInputRef   = useRef<HTMLInputElement>(null)
   const canvasImgInputRef = useRef<HTMLInputElement>(null)
+  const colorInputRef = useRef<HTMLInputElement>(null)
+  const editingColorIdxRef = useRef(0)
   const canvasSizeRef = useRef({ w: 0, h: 0 })
 
-  // Pages: pagesRef is source of truth
+  // View transform (zoom + pan)
+  const viewTransformRef = useRef({ scale: 1, tx: 12, ty: 12 })
+  const [viewTransform, setViewTransform] = useState({ scale: 1, tx: 12, ty: 12 })
+
+  // Pinch state for 2-finger zoom
+  const pinchRef = useRef<{
+    initDist: number; initScale: number
+    initTx: number; initTy: number
+    initMx: number; initMy: number
+  } | null>(null)
+  const isPinchingRef = useRef(false)
+
+  // Active pointer tracking (to block drawing when 2 fingers down)
+  const activePointerIdsRef = useRef(new Set<number>())
+
+  // Pages
   const pagesRef  = useRef<CanvasPageData[]>([{ id: 'p0', background: { type: 'white' }, strokes: [], images: [] }])
   const curIdxRef = useRef(0)
   const [pageCount,   setPageCount]   = useState(1)
   const [currentIdx,  setCurrentIdx]  = useState(0)
   const [currentBgType, setCurrentBgType] = useState<string>('white')
 
-  // Image state — ref for sync in handlers, state for rendering
+  // Image state
   const currentImagesRef = useRef<CanvasImageData[]>([])
   const [currentImagesState, setCurrentImagesState] = useState<CanvasImageData[]>([])
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null)
   const imageInteractionRef = useRef<{
     action: ImageInteractionAction
     imageId: string
-    startClientX: number
-    startClientY: number
+    startClientX: number; startClientY: number
     startX: number; startY: number; startW: number; startH: number
     canvasW: number; canvasH: number
   } | null>(null)
 
+  // Tool state
   const [tool,             setTool]            = useState<Tool>('pen')
-  const [color,            setColor]           = useState<ColorId>('black')
+  const [penSizeIdx,       setPenSizeIdx]       = useState(1)
+  const [hlSizeIdx,        setHlSizeIdx]        = useState(1)
+  const [erSizeIdx,        setErSizeIdx]        = useState(1)
+  const [colors,           setColors]           = useState<string[]>(() => {
+    try {
+      const s = localStorage.getItem(COLORS_KEY)
+      if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length === 6) return p }
+    } catch {}
+    return DEFAULT_COLORS
+  })
+  const [activeColorIdx,   setActiveColorIdx]   = useState(0)
   const [showBgPicker,     setShowBgPicker]     = useState(false)
   const [showClearConfirm, setShowClearConfirm] = useState(false)
   const [isExporting,      setIsExporting]      = useState(false)
-  const [canUndo, setCanUndo] = useState(false)
-  const [canRedo, setCanRedo] = useState(false)
+  const [canUndo,  setCanUndo]  = useState(false)
+  const [canRedo,  setCanRedo]  = useState(false)
   const [hasContent, setHasContent] = useState(false)
   const mountedRef = useRef(false)
+
+  // ── Color helpers ─────────────────────────────────────────────────────────
+
+  const handleColorDotClick = (idx: number) => {
+    if (activeColorIdx === idx) {
+      editingColorIdxRef.current = idx
+      if (colorInputRef.current) {
+        colorInputRef.current.value = colors[idx]
+        colorInputRef.current.click()
+      }
+    } else {
+      setActiveColorIdx(idx)
+    }
+  }
+
+  const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newHex = e.target.value
+    const idx = editingColorIdxRef.current
+    const next = [...colors]
+    next[idx] = newHex
+    setColors(next)
+    localStorage.setItem(COLORS_KEY, JSON.stringify(next))
+  }
+
+  const getActiveColor = (): string => colors[activeColorIdx]
+
+  const getActiveSize = useCallback((): number => {
+    if (tool === 'pen')        return PEN_SIZES[penSizeIdx]
+    if (tool === 'highlighter') return MARKER_SIZES[hlSizeIdx]
+    return ERASER_SIZES[erSizeIdx]
+  }, [tool, penSizeIdx, hlSizeIdx, erSizeIdx])
 
   // ── Image helpers ─────────────────────────────────────────────────────────
 
@@ -279,7 +338,7 @@ export function DrawingCanvas({
     imgCacheRef.current.set(dataUrl, el)
   }, [])
 
-  // ── Thumbnail generation ─────────────────────────────────────────────────
+  // ── Thumbnail ─────────────────────────────────────────────────────────────
 
   const generateThumbnail = useCallback((pageIdx: number): string => {
     const { w, h } = canvasSizeRef.current
@@ -288,19 +347,16 @@ export function DrawingCanvas({
     const THUMB_W = 280
     const scale = THUMB_W / w
     const THUMB_H = Math.round(h * scale)
-    const offscreen = document.createElement('canvas')
-    offscreen.width = THUMB_W
-    offscreen.height = THUMB_H
-    const ctx = offscreen.getContext('2d')!
+    const off = document.createElement('canvas')
+    off.width = THUMB_W; off.height = THUMB_H
+    const ctx = off.getContext('2d')!
     ctx.scale(scale, scale)
     drawBackground(ctx, w, h, page.background, imgCacheRef.current)
     drawCanvasImages(ctx, w, h, page.images ?? [], imgCacheRef.current)
     const strokes = pageIdx === curIdxRef.current ? strokesRef.current : page.strokes
     for (const s of strokes) paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
-    return offscreen.toDataURL('image/png', 0.75)
+    return off.toDataURL('image/png', 0.75)
   }, [])
-
-  // ── Notify parent of pages change ─────────────────────────────────────────
 
   const notifyPagesChanged = useCallback(() => {
     if (!onPagesChange) return
@@ -309,38 +365,29 @@ export function DrawingCanvas({
     pagesRef.current[idx].images    = currentImagesRef.current
     pagesRef.current[idx].thumbnail = generateThumbnail(idx)
     onPagesChange(pagesRef.current.map(p => ({
-      id: p.id,
-      background: p.background,
-      strokes: [...p.strokes],
-      images: [...p.images],
-      thumbnail: p.thumbnail,
+      id: p.id, background: p.background,
+      strokes: [...p.strokes], images: [...p.images], thumbnail: p.thumbnail,
     })))
   }, [onPagesChange, generateThumbnail])
 
-  // ── Load initialPages on mount ────────────────────────────────────────────
+  // ── Load initialPages ─────────────────────────────────────────────────────
 
   useEffect(() => {
     if (mountedRef.current) return
     mountedRef.current = true
     if (!initialPages || initialPages.length === 0) return
-
     pagesRef.current = initialPages.map(p => ({
-      id: p.id,
-      background: p.background,
-      strokes: [...p.strokes],
-      images: [...(p.images ?? [])],
+      id: p.id, background: p.background,
+      strokes: [...p.strokes], images: [...(p.images ?? [])],
     }))
     curIdxRef.current = 0
     strokesRef.current = [...pagesRef.current[0].strokes]
     setPageCount(pagesRef.current.length)
     setCurrentIdx(0)
     setCurrentBgType(pagesRef.current[0].background.type)
-
     const imgs0 = pagesRef.current[0].images ?? []
     currentImagesRef.current = imgs0
     setCurrentImagesState(imgs0)
-
-    // Preload all cached images
     pagesRef.current.forEach(page => {
       if (page.background.type === 'image') preloadImage((page.background as { dataUrl: string }).dataUrl)
       ;(page.images ?? []).forEach(img => preloadImage(img.dataUrl))
@@ -364,33 +411,27 @@ export function DrawingCanvas({
   }, [])
 
   const redrawBgCanvas = useCallback((bg: Background) => {
-    const c = bgCanvasRef.current
-    if (!c) return
-    const ctx = c.getContext('2d')
-    if (!ctx) return
+    const c = bgCanvasRef.current; if (!c) return
+    const ctx = c.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
     drawBackground(ctx, w, h, bg, imgCacheRef.current)
   }, [getCSS])
 
   const redrawStrokeCanvas = useCallback((strokes: StrokeRecord[]) => {
-    const c = skCanvasRef.current
-    if (!c) return
-    const ctx = c.getContext('2d')
-    if (!ctx) return
+    const c = skCanvasRef.current; if (!c) return
+    const ctx = c.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
     ctx.clearRect(0, 0, w, h)
     for (const s of strokes) paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
   }, [getCSS])
 
   const exportAndNotify = useCallback(() => {
-    const sk = skCanvasRef.current
-    if (!sk) return
+    const sk = skCanvasRef.current; if (!sk) return
     const { w, h } = getCSS()
     const page = pagesRef.current[curIdxRef.current]
     const images = currentImagesRef.current
     if (strokesRef.current.length === 0 && page.background.type === 'white' && images.length === 0) {
-      onChange(null)
-      return
+      onChange(null); return
     }
     const dpr = window.devicePixelRatio || 1
     const exp = document.createElement('canvas')
@@ -413,18 +454,13 @@ export function DrawingCanvas({
     pagesRef.current[leaving].thumbnail = generateThumbnail(leaving)
     curIdxRef.current = idx
     strokesRef.current = [...pagesRef.current[idx].strokes]
-    undoStackRef.current = []
-    redoStackRef.current = []
+    undoStackRef.current = []; redoStackRef.current = []
     const newBg  = pagesRef.current[idx].background
     const newImg = pagesRef.current[idx].images ?? []
-    setCurrentIdx(idx)
-    setCurrentBgType(newBg.type)
-    currentImagesRef.current = newImg
-    setCurrentImagesState(newImg)
-    setSelectedImageId(null)
-    updateHistoryState()
-    redrawBgCanvas(newBg)
-    redrawStrokeCanvas(strokesRef.current)
+    setCurrentIdx(idx); setCurrentBgType(newBg.type)
+    currentImagesRef.current = newImg; setCurrentImagesState(newImg)
+    setSelectedImageId(null); updateHistoryState()
+    redrawBgCanvas(newBg); redrawStrokeCanvas(strokesRef.current)
     notifyPagesChanged()
   }, [redrawBgCanvas, redrawStrokeCanvas, updateHistoryState, notifyPagesChanged, generateThumbnail])
 
@@ -435,39 +471,26 @@ export function DrawingCanvas({
     pagesRef.current.push(newPage)
     const newIdx = pagesRef.current.length - 1
     curIdxRef.current = newIdx
-    strokesRef.current = []
-    undoStackRef.current = []
-    redoStackRef.current = []
+    strokesRef.current = []; undoStackRef.current = []; redoStackRef.current = []
     currentImagesRef.current = []
-    setPageCount(pagesRef.current.length)
-    setCurrentIdx(newIdx)
-    setCurrentBgType('white')
-    setCurrentImagesState([])
-    setSelectedImageId(null)
-    updateHistoryState()
-    redrawBgCanvas({ type: 'white' })
-    redrawStrokeCanvas([])
-    onChange(null)
-    notifyPagesChanged()
+    setPageCount(pagesRef.current.length); setCurrentIdx(newIdx)
+    setCurrentBgType('white'); setCurrentImagesState([]); setSelectedImageId(null)
+    updateHistoryState(); redrawBgCanvas({ type: 'white' }); redrawStrokeCanvas([])
+    onChange(null); notifyPagesChanged()
   }, [redrawBgCanvas, redrawStrokeCanvas, updateHistoryState, onChange, notifyPagesChanged])
 
   const setPageBackground = useCallback((bg: Background) => {
-    if (bg.type === 'image' && !imgCacheRef.current.has((bg as { dataUrl: string }).dataUrl)) {
+    if (bg.type === 'image') {
       const dataUrl = (bg as { dataUrl: string }).dataUrl
-      const img = new Image()
-      img.onload = () => {
-        imgCacheRef.current.set(dataUrl, img)
-        redrawBgCanvas(bg)
-        exportAndNotify()
+      if (!imgCacheRef.current.has(dataUrl)) {
+        const img = new Image()
+        img.onload = () => { imgCacheRef.current.set(dataUrl, img); redrawBgCanvas(bg); exportAndNotify() }
+        img.src = dataUrl
       }
-      img.src = dataUrl
     }
     pagesRef.current[curIdxRef.current].background = bg
-    setCurrentBgType(bg.type)
-    setShowBgPicker(false)
-    redrawBgCanvas(bg)
-    exportAndNotify()
-    notifyPagesChanged()
+    setCurrentBgType(bg.type); setShowBgPicker(false)
+    redrawBgCanvas(bg); exportAndNotify(); notifyPagesChanged()
   }, [redrawBgCanvas, exportAndNotify, notifyPagesChanged])
 
   // ── Resize observer ───────────────────────────────────────────────────────
@@ -481,17 +504,17 @@ export function DrawingCanvas({
       let w: number, h: number
 
       if (isFullscreen) {
-        const availW = outerRect.width - 48
-        const availH = outerRect.height - 48
-        const A4_RATIO = 297 / 210
-        w = availW
-        h = w * A4_RATIO
-        if (h > availH) { h = availH; w = h / A4_RATIO }
-        w = Math.floor(w); h = Math.floor(h)
+        const pad = 14
+        w = Math.floor(outerRect.width - pad * 2)
+        h = Math.floor(w * (297 / 210))
         if (pageRef.current) {
           pageRef.current.style.width  = `${w}px`
           pageRef.current.style.height = `${h}px`
         }
+        // Reset view so page starts at top-left with small padding
+        const initT = { scale: 1, tx: pad, ty: 12 }
+        viewTransformRef.current = initT
+        setViewTransform(initT)
       } else {
         w = outerRect.width
         h = outerRect.height
@@ -503,8 +526,7 @@ export function DrawingCanvas({
       if (skCanvasRef.current) resizeCanvas(skCanvasRef.current, w, h)
       if (fgCanvasRef.current) resizeCanvas(fgCanvasRef.current, w, h)
       const bg = pagesRef.current[curIdxRef.current].background
-      redrawBgCanvas(bg)
-      redrawStrokeCanvas(strokesRef.current)
+      redrawBgCanvas(bg); redrawStrokeCanvas(strokesRef.current)
     }
 
     resize()
@@ -513,53 +535,123 @@ export function DrawingCanvas({
     return () => ro.disconnect()
   }, [isFullscreen, redrawBgCanvas, redrawStrokeCanvas])
 
+  // ── 2-finger pinch zoom + pan ─────────────────────────────────────────────
+
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container || !isFullscreen) return
+
+    function onTouchStart(e: TouchEvent) {
+      if (e.touches.length >= 2) {
+        e.preventDefault()
+        isPinchingRef.current = true
+        activeRef.current = null // cancel any active stroke
+        const t1 = e.touches[0], t2 = e.touches[1]
+        const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY)
+        const mx = (t1.clientX + t2.clientX) / 2
+        const my = (t1.clientY + t2.clientY) / 2
+        const { scale, tx, ty } = viewTransformRef.current
+        pinchRef.current = { initDist: dist, initScale: scale, initTx: tx, initTy: ty, initMx: mx, initMy: my }
+      } else {
+        isPinchingRef.current = false
+        pinchRef.current = null
+      }
+    }
+
+    function onTouchMove(e: TouchEvent) {
+      if (!pinchRef.current || e.touches.length < 2) return
+      e.preventDefault()
+      const t1 = e.touches[0], t2 = e.touches[1]
+      const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY)
+      const mx = (t1.clientX + t2.clientX) / 2
+      const my = (t1.clientY + t2.clientY) / 2
+      const { initDist, initScale, initTx, initTy, initMx, initMy } = pinchRef.current
+
+      const rawScale = initScale * (dist / initDist)
+      const newScale = Math.max(0.25, Math.min(10, rawScale))
+      const sf = newScale / initScale
+
+      // Keep initM fixed, then add pan delta
+      const newTx = initMx - (initMx - initTx) * sf + (mx - initMx)
+      const newTy = initMy - (initMy - initTy) * sf + (my - initMy)
+
+      viewTransformRef.current = { scale: newScale, tx: newTx, ty: newTy }
+      setViewTransform({ scale: newScale, tx: newTx, ty: newTy })
+    }
+
+    function onTouchEnd(e: TouchEvent) {
+      if (e.touches.length < 2) {
+        pinchRef.current = null
+        // Small delay before allowing drawing again to avoid accidental strokes
+        setTimeout(() => { isPinchingRef.current = false }, 80)
+      }
+    }
+
+    container.addEventListener('touchstart', onTouchStart, { passive: false })
+    container.addEventListener('touchmove',  onTouchMove,  { passive: false })
+    container.addEventListener('touchend',   onTouchEnd)
+    container.addEventListener('touchcancel', onTouchEnd)
+    return () => {
+      container.removeEventListener('touchstart', onTouchStart)
+      container.removeEventListener('touchmove',  onTouchMove)
+      container.removeEventListener('touchend',   onTouchEnd)
+      container.removeEventListener('touchcancel', onTouchEnd)
+    }
+  }, [isFullscreen])
+
   // ── Pointer events (drawing) ──────────────────────────────────────────────
 
   const getXY = (e: React.PointerEvent<HTMLCanvasElement>): number[] => {
     const rect = fgCanvasRef.current!.getBoundingClientRect()
-    return [e.clientX - rect.left, e.clientY - rect.top, e.pressure || 0.5]
+    const scale = viewTransformRef.current.scale
+    return [
+      (e.clientX - rect.left) / scale,
+      (e.clientY - rect.top)  / scale,
+      e.pressure || 0.5,
+    ]
   }
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (tool === 'select') return
+    activePointerIdsRef.current.add(e.pointerId)
+    // Block drawing if pinching or more than 1 finger
+    if (isPinchingRef.current || activePointerIdsRef.current.size > 1) {
+      activeRef.current = null
+      return
+    }
     e.currentTarget.setPointerCapture(e.pointerId)
-    const colorHex = COLORS.find(c => c.id === color)!.hex
-    activeRef.current = { points: [getXY(e)], tool: tool as Exclude<Tool, 'select'>, colorHex, size: 4 }
+    activeRef.current = {
+      points: [getXY(e)],
+      tool: tool as Exclude<Tool, 'select'>,
+      colorHex: getActiveColor(),
+      size: getActiveSize(),
+    }
   }
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!activeRef.current || e.buttons === 0) return
+    if (isPinchingRef.current || activePointerIdsRef.current.size > 1) return
     activeRef.current.points.push(getXY(e))
-    const fg = fgCanvasRef.current
-    if (!fg) return
-    const ctx = fg.getContext('2d')
-    if (!ctx) return
+    const fg = fgCanvasRef.current; if (!fg) return
+    const ctx = fg.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
     ctx.clearRect(0, 0, w, h)
     paintStroke(ctx, activeRef.current.points, activeRef.current.tool, activeRef.current.colorHex, activeRef.current.size)
   }
 
-  const onPointerUp = () => {
+  const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    activePointerIdsRef.current.delete(e.pointerId)
     const stroke = activeRef.current
     activeRef.current = null
     if (!stroke || stroke.points.length === 0) return
     const sk = skCanvasRef.current
-    if (sk) {
-      const ctx = sk.getContext('2d')
-      if (ctx) paintStroke(ctx, stroke.points, stroke.tool, stroke.colorHex, stroke.size)
-    }
+    if (sk) { const ctx = sk.getContext('2d'); if (ctx) paintStroke(ctx, stroke.points, stroke.tool, stroke.colorHex, stroke.size) }
     const fg = fgCanvasRef.current
-    if (fg) {
-      const ctx = fg.getContext('2d')
-      const { w, h } = getCSS()
-      if (ctx) ctx.clearRect(0, 0, w, h)
-    }
+    if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
     undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
     redoStackRef.current = []
     strokesRef.current = [...strokesRef.current, stroke]
-    updateHistoryState()
-    exportAndNotify()
-    notifyPagesChanged()
+    updateHistoryState(); exportAndNotify(); notifyPagesChanged()
   }
 
   // ── Image pointer events ──────────────────────────────────────────────────
@@ -582,25 +674,21 @@ export function DrawingCanvas({
   }
 
   const handleImagePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const inter = imageInteractionRef.current
-    if (!inter) return
-    const dx = (e.clientX - inter.startClientX) / inter.canvasW
-    const dy = (e.clientY - inter.startClientY) / inter.canvasH
+    const inter = imageInteractionRef.current; if (!inter) return
+    const scale = viewTransformRef.current.scale
+    const dx = (e.clientX - inter.startClientX) / (inter.canvasW * scale)
+    const dy = (e.clientY - inter.startClientY) / (inter.canvasH * scale)
     const newImages = currentImagesRef.current.map(img => {
       if (img.id !== inter.imageId) return img
-      if (inter.action === 'drag') {
+      if (inter.action === 'drag')
         return { ...img, x: clamp(inter.startX + dx, 0, 1 - img.w), y: clamp(inter.startY + dy, 0, 1 - img.h) }
-      }
-      if (inter.action === 'resize-right') {
+      if (inter.action === 'resize-right')
         return { ...img, w: Math.max(0.04, inter.startW + dx) }
-      }
-      if (inter.action === 'resize-bottom') {
+      if (inter.action === 'resize-bottom')
         return { ...img, h: Math.max(0.04, inter.startH + dy) }
-      }
       if (inter.action === 'resize-corner') {
         const newW = Math.max(0.04, inter.startW + dx)
-        const ratio = inter.startH / Math.max(0.001, inter.startW)
-        return { ...img, w: newW, h: Math.max(0.04, newW * ratio) }
+        return { ...img, w: newW, h: Math.max(0.04, newW * (inter.startH / Math.max(0.001, inter.startW))) }
       }
       return img
     })
@@ -609,97 +697,63 @@ export function DrawingCanvas({
 
   const handleImagePointerUp = () => {
     if (imageInteractionRef.current) {
-      imageInteractionRef.current = null
-      exportAndNotify()
-      notifyPagesChanged()
+      imageInteractionRef.current = null; exportAndNotify(); notifyPagesChanged()
     }
   }
 
   const deleteSelectedImage = (id: string) => {
-    const newImages = currentImagesRef.current.filter(i => i.id !== id)
-    setCurrentImages(newImages)
-    setSelectedImageId(null)
-    exportAndNotify()
-    notifyPagesChanged()
+    setCurrentImages(currentImagesRef.current.filter(i => i.id !== id))
+    setSelectedImageId(null); exportAndNotify(); notifyPagesChanged()
   }
 
   const handleCanvasImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0]; if (!file) return
     const reader = new FileReader()
     reader.onload = (ev) => {
-      const dataUrl = ev.target?.result as string
-      if (!dataUrl) return
+      const dataUrl = ev.target?.result as string; if (!dataUrl) return
       preloadImage(dataUrl)
-      const newImg: CanvasImageData = {
-        id: `img-${Date.now()}`,
-        dataUrl,
-        x: 0.05, y: 0.05, w: 0.4, h: 0.3,
-      }
-      const newImages = [...currentImagesRef.current, newImg]
-      setCurrentImages(newImages)
-      setSelectedImageId(newImg.id)
-      setTool('select')
-      exportAndNotify()
-      notifyPagesChanged()
+      const newImg: CanvasImageData = { id: `img-${Date.now()}`, dataUrl, x: 0.05, y: 0.05, w: 0.4, h: 0.3 }
+      setCurrentImages([...currentImagesRef.current, newImg])
+      setSelectedImageId(newImg.id); setTool('select')
+      exportAndNotify(); notifyPagesChanged()
     }
-    reader.readAsDataURL(file)
-    e.target.value = ''
+    reader.readAsDataURL(file); e.target.value = ''
   }
 
   // ── Undo / Redo / Clear ───────────────────────────────────────────────────
 
   const handleUndo = () => {
     if (undoStackRef.current.length === 0) return
-    const snapshot = undoStackRef.current[undoStackRef.current.length - 1]
+    const snap = undoStackRef.current[undoStackRef.current.length - 1]
     redoStackRef.current = [...redoStackRef.current, [...strokesRef.current]]
     undoStackRef.current = undoStackRef.current.slice(0, -1)
-    strokesRef.current = [...snapshot]
-    redrawStrokeCanvas(strokesRef.current)
-    updateHistoryState()
-    exportAndNotify()
-    notifyPagesChanged()
+    strokesRef.current = [...snap]
+    redrawStrokeCanvas(strokesRef.current); updateHistoryState(); exportAndNotify(); notifyPagesChanged()
   }
 
   const handleRedo = () => {
     if (redoStackRef.current.length === 0) return
-    const snapshot = redoStackRef.current[redoStackRef.current.length - 1]
+    const snap = redoStackRef.current[redoStackRef.current.length - 1]
     undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
     redoStackRef.current = redoStackRef.current.slice(0, -1)
-    strokesRef.current = [...snapshot]
-    redrawStrokeCanvas(strokesRef.current)
-    updateHistoryState()
-    exportAndNotify()
-    notifyPagesChanged()
+    strokesRef.current = [...snap]
+    redrawStrokeCanvas(strokesRef.current); updateHistoryState(); exportAndNotify(); notifyPagesChanged()
   }
 
   const handleClear = () => {
     setShowClearConfirm(false)
     undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
-    redoStackRef.current = []
-    strokesRef.current = []
+    redoStackRef.current = []; strokesRef.current = []
     const sk = skCanvasRef.current
-    if (sk) {
-      const { w, h } = getCSS()
-      sk.getContext('2d')?.clearRect(0, 0, w, h)
-    }
-    updateHistoryState()
-    exportAndNotify()
-    notifyPagesChanged()
+    if (sk) { const { w, h } = getCSS(); sk.getContext('2d')?.clearRect(0, 0, w, h) }
+    updateHistoryState(); exportAndNotify(); notifyPagesChanged()
   }
 
-  // ── Background image upload ───────────────────────────────────────────────
-
   const handleBgImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+    const file = e.target.files?.[0]; if (!file) return
     const reader = new FileReader()
-    reader.onload = (ev) => {
-      const dataUrl = ev.target?.result as string
-      if (dataUrl) setPageBackground({ type: 'image', dataUrl })
-    }
-    reader.readAsDataURL(file)
-    e.target.value = ''
+    reader.onload = (ev) => { const d = ev.target?.result as string; if (d) setPageBackground({ type: 'image', dataUrl: d }) }
+    reader.readAsDataURL(file); e.target.value = ''
   }
 
   // ── PDF export ────────────────────────────────────────────────────────────
@@ -712,8 +766,7 @@ export function DrawingCanvas({
       const { jsPDF } = await import('jspdf')
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' })
       const { w, h } = getCSS()
-      const dpr = window.devicePixelRatio || 1
-
+      const dpr = Math.max(2, window.devicePixelRatio || 2)
       for (let i = 0; i < pagesRef.current.length; i++) {
         if (i > 0) doc.addPage()
         const page = pagesRef.current[i]
@@ -741,7 +794,7 @@ export function DrawingCanvas({
     const { w, h } = getCSS()
     const page = pagesRef.current[curIdxRef.current]
     const images = currentImagesRef.current
-    const dpr = window.devicePixelRatio || 1
+    const dpr = Math.max(2, window.devicePixelRatio || 2)
     const canvas = document.createElement('canvas')
     canvas.width  = Math.round(w * dpr)
     canvas.height = Math.round(h * dpr)
@@ -753,9 +806,22 @@ export function DrawingCanvas({
     onAnalyzeRequest(canvas.toDataURL('image/png'))
   }, [onAnalyzeRequest, getCSS])
 
+  // ── Size UI helpers ───────────────────────────────────────────────────────
+
+  const currentSizeIdx = tool === 'pen' ? penSizeIdx : tool === 'highlighter' ? hlSizeIdx : erSizeIdx
+  const setCurrentSizeIdx = tool === 'pen' ? setPenSizeIdx : tool === 'highlighter' ? setHlSizeIdx : setErSizeIdx
+
   // ── Render ────────────────────────────────────────────────────────────────
 
   const selectedImg = currentImagesState.find(i => i.id === selectedImageId) ?? null
+
+  // Shared page style to prevent selection/callout
+  const noSelectStyle: React.CSSProperties = {
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
+    // @ts-ignore
+    WebkitTouchCallout: 'none',
+  }
 
   return (
     <div className={`flex flex-col ${isFullscreen ? 'h-full w-full' : ''}`}>
@@ -763,9 +829,7 @@ export function DrawingCanvas({
       {/* ── Background picker panel ── */}
       {showBgPicker && (
         <div className="flex items-center gap-1.5 px-3 py-2 border-t border-border bg-surface shrink-0 flex-wrap">
-          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider mr-1 shrink-0">
-            Hintergrund
-          </span>
+          <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider mr-1 shrink-0">Hintergrund</span>
           {BG_OPTIONS.map(({ type, label }) => (
             <button
               key={type}
@@ -773,7 +837,7 @@ export function DrawingCanvas({
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-[11px] font-semibold border transition-all press-sm"
               style={
                 currentBgType === type
-                  ? { background: 'rgba(var(--color-accent),0.12)', border: '1px solid rgba(var(--color-accent),0.5)', color: 'rgb(var(--color-accent))' }
+                  ? { background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
                   : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }
               }
             >
@@ -786,7 +850,7 @@ export function DrawingCanvas({
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-[11px] font-semibold border border-border/60 text-text-secondary transition-all press-sm"
             style={
               currentBgType === 'image'
-                ? { background: 'rgba(var(--color-accent),0.12)', border: '1px solid rgba(var(--color-accent),0.5)', color: 'rgb(var(--color-accent))' }
+                ? { background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
                 : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }
             }
           >
@@ -800,14 +864,13 @@ export function DrawingCanvas({
       {/* ── Main toolbar ── */}
       <div className="flex items-center gap-2 px-3 py-2.5 border-t border-border bg-surface shrink-0 flex-wrap">
 
-        {/* Back button — fullscreen only */}
+        {/* Back */}
         {isFullscreen && onBack && (
           <>
             <button
               onClick={onBack}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
               style={{ background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
-              title="Zurück und speichern"
             >
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
@@ -824,10 +887,9 @@ export function DrawingCanvas({
           className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
           style={
             showBgPicker
-              ? { background: 'rgba(var(--color-accent),0.15)', border: '1px solid rgba(var(--color-accent),0.5)', color: 'rgb(var(--color-accent))' }
+              ? { background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
               : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
           }
-          title="Hintergrund wechseln"
         >
           <BgIcon type={currentBgType} size={11} />
           Seite
@@ -837,28 +899,28 @@ export function DrawingCanvas({
 
         {/* Tool pills */}
         <div className="flex items-center gap-1.5">
-          {/* Select tool */}
+          {/* Select */}
           <button
             onClick={() => setTool('select')}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
             style={
               tool === 'select'
-                ? { background: 'rgba(var(--color-accent),0.15)', border: '1px solid rgba(var(--color-accent),0.5)', color: 'rgb(var(--color-accent))' }
+                ? { background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.5)', color: '#7C3AED' }
                 : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
             }
-            title="Objekte auswählen"
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M5 3l14 9-7 1-4 6-3-16z" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
 
+          {/* Stift — explicit purple pill */}
           <button
             onClick={() => setTool('pen')}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
             style={
               tool === 'pen'
-                ? { background: 'rgba(var(--color-accent),0.15)', border: '1px solid rgba(var(--color-accent),0.5)', color: 'rgb(var(--color-accent))' }
+                ? { background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.55)', color: '#7C3AED' }
                 : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }
             }
           >
@@ -868,6 +930,7 @@ export function DrawingCanvas({
             Stift
           </button>
 
+          {/* Marker */}
           <button
             onClick={() => setTool('highlighter')}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
@@ -884,6 +947,7 @@ export function DrawingCanvas({
             Marker
           </button>
 
+          {/* Radier */}
           <button
             onClick={() => setTool('eraser')}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
@@ -901,7 +965,36 @@ export function DrawingCanvas({
           </button>
         </div>
 
-        {/* Image upload button — fullscreen only */}
+        {/* Size picker — S/M/L dots for drawing tools */}
+        {(tool === 'pen' || tool === 'highlighter' || tool === 'eraser') && (
+          <>
+            <div className="w-px h-4 bg-border/60 shrink-0" />
+            <div className="flex items-center gap-0.5">
+              {([0, 1, 2] as const).map(sIdx => {
+                const isActive = currentSizeIdx === sIdx
+                const visualSz = [5, 8, 12][sIdx]
+                const dotColor = tool === 'eraser'
+                  ? (isActive ? '#888' : '#bbb')
+                  : (isActive ? colors[activeColorIdx] : colors[activeColorIdx] + '66')
+                return (
+                  <button
+                    key={sIdx}
+                    onClick={() => setCurrentSizeIdx(sIdx)}
+                    className="flex items-center justify-center w-7 h-7 rounded-full transition-all press-sm"
+                    style={{
+                      background: isActive ? 'rgba(124,58,237,0.1)' : 'transparent',
+                      border: `1.5px solid ${isActive ? 'rgba(124,58,237,0.45)' : 'transparent'}`,
+                    }}
+                  >
+                    <div style={{ width: visualSz, height: visualSz, borderRadius: '50%', background: dotColor }} />
+                  </button>
+                )
+              })}
+            </div>
+          </>
+        )}
+
+        {/* Image upload — fullscreen only */}
         {isFullscreen && (
           <>
             <div className="w-px h-4 bg-border/60 shrink-0" />
@@ -909,7 +1002,6 @@ export function DrawingCanvas({
               onClick={() => canvasImgInputRef.current?.click()}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
               style={{ background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-muted))' }}
-              title="Foto in Canvas einfügen"
             >
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                 <rect x="3" y="3" width="18" height="18" rx="2" />
@@ -924,27 +1016,40 @@ export function DrawingCanvas({
 
         <div className="w-px h-4 bg-border/60 shrink-0" />
 
-        {/* Color dots — pen/highlighter only */}
+        {/* 6 Color dots — tap to select, tap selected to edit */}
         {(tool === 'pen' || tool === 'highlighter') && (
           <>
-            <div className="flex items-center gap-2">
-              {COLORS.map(c => (
-                <button
-                  key={c.id}
-                  onClick={() => setColor(c.id)}
-                  className="transition-all press-sm shrink-0"
-                  style={{
-                    width: color === c.id ? 20 : 14,
-                    height: color === c.id ? 20 : 14,
-                    borderRadius: '50%',
-                    backgroundColor: tool === 'highlighter' ? c.hex + '99' : c.hex,
-                    border: color === c.id ? '2.5px solid white' : '2px solid transparent',
-                    boxShadow: color === c.id ? `0 0 0 2px ${c.hex}80` : 'none',
-                    opacity: color === c.id ? 1 : 0.55,
-                  }}
-                />
-              ))}
+            <div className="flex items-center gap-1.5">
+              {colors.map((hex, idx) => {
+                const isActive = activeColorIdx === idx
+                const displayHex = tool === 'highlighter' ? hex + '99' : hex
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleColorDotClick(idx)}
+                    className="transition-all press-sm shrink-0 relative"
+                    style={{
+                      width: isActive ? 20 : 15,
+                      height: isActive ? 20 : 15,
+                      borderRadius: '50%',
+                      backgroundColor: displayHex,
+                      border: isActive ? '2.5px solid white' : '2px solid transparent',
+                      boxShadow: isActive ? `0 0 0 2px ${hex}90` : 'none',
+                      opacity: isActive ? 1 : 0.6,
+                    }}
+                    title={isActive ? 'Farbe ändern' : 'Farbe wählen'}
+                  />
+                )
+              })}
             </div>
+            {/* Hidden native color picker */}
+            <input
+              ref={colorInputRef}
+              type="color"
+              className="opacity-0 absolute pointer-events-none"
+              style={{ width: 0, height: 0 }}
+              onChange={handleColorPickerChange}
+            />
             <div className="w-px h-4 bg-border/60 shrink-0" />
           </>
         )}
@@ -952,12 +1057,8 @@ export function DrawingCanvas({
         {/* Undo / Redo */}
         <div className="flex items-center gap-1">
           <button
-            onClick={handleUndo}
-            disabled={!canUndo}
-            className={`p-1.5 rounded-pill border border-border/60 hover:bg-surface-hover transition-all press-sm shrink-0 ${
-              !canUndo ? 'opacity-30 cursor-not-allowed text-text-muted' : 'text-text-secondary'
-            }`}
-            title="Zurück"
+            onClick={handleUndo} disabled={!canUndo}
+            className={`p-1.5 rounded-pill border border-border/60 hover:bg-surface-hover transition-all press-sm shrink-0 ${!canUndo ? 'opacity-30 cursor-not-allowed text-text-muted' : 'text-text-secondary'}`}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M3 7v6h6" strokeLinecap="round" strokeLinejoin="round" />
@@ -965,12 +1066,8 @@ export function DrawingCanvas({
             </svg>
           </button>
           <button
-            onClick={handleRedo}
-            disabled={!canRedo}
-            className={`p-1.5 rounded-pill border border-border/60 hover:bg-surface-hover transition-all press-sm shrink-0 ${
-              !canRedo ? 'opacity-30 cursor-not-allowed text-text-muted' : 'text-text-secondary'
-            }`}
-            title="Wiederholen"
+            onClick={handleRedo} disabled={!canRedo}
+            className={`p-1.5 rounded-pill border border-border/60 hover:bg-surface-hover transition-all press-sm shrink-0 ${!canRedo ? 'opacity-30 cursor-not-allowed text-text-muted' : 'text-text-secondary'}`}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M21 7v6h-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -986,31 +1083,14 @@ export function DrawingCanvas({
           showClearConfirm ? (
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="text-[11px] font-semibold text-text-secondary">Seite löschen?</span>
-              <button
-                onClick={handleClear}
-                className="px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
-                style={{ background: 'rgba(255,59,48,0.12)', border: '1px solid rgba(255,59,48,0.45)', color: '#FF3B30' }}
-              >
-                Ja
-              </button>
-              <button
-                onClick={() => setShowClearConfirm(false)}
-                className="px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm"
-                style={{ background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
-              >
-                Nein
-              </button>
+              <button onClick={handleClear} className="px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm" style={{ background: 'rgba(255,59,48,0.12)', border: '1px solid rgba(255,59,48,0.45)', color: '#FF3B30' }}>Ja</button>
+              <button onClick={() => setShowClearConfirm(false)} className="px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm" style={{ background: 'transparent', border: '1px solid rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}>Nein</button>
             </div>
           ) : (
             <button
-              onClick={() => hasContent && setShowClearConfirm(true)}
-              disabled={!hasContent}
+              onClick={() => hasContent && setShowClearConfirm(true)} disabled={!hasContent}
               className="flex items-center gap-1 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
-              style={
-                hasContent
-                  ? { background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.35)', color: '#FF3B30' }
-                  : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', opacity: 0.4, cursor: 'not-allowed' }
-              }
+              style={hasContent ? { background: 'rgba(255,59,48,0.1)', border: '1px solid rgba(255,59,48,0.35)', color: '#FF3B30' } : { background: 'transparent', border: '1px solid rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', opacity: 0.4, cursor: 'not-allowed' }}
             >
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
@@ -1020,13 +1100,12 @@ export function DrawingCanvas({
           )
         )}
 
-        {/* KI-Analyse — fullscreen only */}
+        {/* KI-Analyse */}
         {isFullscreen && !showClearConfirm && onAnalyzeRequest && (
           <button
             onClick={handleAnalyzeRequest}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0"
             style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.4)', color: '#059669' }}
-            title="Handschrift analysieren"
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" />
@@ -1036,19 +1115,12 @@ export function DrawingCanvas({
           </button>
         )}
 
-        {/* PDF export — fullscreen only */}
+        {/* PDF export */}
         {isFullscreen && !showClearConfirm && (
           <button
-            onClick={handleExportPDF}
-            disabled={isExporting}
+            onClick={handleExportPDF} disabled={isExporting}
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-pill text-[11px] font-bold transition-all press-sm shrink-0 ml-1"
-            style={{
-              background: 'rgba(var(--color-accent),0.12)',
-              border: '1px solid rgba(var(--color-accent),0.45)',
-              color: 'rgb(var(--color-accent))',
-              opacity: isExporting ? 0.6 : 1,
-              cursor: isExporting ? 'not-allowed' : 'pointer',
-            }}
+            style={{ background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.45)', color: '#7C3AED', opacity: isExporting ? 0.6 : 1, cursor: isExporting ? 'not-allowed' : 'pointer' }}
           >
             {isExporting ? (
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="animate-spin">
@@ -1069,188 +1141,129 @@ export function DrawingCanvas({
       {isFullscreen ? (
         <div
           ref={containerRef}
-          className="flex-1 flex items-center justify-center overflow-hidden"
-          style={{ backgroundColor: '#E2E4E9' }}
+          className="flex-1 relative overflow-hidden"
+          style={{ backgroundColor: '#E2E4E9', ...noSelectStyle }}
+          onContextMenu={(e) => e.preventDefault()}
         >
+          {/* Transform wrapper — this is what gets zoomed/panned */}
           <div
-            ref={pageRef}
-            className="relative shrink-0"
+            ref={pageWrapRef}
             style={{
-              backgroundColor: '#FFFFFF',
-              touchAction: 'none',
-              boxShadow: '0 8px 40px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
+              position: 'absolute',
+              top: 0, left: 0,
+              transformOrigin: '0 0',
+              transform: `translate(${viewTransform.tx}px, ${viewTransform.ty}px) scale(${viewTransform.scale})`,
+              willChange: 'transform',
             }}
           >
-            {/* z-1: background canvas */}
-            <canvas ref={bgCanvasRef} className="absolute inset-0 w-full h-full" style={{ zIndex: 1, pointerEvents: 'none' }} />
-
-            {/* z-2: image layer (interactive in select mode) */}
+            {/* A4 page */}
             <div
-              className="absolute inset-0"
-              style={{ zIndex: 2, pointerEvents: tool === 'select' ? 'auto' : 'none' }}
-              onClick={() => setSelectedImageId(null)}
-            >
-              {currentImagesState.map(img => (
-                <div
-                  key={img.id}
-                  style={{
-                    position: 'absolute',
-                    left: `${img.x * 100}%`,
-                    top: `${img.y * 100}%`,
-                    width: `${img.w * 100}%`,
-                    height: `${img.h * 100}%`,
-                    cursor: 'move',
-                    boxSizing: 'border-box',
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                  onPointerDown={(e) => handleImagePointerDown(e, img, 'drag')}
-                  onPointerMove={handleImagePointerMove}
-                  onPointerUp={handleImagePointerUp}
-                  onPointerCancel={handleImagePointerUp}
-                >
-                  <img
-                    src={img.dataUrl}
-                    style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none', userSelect: 'none', objectFit: 'fill' }}
-                    draggable={false}
-                    alt=""
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* z-3: stroke canvas (display only) */}
-            <canvas ref={skCanvasRef} className="absolute inset-0 w-full h-full" style={{ zIndex: 3, pointerEvents: 'none' }} />
-
-            {/* z-4: active stroke canvas */}
-            <canvas
-              ref={fgCanvasRef}
-              className="absolute inset-0 w-full h-full"
+              ref={pageRef}
+              className="relative shrink-0"
               style={{
-                zIndex: 4,
-                cursor: tool === 'eraser' ? 'cell' : tool === 'select' ? 'default' : 'crosshair',
-                pointerEvents: tool === 'select' ? 'none' : 'auto',
-                touchAction: 'none',
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 8px 40px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.10)',
+                ...noSelectStyle,
               }}
-              onPointerDown={onPointerDown}
-              onPointerMove={onPointerMove}
-              onPointerUp={onPointerUp}
-              onPointerLeave={onPointerUp}
-              onPointerCancel={onPointerUp}
-            />
+            >
+              {/* bg canvas */}
+              <canvas ref={bgCanvasRef} className="absolute inset-0 w-full h-full" style={{ zIndex: 1, pointerEvents: 'none' }} />
 
-            {/* z-5: selection handles (above strokes when in select mode) */}
-            {tool === 'select' && selectedImg && (() => {
-              const { w: cw, h: ch } = canvasSizeRef.current
-              const px = selectedImg.x * cw
-              const py = selectedImg.y * ch
-              const pw = selectedImg.w * cw
-              const ph = selectedImg.h * ch
-              const handleStyle: React.CSSProperties = {
-                position: 'absolute',
-                background: '#7C3AED',
-                borderRadius: 3,
-              }
-              return (
-                <div
-                  style={{
-                    position: 'absolute',
-                    zIndex: 5,
-                    left: px,
-                    top: py,
-                    width: pw,
-                    height: ph,
-                    boxSizing: 'border-box',
-                    border: '2px solid #7C3AED',
-                    pointerEvents: 'none',
-                  }}
-                >
-                  {/* Delete */}
+              {/* image layer */}
+              <div
+                className="absolute inset-0"
+                style={{ zIndex: 2, pointerEvents: tool === 'select' ? 'auto' : 'none' }}
+                onClick={() => setSelectedImageId(null)}
+              >
+                {currentImagesState.map(img => (
                   <div
-                    style={{
-                      position: 'absolute', top: -12, right: -12,
-                      width: 22, height: 22,
-                      background: '#FF3B30', borderRadius: '50%',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      cursor: 'pointer', pointerEvents: 'auto',
-                    }}
-                    onPointerDown={(e) => { e.stopPropagation(); deleteSelectedImage(selectedImg.id) }}
+                    key={img.id}
+                    style={{ position: 'absolute', left: `${img.x * 100}%`, top: `${img.y * 100}%`, width: `${img.w * 100}%`, height: `${img.h * 100}%`, cursor: 'move', boxSizing: 'border-box' }}
+                    onClick={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => handleImagePointerDown(e, img, 'drag')}
+                    onPointerMove={handleImagePointerMove}
+                    onPointerUp={handleImagePointerUp}
+                    onPointerCancel={handleImagePointerUp}
                   >
-                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
-                      <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-                    </svg>
+                    <img src={img.dataUrl} style={{ width: '100%', height: '100%', display: 'block', pointerEvents: 'none', userSelect: 'none', objectFit: 'fill' }} draggable={false} alt="" />
                   </div>
-                  {/* Right resize */}
-                  <div
-                    style={{ ...handleStyle, right: -5, top: '50%', transform: 'translateY(-50%)', width: 10, height: 28, cursor: 'ew-resize', pointerEvents: 'auto' }}
-                    onPointerDown={(e) => { e.stopPropagation(); handleImagePointerDown(e, selectedImg, 'resize-right') }}
-                    onPointerMove={handleImagePointerMove}
-                    onPointerUp={handleImagePointerUp}
-                    onPointerCancel={handleImagePointerUp}
-                  />
-                  {/* Bottom resize */}
-                  <div
-                    style={{ ...handleStyle, bottom: -5, left: '50%', transform: 'translateX(-50%)', width: 28, height: 10, cursor: 'ns-resize', pointerEvents: 'auto' }}
-                    onPointerDown={(e) => { e.stopPropagation(); handleImagePointerDown(e, selectedImg, 'resize-bottom') }}
-                    onPointerMove={handleImagePointerMove}
-                    onPointerUp={handleImagePointerUp}
-                    onPointerCancel={handleImagePointerUp}
-                  />
-                  {/* Corner resize */}
-                  <div
-                    style={{ ...handleStyle, right: -5, bottom: -5, width: 14, height: 14, cursor: 'nwse-resize', pointerEvents: 'auto' }}
-                    onPointerDown={(e) => { e.stopPropagation(); handleImagePointerDown(e, selectedImg, 'resize-corner') }}
-                    onPointerMove={handleImagePointerMove}
-                    onPointerUp={handleImagePointerUp}
-                    onPointerCancel={handleImagePointerUp}
-                  />
-                </div>
-              )
-            })()}
-
-            {/* Page strip */}
-            <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none" style={{ zIndex: 6 }}>
-              <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1.5 pointer-events-auto">
-                {Array.from({ length: pageCount }).map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => goToPage(i)}
-                    className="transition-all press-sm"
-                    style={{
-                      width: i === currentIdx ? 22 : 8,
-                      height: 8,
-                      borderRadius: 4,
-                      backgroundColor: i === currentIdx ? '#1A1A2E' : 'rgba(0,0,0,0.2)',
-                    }}
-                    title={`Seite ${i + 1}`}
-                  />
                 ))}
-                <div className="w-px h-3 bg-black/15 mx-0.5" />
-                <button
-                  onClick={addPage}
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-black/40 hover:text-black/70 hover:bg-black/8 transition-all press-sm"
-                  title="Neue Seite"
-                >
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                    <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-                  </svg>
-                </button>
               </div>
+
+              {/* stroke canvas */}
+              <canvas ref={skCanvasRef} className="absolute inset-0 w-full h-full" style={{ zIndex: 3, pointerEvents: 'none' }} />
+
+              {/* active stroke canvas */}
+              <canvas
+                ref={fgCanvasRef}
+                className="absolute inset-0 w-full h-full"
+                style={{
+                  zIndex: 4,
+                  cursor: tool === 'eraser' ? 'cell' : tool === 'select' ? 'default' : 'crosshair',
+                  pointerEvents: tool === 'select' ? 'none' : 'auto',
+                  touchAction: 'none',
+                }}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+                onPointerLeave={onPointerUp}
+                onPointerCancel={onPointerUp}
+              />
+
+              {/* selection handles */}
+              {tool === 'select' && selectedImg && (() => {
+                const { w: cw, h: ch } = canvasSizeRef.current
+                const px = selectedImg.x * cw, py = selectedImg.y * ch
+                const pw = selectedImg.w * cw, ph = selectedImg.h * ch
+                const hs: React.CSSProperties = { position: 'absolute', background: '#7C3AED', borderRadius: 3 }
+                return (
+                  <div style={{ position: 'absolute', zIndex: 5, left: px, top: py, width: pw, height: ph, boxSizing: 'border-box', border: '2px solid #7C3AED', pointerEvents: 'none' }}>
+                    <div style={{ position: 'absolute', top: -12, right: -12, width: 22, height: 22, background: '#FF3B30', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', pointerEvents: 'auto' }} onPointerDown={(e) => { e.stopPropagation(); deleteSelectedImage(selectedImg.id) }}>
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" /></svg>
+                    </div>
+                    <div style={{ ...hs, right: -5, top: '50%', transform: 'translateY(-50%)', width: 10, height: 28, cursor: 'ew-resize', pointerEvents: 'auto' }} onPointerDown={(e) => { e.stopPropagation(); handleImagePointerDown(e, selectedImg, 'resize-right') }} onPointerMove={handleImagePointerMove} onPointerUp={handleImagePointerUp} onPointerCancel={handleImagePointerUp} />
+                    <div style={{ ...hs, bottom: -5, left: '50%', transform: 'translateX(-50%)', width: 28, height: 10, cursor: 'ns-resize', pointerEvents: 'auto' }} onPointerDown={(e) => { e.stopPropagation(); handleImagePointerDown(e, selectedImg, 'resize-bottom') }} onPointerMove={handleImagePointerMove} onPointerUp={handleImagePointerUp} onPointerCancel={handleImagePointerUp} />
+                    <div style={{ ...hs, right: -5, bottom: -5, width: 14, height: 14, cursor: 'nwse-resize', pointerEvents: 'auto' }} onPointerDown={(e) => { e.stopPropagation(); handleImagePointerDown(e, selectedImg, 'resize-corner') }} onPointerMove={handleImagePointerMove} onPointerUp={handleImagePointerUp} onPointerCancel={handleImagePointerUp} />
+                  </div>
+                )
+              })()}
+            </div>
+          </div>
+
+          {/* Page strip — outside transform wrapper so it stays fixed at bottom */}
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none" style={{ zIndex: 10 }}>
+            <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1.5 pointer-events-auto">
+              {Array.from({ length: pageCount }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goToPage(i)}
+                  className="transition-all press-sm"
+                  style={{ width: i === currentIdx ? 22 : 8, height: 8, borderRadius: 4, backgroundColor: i === currentIdx ? '#1A1A2E' : 'rgba(0,0,0,0.2)' }}
+                />
+              ))}
+              <div className="w-px h-3 bg-black/15 mx-0.5" />
+              <button onClick={addPage} className="w-6 h-6 rounded-full flex items-center justify-center text-black/40 hover:text-black/70 transition-all press-sm">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
       ) : (
-        // Inline mode: simple canvas preview, no image interaction
+        // Inline mode
         <div
           ref={containerRef}
           className="relative w-full"
-          style={{ height: '220px', touchAction: 'none', backgroundColor: '#FFFFFF' }}
+          style={{ height: '220px', touchAction: 'none', backgroundColor: '#FFFFFF', ...noSelectStyle }}
+          onContextMenu={(e) => e.preventDefault()}
         >
           <canvas ref={bgCanvasRef} className="absolute inset-0 w-full h-full" />
           <canvas ref={skCanvasRef} className="absolute inset-0 w-full h-full" style={{ pointerEvents: 'none' }} />
           <canvas
             ref={fgCanvasRef}
             className="absolute inset-0 w-full h-full"
-            style={{ cursor: tool === 'eraser' ? 'cell' : 'crosshair' }}
+            style={{ cursor: tool === 'eraser' ? 'cell' : 'crosshair', touchAction: 'none' }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
