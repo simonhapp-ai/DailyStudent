@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
+import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 
 function toDateStr(d: Date): string {
