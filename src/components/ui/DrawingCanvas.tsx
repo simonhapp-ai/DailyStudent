@@ -363,12 +363,6 @@ function getStrokesBBox(strokes: StrokeRecord[]): { x: number; y: number; w: num
   return { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 }
 }
 
-function scaleGeomShape(shape: GeomShape, sf: number, cx: number, cy: number): GeomShape {
-  const sc = (v: number, c: number) => c + (v - c) * sf
-  if (shape.kind === 'line') return { kind: 'line', x1: sc(shape.x1,cx)+0, y1: sc(shape.y1,cy)+0, x2: sc(shape.x2,cx)+0, y2: sc(shape.y2,cy)+0 }
-  if (shape.kind === 'rect') return { kind: 'rect', x: sc(shape.x,cx), y: sc(shape.y,cy), w: Math.max(10,shape.w*sf), h: Math.max(10,shape.h*sf) }
-  return { kind: 'ellipse', cx: sc(shape.cx,cx), cy: sc(shape.cy,cy), rx: Math.max(8,shape.rx*sf), ry: Math.max(8,shape.ry*sf) }
-}
 
 function applyTransformToStroke(
   s: StrokeRecord,
@@ -473,7 +467,6 @@ export function DrawingCanvas({
   const [penOnlyMode, setPenOnlyMode] = useState(() => localStorage.getItem(PEN_ONLY_KEY) === '1')
   const penOnlyModeRef = useRef(penOnlyMode)
   useEffect(() => { penOnlyModeRef.current = penOnlyMode }, [penOnlyMode])
-  useEffect(() => { if (tool !== 'lasso') { selectionRef.current = null; setSelection(null) } }, [tool])
 
   // Single-finger pan state (used in pen-only mode)
   const singleTouchRef = useRef<{
@@ -523,7 +516,6 @@ export function DrawingCanvas({
   const [isExporting,      setIsExporting]      = useState(false)
   const [canUndo,  setCanUndo]  = useState(false)
   const [canRedo,  setCanRedo]  = useState(false)
-  const [hasContent, setHasContent] = useState(false)
   const mountedRef = useRef(false)
 
   // Lasso selection
@@ -537,6 +529,8 @@ export function DrawingCanvas({
     snapshots: StrokeRecord[]
     origBBox: { x: number; y: number; w: number; h: number }
   } | null>(null)
+
+  useEffect(() => { if (tool !== 'lasso') { selectionRef.current = null; setSelection(null) } }, [tool])
 
   // Geometry snap
   const GEOM_HOLD_MS = 400
@@ -1046,7 +1040,7 @@ export function DrawingCanvas({
     if (isPinchingRef.current || activePointerIdsRef.current.size > 1) { activeRef.current = null; return }
     e.currentTarget.setPointerCapture(e.pointerId)
     const drawTool: Exclude<Tool, 'select' | 'geometry' | 'lasso'> =
-      (tool === 'geometry' || tool === 'lasso') ? 'pen' : tool as Exclude<Tool, 'select' | 'geometry' | 'lasso'>
+      tool === 'geometry' ? 'pen' : tool as Exclude<Tool, 'select' | 'geometry' | 'lasso'>
     activeRef.current = {
       points: [getXY(e)],
       tool: drawTool,
