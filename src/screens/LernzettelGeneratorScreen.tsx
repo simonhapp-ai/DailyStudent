@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
 import { generateLernzettel } from '../lib/groq'
-import { SUBJECT_INFO, getTopicPlaceholder } from '../data/subjectInfo'
+import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import type { Lernzettel } from '../types'
 
 const G_LERNZETTEL = 'linear-gradient(145deg, #5AC8FA, #007BB8)'
@@ -54,7 +54,7 @@ export function LernzettelGeneratorScreen() {
 
   const handleGenerate = async () => {
     if (!selectedSubjectId) return
-    const info = SUBJECT_INFO[selectedSubjectId]
+    const info = resolveSubjectInfo(selectedSubjectId, profile?.customFaecher)
     const subjectName = info?.name ?? selectedSubjectId
     const smartNotes = selectedNoteIds
       .map((id) => generatedNotes[id])
@@ -146,7 +146,7 @@ export function LernzettelGeneratorScreen() {
           <div className="space-y-2.5">
             <p className="section-label px-0.5 mb-1">Fach wählen</p>
             {availableSubjectIds.map((subjectId) => {
-              const info = SUBJECT_INFO[subjectId]
+              const info = resolveSubjectInfo(subjectId, profile?.customFaecher)
               const noteCount = userNotes.filter(
                 (n) => n.subjectId === subjectId && generatedNotes[n.id]
               ).length
@@ -394,7 +394,7 @@ export function LernzettelGeneratorScreen() {
                     Du hast keine Smart Notes ausgewählt. Die KI erstellt den Lernzettel{' '}
                     {selectedTopics.length > 0
                       ? <>nur auf Basis der Kerncurriculum-Daten für <strong className="text-text-primary">{selectedTopics.slice(0, 2).join(', ')}{selectedTopics.length > 2 ? ' …' : ''}</strong>.</>
-                      : <>nur auf Basis der allgemeinen Kerncurriculum-Daten für <strong className="text-text-primary">{SUBJECT_INFO[selectedSubjectId ?? '']?.name ?? 'dieses Fach'}</strong>.</>
+                      : <>nur auf Basis der allgemeinen Kerncurriculum-Daten für <strong className="text-text-primary">{selectedSubjectId ? resolveSubjectInfo(selectedSubjectId, profile?.customFaecher).name : 'dieses Fach'}</strong>.</>
                     }{' '}
                     Das Ergebnis ist weniger auf deine Unterrichtsinhalte abgestimmt.
                   </p>

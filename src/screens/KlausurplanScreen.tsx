@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO, getTopicPlaceholder } from '../data/subjectInfo'
+import { SUBJECT_INFO, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 
 function toDateStr(d: Date): string {
@@ -122,8 +122,7 @@ export function KlausurplanScreen() {
                 <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Fach</p>
                 <div className="grid grid-cols-3 gap-1.5">
                   {faecher.map((id) => {
-                    const subj = SUBJECT_INFO[id]
-                    if (!subj) return null
+                    const subj = resolveSubjectInfo(id, profile?.customFaecher)
                     const active = subjectId === id
                     return (
                       <button
@@ -211,7 +210,7 @@ export function KlausurplanScreen() {
             <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">Anstehend</p>
             <div className="space-y-2">
               {upcoming.map((k) => {
-                const subj = SUBJECT_INFO[k.subjectId]
+                const subj = resolveSubjectInfo(k.subjectId, profile?.customFaecher)
                 const days = daysLeft(k.date)
                 const badgeStyle = days === 0
                   ? { bg: 'rgba(255,59,48,0.15)', color: '#FF3B30' }
@@ -279,7 +278,7 @@ export function KlausurplanScreen() {
             <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">Vergangen</p>
             <div className="space-y-2">
               {past.map((k) => {
-                const subj = SUBJECT_INFO[k.subjectId]
+                const subj = resolveSubjectInfo(k.subjectId, profile?.customFaecher)
                 return (
                   <div
                     key={`past-${k.subjectId}-${k.date}`}

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser, type EntryType, type PersonalEntry, type KlausurTermin } from '../context/UserContext'
-import { SUBJECT_INFO, getTopicPlaceholder } from '../data/subjectInfo'
+import { SUBJECT_INFO, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 import type { StundenplanSlot, Stundenplan, AbiHalbjahr, UserNote } from '../types'
 import type { StandaloneHomeworkItem } from '../context/UserContext'
@@ -1677,6 +1677,7 @@ function KlausurFormFields({
 const SP_DAY_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr'] as const
 
 function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: string[]; onSave: (slots: StundenplanSlot[]) => void; initialSlots?: StundenplanSlot[] }) {
+  const { profile: spProfile } = useUser()
   const [open, setOpen] = useState(() => !!initialSlots)
   const [mode, setMode] = useState<'choose' | 'manual' | 'scan'>(() => (initialSlots && initialSlots.length > 0 ? 'manual' : 'choose'))
   const [slots, setSlots] = useState<StundenplanSlot[]>(initialSlots ?? [])
@@ -1689,7 +1690,7 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
   const [scanError, setScanError] = useState('')
   const [fromAI, setFromAI] = useState(false)
 
-  const profileSubjects = faecher.map((id) => SUBJECT_INFO[id] ? { id, ...SUBJECT_INFO[id] } : null).filter((s): s is { id: string; name: string; icon: string; color: string } => s !== null)
+  const profileSubjects = faecher.map((id) => ({ id, ...resolveSubjectInfo(id, spProfile?.customFaecher) }))
   const daySlots = slots.filter((s) => s.day === activeDay).sort((a, b) => a.startTime.localeCompare(b.startTime))
   const totalSlots = slots.length
 

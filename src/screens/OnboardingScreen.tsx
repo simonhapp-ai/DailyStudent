@@ -5,7 +5,7 @@ import { useUser } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
 import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS } from '../lib/gemini'
 import type { UserNote, StundenplanSlot } from '../types'
-import { SUBJECT_INFO, SUBJECT_GROUPS, getTopicPlaceholder } from '../data/subjectInfo'
+import { SUBJECT_INFO, SUBJECT_GROUPS, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 import { parseStundenplanFromImage } from '../lib/groq'
 
@@ -202,6 +202,7 @@ export function OnboardingScreen() {
         {step === 7 && (
           <StepStundenplan
             faecher={faecher}
+            customFaecher={customFaecher}
             slots={stundenplanSlots}
             setSlots={setStundenplanSlots}
             onNext={next}
@@ -209,11 +210,12 @@ export function OnboardingScreen() {
           />
         )}
         {step === 8 && (
-          <StepDateiImport onNext={next} faecher={faecher} />
+          <StepDateiImport onNext={next} faecher={faecher} customFaecher={customFaecher} />
         )}
         {step === 9 && (
           <StepKlausur
             faecher={faecher}
+            customFaecher={customFaecher}
             subject={klausurSubject} setSubject={setKlausurSubject}
             date={klausurDate} setDate={setKlausurDate}
             topic={klausurTopic} setTopic={setKlausurTopic}
@@ -1118,12 +1120,14 @@ const DAY_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr'] as const
 
 function StepStundenplan({
   faecher,
+  customFaecher,
   slots,
   setSlots,
   onNext,
   onUpdateFaecher,
 }: {
   faecher: string[]
+  customFaecher: CustomFach[]
   slots: StundenplanSlot[]
   setSlots: (s: StundenplanSlot[]) => void
   onNext: () => void
@@ -1140,9 +1144,7 @@ function StepStundenplan({
   const [fromAI, setFromAI] = useState(false)
   const [mismatchData, setMismatchData] = useState<{ slots: StundenplanSlot[]; additionalSubjectIds: string[] } | null>(null)
 
-  const profileSubjects = faecher
-    .map((id) => (SUBJECT_INFO[id] ? { id, ...SUBJECT_INFO[id] } : null))
-    .filter((s): s is { id: string; name: string; icon: string; color: string } => s !== null)
+  const profileSubjects = faecher.map((id) => ({ id, ...resolveSubjectInfo(id, customFaecher) }))
 
   const daySlots = slots
     .filter((s) => s.day === activeDay)
@@ -1583,7 +1585,7 @@ function StepStundenplan({
 
 type ImportPhase = 'idle' | 'suggesting' | 'suggested' | 'manual' | 'processing' | 'done'
 
-function StepDateiImport({ onNext, faecher }: { onNext: () => void; faecher: string[] }) {
+function StepDateiImport({ onNext, faecher, customFaecher }: { onNext: () => void; faecher: string[]; customFaecher: CustomFach[] }) {
   const { saveNote, saveToOhneFachFolder, addFolder, userFolders } = useUser()
   const fileRef = useRef<HTMLInputElement>(null)
   const cancelRef = useRef(false)
@@ -1596,9 +1598,7 @@ function StepDateiImport({ onNext, faecher }: { onNext: () => void; faecher: str
   const [succeeded, setSucceeded] = useState(0)
   const [failed, setFailed] = useState(0)
 
-  const profileSubjects = faecher
-    .map((id) => SUBJECT_INFO[id] ? { id, ...SUBJECT_INFO[id] } : null)
-    .filter((s): s is { id: string; name: string; icon: string; color: string } => s !== null)
+  const profileSubjects = faecher.map((id) => ({ id, ...resolveSubjectInfo(id, customFaecher) }))
 
   const handleSelect = (fileList: FileList | null) => {
     if (!fileList || fileList.length === 0) return
@@ -1879,16 +1879,18 @@ function StepDateiImport({ onNext, faecher }: { onNext: () => void; faecher: str
 
 function StepKlausur({
   faecher,
+  customFaecher,
   subject, setSubject,
   date, setDate,
   topic, setTopic,
 }: {
   faecher: string[]
+  customFaecher: CustomFach[]
   subject: string; setSubject: (v: string) => void
   date: string; setDate: (v: string) => void
   topic: string; setTopic: (v: string) => void
 }) {
-  const available = faecher.map((id) => ({ id, ...SUBJECT_INFO[id] })).filter((s) => s.name)
+  const available = faecher.map((id) => ({ id, ...resolveSubjectInfo(id, customFaecher) }))
   const subjectTopics = subject
     ? topics.filter((t) => t.subjectId === subject).map((t) => t.name)
     : []

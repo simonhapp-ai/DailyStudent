@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { resolveSubjectInfo } from '../data/subjectInfo'
 
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -46,8 +46,7 @@ export function HausaufgabenheftScreen() {
   const [addDueDate, setAddDueDate] = useState('')
 
   const profileSubjects = (profile?.faecher ?? [])
-    .map((sid) => SUBJECT_INFO[sid] ? { id: sid, ...SUBJECT_INFO[sid] } : null)
-    .filter((s): s is NonNullable<typeof s> => s !== null)
+    .map((sid) => ({ id: sid, ...resolveSubjectInfo(sid, profile?.customFaecher) }))
 
   // Collect all pending items
   const pending: PendingItem[] = []
@@ -225,7 +224,7 @@ export function HausaufgabenheftScreen() {
         )}
 
         {pending.map((item) => {
-          const subj = item.subjectId ? SUBJECT_INFO[item.subjectId] : null
+          const subj = item.subjectId ? resolveSubjectInfo(item.subjectId, profile?.customFaecher) : null
           const color = subj?.color ?? '#FF9500'
           const isConfirming = confirmingId === item.id
           const days = item.dueDate ? daysUntil(item.dueDate) : null
