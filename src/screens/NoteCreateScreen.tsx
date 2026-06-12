@@ -138,6 +138,23 @@ export function NoteCreateScreen() {
     makeDrawingBlock('drawing-0'),
   ])
 
+  // Page menu (3-dot menu on each thumbnail)
+  const [pageMenu, setPageMenu] = useState<{ blockId: string; pageId: string } | null>(null)
+
+  function deletePageFromBlock(blockId: string, pageId: string) {
+    setBlocks(prev => prev.map(b => {
+      if (b.id !== blockId || b.type !== 'drawing') return b
+      const db = b as DrawingBlock
+      const newPages = db.pages.filter(p => p.id !== pageId)
+      if (newPages.length === 0) {
+        // Reset to closed state — no thumbnails, fresh page
+        return { ...db, pages: [{ id: 'p0', background: { type: 'white' as const }, strokes: [], images: [] }], dataUrl: null }
+      }
+      return { ...db, pages: newPages }
+    }))
+    setPageMenu(null)
+  }
+
   // Quick Ask
   const [showAskBar, setShowAskBar] = useState(false)
   const [askInput, setAskInput] = useState('')
@@ -990,58 +1007,141 @@ export function NoteCreateScreen() {
           <div
             className="flex gap-2 px-3 py-2.5 overflow-x-auto border-b border-border/50 bg-surface"
             style={{ scrollbarWidth: 'none' }}
+            onClick={() => setPageMenu(null)}
           >
             {block.pages.map((page, i) => (
-              <button
+              <div
                 key={page.id}
-                onClick={openCanvas}
-                className="relative shrink-0 rounded-lg overflow-hidden press-sm transition-shadow"
-                style={{
-                  width: 68,
-                  height: 96,
-                  background: '#fff',
-                  border: '1.5px solid rgba(0,0,0,0.1)',
-                  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                }}
-                title={`Seite ${i + 1} öffnen`}
+                className="relative shrink-0"
+                style={{ width: 68, height: 96 }}
               >
-                {page.thumbnail ? (
-                  <img
-                    src={page.thumbnail}
-                    alt={`Seite ${i + 1}`}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-white">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C7C7CC" strokeWidth="1.8">
-                      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                {/* Thumbnail card */}
+                <button
+                  onClick={openCanvas}
+                  className="absolute inset-0 rounded-lg overflow-hidden press-sm transition-shadow"
+                  style={{
+                    background: '#fff',
+                    border: '1.5px solid rgba(0,0,0,0.1)',
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                  }}
+                  title={`Seite ${i + 1} öffnen`}
+                >
+                  {page.thumbnail ? (
+                    <img
+                      src={page.thumbnail}
+                      alt={`Seite ${i + 1}`}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-white">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C7C7CC" strokeWidth="1.8">
+                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  )}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 flex items-center justify-center"
+                    style={{ background: 'rgba(0,0,0,0.38)', height: 16 }}
+                  >
+                    <span style={{ color: 'white', fontSize: 9, fontWeight: 600 }}>{i + 1}</span>
+                  </div>
+                </button>
+
+                {/* 3-dot menu button */}
+                <button
+                  onClick={e => {
+                    e.stopPropagation()
+                    setPageMenu(prev =>
+                      prev?.blockId === block.id && prev?.pageId === page.id ? null : { blockId: block.id, pageId: page.id }
+                    )
+                  }}
+                  className="absolute top-1 right-1 flex items-center justify-center rounded-full press-sm"
+                  style={{
+                    width: 20, height: 20,
+                    background: 'rgba(0,0,0,0.45)',
+                    backdropFilter: 'blur(4px)',
+                    zIndex: 2,
+                  }}
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="white">
+                    <circle cx="5" cy="12" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="19" cy="12" r="2" />
+                  </svg>
+                </button>
+
+                {/* Mini popup */}
+                {pageMenu?.blockId === block.id && pageMenu?.pageId === page.id && (
+                  <div
+                    className="absolute rounded-xl overflow-hidden"
+                    style={{
+                      top: 26, right: 0,
+                      background: '#2C2C2E',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                      zIndex: 20,
+                      minWidth: 140,
+                    }}
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <button
+                      onClick={() => deletePageFromBlock(block.id, page.id)}
+                      className="w-full flex items-center gap-2.5 px-3 py-2.5 text-left"
+                      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,59,48,0.15)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" strokeWidth="2.2">
+                        <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
+                      </svg>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#FF6B6B' }}>Seite löschen</span>
+                    </button>
                   </div>
                 )}
-                <div
-                  className="absolute bottom-0 left-0 right-0 flex items-center justify-center"
-                  style={{ background: 'rgba(0,0,0,0.38)', height: 16 }}
-                >
-                  <span style={{ color: 'white', fontSize: 9, fontWeight: 600 }}>{i + 1}</span>
-                </div>
-              </button>
+              </div>
             ))}
-            {/* Add page tile */}
+
+            {/* Add page tile — looks like a new page */}
             <button
               onClick={openCanvas}
-              className="shrink-0 rounded-lg flex flex-col items-center justify-center gap-1 press-sm"
+              className="shrink-0 rounded-lg press-sm relative overflow-hidden"
               style={{
                 width: 68, height: 96,
+                background: 'rgb(var(--color-surface))',
                 border: '1.5px dashed rgba(var(--color-border),0.7)',
-                color: 'rgb(var(--color-text-muted))',
-                background: 'transparent',
               }}
               title="Neue Seite im Schreibblock"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-              </svg>
-              <span style={{ fontSize: 9, fontWeight: 600 }}>Seite</span>
+              {/* Faint page silhouette offset behind */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: 10, top: 6, right: 4, bottom: 10,
+                  borderRadius: 5,
+                  background: 'rgba(var(--color-border),0.18)',
+                  border: '1px solid rgba(var(--color-border),0.35)',
+                }}
+              />
+              {/* Main page face */}
+              <div
+                style={{
+                  position: 'absolute',
+                  left: 6, top: 10, right: 8, bottom: 6,
+                  borderRadius: 5,
+                  background: 'rgb(var(--color-surface))',
+                  border: '1.2px solid rgba(var(--color-border),0.5)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <div style={{
+                  width: 20, height: 20, borderRadius: '50%',
+                  background: 'rgba(var(--color-accent),0.15)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-accent))" strokeWidth="2.8" strokeLinecap="round">
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </div>
+              </div>
             </button>
           </div>
         )}

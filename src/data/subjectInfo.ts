@@ -27,6 +27,18 @@ export const SUBJECT_INFO: Record<string, { name: string; icon: string; color: s
   seminarfach:    { name: 'Seminarfach',       icon: '📋', color: '#E879F9' },
 }
 
+// Resolves subject display info for both standard and user-created custom subjects.
+// Falls back to icon 📚 and accent color for custom IDs not in SUBJECT_INFO.
+export function resolveSubjectInfo(
+  id: string,
+  customFaecher?: Array<{ id: string; name: string; icon?: string }>,
+): { name: string; icon: string; color: string } {
+  if (SUBJECT_INFO[id]) return SUBJECT_INFO[id]
+  const custom = customFaecher?.find((cf) => cf.id === id)
+  if (custom) return { name: custom.name, icon: custom.icon ?? '📚', color: '#7C3AED' }
+  return { name: id, icon: '📚', color: '#7C3AED' }
+}
+
 export const SUBJECT_TOPIC_EXAMPLES: Record<string, [string, string]> = {
   deutsch:        ['Effi Briest', 'Faust – Gretchentragödie'],
   mathematik:     ['Integralrechnung', 'Stochastik – Hypothesentest'],

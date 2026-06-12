@@ -325,6 +325,84 @@ function moveGeomShape(shape: GeomShape, dx: number, dy: number): GeomShape {
   return { ...shape, cx: shape.cx + dx, cy: shape.cy + dy }
 }
 
+// ── Lasso / selection helpers ─────────────────────────────────────────────────
+
+function pointInPoly(px: number, py: number, poly: number[][]): boolean {
+  let inside = false
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1]
+    if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi)
+      inside = !inside
+  }
+  return inside
+}
+
+function getStrokeKeyPts(s: StrokeRecord): number[][] {
+  if (s.shape) return getGeomHandles(s.shape).map(h => [h.x, h.y])
+  const pts = s.points
+  const result: number[][] = [pts[0], pts[pts.length - 1]]
+  for (let i = 4; i < pts.length - 1; i += 4) result.push(pts[i])
+  return result
+}
+
+function isStrokeInLasso(s: StrokeRecord, lasso: number[][]): boolean {
+  return getStrokeKeyPts(s).some(p => pointInPoly(p[0], p[1], lasso))
+}
+
+function getStrokesBBox(strokes: StrokeRecord[]): { x: number; y: number; w: number; h: number } | null {
+  if (strokes.length === 0) return null
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity
+  for (const s of strokes) {
+    const pts = s.shape ? getStrokeKeyPts(s) : s.points
+    for (const p of pts) {
+      if (p[0] < minX) minX = p[0]; if (p[1] < minY) minY = p[1]
+      if (p[0] > maxX) maxX = p[0]; if (p[1] > maxY) maxY = p[1]
+    }
+  }
+  const pad = 14
+  return { x: minX - pad, y: minY - pad, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2 }
+}
+
+function scaleGeomShape(shape: GeomShape, sf: number, cx: number, cy: number): GeomShape {
+  const sc = (v: number, c: number) => c + (v - c) * sf
+  if (shape.kind === 'line') return { kind: 'line', x1: sc(shape.x1,cx)+0, y1: sc(shape.y1,cy)+0, x2: sc(shape.x2,cx)+0, y2: sc(shape.y2,cy)+0 }
+  if (shape.kind === 'rect') return { kind: 'rect', x: sc(shape.x,cx), y: sc(shape.y,cy), w: Math.max(10,shape.w*sf), h: Math.max(10,shape.h*sf) }
+  return { kind: 'ellipse', cx: sc(shape.cx,cx), cy: sc(shape.cy,cy), rx: Math.max(8,shape.rx*sf), ry: Math.max(8,shape.ry*sf) }
+}
+
+function applyTransformToStroke(
+  s: StrokeRecord,
+  dx: number, dy: number, sf: number, cx: number, cy: number,
+): StrokeRecord {
+  const tp = (p: number[]): number[] => [cx + (p[0]-cx)*sf + dx, cy + (p[1]-cy)*sf + dy, p[2] ?? 0.5]
+  const newPts = s.points.map(tp)
+  let newShape: GeomShape | undefined
+  if (s.shape) {
+    const sh = s.shape
+    if (sh.kind === 'line') newShape = { kind:'line', x1: cx+(sh.x1-cx)*sf+dx, y1: cy+(sh.y1-cy)*sf+dy, x2: cx+(sh.x2-cx)*sf+dx, y2: cy+(sh.y2-cy)*sf+dy }
+    else if (sh.kind === 'rect') newShape = { kind:'rect', x: cx+(sh.x-cx)*sf+dx, y: cy+(sh.y-cy)*sf+dy, w: Math.max(10,sh.w*sf), h: Math.max(10,sh.h*sf) }
+    else newShape = { kind:'ellipse', cx: cx+(sh.cx-cx)*sf+dx, cy: cy+(sh.cy-cy)*sf+dy, rx: Math.max(8,sh.rx*sf), ry: Math.max(8,sh.ry*sf) }
+  }
+  return { ...s, points: newPts, shape: newShape }
+}
+
+function genId() { return `s${Date.now()}_${Math.random().toString(36).slice(2,5)}` }
+
+function paintLassoPath(ctx: CanvasRenderingContext2D, pts: number[][]) {
+  if (pts.length < 2) return
+  ctx.save()
+  ctx.strokeStyle = '#7C3AED'; ctx.lineWidth = 1.8
+  ctx.setLineDash([6, 4]); ctx.lineCap = 'round'; ctx.lineJoin = 'round'
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1])
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1])
+  ctx.lineTo(pts[0][0], pts[0][1])
+  ctx.stroke()
+  ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1])
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1])
+  ctx.closePath(); ctx.fillStyle = '#7C3AED'; ctx.globalAlpha = 0.07; ctx.fill()
+  ctx.restore()
+}
+
 function resizeCanvas(canvas: HTMLCanvasElement, cssW: number, cssH: number) {
   const dpr = window.devicePixelRatio || 1
   canvas.width  = Math.round(cssW * dpr)
@@ -395,6 +473,7 @@ export function DrawingCanvas({
   const [penOnlyMode, setPenOnlyMode] = useState(() => localStorage.getItem(PEN_ONLY_KEY) === '1')
   const penOnlyModeRef = useRef(penOnlyMode)
   useEffect(() => { penOnlyModeRef.current = penOnlyMode }, [penOnlyMode])
+  useEffect(() => { if (tool !== 'lasso') { selectionRef.current = null; setSelection(null) } }, [tool])
 
   // Single-finger pan state (used in pen-only mode)
   const singleTouchRef = useRef<{
@@ -447,8 +526,20 @@ export function DrawingCanvas({
   const [hasContent, setHasContent] = useState(false)
   const mountedRef = useRef(false)
 
+  // Lasso selection
+  const lassoDrawRef = useRef<number[][] | null>(null)
+  type SelectionState = { ids: string[]; bbox: { x: number; y: number; w: number; h: number } }
+  const [selection, setSelection] = useState<SelectionState | null>(null)
+  const selectionRef = useRef<SelectionState | null>(null)
+  const selDragRef = useRef<{
+    mode: 'move' | 'scale-tl' | 'scale-tr' | 'scale-br' | 'scale-bl'
+    startCX: number; startCY: number
+    snapshots: StrokeRecord[]
+    origBBox: { x: number; y: number; w: number; h: number }
+  } | null>(null)
+
   // Geometry snap
-  const GEOM_HOLD_MS = 900
+  const GEOM_HOLD_MS = 400
   const geomHoldTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [selectedGeomId, setSelectedGeomId] = useState<string | null>(null)
   const selectedGeomIdRef = useRef<string | null>(null)
@@ -546,7 +637,8 @@ export function DrawingCanvas({
     if (!initialPages || initialPages.length === 0) return
     pagesRef.current = initialPages.map(p => ({
       id: p.id, background: p.background,
-      strokes: [...p.strokes], images: [...(p.images ?? [])],
+      strokes: p.strokes.map(s => s.id ? s : { ...s, id: genId() }),
+      images: [...(p.images ?? [])],
     }))
     curIdxRef.current = 0
     strokesRef.current = [...pagesRef.current[0].strokes]
@@ -835,6 +927,18 @@ export function DrawingCanvas({
     ]
   }
 
+  const handleDeleteSelection = () => {
+    const sel = selectionRef.current
+    if (!sel) return
+    const selIds = new Set(sel.ids)
+    undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
+    redoStackRef.current = []
+    strokesRef.current = strokesRef.current.filter(s => !s.id || !selIds.has(s.id))
+    redrawStrokeCanvas(strokesRef.current)
+    selectionRef.current = null; setSelection(null)
+    updateHistoryState(); exportAndNotify(); notifyPagesChanged()
+  }
+
   const snapCurrentStroke = () => {
     if (geomHoldTimerRef.current) { clearTimeout(geomHoldTimerRef.current); geomHoldTimerRef.current = null }
     const active = activeRef.current
@@ -869,6 +973,46 @@ export function DrawingCanvas({
     if (e.pointerType === 'pen') { hasSeenPenRef.current = true; penIsActiveRef.current = true }
     if (penOnlyModeRef.current && e.pointerType !== 'pen') return
     if (!penOnlyModeRef.current && hasSeenPenRef.current && e.pointerType === 'touch') return
+
+    // Lasso tool: selection drag or new lasso
+    if (tool === 'lasso') {
+      const [cx, cy] = getXY(e)
+      const scale = viewTransformRef.current.scale
+      const sel = selectionRef.current
+      if (sel) {
+        const { x, y, w, h } = sel.bbox
+        const handleR = 18 / scale
+        const corners: { cx: number; cy: number; mode: typeof selDragRef.current extends null ? never : NonNullable<typeof selDragRef.current>['mode'] }[] = [
+          { cx: x,     cy: y,     mode: 'scale-tl' },
+          { cx: x + w, cy: y,     mode: 'scale-tr' },
+          { cx: x + w, cy: y + h, mode: 'scale-br' },
+          { cx: x,     cy: y + h, mode: 'scale-bl' },
+        ]
+        for (const c of corners) {
+          if (Math.hypot(cx - c.cx, cy - c.cy) < handleR) {
+            e.currentTarget.setPointerCapture(e.pointerId)
+            const snaps = strokesRef.current.filter(s => s.id && sel.ids.includes(s.id)).map(s => ({ ...s }))
+            selDragRef.current = { mode: c.mode, startCX: cx, startCY: cy, snapshots: snaps, origBBox: { ...sel.bbox } }
+            redrawStrokeCanvas(strokesRef.current.filter(s => !s.id || !sel.ids.includes(s.id)))
+            return
+          }
+        }
+        // Move: click inside bbox
+        if (cx >= x && cx <= x + w && cy >= y && cy <= y + h) {
+          e.currentTarget.setPointerCapture(e.pointerId)
+          const snaps = strokesRef.current.filter(s => s.id && sel.ids.includes(s.id)).map(s => ({ ...s }))
+          selDragRef.current = { mode: 'move', startCX: cx, startCY: cy, snapshots: snaps, origBBox: { ...sel.bbox } }
+          redrawStrokeCanvas(strokesRef.current.filter(s => !s.id || !sel.ids.includes(s.id)))
+          return
+        }
+        // Click outside → deselect, start new lasso
+        selectionRef.current = null; setSelection(null)
+        redrawStrokeCanvas(strokesRef.current)
+      }
+      e.currentTarget.setPointerCapture(e.pointerId)
+      lassoDrawRef.current = [getXY(e)]
+      return
+    }
 
     // Geometry tool: check if tapping an existing snapped shape
     if (tool === 'geometry') {
@@ -916,6 +1060,40 @@ export function DrawingCanvas({
       const rect = fgCanvasRef.current!.getBoundingClientRect()
       const scale = viewTransformRef.current.scale
       setEraserCursorPos({ x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale })
+    }
+
+    // Lasso selection drag / scale
+    if (selDragRef.current) {
+      const drag = selDragRef.current
+      const [cx, cy] = getXY(e)
+      const bbox = drag.origBBox
+      const bcx = bbox.x + bbox.w / 2, bcy = bbox.y + bbox.h / 2
+      let dx = 0, dy = 0, sf = 1
+      if (drag.mode === 'move') {
+        dx = cx - drag.startCX; dy = cy - drag.startCY
+      } else {
+        const origDist = Math.hypot(drag.startCX - bcx, drag.startCY - bcy)
+        const newDist  = Math.hypot(cx - bcx, cy - bcy)
+        sf = origDist > 5 ? newDist / origDist : 1
+      }
+      const transformed = drag.snapshots.map(s => applyTransformToStroke(s, dx, dy, sf, bcx, bcy))
+      const fg = fgCanvasRef.current; if (!fg) return
+      const ctx = fg.getContext('2d'); if (!ctx) return
+      const { w, h } = getCSS(); ctx.clearRect(0, 0, w, h)
+      for (const s of transformed) paintStrokeRecord(ctx, s)
+      const nb = getStrokesBBox(transformed)
+      if (nb) { selectionRef.current = { ...selectionRef.current!, bbox: nb }; setSelection({ ...selectionRef.current!, bbox: nb }) }
+      return
+    }
+
+    // Lasso drawing on fg canvas
+    if (lassoDrawRef.current) {
+      lassoDrawRef.current.push(getXY(e))
+      const fg = fgCanvasRef.current; if (!fg) return
+      const ctx = fg.getContext('2d'); if (!ctx) return
+      const { w, h } = getCSS(); ctx.clearRect(0, 0, w, h)
+      paintLassoPath(ctx, lassoDrawRef.current)
+      return
     }
 
     // Geometry shape drag / resize
@@ -967,6 +1145,57 @@ export function DrawingCanvas({
     if (e.pointerType === 'pen') penIsActiveRef.current = false
     activePointerIdsRef.current.delete(e.pointerId)
 
+    // Lasso selection drag/scale commit
+    if (selDragRef.current) {
+      const drag = selDragRef.current
+      const [cx, cy] = getXY(e)
+      const bbox = drag.origBBox
+      const bcx = bbox.x + bbox.w / 2, bcy = bbox.y + bbox.h / 2
+      let dx = 0, dy = 0, sf = 1
+      if (drag.mode === 'move') {
+        dx = cx - drag.startCX; dy = cy - drag.startCY
+      } else {
+        const origDist = Math.hypot(drag.startCX - bcx, drag.startCY - bcy)
+        const newDist  = Math.hypot(cx - bcx, cy - bcy)
+        sf = origDist > 5 ? newDist / origDist : 1
+      }
+      const selIds = new Set(selectionRef.current?.ids ?? [])
+      const transformed = drag.snapshots.map(s => applyTransformToStroke(s, dx, dy, sf, bcx, bcy))
+      const nonSel = strokesRef.current.filter(s => !s.id || !selIds.has(s.id))
+      const fg = fgCanvasRef.current; if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+      strokesRef.current = [...nonSel, ...transformed]
+      redrawStrokeCanvas(strokesRef.current)
+      const nb = getStrokesBBox(transformed)
+      const newSel = nb ? { ids: [...selIds], bbox: nb } : null
+      selectionRef.current = newSel; setSelection(newSel)
+      selDragRef.current = null
+      undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
+      redoStackRef.current = []
+      updateHistoryState(); exportAndNotify(); notifyPagesChanged()
+      return
+    }
+
+    // Lasso draw complete — detect selection
+    if (lassoDrawRef.current) {
+      const lasso = lassoDrawRef.current
+      lassoDrawRef.current = null
+      const fg = fgCanvasRef.current; if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+      if (lasso.length >= 3) {
+        const selected = strokesRef.current.filter(s => isStrokeInLasso(s, lasso))
+        if (selected.length > 0) {
+          const ids = selected.map(s => s.id!).filter(Boolean)
+          const bbox = getStrokesBBox(selected)
+          if (bbox) {
+            const newSel = { ids, bbox }
+            selectionRef.current = newSel; setSelection(newSel)
+          }
+        } else {
+          selectionRef.current = null; setSelection(null)
+        }
+      }
+      return
+    }
+
     // Geometry drag commit
     if (geomDragRef.current) {
       geomDragRef.current = null
@@ -995,6 +1224,7 @@ export function DrawingCanvas({
       if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
     }
 
+    if (!stroke.id) stroke.id = genId()
     undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
     redoStackRef.current = []
     strokesRef.current = [...strokesRef.current, stroke]
@@ -1081,6 +1311,7 @@ export function DrawingCanvas({
     redoStackRef.current = [...redoStackRef.current, [...strokesRef.current]]
     undoStackRef.current = undoStackRef.current.slice(0, -1)
     strokesRef.current = [...snap]
+    selectionRef.current = null; setSelection(null)
     redrawStrokeCanvas(strokesRef.current); updateHistoryState(); exportAndNotify(); notifyPagesChanged()
   }
 
@@ -1090,11 +1321,13 @@ export function DrawingCanvas({
     undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
     redoStackRef.current = redoStackRef.current.slice(0, -1)
     strokesRef.current = [...snap]
+    selectionRef.current = null; setSelection(null)
     redrawStrokeCanvas(strokesRef.current); updateHistoryState(); exportAndNotify(); notifyPagesChanged()
   }
 
   const handleClear = () => {
     setShowClearConfirm(false)
+    selectionRef.current = null; setSelection(null)
     undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
     redoStackRef.current = []; strokesRef.current = []
     const sk = skCanvasRef.current
@@ -1319,10 +1552,9 @@ export function DrawingCanvas({
 
               {/* Seite löschen */}
               <button
-                onClick={() => { setShowSettings(false); if (hasContent) setShowClearConfirm(true) }}
+                onClick={() => { setShowSettings(false); setShowClearConfirm(true) }}
                 className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
-                style={{ opacity: hasContent ? 1 : 0.35 }}
-                onMouseEnter={e => { if (hasContent) e.currentTarget.style.background = 'rgba(255,59,48,0.12)' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,59,48,0.12)' }}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
                 <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,59,48,0.18)' }}>
@@ -1727,6 +1959,75 @@ export function DrawingCanvas({
                     }}
                   />
                 ))}
+              </div>
+            )
+          })()}
+
+          {/* Lasso selection overlay */}
+          {tool === 'lasso' && selection && (() => {
+            const { x, y, w, h } = selection.bbox
+            const { tx, ty, scale } = viewTransform
+            const left = tx + x * scale, top = ty + y * scale
+            const width = w * scale, height = h * scale
+            const HR = 9 // handle radius px
+            const corners = [
+              { key: 'tl', left: left - HR,         top: top - HR },
+              { key: 'tr', left: left + width - HR,  top: top - HR },
+              { key: 'br', left: left + width - HR,  top: top + height - HR },
+              { key: 'bl', left: left - HR,          top: top + height - HR },
+            ]
+            return (
+              <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 9 }}>
+                {/* Dashed bounding box */}
+                <div style={{
+                  position: 'absolute', left: left - 2, top: top - 2,
+                  width: width + 4, height: height + 4,
+                  border: '1.8px dashed rgba(124,58,237,0.75)',
+                  borderRadius: 3, pointerEvents: 'none',
+                }} />
+                {/* Corner handles */}
+                {corners.map(c => (
+                  <div key={c.key} style={{
+                    position: 'absolute', left: c.left, top: c.top,
+                    width: HR * 2, height: HR * 2, borderRadius: '50%',
+                    background: 'white', border: '2px solid #7C3AED',
+                    boxShadow: '0 1px 6px rgba(0,0,0,0.25)',
+                    pointerEvents: 'none',
+                  }} />
+                ))}
+                {/* Action buttons */}
+                <div style={{
+                  position: 'absolute',
+                  left: left + width / 2 - 64,
+                  top: top - 46,
+                  display: 'flex', gap: 6,
+                  pointerEvents: 'auto',
+                }}>
+                  <button
+                    onPointerDown={e => e.stopPropagation()}
+                    onClick={handleDeleteSelection}
+                    style={{
+                      height: 32, paddingInline: 14,
+                      borderRadius: 10, border: 'none',
+                      background: '#FF453A', color: 'white',
+                      fontSize: 13, fontWeight: 700,
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
+                      cursor: 'pointer',
+                    }}
+                  >Löschen</button>
+                  <button
+                    onPointerDown={e => e.stopPropagation()}
+                    onClick={() => { /* copy stub */ }}
+                    style={{
+                      height: 32, paddingInline: 14,
+                      borderRadius: 10, border: '1.5px solid rgba(124,58,237,0.5)',
+                      background: 'white', color: '#7C3AED',
+                      fontSize: 13, fontWeight: 700,
+                      boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
+                      cursor: 'pointer',
+                    }}
+                  >Kopieren</button>
+                </div>
               </div>
             )
           })()}

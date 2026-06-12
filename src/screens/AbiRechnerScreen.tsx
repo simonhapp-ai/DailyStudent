@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { resolveSubjectInfo } from '../data/subjectInfo'
 import type { AbiGradeEntry, AbiHalbjahr } from '../types'
 
 // ── Internal helpers ──────────────────────────────────────────────────────────
@@ -282,13 +282,15 @@ function SubjectCard({
   onChange,
   onLkChange,
   hideLk = false,
+  customFaecher,
 }: {
   entry: AbiGradeEntry
   onChange: (e: AbiGradeEntry) => void
   onLkChange?: (subjectId: string, isLK: boolean) => void
   hideLk?: boolean
+  customFaecher?: Array<{ id: string; name: string; icon?: string }>
 }) {
-  const subj = SUBJECT_INFO[entry.subjectId]
+  const subj = resolveSubjectInfo(entry.subjectId, customFaecher)
   const ratio = entry.smRatio ?? 0.5
 
   // Resolve grades — migrate from single values when no array exists yet
@@ -329,13 +331,13 @@ function SubjectCard({
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
           <div
             className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
-            style={{ background: `${subj?.color ?? '#7C3AED'}22` }}
+            style={{ background: `${subj.color}22` }}
           >
-            {subj?.icon ?? '📚'}
+            {subj.icon}
           </div>
           <div className="min-w-0">
             <span className="font-semibold text-[14px] text-text-primary truncate block">
-              {subj?.name ?? entry.subjectId}
+              {subj.name}
             </span>
             {subjectTypeLabel && (
               <span className="text-[10px] text-text-muted font-medium">{subjectTypeLabel} · nicht eingerechnet</span>
@@ -867,6 +869,7 @@ export function AbiRechnerScreen() {
                     entry={entry}
                     onChange={updateEntry}
                     onLkChange={isOberstufe ? updateLkAcrossHalbjahre : undefined}
+                    customFaecher={profile?.customFaecher}
                   />
                 ))}
               </>
@@ -882,6 +885,7 @@ export function AbiRechnerScreen() {
                   entry={seminarfachEntry}
                   onChange={updateEntry}
                   hideLk
+                  customFaecher={profile?.customFaecher}
                 />
               </>
             )}

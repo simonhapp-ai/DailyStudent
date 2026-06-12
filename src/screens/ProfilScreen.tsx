@@ -447,7 +447,7 @@ export function ProfilScreen() {
             <button
               onClick={() => {
                 localStorage.removeItem('lernapp_v1')
-                window.location.reload()
+                window.location.href = '/'
               }}
               className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
             >

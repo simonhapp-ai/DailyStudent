@@ -3,13 +3,105 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO, SUBJECT_GROUPS } from '../data/subjectInfo'
 import { BottomSheet } from '../components/ui/BottomSheet'
+import { Button } from '../components/ui/Button'
+
+type CustomFach = { id: string; name: string; icon?: string }
+
+function CustomFaecherModal({
+  initial,
+  onSave,
+  onClose,
+}: {
+  initial: CustomFach[]
+  onSave: (faecher: CustomFach[]) => void
+  onClose: () => void
+}) {
+  const [inputs, setInputs] = useState<string[]>(
+    initial.length > 0 ? initial.map((cf) => cf.name) : [''],
+  )
+
+  const updateInput = (i: number, val: string) =>
+    setInputs((prev) => prev.map((inp, idx) => (idx === i ? val : inp)))
+  const removeInput = (i: number) =>
+    setInputs((prev) => prev.filter((_, idx) => idx !== i))
+  const addInput = () => setInputs((prev) => [...prev, ''])
+
+  const handleSave = () => {
+    const valid = inputs.filter((s) => s.trim().length > 0)
+    // Preserve existing IDs for names that match; generate new IDs for new names
+    const faecher: CustomFach[] = valid.map((name) => {
+      const existing = initial.find((cf) => cf.name === name.trim())
+      return existing ?? { id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`, name: name.trim() }
+    })
+    onSave(faecher)
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-background flex flex-col max-w-lg mx-auto">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+        <div>
+          <h2 className="text-[17px] font-bold text-text-primary">Eigene Fächer</h2>
+          <p className="text-[12px] text-text-muted mt-0.5">Trag so viele Fächer ein wie du möchtest</p>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-text-muted hover:text-text-secondary text-sm font-medium transition-colors"
+        >
+          Abbrechen
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto px-5 py-5 space-y-3">
+        {inputs.map((val, i) => (
+          <div key={i} className="flex gap-2">
+            <input
+              value={val}
+              onChange={(e) => updateInput(i, e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') addInput() }}
+              placeholder={`z. B. ${['Informatik', 'BWL', 'Jura', 'Medizin', 'Psychologie'][i % 5]}`}
+              className="flex-1 bg-surface border border-border rounded-card px-4 py-3.5 text-text-primary text-[15px] placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+            />
+            {inputs.length > 1 && (
+              <button
+                onClick={() => removeInput(i)}
+                className="w-11 h-11 rounded-card border border-border flex items-center justify-center text-text-muted hover:text-danger hover:border-danger/30 transition-colors shrink-0"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+                </svg>
+              </button>
+            )}
+          </div>
+        ))}
+
+        <button
+          onClick={addInput}
+          className="w-full py-3 border border-dashed border-border rounded-card flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+          </svg>
+          <span className="text-[13px] font-medium">Weiteres Fach</span>
+        </button>
+      </div>
+
+      <div className="px-5 pb-8 pt-4 border-t border-border">
+        <Button variant="primary" fullWidth size="lg" onClick={handleSave}>
+          Fertig
+        </Button>
+      </div>
+    </div>
+  )
+}
 
 export function FaecherEditScreen() {
   const navigate = useNavigate()
   const { profile, applyFaecherChanges } = useUser()
 
   const [selectedFaecher, setSelectedFaecher] = useState<string[]>([...(profile?.faecher ?? [])])
+  const [localCustomFaecher, setLocalCustomFaecher] = useState<CustomFach[]>([...(profile?.customFaecher ?? [])])
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
+  const [showCustomModal, setShowCustomModal] = useState(false)
 
   if (!profile) return null
 
@@ -31,16 +123,44 @@ export function FaecherEditScreen() {
     setConfirmDelete(null)
   }
 
+  function handleRemoveCustomFach(id: string) {
+    setLocalCustomFaecher((prev) => prev.filter((cf) => cf.id !== id))
+    setSelectedFaecher((prev) => prev.filter((f) => f !== id))
+  }
+
+  function handleSaveCustomFaecher(newFaecher: CustomFach[]) {
+    const oldCustomIds = new Set(localCustomFaecher.map((cf) => cf.id))
+    const newCustomIds = newFaecher.map((cf) => cf.id)
+    setLocalCustomFaecher(newFaecher)
+    setSelectedFaecher((prev) => {
+      const withoutOldCustom = prev.filter((id) => !oldCustomIds.has(id))
+      return [...withoutOldCustom, ...newCustomIds]
+    })
+    setShowCustomModal(false)
+  }
+
   function handleSave() {
     const deletedIds = profile!.faecher.filter((id) => !selectedFaecher.includes(id))
-    applyFaecherChanges(selectedFaecher, deletedIds)
+    applyFaecherChanges(selectedFaecher, deletedIds, localCustomFaecher)
     navigate(-1)
   }
 
-  const confirmSubject = confirmDelete ? SUBJECT_INFO[confirmDelete] : null
+  const confirmSubject = confirmDelete
+    ? (SUBJECT_INFO[confirmDelete] ?? { name: confirmDelete, icon: '📚', color: '#7C3AED' })
+    : null
+
+  const totalSelected = selectedFaecher.length
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      {showCustomModal && (
+        <CustomFaecherModal
+          initial={localCustomFaecher}
+          onSave={handleSaveCustomFaecher}
+          onClose={() => setShowCustomModal(false)}
+        />
+      )}
+
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-md border-b border-border/50">
         <div className="flex items-center justify-between px-4 pt-14 pb-3">
@@ -68,9 +188,57 @@ export function FaecherEditScreen() {
         <h1 className="text-[28px] font-bold text-text-primary mb-1">Deine Fächer</h1>
         <p className="text-text-muted text-sm mb-6">
           Fächer hinzufügen oder entfernen.{' '}
-          <span className="text-accent font-medium">{selectedFaecher.length} ausgewählt</span>
+          <span className="text-accent font-medium">{totalSelected} ausgewählt</span>
         </p>
 
+        {/* ── Eigene Fächer ─────────────────────────────── */}
+        <div className="mb-7 rounded-[20px] border border-border/60 bg-surface overflow-hidden">
+          <div className="px-4 pt-4 pb-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="font-semibold text-[15px] text-text-primary">Eigene Fächer</p>
+                <p className="text-[12px] text-text-muted mt-0.5">
+                  {localCustomFaecher.length > 0
+                    ? `${localCustomFaecher.length} eigene${localCustomFaecher.length === 1 ? 's Fach' : ' Fächer'} angelegt`
+                    : 'Fächer die oben nicht aufgeführt sind — z. B. Informatik, Latein …'}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowCustomModal(true)}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-[12px] grad-accent text-white text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <path d="M12 5v14M5 12h14" strokeLinecap="round" />
+                </svg>
+                {localCustomFaecher.length > 0 ? 'Bearbeiten' : 'Anlegen'}
+              </button>
+            </div>
+          </div>
+
+          {localCustomFaecher.length > 0 && (
+            <div className="px-4 pb-4 flex flex-wrap gap-2">
+              {localCustomFaecher.map((cf) => (
+                <div
+                  key={cf.id}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill"
+                  style={{ background: 'rgba(var(--color-accent), 0.1)', border: '1px solid rgba(var(--color-accent), 0.25)' }}
+                >
+                  <span className="text-[13px] font-semibold text-accent">{cf.name}</span>
+                  <button
+                    onClick={() => handleRemoveCustomFach(cf.id)}
+                    className="text-accent/60 hover:text-danger transition-colors"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── Standard Fächer ───────────────────────────── */}
         <div className="space-y-5">
           {SUBJECT_GROUPS.map((group) => (
             <div key={group.label}>
@@ -128,10 +296,10 @@ export function FaecherEditScreen() {
           ))}
         </div>
 
-        {/* Info note about folder creation */}
+        {/* Info note */}
         <div className="mt-6 px-4 py-3 rounded-card bg-surface border border-border/60">
           <p className="text-xs text-text-muted leading-relaxed">
-            Neue Fächer erhalten automatisch Ordner nach deinem gewählten Sortiermodus ({profile.folderSortMode === 'manual' ? 'Manuell' : 'Halbjahr/Quartale'}).
+            Neue Fächer erhalten automatisch Ordner nach deinem gewählten Sortiermodus ({profile.folderSortMode === 'manual' ? 'Manuell' : profile.userType === 'student' ? 'Semester' : 'Halbjahr/Quartale'}).
           </p>
         </div>
       </div>
