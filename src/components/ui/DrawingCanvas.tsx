@@ -652,7 +652,6 @@ export function DrawingCanvas({
   const updateHistoryState = useCallback(() => {
     setCanUndo(undoStackRef.current.length > 0)
     setCanRedo(redoStackRef.current.length > 0)
-    setHasContent(strokesRef.current.length > 0)
   }, [])
 
   const getCSS = useCallback((): { w: number; h: number } => {
