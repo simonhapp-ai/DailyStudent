@@ -376,11 +376,10 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
 
     const DEFAULT_STATS: AppStats = { scanCount: 0, examCount: 0, streak: 0, lastStudyDate: null, studiedDays: [], examScores: [] }
 
-    // Dev-mode accounts trust the manual profile flag; all others derive isPro from subscriptions only
-    const isDevMode = profileRow.is_dev_mode ?? false
-    const isPro = isDevMode
-      ? (profileRow.is_pro ?? false)
-      : (subRow?.status === 'active' || subRow?.status === 'trialing')
+    // isPro = manual override in profiles.is_pro OR active/trialing subscription
+    const isPro =
+      (profileRow.is_pro ?? false) ||
+      (subRow?.status === 'active' || subRow?.status === 'trialing')
 
     // grade_data table is authoritative — fall back to profiles.abi_halbjahre for old accounts
     const resolvedAbiHalbjahre = gradeRow?.abi_halbjahre ?? profileRow.abi_halbjahre ?? null

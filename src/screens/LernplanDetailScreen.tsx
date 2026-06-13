@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useUser, type PersonalEntry } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
-import type { LernplanSession, LernDayType, LernMethode, StundenplanSlot } from '../types'
+import { ProModal } from '../components/ui/ProModal'
+import type { LernplanSession, LernplanActivity, LernDayType, LernMethode, StundenplanSlot } from '../types'
 
 const METHOD_ICONS: Record<LernMethode, string> = {
   karteikarten: '🃏',
@@ -19,6 +21,13 @@ const METHOD_LABELS: Record<LernMethode, string> = {
   probeklausur: 'Probeklausur',
   lesen: 'Lesen',
   wiederholen: 'Wiederholen',
+}
+
+const METHOD_ROUTES: Partial<Record<LernMethode, string>> = {
+  karteikarten: '/klausurmodus/karteikarten/neu',
+  blurting: '/klausurmodus/blurting',
+  lernzettel: '/klausurmodus/lernzettel/neu',
+  probeklausur: '/klausurmodus/probeklausur',
 }
 
 const DAY_TYPE_LABELS: Record<LernDayType, string> = {
@@ -76,9 +85,21 @@ function uid() {
 export function LernplanDetailScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { lernplaene, deleteLernplan, addEntries, personalEntries, profile } = useUser()
+  const { lernplaene, deleteLernplan, addEntries, personalEntries, profile, isPro } = useUser()
 
   const plan = lernplaene.find((p) => p.id === id)
+
+  const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set())
+  const [showProModal, setShowProModal] = useState(false)
+
+  const toggleSession = (key: string) => {
+    setExpandedSessions((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
   if (!plan) {
     return (
@@ -97,22 +118,19 @@ export function LernplanDetailScreen() {
     const timeToMin = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + m }
     const pad = (n: number) => String(n).padStart(2, '0')
     const minToTime = (m: number) => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`
-    const BUFFER = 15 // minutes between blocks
+    const BUFFER = 15
     const MAX_SESSION_MIN = 90
-    const NOON = 13 * 60 // 780 min = 13:00
+    const NOON = 13 * 60
 
-    // Day of week in Stundenplan format (0=Mo … 4=Fr)
     const getSpDow = (dateStr: string): number => {
       const d = new Date(dateStr).getDay()
-      return d === 0 ? 6 : d - 1 // Sun→6, Mon→0 … Sat→5
+      return d === 0 ? 6 : d - 1
     }
 
-    // Build sorted, merged list of busy intervals (start/end in minutes from midnight)
     const getBusyIntervals = (dateStr: string): Array<{ s: number; e: number }> => {
       const dow = getSpDow(dateStr)
       const raw: Array<{ s: number; e: number }> = []
 
-      // 1. Stundenplan slots for this weekday (only Mo–Fr)
       if (dow >= 0 && dow <= 4) {
         const slots: StundenplanSlot[] = profile?.stundenplan?.slots ?? []
         for (const slot of slots) {
@@ -121,7 +139,6 @@ export function LernplanDetailScreen() {
         }
       }
 
-      // 2. Existing personal calendar entries for this exact date
       for (const entry of personalEntries) {
         if (entry.date !== dateStr) continue
         const s = timeToMin(entry.time)
@@ -129,14 +146,12 @@ export function LernplanDetailScreen() {
         raw.push({ s, e })
       }
 
-      // 3. Plan's own blocked-time rules
       for (const bt of plan.config.blockedTimes ?? []) {
         const applies = bt.dayOfWeek.length === 0 || bt.dayOfWeek.includes(dow)
         if (!applies) continue
         raw.push({ s: timeToMin(bt.startTime), e: timeToMin(bt.endTime) })
       }
 
-      // Sort and merge overlapping intervals
       const sorted = raw.sort((a, b) => a.s - b.s)
       const merged: Array<{ s: number; e: number }> = []
       for (const iv of sorted) {
@@ -149,8 +164,6 @@ export function LernplanDetailScreen() {
       return merged
     }
 
-    // Find free gaps in [dayStart, 23:00] given busy intervals.
-    // Returns gaps sorted by preference (morgen: morning first, abend: afternoon first).
     const getFreeGaps = (
       busy: Array<{ s: number; e: number }>,
       pref: 'morgen' | 'abend' | 'beides',
@@ -167,16 +180,12 @@ export function LernplanDetailScreen() {
       if (cursor < DAY_END) gaps.push({ s: cursor, e: DAY_END })
 
       if (pref === 'morgen') {
-        const morning = gaps.filter(g => g.s < NOON)
-        const afternoon = gaps.filter(g => g.s >= NOON)
-        return [...morning, ...afternoon]
+        return [...gaps.filter(g => g.s < NOON), ...gaps.filter(g => g.s >= NOON)]
       }
       if (pref === 'abend') {
-        const afternoon = gaps.filter(g => g.e > NOON)
-        const morning = gaps.filter(g => g.e <= NOON)
-        return [...afternoon, ...morning]
+        return [...gaps.filter(g => g.e > NOON), ...gaps.filter(g => g.e <= NOON)]
       }
-      return gaps // beides: chronological order
+      return gaps
     }
 
     const pref = plan.config.studyTimePreference ?? 'beides'
@@ -187,7 +196,6 @@ export function LernplanDetailScreen() {
       if (!day.sessions.length) return
       const busy = getBusyIntervals(day.date)
 
-      // Determine earliest start based on preference
       const lastSchoolEnd = busy.filter(b => {
         const dow = getSpDow(day.date)
         if (dow < 0 || dow > 4) return false
@@ -201,20 +209,18 @@ export function LernplanDetailScreen() {
       let gapIdx = 0
       let gapCursor = freeGaps[0]?.s ?? -1
 
-      day.sessions.forEach((session) => {
+      day.sessions.forEach((session, sessionIdx) => {
         const dur = Math.min(session.durationMin, MAX_SESSION_MIN)
 
-        // Find a gap that fits this session
         while (gapIdx < freeGaps.length) {
           const gap = freeGaps[gapIdx]
           if (gapCursor < gap.s) gapCursor = gap.s
           if (gapCursor + dur <= gap.e) {
-            // Found a slot
             const start = gapCursor
             const end = start + dur
             entries.push({
               id: uid(),
-              title: `${session.subjectName} – ${session.topic}`,
+              title: `Lernblock ${sessionIdx + 1}: ${session.topic}`,
               type: 'lerneinheit',
               date: day.date,
               time: minToTime(start),
@@ -225,7 +231,6 @@ export function LernplanDetailScreen() {
             gapCursor = end + BUFFER
             return
           }
-          // Gap too small or exhausted — move to next
           gapIdx++
           gapCursor = freeGaps[gapIdx]?.s ?? -1
         }
@@ -235,7 +240,7 @@ export function LernplanDetailScreen() {
 
     addEntries(entries)
     let msg = `${entries.length} Lernblöcke wurden zum Kalender hinzugefügt.`
-    if (skipped.length) msg += `\n\n${skipped.length} Block(s) konnten nicht eingeplant werden (kein freier Slot): ${skipped.join(', ')}`
+    if (skipped.length) msg += `\n\n${skipped.length} Block(s) konnten nicht eingeplant werden: ${skipped.join(', ')}`
     alert(msg)
   }
 
@@ -362,7 +367,6 @@ export function LernplanDetailScreen() {
               >
                 {/* Day header */}
                 <div className="flex items-center gap-3 px-4 pt-4 pb-3">
-                  {/* Date pill */}
                   <div className={`flex flex-col items-center w-10 rounded-[10px] py-1 shrink-0 ${
                     todayMark ? 'bg-accent' : 'bg-background/60'
                   }`}>
@@ -410,9 +414,22 @@ export function LernplanDetailScreen() {
                 {/* Sessions */}
                 {day.sessions.length > 0 && (
                   <div className="px-4 pb-4 space-y-2">
-                    {day.sessions.map((session, sIdx) => (
-                      <SessionCard key={sIdx} session={session} />
-                    ))}
+                    {day.sessions.map((session, sIdx) => {
+                      const sessionKey = `${day.date}-${sIdx}`
+                      const isExpanded = expandedSessions.has(sessionKey)
+                      return (
+                        <SessionCard
+                          key={sIdx}
+                          session={session}
+                          sessionIndex={sIdx}
+                          isExpanded={isExpanded}
+                          onToggle={() => toggleSession(sessionKey)}
+                          isPro={isPro}
+                          onShowPro={() => setShowProModal(true)}
+                          onNavigate={(route) => navigate(route)}
+                        />
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -430,42 +447,175 @@ export function LernplanDetailScreen() {
           </button>
         </div>
       </div>
+
+      <ProModal isOpen={showProModal} onClose={() => setShowProModal(false)} feature="lernplan" />
     </>
   )
 }
 
-function SessionCard({ session }: { session: LernplanSession }) {
+/* ─── SessionCard ──────────────────────────────────────────────── */
+
+function SessionCard({
+  session,
+  sessionIndex,
+  isExpanded,
+  onToggle,
+  isPro,
+  onShowPro,
+  onNavigate,
+}: {
+  session: LernplanSession
+  sessionIndex: number
+  isExpanded: boolean
+  onToggle: () => void
+  isPro: boolean
+  onShowPro: () => void
+  onNavigate: (route: string) => void
+}) {
   const subj = SUBJECT_INFO[session.subjectId]
   const priorityColor = session.priority === 'hoch' ? '#FF453A' : session.priority === 'mittel' ? '#FF9F0A' : '#30D158'
+  const hasActivities = (session.activities?.length ?? 0) > 0
+  const hasProActivity = session.activities?.some((a) => a.isPro) ?? false
 
   return (
-    <div className="bg-background/70 border border-border/40 rounded-[14px] p-3 flex items-center gap-3">
-      <div
-        className="w-9 h-9 rounded-[10px] flex items-center justify-center text-base shrink-0"
-        style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
+    <div className="bg-background/70 border border-border/40 rounded-[14px] overflow-hidden">
+      {/* Collapsed header — always clickable */}
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center gap-3 p-3 text-left active:bg-surface-hover/30 transition-colors"
       >
-        {subj?.icon ?? '📚'}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <p className="text-text-primary font-semibold text-[13px]">{session.subjectName}</p>
-          {session.isLK && (
-            <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-accent/15 text-accent">LK</span>
-          )}
-          <span
-            className="w-1.5 h-1.5 rounded-full shrink-0"
-            style={{ backgroundColor: priorityColor }}
-          />
+        <div
+          className="w-9 h-9 rounded-[10px] flex items-center justify-center text-base shrink-0"
+          style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
+        >
+          {subj?.icon ?? '📚'}
         </div>
-        <p className="text-text-muted text-[12px] truncate">{session.topic}</p>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <p className="text-text-primary font-semibold text-[13px]">{session.subjectName}</p>
+            {session.isLK && (
+              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-accent/15 text-accent">LK</span>
+            )}
+            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: priorityColor }} />
+          </div>
+          <p className="text-text-muted text-[12px] truncate">{session.topic}</p>
+        </div>
+        <div className="flex flex-col items-end gap-1 shrink-0">
+          <span className="text-[11px] font-bold text-text-muted">{durationLabel(session.durationMin)}</span>
+          <div className="flex items-center gap-1">
+            {hasProActivity && !isPro && (
+              <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
+            )}
+            <span className="text-[11px] text-text-muted/70 flex items-center gap-0.5">
+              <span>{METHOD_ICONS[session.method]}</span>
+            </span>
+            {hasActivities && (
+              <svg
+                width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                className={`text-text-muted transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+              >
+                <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+          </div>
+        </div>
+      </button>
+
+      {/* Expanded detail */}
+      {isExpanded && hasActivities && (
+        <div className="px-3 pb-3 space-y-2 border-t border-border/30 pt-3">
+          {/* Learning goal */}
+          {session.learningGoal && (
+            <div className="flex items-start gap-2 px-1 mb-3">
+              <span className="text-[13px] shrink-0 mt-0.5">🎯</span>
+              <p className="text-text-secondary text-[12px] leading-relaxed italic">{session.learningGoal}</p>
+            </div>
+          )}
+
+          {/* Activity rows */}
+          {session.activities!.map((activity, aIdx) => (
+            <ActivityRow
+              key={aIdx}
+              activity={activity}
+              isPro={isPro}
+              onShowPro={onShowPro}
+              onNavigate={onNavigate}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* ─── ActivityRow ──────────────────────────────────────────────── */
+
+function ActivityRow({
+  activity,
+  isPro,
+  onShowPro,
+  onNavigate,
+}: {
+  activity: LernplanActivity
+  isPro: boolean
+  onShowPro: () => void
+  onNavigate: (route: string) => void
+}) {
+  const route = METHOD_ROUTES[activity.method]
+  const isLocked = activity.isPro && !isPro
+
+  const handleAction = () => {
+    if (isLocked) { onShowPro(); return }
+    if (route) onNavigate(route)
+  }
+
+  return (
+    <div className={`flex items-center gap-2.5 p-2.5 rounded-[10px] ${
+      isLocked ? 'bg-amber-500/6 border border-amber-500/15' : 'bg-surface/60 border border-border/30'
+    }`}>
+      {/* Duration chip */}
+      <span className="text-[11px] font-bold text-text-muted bg-background/80 px-2 py-0.5 rounded-[6px] shrink-0 w-14 text-center">
+        {activity.durationMin} min
+      </span>
+
+      {/* Method icon */}
+      <span className="text-[15px] shrink-0">{METHOD_ICONS[activity.method]}</span>
+
+      {/* Title */}
+      <div className="flex-1 min-w-0">
+        <p className={`text-[12px] font-medium leading-tight ${isLocked ? 'text-text-secondary' : 'text-text-primary'}`}>
+          {activity.title}
+        </p>
+        <p className="text-[10px] text-text-muted mt-0.5">{METHOD_LABELS[activity.method]}</p>
       </div>
-      <div className="flex flex-col items-end gap-1 shrink-0">
-        <span className="text-[11px] font-bold text-text-muted">{durationLabel(session.durationMin)}</span>
-        <span className="text-[11px] text-text-muted/70 flex items-center gap-0.5">
-          <span>{METHOD_ICONS[session.method]}</span>
-          <span className="text-[10px]">{METHOD_LABELS[session.method]}</span>
-        </span>
-      </div>
+
+      {/* Action button */}
+      {route && (
+        <button
+          onClick={handleAction}
+          className={`flex items-center gap-1 px-2 py-1.5 rounded-[8px] text-[11px] font-semibold shrink-0 transition-all active:scale-[0.95] ${
+            isLocked
+              ? 'bg-amber-500/15 text-amber-500'
+              : 'bg-accent/12 text-accent'
+          }`}
+        >
+          {isLocked ? (
+            <>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+              Pro
+            </>
+          ) : (
+            <>
+              Starten
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </>
+          )}
+        </button>
+      )}
     </div>
   )
 }

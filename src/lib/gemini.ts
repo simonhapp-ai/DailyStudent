@@ -438,9 +438,21 @@ export async function generateLernplan(input: LernplanGeneratorInput): Promise<{
   days: LernplanDay[]
   examSchedule: LernplanExam[]
 }> {
+  // Build exam text — prefer examChecklists (new), fall back to klausurtermine.topic (legacy)
+  const checklistMap = new Map(
+    (input.examChecklists ?? []).map((c) => [`${c.subjectId}|${c.date}`, c])
+  )
+
   const examsText = [...input.klausurtermine]
     .sort((a, b) => a.date.localeCompare(b.date))
-    .map((k) => `- ${k.subjectName} (${k.isLK ? 'LK' : 'GK'}): ${k.date}${k.topic ? ' — ' + k.topic : ''}`)
+    .map((k) => {
+      const cl = checklistMap.get(`${k.subjectId}|${k.date}`)
+      if (cl && cl.topics.length > 0) {
+        const topicLines = cl.topics.map((t) => `    • ${t}`).join('\n')
+        return `- ${k.subjectName} (${k.isLK ? 'LK' : 'GK'}): ${k.date}\n  Prüfungsthemen (ALLE müssen abgedeckt werden):\n${topicLines}`
+      }
+      return `- ${k.subjectName} (${k.isLK ? 'LK' : 'GK'}): ${k.date}${k.topic ? ' — ' + k.topic : ''}`
+    })
     .join('\n')
 
   const blockedText = input.blockedTimes.length > 0
@@ -456,7 +468,7 @@ export async function generateLernplan(input: LernplanGeneratorInput): Promise<{
 
   const systemPrompt = `Du bist ein professioneller Lernplaner für deutsche Gymnasiasten (Klasse 10–13) und Abiturienten. Erstelle einen strukturierten, realistischen Lernplan als JSON.
 
-REGELN:
+PLANUNGS-REGELN:
 - LK-Fächer erhalten ~40% mehr Lernzeit als GK-Fächer und höhere Priorität.
 - Das nächste Klausur-Fach hat die höchste Priorität pro Tag.
 - 1 Tag VOR jeder Klausur: dayType="puffer", nur Wiederholung dieses Fachs, keine neuen Themen.
@@ -467,17 +479,29 @@ REGELN:
 - Methoden-Rotation: möglichst keine 2× identische Methode hintereinander.
 - Session-Dauer: 25–90 Minuten. Max. ${input.dailyStudyHours}h Gesamtlernzeit pro Tag.
 - Bei Zielnote ≥ 13 NP (sehr gut): mehr Probeklausuren und Wiederholungen einplanen.
+- Wenn Prüfungsthemen angegeben: jedes Thema muss in mindestens einer Session als topic auftauchen. Wenn ein Thema einem KC-Oberthema entspricht, alle Unterthemen dieses Oberthemas abdecken.
 ${input.planType === 'abitur' ? '- ABITUR-MODUS: Kein regulärer Schulunterricht. Volle Tage verfügbar. LK-Fächer haben 2× Gewichtung. Q1–Q4 Inhalte aller Prüfungsfächer abdecken.' : ''}
 
+SESSION-INHALT (PFLICHT für jede Session):
+- "learningGoal": 1–2 Sätze konkretes Lernziel ("Nach dieser Session kannst du...").
+- "activities": Array mit 2–3 konkreten Lernaktivitäten. Summe der durationMin = session.durationMin.
+  - method: karteikarten | blurting | lernzettel | probeklausur | lesen | wiederholen
+  - isPro: true für "lernzettel" und "probeklausur" (das sind App-Pro-Features)
+  - Typisch 90min: [{lernzettel,30min,Pro}, {blurting,10min,free}, {probeklausur,50min,Pro}]
+  - Typisch 60min: [{lernzettel,25min,Pro}, {blurting,10min,free}, {karteikarten,25min,free}]
+  - Typisch 45min: [{lesen,20min,free}, {blurting,10min,free}, {karteikarten,15min,free}]
+  - Typisch 30min: [{karteikarten,20min,free}, {blurting,10min,free}]
+  - Wenn session.durationMin ≥ 45: mindestens eine Pro-Aktivität (lernzettel oder probeklausur) einplanen.
+
 Antworte NUR mit validem JSON (kein Markdown), exakt diese Struktur:
-{"title":"...","summary":"...","days":[{"date":"YYYY-MM-DD","dayType":"lern","sessions":[{"subjectId":"...","subjectName":"...","topic":"...","durationMin":60,"method":"karteikarten","isLK":false,"priority":"hoch"}],"totalMin":60,"note":null}],"examSchedule":[{"date":"YYYY-MM-DD","subjectId":"...","subjectName":"...","topic":"..."}]}`
+{"title":"...","summary":"...","days":[{"date":"YYYY-MM-DD","dayType":"lern","sessions":[{"subjectId":"...","subjectName":"...","topic":"...","durationMin":90,"method":"lernzettel","isLK":false,"priority":"hoch","learningGoal":"Nach dieser Session kannst du...","activities":[{"title":"Lernzettel aus Smart Notes erstellen","durationMin":30,"method":"lernzettel","isPro":true},{"title":"Blurting – alles aufschreiben","durationMin":10,"method":"blurting","isPro":false},{"title":"Probeklausur ohne Material","durationMin":50,"method":"probeklausur","isPro":true}]}],"totalMin":90,"note":null}],"examSchedule":[{"date":"YYYY-MM-DD","subjectId":"...","subjectName":"...","topic":"..."}]}`
 
   const userPrompt = `Plantyp: ${input.planType === 'einzel' ? 'Einzelfach-Lernplan' : input.planType === 'vollstaendig' ? 'Vollständiger Klausurenplan' : 'Abitur-Lernplan'}
 Klasse: ${input.klasse} | Schulform: ${input.schulform}
 Startdatum: ${input.startDate}
 Planungszeitraum: ${input.planDurationDays} Tage
 
-KLAUSURTERMINE:
+KLAUSURTERMINE & PRÜFUNGSTHEMEN:
 ${examsText}
 
 LERNKAPAZITÄT:
@@ -491,14 +515,14 @@ ${blockedText}
 
 SCHWÄCHEN (mehr Sessions):
 ${weaknessText}
-${input.preferredMethods && input.preferredMethods.length > 0 && input.preferredMethods.length < 6 ? `\nBEVORZUGTE LERNMETHODEN (bevorzuge diese bei der Session-Planung):\n${input.preferredMethods.join(', ')}` : ''}${input.smartNotesContext ? `\nBEREITS BEHANDELTE INHALTE (Smart Notes des Schülers — nutze diese um konkrete Themen als Session-Topics zu setzen):\n${input.smartNotesContext}` : ''}${input.kcContext ? `\nKERNCURRICULUM:\n${input.kcContext}` : ''}
+${input.preferredMethods && input.preferredMethods.length > 0 && input.preferredMethods.length < 6 ? `\nBEVORZUGTE LERNMETHODEN:\n${input.preferredMethods.join(', ')}` : ''}${input.smartNotesContext ? `\nBEREITS BEHANDELTE INHALTE (Smart Notes — nutze als konkrete Session-Topics):\n${input.smartNotesContext}` : ''}${input.kcContext ? `\nKERNCURRICULUM:\n${input.kcContext}` : ''}
 
-Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${input.startDate}. Jeder Tag muss im days-Array enthalten sein.`
+Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${input.startDate}. Jeder Tag muss im days-Array enthalten sein. Jede Session muss learningGoal und activities enthalten.`
 
   const lernplanBodyObj = {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-    generationConfig: { temperature: 0.3, maxOutputTokens: 16384, responseMimeType: 'application/json' },
+    generationConfig: { temperature: 0.3, maxOutputTokens: 32768, responseMimeType: 'application/json' },
   }
 
   // On 503 (model overloaded), fall back to flash-lite immediately

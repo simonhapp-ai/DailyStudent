@@ -163,7 +163,20 @@ function AppRoutes() {
 function Layout() {
   const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
-  const [needsMfa, setNeedsMfa] = useState(false)
+  // True if localStorage has a previous session — lets us skip the spinner for returning users
+  const [hasLocalSession] = useState(() => {
+    try {
+      const raw = localStorage.getItem('lernapp_v1')
+      return raw ? !!(JSON.parse(raw) as { userId?: string }).userId : false
+    } catch { return false }
+  })
+  // Initialize from cache so MFA screen shows immediately on refresh — no app flash
+  const [needsMfa, setNeedsMfa] = useState(() => {
+    try {
+      const raw = localStorage.getItem('lernapp_v1')
+      return raw ? !!(JSON.parse(raw) as { mfaRequired?: boolean }).mfaRequired : false
+    } catch { return false }
+  })
 
   useEffect(() => {
     if (!authUser) {
@@ -172,11 +185,19 @@ function Layout() {
     }
     void (async () => {
       const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
-      setNeedsMfa(data?.nextLevel === 'aal2' && data?.currentLevel !== 'aal2')
+      const required = data?.nextLevel === 'aal2' && data?.currentLevel !== 'aal2'
+      setNeedsMfa(required)
+      // Cache result so next refresh shows the right screen immediately
+      try {
+        const raw = localStorage.getItem('lernapp_v1')
+        const stored = raw ? (JSON.parse(raw) as object) : {}
+        localStorage.setItem('lernapp_v1', JSON.stringify({ ...stored, mfaRequired: required }))
+      } catch {}
     })()
   }, [authUser?.id])
 
-  if (authLoading) {
+  // Only block with spinner if there's no local data to show while Supabase initializes
+  if (authLoading && !hasLocalSession) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
@@ -184,11 +205,14 @@ function Layout() {
     )
   }
 
-  if (!authUser) {
-    if (location.pathname === '/landing') return <LandingScreen />
-    if (location.pathname === '/impressum') return <ImpressumScreen />
-    if (location.pathname === '/datenschutz') return <DatenschutzScreen />
-    if (location.pathname === '/agb') return <AGBScreen />
+  // Public routes — always accessible without auth
+  if (location.pathname === '/landing') return <LandingScreen />
+  if (location.pathname === '/impressum') return <ImpressumScreen />
+  if (location.pathname === '/datenschutz') return <DatenschutzScreen />
+  if (location.pathname === '/agb') return <AGBScreen />
+
+  // Only redirect to auth once Supabase has confirmed there's no valid session
+  if (!authLoading && !authUser) {
     if (location.pathname === '/') return <Navigate to="/landing" replace />
     return <AuthScreen />
   }

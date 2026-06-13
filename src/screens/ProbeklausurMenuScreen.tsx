@@ -202,9 +202,7 @@ export function ProbeklausurMenuScreen() {
                 </span>
               ))}
               {mode.proBadge && !isPro && (
-                <span className="px-2.5 py-1 rounded-pill text-[11px] font-black bg-accent/15 text-accent">
-                  ✦ {mode.proBadge} · Pro
-                </span>
+                <span className="badge-pro-gold px-2 py-0.5">✦ Pro</span>
               )}
             </div>
           </button>
@@ -233,9 +231,7 @@ export function ProbeklausurMenuScreen() {
                   </span>
                 ))}
                 {mode.proBadge && !isPro && (
-                  <span className="px-2 py-0.5 rounded-pill text-[10px] font-black bg-accent/15 text-accent">
-                    ✦ Pro
-                  </span>
+                  <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
                 )}
               </div>
             </button>

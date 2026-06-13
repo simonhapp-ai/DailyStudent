@@ -124,6 +124,7 @@ function CloseIcon({ size = 14 }: { size?: number }) {
 
 export function KalenderScreen() {
   const { profile, personalEntries, addEntry, removeEntry, updateProfile, addKlausurtermin, userNotes, completedHomeworkIds, standaloneHomework, appStats } = useUser()
+  const navigate = useNavigate()
   const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
 
   const today = new Date(); today.setHours(0, 0, 0, 0)
@@ -782,6 +783,20 @@ export function KalenderScreen() {
                   {TYPE_CONFIG[selectedEntry.type].label}
                 </span>
               </div>
+
+              {/* Zum Lernplan */}
+              {selectedEntry.lernplanId && (
+                <button
+                  onClick={() => { closeDetail(); navigate(`/klausurmodus/lernplan/${selectedEntry.lernplanId}`) }}
+                  className="w-full py-3 rounded-[12px] text-[14px] font-bold transition-all press-sm flex items-center justify-center gap-2"
+                  style={{ background: 'rgba(var(--color-accent), 0.10)', color: 'rgb(var(--color-accent))' }}
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Zum Lernplan
+                </button>
+              )}
 
               {/* Delete */}
               <button

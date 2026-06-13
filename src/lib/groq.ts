@@ -57,6 +57,31 @@ async function groqFetch(body: Record<string, unknown>): Promise<string> {
   return res.choices[0].message.content
 }
 
+export async function extractTopicsFromImage(dataUrl: string): Promise<string[]> {
+  const { base64, mimeType } = await resizeImage(dataUrl)
+  const text = await groqFetch({
+    model: VISION_MODEL,
+    max_tokens: 1024,
+    temperature: 0.1,
+    messages: [{
+      role: 'user',
+      content: [
+        { type: 'image_url', image_url: { url: `data:${mimeType};base64,${base64}` } },
+        {
+          type: 'text',
+          text: 'Extrahiere alle Themen, Lernziele oder Stichpunkte aus dieser Checkliste oder Liste. Antworte NUR mit einem JSON-Array von Strings, z.B. ["Thema 1", "Thema 2"]. Keine Erklärungen, nur das Array.',
+        },
+      ],
+    }],
+  })
+  try {
+    const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
+    const arr = JSON.parse(cleaned)
+    if (Array.isArray(arr)) return (arr as unknown[]).map(String).filter(Boolean)
+  } catch {}
+  return text.split('\n').map((l) => l.replace(/^[-•*\d.)\s]+/, '').trim()).filter(Boolean)
+}
+
 // Step 1: Foto → Text via Llama 3.2 Vision
 export async function extractTextFromImage(dataUrl: string): Promise<string> {
   const { base64, mimeType } = await resizeImage(dataUrl)

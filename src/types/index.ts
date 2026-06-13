@@ -272,6 +272,13 @@ export interface LernplanBlockedTime {
   endTime: string
 }
 
+export interface LernplanActivity {
+  title: string
+  durationMin: number
+  method: LernMethode
+  isPro: boolean
+}
+
 export interface LernplanSession {
   subjectId: string
   subjectName: string
@@ -280,6 +287,8 @@ export interface LernplanSession {
   method: LernMethode
   isLK: boolean
   priority: 'hoch' | 'mittel' | 'niedrig'
+  learningGoal?: string
+  activities?: LernplanActivity[]
 }
 
 export interface LernplanDay {
@@ -341,6 +350,13 @@ export interface LernplanGeneratorInput {
   studyTimePreference: 'morgen' | 'abend' | 'beides'
   includeWeekends: boolean
   preferredMethods?: LernMethode[]
+  examChecklists?: Array<{
+    subjectId: string
+    subjectName: string
+    date: string
+    topics: string[]
+    isLK: boolean
+  }>
 }
 
 /* ─── SmartNote (generated) ─────────────────────────────────── */
