@@ -118,8 +118,10 @@ Smart Notes
 - **LandingScreen** ✅ (`/landing`) — öffentliche Marketing-Seite, Framer Motion, Floating Bubble Navbar, Hero, Features, Pricing, Footer; conditional root: Unauthenticated → `/landing`, authenticated → App
 - **Bug-Report Widget** ✅ — Accordion-Card in ProfilScreen (kein Floating Button mehr), EmailJS
 - **Nav UX — Emil Kowalski Style** ✅ — Hover-Scale (1.08×), neutrale Grau-Highlights, `.nav-btn` + `.nav-active` CSS-Klassen (kein Inline-Hintergrund), Gold-shimmer Pro Badge (10s-Zyklus)
-- **App Icons** ✅ — `public/icon.svg` neu: Center-Orb + Hex-Ring (golden auf dark purple); `logo.png` in Nav + Footer per `scale(1.38)` transform gezoomt
-- **Custom Fächer Supabase-Sync** ✅ — `custom_faecher JSONB` Column via Migration `003_custom_faecher.sql`; `syncProfile` schreibt, `mapProfile` liest → kein Datenverlust nach Logout mehr. **Manueller Schritt: SQL in Supabase ausführen:** `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_faecher JSONB DEFAULT NULL;`
+- **App Icons** ✅ — `public/icon.svg`: transparenter Hintergrund, Motiv 1.22× gezoomt; `logo.png` in Nav + Footer per `scale(1.38)` transform gezoomt
+- **Custom Fächer Supabase-Sync** ✅ — `custom_faecher JSONB` Column via Migration `003_custom_faecher.sql`; SQL angewendet 14.06.2026
+- **Landing Page Scroll-Animationen** ✅ — `FadeUp` bidirektional (`once: false`), reverse beim Hochscrollen, kein Stagger beim Exit
+- **Rechtliches-Sektion im ProfilScreen** ✅ — Impressum, Datenschutz, AGB in eigene Sektion ganz unten ausgelagert
 
 ### Paywall-Strategie (Stand 10.06.2026):
 
@@ -141,33 +143,33 @@ Smart Notes
 **Paywall-Pattern:** Kein Blur. Free-User sehen eine klare Lock-Card mit konkreten Feature-Bullets. Klick öffnet `ProModal` als Bottom Sheet von unten mit Stripe-Checkout.  
 **ProModal:** `src/components/ui/ProModal.tsx` — `feature` Prop steuert Headline + Bullets. Stripe-Checkout direkt im Modal.
 
-### Phase 3 — Known Issues (Stand: 13.06.2026):
+### Known Issues (Stand: 14.06.2026):
 
 **MINOR:**
 1. **Apple OAuth** — Button in AuthScreen vorhanden, aber NICHT GETESTET
 2. **Email Confirmation Flow** — kein UI-Hinweis nach Signup
 3. **Impressum Steuernummer** — Platzhalter, nach Eingang vom Finanzamt Harburg nachtragen
-4. **Supabase Migration 003** — `custom_faecher JSONB` Spalte muss manuell via SQL Editor applied werden (Datei: `supabase/migrations/003_custom_faecher.sql`)
 
-### Phase 3 — Was noch zu tun ist:
-1. ~~**Deployment** (Vercel)~~ ✅ dailystudent.de (10.06.2026)
-2. ~~**`delete-account` Edge Function deployen**~~ ✅ (10.06.2026)
-3. ~~**TypeScript Cleanup**~~ ✅ (10.06.2026)
-4. ~~**Stripe Production-Mode**~~ ✅ Live-Keys + Live-Preise (10.06.2026)
-5. ~~**AGB**~~ ✅ AGBScreen + Route + ProfilScreen-Link (10.06.2026)
-6. ~~**Landing Page**~~ ✅ LandingScreen mit Bubble-Navbar, Hero, Features, Pricing (13.06.2026)
-7. ~~**Nav UX**~~ ✅ Hover-Scale + neutrale Highlights + Gold Pro Badge (13.06.2026)
-8. ~~**Custom Fach Supabase-Sync**~~ ✅ Accordion-UI + `custom_faecher` JSONB in DB (13.06.2026) — **Supabase SQL noch manuell anwenden!**
-9. **Rechtliches in eigene Rubrik** — Impressum, Datenschutz, AGB im ProfilScreen in eigene "Rechtliches"-Sektion ganz unten
-10. **Lernplan funktionieren lassen** — Lernplan-Flow komplett durchgehen: Navigation, Generierung (Gemini), Detailansicht, Kalender-Export — Bugs fixen
-11. **Beta-Referral-System** — siehe Roadmap unten, vollständige Spec
-12. **Claude Lernzettel Preview** — Teaser-Card in LernzettelScreen/LernzettelGeneratorScreen ("Coming next update")
-13. **Import-Funktion** — vollständigen Import-Flow testen und Bugs fixen
-14. **Notenrechner UI** — ausklappbare Fächer + bessere Einzelübersicht
-15. **Email Confirmation Flow** — Hinweis nach Signup
-16. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
-17. **Push-Benachrichtigungen** — nach Launch
-18. **Studentenadaption** — nach Launch
+### To-Do — Priorisiert (Stand: 14.06.2026):
+
+#### Rechtlich / Dringend:
+1. **Impressum + AGB aktualisieren** — Streitschlichtungshinweis (OS-Plattform / §36 VSBG) **ENTFERNEN** — wurde abgeschaltet, darf nicht mehr angezeigt werden, sonst Abmahngefahr. Beide Screens durchgehen und bereinigen.
+
+#### UX / Features:
+2. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige (heute hervorgehoben, nächste Stunde prominent), Quick-Actions klarer, Klausur-Countdown prominenter
+3. **Tutorial / Onboarding-Walkthrough** — nach dem Onboarding einen kurzen interaktiven Tutorial-Modus: zeigt die wichtigsten Screens (Unterricht → Smart Note → Karteikarten → Klausurmodus), max. 4–5 Schritte, überspringbar, nur beim ersten Login
+4. **Lernplan funktionieren lassen** — Flow komplett testen: Konfigurator → Gemini → Detailansicht → Kalender-Export, bekannte Bugs fixen
+5. **Beta-Referral-System** — siehe Roadmap unten, vollständige Spec
+6. **Claude Lernzettel Preview** — Teaser-Card in LernzettelScreen ("Nächstes Update"-Badge)
+7. **Notenrechner UI** — ausklappbare Fach-Kacheln, Farbcoding grün/orange/rot
+8. **Import-Flow** — vollständig testen + Bugs fixen
+9. **Email Confirmation Flow** — Hinweis nach Signup
+10. **Design-Anpassungen** — allgemeines UI-Polish (zu klären welche Screens)
+
+#### Nach Launch:
+11. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
+12. **Push-Benachrichtigungen**
+13. **Studentenadaption**
 
 ---
 
