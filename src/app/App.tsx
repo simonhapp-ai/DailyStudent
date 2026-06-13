@@ -62,6 +62,7 @@ import { LernplanDetailScreen } from '../screens/LernplanDetailScreen'
 import { LernplanListScreen } from '../screens/LernplanListScreen'
 import { AuthScreen } from '../screens/AuthScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
+import { LandingScreen } from '../screens/LandingScreen'
 import { DrawingCanvasScreen } from '../screens/DrawingCanvasScreen'
 import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
 import { TwoFactorSetupScreen } from '../screens/TwoFactorSetupScreen'
@@ -110,6 +111,7 @@ function SmartRedirect() {
 function AppRoutes() {
   return (
     <Routes>
+      <Route path="/landing" element={<LandingScreen />} />
       <Route path="/" element={<SmartRedirect />} />
       <Route path="/dashboard" element={<DashboardScreen />} />
       <Route path="/kalender" element={<KalenderScreen />} />
@@ -183,6 +185,8 @@ function Layout() {
   }
 
   if (!authUser) {
+    if (location.pathname === '/landing') return <LandingScreen />
+    if (location.pathname === '/') return <Navigate to="/landing" replace />
     return <AuthScreen />
   }
 
