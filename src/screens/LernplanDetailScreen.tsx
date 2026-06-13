@@ -421,7 +421,6 @@ export function LernplanDetailScreen() {
                         <SessionCard
                           key={sIdx}
                           session={session}
-                          sessionIndex={sIdx}
                           isExpanded={isExpanded}
                           onToggle={() => toggleSession(sessionKey)}
                           isPro={isPro}
@@ -457,7 +456,6 @@ export function LernplanDetailScreen() {
 
 function SessionCard({
   session,
-  sessionIndex,
   isExpanded,
   onToggle,
   isPro,
@@ -465,7 +463,6 @@ function SessionCard({
   onNavigate,
 }: {
   session: LernplanSession
-  sessionIndex: number
   isExpanded: boolean
   onToggle: () => void
   isPro: boolean
