@@ -305,13 +305,13 @@ export function FolderScreen() {
       <BottomSheet isOpen={showNewFolderModal} onClose={() => setShowNewFolderModal(false)}>
         <div className="px-5 pb-2">
           <h2 className="text-[20px] font-bold text-text-primary mb-2">Neuer Unterordner</h2>
-          <FolderBreadcrumb parts={buildFolderPathParts(folder, userFolders, isNoSubject ? 'Schnellnotizen' : (subject?.name ?? ''))} />
+          <FolderBreadcrumb parts={buildFolderPathParts(folder, userFolders, isNoSubject ? 'Schnellnotizen' : subjectName)} />
           <input
             type="text"
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && createFolder()}
-            placeholder={getTopicPlaceholder(subject?.id)}
+            placeholder={getTopicPlaceholder(id)}
             className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary placeholder-text-muted mb-4 focus:outline-none focus:border-accent transition-colors"
           />
           <button
