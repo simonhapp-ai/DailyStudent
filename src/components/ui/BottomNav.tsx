@@ -91,16 +91,12 @@ export function BottomNav() {
               key={item.path}
               onClick={() => navigate(item.path)}
               className="flex flex-col items-center gap-[3px] min-w-[68px] py-1 press-sm"
-              style={{ color: active ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))' }}
+              style={{ color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))' }}
             >
-              {/* Icon with glow pill */}
               <div
-                className="relative px-3 py-1.5 rounded-[12px] transition-all duration-300"
-                style={active ? {
-                  background: 'linear-gradient(145deg, rgba(196,181,253,0.45), rgba(109,40,217,0.2))',
-                  boxShadow: '0 0 20px rgba(124,58,237,0.28), 0 0 8px rgba(124,58,237,0.16)',
-                } : {
-                  background: 'rgba(var(--color-border), 0.28)',
+                className="relative px-3 py-1.5 rounded-[12px] nav-btn"
+                style={{
+                  background: active ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
                 }}
               >
                 {item.icon(active)}

@@ -89,17 +89,15 @@ export function DesktopSidebar() {
               key={item.path}
               onClick={() => navigate(item.path)}
               title={item.label}
-              className="w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm transition-colors"
+              className="w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn"
               style={{
-                color: active ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))',
-                background: active
-                  ? 'linear-gradient(145deg, rgba(196,181,253,0.35), rgba(109,40,217,0.15))'
-                  : undefined,
-                boxShadow: active ? '0 0 16px rgba(124,58,237,0.18)' : undefined,
+                color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))',
+                background: active ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
+                fontWeight: active ? 700 : 500,
               }}
             >
               {item.icon(active)}
-              <span className="text-[9px] font-semibold tracking-tight leading-none" style={{ fontWeight: active ? 700 : 500 }}>
+              <span className="text-[9px] tracking-tight leading-none">
                 {item.label === 'Klausurmodus' ? 'Klausur' : item.label}
               </span>
             </button>
@@ -115,12 +113,10 @@ export function DesktopSidebar() {
         <button
           onClick={() => navigate('/profil')}
           title="Profil"
-          className="w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm transition-colors"
+          className="w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn"
           style={{
-            color: isProfilActive ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))',
-            background: isProfilActive
-              ? 'linear-gradient(145deg, rgba(196,181,253,0.35), rgba(109,40,217,0.15))'
-              : undefined,
+            color: isProfilActive ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))',
+            background: isProfilActive ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
           }}
         >
           {/* Avatar circle */}
@@ -186,19 +182,15 @@ export function DesktopSidebarWide() {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm transition-colors text-left"
+              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm nav-btn text-left"
               style={{
-                color: active ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-secondary))',
-                background: active
-                  ? 'linear-gradient(145deg, rgba(196,181,253,0.35), rgba(109,40,217,0.15))'
-                  : undefined,
-                boxShadow: active ? '0 0 16px rgba(124,58,237,0.15)' : undefined,
+                color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-secondary))',
+                background: active ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
+                fontWeight: active ? 700 : 500,
               }}
             >
               <span className="shrink-0">{item.icon(active)}</span>
-              <span className="text-[14px] leading-none" style={{ fontWeight: active ? 700 : 500 }}>
-                {item.label}
-              </span>
+              <span className="text-[14px] leading-none">{item.label}</span>
             </button>
           )
         })}
@@ -211,12 +203,10 @@ export function DesktopSidebarWide() {
       <div className="px-3 pb-6">
         <button
           onClick={() => navigate('/profil')}
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm transition-colors"
+          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm nav-btn"
           style={{
-            color: isProfilActive ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-secondary))',
-            background: isProfilActive
-              ? 'linear-gradient(145deg, rgba(196,181,253,0.35), rgba(109,40,217,0.15))'
-              : undefined,
+            color: isProfilActive ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-secondary))',
+            background: isProfilActive ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
           }}
         >
           <div
