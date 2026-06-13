@@ -67,7 +67,7 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~95% (Stand: 10.06.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~98% (Stand: 13.06.2026)
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
@@ -86,7 +86,7 @@ Smart Notes
 - **KlausurphasenScreen Statistik-Widget:** Mini-Balkendiagramm (Notenpunkte/Fach) + Mini-Linienchart (Notenverlauf) + 6 Stats-Kacheln (Streak, Notizen, Fotos, PK, Lernzettel, Karten) → klickt zu InsightsScreen
 - **AbiRechnerScreen:** NP-Rechner mit Zielnote-Vergleich, Sync-Status-Feedback
 - **KlausurplanScreen, HausaufgabenheftScreen, KalenderScreen** — funktionsfähig
-- **FaecherEditScreen:** Fächer nachträglich hinzufügen/entfernen mit Ordner-Sync
+- **FaecherEditScreen:** Fächer hinzufügen/entfernen + Custom Fächer (Accordion-Widget, Supabase-sync)
 - **FolderSystem:** Ordner, Unterordner, auto-generiert nach Halbjahr/Quartal
 - **Theme:** Hell/Dunkel/System
 - **isPro-Flag:** Toggle im Profil (Dev-Mode) — schaltet alle KI-Features + Paywalls app-weit
@@ -99,6 +99,7 @@ Smart Notes
 - **`src/lib/supabaseSync.ts`** ✅ — Sync Queue mit Retry für alle Operationen inkl. `syncGradeData`
 - **`supabase/migrations/001_initial_schema.sql`** ✅ — Vollständiges DB-Schema mit 13 Tabellen, RLS, Trigger
 - **`supabase/migrations/002_grade_data.sql`** ✅ — Dedizierte `grade_data` Tabelle — ANGEWENDET 09.06.2026
+- **`supabase/migrations/003_custom_faecher.sql`** ⚠️ — `custom_faecher JSONB` Spalte in `profiles` — **NOCH NICHT ANGEWENDET** → `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_faecher JSONB DEFAULT NULL;`
 - **`supabase/functions/groq-proxy/`** ✅ — deployed
 - **`supabase/functions/gemini-proxy/`** ✅ — deployed
 - **`supabase/functions/create-checkout-session/`** ✅ — Stripe Checkout, Live-Mode aktiv
@@ -112,8 +113,13 @@ Smart Notes
 - **Rechtliches — vollständig** ✅:
   - `ImpressumScreen` (`/profil/impressum`) — echte Daten, Steuernummer noch ausstehend
   - `DatenschutzScreen` (`/profil/datenschutz`) — 10 Abschnitte, DSGVO-konform, Account-Lösch-Button
-  - `AGBScreen` (`/profil/agb`) — 28 Sektionen, Termly-generiert, **NEU 10.06.2026**
+  - `AGBScreen` (`/profil/agb`) — 28 Sektionen, Termly-generiert
   - Account-Löschung: DSGVO Art. 17 via `delete-account` Edge Function ✅ deployed
+- **LandingScreen** ✅ (`/landing`) — öffentliche Marketing-Seite, Framer Motion, Floating Bubble Navbar, Hero, Features, Pricing, Footer; conditional root: Unauthenticated → `/landing`, authenticated → App
+- **Bug-Report Widget** ✅ — Accordion-Card in ProfilScreen (kein Floating Button mehr), EmailJS
+- **Nav UX — Emil Kowalski Style** ✅ — Hover-Scale (1.08×), neutrale Grau-Highlights, `.nav-btn` + `.nav-active` CSS-Klassen (kein Inline-Hintergrund), Gold-shimmer Pro Badge (10s-Zyklus)
+- **App Icons** ✅ — `public/icon.svg` neu: Center-Orb + Hex-Ring (golden auf dark purple); `logo.png` in Nav + Footer per `scale(1.38)` transform gezoomt
+- **Custom Fächer Supabase-Sync** ✅ — `custom_faecher JSONB` Column via Migration `003_custom_faecher.sql`; `syncProfile` schreibt, `mapProfile` liest → kein Datenverlust nach Logout mehr. **Manueller Schritt: SQL in Supabase ausführen:** `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_faecher JSONB DEFAULT NULL;`
 
 ### Paywall-Strategie (Stand 10.06.2026):
 
@@ -135,12 +141,13 @@ Smart Notes
 **Paywall-Pattern:** Kein Blur. Free-User sehen eine klare Lock-Card mit konkreten Feature-Bullets. Klick öffnet `ProModal` als Bottom Sheet von unten mit Stripe-Checkout.  
 **ProModal:** `src/components/ui/ProModal.tsx` — `feature` Prop steuert Headline + Bullets. Stripe-Checkout direkt im Modal.
 
-### Phase 3 — Known Issues (Stand: 10.06.2026):
+### Phase 3 — Known Issues (Stand: 13.06.2026):
 
 **MINOR:**
 1. **Apple OAuth** — Button in AuthScreen vorhanden, aber NICHT GETESTET
 2. **Email Confirmation Flow** — kein UI-Hinweis nach Signup
 3. **Impressum Steuernummer** — Platzhalter, nach Eingang vom Finanzamt Harburg nachtragen
+4. **Supabase Migration 003** — `custom_faecher JSONB` Spalte muss manuell via SQL Editor applied werden (Datei: `supabase/migrations/003_custom_faecher.sql`)
 
 ### Phase 3 — Was noch zu tun ist:
 1. ~~**Deployment** (Vercel)~~ ✅ dailystudent.de (10.06.2026)
@@ -148,17 +155,19 @@ Smart Notes
 3. ~~**TypeScript Cleanup**~~ ✅ (10.06.2026)
 4. ~~**Stripe Production-Mode**~~ ✅ Live-Keys + Live-Preise (10.06.2026)
 5. ~~**AGB**~~ ✅ AGBScreen + Route + ProfilScreen-Link (10.06.2026)
-6. **Rechtliches in eigene Rubrik** — Impressum, Datenschutz, AGB im ProfilScreen aus den normalen Einstellungen raus und in eine eigene "Rechtliches"-Sektion ganz unten verschieben
-7. **Lernplan funktionieren lassen** — Lernplan-Flow komplett durchgehen: Navigation, Generierung (Gemini), Detailansicht, Kalender-Export — Bugs fixen
-8. **Beta-Referral-System** — siehe Roadmap unten, vollständige Spec
-9. **Claude Lernzettel Preview** — Teaser-Card in LernzettelScreen/LernzettelGeneratorScreen ("Coming next update")
-10. **Custom Fach** — Eigene Fächer ohne KC-Anbindung (Fallback: leeres KC / Niedersachsen-Generic)
-11. **Import-Funktion** — vollständigen Import-Flow testen und Bugs fixen
-12. **Notenrechner UI** — ausklappbare Fächer + bessere Einzelübersicht
-13. **Email Confirmation Flow** — Hinweis nach Signup
-14. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
-15. **Push-Benachrichtigungen** — nach Launch
-16. **Studentenadaption** — nach Launch
+6. ~~**Landing Page**~~ ✅ LandingScreen mit Bubble-Navbar, Hero, Features, Pricing (13.06.2026)
+7. ~~**Nav UX**~~ ✅ Hover-Scale + neutrale Highlights + Gold Pro Badge (13.06.2026)
+8. ~~**Custom Fach Supabase-Sync**~~ ✅ Accordion-UI + `custom_faecher` JSONB in DB (13.06.2026) — **Supabase SQL noch manuell anwenden!**
+9. **Rechtliches in eigene Rubrik** — Impressum, Datenschutz, AGB im ProfilScreen in eigene "Rechtliches"-Sektion ganz unten
+10. **Lernplan funktionieren lassen** — Lernplan-Flow komplett durchgehen: Navigation, Generierung (Gemini), Detailansicht, Kalender-Export — Bugs fixen
+11. **Beta-Referral-System** — siehe Roadmap unten, vollständige Spec
+12. **Claude Lernzettel Preview** — Teaser-Card in LernzettelScreen/LernzettelGeneratorScreen ("Coming next update")
+13. **Import-Funktion** — vollständigen Import-Flow testen und Bugs fixen
+14. **Notenrechner UI** — ausklappbare Fächer + bessere Einzelübersicht
+15. **Email Confirmation Flow** — Hinweis nach Signup
+16. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
+17. **Push-Benachrichtigungen** — nach Launch
+18. **Studentenadaption** — nach Launch
 
 ---
 
@@ -242,11 +251,11 @@ Smart Notes
 
 ---
 
-## Supabase DB-Schema — 13 Tabellen (Stand 09.06.2026)
+## Supabase DB-Schema — 13 Tabellen (Stand 13.06.2026)
 
 | Tabelle | Inhalt |
 |---------|--------|
-| `profiles` | Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermine, Stundenplan (JSONB), Abi-Gesamtnote, Theme, isPro, isDevMode |
+| `profiles` | Name, Klasse, Schulform, Bundesland, Fächer, `custom_faecher` (JSONB), Klausurtermine, Stundenplan (JSONB), Abi-Gesamtnote, Theme, isPro, isDevMode |
 | `grade_data` | `abi_halbjahre` (JSONB) — **dedizierte, isolierte Notentabelle**, verhindert Überschreiben durch Profile-Sync |
 | `app_stats` | Streak, scanCount, examCount, lastStudyDate, studiedDays[], examScores[] |
 | `user_folders` | Fach-Ordner-Baum mit Eltern-Kind-Beziehung |
@@ -291,6 +300,9 @@ KC-Daten liegen als JSON-Dateien in `public/kc/{Bundesland}/{fach}.json`.
 - **KlausurphasenScreen bleibt Hub** — kein Feature-Screen, nur Einstieg in die Lernmethoden
 - **HomeScreen = UnterrichtScreen** — kein separater HomeScreen; `/` redirectet direkt zu `/unterricht`
 - **Lernplan Kalender-Export:** `addToCalendar()` in `LernplanDetailScreen` baut Busy-Intervalle aus Stundenplan + personalEntries und platziert Sessions in freien Fenstern. Max 90 Min/Block, 15-Min-Pausen. Preferences: morgen=0–13h first, abend=13–24h first, beides=chronologisch.
+- **`/landing` Route:** Öffentlich zugänglich für alle (authenticated + unauthenticated). In `App.tsx` Layout: vor dem Sidebar-Render wird `/landing` abgefangen und `<LandingScreen />` direkt gerendert — kein Sidebar. Unauthenticated Startseite redirectet auf `/landing`.
+- **Nav-Button Hover:** `.nav-btn` + `.nav-active` CSS-Klassen in `index.css` steuern Hintergrund. **Kein inline `background` Style** auf Nav-Buttons — das würde CSS-Hover (`:hover { transform: scale(1.08) }`) blockieren. Active-State → `nav-active` Klasse, nicht inline.
+- **Custom Fächer:** `profile.customFaecher` Array in `UserProfile`. `resolveSubjectInfo(id, customFaecher)` in `subjectInfo.ts` liefert Fallback-Icon 📚 + Farbe für custom IDs. `syncProfile` schreibt `custom_faecher` nach Supabase, `mapProfile` liest es zurück.
 
 ---
 
@@ -476,28 +488,33 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ---
 
-## Letzte Session (10.06.2026)
+## Letzte Session (13.06.2026)
 
-**Launch-Vorbereitung: Paywall, AGB, Edge Functions**
+**UX-Polish, Landing Page, Icon-Updates, Custom Fächer Fix**
 
-**1. Paywall-Redesign (komplett)**
-- Kein Blur mehr — Free-User sehen klare Lock-Cards mit Feature-Bullets
-- `ProModal.tsx` mit echtem Stripe-Checkout verdrahtet (`createCheckoutSession()` aus `src/lib/stripe.ts`)
-- `ProbeklausurMenuScreen`: Modi 1/3/4 nur mit Pro (ProModal bei Klick), Mode 2 = 1/Tag Free
-- `ProbeklausurMode1-4Screen`: KI-Korrektur nur Pro — Lock-Card im Result-Screen
-- `LernzettelScreen`: 1 Lernzettel/Tag Free, dann ProModal
-- `LernplanDetailScreen`: Blur entfernt — Einzel-Lernplan vollständig sichtbar
-- `LernplanKonfiguratorScreen`: Vollständig/Abitur → ProModal direkt beim Klick auf Option (nicht erst bei "Weiter")
-- Pro badges (`✦ KI-Korrektur · Pro`, `✦ Pro`) verschwinden wenn `isPro = true`
+**1. Landing Page (`LandingScreen.tsx`)**
+- Öffentliche Route `/landing` — Framer Motion Animationen, Hero, 4 Feature-Sections mit App-Mockups, Pricing, Footer
+- Floating Bubble Navbar: `fixed top-4`, `max-w-[800px] mx-auto`, `rounded-2xl`, Glassmorphism — löst Phone-Statusbar-Konflikt
+- Authenticated users → Sidebar bypass in `App.tsx` Layout; CTA "App öffnen" → navigiert zu Dashboard/Unterricht wenn eingeloggt
+- Logo.png statt 🎓 Emoji in Navbar und Footer
 
-**2. AGB (Nutzungsbedingungen)**
-- `AGBScreen.tsx` neu erstellt (`/profil/agb`) — 28 Sektionen, Termly-generiert (EN), Simon Happ Social Media
-- Route in `App.tsx`, Link in `ProfilScreen` unter Datenschutz/Impressum
+**2. Nav UX — Emil Kowalski Style**
+- Hover-Scale `transform: scale(1.08)` auf `.nav-btn:hover` — sichtbares Feedback wenn Cursor über Nav-Button
+- `.nav-active` CSS-Klasse ersetzt inline `background` Style → CSS-Hover-Regeln feuern jetzt korrekt
+- Gold Pro Badge (`.badge-pro-gold`) mit 10s-Shimmer-Zyklus in Sidebar + ProfilScreen
+- `BottomNav` + `DesktopSidebar` (narrow + wide) gepatcht
 
-**3. Edge Functions**
-- `delete-account` deployed: `supabase functions deploy delete-account` ✅
-- Vercel Analytics: `<Analytics />` in `App.tsx` integriert
+**3. App Icons**
+- `public/icon.svg` neu: Center-Orb (goldener radialer Gradient) + 6 Hex-Nodes + Spokes, dark purple Hintergrund — passt zum Logo-Motiv
+- `logo.png` in Sidebar und Landing-Navbar via `scale(1.38) overflow-hidden` gezoomt (Logo hat zu viel Padding)
 
-**Offene TODOs aus dieser Session:**
-- Rechtliche Links (AGB, Datenschutz, Impressum) in ProfilScreen in eigene "Rechtliches"-Sektion ganz unten verschieben
-- Lernplan-Flow auf Funktionsfähigkeit prüfen und ggf. fixen
+**4. Custom Fächer — Datenverlust behoben + UI-Redesign**
+- Migration `003_custom_faecher.sql`: `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_faecher JSONB DEFAULT NULL;` — **manuell in Supabase anwenden!**
+- `syncProfile()` schreibt `custom_faecher`, `mapProfile()` liest es zurück → kein Datenverlust nach Logout
+- Retry Queue ebenfalls gepatcht
+- `FaecherEditScreen`: Full-Screen-Modal → Inline-Accordion-Widget; Chevron-Rotation, AnimatePresence, Chips-Ansicht im collapsed State
+
+**Offene TODOs:**
+- Supabase Migration 003 manuell anwenden (SQL Editor)
+- Rechtliche Links in ProfilScreen in eigene "Rechtliches"-Sektion verschieben
+- Lernplan-Flow testen und Bugs fixen
