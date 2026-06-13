@@ -472,27 +472,27 @@ export function ProfilScreen() {
         {/* ── Feedback ───────────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Feedback</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
-            <button
-              onClick={() => navigate('/landing')}
-              className="w-full flex items-center justify-between px-4 py-3.5 text-left press-sm border-b border-border/50"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 text-white text-[14px]"
-                  style={{ background: 'linear-gradient(135deg, #5AC8FA, #0891B2)' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
-                  </svg>
+          <div className="space-y-2">
+            <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+              <button
+                onClick={() => navigate('/landing')}
+                className="w-full flex items-center justify-between px-4 py-3.5 text-left press-sm"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0"
+                    style={{ background: 'linear-gradient(135deg, #5AC8FA, #0891B2)' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
+                    </svg>
+                  </div>
+                  <span className="text-text-primary text-[15px]">App Übersicht</span>
                 </div>
-                <span className="text-text-primary text-[15px]">Hilfe & App-Übersicht</span>
-              </div>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
-                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-            <div className="overflow-hidden">
-              <BugReportWidget />
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+                  <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
             </div>
+            <BugReportWidget />
           </div>
         </div>
 
