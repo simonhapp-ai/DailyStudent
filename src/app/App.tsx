@@ -112,6 +112,9 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/landing" element={<LandingScreen />} />
+      <Route path="/impressum" element={<ImpressumScreen />} />
+      <Route path="/datenschutz" element={<DatenschutzScreen />} />
+      <Route path="/agb" element={<AGBScreen />} />
       <Route path="/" element={<SmartRedirect />} />
       <Route path="/dashboard" element={<DashboardScreen />} />
       <Route path="/kalender" element={<KalenderScreen />} />
@@ -186,6 +189,9 @@ function Layout() {
 
   if (!authUser) {
     if (location.pathname === '/landing') return <LandingScreen />
+    if (location.pathname === '/impressum') return <ImpressumScreen />
+    if (location.pathname === '/datenschutz') return <DatenschutzScreen />
+    if (location.pathname === '/agb') return <AGBScreen />
     if (location.pathname === '/') return <Navigate to="/landing" replace />
     return <AuthScreen />
   }

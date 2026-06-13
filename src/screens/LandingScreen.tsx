@@ -951,9 +951,9 @@ export function LandingScreen() {
           </div>
           <div className="flex items-center gap-6">
             {[
-              ['/profil/impressum', 'Impressum'],
-              ['/profil/datenschutz', 'Datenschutz'],
-              ['/profil/agb', 'AGB'],
+              ['/impressum', 'Impressum'],
+              ['/datenschutz', 'Datenschutz'],
+              ['/agb', 'AGB'],
             ].map(([href, label]) => (
               <a
                 key={href}
