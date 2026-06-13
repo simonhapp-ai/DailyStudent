@@ -1,7 +1,6 @@
 import { useUser, type AppTheme } from '../context/UserContext'
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Badge } from '../components/ui/Badge'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { supabase } from '../lib/supabase'
 import { BugReportWidget } from '../components/ui/BugReportWidget'
@@ -160,10 +159,19 @@ export function ProfilScreen() {
             </button>
 
             <div className="flex-1 min-w-0">
-              <p className="text-text-primary font-bold text-[18px] truncate">{profile?.name ?? 'Max Müller'}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-text-primary font-bold text-[18px] truncate">{profile?.name ?? 'Max Müller'}</p>
+                {isPro && (
+                  <span
+                    className="shrink-0 text-[11px] font-bold px-2 py-0.5 rounded-full"
+                    style={{ background: 'linear-gradient(135deg, #7C3AED, #A78BFA)', color: 'white', letterSpacing: '0.01em' }}
+                  >
+                    Premium
+                  </span>
+                )}
+              </div>
               <p className="text-text-muted text-[13px] mt-0.5 truncate">{subtitle}</p>
             </div>
-            <Badge color={isPro ? 'success' : 'muted'}>{isPro ? 'Pro' : 'Free'}</Badge>
           </div>
 
           {/* ── Avatar picker (inline, toggled by avatar tap) ────── */}
