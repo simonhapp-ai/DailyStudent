@@ -1073,7 +1073,7 @@ export function NoteCreateScreen() {
                   <div
                     className="absolute rounded-xl overflow-hidden"
                     style={{
-                      top: 26, right: 0,
+                      top: 26, ...(i === 0 ? { left: 0 } : { right: 0 }),
                       background: '#2C2C2E',
                       border: '1px solid rgba(255,255,255,0.08)',
                       boxShadow: '0 8px 32px rgba(0,0,0,0.5)',

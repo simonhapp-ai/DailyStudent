@@ -4,6 +4,7 @@ import { getStroke } from 'perfect-freehand'
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 type Tool = 'pen' | 'highlighter' | 'eraser' | 'select' | 'geometry' | 'lasso'
+type PenType = 'füller' | 'bleistift' | 'fineliner' | 'edding'
 type BackgroundType = 'white' | 'lined' | 'grid' | 'dotted'
 type Background = { type: BackgroundType } | { type: 'image'; dataUrl: string }
 
@@ -28,6 +29,7 @@ interface StrokeRecord {
   colorHex: string
   size: number
   shape?: GeomShape
+  penType?: PenType
 }
 
 export interface CanvasPageData {
@@ -42,9 +44,10 @@ type ImageInteractionAction = 'drag' | 'resize-right' | 'resize-bottom' | 'resiz
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const PEN_SIZES    = [2, 4, 8]
-const MARKER_SIZES = [8, 14, 24]
-const ERASER_SIZES = [10, 20, 36]
+const PEN_SIZES    = [1.5, 3, 5, 8, 13, 20]
+const MARKER_SIZES = [8, 12, 18, 26, 36, 50]
+const ERASER_SIZES = [8, 14, 22, 32, 44, 60]
+const DOT_VIS_SIZES = [3, 5, 8, 12, 17, 24]   // visual dot sizes in the picker
 
 const DEFAULT_COLORS = ['#111827', '#2563EB', '#DC2626', '#16A34A', '#7C3AED', '#F97316']
 const COLORS_KEY = 'sb_palette_v1'
@@ -126,13 +129,15 @@ function paintStroke(
   tool: Exclude<Tool, 'select'>,
   colorHex: string,
   size: number,
+  penType: PenType = 'füller',
 ) {
   if (points.length === 0) return
+  const isFüller = tool === 'pen' && penType === 'füller'
   const outline = getStroke(points, {
     size: tool === 'eraser' ? size * 4 : size,
-    smoothing: 0.5,
-    thinning: tool === 'pen' ? 0.45 : 0,
-    simulatePressure: tool === 'pen',
+    smoothing: tool === 'pen' && penType === 'bleistift' ? 0.2 : 0.5,
+    thinning: isFüller ? 0.45 : 0,
+    simulatePressure: isFüller,
   })
   const path = buildPath(outline)
   ctx.save()
@@ -254,7 +259,7 @@ function paintGeomShape(
 
 function paintStrokeRecord(ctx: CanvasRenderingContext2D, s: StrokeRecord) {
   if (s.shape) paintGeomShape(ctx, s.shape, s.colorHex, s.size)
-  else         paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
+  else         paintStroke(ctx, s.points, s.tool, s.colorHex, s.size, s.penType)
 }
 
 type GeomHandle = { x: number; y: number; idx: number }
@@ -545,6 +550,28 @@ export function DrawingCanvas({
     origShape: GeomShape
   } | null>(null)
 
+  // Pen type (Füller / Bleistift / Fineliner / Edding)
+  const [penType, setPenType] = useState<PenType>('füller')
+  const penTypeRef = useRef<PenType>('füller')
+  useEffect(() => { penTypeRef.current = penType }, [penType])
+
+  // Tool size popup (shown when re-clicking the active tool)
+  const [activeToolPopup, setActiveToolPopup] = useState<Tool | null>(null)
+  const [showPenTypeSubmenu, setShowPenTypeSubmenu] = useState(false)
+  const penBtnRef  = useRef<HTMLButtonElement>(null)
+  const hlBtnRef   = useRef<HTMLButtonElement>(null)
+  const erBtnRef   = useRef<HTMLButtonElement>(null)
+  const geomBtnRef = useRef<HTMLButtonElement>(null)
+  useEffect(() => { setActiveToolPopup(null); setShowPenTypeSubmenu(false) }, [tool])
+
+  // Clipboard for lasso copy/paste
+  const copiedStrokesRef = useRef<StrokeRecord[]>([])
+  const [pasteMenuPos, setPasteMenuPos] = useState<{ screenX: number; screenY: number; canvasX: number; canvasY: number } | null>(null)
+
+  // Long-press detection (for paste menu)
+  const longPressTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const longPressStartRef   = useRef<{ clientX: number; clientY: number; canvasX: number; canvasY: number } | null>(null)
+
   // ── Color helpers ─────────────────────────────────────────────────────────
 
   const handleColorDotClick = (idx: number) => {
@@ -571,9 +598,9 @@ export function DrawingCanvas({
   const getActiveColor = (): string => colors[activeColorIdx]
 
   const getActiveSize = useCallback((): number => {
-    if (tool === 'highlighter') return MARKER_SIZES[hlSizeIdx]
-    if (tool === 'eraser')      return ERASER_SIZES[erSizeIdx]
-    return PEN_SIZES[penSizeIdx]  // pen, geometry, lasso all use pen sizes
+    if (tool === 'highlighter') return MARKER_SIZES[clamp(hlSizeIdx, 0, MARKER_SIZES.length - 1)]
+    if (tool === 'eraser')      return ERASER_SIZES[clamp(erSizeIdx, 0, ERASER_SIZES.length - 1)]
+    return PEN_SIZES[clamp(penSizeIdx, 0, PEN_SIZES.length - 1)]
   }, [tool, penSizeIdx, hlSizeIdx, erSizeIdx])
 
   // ── Image helpers ─────────────────────────────────────────────────────────
@@ -607,7 +634,7 @@ export function DrawingCanvas({
     drawBackground(ctx, w, h, page.background, imgCacheRef.current)
     drawCanvasImages(ctx, w, h, page.images ?? [], imgCacheRef.current)
     const strokes = pageIdx === curIdxRef.current ? strokesRef.current : page.strokes
-    for (const s of strokes) paintStroke(ctx, s.points, s.tool, s.colorHex, s.size)
+    for (const s of strokes) paintStrokeRecord(ctx, s)
     return off.toDataURL('image/png', 0.75)
   }, [])
 
@@ -932,6 +959,33 @@ export function DrawingCanvas({
     updateHistoryState(); exportAndNotify(); notifyPagesChanged()
   }
 
+  const handleCopySelection = () => {
+    const sel = selectionRef.current
+    if (!sel) return
+    copiedStrokesRef.current = strokesRef.current.filter(s => s.id && sel.ids.includes(s.id))
+    // Keep selection visible after copy
+  }
+
+  const handlePaste = (canvasX: number, canvasY: number) => {
+    const copied = copiedStrokesRef.current
+    if (copied.length === 0) return
+    const bbox = getStrokesBBox(copied)
+    if (!bbox) return
+    const bcx = bbox.x + bbox.w / 2
+    const bcy = bbox.y + bbox.h / 2
+    const dx = canvasX - bcx, dy = canvasY - bcy
+    const newStrokes: StrokeRecord[] = copied.map(s => ({
+      ...applyTransformToStroke(s, dx, dy, 1, bcx, bcy),
+      id: genId(),
+    }))
+    undoStackRef.current = [...undoStackRef.current, [...strokesRef.current]]
+    redoStackRef.current = []
+    strokesRef.current = [...strokesRef.current, ...newStrokes]
+    redrawStrokeCanvas(strokesRef.current)
+    updateHistoryState(); exportAndNotify(); notifyPagesChanged()
+    setPasteMenuPos(null)
+  }
+
   const snapCurrentStroke = () => {
     if (geomHoldTimerRef.current) { clearTimeout(geomHoldTimerRef.current); geomHoldTimerRef.current = null }
     const active = activeRef.current
@@ -956,63 +1010,22 @@ export function DrawingCanvas({
     redoStackRef.current = []
     strokesRef.current = [...strokesRef.current, snap]
     updateHistoryState(); exportAndNotify(); notifyPagesChanged()
-    selectedGeomIdRef.current = newId
-    setSelectedGeomId(newId)
+    // No auto-select: user taps the shape with finger to select it
   }
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (tool === 'select') return
 
     if (e.pointerType === 'pen') { hasSeenPenRef.current = true; penIsActiveRef.current = true }
-    if (penOnlyModeRef.current && e.pointerType !== 'pen') return
-    if (!penOnlyModeRef.current && hasSeenPenRef.current && e.pointerType === 'touch') return
 
-    // Lasso tool: selection drag or new lasso
-    if (tool === 'lasso') {
-      const [cx, cy] = getXY(e)
-      const scale = viewTransformRef.current.scale
-      const sel = selectionRef.current
-      if (sel) {
-        const { x, y, w, h } = sel.bbox
-        const handleR = 18 / scale
-        const corners: { cx: number; cy: number; mode: typeof selDragRef.current extends null ? never : NonNullable<typeof selDragRef.current>['mode'] }[] = [
-          { cx: x,     cy: y,     mode: 'scale-tl' },
-          { cx: x + w, cy: y,     mode: 'scale-tr' },
-          { cx: x + w, cy: y + h, mode: 'scale-br' },
-          { cx: x,     cy: y + h, mode: 'scale-bl' },
-        ]
-        for (const c of corners) {
-          if (Math.hypot(cx - c.cx, cy - c.cy) < handleR) {
-            e.currentTarget.setPointerCapture(e.pointerId)
-            const snaps = strokesRef.current.filter(s => s.id && sel.ids.includes(s.id)).map(s => ({ ...s }))
-            selDragRef.current = { mode: c.mode, startCX: cx, startCY: cy, snapshots: snaps, origBBox: { ...sel.bbox } }
-            redrawStrokeCanvas(strokesRef.current.filter(s => !s.id || !sel.ids.includes(s.id)))
-            return
-          }
-        }
-        // Move: click inside bbox
-        if (cx >= x && cx <= x + w && cy >= y && cy <= y + h) {
-          e.currentTarget.setPointerCapture(e.pointerId)
-          const snaps = strokesRef.current.filter(s => s.id && sel.ids.includes(s.id)).map(s => ({ ...s }))
-          selDragRef.current = { mode: 'move', startCX: cx, startCY: cy, snapshots: snaps, origBBox: { ...sel.bbox } }
-          redrawStrokeCanvas(strokesRef.current.filter(s => !s.id || !sel.ids.includes(s.id)))
-          return
-        }
-        // Click outside → deselect, start new lasso
-        selectionRef.current = null; setSelection(null)
-        redrawStrokeCanvas(strokesRef.current)
-      }
-      e.currentTarget.setPointerCapture(e.pointerId)
-      lassoDrawRef.current = [getXY(e)]
-      return
-    }
+    // Close tool popup on any canvas touch
+    if (activeToolPopup) { setActiveToolPopup(null); setShowPenTypeSubmenu(false) }
 
-    // Geometry tool: check if tapping an existing snapped shape
+    // ── Geometry: finger OR pen can select shapes; only pen can draw ──────────
     if (tool === 'geometry') {
       const [cx, cy] = getXY(e)
       const scale = viewTransformRef.current.scale
-      const handleR = 18 / scale
-      const bodyT   = 14 / scale
+      const handleR = 18 / scale, bodyT = 14 / scale
       for (let i = strokesRef.current.length - 1; i >= 0; i--) {
         const s = strokesRef.current[i]
         if (!s.shape || !s.id) continue
@@ -1028,11 +1041,69 @@ export function DrawingCanvas({
           startCX: cx, startCY: cy,
           origShape: { ...s.shape } as GeomShape,
         }
-        return
+        return  // both finger and pen stop here when hitting a shape
       }
-      // Clicked empty — deselect
-      selectedGeomIdRef.current = null
-      setSelectedGeomId(null)
+      // Tapped empty space — deselect
+      selectedGeomIdRef.current = null; setSelectedGeomId(null)
+      // Finger on empty: can't draw, done
+      if (e.pointerType !== 'pen') return
+      // Pen on empty: fall through to draw
+    }
+
+    // Standard pen-only / touch blocking (for non-geometry tools)
+    if (tool !== 'geometry') {
+      if (penOnlyModeRef.current && e.pointerType !== 'pen') return
+      if (!penOnlyModeRef.current && hasSeenPenRef.current && e.pointerType === 'touch') return
+    }
+
+    // ── Lasso tool: selection drag or new lasso ───────────────────────────────
+    if (tool === 'lasso') {
+      const [cx, cy] = getXY(e)
+      const scale = viewTransformRef.current.scale
+      const sel = selectionRef.current
+      if (sel) {
+        const { x, y, w, h } = sel.bbox
+        const handleR = 18 / scale
+        const corners: { cx: number; cy: number; mode: NonNullable<typeof selDragRef.current>['mode'] }[] = [
+          { cx: x,     cy: y,     mode: 'scale-tl' },
+          { cx: x + w, cy: y,     mode: 'scale-tr' },
+          { cx: x + w, cy: y + h, mode: 'scale-br' },
+          { cx: x,     cy: y + h, mode: 'scale-bl' },
+        ]
+        for (const c of corners) {
+          if (Math.hypot(cx - c.cx, cy - c.cy) < handleR) {
+            e.currentTarget.setPointerCapture(e.pointerId)
+            const snaps = strokesRef.current.filter(s => s.id && sel.ids.includes(s.id)).map(s => ({ ...s }))
+            selDragRef.current = { mode: c.mode, startCX: cx, startCY: cy, snapshots: snaps, origBBox: { ...sel.bbox } }
+            redrawStrokeCanvas(strokesRef.current.filter(s => !s.id || !sel.ids.includes(s.id)))
+            return
+          }
+        }
+        if (cx >= x && cx <= x + w && cy >= y && cy <= y + h) {
+          e.currentTarget.setPointerCapture(e.pointerId)
+          const snaps = strokesRef.current.filter(s => s.id && sel.ids.includes(s.id)).map(s => ({ ...s }))
+          selDragRef.current = { mode: 'move', startCX: cx, startCY: cy, snapshots: snaps, origBBox: { ...sel.bbox } }
+          redrawStrokeCanvas(strokesRef.current.filter(s => !s.id || !sel.ids.includes(s.id)))
+          return
+        }
+        selectionRef.current = null; setSelection(null)
+        redrawStrokeCanvas(strokesRef.current)
+      }
+      // Start long-press timer for paste menu
+      if (copiedStrokesRef.current.length > 0 && !sel) {
+        const [cx2, cy2] = getXY(e)
+        longPressStartRef.current = { clientX: e.clientX, clientY: e.clientY, canvasX: cx2, canvasY: cy2 }
+        longPressTimerRef.current = setTimeout(() => {
+          if (longPressStartRef.current) {
+            const { canvasX, canvasY } = longPressStartRef.current
+            setPasteMenuPos({ screenX: e.clientX, screenY: e.clientY, canvasX, canvasY })
+            longPressStartRef.current = null
+          }
+        }, 550)
+      }
+      e.currentTarget.setPointerCapture(e.pointerId)
+      lassoDrawRef.current = [getXY(e)]
+      return
     }
 
     activePointerIdsRef.current.add(e.pointerId)
@@ -1045,6 +1116,7 @@ export function DrawingCanvas({
       tool: drawTool,
       colorHex: getActiveColor(),
       size: getActiveSize(),
+      penType: drawTool === 'pen' ? penTypeRef.current : undefined,
     }
   }
 
@@ -1053,6 +1125,14 @@ export function DrawingCanvas({
       const rect = fgCanvasRef.current!.getBoundingClientRect()
       const scale = viewTransformRef.current.scale
       setEraserCursorPos({ x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale })
+    }
+
+    // Cancel long-press if finger moved more than 8px
+    if (longPressStartRef.current) {
+      if (Math.hypot(e.clientX - longPressStartRef.current.clientX, e.clientY - longPressStartRef.current.clientY) > 8) {
+        if (longPressTimerRef.current) { clearTimeout(longPressTimerRef.current); longPressTimerRef.current = null }
+        longPressStartRef.current = null
+      }
     }
 
     // Lasso selection drag / scale
@@ -1131,12 +1211,15 @@ export function DrawingCanvas({
     const ctx = fg.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
     ctx.clearRect(0, 0, w, h)
-    paintStroke(ctx, activeRef.current.points, activeRef.current.tool, activeRef.current.colorHex, activeRef.current.size)
+    paintStroke(ctx, activeRef.current.points, activeRef.current.tool, activeRef.current.colorHex, activeRef.current.size, activeRef.current.penType)
   }
 
   const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (e.pointerType === 'pen') penIsActiveRef.current = false
     activePointerIdsRef.current.delete(e.pointerId)
+    // Clear long-press timer
+    if (longPressTimerRef.current) { clearTimeout(longPressTimerRef.current); longPressTimerRef.current = null }
+    longPressStartRef.current = null
 
     // Lasso selection drag/scale commit
     if (selDragRef.current) {
@@ -1212,7 +1295,7 @@ export function DrawingCanvas({
 
     if (stroke.tool !== 'eraser') {
       const sk = skCanvasRef.current
-      if (sk) { const ctx = sk.getContext('2d'); if (ctx) paintStroke(ctx, stroke.points, stroke.tool, stroke.colorHex, stroke.size) }
+      if (sk) { const ctx = sk.getContext('2d'); if (ctx) paintStroke(ctx, stroke.points, stroke.tool, stroke.colorHex, stroke.size, stroke.penType) }
       const fg = fgCanvasRef.current
       if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
     }
@@ -1384,11 +1467,6 @@ export function DrawingCanvas({
     if (skCanvasRef.current) ctx.drawImage(skCanvasRef.current, 0, 0, w, h)
     onAnalyzeRequest(canvas.toDataURL('image/png'))
   }, [onAnalyzeRequest, getCSS])
-
-  // ── Size UI helpers ───────────────────────────────────────────────────────
-
-  const currentSizeIdx = tool === 'pen' ? penSizeIdx : tool === 'highlighter' ? hlSizeIdx : erSizeIdx
-  const setCurrentSizeIdx = tool === 'pen' ? setPenSizeIdx : tool === 'highlighter' ? setHlSizeIdx : setErSizeIdx
 
   // ── Render ────────────────────────────────────────────────────────────────
 
@@ -1562,6 +1640,142 @@ export function DrawingCanvas({
         </>
       )}
 
+      {/* ── Tool size / pen-type popup ── */}
+      {activeToolPopup && (() => {
+        const btnRef =
+          activeToolPopup === 'pen'         ? penBtnRef  :
+          activeToolPopup === 'highlighter' ? hlBtnRef   :
+          activeToolPopup === 'eraser'      ? erBtnRef   : geomBtnRef
+        const rect = btnRef.current?.getBoundingClientRect()
+        if (!rect) return null
+        const sizes = activeToolPopup === 'highlighter' ? MARKER_SIZES : activeToolPopup === 'eraser' ? ERASER_SIZES : PEN_SIZES
+        const sizeIdx = activeToolPopup === 'highlighter' ? hlSizeIdx : activeToolPopup === 'eraser' ? erSizeIdx : penSizeIdx
+        const setSizeIdx = activeToolPopup === 'highlighter' ? setHlSizeIdx : activeToolPopup === 'eraser' ? setErSizeIdx : setPenSizeIdx
+        const showPenTypes = activeToolPopup === 'pen'
+        const penTypeLabels: { key: PenType; label: string }[] = [
+          { key: 'füller',    label: 'Füller'    },
+          { key: 'fineliner', label: 'Fineliner' },
+          { key: 'bleistift', label: 'Bleistift' },
+          { key: 'edding',    label: 'Edding'    },
+        ]
+        const POPUP_W = 58
+        const popupLeft = rect.left + rect.width / 2 - POPUP_W / 2
+        const popupTop  = rect.bottom + 8
+        return (
+          <>
+            <style>{`@keyframes toolPopupIn { from { opacity:0; transform:scaleY(0.7); } to { opacity:1; transform:scaleY(1); } }`}</style>
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0"
+              style={{ zIndex: 50 }}
+              onClick={() => { setActiveToolPopup(null); setShowPenTypeSubmenu(false) }}
+            />
+            {/* Popup wrapper — flex row so submenu sits beside main popup */}
+            <div
+              className="fixed"
+              style={{ zIndex: 51, top: popupTop, left: popupLeft, display: 'flex', alignItems: 'flex-end' }}
+            >
+              {/* Main size popup */}
+              <div
+                style={{
+                  width: POPUP_W,
+                  background: '#2C2C2E',
+                  borderRadius: showPenTypes && showPenTypeSubmenu ? '14px 0 0 14px' : 14,
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  boxShadow: '0 12px 40px rgba(0,0,0,0.55)',
+                  padding: '6px 0',
+                  transformOrigin: 'top center',
+                  animation: 'toolPopupIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both',
+                }}
+              >
+                {/* 6 size circles — small at top, large at bottom */}
+                {sizes.map((_, i) => {
+                  const isActive = sizeIdx === i
+                  const dotSz = DOT_VIS_SIZES[i]
+                  const dotColor = activeToolPopup === 'eraser'
+                    ? (isActive ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.28)')
+                    : (isActive ? colors[activeColorIdx] : colors[activeColorIdx] + '66')
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => { setSizeIdx(i) }}
+                      style={{
+                        width: '100%', height: 40,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        background: isActive ? 'rgba(124,58,237,0.18)' : 'transparent',
+                        border: 'none', cursor: 'pointer',
+                      }}
+                    >
+                      <div style={{ width: dotSz, height: dotSz, borderRadius: '50%', background: dotColor }} />
+                    </button>
+                  )
+                })}
+                {/* Stift Art row (pen only) */}
+                {showPenTypes && (
+                  <>
+                    <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '4px 10px' }} />
+                    <button
+                      onClick={() => setShowPenTypeSubmenu(v => !v)}
+                      style={{
+                        width: '100%', height: 40,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2,
+                        background: showPenTypeSubmenu ? 'rgba(124,58,237,0.18)' : 'transparent',
+                        border: 'none', cursor: 'pointer',
+                        color: 'rgba(255,255,255,0.7)', fontSize: 9, fontWeight: 700,
+                      }}
+                    >
+                      <span style={{ lineHeight: 1.2 }}>Stift<br />Art</span>
+                      <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {/* Pen type submenu (beside main popup, going upward) */}
+              {showPenTypes && showPenTypeSubmenu && (
+                <div
+                  style={{
+                    background: '#2C2C2E',
+                    borderRadius: '0 14px 14px 0',
+                    border: '1px solid rgba(255,255,255,0.10)',
+                    borderLeft: 'none',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.55)',
+                    padding: '6px 0',
+                    minWidth: 130,
+                    transformOrigin: 'bottom left',
+                    animation: 'toolPopupIn 0.25s cubic-bezier(0.34,1.56,0.64,1) both',
+                  }}
+                >
+                  {penTypeLabels.map(({ key, label }) => (
+                    <button
+                      key={key}
+                      onClick={() => { setPenType(key); penTypeRef.current = key; setShowPenTypeSubmenu(false) }}
+                      style={{
+                        width: '100%', height: 40, padding: '0 14px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                        background: penType === key ? 'rgba(124,58,237,0.18)' : 'transparent',
+                        border: 'none', cursor: 'pointer',
+                        color: penType === key ? '#C4B5FD' : 'rgba(255,255,255,0.8)',
+                        fontSize: 13, fontWeight: penType === key ? 700 : 500,
+                      }}
+                    >
+                      <span>{label}</span>
+                      {penType === key && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
+        )
+      })()}
+
       {/* Clear confirm overlay */}
       {showClearConfirm && (
         <div className="fixed inset-0 flex items-center justify-center" style={{ zIndex: 60, background: 'rgba(0,0,0,0.4)' }}>
@@ -1631,69 +1845,75 @@ export function DrawingCanvas({
         {/* ── Tool icons ── */}
 
         {/* Pen — fountain pen nib */}
-        <button onClick={() => setTool('pen')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'pen' ? { background: 'rgba(124,58,237,0.14)', color: '#7C3AED' } : { color: 'rgb(var(--color-text-muted))' }} title="Stift">
+        <button
+          ref={penBtnRef}
+          onClick={() => { if (tool === 'pen') setActiveToolPopup(v => v === 'pen' ? null : 'pen'); else { setTool('pen'); setActiveToolPopup(null) } }}
+          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          style={tool === 'pen' ? { background: 'rgba(124,58,237,0.14)', color: '#7C3AED' } : { color: 'rgb(var(--color-text-muted))' }}
+          title="Stift"
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-            {/* Body */}
             <path d="M19 2C20.1 2 21.5 3 21.5 4.5C21.5 5.2 21.2 5.8 20.7 6.3L8.5 18.5L4.5 20L6 16L18.2 3.8C18.7 3.2 19 2 19 2Z" strokeWidth="1.65"/>
-            {/* Nib joint */}
             <path d="M16.5 5L19 7.5" strokeWidth="1.4"/>
-            {/* Ink tip */}
             <path d="M5.2 16.8L4.5 20" strokeWidth="1.65"/>
-            {/* Ink dot */}
             <circle cx="4.5" cy="20" r="0.7" fill="currentColor" stroke="none"/>
           </svg>
         </button>
 
         {/* Marker — flat chisel-tip highlighter */}
-        <button onClick={() => setTool('highlighter')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'highlighter' ? { background: 'rgba(250,204,21,0.15)', color: '#CA8A04' } : { color: 'rgb(var(--color-text-muted))' }} title="Marker">
+        <button
+          ref={hlBtnRef}
+          onClick={() => { if (tool === 'highlighter') setActiveToolPopup(v => v === 'highlighter' ? null : 'highlighter'); else { setTool('highlighter'); setActiveToolPopup(null) } }}
+          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          style={tool === 'highlighter' ? { background: 'rgba(250,204,21,0.15)', color: '#CA8A04' } : { color: 'rgb(var(--color-text-muted))' }}
+          title="Marker"
+        >
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-            {/* Wide marker barrel */}
             <path d="M20.5 3.5C21.3 4.3 21.3 5.7 20.5 6.5L9.5 17.5L6 18.5L7 15L18 4C18.8 3.2 20.5 3.5 20.5 3.5Z" strokeWidth="1.8"/>
-            {/* Cap band near top */}
             <path d="M17.5 5L20.5 8" strokeWidth="1.4"/>
-            {/* Chisel tip — flat angled end at bottom-left */}
             <path d="M6 18.5L9.5 17.5" strokeWidth="2.8"/>
-            {/* Wide highlight stroke below (shows it's a highlighter) */}
             <path d="M2.5 22L12 22" strokeWidth="3.5" strokeOpacity="0.45"/>
           </svg>
         </button>
 
         {/* Eraser — rectangular block eraser, slightly tilted */}
-        <button onClick={() => setTool('eraser')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'eraser' ? { background: 'rgba(255,59,48,0.11)', color: '#FF3B30' } : { color: 'rgb(var(--color-text-muted))' }} title="Radierer">
+        <button
+          ref={erBtnRef}
+          onClick={() => { if (tool === 'eraser') setActiveToolPopup(v => v === 'eraser' ? null : 'eraser'); else { setTool('eraser'); setActiveToolPopup(null) } }}
+          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          style={tool === 'eraser' ? { background: 'rgba(255,59,48,0.11)', color: '#FF3B30' } : { color: 'rgb(var(--color-text-muted))' }}
+          title="Radierer"
+        >
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
             <g transform="rotate(-10, 12, 14)">
-              {/* Eraser block */}
               <rect x="2" y="9" width="20" height="10" rx="2" strokeWidth="1.75"/>
-              {/* Cap / rubber separator */}
               <line x1="14" y1="9" x2="14" y2="19" strokeWidth="1.45"/>
-              {/* Erasing-marks above (lines being erased) */}
               <path d="M3.5 5.5L10 5.5M4.5 7.2L9 7.2" strokeWidth="1.2" strokeOpacity="0.5"/>
             </g>
           </svg>
         </button>
 
         {/* Geometry pen — pen + ruler */}
-        <button onClick={() => setTool('geometry')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'geometry' ? { background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' } : { color: 'rgb(var(--color-text-muted))' }} title="Geometrie-Stift (bald)">
+        <button
+          ref={geomBtnRef}
+          onClick={() => { if (tool === 'geometry') setActiveToolPopup(v => v === 'geometry' ? null : 'geometry'); else { setTool('geometry'); setActiveToolPopup(null) } }}
+          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          style={tool === 'geometry' ? { background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' } : { color: 'rgb(var(--color-text-muted))' }}
+          title="Geometrie-Stift"
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-            {/* Ruler bar */}
             <rect x="2" y="17" width="20" height="5" rx="1.5" strokeWidth="1.65"/>
-            {/* Ruler tick marks */}
             <path d="M7 17L7 19.5M12 17L12 19.5M17 17L17 19.5" strokeWidth="1.2"/>
-            {/* Pen above ruler */}
             <path d="M15.5 3.5C16.3 2.7 17.8 2.7 18 4L18 4.5C18 5.5 17.3 6.5 16.4 7.4L10.5 13.3L8 15L8.8 12.5L14.5 6.5C15 5.5 15.5 3.5 15.5 3.5Z" strokeWidth="1.65"/>
-            {/* Pen nib joint */}
             <path d="M14 6L16 8" strokeWidth="1.3"/>
           </svg>
         </button>
 
         {/* Lasso — dashed selection oval */}
-        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl (bald)">
+        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round">
-            {/* Dashed selection oval */}
             <ellipse cx="13" cy="10" rx="8.5" ry="6" strokeWidth="1.75" strokeDasharray="2.8 2"/>
-            {/* Lasso tail (dashed, connecting back) */}
             <path d="M4.5 11C3.2 13.5 3.8 16.5 6.5 16.5L9 16.5" strokeWidth="1.65" strokeDasharray="2.8 2"/>
-            {/* Arrow end of lasso */}
             <path d="M9 16.5L9 20" strokeWidth="1.65" strokeLinejoin="round"/>
             <path d="M7 18.2L9 20.5L11 18.2" strokeWidth="1.55" strokeLinejoin="round"/>
           </svg>
@@ -1710,30 +1930,6 @@ export function DrawingCanvas({
           </button>
         )}
         <input ref={canvasImgInputRef} type="file" accept="image/*" className="hidden" onChange={handleCanvasImageUpload} />
-
-        {/* Size picker — S/M/L dots (only for drawing tools) */}
-        {(tool === 'pen' || tool === 'highlighter' || tool === 'eraser' || tool === 'geometry') && (
-          <>
-            <div className="w-px h-6 bg-border/40 mx-1 shrink-0" />
-            <div className="flex items-center gap-0.5">
-              {([0, 1, 2] as const).map(sIdx => {
-                const isActive = currentSizeIdx === sIdx
-                const visualSz = [5, 8, 12][sIdx]
-                const dotColor = tool === 'eraser'
-                  ? (isActive ? '#888' : '#bbb')
-                  : (isActive ? colors[activeColorIdx] : colors[activeColorIdx] + '55')
-                return (
-                  <button key={sIdx} onClick={() => setCurrentSizeIdx(sIdx)}
-                    className="flex items-center justify-center w-10 h-10 rounded-full transition-all press-sm"
-                    style={{ background: isActive ? 'rgba(124,58,237,0.1)' : 'transparent', border: `1.5px solid ${isActive ? 'rgba(124,58,237,0.4)' : 'transparent'}` }}
-                  >
-                    <div style={{ width: visualSz, height: visualSz, borderRadius: '50%', background: dotColor }} />
-                  </button>
-                )
-              })}
-            </div>
-          </>
-        )}
 
         {/* ── Prominent separator ── */}
         <div className="w-px h-7 mx-2 shrink-0" style={{ background: 'rgba(0,0,0,0.12)' }} />
@@ -2010,7 +2206,7 @@ export function DrawingCanvas({
                   >Löschen</button>
                   <button
                     onPointerDown={e => e.stopPropagation()}
-                    onClick={() => { /* copy stub */ }}
+                    onClick={() => handleCopySelection()}
                     style={{
                       height: 32, paddingInline: 14,
                       borderRadius: 10, border: '1.5px solid rgba(124,58,237,0.5)',
@@ -2022,6 +2218,47 @@ export function DrawingCanvas({
                   >Kopieren</button>
                 </div>
               </div>
+            )
+          })()}
+
+          {/* Paste menu — appears at long-press position */}
+          {pasteMenuPos && (() => {
+            const containerRect = containerRef.current?.getBoundingClientRect()
+            if (!containerRect) return null
+            const { tx, ty, scale } = viewTransform
+            const screenX = tx + pasteMenuPos.canvasX * scale + containerRect.left
+            const screenY = ty + pasteMenuPos.canvasY * scale + containerRect.top
+            const relX = screenX - containerRect.left
+            const relY = screenY - containerRect.top
+            return (
+              <>
+                {/* Backdrop */}
+                <div
+                  className="absolute inset-0"
+                  style={{ zIndex: 11 }}
+                  onClick={() => setPasteMenuPos(null)}
+                />
+                <div
+                  style={{
+                    position: 'absolute', zIndex: 12,
+                    left: relX - 50, top: relY - 52,
+                    pointerEvents: 'auto',
+                  }}
+                >
+                  <button
+                    onPointerDown={e => e.stopPropagation()}
+                    onClick={() => handlePaste(pasteMenuPos.canvasX, pasteMenuPos.canvasY)}
+                    style={{
+                      height: 36, paddingInline: 18,
+                      borderRadius: 12, border: 'none',
+                      background: '#7C3AED', color: 'white',
+                      fontSize: 14, fontWeight: 700,
+                      boxShadow: '0 4px 16px rgba(124,58,237,0.45)',
+                      cursor: 'pointer',
+                    }}
+                  >Einsetzen</button>
+                </div>
+              </>
             )
           })()}
 
