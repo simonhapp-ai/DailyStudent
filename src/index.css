@@ -312,8 +312,10 @@ textarea::placeholder {
 /* ── Gold Pro Badge shimmer ─────────────────────────────────── */
 
 @keyframes gold-shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0%    { background-position: -200% center; }
+  13%   { background-position: 200% center; }
+  13.1% { background-position: -200% center; }
+  100%  { background-position: -200% center; }
 }
 
 .badge-pro-gold {
@@ -342,5 +344,5 @@ textarea::placeholder {
     transparent 75%
   );
   background-size: 200% 100%;
-  animation: gold-shimmer 2.2s infinite ease-in-out;
+  animation: gold-shimmer 10s infinite ease-in-out;
 }
