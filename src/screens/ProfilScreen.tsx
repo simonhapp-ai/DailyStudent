@@ -162,12 +162,7 @@ export function ProfilScreen() {
               <div className="flex items-center gap-2">
                 <p className="text-text-primary font-bold text-[18px] truncate">{profile?.name ?? 'Max Müller'}</p>
                 {isPro && (
-                  <span
-                    className="shrink-0 text-[11px] font-bold px-2 py-0.5 rounded-full"
-                    style={{ background: 'linear-gradient(135deg, #7C3AED, #A78BFA)', color: 'white', letterSpacing: '0.01em' }}
-                  >
-                    Premium
-                  </span>
+                  <span className="badge-pro-gold px-2.5 py-0.5 shrink-0">✦ Pro</span>
                 )}
               </div>
               <p className="text-text-muted text-[13px] mt-0.5 truncate">{subtitle}</p>

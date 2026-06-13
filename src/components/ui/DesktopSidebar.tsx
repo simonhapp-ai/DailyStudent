@@ -135,11 +135,9 @@ export function DesktopSidebar() {
           </span>
         </button>
 
-        {/* Pro badge */}
         {isPro && (
-          <div className="mt-1.5 mx-1 px-1.5 py-0.5 rounded-full text-center"
-               style={{ background: 'linear-gradient(135deg, rgba(255,208,96,0.2), rgba(192,119,0,0.15))' }}>
-            <span className="text-[8px] font-bold tracking-wide" style={{ color: '#C07700' }}>PRO</span>
+          <div className="mt-1 flex justify-center">
+            <span className="badge-pro-gold px-2 py-0.5">✦ Pro</span>
           </div>
         )}
       </div>
@@ -228,12 +226,12 @@ export function DesktopSidebarWide() {
             {profile?.avatarEmoji ?? initial}
           </div>
           <div className="flex-1 overflow-hidden text-left">
-            <p className="text-[13px] font-semibold text-text-primary leading-tight truncate">
-              {profile?.name ?? 'Profil'}
-            </p>
-            <p className="text-[10px] text-text-muted mt-0.5">
-              {isPro ? '✦ Pro · aktiv' : 'Free'}
-            </p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-[13px] font-semibold text-text-primary leading-tight truncate">
+                {profile?.name ?? 'Profil'}
+              </p>
+              {isPro && <span className="badge-pro-gold px-1.5 py-0.5 shrink-0">✦ Pro</span>}
+            </div>
           </div>
         </button>
       </div>

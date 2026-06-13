@@ -293,3 +293,39 @@ textarea::placeholder {
 .animate-grade-pop {
   animation: grade-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
+
+/* ── Gold Pro Badge shimmer ─────────────────────────────────── */
+
+@keyframes gold-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.badge-pro-gold {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #3B1F00;
+  background: linear-gradient(135deg, #C8860A 0%, #F5C842 35%, #FFD700 50%, #D4AF37 65%, #C07700 100%);
+  text-shadow: 0 1px 1px rgba(255,255,255,0.25);
+  box-shadow: 0 1px 6px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.35);
+}
+
+.badge-pro-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 25%,
+    rgba(255,255,255,0.55) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: gold-shimmer 2.2s infinite ease-in-out;
+}
