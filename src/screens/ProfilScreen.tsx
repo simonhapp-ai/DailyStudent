@@ -422,33 +422,6 @@ export function ProfilScreen() {
               </svg>
             </button>
             <button
-              onClick={() => navigate('/profil/agb')}
-              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
-            >
-              <span className="text-text-primary text-[15px]">Nutzungsbedingungen (AGB)</span>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
-                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-            <button
-              onClick={() => navigate('/profil/datenschutz')}
-              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
-            >
-              <span className="text-text-primary text-[15px]">Datenschutzerklärung</span>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
-                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-            <button
-              onClick={() => navigate('/profil/impressum')}
-              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
-            >
-              <span className="text-text-primary text-[15px]">Impressum</span>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
-                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </button>
-            <button
               onClick={() => {
                 localStorage.removeItem('lernapp_v1')
                 window.location.href = '/'
@@ -465,6 +438,40 @@ export function ProfilScreen() {
               className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm"
             >
               <span className="text-text-primary text-[15px]">Bundesland & Lehrplan</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* ── Rechtliches ────────────────────────────────────────── */}
+        <div>
+          <h2 className="section-label mb-2">Rechtliches</h2>
+          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+            <button
+              onClick={() => navigate('/profil/impressum')}
+              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
+            >
+              <span className="text-text-primary text-[15px]">Impressum</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button
+              onClick={() => navigate('/profil/datenschutz')}
+              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
+            >
+              <span className="text-text-primary text-[15px]">Datenschutzerklärung</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button
+              onClick={() => navigate('/profil/agb')}
+              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm"
+            >
+              <span className="text-text-primary text-[15px]">Nutzungsbedingungen (AGB)</span>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
                 <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>

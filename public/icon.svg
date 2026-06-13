@@ -1,11 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <!-- Deep purple background gradient -->
-    <radialGradient id="bg" cx="50%" cy="42%" r="58%">
-      <stop offset="0%" stop-color="#2B1257"/>
-      <stop offset="100%" stop-color="#07050F"/>
-    </radialGradient>
-
     <!-- Center orb -->
     <radialGradient id="orb" cx="36%" cy="30%" r="70%">
       <stop offset="0%"   stop-color="#FFFBE8"/>
@@ -28,84 +22,86 @@
     </radialGradient>
   </defs>
 
-  <!-- Background -->
-  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- All motif elements scaled 1.22× around center 256,256 -->
+  <g transform="translate(256,256) scale(1.22) translate(-256,-256)">
 
-  <!--
-    Pointy-top hexagon.
-    Center: 256,256   Ring radius: 152
-    Top:        256, 104
-    Top-right:  388, 180
-    Bot-right:  388, 332
-    Bottom:     256, 408
-    Bot-left:   124, 332
-    Top-left:   124, 180
-  -->
+    <!--
+      Pointy-top hexagon.
+      Center: 256,256   Ring radius: 152
+      Top:        256, 104
+      Top-right:  388, 180
+      Bot-right:  388, 332
+      Bottom:     256, 408
+      Bot-left:   124, 332
+      Top-left:   124, 180
+    -->
 
-  <!-- Spoke lines: center → each node -->
-  <g stroke="#C8860A" stroke-width="5" stroke-linecap="round" opacity="0.55">
-    <line x1="256" y1="256" x2="256" y2="104"/>
-    <line x1="256" y1="256" x2="388" y2="180"/>
-    <line x1="256" y1="256" x2="388" y2="332"/>
-    <line x1="256" y1="256" x2="256" y2="408"/>
-    <line x1="256" y1="256" x2="124" y2="332"/>
-    <line x1="256" y1="256" x2="124" y2="180"/>
+    <!-- Spoke lines: center → each node -->
+    <g stroke="#C8860A" stroke-width="5" stroke-linecap="round" opacity="0.55">
+      <line x1="256" y1="256" x2="256" y2="104"/>
+      <line x1="256" y1="256" x2="388" y2="180"/>
+      <line x1="256" y1="256" x2="388" y2="332"/>
+      <line x1="256" y1="256" x2="256" y2="408"/>
+      <line x1="256" y1="256" x2="124" y2="332"/>
+      <line x1="256" y1="256" x2="124" y2="180"/>
+    </g>
+
+    <!-- Bright overlay on spokes -->
+    <g stroke="#F5C842" stroke-width="2.5" stroke-linecap="round" opacity="0.75">
+      <line x1="256" y1="256" x2="256" y2="104"/>
+      <line x1="256" y1="256" x2="388" y2="180"/>
+      <line x1="256" y1="256" x2="388" y2="332"/>
+      <line x1="256" y1="256" x2="256" y2="408"/>
+      <line x1="256" y1="256" x2="124" y2="332"/>
+      <line x1="256" y1="256" x2="124" y2="180"/>
+    </g>
+
+    <!-- Outer ring connecting adjacent nodes -->
+    <g stroke="#C8860A" stroke-width="5" stroke-linecap="round" opacity="0.55">
+      <line x1="256" y1="104" x2="388" y2="180"/>
+      <line x1="388" y1="180" x2="388" y2="332"/>
+      <line x1="388" y1="332" x2="256" y2="408"/>
+      <line x1="256" y1="408" x2="124" y2="332"/>
+      <line x1="124" y1="332" x2="124" y2="180"/>
+      <line x1="124" y1="180" x2="256" y2="104"/>
+    </g>
+    <g stroke="#F5C842" stroke-width="2.5" stroke-linecap="round" opacity="0.75">
+      <line x1="256" y1="104" x2="388" y2="180"/>
+      <line x1="388" y1="180" x2="388" y2="332"/>
+      <line x1="388" y1="332" x2="256" y2="408"/>
+      <line x1="256" y1="408" x2="124" y2="332"/>
+      <line x1="124" y1="332" x2="124" y2="180"/>
+      <line x1="124" y1="180" x2="256" y2="104"/>
+    </g>
+
+    <!-- Node halos -->
+    <g opacity="0.65">
+      <circle cx="256" cy="104" r="22" fill="url(#ng)"/>
+      <circle cx="388" cy="180" r="22" fill="url(#ng)"/>
+      <circle cx="388" cy="332" r="22" fill="url(#ng)"/>
+      <circle cx="256" cy="408" r="22" fill="url(#ng)"/>
+      <circle cx="124" cy="332" r="22" fill="url(#ng)"/>
+      <circle cx="124" cy="180" r="22" fill="url(#ng)"/>
+    </g>
+
+    <!-- Node dots -->
+    <g fill="#F5C842">
+      <circle cx="256" cy="104" r="9"/>
+      <circle cx="388" cy="180" r="9"/>
+      <circle cx="388" cy="332" r="9"/>
+      <circle cx="256" cy="408" r="9"/>
+      <circle cx="124" cy="332" r="9"/>
+      <circle cx="124" cy="180" r="9"/>
+    </g>
+
+    <!-- Center ambient glow -->
+    <circle cx="256" cy="256" r="80" fill="url(#halo)"/>
+
+    <!-- Center orb -->
+    <circle cx="256" cy="256" r="30" fill="url(#orb)"/>
+
+    <!-- Center orb highlight -->
+    <circle cx="248" cy="247" r="11" fill="white" opacity="0.28"/>
+
   </g>
-
-  <!-- Bright overlay on spokes (inner third only, for glow feel) -->
-  <g stroke="#F5C842" stroke-width="2.5" stroke-linecap="round" opacity="0.75">
-    <line x1="256" y1="256" x2="256" y2="104"/>
-    <line x1="256" y1="256" x2="388" y2="180"/>
-    <line x1="256" y1="256" x2="388" y2="332"/>
-    <line x1="256" y1="256" x2="256" y2="408"/>
-    <line x1="256" y1="256" x2="124" y2="332"/>
-    <line x1="256" y1="256" x2="124" y2="180"/>
-  </g>
-
-  <!-- Outer ring connecting adjacent nodes -->
-  <g stroke="#C8860A" stroke-width="5" stroke-linecap="round" opacity="0.55">
-    <line x1="256" y1="104" x2="388" y2="180"/>
-    <line x1="388" y1="180" x2="388" y2="332"/>
-    <line x1="388" y1="332" x2="256" y2="408"/>
-    <line x1="256" y1="408" x2="124" y2="332"/>
-    <line x1="124" y1="332" x2="124" y2="180"/>
-    <line x1="124" y1="180" x2="256" y2="104"/>
-  </g>
-  <g stroke="#F5C842" stroke-width="2.5" stroke-linecap="round" opacity="0.75">
-    <line x1="256" y1="104" x2="388" y2="180"/>
-    <line x1="388" y1="180" x2="388" y2="332"/>
-    <line x1="388" y1="332" x2="256" y2="408"/>
-    <line x1="256" y1="408" x2="124" y2="332"/>
-    <line x1="124" y1="332" x2="124" y2="180"/>
-    <line x1="124" y1="180" x2="256" y2="104"/>
-  </g>
-
-  <!-- Node halos (soft glow behind each vertex dot) -->
-  <g opacity="0.65">
-    <circle cx="256" cy="104" r="22" fill="url(#ng)"/>
-    <circle cx="388" cy="180" r="22" fill="url(#ng)"/>
-    <circle cx="388" cy="332" r="22" fill="url(#ng)"/>
-    <circle cx="256" cy="408" r="22" fill="url(#ng)"/>
-    <circle cx="124" cy="332" r="22" fill="url(#ng)"/>
-    <circle cx="124" cy="180" r="22" fill="url(#ng)"/>
-  </g>
-
-  <!-- Node dots -->
-  <g fill="#F5C842">
-    <circle cx="256" cy="104" r="9"/>
-    <circle cx="388" cy="180" r="9"/>
-    <circle cx="388" cy="332" r="9"/>
-    <circle cx="256" cy="408" r="9"/>
-    <circle cx="124" cy="332" r="9"/>
-    <circle cx="124" cy="180" r="9"/>
-  </g>
-
-  <!-- Center ambient glow -->
-  <circle cx="256" cy="256" r="80" fill="url(#halo)"/>
-
-  <!-- Center orb -->
-  <circle cx="256" cy="256" r="30" fill="url(#orb)"/>
-
-  <!-- Center orb highlight -->
-  <circle cx="248" cy="247" r="11" fill="white" opacity="0.28"/>
 </svg>
