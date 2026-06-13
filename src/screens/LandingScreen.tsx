@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { useUser } from '../context/UserContext'
@@ -10,21 +10,34 @@ function FadeUp({
   children,
   delay = 0,
   className = '',
-  y = 22,
+  y = 24,
 }: {
   children: React.ReactNode
   delay?: number
   className?: string
   y?: number
 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: false, margin: '-60px' })
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: false, margin: '-72px' })
+  // Track whether element is above or below viewport when offscreen
+  const [offscreen, setOffscreen] = useState<'above' | 'below'>('below')
+
+  useEffect(() => {
+    if (!inView && ref.current) {
+      const rect = ref.current.getBoundingClientRect()
+      // If center of element is above midpoint → element is above viewport (scrolled past)
+      setOffscreen(rect.top + rect.height / 2 < window.innerHeight / 2 ? 'above' : 'below')
+    }
+  }, [inView])
+
+  const hiddenY = offscreen === 'above' ? -y : y
+
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y }}
-      transition={{ duration: 0.58, ease: E, delay: inView ? delay : 0 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: hiddenY }}
+      transition={{ duration: 0.55, ease: E, delay: inView ? delay : 0 }}
       className={className}
     >
       {children}
