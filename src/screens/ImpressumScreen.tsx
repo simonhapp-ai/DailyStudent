@@ -29,19 +29,6 @@ const SECTIONS = [
     ],
   },
   {
-    title: 'Streitschlichtung',
-    rows: [
-      {
-        label: 'EU-Plattform',
-        value: 'Die EU-Kommission stellt eine Plattform zur Online-Streitbeilegung bereit: https://ec.europa.eu/consumers/odr',
-      },
-      {
-        label: 'Hinweis',
-        value: 'Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.',
-      },
-    ],
-  },
-  {
     title: 'Haftungsausschluss',
     rows: [
       {
