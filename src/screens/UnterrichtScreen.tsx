@@ -6,7 +6,6 @@ import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS
 import type { UserFolder, UserNote } from '../types'
 import { subjects, halfYears } from '../data/mockData'
 import type { HalfYear } from '../types'
-import type { Subject } from '../types'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 
 export function UnterrichtScreen() {
@@ -36,7 +35,7 @@ export function UnterrichtScreen() {
   const [importFiles, setImportFiles] = useState<File[]>([])
   const [importPhase, setImportPhase] = useState<ImportPhase>('idle')
   const [importSuggestion, setImportSuggestion] = useState<ImportDestination | null>(null)
-  const [manualSubject, setManualSubject] = useState<Subject | null>(null)
+  const [manualSubject, setManualSubject] = useState<{ id: string; name: string } | null>(null)
   const [importCurrent, setImportCurrent] = useState(0)
   const [importSucceeded, setImportSucceeded] = useState(0)
   const [importFailed, setImportFailed] = useState(0)
@@ -114,7 +113,7 @@ export function UnterrichtScreen() {
     setImportPhase('manual-subjects')
   }
 
-  const selectManualSubject = (s: Subject) => {
+  const selectManualSubject = (s: { id: string; name: string }) => {
     const subs = userFolders.filter((f) => f.subjectId === s.id && !f.parentFolderId)
     if (subs.length === 0) {
       void startProcessing(s.id, s.name, undefined)
@@ -221,9 +220,15 @@ export function UnterrichtScreen() {
     }
   }
 
-  const profileSubjects: Subject[] = (profile?.faecher ?? [])
-    .map((id) => subjects.find((s) => s.id === id))
-    .filter((s): s is Subject => s !== undefined)
+  const profileSubjects: { id: string; name: string }[] = (profile?.faecher ?? [])
+    .map((id) => {
+      const std = subjects.find((s) => s.id === id)
+      if (std) return { id: std.id, name: std.name }
+      const custom = profile?.customFaecher?.find((cf) => cf.id === id)
+      if (custom) return { id: custom.id, name: custom.name }
+      return null
+    })
+    .filter((s): s is { id: string; name: string } => s !== null)
 
   const toggleSubject = (id: string) => {
     setExpandedSubjects((prev) => {
@@ -357,6 +362,7 @@ export function UnterrichtScreen() {
             const subjectFolders = userFolders.filter((f) => f.subjectId === subject.id && !f.parentFolderId)
             const totalNotes = userNotes.filter((n) => n.subjectId === subject.id).length
             const isExpanded = expandedSubjects.has(subject.id)
+            const customColorIdx = profile?.customFaecher?.findIndex((cf) => cf.id === subject.id) ?? -1
 
             return (
               <div key={subject.id} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
@@ -364,7 +370,11 @@ export function UnterrichtScreen() {
                   onClick={() => toggleSubject(subject.id)}
                   className="w-full flex items-center gap-4 px-4 py-4 hover:bg-surface-hover transition-colors press-sm"
                 >
-                  <SubjectIcon subjectId={subject.id} size="md" />
+                  <SubjectIcon
+                    subjectId={subject.id}
+                    size="md"
+                    customColorIndex={customColorIdx >= 0 ? customColorIdx : undefined}
+                  />
                   <div className="flex-1 text-left">
                     <p className="text-text-primary font-semibold text-[15px]">{subject.name}</p>
                     <p className="text-text-muted text-[12px] mt-0.5">
@@ -408,7 +418,9 @@ export function UnterrichtScreen() {
           {addFolderFor && (
             <div className="flex items-center gap-1.5 flex-wrap mb-4">
               <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-accent/10 text-accent">
-                {subjects.find((s) => s.id === addFolderFor)?.name ?? addFolderFor}
+                {subjects.find((s) => s.id === addFolderFor)?.name
+                  ?? profile?.customFaecher?.find((cf) => cf.id === addFolderFor)?.name
+                  ?? addFolderFor}
               </span>
             </div>
           )}

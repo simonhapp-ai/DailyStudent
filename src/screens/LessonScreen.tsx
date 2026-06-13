@@ -2,33 +2,41 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { resolveSubjectInfo } from '../data/subjectInfo'
 import { subjects } from '../data/mockData'
 
 export function LessonScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { userNotes } = useUser()
+  const { userNotes, profile } = useUser()
 
-  const subject = subjects.find((s) => s.id === id)
+  const standardSubject = subjects.find((s) => s.id === id)
+  const subjectDisplay = id
+    ? (standardSubject
+        ? { name: standardSubject.name, color: standardSubject.color }
+        : { name: resolveSubjectInfo(id, profile?.customFaecher).name, color: '#7C3AED' })
+    : null
+
   const subjectUserNotes = userNotes.filter((n) => n.subjectId === id)
 
-  if (!subject) return <div className="p-4 text-text-secondary">Fach nicht gefunden.</div>
+  if (!subjectDisplay) return <div className="p-4 text-text-secondary">Fach nicht gefunden.</div>
 
   const totalCount = subjectUserNotes.length
+  const customColorIdx = profile?.customFaecher?.findIndex((cf) => cf.id === id) ?? -1
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-28">
       <Header
-        title={subject.name}
+        title={subjectDisplay.name}
         subtitle={`${totalCount} ${totalCount === 1 ? 'Notiz' : 'Notizen'}`}
         showBack
         right={
-          <div
-            className="w-10 h-10 rounded-[13px] flex items-center justify-center text-[20px]"
-            style={{ backgroundColor: `${subject.color}18` }}
-          >
-            {subject.icon}
-          </div>
+          <SubjectIcon
+            subjectId={id ?? ''}
+            size="md"
+            customColorIndex={customColorIdx >= 0 ? customColorIdx : undefined}
+          />
         }
       />
 
@@ -43,7 +51,7 @@ export function LessonScreen() {
               <span className="text-[11px] text-text-muted font-medium">
                 {new Date(note.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: 'short' })}
               </span>
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: subject.color }} />
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: subjectDisplay.color }} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">

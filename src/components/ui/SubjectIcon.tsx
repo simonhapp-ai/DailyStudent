@@ -7,7 +7,29 @@ interface SubjectIconProps {
   subjectId: string
   size?: Size
   className?: string
+  customColorIndex?: number
 }
+
+// 10 gradients cycling green → orange → yellow → dark pink
+const CUSTOM_GRADIENTS = [
+  { from: '#3DD68C', to: '#10A05A' }, // 1  mint green
+  { from: '#FF9F0A', to: '#C96700' }, // 2  orange
+  { from: '#FFD60A', to: '#C8A300' }, // 3  yellow
+  { from: '#FF2D88', to: '#B50060' }, // 4  deep pink
+  { from: '#34C759', to: '#1A7E31' }, // 5  forest green
+  { from: '#FF6B35', to: '#C03500' }, // 6  burnt orange
+  { from: '#F5BC00', to: '#A07A00' }, // 7  amber
+  { from: '#FF375F', to: '#8C0025' }, // 8  raspberry
+  { from: '#00C7BE', to: '#007A76' }, // 9  teal
+  { from: '#FFAB40', to: '#D46400' }, // 10 golden orange
+]
+
+const customPlusIcon = (
+  <>
+    <circle cx="12" cy="12" r="7.5" />
+    <path d="M12 8.5v7M8.5 12h7" />
+  </>
+)
 
 const gradientLevel: Record<string, Level> = {
   deutsch: 'a', physik: 'a', chemie: 'a', kunst: 'a', musik: 'a', sport: 'a',
@@ -168,9 +190,34 @@ const fallbackIcon = (
   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
 )
 
-export function SubjectIcon({ subjectId, size = 'md', className = '' }: SubjectIconProps) {
-  const lvl = gradientLevel[subjectId] ?? 'a'
+export function SubjectIcon({ subjectId, size = 'md', className = '', customColorIndex }: SubjectIconProps) {
   const { cls, px } = sizeConfig[size]
+
+  if (subjectId.startsWith('custom_')) {
+    const idx = ((customColorIndex ?? 0) % CUSTOM_GRADIENTS.length + CUSTOM_GRADIENTS.length) % CUSTOM_GRADIENTS.length
+    const { from, to } = CUSTOM_GRADIENTS[idx]
+    return (
+      <div
+        className={`${cls} rounded-full flex items-center justify-center shrink-0 ${className}`}
+        style={{ background: `radial-gradient(circle at 35% 35%, ${from}, ${to})` }}
+      >
+        <svg
+          width={px}
+          height={px}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {customPlusIcon}
+        </svg>
+      </div>
+    )
+  }
+
+  const lvl = gradientLevel[subjectId] ?? 'a'
   const custom = customGradients[subjectId]
   const from = custom ? custom.from : `rgb(var(--si-${lvl}-from))`
   const to   = custom ? custom.to   : `rgb(var(--si-${lvl}-to))`

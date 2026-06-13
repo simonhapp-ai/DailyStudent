@@ -5,7 +5,7 @@ import { Badge } from '../components/ui/Badge'
 import { useUser } from '../context/UserContext'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { subjects } from '../data/mockData'
-import { getTopicPlaceholder } from '../data/subjectInfo'
+import { getTopicPlaceholder, resolveSubjectInfo } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import type { UserFolder } from '../types'
 
@@ -50,7 +50,7 @@ function FolderBreadcrumb({ parts, className = 'mb-4' }: { parts: string[]; clas
 export function FolderScreen() {
   const { id, folderId } = useParams<{ id: string; folderId: string }>()
   const navigate = useNavigate()
-  const { userFolders, userNotes, addFolder, deleteFolder } = useUser()
+  const { userFolders, userNotes, addFolder, deleteFolder, profile } = useUser()
 
   const [fabOpen, setFabOpen] = useState(false)
   const [showNewFolderModal, setShowNewFolderModal] = useState(false)
@@ -59,16 +59,23 @@ export function FolderScreen() {
 
   const folder = userFolders.find((f) => f.id === folderId)
   const isNoSubject = folder?.subjectId === 'ohne-fach'
-  const subject = isNoSubject ? null : subjects.find((s) => s.id === id)
+
+  // Resolve subject name for both standard and custom subjects
+  const subjectName: string = isNoSubject
+    ? ''
+    : (subjects.find((s) => s.id === id)?.name
+        ?? (id ? resolveSubjectInfo(id, profile?.customFaecher).name : ''))
+
   const subFolders = isNoSubject ? [] : userFolders.filter((f) => f.parentFolderId === folderId)
   const folderNotes = userNotes.filter((n) => n.folderId === folderId)
 
-  if (!folder || (!isNoSubject && !subject)) {
+  if (!folder) {
     return <div className="p-4 text-text-secondary">Ordner nicht gefunden.</div>
   }
 
   const folderName = isNoSubject ? 'Schnellnotizen' : folder.name
   const isDeletable = isNoSubject && folderId === NO_SUBJECT_FOLDER_ID
+  const customColorIdx = profile?.customFaecher?.findIndex((cf) => cf.id === id) ?? -1
 
   const openNewFolder = () => {
     setNewFolderName('')
@@ -79,7 +86,7 @@ export function FolderScreen() {
     if (!newFolderName.trim() || !folderId) return
     const newFolder: UserFolder = {
       id: `folder-user-${crypto.randomUUID()}`,
-      subjectId: subject?.id ?? 'ohne-fach',
+      subjectId: id ?? 'ohne-fach',
       halfYearId: folder?.halfYearId,
       parentFolderId: folderId,
       name: newFolderName.trim(),
@@ -110,13 +117,13 @@ export function FolderScreen() {
   const isEmpty = subFolders.length === 0 && folderNotes.length === 0
   const pathParts = isNoSubject && !folder.parentFolderId
     ? []
-    : buildFolderPathParts(folder, userFolders, isNoSubject ? 'Schnellnotizen' : (subject?.name ?? ''))
+    : buildFolderPathParts(folder, userFolders, isNoSubject ? 'Schnellnotizen' : subjectName)
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-32">
       <Header
         title={folderName}
-        subtitle={isNoSubject ? 'Schnelle Notizen ohne Fach' : subject!.name}
+        subtitle={isNoSubject ? 'Schnelle Notizen ohne Fach' : subjectName}
         showBack
         right={
           isDeletable ? (
@@ -131,7 +138,11 @@ export function FolderScreen() {
               </svg>
             </button>
           ) : (
-            <SubjectIcon subjectId={id ?? ''} size="md" />
+            <SubjectIcon
+              subjectId={id ?? ''}
+              size="md"
+              customColorIndex={customColorIdx >= 0 ? customColorIdx : undefined}
+            />
           )
         }
       />
