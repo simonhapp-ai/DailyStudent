@@ -1,14 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="62%">
+      <stop offset="0%"   stop-color="#2B1257"/>
+      <stop offset="100%" stop-color="#07050F"/>
+    </radialGradient>
     <radialGradient id="orb" cx="36%" cy="30%" r="70%">
-      <stop offset="0%"   stop-color="#FFFBE8"/>
-      <stop offset="28%"  stop-color="#FFD700"/>
-      <stop offset="68%"  stop-color="#C8860A"/>
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="18%"  stop-color="#FFE566"/>
+      <stop offset="55%"  stop-color="#FFD700"/>
+      <stop offset="85%"  stop-color="#C8860A"/>
       <stop offset="100%" stop-color="#6B3E00"/>
     </radialGradient>
     <radialGradient id="halo" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"   stop-color="#FFD700" stop-opacity="0.45"/>
-      <stop offset="60%"  stop-color="#C8860A" stop-opacity="0.12"/>
+      <stop offset="0%"   stop-color="#FFD700" stop-opacity="0.55"/>
+      <stop offset="55%"  stop-color="#C8860A" stop-opacity="0.15"/>
       <stop offset="100%" stop-color="#C8860A" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="ng" cx="50%" cy="50%" r="50%">
@@ -17,10 +22,16 @@
     </radialGradient>
   </defs>
 
-  <!-- Scaled 1.3× around center for better fill -->
+  <!-- Scale 1.3× around center -->
   <g transform="translate(256,256) scale(1.3) translate(-256,-256)">
 
-    <!-- Hex ring (outer edges only, no spokes) -->
+    <!-- Hex fill: dark purple bg only inside the hexagon -->
+    <polygon
+      points="256,104 388,180 388,332 256,408 124,332 124,180"
+      fill="url(#bg)"
+    />
+
+    <!-- Hex ring -->
     <g stroke="#C8860A" stroke-width="6" stroke-linecap="round" opacity="0.6">
       <line x1="256" y1="104" x2="388" y2="180"/>
       <line x1="388" y1="180" x2="388" y2="332"/>
@@ -29,7 +40,7 @@
       <line x1="124" y1="332" x2="124" y2="180"/>
       <line x1="124" y1="180" x2="256" y2="104"/>
     </g>
-    <g stroke="#F5C842" stroke-width="3" stroke-linecap="round" opacity="0.85">
+    <g stroke="#F5C842" stroke-width="3" stroke-linecap="round" opacity="0.9">
       <line x1="256" y1="104" x2="388" y2="180"/>
       <line x1="388" y1="180" x2="388" y2="332"/>
       <line x1="388" y1="332" x2="256" y2="408"/>
@@ -39,7 +50,7 @@
     </g>
 
     <!-- Node halos -->
-    <g opacity="0.65">
+    <g opacity="0.7">
       <circle cx="256" cy="104" r="22" fill="url(#ng)"/>
       <circle cx="388" cy="180" r="22" fill="url(#ng)"/>
       <circle cx="388" cy="332" r="22" fill="url(#ng)"/>
@@ -59,13 +70,13 @@
     </g>
 
     <!-- Center glow -->
-    <circle cx="256" cy="256" r="80" fill="url(#halo)"/>
+    <circle cx="256" cy="256" r="90" fill="url(#halo)"/>
 
-    <!-- Center orb -->
-    <circle cx="256" cy="256" r="34" fill="url(#orb)"/>
+    <!-- Center orb — bigger + brighter -->
+    <circle cx="256" cy="256" r="42" fill="url(#orb)"/>
 
-    <!-- Orb highlight -->
-    <circle cx="248" cy="247" r="12" fill="white" opacity="0.28"/>
+    <!-- Orb specular highlight -->
+    <circle cx="244" cy="242" r="15" fill="white" opacity="0.35"/>
 
   </g>
 </svg>
