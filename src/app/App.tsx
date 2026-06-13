@@ -164,22 +164,19 @@ function Layout() {
   const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
   const [needsMfa, setNeedsMfa] = useState(false)
-  const [mfaChecked, setMfaChecked] = useState(false)
 
   useEffect(() => {
     if (!authUser) {
       setNeedsMfa(false)
-      setMfaChecked(false)
       return
     }
     void (async () => {
       const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
       setNeedsMfa(data?.nextLevel === 'aal2' && data?.currentLevel !== 'aal2')
-      setMfaChecked(true)
     })()
   }, [authUser?.id])
 
-  if (authLoading || (authUser && !mfaChecked)) {
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
