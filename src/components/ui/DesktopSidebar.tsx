@@ -77,7 +77,9 @@ export function DesktopSidebar() {
     >
       {/* Logo */}
       <div className="flex justify-center pt-7 pb-5 px-2">
-        <img src="/logo.png" alt="DailyStudent" className="w-9 h-9 rounded-[12px] object-cover shrink-0" />
+        <div className="w-9 h-9 rounded-[12px] overflow-hidden shrink-0">
+          <img src="/logo.png" alt="DailyStudent" className="w-full h-full object-cover" style={{ transform: 'scale(1.38)', transformOrigin: 'center' }} />
+        </div>
       </div>
 
       {/* Nav */}
@@ -89,10 +91,9 @@ export function DesktopSidebar() {
               key={item.path}
               onClick={() => navigate(item.path)}
               title={item.label}
-              className="w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn"
+              className={`w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn ${active ? 'nav-active' : ''}`}
               style={{
                 color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))',
-                background: active ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
                 fontWeight: active ? 700 : 500,
               }}
             >
@@ -113,10 +114,9 @@ export function DesktopSidebar() {
         <button
           onClick={() => navigate('/profil')}
           title="Profil"
-          className="w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn"
+          className={`w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn ${isProfilActive ? 'nav-active' : ''}`}
           style={{
             color: isProfilActive ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))',
-            background: isProfilActive ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
           }}
         >
           {/* Avatar circle */}
@@ -167,7 +167,9 @@ export function DesktopSidebarWide() {
     >
       {/* Logo + wordmark */}
       <div className="flex items-center gap-3 px-5 pt-7 pb-5">
-        <img src="/logo.png" alt="DailyStudent" className="w-9 h-9 rounded-[12px] object-cover shrink-0" />
+        <div className="w-9 h-9 rounded-[12px] overflow-hidden shrink-0">
+          <img src="/logo.png" alt="DailyStudent" className="w-full h-full object-cover" style={{ transform: 'scale(1.38)', transformOrigin: 'center' }} />
+        </div>
         <div>
           <p className="text-[14px] font-bold text-text-primary leading-tight">DailyStudent</p>
           <p className="text-[10px] text-text-muted leading-tight">Lernökosystem</p>
@@ -182,10 +184,9 @@ export function DesktopSidebarWide() {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm nav-btn text-left"
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm nav-btn text-left ${active ? 'nav-active' : ''}`}
               style={{
                 color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-secondary))',
-                background: active ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
                 fontWeight: active ? 700 : 500,
               }}
             >
@@ -203,10 +204,9 @@ export function DesktopSidebarWide() {
       <div className="px-3 pb-6">
         <button
           onClick={() => navigate('/profil')}
-          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm nav-btn"
+          className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm nav-btn ${isProfilActive ? 'nav-active' : ''}`}
           style={{
             color: isProfilActive ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-secondary))',
-            background: isProfilActive ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
           }}
         >
           <div

@@ -94,10 +94,7 @@ export function BottomNav() {
               style={{ color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))' }}
             >
               <div
-                className="relative px-3 py-1.5 rounded-[12px] nav-btn"
-                style={{
-                  background: active ? 'rgba(var(--color-text-primary), 0.08)' : 'transparent',
-                }}
+                className={`relative px-3 py-1.5 rounded-[12px] nav-btn ${active ? 'nav-active' : ''}`}
               >
                 {item.icon(active)}
               </div>

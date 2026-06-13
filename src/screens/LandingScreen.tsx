@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
+import { useUser } from '../context/UserContext'
 
 // Emil Kowalski: custom strong ease-out curve — starts fast, feels instant
 const E = [0.23, 1, 0.32, 1] as const
@@ -306,56 +307,60 @@ function LernplanMockup() {
 
 function Navbar({ onCta }: { onCta: () => void }) {
   return (
-    <motion.nav
-      initial={{ opacity: 0, y: -12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: E }}
-      className="fixed top-0 inset-x-0 z-50"
-      style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
-    >
-      <div
-        className="border-b"
-        style={{ background: 'rgba(250,250,253,0.85)', borderColor: 'rgba(209,209,214,0.4)' }}
+    <div className="fixed top-4 sm:top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+      <motion.div
+        initial={{ opacity: 0, y: -16, scale: 0.97 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.52, ease: E }}
+        className="pointer-events-auto w-full flex items-center justify-between px-4 py-2.5 rounded-2xl"
+        style={{
+          maxWidth: '800px',
+          background: 'rgba(250,250,253,0.92)',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
+          border: '1px solid rgba(209,209,214,0.5)',
+          boxShadow: '0 4px 28px rgba(22,14,40,0.09), 0 1px 4px rgba(22,14,40,0.05)',
+        }}
       >
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-2.5">
-            <div
-              className="w-8 h-8 rounded-[10px] flex items-center justify-center text-white text-[16px] font-black shadow-sm"
-              style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)' }}
-            >
-              🎓
-            </div>
-            <span className="font-bold text-[17px] text-[#160E28] tracking-tight">DailyStudent</span>
+        {/* Logo */}
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-[9px] overflow-hidden shrink-0">
+            <img
+              src="/logo.png"
+              alt="DailyStudent"
+              className="w-full h-full object-cover"
+              style={{ transform: 'scale(1.38)', transformOrigin: 'center' }}
+            />
           </div>
-
-          {/* Nav links (desktop only) */}
-          <div className="hidden md:flex items-center gap-7">
-            {[['#features', 'Features'], ['#vorteile', 'Vorteile'], ['#preise', 'Preise']].map(([href, label]) => (
-              <a
-                key={href}
-                href={href}
-                className="text-[14px] font-medium text-[#483C5F] hover:text-[#160E28] transition-colors duration-150"
-              >
-                {label}
-              </a>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <button
-            onClick={onCta}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold text-white shadow-sm press-sm"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)' }}
-          >
-            App öffnen
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
+          <span className="font-bold text-[15px] text-[#160E28] tracking-tight">DailyStudent</span>
         </div>
-      </div>
-    </motion.nav>
+
+        {/* Nav links (desktop only) */}
+        <div className="hidden md:flex items-center gap-6">
+          {[['#features', 'Features'], ['#vorteile', 'Vorteile'], ['#preise', 'Preise']].map(([href, label]) => (
+            <a
+              key={href}
+              href={href}
+              className="text-[13px] font-medium text-[#483C5F] hover:text-[#160E28] transition-colors duration-150"
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <button
+          onClick={onCta}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0"
+          style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}
+        >
+          App öffnen
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
+      </motion.div>
+    </div>
   )
 }
 
@@ -440,14 +445,22 @@ function FeatureSection({
 
 export function LandingScreen() {
   const navigate = useNavigate()
-  const goToApp = () => navigate('/auth')
+  const { authUser } = useUser()
+  const goToApp = () => {
+    if (authUser) {
+      const isDesktop = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
+      navigate(isDesktop ? '/dashboard' : '/unterricht')
+    } else {
+      navigate('/auth')
+    }
+  }
 
   return (
     <div className="min-h-dvh" style={{ background: '#FAFAFD', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif' }}>
       <Navbar onCta={goToApp} />
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <section className="relative min-h-dvh flex items-center overflow-hidden pt-16">
+      <section className="relative min-h-dvh flex items-center overflow-hidden pt-24">
         {/* Background glow */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -917,11 +930,8 @@ export function LandingScreen() {
       >
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div
-              className="w-6 h-6 rounded-lg flex items-center justify-center text-[13px]"
-              style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)' }}
-            >
-              🎓
+            <div className="w-6 h-6 rounded-lg overflow-hidden shrink-0">
+              <img src="/logo.png" alt="DailyStudent" className="w-full h-full object-cover" style={{ transform: 'scale(1.38)', transformOrigin: 'center' }} />
             </div>
             <span className="text-[13px] font-semibold text-[#160E28]">DailyStudent</span>
             <span className="text-[12px] text-[#988CAF] ml-1">© 2026 Simon Happ</span>

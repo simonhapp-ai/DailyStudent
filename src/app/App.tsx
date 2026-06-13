@@ -208,6 +208,8 @@ function Layout() {
     return <OnboardingScreen />
   }
 
+  if (location.pathname === '/landing') return <LandingScreen />
+
   const hideNav =
     location.pathname === '/klausurmodus/karteikarten/neu' ||
     location.pathname === '/klausurmodus/lernzettel/neu' ||
