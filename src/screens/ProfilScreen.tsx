@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Badge } from '../components/ui/Badge'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { supabase } from '../lib/supabase'
+import { BugReportWidget } from '../components/ui/BugReportWidget'
 
 const AVATAR_BG_OPTIONS = [
   { id: 'purple', gradient: 'linear-gradient(145deg, #A78BFA, #7C3AED)' },
@@ -466,6 +467,12 @@ export function ProfilScreen() {
               </svg>
             </button>
           </div>
+        </div>
+
+        {/* ── Feedback ───────────────────────────────────────────── */}
+        <div>
+          <h2 className="section-label mb-2">Feedback</h2>
+          <BugReportWidget />
         </div>
 
       </div>
