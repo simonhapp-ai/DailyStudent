@@ -2,138 +2,876 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=960">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<title>Ökologie — Biologie LK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernzettel Â· Ãkologie II â StoffkreislÃ¤ufe &amp; Nachhaltigkeit Â· Bio LK eA</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Source Sans 3',system-ui,sans-serif;background:#faf8f4;color:#1c2b1e;font-size:14px;line-height:1.55}
-  .topbar{background:#2a6e4a;color:#fff;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
-  .t-left{display:flex;align-items:center;gap:10px}
-  .t-sub{font-size:18px;font-weight:700;letter-spacing:-.3px}
-  .t-topic{font-size:12px;font-weight:500;color:rgba(255,255,255,.7)}
-  .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
-  .chip-w{background:rgba(255,255,255,.18);color:#fff}
-  .chip-g{background:linear-gradient(135deg,#c8860a,#f5c842);color:#3b1f00}
-  .main{padding:18px 36px;display:grid;grid-template-columns:1.45fr 1fr;gap:22px}
-  .diag-box{background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;padding:16px}
-  .diag-title{font-family:'Lora',Georgia,serif;font-size:13px;font-weight:700;color:#1a4731;margin-bottom:12px}
-  .rcol{display:flex;flex-direction:column;gap:11px}
-  .fb{background:#f0fdf4;border:1.5px solid #2a6e4a;border-left-width:4px;border-radius:8px;padding:12px 14px}
-  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#2a6e4a;margin-bottom:7px}
-  .fb-eq{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#1a4731;margin-bottom:4px;line-height:1.6}
-  .fb-desc{font-size:12px;color:#4b7358;line-height:1.45}
-  .cb{border-radius:8px;padding:11px 13px}
-  .cb-e{background:#fffbeb;border-left:4px solid #d97706}
-  .cb-k{background:#f0fdf4;border-left:4px solid #16a34a}
-  .cb-i{background:#eff6ff;border-left:4px solid #2563eb}
-  .cb-t{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-  .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-i .cb-t{color:#1e40af}
-  .cb-txt{font-size:12.5px;line-height:1.5;color:#1c2b1e}
-  .sumrow{padding:14px 36px;background:#f0fdf4;border-top:1px solid #bbf7d0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .sc{background:#fff;border:1px solid #bbf7d0;border-top:3px solid #2a6e4a;border-radius:7px;padding:10px}
-  .sc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6b9478;margin-bottom:4px}
-  .sc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#1a4731}
-  .sc-desc{font-size:11px;color:#6b9478;margin-top:3px}
+  :root{
+    --acc:#2a6e4a;--acc-mid:#3a8a5e;--acc-light:#5aaa7e;
+    --pas:#f0f7f2;--pas-dark:#c8e6d4;
+    --bg:#faf8f4;--surf:#ffffff;
+    --muted:#6b7265;--text:#1e2a1e;
+    --border:#d0e4d8;--radius:10px;
+    --sh-sm:0 1px 5px rgba(42,110,74,.07);
+    --sh:0 3px 16px rgba(42,110,74,.09)
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.74}
+
+  .topbar{background:var(--acc);color:#fff;padding:0 32px;position:sticky;top:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;height:54px;
+    box-shadow:0 2px 14px rgba(42,110,74,.28)}
+  .tl{display:flex;align-items:center;gap:14px}
+  .ts{font-family:'Lora',serif;font-size:17px;font-weight:700;letter-spacing:-.2px}
+  .tc{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{padding:3px 11px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.4px}
+  .chip-l{background:#ffffff22;border:1px solid #ffffff55;color:#d4f0e0}
+  .chip-d{background:#c9b99a22;border:1px solid #c9b99a55;color:#f0e8d8}
+  .chip-e{background:#fbbf2420;border:1px solid #fbbf2455;color:#fde68a}
+  .tr{font-size:11px;color:#9ad4b8;letter-spacing:.3px}
+
+  .page{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  .hero{border-left:5px solid var(--acc);padding:20px 26px;background:var(--pas);
+    border-radius:0 var(--radius) var(--radius) 0;margin-bottom:34px}
+  .hero-ey{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--acc-mid);margin-bottom:6px}
+  .hero-ti{font-family:'Lora',serif;font-size:25px;font-weight:700;color:var(--acc);line-height:1.25;margin-bottom:8px}
+  .hero-me{font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+
+  .toc{background:var(--surf);border:1.5px solid var(--border);border-radius:var(--radius);
+    padding:20px 24px;margin-bottom:40px;box-shadow:var(--sh-sm)}
+  .toc-ti{font-family:'Lora',serif;font-size:13px;font-weight:700;color:var(--acc);
+    text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+  .toc ol{padding-left:20px}
+  .toc li{margin:6px 0}
+  .toc a{color:var(--acc-mid);text-decoration:none;font-size:14px;font-weight:500}
+  .toc a:hover{color:var(--acc);text-decoration:underline}
+
+  .sec{margin-bottom:56px}
+  .sec-hd{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;
+    padding-bottom:14px;border-bottom:2px solid var(--pas-dark)}
+  .sec-num{width:38px;height:38px;background:var(--acc);color:#fff;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Lora',serif;font-size:17px;font-weight:700;flex-shrink:0;margin-top:2px}
+  .sec-ti{font-family:'Lora',serif;font-size:22px;font-weight:700;color:var(--acc);line-height:1.3}
+  .sec-su{font-size:13px;color:var(--muted);margin-top:2px}
+
+  .bt{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--acc-mid);
+    margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .bt::before{content:'';display:block;width:16px;height:2px;background:var(--acc-light)}
+  p{margin-bottom:12px} p:last-child{margin-bottom:0}
+
+  .kb{background:var(--pas);border-left:4px solid var(--acc);
+    border-radius:0 var(--radius) var(--radius) 0;padding:13px 18px;margin:14px 0;box-shadow:var(--sh-sm)}
+  .kb .kl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--acc-mid);margin-bottom:6px}
+  .kb .km{font-family:'Lora',serif;font-size:15px;font-weight:600;color:var(--acc);line-height:1.45}
+  .kb .ke{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.58}
+  code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--pas);color:var(--acc);padding:1px 6px;border-radius:4px}
+
+  .callout{border-left:4px solid;border-radius:0 var(--radius) var(--radius) 0;
+    padding:11px 16px;margin:13px 0;font-size:13.5px;line-height:1.62}
+  .ct{font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+  .c-esel{background:#fdf3e0;border-color:#b07a10;color:#7a4e0a}
+  .c-esel .ct{color:#8a5c08}
+  .c-warn{background:#fdf0ee;border-color:#9e2a1c;color:#7a1c10}
+  .c-warn .ct{color:#8a1c10}
+  .c-kc{background:#edf7f2;border-color:#1e5c38;color:#1e4a2e}
+  .c-kc .ct{color:#1a5232}
+  .c-info{background:var(--pas);border-color:var(--acc);color:#1a3a24}
+  .c-info .ct{color:var(--acc)}
+
+  .ea{display:inline-flex;align-items:center;background:var(--acc);color:#fff;
+    font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.4px;margin-left:8px;vertical-align:middle}
+
+  .ex{background:#f4fbf6;border:1.5px solid var(--pas-dark);border-radius:var(--radius);padding:15px 20px;margin:13px 0}
+  .ex-ti{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--acc-mid);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .step{display:flex;gap:10px;margin-bottom:7px;font-size:13.5px;align-items:flex-start}
+  .sn{width:22px;height:22px;background:var(--acc);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+
+  .dw{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin:16px 0;box-shadow:var(--sh-sm);overflow-x:auto}
+  .dc{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;font-style:italic}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:13px 0}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:13px 0}
+  @media(max-width:640px){.g2,.g3{grid-template-columns:1fr}}
+  .divider{height:1px;background:var(--pas-dark);margin:26px 0}
+
+  .sum{background:var(--pas);border:2px solid var(--acc);border-radius:var(--radius);padding:28px;margin-top:48px}
+  .sum-ti{font-family:'Lora',serif;font-size:22px;font-weight:700;color:var(--acc);margin-bottom:20px}
+  .kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:11px;margin-bottom:24px}
+  .kc{background:#fff;border-left:4px solid var(--acc);border-radius:0 8px 8px 0;padding:11px 14px;box-shadow:var(--sh-sm)}
+  .kc .kl2{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .kc .kk{font-family:'Lora',serif;font-size:13.5px;color:var(--acc);font-weight:600;line-height:1.4}
+  .kc .ke2{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:11px}
+  .ac{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:13px;box-shadow:var(--sh-sm)}
+  .ac .an{width:24px;height:24px;background:var(--acc);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:7px}
+  .ac .at{font-size:12px;font-weight:700;color:var(--acc);margin-bottom:4px}
+  .ac .as{font-size:12.5px;color:var(--text);line-height:1.52}
+  .ac .ah{font-size:11.5px;color:var(--muted);margin-top:6px;border-top:1px solid var(--border);padding-top:6px}
+
+  @media print{
+    body{background:#fff!important}
+    .topbar{display:none!important}
+    .dw,.kb,.callout,.ex,.ac,.kc{break-inside:avoid}
+    .page{padding:12px}
+  }
+
+  .chip-pro{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 11px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.3px;
+    background:linear-gradient(135deg,#C8860A 0%,#F5C842 45%,#D97706 100%);
+    color:#3b1f00;
+    box-shadow:0 1px 8px rgba(200,134,10,.4),inset 0 1px 0 rgba(255,255,255,.3);
+    position:relative;overflow:hidden;
+  }
+  .chip-pro::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.45) 50%,transparent 75%);
+    background-size:200% 100%;
+    animation:pro-shimmer 8s infinite ease-in-out;
+  }
+  @keyframes pro-shimmer{
+    0%{background-position:-200% center}
+    12%{background-position:200% center}
+    12.1%{background-position:-200% center}
+    100%{background-position:-200% center}
+  }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="t-left">
-    <span class="t-sub">Biologie LK</span>
-    <span class="chip chip-w">Ökologie</span>
-    <span class="t-topic">Stoffkreisläufe &amp; Nachhaltigkeit</span>
+  <div class="tl">
+    <div class="ts">Bio LK Â· Ãkologie II â StoffkreislÃ¤ufe &amp; Nachhaltigkeit</div>
+    <div class="tc">
+      <span class="chip chip-l">eA Â· erhÃ¶htes Anforderungsniveau</span>
+      <span class="chip chip-d">ð 15.04.2026</span>
+      <span class="chip chip-e">ð¿ PrÃ¼fung: 22.04.2026</span>
+    </div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <span class="chip chip-g">✦ Pro Lernzettel</span>
-    <span style="font-size:12px;color:rgba(255,255,255,.55)">Klausur: 12.05.2026</span>
+  <div class="tr"><span class="chip chip-pro">&#10022; Pro Lernzettel</span></div>
+</div>
+
+<div class="page">
+
+<div class="hero">
+  <div class="hero-ey">Biologie LK Niedersachsen Â· Qualifikationsphase Â· eA Â· Mi 15.04.2026 Â· KW 16</div>
+  <div class="hero-ti">Ãkologie II â StoffkreislÃ¤ufe &amp; Nachhaltigkeit</div>
+  <div class="hero-me">
+    <span>ð 15.04.2026 Â· Block 1+2</span>
+    <span>ð¯ ErhÃ¶htes Anforderungsniveau (eA)</span>
+    <span>ð KC: QP3.3 StoffflÃ¼sse Â· QP3.4 Nachhaltigkeit</span>
   </div>
 </div>
 
-<div class="main">
-  <div>
-    <div class="diag-box">
-      <div class="diag-title">Globaler Kohlenstoffkreislauf (vereinfacht)</div>
-      <svg viewBox="0 0 520 285" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        <rect x="155" y="10" width="210" height="44" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.5"/>
-        <text x="260" y="29" font-size="11" fill="#1e40af" text-anchor="middle" font-weight="700">Atmosphäre</text>
-        <text x="260" y="46" font-size="10" fill="#1e40af" text-anchor="middle">CO₂: 421 ppm (↑)</text>
-        <rect x="22" y="106" width="145" height="44" rx="8" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.5"/>
-        <text x="95" y="125" font-size="11" fill="#14532d" text-anchor="middle" font-weight="700">Pflanzen / Algen</text>
-        <text x="95" y="143" font-size="10" fill="#14532d" text-anchor="middle">Photosynthese &amp; Veratmung</text>
-        <rect x="355" y="106" width="143" height="44" rx="8" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
-        <text x="427" y="125" font-size="11" fill="#9a3412" text-anchor="middle" font-weight="700">Konsumenten</text>
-        <text x="427" y="143" font-size="10" fill="#9a3412" text-anchor="middle">Zellatmung → CO₂</text>
-        <rect x="155" y="216" width="210" height="44" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
-        <text x="260" y="235" font-size="11" fill="#713f12" text-anchor="middle" font-weight="700">Boden / Sediment</text>
-        <text x="260" y="252" font-size="10" fill="#713f12" text-anchor="middle">Fossile Brennstoffe · Humus</text>
-        <defs>
-          <marker id="ga" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#16a34a"/></marker>
-          <marker id="ra" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#ef4444"/></marker>
-          <marker id="ya" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#ca8a04"/></marker>
-        </defs>
-        <path d="M155 32 L95 106" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#ga)"/>
-        <path d="M95 106 L155 32" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ra)"/>
-        <text x="89" y="70" font-size="9.5" fill="#14532d" font-weight="600">Photo-</text>
-        <text x="89" y="82" font-size="9.5" fill="#14532d" font-weight="600">synthese</text>
-        <text x="143" y="64" font-size="9.5" fill="#b91c1c">Atmung</text>
-        <path d="M365 106 L345 54" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#ra)"/>
-        <text x="348" y="78" font-size="9.5" fill="#b91c1c" font-weight="600">CO₂ ↑</text>
-        <path d="M167 128 L355 128" fill="none" stroke="#ca8a04" stroke-width="1.8" marker-end="url(#ya)"/>
-        <text x="260" y="122" font-size="10" fill="#a16207" text-anchor="middle" font-weight="600">Fressen (Energie)</text>
-        <path d="M95 150 L185 216" fill="none" stroke="#a16207" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ya)"/>
-        <path d="M427 150 L335 216" fill="none" stroke="#a16207" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ya)"/>
-        <text x="134" y="194" font-size="9.5" fill="#a16207">Abbau</text>
-        <text x="342" y="194" font-size="9.5" fill="#a16207">Abbau</text>
-        <path d="M260 216 L260 54" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#ra)"/>
-        <rect x="263" y="126" width="66" height="22" rx="4" fill="#fef2f2"/>
-        <text x="296" y="138" font-size="10" fill="#991b1b" text-anchor="middle" font-weight="700">Verbrennung</text>
-        <text x="296" y="150" font-size="9" fill="#991b1b" text-anchor="middle">fossiler Energie</text>
-      </svg>
+<nav class="toc">
+  <div class="toc-ti">ð Inhaltsverzeichnis</div>
+  <ol>
+    <li><a href="#s1">Kohlenstoffkreislauf: Produzenten, Konsumenten, Destruenten &amp; anthropogener Treibhauseffekt</a></li>
+    <li><a href="#s2">Stickstoffkreislauf: N-Fixierung, Nitrifikation, Denitrifikation &amp; Ammonifikation</a></li>
+    <li><a href="#s3">Nachhaltigkeit: Ã¶kologischer FuÃabdruck &amp; Handlungsoptionen (eA)</a></li>
+    <li><a href="#s4">RenaturierungsmaÃnahmen: Ã¶kologische, Ã¶konomische &amp; soziale Perspektive bewerten</a></li>
+    <li><a href="#summary">ð PrÃ¼fungszusammenfassung</a></li>
+  </ol>
+</nav>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S1: KOHLENSTOFFKREISLAUF
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s1">
+  <div class="sec-hd">
+    <div class="sec-num">1</div>
+    <div>
+      <div class="sec-ti">Kohlenstoffkreislauf</div>
+      <div class="sec-su">Produzenten Â· Konsumenten Â· Destruenten Â· anthropogener Treibhauseffekt</div>
     </div>
   </div>
 
-  <div class="rcol">
-    <div class="fb">
-      <div class="fb-lbl">Produktivitätsformeln</div>
-      <div class="fb-eq">NPP = BPP − R<sub>atmung</sub></div>
-      <div class="fb-eq">η = NPP(n+1) / NPP(n)</div>
-      <div class="fb-desc">NPP: Nettoprimärproduktion | η (Wirkungsgrad) je Stufe ≈ 10 %</div>
+  <div class="bt">Grundprinzip &amp; Akteure</div>
+  <p>Der <strong>Kohlenstoffkreislauf</strong> beschreibt den globalen Umlauf des Elements Kohlenstoff (C) durch BiosphÃ¤re, AtmosphÃ¤re, HydrosphÃ¤re und LithosphÃ¤re. Kohlenstoff liegt in verschiedenen Formen vor: als COâ in der AtmosphÃ¤re, als organische Verbindungen in Lebewesen, als Karbonate im Gestein und als fossile Energie.</p>
+
+  <div class="kb">
+    <div class="kl">Zentrale Gleichgewichtsreaktionen</div>
+    <div class="km">Fotosynthese: 6 COâ + 6 HâO â CâHââOâ + 6 Oâ (COâ-Bindung)</div>
+    <div class="ke">
+      <strong>Zellatmung/Verbrennung:</strong> CâHââOâ + 6 Oâ â 6 COâ + 6 HâO (COâ-Freisetzung)<br>
+      <strong>Produzenten</strong> (Pflanzen, Algen): binden COâ durch Fotosynthese â organische Biomasse<br>
+      <strong>Konsumenten</strong> (Tiere): geben COâ durch Zellatmung ab, bauen organisches C in Biomasse ein<br>
+      <strong>Destruenten</strong> (Bakterien, Pilze): mineralisieren totes organisches Material â COâ-Freisetzung (Remineralisierung)
     </div>
-    <div class="cb cb-e">
-      <div class="cb-t">🐴 Eselsbrücke</div>
-      <div class="cb-txt"><strong>„Nur 10 % schaffen die Reise"</strong><br>90 % Energie gehen als Wärme verloren. Fleischessen ist 10× ineffizienter als Pflanzenkost.</div>
+  </div>
+
+  <!-- SVG: Kohlenstoffkreislauf -->
+  <div class="dw">
+    <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="400" fill="#ffffff"/>
+      <text x="350" y="22" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Kohlenstoffkreislauf: natÃ¼rliche FlÃ¼sse &amp; anthropogene StÃ¶rung</text>
+
+      <!-- ATMOSPHÃRE (oben, hellblau) -->
+      <rect x="180" y="38" width="340" height="55" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <text x="350" y="63" font-size="12" fill="#1d4ed8" text-anchor="middle" font-weight="700">AtmosphÃ¤re: COâ</text>
+      <text x="350" y="78" font-size="10.5" fill="#1d4ed8" text-anchor="middle">~420 ppm (2024) Â· steigt!</text>
+
+      <!-- PRODUZENTEN (links, grÃ¼n) -->
+      <rect x="35" y="155" width="140" height="65" rx="8" fill="#c8e6d4" stroke="#2a6e4a" stroke-width="2"/>
+      <text x="105" y="181" font-size="11" fill="#1e5c38" text-anchor="middle" font-weight="700">Produzenten</text>
+      <text x="105" y="196" font-size="10" fill="#1e5c38" text-anchor="middle">Pflanzen, Algen</text>
+      <text x="105" y="210" font-size="10" fill="#1e5c38" text-anchor="middle">binden COâ</text>
+
+      <!-- KONSUMENTEN (Mitte, orange) -->
+      <rect x="265" y="155" width="170" height="65" rx="8" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+      <text x="350" y="181" font-size="11" fill="#92400e" text-anchor="middle" font-weight="700">Konsumenten</text>
+      <text x="350" y="196" font-size="10" fill="#92400e" text-anchor="middle">Tiere (Herbivore, Carnivore)</text>
+      <text x="350" y="210" font-size="10" fill="#92400e" text-anchor="middle">Atmung â COâ</text>
+
+      <!-- DESTRUENTEN (unten, braun) -->
+      <rect x="265" y="295" width="170" height="65" rx="8" fill="#d4c5a9" stroke="#78350f" stroke-width="2"/>
+      <text x="350" y="321" font-size="11" fill="#451a03" text-anchor="middle" font-weight="700">Destruenten</text>
+      <text x="350" y="336" font-size="10" fill="#451a03" text-anchor="middle">Bakterien, Pilze</text>
+      <text x="350" y="350" font-size="10" fill="#451a03" text-anchor="middle">Remineralisierung â COâ</text>
+
+      <!-- FOSSILE VORRÃTE (rechts, dunkelgrau) -->
+      <rect x="530" y="250" width="145" height="65" rx="8" fill="#374151" stroke="#1f2937" stroke-width="2"/>
+      <text x="602" y="276" font-size="11" fill="#f9fafb" text-anchor="middle" font-weight="700">Fossile VorrÃ¤te</text>
+      <text x="602" y="291" font-size="10" fill="#d1d5db" text-anchor="middle">Kohle, ErdÃ¶l, Erdgas</text>
+      <text x="602" y="305" font-size="10" fill="#d1d5db" text-anchor="middle">~1 Mio. Jahre gebildet</text>
+
+      <!-- PFEILE (natÃ¼rliche FlÃ¼sse) -->
+      <!-- Fotosynthese: Atm â Produzenten -->
+      <path d="M215,93 Q160,130 130,155" fill="none" stroke="#2a6e4a" stroke-width="2.5" marker-end="url(#ac1)"/>
+      <defs><marker id="ac1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+      <rect x="118" y="108" width="78" height="20" rx="3" fill="#edf7f2" stroke="#1e5c38" stroke-width="1"/>
+      <text x="157" y="121" font-size="10" fill="#1e5c38" text-anchor="middle" font-weight="700">Fotosynthese</text>
+
+      <!-- Atmung Produzenten: Produzenten â Atm -->
+      <path d="M130,155 Q180,120 215,93" fill="none" stroke="#b07a10" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#ac2)"/>
+      <defs><marker id="ac2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#b07a10"/></marker></defs>
+      <text x="84" y="130" font-size="9.5" fill="#b07a10" text-anchor="middle">Atmung P.</text>
+
+      <!-- FraÃ: Produzenten â Konsumenten -->
+      <line x1="175" y1="185" x2="265" y2="185" stroke="#d97706" stroke-width="2.5" marker-end="url(#ac3)"/>
+      <defs><marker id="ac3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#d97706"/></marker></defs>
+      <text x="220" y="178" font-size="9.5" fill="#d97706" text-anchor="middle">FraÃ</text>
+
+      <!-- Atmung Konsumenten â Atm -->
+      <path d="M350,155 Q350,120 350,93" fill="none" stroke="#b07a10" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#ac4)"/>
+      <defs><marker id="ac4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#b07a10"/></marker></defs>
+      <text x="364" y="125" font-size="9.5" fill="#b07a10">Atmung K.</text>
+
+      <!-- Absterben â Destruenten -->
+      <line x1="350" y1="220" x2="350" y2="295" stroke="#78350f" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#ac5)"/>
+      <defs><marker id="ac5" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#78350f"/></marker></defs>
+      <text x="370" y="260" font-size="9.5" fill="#78350f">Absterben</text>
+
+      <!-- Produzenten â Destruenten -->
+      <path d="M130,220 Q210,280 265,320" fill="none" stroke="#78350f" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#ac6)"/>
+      <defs><marker id="ac6" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#78350f"/></marker></defs>
+
+      <!-- Destruenten â Atm (Remineralisierung) -->
+      <path d="M350,295 Q350,240 350,93" fill="none" stroke="#78350f" stroke-width="1.5" stroke-dasharray="3,3" opacity=".5"/>
+      <path d="M350,220 Q420,155 485,93" fill="none" stroke="#78350f" stroke-width="2" marker-end="url(#ac7)"/>
+      <defs><marker id="ac7" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#78350f"/></marker></defs>
+      <text x="450" y="160" font-size="9.5" fill="#78350f" text-anchor="middle">Remineralisi.</text>
+
+      <!-- ANTHROPOGENE STÃRUNG: Fossile â Atm (rot, dick!) -->
+      <path d="M602,250 Q602,160 520,93" fill="none" stroke="#ef4444" stroke-width="3.5" marker-end="url(#ac8)"/>
+      <defs><marker id="ac8" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+      <rect x="550" y="148" width="130" height="30" rx="4" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1.5"/>
+      <text x="615" y="161" font-size="10.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">Verbrennung fossiler</text>
+      <text x="615" y="173" font-size="10.5" fill="#9e2a1c" text-anchor="middle">Brennstoffe (+COâ!)</text>
+
+      <!-- Abholzung -->
+      <path d="M40" y1="280" d="M62,250 Q62,155 180,90" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,2" marker-end="url(#ac9)"/>
+      <defs><marker id="ac9" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+      <rect x="10" y="248" width="95" height="28" rx="4" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1.5"/>
+      <text x="57" y="260" font-size="9.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">Abholzung</text>
+      <text x="57" y="271" font-size="9" fill="#9e2a1c" text-anchor="middle">weniger Bindung!</text>
+
+      <!-- Ozeane / Kalkstein -->
+      <rect x="35" y="320" width="160" height="45" rx="5" fill="#bfdbfe" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="115" y="340" font-size="10.5" fill="#1e40af" text-anchor="middle" font-weight="700">Ozeane &amp; Kalk</text>
+      <text x="115" y="354" font-size="10" fill="#1e40af" text-anchor="middle">COâ-Speicher (~90%!)</text>
+      <line x1="195" y1="343" x2="265" y2="330" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#ac10)"/>
+      <defs><marker id="ac10" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#3b82f6"/></marker></defs>
+
+      <!-- Legende -->
+      <rect x="530" y="355" width="162" height="38" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1"/>
+      <line x1="540" y1="368" x2="568" y2="368" stroke="#2a6e4a" stroke-width="2.5"/>
+      <text x="574" y="371" font-size="9.5" fill="#2a6e4a">natÃ¼rl. Kreislauf</text>
+      <line x1="540" y1="383" x2="568" y2="383" stroke="#ef4444" stroke-width="2.5"/>
+      <text x="574" y="386" font-size="9.5" fill="#9e2a1c">anthropogen (StÃ¶rung)</text>
+    </svg>
+    <div class="dc">Kohlenstoffkreislauf: NatÃ¼rliche FlÃ¼sse (grÃ¼n/braun) zwischen Atmosph., Produzenten, Konsumenten, Destruenten und Ozeanen. Anthropogene StÃ¶rung (rot): fossile Verbrennung + Abholzung â COâ-Anstieg â Treibhauseffekt.</div>
+  </div>
+
+  <div class="bt">Anthropogener Treibhauseffekt <span class="ea-badge">eA: Diskutieren</span></div>
+  <div class="g2">
+    <div class="kb">
+      <div class="kl">NatÃ¼rlicher Treibhauseffekt</div>
+      <div class="km" style="font-size:13.5px">COâ, HâO, CHâ absorbieren IR-Strahlung â Erde wÃ¤rmer</div>
+      <div class="ke">
+        Ohne natÃ¼rlichen Treibhauseffekt: mittlere ErdoberflÃ¤chentemperatur â â18Â°C (statt +15Â°C)<br>
+        <strong>Treibhausgase:</strong> COâ, CHâ (Methan), NâO (Lachgas), HâO-Dampf<br>
+        COâ-Anteil in AtmosphÃ¤re: vorindustriell ~280 ppm â heute ~420 ppm (+50%!)
+      </div>
     </div>
-    <div class="cb cb-k">
-      <div class="cb-t">📋 Kerncurriculum</div>
-      <div class="cb-txt">C- und N-Kreislauf erklären · Nachhaltigkeit bewerten · Treibhauseffekt analysieren (AFB II–III)</div>
+    <div class="kb" style="border-color:#9e2a1c">
+      <div class="kl" style="color:#8a1c10">Anthropogene VerstÃ¤rkung</div>
+      <div class="km" style="font-size:13.5px;color:#9e2a1c">ZusÃ¤tzliche THG durch menschl. AktivitÃ¤ten â ErwÃ¤rmung</div>
+      <div class="ke">
+        <strong>Quellen:</strong> Fossile Verbrennung (Kohle, Ãl, Gas) Â· Landwirtschaft (CHâ aus Tieren/Reisfeldern) Â· Industrie (NâO) Â· Abholzung (weniger COâ-Senke)<br>
+        <strong>Folgen:</strong> Gletscherschmelze, Meeresspiegelanstieg, Extremwetter, Artensterben
+      </div>
     </div>
-    <div class="cb cb-i">
-      <div class="cb-t">ℹ️ Klimarelevanz</div>
-      <div class="cb-txt">CO₂: 421 ppm (vorindustriell: 280 ppm). CH₄ hat 28× stärkeren Treibhauseffekt.</div>
+  </div>
+
+  <div class="ex">
+    <div class="ex-ti">ð Operator: Diskutieren â evidenzbasierte Argumente zum Treibhauseffekt (KC!)</div>
+    <div class="step"><div class="sn">1</div><div><strong>Evidenz darstellen:</strong> COâ-Konzentration stieg seit ~1850 von 280 auf >420 ppm. Globale Durchschnittstemperatur stieg um ~1,2Â°C (IPCC 2021). Korrelation statistisch nachweisbar.</div></div>
+    <div class="step"><div class="sn">2</div><div><strong>Kausalkette erlÃ¤utern:</strong> Fossile Verbrennung â COâ-Zunahme â mehr IR-Absorption â VerstÃ¤rkung des Treibhauseffekts â Temperaturanstieg.</div></div>
+    <div class="step"><div class="sn">3</div><div><strong>Gegenargumente einbeziehen:</strong> NatÃ¼rliche Klimaschwankungen existieren (Milankovitch-Zyklen). Sonne als Faktor. Dann jedoch begrÃ¼nden, warum diese den aktuellen Anstieg nicht erklÃ¤ren kÃ¶nnen.</div></div>
+    <div class="step"><div class="sn">4</div><div><strong>Folgen fÃ¼r Nahrungskette ableiten:</strong> Verschiebung von PhÃ¤nologien â Entkoppelung von RÃ¤uber-Beute-Zyklen â Artensterben â Nahrungsketteneffekte.</div></div>
+    <div class="step"><div class="sn">5</div><div><strong>Eigene Position:</strong> Evidenzbasiert ist anthropogener Klimawandel wissenschaftlich belegt â Handlungsbedarf auf allen Ebenen (Individuum, Staat, international).</div></div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: P-K-D (Produzenten-Konsumenten-Destruenten)</div>
+    <strong>âPflanzen Krallen DÃ¼nger"</strong>: <strong>P</strong>roduzenten binden COâ (Fotosynthese) Â· <strong>K</strong>onsumenten fressen und atmen COâ aus Â· <strong>D</strong>estruenten verwandeln totes Material wieder in COâ und Mineralien. Der Kreislauf schlieÃt sich â ohne Destruenten stapelt sich toter Stoff endlos auf!
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP3.3)</div>
+    KC: <em>âStoffflÃ¼sse in Ãkosystemen der BiosphÃ¤re anhand des Kohlenstoffkreislaufs erlÃ¤utern"</em> und <em>âevidenzbasiert zu den Auswirkungen des anthropogenen Treibhauseffekts auf den Stofffluss in einer Nahrungskette diskutieren"</em>. Operator <strong>diskutieren</strong>: mehrere Perspektiven + eigene Position mit BegrÃ¼ndung!
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S2: STICKSTOFFKREISLAUF
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s2">
+  <div class="sec-hd">
+    <div class="sec-num">2</div>
+    <div>
+      <div class="sec-ti">Stickstoffkreislauf</div>
+      <div class="sec-su">N-Fixierung Â· Ammonifikation Â· Nitrifikation Â· Denitrifikation Â· Chemosynthese</div>
     </div>
+  </div>
+
+  <div class="bt">Ãberblick &amp; Bedeutung</div>
+  <p>Stickstoff (N) ist Bestandteil aller AminosÃ¤uren, Proteine, Nucleotide und damit aller Lebewesen. Obwohl die AtmosphÃ¤re zu 78% aus Nâ besteht, kÃ¶nnen die meisten Organismen diesen <em>nicht</em> direkt nutzen. Mikrobielle Prozesse sind daher <strong>essentiell</strong> fÃ¼r den Stickstoffkreislauf.</p>
+
+  <div class="kb">
+    <div class="kl">Die vier mikrobiellen SchlÃ¼sselprozesse</div>
+    <div class="km">Nâ-Fixierung â Ammonifikation â Nitrifikation â Denitrifikation</div>
+    <div class="ke">
+      <strong>Nâ-Fixierung:</strong> Nâ (atm.) â NHâ / NHââº (bioverfÃ¼gbar) Â· durch Rhizobien, Cyanobakterien, frei lebende Bakterien (z.B. Azotobacter)<br>
+      <strong>Ammonifikation:</strong> Organisches N (AminosÃ¤uren, Nucleotide) â NHâ/NHââº Â· durch heterotrophe Destruenten<br>
+      <strong>Nitrifikation:</strong> NHââº â NOââ» â NOââ» Â· durch Nitrosomonas und Nitrobacter (Chemosynthese!)<br>
+      <strong>Denitrifikation:</strong> NOââ» â Nâ Â· durch anaerobe Bakterien â RÃ¼ckgabe an AtmosphÃ¤re
+    </div>
+  </div>
+
+  <!-- SVG: Stickstoffkreislauf -->
+  <div class="dw">
+    <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="400" fill="#f8f8f6"/>
+      <text x="350" y="22" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Stickstoffkreislauf: molekulare Ebene (alle Prozesse auf einen Blick)</text>
+
+      <!-- ATMOSPHÃRE N2 -->
+      <rect x="200" y="38" width="300" height="52" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <text x="350" y="60" font-size="13" fill="#1d4ed8" text-anchor="middle" font-weight="700">AtmosphÃ¤re: Nâ (78%)</text>
+      <text x="350" y="78" font-size="10.5" fill="#1d4ed8" text-anchor="middle">nicht direkt nutzbar fÃ¼r Pflanzen!</text>
+
+      <!-- BODEN: NH4+ -->
+      <rect x="80" y="175" width="140" height="52" rx="7" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+      <text x="150" y="198" font-size="12" fill="#92400e" text-anchor="middle" font-weight="700">NHââº</text>
+      <text x="150" y="214" font-size="10" fill="#92400e" text-anchor="middle">Ammonium (Boden)</text>
+
+      <!-- NO2- -->
+      <rect x="280" y="175" width="140" height="52" rx="7" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+      <text x="350" y="198" font-size="12" fill="#713f12" text-anchor="middle" font-weight="700">NOââ»</text>
+      <text x="350" y="214" font-size="10" fill="#713f12" text-anchor="middle">Nitrit</text>
+
+      <!-- NO3- -->
+      <rect x="480" y="175" width="140" height="52" rx="7" fill="#f0f7f2" stroke="#2a6e4a" stroke-width="2"/>
+      <text x="550" y="198" font-size="12" fill="#1e5c38" text-anchor="middle" font-weight="700">NOââ»</text>
+      <text x="550" y="214" font-size="10" fill="#1e5c38" text-anchor="middle">Nitrat (fÃ¼r Pflanzen!)</text>
+
+      <!-- Pflanzen / Organisches N -->
+      <rect x="200" y="295" width="300" height="52" rx="7" fill="#c8e6d4" stroke="#2a6e4a" stroke-width="2"/>
+      <text x="350" y="318" font-size="12" fill="#1e5c38" text-anchor="middle" font-weight="700">Organisches N</text>
+      <text x="350" y="334" font-size="10.5" fill="#1e5c38" text-anchor="middle">Pflanzen/Tiere: AminosÃ¤uren, Proteine, DNA</text>
+
+      <!-- PFEILE MIT PROZESSEN -->
+      <!-- N2-Fixierung: AtmosphÃ¤re â NH4+ -->
+      <path d="M280,90 Q215,130 195,175" fill="none" stroke="#2a6e4a" stroke-width="2.5" marker-end="url(#an1)"/>
+      <defs><marker id="an1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+      <rect x="70" y="110" width="120" height="32" rx="4" fill="#edf7f2" stroke="#1e5c38" stroke-width="1"/>
+      <text x="130" y="124" font-size="10" fill="#1e5c38" text-anchor="middle" font-weight="700">Nâ-Fixierung</text>
+      <text x="130" y="136" font-size="9.5" fill="#1e5c38" text-anchor="middle">Rhizobien, Cyanobakt.</text>
+
+      <!-- Denitrifikation: NO3- â N2 -->
+      <path d="M550,175 Q600,120 480,90" fill="none" stroke="#9e2a1c" stroke-width="2.5" marker-end="url(#an2)"/>
+      <defs><marker id="an2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#9e2a1c"/></marker></defs>
+      <rect x="548" y="105" width="140" height="32" rx="4" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="618" y="119" font-size="10" fill="#9e2a1c" text-anchor="middle" font-weight="700">Denitrifikation</text>
+      <text x="618" y="131" font-size="9.5" fill="#9e2a1c" text-anchor="middle">anaer. Bakterien</text>
+
+      <!-- Ammonifikation: Organ.N â NH4+ -->
+      <path d="M265,305 Q200,275 195,227" fill="none" stroke="#d97706" stroke-width="2.5" marker-end="url(#an3)"/>
+      <defs><marker id="an3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#d97706"/></marker></defs>
+      <rect x="48" y="262" width="120" height="32" rx="4" fill="#fdf3e0" stroke="#b07a10" stroke-width="1"/>
+      <text x="108" y="276" font-size="10" fill="#7a4e0a" text-anchor="middle" font-weight="700">Ammonifikation</text>
+      <text x="108" y="288" font-size="9.5" fill="#7a4e0a" text-anchor="middle">Destruenten</text>
+
+      <!-- Nitrifikation Schritt 1: NH4+ â NO2- -->
+      <line x1="220" y1="200" x2="280" y2="200" stroke="#ca8a04" stroke-width="2.5" marker-end="url(#an4)"/>
+      <defs><marker id="an4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ca8a04"/></marker></defs>
+      <rect x="212" y="158" width="96" height="30" rx="3" fill="#fef9c3" stroke="#ca8a04" stroke-width="1"/>
+      <text x="260" y="170" font-size="9.5" fill="#713f12" text-anchor="middle" font-weight="700">Nitrifikation I</text>
+      <text x="260" y="182" font-size="9" fill="#713f12" text-anchor="middle">Nitrosomonas</text>
+
+      <!-- Nitrifikation Schritt 2: NO2- â NO3- -->
+      <line x1="420" y1="200" x2="480" y2="200" stroke="#ca8a04" stroke-width="2.5" marker-end="url(#an5)"/>
+      <defs><marker id="an5" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ca8a04"/></marker></defs>
+      <rect x="410" y="158" width="90" height="30" rx="3" fill="#fef9c3" stroke="#ca8a04" stroke-width="1"/>
+      <text x="455" y="170" font-size="9.5" fill="#713f12" text-anchor="middle" font-weight="700">Nitrifikation II</text>
+      <text x="455" y="182" font-size="9" fill="#713f12" text-anchor="middle">Nitrobacter</text>
+
+      <!-- NO3- â Pflanzen (Aufnahme) -->
+      <path d="M550,227 Q500,265 450,295" fill="none" stroke="#2a6e4a" stroke-width="2.5" marker-end="url(#an6)"/>
+      <defs><marker id="an6" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+      <rect x="498" y="253" width="82" height="20" rx="3" fill="#edf7f2" stroke="#1e5c38" stroke-width="1"/>
+      <text x="539" y="266" font-size="9.5" fill="#1e5c38" text-anchor="middle" font-weight="700">Aufnahme!</text>
+
+      <!-- NH4+ â Pflanzen (direkte Aufnahme) -->
+      <path d="M150,227 Q200,265 265,298" fill="none" stroke="#2a6e4a" stroke-width="1.5" stroke-dasharray="5,2" marker-end="url(#an7)"/>
+      <defs><marker id="an7" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+
+      <!-- Pflanzen â Tiere (FraÃ) â Organ.N bleibt -->
+      <text x="350" y="382" font-size="10.5" fill="#1e5c38" text-anchor="middle">FraÃ: Tiere nehmen organ. N in Biomasse auf â Ausscheidung/Sterben â Ammonifikation</text>
+
+      <!-- Chemosynthese Box -->
+      <rect x="225" y="238" width="250" height="26" rx="5" fill="#f2eff8" stroke="#3a2878" stroke-width="1.5"/>
+      <text x="350" y="254" font-size="10" fill="#3a2878" text-anchor="middle" font-weight="700">Nitrifikation = Chemosynthese! NHââº â NOââ» â NOââ» liefert Energie</text>
+    </svg>
+    <div class="dc">Stickstoffkreislauf auf molekularer Ebene: Fixierung (Nâ â NHââº), Ammonifikation (org.N â NHââº), Nitrifikation (NHââº â NOââ», Chemosynthese), Denitrifikation (NOââ» â Nâ). Pflanzen nehmen NOââ» (und NHââº) auf.</div>
+  </div>
+
+  <div class="bt">Chemosynthese: Nitrifikation als Energiequelle</div>
+  <div class="kb">
+    <div class="kl">Nitrifikation = Chemosynthese (KC-Pflichtinhalt!)</div>
+    <div class="km" style="font-size:13.5px">2 NHââº + 3 Oâ â 2 NOââ» + 4 Hâº + 2 HâO + Energie (Nitrosomonas)</div>
+    <div class="ke">
+      <code>2 NOââ» + Oâ â 2 NOââ» + Energie (Nitrobacter)</code><br>
+      <strong>Chemosynthese:</strong> Energiegewinnung durch anorganische chemische Reaktionen (statt Licht wie bei Fotosynthese). Die Energie wird zur COâ-Fixierung genutzt â chemoautotrophe Lebensweise.<br>
+      Vorkommen: Tiefseequellen (Schwefeloxidation), Boden (Nitrifikation), Eisenbakterien
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="ex">
+      <div class="ex-ti">ð Nitrifikation erlÃ¤utern (PrÃ¼fungsformat)</div>
+      <div class="step"><div class="sn">1</div><div>NHââº wird von Nitrosomonas oxidiert â NOââ» + Energie</div></div>
+      <div class="step"><div class="sn">2</div><div>NOââ» wird von Nitrobacter oxidiert â NOââ» + Energie</div></div>
+      <div class="step"><div class="sn">3</div><div>Freigesetzte Energie â COâ-Fixierung (Biosynthese) = Chemosynthese</div></div>
+      <div class="step"><div class="sn">4</div><div>NOââ» kann von Pflanzenwurzeln aufgenommen werden â Einbau in AminosÃ¤uren</div></div>
+    </div>
+    <div class="ex">
+      <div class="ex-ti">â ï¸ Eutrophierung durch N-Ãberschuss</div>
+      <div class="step"><div class="sn">1</div><div>Ãberfluss NOââ» (DÃ¼ngung) â AlgenblÃ¼te (Eutrophierung)</div></div>
+      <div class="step"><div class="sn">2</div><div>Algen sterben ab â massiver Oâ-Verbrauch durch Destruenten</div></div>
+      <div class="step"><div class="sn">3</div><div>Sauerstoffmangel (Hypoxie) â Fischsterben</div></div>
+      <div class="step"><div class="sn">4</div><div>Anaerobe Bedingungen â Denitrifikation â Nâ â Kreislauf schlieÃt sich</div></div>
+    </div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: N-Kreislauf in Reihenfolge</div>
+    <strong>âNeugierige Ameisen Nagen DÃ¤mme"</strong>: <strong>N</strong>â-Fixierung â <strong>A</strong>mmonifikation â <strong>N</strong>itrifikation â <strong>D</strong>enitrifikation. Oder auch als Gedankenkreis: Stickstoff kommt aus der AtmosphÃ¤re (Fixierung), wird durch Lebewesen organisch, geht zurÃ¼ck in anorganisch (Ammonifikation + Nitrifikation), und schlieÃlich zurÃ¼ck in die AtmosphÃ¤re (Denitrifikation).
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: Nitrifikation â  Nâ-Fixierung</div>
+    <strong>Nitrifikation:</strong> NHââº â NOââ» â NOââ» (nur oxidative Schritte, keine Nâ-Beteiligung!) <strong>Nâ-Fixierung:</strong> Nâ â NHâ / NHââº (Eingliederung atmosphÃ¤rischen N in den Kreislauf). Beide Prozesse werden oft verwechselt! Auch: Nitrit (NOââ») ist giftig und Zwischenprodukt â nur kurzlebig im Boden.
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP3.3)</div>
+    KC: <em>âmikrobielle N-Fixierung, Nitrifikation, Denitrifikation und Ammonifikation durch Mikroorganismen als Chemosynthese erlÃ¤utern"</em> und <em>âeinen Stickstoffkreislauf auf molekularer Ebene unter BerÃ¼cksichtigung von Produzenten, Konsumenten und Destruenten schematisch darstellen"</em>.
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S3: NACHHALTIGKEIT
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s3">
+  <div class="sec-hd">
+    <div class="sec-num">3</div>
+    <div>
+      <div class="sec-ti">Nachhaltigkeit</div>
+      <div class="sec-su">Ãkologischer FuÃabdruck Â· Handlungsoptionen abwÃ¤gen (eA)</div>
+    </div>
+  </div>
+
+  <div class="bt">Definition &amp; Konzept</div>
+  <p><strong>Nachhaltige Entwicklung</strong> bedeutet, die BedÃ¼rfnisse der Gegenwart zu befriedigen, ohne die MÃ¶glichkeiten kÃ¼nftiger Generationen zu gefÃ¤hrden, ihre eigenen BedÃ¼rfnisse zu befriedigen (Brundtland-Definition, 1987). Sie umfasst drei miteinander verknÃ¼pfte Dimensionen: Ãkologie, Ãkonomie und Soziales.</p>
+
+  <div class="kb">
+    <div class="kl">Ãkologischer FuÃabdruck</div>
+    <div class="km">FlÃ¤che (global ha), die ein Mensch/eine Nation benÃ¶tigt, um seinen Lebensstil zu ermÃ¶glichen &amp; AbfÃ¤lle zu absorbieren</div>
+    <div class="ke">
+      <strong>BiokapaÂ­zitÃ¤t der Erde:</strong> ~1,6 gha pro Person (2024)<br>
+      <strong>Durchschnittl. WeltbÃ¼rger:</strong> ~2,8 gha (Overshoot!)<br>
+      <strong>Deutschland:</strong> ~5,0 gha Â· <strong>USA:</strong> ~8,1 gha Â· <strong>Indien:</strong> ~1,1 gha<br>
+      <strong>ErdÃ¼berlastungstag (Earth Overshoot Day):</strong> 2023: 2. August â ab diesem Tag lebt die Menschheit von Ersparnissen kÃ¼nftiger Generationen!
+    </div>
+  </div>
+
+  <!-- SVG: Nachhaltigkeits-Dreieck + FuÃabdruck -->
+  <div class="dw">
+    <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="340" fill="#ffffff"/>
+      <text x="350" y="22" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Nachhaltigkeit: Drei-SÃ¤ulen-Modell &amp; Ã¶kologischer FuÃabdruck</text>
+
+      <!-- DREI-SÃULEN-DREIECK (links) -->
+      <!-- Dreieck -->
+      <polygon points="175,60 60,270 290,270" fill="none" stroke="#2a6e4a" stroke-width="2.5"/>
+      <!-- Ecken fÃ¼llen -->
+      <!-- Ãkologie (oben) -->
+      <circle cx="175" cy="60" r="36" fill="#c8e6d4" stroke="#2a6e4a" stroke-width="2"/>
+      <text x="175" y="55" font-size="11" fill="#1e5c38" text-anchor="middle" font-weight="700">Ãkologie</text>
+      <text x="175" y="70" font-size="9.5" fill="#1e5c38" text-anchor="middle">Umwelt</text>
+      <!-- Ãkonomie (links unten) -->
+      <circle cx="60" cy="270" r="36" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+      <text x="60" y="265" font-size="11" fill="#92400e" text-anchor="middle" font-weight="700">Ãkonomie</text>
+      <text x="60" y="280" font-size="9.5" fill="#92400e" text-anchor="middle">Wirtschaft</text>
+      <!-- Soziales (rechts unten) -->
+      <circle cx="290" cy="270" r="36" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <text x="290" y="265" font-size="11" fill="#1d4ed8" text-anchor="middle" font-weight="700">Soziales</text>
+      <text x="290" y="280" font-size="9.5" fill="#1d4ed8" text-anchor="middle">Gerechtigkeit</text>
+      <!-- Nachhaltigkeit in der Mitte -->
+      <ellipse cx="175" cy="200" rx="50" ry="35" fill="#edf7f2" stroke="#2a6e4a" stroke-width="1.5"/>
+      <text x="175" y="196" font-size="10.5" fill="#2a6e4a" text-anchor="middle" font-weight="700">Nach-</text>
+      <text x="175" y="210" font-size="10.5" fill="#2a6e4a" text-anchor="middle" font-weight="700">haltigkeit</text>
+
+      <!-- Spannungen -->
+      <text x="100" y="145" font-size="9" fill="#9e2a1c" text-anchor="middle" transform="rotate(-45,100,145)">â Konflikt?</text>
+      <text x="252" y="145" font-size="9" fill="#9e2a1c" text-anchor="middle" transform="rotate(45,252,145)">â Konflikt?</text>
+
+      <!-- FUSSABDRUCK-BALKENDIAGRAMM (rechts) -->
+      <text x="520" y="48" font-size="11" fill="#2a6e4a" text-anchor="middle" font-weight="700">Ãkologischer FuÃabdruck (gha/Person)</text>
+
+      <!-- Achsen -->
+      <line x1="360" y1="280" x2="680" y2="280" stroke="#4b5563" stroke-width="1.5"/>
+      <line x1="360" y1="65" x2="360" y2="280" stroke="#4b5563" stroke-width="1.5"/>
+      <text x="357" y="62" font-size="9" fill="#6b7265" text-anchor="end">gha</text>
+
+      <!-- Skala -->
+      <text x="354" y="280" font-size="8.5" fill="#6b7265" text-anchor="end">0</text>
+      <text x="354" y="230" font-size="8.5" fill="#6b7265" text-anchor="end">2</text>
+      <text x="354" y="178" font-size="8.5" fill="#6b7265" text-anchor="end">4</text>
+      <text x="354" y="128" font-size="8.5" fill="#6b7265" text-anchor="end">6</text>
+      <text x="354" y="78" font-size="8.5" fill="#6b7265" text-anchor="end">8</text>
+      <line x1="357" y1="230" x2="360" y2="230" stroke="#e5e7eb" stroke-width="0.8"/>
+      <line x1="357" y1="178" x2="360" y2="178" stroke="#e5e7eb" stroke-width="0.8"/>
+      <line x1="357" y1="128" x2="360" y2="128" stroke="#e5e7eb" stroke-width="0.8"/>
+
+      <!-- BiokapazitÃ¤ts-Linie -->
+      <line x1="360" y1="238" x2="680" y2="238" stroke="#2a6e4a" stroke-width="1.5" stroke-dasharray="5,3"/>
+      <text x="672" y="234" font-size="9.5" fill="#2a6e4a" text-anchor="end" font-weight="700">Biokap. 1,6</text>
+
+      <!-- Balken -->
+      <!-- Indien: 1.1 gha â HÃ¶he 27.5px -->
+      <rect x="372" y="252" width="40" height="28" rx="2" fill="#a8d4ba" stroke="#2a6e4a" stroke-width="1"/>
+      <text x="392" y="292" font-size="9" fill="#2a6e4a" text-anchor="middle">Indien</text>
+      <text x="392" y="248" font-size="9" fill="#2a6e4a" text-anchor="middle">1,1</text>
+
+      <!-- Welt: 2.8 gha â HÃ¶he 70px -->
+      <rect x="425" y="210" width="40" height="70" rx="2" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+      <text x="445" y="292" font-size="9" fill="#92400e" text-anchor="middle">Welt</text>
+      <text x="445" y="207" font-size="9" fill="#92400e" text-anchor="middle">2,8</text>
+
+      <!-- China: 3.6 gha â HÃ¶he 90px -->
+      <rect x="478" y="190" width="40" height="90" rx="2" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+      <text x="498" y="292" font-size="9" fill="#ea580c" text-anchor="middle">China</text>
+      <text x="498" y="187" font-size="9" fill="#ea580c" text-anchor="middle">3,6</text>
+
+      <!-- Deutschland: 5.0 gha â HÃ¶he 125px -->
+      <rect x="531" y="155" width="40" height="125" rx="2" fill="#fca5a5" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="551" y="292" font-size="9" fill="#dc2626" text-anchor="middle">Dtl.</text>
+      <text x="551" y="152" font-size="9" fill="#dc2626" text-anchor="middle">5,0</text>
+
+      <!-- USA: 8.1 gha â HÃ¶he 202px -->
+      <rect x="584" y="78" width="40" height="202" rx="2" fill="#ef4444" stroke="#9e2a1c" stroke-width="2"/>
+      <text x="604" y="292" font-size="9" fill="#9e2a1c" text-anchor="middle">USA</text>
+      <text x="604" y="74" font-size="9" fill="#9e2a1c" text-anchor="middle">8,1</text>
+
+      <!-- Callout BiokapazitÃ¤t -->
+      <line x1="600" y1="238" x2="650" y2="295" stroke="#2a6e4a" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="620" y="296" width="72" height="28" rx="3" fill="#edf7f2" stroke="#1e5c38" stroke-width="1"/>
+      <text x="656" y="308" font-size="9.5" fill="#1e5c38" text-anchor="middle" font-weight="700">Biokapaz.</text>
+      <text x="656" y="320" font-size="9" fill="#1e5c38" text-anchor="middle">Grenze</text>
+    </svg>
+    <div class="dc">Links: Drei-SÃ¤ulen-Modell der Nachhaltigkeit (Ãkologie â Ãkonomie â Soziales, alle drei mÃ¼ssen gleichzeitig beachtet werden). Rechts: Ãkologischer FuÃabdruck im LÃ¤ndervergleich â nur Indien liegt unterhalb der BiokapazitÃ¤tsgrenze.</div>
+  </div>
+
+  <div class="bt">Handlungsoptionen abwÃ¤gen <span class="ea-badge">eA: Bewertungskompetenz</span></div>
+  <div class="ex">
+    <div class="ex-ti">âï¸ Operator: AbwÃ¤gen â COâ-Reduktion: Fleischverzicht vs. Flugreduktion</div>
+    <div class="step">
+      <div class="sn" style="background:#1e5c38">+</div>
+      <div><strong>Vegetarische/vegane ErnÃ¤hrung:</strong> Tierhaltung verursacht ~14,5% der globalen THG (FAO). Verzicht auf Rindfleisch reduziert individuellen COâ-FuÃabdruck um bis zu 500â600 kg COâ-eq/Jahr. Skalierungseffekt: bei breiter Akzeptanz groÃe Wirkung.</div>
+    </div>
+    <div class="step">
+      <div class="sn" style="background:#1e5c38">+</div>
+      <div><strong>Flugreduktion:</strong> Ein Interkontinentalflug erzeugt ~2â4 t COâ-eq pro Person. Entspricht dem halben deutschen Jahres-COâ-Budget einer klimaneutralen Gesellschaft. Direkter, messbarer Effekt.</div>
+    </div>
+    <div class="step">
+      <div class="sn" style="background:#9e2a1c">â</div>
+      <div><strong>Individuelle MaÃnahmen vs. SystemverÃ¤nderung:</strong> Beide MaÃnahmen allein reichen nicht â strukturelle VerÃ¤nderungen (Energiesystem, Subventionen, Regulierung) sind notwendig. Risiko: Individualisierung gesellschaftlicher Probleme (Victim blaming).</div>
+    </div>
+    <div class="step">
+      <div class="sn" style="background:#9e2a1c">â</div>
+      <div><strong>Soziale Gerechtigkeit:</strong> Globaler SÃ¼den hat geringen COâ-FuÃabdruck, leidet aber am stÃ¤rksten unter Klimafolgen â Verantwortung liegt primÃ¤r bei IndustrielÃ¤ndern. ErnÃ¤hrungsumstellung kann in Ã¤rmeren Regionen schwierig sein.</div>
+    </div>
+    <div class="step"><div class="sn">â</div><div><strong>Fazit:</strong> Beide MaÃnahmen sinnvoll, aber nicht ausreichend. Kombination aus individuellem Handeln + politischen MaÃnahmen + internationalen Abkommen nÃ¶tig.</div></div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: Nachhaltigkeit</div>
+    <strong>âÃkologie-Ãkonomie-Soziales = EES: Erde-Euro-Equity"</strong>: Erde (Umwelt) muss funktionieren, Euro (Wirtschaft) muss nachhaltig sein, Equity (soziale Gerechtigkeit) muss gewahrt bleiben. Fehlt eine SÃ¤ule, bricht das System zusammen. Nachhaltigkeit ist das Gleichgewicht aller drei!
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP3.4)</div>
+    KC: <em>âauf Basis des Ã¶kologischen FuÃabdrucks Handlungsoptionen in alltagsrelevanten Entscheidungssituationen zur Kohlenstoffdioxidbilanz entwickeln und abwÃ¤gen"</em>. Operator <strong>abwÃ¤gen</strong>: verschiedene Optionen mit Pro/Contra aus mehreren Perspektiven analysieren + begrÃ¼ndetes Urteil formulieren.
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S4: RENATURIERUNG
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s4">
+  <div class="sec-hd">
+    <div class="sec-num">4</div>
+    <div>
+      <div class="sec-ti">RenaturierungsmaÃnahmen</div>
+      <div class="sec-su">Ãkologische Â· Ã¶konomische Â· soziale Perspektive Â· Bewertungskompetenz (eA)</div>
+    </div>
+  </div>
+
+  <div class="bt">Was ist Renaturierung?</div>
+  <p><strong>Renaturierung</strong> bezeichnet die RÃ¼ckfÃ¼hrung eines degradierten Ãkosystems in einen naturnahen Zustand. Beispiele: WiederbewÃ¤sserung von trockengelegten Mooren, Entfernung von Flussbegradigung, Aufgabe intensiver landwirtschaftlicher Nutzung, Wiederanpflanzung von WÃ¤ldern. Sie dient dem Schutz der BiodiversitÃ¤t und der Ãkosystemleistungen.</p>
+
+  <div class="kb">
+    <div class="kl">Ãkosystemleistungen</div>
+    <div class="km">Leistungen der Natur, die dem Menschen direkt oder indirekt nÃ¼tzen</div>
+    <div class="ke">
+      <strong>Versorgungsleistungen:</strong> Nahrung, Trinkwasser, Holz, Faserstoffe<br>
+      <strong>Regulierungsleistungen:</strong> Klimaregulierung, Hochwasserschutz, Luftreinigung, BestÃ¤ubung<br>
+      <strong>Kulturelle Leistungen:</strong> Erholung, Ãsthetik, spirituelle Werte, Bildung<br>
+      <strong>UnterstÃ¼tzungsleistungen:</strong> NÃ¤hrstoffkreislauf, Bodenbildung, Fotosynthese
+    </div>
+  </div>
+
+  <!-- SVG: Drei-Perspektiven-Bewertung Renaturierung -->
+  <div class="dw">
+    <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="360" fill="#f8f8f6"/>
+      <text x="350" y="22" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Renaturierung eines Flussabschnitts: Drei-Perspektiven-Bewertung</text>
+
+      <!-- ÃKOLOGISCHE PERSPEKTIVE -->
+      <rect x="20" y="40" width="200" height="295" rx="8" fill="#edf7f2" stroke="#1e5c38" stroke-width="2"/>
+      <text x="120" y="62" font-size="12" fill="#1e5c38" text-anchor="middle" font-weight="700">ð¿ Ãkologisch</text>
+      <!-- Pro -->
+      <text x="35" y="83" font-size="10.5" fill="#1e5c38" font-weight="600">+ Vorteile:</text>
+      <text x="35" y="98" font-size="10" fill="#1e5c38">â¢ BiodiversitÃ¤t â</text>
+      <text x="35" y="112" font-size="10" fill="#1e5c38">â¢ LebensrÃ¤ume fÃ¼r</text>
+      <text x="35" y="126" font-size="10" fill="#1e5c38">  bedrohte Arten</text>
+      <text x="35" y="142" font-size="10" fill="#1e5c38">â¢ Moore: COâ-Speicher</text>
+      <text x="35" y="157" font-size="10" fill="#1e5c38">  (Klimaschutz!)</text>
+      <text x="35" y="172" font-size="10" fill="#1e5c38">â¢ Selbstreinigung Wasser</text>
+      <text x="35" y="188" font-size="10" fill="#1e5c38">â¢ Hochwasserschutz â</text>
+      <text x="35" y="204" font-size="10" fill="#1e5c38">â¢ Bodenfruchtbarkeit â</text>
+      <!-- Contra -->
+      <text x="35" y="224" font-size="10.5" fill="#9e2a1c" font-weight="600">â Nachteile:</text>
+      <text x="35" y="239" font-size="10" fill="#9e2a1c">â¢ Methanemissionen aus</text>
+      <text x="35" y="254" font-size="10" fill="#9e2a1c">  renaturierten Mooren</text>
+      <text x="35" y="270" font-size="10" fill="#9e2a1c">â¢ Ãbergangsphase:</text>
+      <text x="35" y="284" font-size="10" fill="#9e2a1c">  instabiles Ãkosystem</text>
+      <text x="35" y="300" font-size="10" fill="#9e2a1c">â¢ Invasive Arten mÃ¶gl.</text>
+      <text x="35" y="320" font-size="10" fill="#1e5c38" font-weight="600">Fazit: langfristig positiv</text>
+
+      <!-- ÃKONOMISCHE PERSPEKTIVE -->
+      <rect x="250" y="40" width="200" height="295" rx="8" fill="#fef9c3" stroke="#d97706" stroke-width="2"/>
+      <text x="350" y="62" font-size="12" fill="#92400e" text-anchor="middle" font-weight="700">ð° Ãkonomisch</text>
+      <!-- Pro -->
+      <text x="265" y="83" font-size="10.5" fill="#92400e" font-weight="600">+ Vorteile:</text>
+      <text x="265" y="98" font-size="10" fill="#92400e">â¢ Ãkotourismus â</text>
+      <text x="265" y="112" font-size="10" fill="#92400e">â¢ Hochwasserschutz</text>
+      <text x="265" y="126" font-size="10" fill="#92400e">  spart Schadenskosten</text>
+      <text x="265" y="142" font-size="10" fill="#92400e">â¢ WasserqualitÃ¤t â â</text>
+      <text x="265" y="157" font-size="10" fill="#92400e">  Trinkwasserkosten â</text>
+      <text x="265" y="172" font-size="10" fill="#92400e">â¢ EU-Subventionen fÃ¼r</text>
+      <text x="265" y="188" font-size="10" fill="#92400e">  Landschaftspflege</text>
+      <text x="265" y="204" font-size="10" fill="#92400e">â¢ Kohlenstoffzertifikate</text>
+      <!-- Contra -->
+      <text x="265" y="224" font-size="10.5" fill="#9e2a1c" font-weight="600">â Nachteile:</text>
+      <text x="265" y="239" font-size="10" fill="#9e2a1c">â¢ Hohe Anfangsinv.</text>
+      <text x="265" y="254" font-size="10" fill="#9e2a1c">  (Kauf, Umbau)</text>
+      <text x="265" y="270" font-size="10" fill="#9e2a1c">â¢ Landwirtschaftliche</text>
+      <text x="265" y="284" font-size="10" fill="#9e2a1c">  NutzflÃ¤che verloren</text>
+      <text x="265" y="300" font-size="10" fill="#9e2a1c">â¢ Kurzzeitig: Einkomm.</text>
+      <text x="265" y="315" font-size="10" fill="#9e2a1c">  verluste fÃ¼r Landwirte</text>
+      <text x="265" y="328" font-size="10" fill="#92400e" font-weight="600">Fazit: langfristig rentabel</text>
+
+      <!-- SOZIALE PERSPEKTIVE -->
+      <rect x="480" y="40" width="200" height="295" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+      <text x="580" y="62" font-size="12" fill="#1d4ed8" text-anchor="middle" font-weight="700">ð¥ Sozial</text>
+      <!-- Pro -->
+      <text x="495" y="83" font-size="10.5" fill="#1d4ed8" font-weight="600">+ Vorteile:</text>
+      <text x="495" y="98" font-size="10" fill="#1d4ed8">â¢ Erholung, Freizeit</text>
+      <text x="495" y="112" font-size="10" fill="#1d4ed8">â¢ Bildungsinfrastruktur</text>
+      <text x="495" y="126" font-size="10" fill="#1d4ed8">  (Lehrpfade, Schulen)</text>
+      <text x="495" y="142" font-size="10" fill="#1d4ed8">â¢ LebensqualitÃ¤t â</text>
+      <text x="495" y="157" font-size="10" fill="#1d4ed8">  (Stadtrand, Natur)</text>
+      <text x="495" y="172" font-size="10" fill="#1d4ed8">â¢ Gesundheit: Natur</text>
+      <text x="495" y="188" font-size="10" fill="#1d4ed8">  reduziert Stress</text>
+      <text x="495" y="204" font-size="10" fill="#1d4ed8">â¢ IdentitÃ¤t (Heimat)</text>
+      <!-- Contra -->
+      <text x="495" y="224" font-size="10.5" fill="#9e2a1c" font-weight="600">â Nachteile:</text>
+      <text x="495" y="239" font-size="10" fill="#9e2a1c">â¢ Landwirte verlieren</text>
+      <text x="495" y="254" font-size="10" fill="#9e2a1c">  ArbeitsplÃ¤tze / FlÃ¤chen</text>
+      <text x="495" y="270" font-size="10" fill="#9e2a1c">â¢ Konflikte zwischen</text>
+      <text x="495" y="284" font-size="10" fill="#9e2a1c">  Naturschutz/Nutzung</text>
+      <text x="495" y="300" font-size="10" fill="#9e2a1c">â¢ ZugangsbeschrÃ¤nk.</text>
+      <text x="495" y="315" font-size="10" fill="#9e2a1c">  fÃ¼r Freizeit mÃ¶glich</text>
+      <text x="495" y="328" font-size="10" fill="#1d4ed8" font-weight="600">Fazit: gesellschaftl. komplex</text>
+    </svg>
+    <div class="dc">Drei-Perspektiven-Analyse einer RenaturierungsmaÃnahme (z.B. Flussbegradigung rÃ¼ckgÃ¤ngig machen). Alle drei Dimensionen der Nachhaltigkeit mÃ¼ssen berÃ¼cksichtigt werden â keine darf dominieren.</div>
+  </div>
+
+  <div class="bt">Bewertungsaufgabe: Renaturierung eines Moorgebiets <span class="ea-badge">eA: Bewerten</span></div>
+  <div class="ex">
+    <div class="ex-ti">âï¸ Operator: Bewerten â Renaturierung eines trockengelegten Moors</div>
+    <div class="step"><div class="sn">1</div><div><strong>Ãkologische Perspektive:</strong> Renaturiertes Moor bindet langfristig COâ (Torf: ~600 kg C/ha/Jahr) und schÃ¼tzt BiodiversitÃ¤t (Moorfrosch, Scheidenwollgras). Kurzfristig: Methanemissionen durch Methanobakterien erhÃ¶ht. Netto: positiv fÃ¼r Klimaschutz.</div></div>
+    <div class="step"><div class="sn">2</div><div><strong>Ãkonomische Perspektive:</strong> Hohe Anfangsinvestitionen fÃ¼r Kauf und Umbau (Staue, Abriss von EntwÃ¤sserungsgrÃ¤ben). Langfristig: EU-FÃ¶rdergelder fÃ¼r Naturschutz, Ãkotourismus, gesparkte Hochwasserschutzkosten. Landwirtschaftlicher Ertragsausfall fÃ¼r betroffene Betriebe.</div></div>
+    <div class="step"><div class="sn">3</div><div><strong>Soziale Perspektive:</strong> Lokale BevÃ¶lkerung: Erholungsgebiet, naturnaher Lebensraum. Konflikte mit Landwirten (EntschÃ¤digungen nÃ¶tig). IdentitÃ¤tsverlust bei traditionell landwirtschaftlich geprÃ¤gten Gemeinden.</div></div>
+    <div class="step"><div class="sn">4</div><div><strong>AbwÃ¤gung und Urteil:</strong> Aus Ã¶kologischer Sicht eindeutig positiv (Klimaschutz, BiodiversitÃ¤t). Sozial und Ã¶konomisch komplex â Erfolg hÃ¤ngt von Partizipation, fairer EntschÃ¤digung und langfristiger Planung ab. Renaturierung ist zu empfehlen, wenn alle Stakeholder einbezogen werden.</div></div>
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: Immer ALLE Perspektiven nennen!</div>
+    Bei Bewertungsaufgaben zur Renaturierung (und Nachhaltigkeit allgemein) werden <strong>alle drei Perspektiven</strong> verlangt: Ã¶kologisch, Ã¶konomisch UND sozial. Wer nur zwei nennt, verliert Punkte! AuÃerdem: Konflikte zwischen den Perspektiven explizit benennen (z.B. Naturschutz vs. Landwirtschaftsinteressen).
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP3.4)</div>
+    KC: <em>âkurz- und langfristige sowie lokale und globale Folgen einer Erhaltungs- und RenaturierungsmaÃnahme reflektieren und bewerten sowie deren Auswirkungen im Hinblick auf Nachhaltigkeit aus Ã¶kologischer, Ã¶konomischer und sozialer Perspektive"</em>. Das ist explizit Bewertungskompetenz â keine bloÃe Beschreibung!
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: ÃÃS-Perspektiven</div>
+    <strong>âÃÃS = Ãko-Ãko-Sozio"</strong>: Ãkologisch (Natur), Ãkonomisch (Geld), Sozial (Menschen). Immer in dieser Reihenfolge durchgehen. FÃ¼r jede Perspektive: Kurzzeitfolgen + Langzeitfolgen + lokale und globale Auswirkungen. Denke dabei an den zeitlichen und rÃ¤umlichen Horizont!
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââ
+     PRÃFUNGSZUSAMMENFASSUNG
+ââââââââââââââââââââââââ -->
+<div class="sum" id="summary">
+  <div class="sum-ti">ð PrÃ¼fungszusammenfassung</div>
+
+  <div class="bt" style="margin-bottom:12px">Zentrale Gleichungen &amp; Konzepte</div>
+  <div class="kg">
+    <div class="kc">
+      <div class="kl2">Fotosynthese</div>
+      <div class="kk">6COâ + 6HâO â CâHââOâ + 6Oâ</div>
+      <div class="ke2">COâ-Bindung Â· Produzenten Â· Licht nÃ¶tig</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">Zellatmung/Verbrennung</div>
+      <div class="kk">CâHââOâ + 6Oâ â 6COâ + 6HâO</div>
+      <div class="ke2">COâ-Freisetzung Â· alle Lebewesen + fossil</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">Nitrifikation I (Chemosyn.)</div>
+      <div class="kk">2NHââº + 3Oâ â 2NOââ» + Energie</div>
+      <div class="ke2">Nitrosomonas Â· chemoautotroph</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">Nitrifikation II</div>
+      <div class="kk">2NOââ» + Oâ â 2NOââ» + Energie</div>
+      <div class="ke2">Nitrobacter Â· Nitrat fÃ¼r Pflanzen verfÃ¼gbar</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">Ãkol. FuÃabdruck</div>
+      <div class="kk">BiokapazitÃ¤t Erde: ~1,6 gha/Person</div>
+      <div class="ke2">DE: ~5,0 Â· Welt: ~2,8 Â· Indien: ~1,1 gha</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">COâ-Konzentration</div>
+      <div class="kk">Vorindustr.: 280 ppm â Heute: ~420 ppm</div>
+      <div class="ke2">+50% = anthropogene VerstÃ¤rkung</div>
+    </div>
+  </div>
+
+  <div class="divider" style="background:#c8e6d4"></div>
+  <div class="bt" style="margin-bottom:12px">Typische eA-PrÃ¼fungsaufgaben mit LÃ¶sungsstrategie</div>
+  <div class="ag">
+    <div class="ac">
+      <div class="an">1</div>
+      <div class="at">Kohlenstoffkreislauf schematisch darstellen</div>
+      <div class="as">1) Alle Akteure zeichnen: AtmosphÃ¤re, Produzenten, Konsumenten, Destruenten, Fossile, Ozean Â· 2) Pfeile mit Prozessnamen: Fotosynthese (COâ rein), Atmung (COâ raus), FraÃ, Remineralisierung Â· 3) Anthropogene StÃ¶rung rot markieren: Verbrennung + Abholzung Â· 4) Mengenangaben: vorindustr. 280 ppm vs. heute 420 ppm COâ</div>
+      <div class="ah">â ï¸ Fossile Brennstoffe gehÃ¶ren DAZU!</div>
+    </div>
+    <div class="ac">
+      <div class="an">2</div>
+      <div class="at">Stickstoffkreislauf auf molekularer Ebene darstellen</div>
+      <div class="as">1) Nâ â NHââº (Nâ-Fixierung: Rhizobien) Â· 2) org. N â NHââº (Ammonifikation: Destruenten) Â· 3) NHââº â NOââ» (Nitrosomonas, Chemosynthese) Â· 4) NOââ» â NOââ» (Nitrobacter) Â· 5) NOââ» â Nâ (Denitrifikation: anaerob) Â· 6) NOââ» â Pflanzen (Aufnahme)</div>
+      <div class="ah">Nitrifikation = Chemosynthese (Energie aus chem. Reaktion)!</div>
+    </div>
+    <div class="ac">
+      <div class="an">3</div>
+      <div class="at">Anthropogenen Treibhauseffekt diskutieren</div>
+      <div class="as">Operator: diskutieren Â· 1) Evidenz: COâ 280â420 ppm, T +1,2Â°C Â· 2) Kausalkette: fossil â COâ â â IR-Absorption â â T â Â· 3) Gegenargumente einbeziehen Â· 4) Folgen fÃ¼r Nahrungsketten ableiten Â· 5) Eigene Position mit BegrÃ¼ndung formulieren</div>
+      <div class="ah">IPCC-Berichte als wissenschaftliche Grundlage nennen!</div>
+    </div>
+    <div class="ac">
+      <div class="an">4</div>
+      <div class="at">Handlungsoptionen abwÃ¤gen</div>
+      <div class="as">1) Optionen benennen (z.B. Fleischverzicht, Flugreduktion, ÃPNV) Â· 2) FuÃabdruck-Daten verwenden (gha oder COâ-eq) Â· 3) Wirksamkeit + Kosten + SozialvertrÃ¤glichkeit Â· 4) Kurzzeit vs. Langzeitfolgen Â· 5) Systemebene vs. Individuum Â· 6) BegrÃ¼ndetes Urteil</div>
+      <div class="ah">Immer: lokale UND globale Folgen!</div>
+    </div>
+    <div class="ac">
+      <div class="an">5</div>
+      <div class="at">Renaturierung aus 3 Perspektiven bewerten</div>
+      <div class="as">Pflicht: Ãkologisch + Ãkonomisch + Sozial! Â· 1) Pro und Contra je Perspektive Â· 2) Zeitperspektive: kurz- vs. langfristig Â· 3) RÃ¤umliche Skala: lokal vs. global Â· 4) Konfliktpunkte explizit nennen Â· 5) Gesamturteil: Vorteile Ã¼berwiegen wennâ¦</div>
+      <div class="ah">â ï¸ Alle 3 Perspektiven = Pflicht! Nie nur 2!</div>
+    </div>
+    <div class="ac">
+      <div class="an">6</div>
+      <div class="at">Ãkosystemleistungen erlÃ¤utern</div>
+      <div class="as">Vier Kategorien: Versorgung (Nahrung, Wasser) Â· Regulierung (Klima, Hochwasser) Â· Kulturell (Erholung) Â· UnterstÃ¼tzung (NÃ¤hrstoffkreislauf). Bei Renaturierung: welche Leistungen werden gestÃ¤rkt? â VerknÃ¼pfung mit wirtschaftlichem Wert und gesellschaftlichem Nutzen.</div>
+      <div class="ah">Ãkosystemleistungen = BrÃ¼cke zwischen Ãkologie und Ãkonomie!</div>
+    </div>
+  </div>
+
+  <div class="divider" style="background:#c8e6d4;margin-top:20px"></div>
+  <div class="bt" style="margin-bottom:10px">Operatoren (eA) fÃ¼r dieses Thema</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:10px">
+    <div class="kc"><div class="kl2">erlÃ¤utern</div><div class="kk" style="font-size:12px">Beschreiben + HintergrÃ¼nde + ZusammenhÃ¤nge</div></div>
+    <div class="kc"><div class="kl2">ableiten</div><div class="kk" style="font-size:12px">Aus Daten/Fakten schlussfolgern</div></div>
+    <div class="kc"><div class="kl2">diskutieren</div><div class="kk" style="font-size:12px">Mehrere Argumente + eigene Position</div></div>
+    <div class="kc"><div class="kl2">abwÃ¤gen</div><div class="kk" style="font-size:12px">Optionen mit Pro/Contra vergleichen + Urteil</div></div>
+    <div class="kc"><div class="kl2">bewerten</div><div class="kk" style="font-size:12px">Kriteriengeleitetes Urteil formulieren</div></div>
+    <div class="kc"><div class="kl2">reflektieren</div><div class="kk" style="font-size:12px">RÃ¼ckblickend kritisch prÃ¼fen</div></div>
   </div>
 </div>
 
-<div class="sumrow">
-  <div class="sc">
-    <div class="sc-lbl">Treibhausgase</div>
-    <div class="sc-val">CO₂, CH₄, N₂O</div>
-    <div class="sc-desc">CH₄ = 28× wirksamer als CO₂ (100 Jahre)</div>
-  </div>
-  <div class="sc">
-    <div class="sc-lbl">Energiefluss je Stufe</div>
-    <div class="sc-val">≈ 10 % weiter</div>
-    <div class="sc-desc">90 % Wärmeverlust (2. Thermodynamik)</div>
-  </div>
-  <div class="sc">
-    <div class="sc-lbl">Biodiversitätsverlust</div>
-    <div class="sc-val">6. Massensterben</div>
-    <div class="sc-desc">1.000× schneller als natürliche Rate</div>
-  </div>
-</div>
-
+</div><!-- /page -->
 </body>
 </html>

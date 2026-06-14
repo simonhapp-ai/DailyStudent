@@ -2,163 +2,1006 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=960">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<title>Neurobiologie — Biologie LK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernzettel Â· Neurobiologie I Â· Bio LK eA</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Source Sans 3',system-ui,sans-serif;background:#faf8f4;color:#1c2b1e;font-size:14px;line-height:1.55}
-  .topbar{background:#2a6e4a;color:#fff;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
-  .t-left{display:flex;align-items:center;gap:10px}
-  .t-sub{font-size:18px;font-weight:700;letter-spacing:-.3px}
-  .t-topic{font-size:12px;font-weight:500;color:rgba(255,255,255,.7)}
-  .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
-  .chip-w{background:rgba(255,255,255,.18);color:#fff}
-  .chip-g{background:linear-gradient(135deg,#c8860a,#f5c842);color:#3b1f00}
-  .main{padding:18px 36px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
-  .diag-box{background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;padding:15px;margin-bottom:12px}
-  .diag-box:last-child{margin-bottom:0}
-  .diag-title{font-family:'Lora',Georgia,serif;font-size:13px;font-weight:700;color:#1a4731;margin-bottom:11px}
-  .rcol{display:flex;flex-direction:column;gap:11px}
-  .fb{background:#f0fdf4;border:1.5px solid #2a6e4a;border-left-width:4px;border-radius:8px;padding:12px 14px}
-  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#2a6e4a;margin-bottom:7px}
-  .fb-eq{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#1a4731;margin-bottom:3px;line-height:1.7}
-  .fb-desc{font-size:12px;color:#4b7358;line-height:1.45}
-  .cb{border-radius:8px;padding:11px 13px}
-  .cb-e{background:#fffbeb;border-left:4px solid #d97706}
-  .cb-k{background:#f0fdf4;border-left:4px solid #16a34a}
-  .cb-w{background:#fef2f2;border-left:4px solid #dc2626}
-  .cb-t{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-  .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-w .cb-t{color:#991b1b}
-  .cb-txt{font-size:12.5px;line-height:1.5;color:#1c2b1e}
-  .sumrow{padding:14px 36px;background:#f0fdf4;border-top:1px solid #bbf7d0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  .sc{background:#fff;border:1px solid #bbf7d0;border-top:3px solid #2a6e4a;border-radius:7px;padding:10px}
-  .sc-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#6b9478;margin-bottom:4px}
-  .sc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#1a4731}
-  .sc-desc{font-size:10.5px;color:#6b9478;margin-top:3px}
+  :root{
+    --acc:#2a6e4a;--acc-mid:#3a8a5e;--acc-light:#5aaa7e;
+    --pas:#f0f7f2;--pas-dark:#c8e6d4;
+    --bg:#faf8f4;--surf:#ffffff;
+    --muted:#6b7265;--text:#1e2a1e;
+    --border:#d0e4d8;--radius:10px;
+    --sh-sm:0 1px 5px rgba(42,110,74,.07);
+    --sh:0 3px 16px rgba(42,110,74,.09)
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.74}
+
+  .topbar{background:var(--acc);color:#fff;padding:0 32px;position:sticky;top:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;height:54px;
+    box-shadow:0 2px 14px rgba(42,110,74,.28)}
+  .tl{display:flex;align-items:center;gap:14px}
+  .ts{font-family:'Lora',serif;font-size:17px;font-weight:700;letter-spacing:-.2px}
+  .tc{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{padding:3px 11px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.4px}
+  .chip-l{background:#ffffff22;border:1px solid #ffffff55;color:#d4f0e0}
+  .chip-d{background:#c9b99a22;border:1px solid #c9b99a55;color:#f0e8d8}
+  .chip-e{background:#fbbf2420;border:1px solid #fbbf2455;color:#fde68a}
+  .tr{font-size:11px;color:#9ad4b8;letter-spacing:.3px}
+
+  .page{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  .hero{border-left:5px solid var(--acc);padding:20px 26px;background:var(--pas);
+    border-radius:0 var(--radius) var(--radius) 0;margin-bottom:34px}
+  .hero-ey{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--acc-mid);margin-bottom:6px}
+  .hero-ti{font-family:'Lora',serif;font-size:25px;font-weight:700;color:var(--acc);line-height:1.25;margin-bottom:8px}
+  .hero-me{font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+
+  .toc{background:var(--surf);border:1.5px solid var(--border);border-radius:var(--radius);
+    padding:20px 24px;margin-bottom:40px;box-shadow:var(--sh-sm)}
+  .toc-ti{font-family:'Lora',serif;font-size:13px;font-weight:700;color:var(--acc);
+    text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+  .toc ol{padding-left:20px}
+  .toc li{margin:5px 0}
+  .toc a{color:var(--acc-mid);text-decoration:none;font-size:14px;font-weight:500;transition:color .15s}
+  .toc a:hover{color:var(--acc);text-decoration:underline}
+  .toc-group{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin:10px 0 4px}
+
+  .sec{margin-bottom:54px}
+  .sec-hd{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;
+    padding-bottom:14px;border-bottom:2px solid var(--pas-dark)}
+  .sec-num{width:38px;height:38px;background:var(--acc);color:#fff;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Lora',serif;font-size:17px;font-weight:700;flex-shrink:0;margin-top:2px}
+  .sec-ti{font-family:'Lora',serif;font-size:21px;font-weight:700;color:var(--acc);line-height:1.3}
+  .sec-su{font-size:13px;color:var(--muted);margin-top:2px}
+
+  .part-banner{background:var(--acc);color:#fff;padding:10px 20px;border-radius:var(--radius);margin:38px 0 28px}
+  .part-ti{font-family:'Lora',serif;font-size:17px;font-weight:700}
+  .part-su{font-size:12px;opacity:.78;margin-top:2px}
+
+  .bt{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--acc-mid);
+    margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .bt::before{content:'';display:block;width:16px;height:2px;background:var(--acc-light)}
+  p{margin-bottom:12px} p:last-child{margin-bottom:0}
+
+  .kb{background:var(--pas);border-left:4px solid var(--acc);
+    border-radius:0 var(--radius) var(--radius) 0;padding:13px 18px;margin:14px 0;box-shadow:var(--sh-sm)}
+  .kb .kl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--acc-mid);margin-bottom:6px}
+  .kb .km{font-family:'Lora',serif;font-size:15px;font-weight:600;color:var(--acc);line-height:1.45}
+  .kb .ke{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.58}
+  code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--pas);color:var(--acc);padding:1px 6px;border-radius:4px}
+
+  .callout{border-left:4px solid;border-radius:0 var(--radius) var(--radius) 0;
+    padding:11px 16px;margin:13px 0;font-size:13.5px;line-height:1.62}
+  .ct{font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+  .c-esel{background:#fdf3e0;border-color:#b07a10;color:#7a4e0a}
+  .c-esel .ct{color:#8a5c08}
+  .c-warn{background:#fdf0ee;border-color:#9e2a1c;color:#7a1c10}
+  .c-warn .ct{color:#8a1c10}
+  .c-kc{background:#edf7f2;border-color:#1e5c38;color:#1e4a2e}
+  .c-kc .ct{color:#1a5232}
+  .c-info{background:var(--pas);border-color:var(--acc);color:#1a3a24}
+  .c-info .ct{color:var(--acc)}
+
+  .ea{display:inline-flex;align-items:center;background:var(--acc);color:#fff;
+    font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:20px;letter-spacing:.4px;margin-left:8px;vertical-align:middle}
+
+  .ex{background:#f4fbf6;border:1.5px solid var(--pas-dark);border-radius:var(--radius);padding:15px 20px;margin:13px 0}
+  .ex-ti{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--acc-mid);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .step{display:flex;gap:10px;margin-bottom:7px;font-size:13.5px;align-items:flex-start}
+  .sn{width:22px;height:22px;background:var(--acc);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+
+  .dw{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin:16px 0;box-shadow:var(--sh-sm);overflow-x:auto}
+  .dc{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;font-style:italic}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:13px 0}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:13px 0}
+  @media(max-width:640px){.g2,.g3{grid-template-columns:1fr}}
+  .divider{height:1px;background:var(--pas-dark);margin:26px 0}
+
+  .sum{background:var(--pas);border:2px solid var(--acc);border-radius:var(--radius);padding:28px;margin-top:48px}
+  .sum-ti{font-family:'Lora',serif;font-size:22px;font-weight:700;color:var(--acc);margin-bottom:20px}
+  .kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:11px;margin-bottom:24px}
+  .kc{background:#fff;border-left:4px solid var(--acc);border-radius:0 8px 8px 0;padding:11px 14px;box-shadow:var(--sh-sm)}
+  .kc .kl2{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .kc .kk{font-family:'Lora',serif;font-size:13.5px;color:var(--acc);font-weight:600;line-height:1.4}
+  .kc .ke2{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:11px}
+  .ac{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:13px;box-shadow:var(--sh-sm)}
+  .ac .an{width:24px;height:24px;background:var(--acc);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:7px}
+  .ac .at{font-size:12px;font-weight:700;color:var(--acc);margin-bottom:4px}
+  .ac .as{font-size:12.5px;color:var(--text);line-height:1.52}
+  .ac .ah{font-size:11.5px;color:var(--muted);margin-top:6px;border-top:1px solid var(--border);padding-top:6px}
+
+  @media print{
+    body{background:#fff!important}
+    .topbar{display:none!important}
+    .dw,.kb,.callout,.ex,.ac,.kc{break-inside:avoid}
+    .page{padding:12px}
+  }
+
+  .chip-pro{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 11px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.3px;
+    background:linear-gradient(135deg,#C8860A 0%,#F5C842 45%,#D97706 100%);
+    color:#3b1f00;
+    box-shadow:0 1px 8px rgba(200,134,10,.4),inset 0 1px 0 rgba(255,255,255,.3);
+    position:relative;overflow:hidden;
+  }
+  .chip-pro::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.45) 50%,transparent 75%);
+    background-size:200% 100%;
+    animation:pro-shimmer 8s infinite ease-in-out;
+  }
+  @keyframes pro-shimmer{
+    0%{background-position:-200% center}
+    12%{background-position:200% center}
+    12.1%{background-position:-200% center}
+    100%{background-position:-200% center}
+  }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="t-left">
-    <span class="t-sub">Biologie LK</span>
-    <span class="chip chip-w">Neurobiologie</span>
-    <span class="t-topic">Ruhepotenzial &amp; Aktionspotenzial</span>
+  <div class="tl">
+    <div class="ts">Bio LK Â· Neurobiologie I</div>
+    <div class="tc">
+      <span class="chip chip-l">eA Â· erhÃ¶htes Anforderungsniveau</span>
+      <span class="chip chip-d">ð 16.04.2026</span>
+      <span class="chip chip-e">ð¿ PrÃ¼fung: 22.04.2026</span>
+    </div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <span class="chip chip-g">✦ Pro Lernzettel</span>
-    <span style="font-size:12px;color:rgba(255,255,255,.55)">Klausur: 19.05.2026</span>
+  <div class="tr"><span class="chip chip-pro">&#10022; Pro Lernzettel</span></div>
+</div>
+
+<div class="page">
+
+<div class="hero">
+  <div class="hero-ey">Biologie LK Niedersachsen Â· Qualifikationsphase Â· eA Â· Do 16.04.2026 Â· KW 16</div>
+  <div class="hero-ti">Neurobiologie I â Ruhe- &amp; Aktionspotenzial &amp; Erregungsleitung</div>
+  <div class="hero-me">
+    <span>ð 16.04.2026 Â· Block 1+2</span>
+    <span>ð¯ ErhÃ¶htes Anforderungsniveau (eA)</span>
+    <span>ð KC: QP4.1 â Nervenzelle, Potenziale, Erregungsleitung</span>
   </div>
 </div>
 
-<div class="main">
-  <div>
-    <div class="diag-box">
-      <div class="diag-title">Aufbau eines Neurons</div>
-      <svg viewBox="0 0 440 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        <path d="M 55 65 Q 30 43 15 26" fill="none" stroke="#2a6e4a" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M 55 65 Q 28 57 10 55" fill="none" stroke="#2a6e4a" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M 55 65 Q 32 82 15 97" fill="none" stroke="#2a6e4a" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M 55 65 Q 25 92 18 115" fill="none" stroke="#2a6e4a" stroke-width="2.2" stroke-linecap="round"/>
-        <ellipse cx="80" cy="65" rx="30" ry="28" fill="#bbf7d0" stroke="#2a6e4a" stroke-width="2"/>
-        <ellipse cx="80" cy="65" rx="14" ry="12" fill="#6ee7b7" stroke="#2a6e4a" stroke-width="1.5"/>
-        <text x="80" y="69" font-size="8.5" fill="#14532d" text-anchor="middle" font-weight="700">Kern</text>
-        <path d="M 108 65 L 125 62 L 145 64" fill="none" stroke="#1a4731" stroke-width="2.5" stroke-linecap="round"/>
-        <rect x="145" y="57" width="50" height="16" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
-        <rect x="205" y="57" width="50" height="16" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
-        <rect x="265" y="57" width="50" height="16" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
-        <circle cx="197" cy="65" r="4" fill="#ef4444" stroke="white" stroke-width="1.5"/>
-        <circle cx="257" cy="65" r="4" fill="#ef4444" stroke="white" stroke-width="1.5"/>
-        <circle cx="317" cy="65" r="4" fill="#ef4444" stroke="white" stroke-width="1.5"/>
-        <path d="M 315 65 L 360 65" stroke="#1a4731" stroke-width="2.2" stroke-linecap="round"/>
-        <circle cx="368" cy="55" r="8" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-        <circle cx="375" cy="69" r="7" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-        <circle cx="362" cy="75" r="6" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
-        <text x="35" y="20" font-size="9.5" fill="#14532d" font-weight="600">Dendriten</text>
-        <text x="70" y="106" font-size="9.5" fill="#14532d" font-weight="600">Soma</text>
-        <text x="162" y="49" font-size="8.5" fill="#0369a1" font-weight="600" text-anchor="middle">Myelin</text>
-        <text x="197" y="46" font-size="9" fill="#b91c1c" text-anchor="middle">Ranvier</text>
-        <text x="360" y="42" font-size="9.5" fill="#92400e" font-weight="600">Endknöpfchen</text>
-        <defs><marker id="ap" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#7c3aed"/></marker></defs>
-        <path d="M 145 85 L 310 85" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ap)"/>
-        <text x="228" y="97" font-size="9.5" fill="#7c3aed" text-anchor="middle" font-weight="600">saltatorische Erregungsleitung</text>
-      </svg>
-    </div>
-    <div class="diag-box">
-      <div class="diag-title">Aktionspotenzial — Zeitverlauf</div>
-      <svg viewBox="0 0 440 148" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        <line x1="45" y1="124" x2="420" y2="124" stroke="#374151" stroke-width="1.5"/>
-        <line x1="45" y1="14" x2="45" y2="124" stroke="#374151" stroke-width="1.5"/>
-        <text x="40" y="18" font-size="9.5" fill="#374151" text-anchor="end">+35</text>
-        <text x="40" y="60" font-size="9.5" fill="#374151" text-anchor="end">  0</text>
-        <text x="40" y="93" font-size="9.5" fill="#374151" text-anchor="end">-55</text>
-        <text x="40" y="113" font-size="9.5" fill="#374151" text-anchor="end">-70</text>
-        <line x1="45" y1="113" x2="420" y2="113" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
-        <line x1="45" y1="93" x2="420" y2="93" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3"/>
-        <path d="M 45 113 L 100 113 Q 108 113 118 93 Q 125 76 155 14 Q 175 14 195 14 Q 215 58 230 113 Q 240 138 270 129 Q 295 122 340 113 L 420 113"
-              fill="none" stroke="#2a6e4a" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
-        <text x="120" y="10" font-size="9.5" fill="#1e40af" font-weight="700">Depolarisation</text>
-        <text x="120" y="22" font-size="8.5" fill="#1e40af">Na⁺ einwärts</text>
-        <text x="220" y="50" font-size="9.5" fill="#dc2626" font-weight="700">Repol.</text>
-        <text x="220" y="62" font-size="8.5" fill="#dc2626">K⁺ auswärts</text>
-        <text x="270" y="127" font-size="9" fill="#7c3aed" font-weight="600">Hyperpolari-</text>
-        <text x="270" y="138" font-size="9" fill="#7c3aed" font-weight="600">sierung</text>
-        <rect x="48" y="89" width="44" height="12" rx="3" fill="#fef2f2"/>
-        <text x="70" y="98" font-size="9" fill="#991b1b" text-anchor="middle" font-weight="700">Schwelle</text>
-        <line x1="108" y1="124" x2="108" y2="100" stroke="#0284c7" stroke-width="1.5"/>
-        <text x="108" y="136" font-size="9" fill="#0284c7" text-anchor="middle">Reiz</text>
-        <text x="420" y="136" font-size="10" fill="#374151" font-weight="600">Zeit (ms)</text>
-        <text x="18" y="72" font-size="10" fill="#374151" font-weight="600" transform="rotate(-90,18,72)">U (mV)</text>
-      </svg>
+<nav class="toc">
+  <div class="toc-ti">ð Inhaltsverzeichnis</div>
+  <div class="toc-group">Teil A â Neuronstruktur &amp; Membranpotenziale</div>
+  <ol>
+    <li><a href="#s1">Neuronstruktur: Dendrit, Soma, Axon, Myelinscheide</a></li>
+    <li><a href="#s2">Ruhepotenzial: FlieÃgleichgewicht, IonenkanÃ¤le, Naâº/Kâº-Pumpe</a></li>
+    <li><a href="#s3">Entstehung &amp; Aufrechterhaltung des Ruhepotenzials (â70 mV)</a></li>
+    <li><a href="#s4">Aktionspotenzial: Depolarisation, Repolarisation, RefraktÃ¤rzeit</a></li>
+    <li><a href="#s5">IonenstrÃ¶me aus Potenzialmessungen ableiten (eA)</a></li>
+  </ol>
+  <div class="toc-group" style="margin-top:8px">Teil B â Erregungsleitung</div>
+  <ol start="6">
+    <li><a href="#s6">Kontinuierliche Erregungsleitung: unmyelinisierte Axone</a></li>
+    <li><a href="#s7">Saltatorische Erregungsleitung: Ranvierscher SchnÃ¼rring</a></li>
+    <li><a href="#s8">Simulation der Erregungsleitung: Modell &amp; Grenzen</a></li>
+  </ol>
+  <ol start="9" style="margin-top:5px">
+    <li><a href="#summary">ð PrÃ¼fungszusammenfassung</a></li>
+  </ol>
+</nav>
+
+<!-- ââââââââââââââââââ TEIL A ââââââââââââââââââ -->
+<div class="part-banner">
+  <div class="part-ti">Teil A Â· Neuronstruktur &amp; Membranpotenziale</div>
+  <div class="part-su">Block 1 Â· 09:00â10:30</div>
+</div>
+
+<!-- ââ S1: NEURONSTRUKTUR ââ -->
+<section class="sec" id="s1">
+  <div class="sec-hd">
+    <div class="sec-num">1</div>
+    <div>
+      <div class="sec-ti">Neuronstruktur</div>
+      <div class="sec-su">Dendrit Â· Soma Â· Axon Â· Myelinscheide Â· Ranvierscher SchnÃ¼rring</div>
     </div>
   </div>
 
-  <div class="rcol">
-    <div class="fb">
-      <div class="fb-lbl">Ionenverteilung — Ruhepotenzial</div>
-      <div class="fb-eq">innen: K⁺ hoch, Na⁺ tief</div>
-      <div class="fb-eq">außen: Na⁺ hoch, K⁺ tief</div>
-      <div class="fb-desc">Na⁺/K⁺-ATPase: 3 Na⁺ raus, 2 K⁺ rein pro ATP → Ruhepotenzial ≈ −70 mV</div>
+  <div class="bt">Aufbau einer Nervenzelle (Neuron)</div>
+  <p>Das Neuron ist die funktionelle Grundeinheit des Nervensystems. Seine Struktur ist exakt auf die Informationsweiterleitung ausgelegt: <strong>Dendriten</strong> empfangen Signale, das <strong>Soma</strong> integriert sie, und das <strong>Axon</strong> leitet das Aktionspotenzial weiter.</p>
+
+  <div class="dw">
+    <svg viewBox="0 0 700 280" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="280" fill="#ffffff"/>
+      <text x="350" y="20" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Aufbau eines myelinisierten Neurons (Querschnitt &amp; Seitenansicht)</text>
+
+      <!-- DENDRITEN (links, verzweigt) -->
+      <line x1="55" y1="140" x2="130" y2="140" stroke="#2a6e4a" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="130" x2="95"  y2="105" stroke="#2a6e4a" stroke-width="3" stroke-linecap="round"/>
+      <line x1="55" y1="150" x2="95"  y2="175" stroke="#2a6e4a" stroke-width="3" stroke-linecap="round"/>
+      <line x1="55" y1="122" x2="35"  y2="100" stroke="#2a6e4a" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="55" y1="125" x2="30"  y2="128" stroke="#2a6e4a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="55" y1="155" x2="30"  y2="162" stroke="#2a6e4a" stroke-width="2" stroke-linecap="round"/>
+      <line x1="55" y1="158" x2="35"  y2="183" stroke="#2a6e4a" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- SOMA -->
+      <ellipse cx="155" cy="140" rx="42" ry="38" fill="#c8e6d4" stroke="#2a6e4a" stroke-width="2.5"/>
+      <!-- Zellkern -->
+      <ellipse cx="155" cy="140" rx="16" ry="14" fill="#edf7f2" stroke="#1e5c38" stroke-width="1.5"/>
+      <ellipse cx="155" cy="140" rx="6"  ry="5"  fill="#2a6e4a" opacity=".5"/>
+
+      <!-- AXONHÃGEL -->
+      <path d="M197,140 Q220,140 230,140" fill="none" stroke="#1a3d6b" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- AXON (lang) mit Myelinscheide -->
+      <!-- Myelinscheiden-Segmente (tÃ¼rkis) -->
+      <rect x="232" y="130" width="68" height="20" rx="4" fill="#a5f3fc" stroke="#0891b2" stroke-width="1.5"/>
+      <!-- Ranvierscher SchnÃ¼rring 1 -->
+      <rect x="300" y="133" width="8"  height="14" rx="1" fill="#fff" stroke="#2a6e4a" stroke-width="1.5"/>
+      <rect x="310" y="130" width="68" height="20" rx="4" fill="#a5f3fc" stroke="#0891b2" stroke-width="1.5"/>
+      <!-- Ranvierscher SchnÃ¼rring 2 -->
+      <rect x="378" y="133" width="8"  height="14" rx="1" fill="#fff" stroke="#2a6e4a" stroke-width="1.5"/>
+      <rect x="388" y="130" width="68" height="20" rx="4" fill="#a5f3fc" stroke="#0891b2" stroke-width="1.5"/>
+      <!-- Ranvierscher SchnÃ¼rring 3 -->
+      <rect x="456" y="133" width="8"  height="14" rx="1" fill="#fff" stroke="#2a6e4a" stroke-width="1.5"/>
+      <rect x="466" y="130" width="68" height="20" rx="4" fill="#a5f3fc" stroke="#0891b2" stroke-width="1.5"/>
+      <!-- Axonmembran (mittig) -->
+      <line x1="232" y1="140" x2="534" y2="140" stroke="#1a3d6b" stroke-width="2"/>
+
+      <!-- AXONTERMINALE (EndknÃ¶pfchen) -->
+      <path d="M534,140 Q550,140 558,130" stroke="#2a6e4a" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M534,140 Q550,140 558,150" stroke="#2a6e4a" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <circle cx="564" cy="126" r="8" fill="#fbbf24" stroke="#b07a10" stroke-width="1.5"/>
+      <circle cx="564" cy="154" r="8" fill="#fbbf24" stroke="#b07a10" stroke-width="1.5"/>
+
+      <!-- Schwann-Zellkerne -->
+      <ellipse cx="266" cy="125" rx="10" ry="6" fill="#e0f2fe" stroke="#0891b2" stroke-width="1" opacity=".8"/>
+      <ellipse cx="344" cy="125" rx="10" ry="6" fill="#e0f2fe" stroke="#0891b2" stroke-width="1" opacity=".8"/>
+      <ellipse cx="422" cy="125" rx="10" ry="6" fill="#e0f2fe" stroke="#0891b2" stroke-width="1" opacity=".8"/>
+      <ellipse cx="500" cy="125" rx="10" ry="6" fill="#e0f2fe" stroke="#0891b2" stroke-width="1" opacity=".8"/>
+
+      <!-- CALLOUTS -->
+      <!-- Dendriten -->
+      <line x1="60" y1="100" x2="60" y2="55" stroke="#2a6e4a" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="10" y="38" width="100" height="20" rx="3" fill="#f0f7f2" stroke="#2a6e4a" stroke-width="1"/>
+      <text x="60" y="51" font-size="10.5" fill="#2a6e4a" text-anchor="middle" font-weight="700">Dendriten</text>
+
+      <!-- Soma -->
+      <line x1="155" y1="102" x2="155" y2="55" stroke="#1e5c38" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="108" y="38" width="94" height="20" rx="3" fill="#edf7f2" stroke="#1e5c38" stroke-width="1"/>
+      <text x="155" y="51" font-size="10.5" fill="#1e5c38" text-anchor="middle" font-weight="700">Soma (ZellkÃ¶rper)</text>
+
+      <!-- AxonhÃ¼gel -->
+      <line x1="215" y1="140" x2="215" y2="55" stroke="#1a3d6b" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="168" y="38" width="94" height="20" rx="3" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1"/>
+      <text x="215" y="51" font-size="10.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">AxonhÃ¼gel</text>
+
+      <!-- Myelinscheide -->
+      <line x1="345" y1="130" x2="345" y2="38" stroke="#0891b2" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="286" y="26" width="118" height="20" rx="3" fill="#e0f2fe" stroke="#0891b2" stroke-width="1"/>
+      <text x="345" y="39" font-size="10.5" fill="#0e7490" text-anchor="middle" font-weight="700">Myelinscheide (Schwann-Z.)</text>
+
+      <!-- Ranvierscher SchnÃ¼rring -->
+      <line x1="304" y1="160" x2="304" y2="210" stroke="#2a6e4a" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="220" y="208" width="168" height="20" rx="3" fill="#f0f7f2" stroke="#2a6e4a" stroke-width="1"/>
+      <text x="304" y="221" font-size="10.5" fill="#2a6e4a" text-anchor="middle" font-weight="700">Ranvierscher SchnÃ¼rring</text>
+
+      <!-- Axonterminal -->
+      <line x1="564" y1="162" x2="600" y2="200" stroke="#b07a10" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="580" y="196" width="110" height="20" rx="3" fill="#fdf3e0" stroke="#b07a10" stroke-width="1"/>
+      <text x="635" y="209" font-size="10.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">EndknÃ¶pfchen (Synapse)</text>
+
+      <!-- Signalfluss-Pfeil -->
+      <line x1="30" y1="255" x2="620" y2="255" stroke="#2a6e4a" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#an1)"/>
+      <defs><marker id="an1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+      <text x="325" y="272" font-size="10.5" fill="#2a6e4a" text-anchor="middle" font-weight="600">Signalfluss: Dendrit â Soma â Axon â Synapse</text>
+    </svg>
+    <div class="dc">Myelinisiertes Neuron: Dendriten (empfangen), Soma (integriert), Axon mit Myelinscheide und Ranvierschen SchnÃ¼rringen (leiten saltatorisch), EndknÃ¶pfchen (Ã¼bertragen auf nÃ¤chste Zelle).</div>
+  </div>
+
+  <div class="kb">
+    <div class="kl">Funktionen der Strukturen</div>
+    <div class="km" style="font-size:13.5px">Dendrit empfÃ¤ngt Â· Soma integriert Â· Axon leitet Â· Synapse Ã¼bertrÃ¤gt</div>
+    <div class="ke">
+      <strong>Dendriten:</strong> groÃe OberflÃ¤che â viele eingehende Signale Â· passive elektrische Weiterleitung<br>
+      <strong>Soma (ZellkÃ¶rper):</strong> enthÃ¤lt Kern, Mitochondrien â Integration aller eingehender Potenziale<br>
+      <strong>AxonhÃ¼gel:</strong> Entstehungsort des Aktionspotenzials (niedrigste Reizschwelle)<br>
+      <strong>Myelinscheide:</strong> Lipidschicht der Schwann-Zellen â elektrische Isolierung â saltatorische Leitung<br>
+      <strong>Ranvierscher SchnÃ¼rring:</strong> myelinfreie Stelle (~1 Âµm breit) â Naâº-KanÃ¤le regenerieren AP
     </div>
-    <div class="cb cb-e">
-      <div class="cb-t">🐴 Eselsbrücke</div>
-      <div class="cb-txt"><strong>„−70 = Schlaf, +35 = Alarm"</strong><br>Na⁺-Kanäle öffnen → Depolarisation bis +35 mV. Dann K⁺ raus → zurück auf −70 mV.</div>
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP4.1)</div>
+    KC: <em>âdie Struktur eines Neurons schematisch skizzieren"</em>. In der PrÃ¼fung: Neuron zeichnen mit korrekten Beschriftungen + Signalfluss-Pfeil. Schwann-Zellen als Bildner der Myelinscheide nicht vergessen!
+  </div>
+</section>
+
+<!-- ââ S2: RUHEPOTENZIAL ââ -->
+<section class="sec" id="s2">
+  <div class="sec-hd">
+    <div class="sec-num">2</div>
+    <div>
+      <div class="sec-ti">Ruhepotenzial</div>
+      <div class="sec-su">FlieÃgleichgewicht Â· IonenkanÃ¤le Â· Naâº/Kâº-Pumpe</div>
     </div>
-    <div class="cb cb-k">
-      <div class="cb-t">📋 Kerncurriculum</div>
-      <div class="cb-txt">Ruhepotenzial + AP erklären · Synapse + Neurotransmitter · Alles-oder-Nichts-Prinzip (AFB I–III)</div>
+  </div>
+
+  <div class="bt">Definition &amp; Entstehung</div>
+  <p>Das <strong>Ruhepotenzial</strong> ist das elektrische Membranpotenzial einer nicht erregten Nervenzelle: <strong>â70 mV</strong> (innen negativ gegenÃ¼ber auÃen). Es ist kein statisches Gleichgewicht, sondern ein dynamisches <strong>FlieÃgleichgewicht</strong>: stÃ¤ndiger Ionenfluss durch KanÃ¤le wird durch aktiven Transport (Naâº/Kâº-Pumpe) aufrechterhalten.</p>
+
+  <div class="kb">
+    <div class="kl">Ionenverteilung im Ruhezustand</div>
+    <div class="km">Innen: Kâº hoch, Naâº niedrig, Clâ» niedrig, org. Anionen hoch Â· AuÃen: Kâº niedrig, Naâº hoch, Clâ» hoch</div>
+    <div class="ke">
+      Kâº: innen ~140 mmol/L Â· auÃen ~5 mmol/L â Konzentrationsgradient nach auÃen<br>
+      Naâº: innen ~15 mmol/L Â· auÃen ~145 mmol/L â Konzentrationsgradient nach innen<br>
+      Konzentrationsunterschiede entstehen durch <strong>aktiven Transport</strong> der Naâº/Kâº-ATPase
     </div>
-    <div class="cb cb-w">
-      <div class="cb-t">⚠️ Prüfungsfalle</div>
-      <div class="cb-txt">Na⁺/K⁺-ATPase ≠ AP-Auslöser! Pumpe erhält nur das Ruhepotenzial. Das AP wird durch spannungsgesteuerte Kanäle ausgelöst.</div>
+  </div>
+
+  <!-- SVG: Ruhepotenzial-Mechanismus -->
+  <div class="dw">
+    <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="340" fill="#f8f8f6"/>
+      <text x="350" y="20" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Ruhepotenzial: Ionenverteilung &amp; FlieÃgleichgewicht (â70 mV)</text>
+
+      <!-- Membran (horizontale Doppelschicht) -->
+      <rect x="60" y="135" width="580" height="12" rx="2" fill="#1a3d6b" opacity=".85"/>
+      <rect x="60" y="150" width="580" height="12" rx="2" fill="#1a3d6b" opacity=".85"/>
+
+      <!-- Beschriftungen Innen/AuÃen -->
+      <text x="350" y="108" font-size="11" fill="#6b7265" text-anchor="middle" font-weight="600">EXTRAZELLULÃRER RAUM (auÃen)</text>
+      <text x="350" y="210" font-size="11" fill="#6b7265" text-anchor="middle" font-weight="600">INTRAZELLULÃRER RAUM (innen)</text>
+
+      <!-- IONENKONZENTRATIONEN AUSSEN -->
+      <!-- Na+ Ionen auÃen (viele, orange) -->
+      <text x="110" y="100" font-size="14" fill="#ea580c" text-anchor="middle" font-weight="700">Naâº</text>
+      <text x="110" y="115" font-size="14" fill="#ea580c" text-anchor="middle" font-weight="700">Naâº</text>
+      <text x="140" y="107" font-size="14" fill="#ea580c" text-anchor="middle" font-weight="700">Naâº</text>
+      <text x="170" y="100" font-size="14" fill="#ea580c" text-anchor="middle" font-weight="700">Naâº</text>
+      <text x="170" y="115" font-size="14" fill="#ea580c" text-anchor="middle" font-weight="700">Naâº</text>
+      <!-- K+ auÃen (wenige, blau) -->
+      <text x="220" y="108" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="700">Kâº</text>
+      <!-- Cl- auÃen (grÃ¼n) -->
+      <text x="260" y="100" font-size="14" fill="#16a34a" text-anchor="middle">Clâ»</text>
+      <text x="290" y="112" font-size="14" fill="#16a34a" text-anchor="middle">Clâ»</text>
+      <!-- LadungsÃ¼berschuss auÃen (+) -->
+      <text x="450" y="95" font-size="11" fill="#ea580c" text-anchor="middle" font-weight="700">+ + + + + + + + + + +</text>
+      <text x="450" y="110" font-size="11" fill="#ea580c" text-anchor="middle" font-weight="700">+ + + + + + + + + + +</text>
+
+      <!-- IONENKONZENTRATIONEN INNEN -->
+      <!-- K+ innen (viele) -->
+      <text x="110" y="230" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="700">Kâº</text>
+      <text x="140" y="245" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="700">Kâº</text>
+      <text x="110" y="260" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="700">Kâº</text>
+      <text x="170" y="238" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="700">Kâº</text>
+      <text x="170" y="258" font-size="14" fill="#2563eb" text-anchor="middle" font-weight="700">Kâº</text>
+      <!-- Na+ innen (wenige) -->
+      <text x="220" y="240" font-size="14" fill="#ea580c" text-anchor="middle" font-weight="700">Naâº</text>
+      <!-- Org. Anionen (negativ geladen) -->
+      <text x="265" y="232" font-size="13" fill="#9e2a1c" text-anchor="middle">Aâ»</text>
+      <text x="295" y="248" font-size="13" fill="#9e2a1c" text-anchor="middle">Aâ»</text>
+      <text x="265" y="260" font-size="13" fill="#9e2a1c" text-anchor="middle">Aâ»</text>
+      <!-- LadungsÃ¼berschuss innen (â) -->
+      <text x="450" y="240" font-size="11" fill="#1a3d6b" text-anchor="middle" font-weight="700">â â â â â â â â â â â</text>
+      <text x="450" y="255" font-size="11" fill="#1a3d6b" text-anchor="middle" font-weight="700">â â â â â â â â â â â</text>
+
+      <!-- K+-Leckkanal (offener Kanal, K+ leckt nach auÃen) -->
+      <rect x="345" y="128" width="18" height="36" rx="3" fill="#2563eb" opacity=".5"/>
+      <line x1="354" y1="140" x2="354" y2="125" stroke="#2563eb" stroke-width="2" marker-end="url(#arp1)"/>
+      <defs><marker id="arp1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2563eb"/></marker></defs>
+      <text x="354" y="175" font-size="9" fill="#2563eb" text-anchor="middle" transform="rotate(-90,354,175)">Kâº leckt raus</text>
+
+      <!-- Na+/K+-Pumpe -->
+      <rect x="400" y="122" width="60" height="48" rx="6" fill="#fdf3e0" stroke="#b07a10" stroke-width="2"/>
+      <text x="430" y="140" font-size="9.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">Naâº/Kâº</text>
+      <text x="430" y="152" font-size="9.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">ATPase</text>
+      <text x="430" y="163" font-size="8.5" fill="#7a4e0a" text-anchor="middle">ATP â ADP</text>
+      <!-- 3 Na+ raus -->
+      <line x1="420" y1="122" x2="406" y2="100" stroke="#ea580c" stroke-width="2" marker-end="url(#arp2)"/>
+      <defs><marker id="arp2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ea580c"/></marker></defs>
+      <text x="395" y="97" font-size="9" fill="#ea580c" font-weight="700">3 Naâº raus</text>
+      <!-- 2 K+ rein -->
+      <line x1="445" y1="100" x2="456" y2="122" stroke="#2563eb" stroke-width="2" marker-end="url(#arp3)"/>
+      <defs><marker id="arp3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2563eb"/></marker></defs>
+      <text x="460" y="97" font-size="9" fill="#2563eb" font-weight="700">2 Kâº rein</text>
+
+      <!-- SpannungsmessgerÃ¤t -->
+      <line x1="580" y1="108" x2="580" y2="135" stroke="#1a3d6b" stroke-width="1.5"/>
+      <line x1="580" y1="162" x2="580" y2="240" stroke="#1a3d6b" stroke-width="1.5"/>
+      <rect x="556" y="225" width="48" height="30" rx="5" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1.5"/>
+      <text x="580" y="244" font-size="14" fill="#1a3d6b" text-anchor="middle" font-weight="700">â70mV</text>
+      <text x="580" y="280" font-size="10.5" fill="#1a3d6b" text-anchor="middle" font-weight="600">Membranpotenzial</text>
+
+      <!-- Callout-Boxen -->
+      <line x1="354" y1="108" x2="330" y2="65" stroke="#2563eb" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="248" y="50" width="164" height="18" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+      <text x="330" y="62" font-size="10" fill="#1d4ed8" text-anchor="middle" font-weight="600">Kâº-Leckkanal: Diffusion nach auÃen</text>
+
+      <line x1="430" y1="170" x2="500" y2="220" stroke="#b07a10" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="460" y="218" width="190" height="30" rx="3" fill="#fdf3e0" stroke="#b07a10" stroke-width="1"/>
+      <text x="555" y="231" font-size="9.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">Aktiv: 3 Naâº raus / 2 Kâº rein</text>
+      <text x="555" y="243" font-size="9" fill="#7a4e0a" text-anchor="middle">â elektrogene Pumpe (netto neg.)</text>
+    </svg>
+    <div class="dc">Ruhepotenzial-Mechanismus: Kâº diffundiert durch LeckkanÃ¤le nach auÃen (Konzentrationsgradient). Die Naâº/Kâº-ATPase pumpt aktiv 3 Naâº raus und 2 Kâº rein â netto negatives Innenpotenzial von â70 mV (FlieÃgleichgewicht).</div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: Naâº/Kâº-Pumpe</div>
+    <strong>â3 Natrium raus, 2 Kalium rein"</strong>: Die Pumpe transportiert mehr positive Ladung (3Ã) nach auÃen als sie holt (2Ã) â netto bleibt innen negativer â elektrogene Wirkung. Merkhilfe: <strong>Na</strong>poleon zieht mit 3 Mann raus, schickt 2 Krieger hinein.
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: FlieÃgleichgewicht â  statisches Gleichgewicht</div>
+    Das Ruhepotenzial ist <strong>kein echtes Gleichgewicht</strong> (was ohne Energieeinsatz bestehen wÃ¼rde). Es ist ein <strong>FlieÃgleichgewicht</strong>: Kâº strÃ¶mt kontinuierlich durch LeckkanÃ¤le aus, aber die Naâº/Kâº-Pumpe hÃ¤lt die Konzentrationen durch aktiven Transport (ATP-Verbrauch) konstant. Ohne ATP â Ruhepotenzial bricht zusammen!
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP4.1)</div>
+    KC: <em>âdie Entstehung und Aufrechterhaltung des Ruhepotenzials auch unter BerÃ¼cksichtigung des Prinzips des FlieÃgleichgewichts sowie den Ablauf des Aktionspotenzials erlÃ¤utern"</em>. FlieÃgleichgewicht = SchlÃ¼sselbegriff!
+  </div>
+</section>
+
+<!-- ââ S3: ENTSTEHUNG RP ââ -->
+<section class="sec" id="s3">
+  <div class="sec-hd">
+    <div class="sec-num">3</div>
+    <div>
+      <div class="sec-ti">Entstehung des Ruhepotenzials (â70 mV)</div>
+      <div class="sec-su">Goldmanns Gleichung qualitativ Â· Nernst-Potenzial Â· Ionenkanaltypen</div>
     </div>
+  </div>
+
+  <div class="bt">Ursachen des Ruhepotenzials</div>
+  <p>Das Ruhepotenzial von â70 mV resultiert aus dem Zusammenspiel von <strong>Diffusion</strong> (Konzentrationsgradienten) und <strong>elektrischen KrÃ¤ften</strong> (elektrochemische Gradienten) Ã¼ber die halbdurchlÃ¤ssige Membran.</p>
+
+  <div class="g2">
+    <div class="kb">
+      <div class="kl">Kalium (Kâº) â Hauptverantwortlich</div>
+      <div class="km" style="font-size:13.5px">Kâº-LeckkanÃ¤le immer offen â Kâº diffundiert nach auÃen</div>
+      <div class="ke">Konzentr.-Gradient: innen &gt;&gt; auÃen â Kâº will nach auÃen<br>
+      Elektrischer Gradient: Innen wird negativer â zieht Kâº zurÃ¼ck<br>
+      Gleichgewicht bei ca. â90 mV (Nernst-Potenzial Kâº)<br>
+      â wichtigster Faktor fÃ¼r das Ruhepotenzial</div>
+    </div>
+    <div class="kb" style="border-color:#ea580c">
+      <div class="kl" style="color:#c2410c">Natrium (Naâº) â Geringerer Beitrag</div>
+      <div class="km" style="font-size:13.5px;color:#c2410c">Naâº-KanÃ¤le im Ruhezustand weitgehend geschlossen</div>
+      <div class="ke">Konzentr.-Gradient: auÃen &gt;&gt; innen â Naâº will rein<br>
+      Elektrischer Gradient: Negativeres Inneres zieht Naâº rein<br>
+      Nernst-Potenzial Naâº â +55 mV (Naâº wÃ¼rde RP positiv machen)<br>
+      â meist geschlossene KanÃ¤le â nur kleiner Naâº-Einstrom</div>
+    </div>
+  </div>
+
+  <div class="callout c-info">
+    <div class="ct">â¹ï¸ Nernst-Potenzial (gA-VerstÃ¤ndnis)</div>
+    Das <strong>Nernst-Potenzial</strong> eines Ions ist das Membranpotenzial, bei dem der Konzentrationsgradient exakt durch den elektrischen Gradienten kompensiert wird â kein Netto-Ionenstrom. FÃ¼r Kâº: E_K â â90 mV Â· FÃ¼r Naâº: E_Na â +55 mV. Das Ruhepotenzial (â70 mV) liegt zwischen beiden â es ist ein Kompromiss, dominiert von Kâº.
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: IonenkanÃ¤le im Vergleich</div>
+    <strong>Leckkanal = immer offen</strong> (wie eine offene TÃ¼r) â Kâº diffundiert stÃ¤ndig.<br>
+    <strong>Spannungsgesteuerter Kanal</strong> = TÃ¼rschloss, das sich bei â70 mV aufschlieÃt (Naâº-Kanal beim AP).<br>
+    <strong>Ligand-gesteuerter Kanal</strong> = TÃ¼r mit Klingelknopf â Ã¶ffnet nur mit SchlÃ¼sselmolekÃ¼l (Neurotransmitter an Synapse).
+  </div>
+</section>
+
+<!-- ââ S4: AKTIONSPOTENZIAL ââ -->
+<section class="sec" id="s4">
+  <div class="sec-hd">
+    <div class="sec-num">4</div>
+    <div>
+      <div class="sec-ti">Aktionspotenzial</div>
+      <div class="sec-su">Depolarisation Â· Repolarisation Â· Hyperpolarisation Â· RefraktÃ¤rzeit</div>
+    </div>
+  </div>
+
+  <div class="bt">Phasen des Aktionspotenzials</div>
+  <p>Das <strong>Aktionspotenzial (AP)</strong> ist eine kurze, stereotypische SpannungsÃ¤nderung der Membran (~1 ms Dauer). Es folgt dem Alles-oder-Nichts-Prinzip: oberhalb der Schwelle (~â55 mV) wird immer das gleiche AP ausgelÃ¶st.</p>
+
+  <!-- SVG: Aktionspotenzial-Kurve -->
+  <div class="dw">
+    <svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="360" fill="#ffffff"/>
+      <text x="350" y="20" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Aktionspotenzial: Phasen, IonenstrÃ¶me &amp; Zeitverlauf</text>
+
+      <!-- Achsen -->
+      <line x1="65" y1="290" x2="620" y2="290" stroke="#4b5563" stroke-width="2" marker-end="url(#aap1)"/>
+      <defs><marker id="aap1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4b5563"/></marker></defs>
+      <line x1="65" y1="310" x2="65" y2="45" stroke="#4b5563" stroke-width="2" marker-end="url(#aap2)"/>
+      <defs><marker id="aap2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4b5563"/></marker></defs>
+      <text x="625" y="294" font-size="11" fill="#6b7265">t (ms)</text>
+      <text x="58" y="42" font-size="11" fill="#6b7265" text-anchor="end">U (mV)</text>
+
+      <!-- Skalenlinien und Werte -->
+      <line x1="60" y1="290" x2="620" y2="290" stroke="#e5e7eb" stroke-width="0.8"/>
+      <!-- â70 mV Linie -->
+      <line x1="60" y1="240" x2="620" y2="240" stroke="#e5e7eb" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <text x="58" y="244" font-size="9.5" fill="#6b7265" text-anchor="end">â70</text>
+      <!-- â55 mV (Schwelle) -->
+      <line x1="60" y1="215" x2="620" y2="215" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="5,3"/>
+      <text x="58" y="219" font-size="9.5" fill="#b07a10" text-anchor="end" font-weight="700">â55</text>
+      <!-- 0 mV -->
+      <line x1="60" y1="170" x2="620" y2="170" stroke="#e5e7eb" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <text x="58" y="174" font-size="9.5" fill="#6b7265" text-anchor="end">0</text>
+      <!-- +30 mV -->
+      <line x1="60" y1="130" x2="620" y2="130" stroke="#e5e7eb" stroke-width="0.8" stroke-dasharray="4,3"/>
+      <text x="58" y="134" font-size="9.5" fill="#6b7265" text-anchor="end">+30</text>
+      <!-- â80 mV (Hyperpol) -->
+      <line x1="60" y1="258" x2="620" y2="258" stroke="#e5e7eb" stroke-width="0.8" stroke-dasharray="2,3" opacity=".5"/>
+      <text x="58" y="262" font-size="9.5" fill="#6b7265" text-anchor="end">â80</text>
+
+      <!-- AP KURVE -->
+      <!-- Ruhepotenzial links -->
+      <line x1="65" y1="240" x2="135" y2="240" stroke="#2a6e4a" stroke-width="2.5"/>
+      <!-- Reiz / Schwellenpotenzial -->
+      <path d="M135,240 Q155,235 175,215" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
+      <!-- Depolarisation (Na+ einwÃ¤rts) -->
+      <path d="M175,215 Q195,170 210,130" fill="none" stroke="#ef4444" stroke-width="3"/>
+      <!-- Overshoot oben -->
+      <path d="M210,130 Q235,105 255,125" fill="none" stroke="#ef4444" stroke-width="3"/>
+      <!-- Repolarisation (K+ auswÃ¤rts) -->
+      <path d="M255,125 Q300,200 330,250" fill="none" stroke="#2563eb" stroke-width="3"/>
+      <!-- Hyperpolarisation -->
+      <path d="M330,250 Q355,265 380,258" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      <!-- Absolute RefraktÃ¤rzeit FÃ¼llung -->
+      <path d="M175,215 Q195,170 210,130 Q235,105 255,125 Q300,200 330,250 L330,215 L175,215 Z" fill="#ef4444" opacity=".08"/>
+      <!-- Relative RefraktÃ¤rzeit FÃ¼llung -->
+      <path d="M330,250 Q355,265 380,258 L380,215 L330,215 Z" fill="#fbbf24" opacity=".12"/>
+      <!-- RÃ¼ckkehr zum RP -->
+      <path d="M380,258 Q410,248 440,240" fill="none" stroke="#2a6e4a" stroke-width="2.5"/>
+      <line x1="440" y1="240" x2="580" y2="240" stroke="#2a6e4a" stroke-width="2.5"/>
+
+      <!-- Zeitmarkierungen (x-Achse) -->
+      <g font-size="9.5" fill="#6b7265" text-anchor="middle">
+        <line x1="135" y1="287" x2="135" y2="293" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="135" y="304">0</text>
+        <line x1="175" y1="287" x2="175" y2="293" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="175" y="304">0,5</text>
+        <line x1="255" y1="287" x2="255" y2="293" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="255" y="304">1</text>
+        <line x1="330" y1="287" x2="330" y2="293" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="330" y="304">1,5</text>
+        <line x1="380" y1="287" x2="380" y2="293" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="380" y="304">2</text>
+        <line x1="440" y1="287" x2="440" y2="293" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="440" y="304">2,5</text>
+      </g>
+
+      <!-- PHASENBESCHRIFTUNGEN (Callouts) -->
+      <!-- Reiz -->
+      <line x1="155" y1="228" x2="130" y2="40" stroke="#b07a10" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="68" y="28" width="124" height="16" rx="3" fill="#fdf3e0" stroke="#b07a10" stroke-width="1"/>
+      <text x="130" y="39" font-size="9.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">Reiz (Ã¼berschwellig)</text>
+
+      <!-- Depolarisation -->
+      <line x1="210" y1="130" x2="250" y2="58" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="196" y="44" width="150" height="18" rx="3" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="271" y="56" font-size="10" fill="#9e2a1c" text-anchor="middle" font-weight="700">â  Depolarisation: Naâº strÃ¶mt ein</text>
+
+      <!-- Repolarisation -->
+      <line x1="300" y1="175" x2="420" y2="58" stroke="#2563eb" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="348" y="44" width="160" height="18" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+      <text x="428" y="56" font-size="10" fill="#1d4ed8" text-anchor="middle" font-weight="700">â¡ Repolarisation: Kâº strÃ¶mt aus</text>
+
+      <!-- Absolute RefraktÃ¤rzeit -->
+      <line x1="252" y1="290" x2="252" y2="318" stroke="#9e2a1c" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="168" y="316" width="180" height="17" rx="3" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="258" y="328" font-size="9.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">abs. RefraktÃ¤rzeit (kein AP mÃ¶gl.)</text>
+
+      <!-- Relative RefraktÃ¤rzeit -->
+      <rect x="355" y="316" width="180" height="17" rx="3" fill="#fdf3e0" stroke="#b07a10" stroke-width="1"/>
+      <text x="445" y="328" font-size="9.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">rel. RefraktÃ¤rzeit (AP nur Ã¼berschwellig)</text>
+
+      <!-- Hyperpolarisation -->
+      <line x1="358" y1="258" x2="530" y2="58" stroke="#6b7265" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="486" y="44" width="154" height="18" rx="3" fill="#f3f4f6" stroke="#6b7265" stroke-width="1"/>
+      <text x="563" y="56" font-size="10" fill="#4b5563" text-anchor="middle" font-weight="700">â¢ Hyperpolarisation: Kâº bis â80mV</text>
+
+      <!-- Schwellenpotenzial-Markierung -->
+      <text x="625" y="218" font-size="9.5" fill="#b07a10" font-weight="700">Schwelle</text>
+      <text x="625" y="229" font-size="9" fill="#b07a10">â55 mV</text>
+    </svg>
+    <div class="dc">Aktionspotenzial-Verlauf: Reiz â SchwellenÃ¼berschreitung â Naâº-Einstrom (Depolarisation bis +30 mV) â Kâº-Ausstrom (Repolarisation) â Hyperpolarisation (â80 mV) â RÃ¼ckkehr zu â70 mV. RefraktÃ¤rzeit verhindert RÃ¼ckwÃ¤rtsleitung.</div>
+  </div>
+
+  <div class="kb">
+    <div class="kl">IonenkanÃ¤le beim Aktionspotenzial</div>
+    <div class="km" style="font-size:13.5px">Depolarisation: spannungsgesteuerte Naâº-KanÃ¤le Ã¶ffnen Â· Repolarisation: Naâº-KanÃ¤le schlieÃen, Kâº-KanÃ¤le Ã¶ffnen</div>
+    <div class="ke">
+      <strong>Depolarisation:</strong> Schwelle â55 mV â spannungsgesteuerte Naâº-KanÃ¤le Ã¶ffnen â massiver Naâº-Einstrom â Membran wird positiv (+30 mV)<br>
+      <strong>Repolarisation:</strong> Naâº-KanÃ¤le inaktivieren â Kâº-KanÃ¤le Ã¶ffnen â Kâº-Ausstrom â Membran wird wieder negativ<br>
+      <strong>Absolute RefraktÃ¤rzeit:</strong> Naâº-KanÃ¤le inaktiviert â kein AP auslÃ¶sbar (0,5â1 ms)<br>
+      <strong>Relative RefraktÃ¤rzeit:</strong> Kâº-KanÃ¤le noch offen â nur Ã¼berschwelliger Reiz lÃ¶st AP aus
+    </div>
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: Alles-oder-Nichts!</div>
+    Das Aktionspotenzial ist <strong>keine graduelle Antwort</strong>. Entweder wird die Schwelle (â55 mV) erreicht â vollstÃ¤ndiges AP mit immer gleicher Amplitude (~100 mV) â oder kein AP. Codierung der ReizstÃ¤rke erfolgt Ã¼ber die <strong>Frequenz</strong> der APs, nicht Ã¼ber deren Amplitude!
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: RefraktÃ¤rzeit</div>
+    <strong>âAbsolut = gar nicht, relativ = vielleicht"</strong>: In der absoluten RefraktÃ¤rzeit (Naâº-KanÃ¤le inaktiviert) kann kein weiteres AP ausgelÃ¶st werden â egal wie stark der Reiz. In der relativen RefraktÃ¤rzeit (Kâº-KanÃ¤le noch offen, Hyperpolarisation) ist ein AP mÃ¶glich, aber nur mit <em>Ã¼berschwelligem</em> Reiz.
+  </div>
+</section>
+
+<!-- ââ S5: IONENSTRÃME ABLEITEN ââ -->
+<section class="sec" id="s5">
+  <div class="sec-hd">
+    <div class="sec-num">5</div>
+    <div>
+      <div class="sec-ti">IonenstrÃ¶me ableiten <span class="ea-badge">eA</span></div>
+      <div class="sec-su">Aus Potenzialmessungen auf Ionenfluss schlieÃen Â· Erkenntnisgewinnungskompetenz</div>
+    </div>
+  </div>
+
+  <div class="bt">Methodik: Potenzialmessungen interpretieren</div>
+  <p>Eine wichtige eA-Kompetenz ist das <strong>Ableiten von IonenstrÃ¶men</strong> aus experimentellen Daten. Aus dem Verlauf des Membranpotenzials (U-t-Diagramm) lÃ¤sst sich auf die Richtung und zeitliche Abfolge der IonenstrÃ¶me schlieÃen.</p>
+
+  <div class="ex">
+    <div class="ex-ti">ð Operator: Ableiten â IonenstrÃ¶me aus Potenzialmessung</div>
+    <div class="step"><div class="sn">1</div><div><strong>Schritt 1 â Kurvenabschnitt identifizieren:</strong> Welche Phase des APs liegt vor? (steigende Kurve = Depolarisation / fallende Kurve = Repolarisation)</div></div>
+    <div class="step"><div class="sn">2</div><div><strong>Schritt 2 â Ladungsverschiebung bestimmen:</strong> Wird das Innere positiver oder negativer? Positiver â positive Ladung strÃ¶mt ein (Naâº) oder negative strÃ¶mt aus. Negativer â positive Ladung strÃ¶mt aus (Kâº) oder Naâº-KanÃ¤le schlieÃen.</div></div>
+    <div class="step"><div class="sn">3</div><div><strong>Schritt 3 â Ionengradienten beachten:</strong> Naâº strÃ¶mt immer nach innen (bei offenen KanÃ¤len) Â· Kâº strÃ¶mt immer nach auÃen (bei offenen KanÃ¤len)</div></div>
+    <div class="step"><div class="sn">4</div><div><strong>Beispiel: U steigt von â70 auf +30 mV â</strong> Ableitung: Naâº-KanÃ¤le Ã¶ffnen â Naâº-Einstrom â Inneres wird positiver</div></div>
+    <div class="step"><div class="sn">5</div><div><strong>Beispiel: U fÃ¤llt von +30 auf â80 mV â</strong> Ableitung: Naâº-KanÃ¤le schlieÃen / inaktivieren â Kâº-KanÃ¤le Ã¶ffnen â Kâº-Ausstrom â Inneres wird negativer</div></div>
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP4.1)</div>
+    KC: <em>âaus Potenzialmessungen IonenstrÃ¶me an Axonen ableiten"</em>. Operator <strong>ableiten</strong> = aus gegebenen Messdaten (U-t-Kurve) logisch auf die zugrundeliegenden IonenstrÃ¶me schlieÃen. Immer: Richtung des Ionenstroms + verantwortlicher Kanal + BegrÃ¼ndung Ã¼ber Gradienten.
+  </div>
+</section>
+
+<!-- ââââââââââââââââââ TEIL B ââââââââââââââââââ -->
+<div class="part-banner">
+  <div class="part-ti">Teil B Â· Erregungsleitung</div>
+  <div class="part-su">Block 2 Â· 11:00â12:30</div>
+</div>
+
+<!-- ââ S6: KONTINUIERLICHE LEITUNG ââ -->
+<section class="sec" id="s6">
+  <div class="sec-hd">
+    <div class="sec-num">6</div>
+    <div>
+      <div class="sec-ti">Kontinuierliche Erregungsleitung</div>
+      <div class="sec-su">Unmyelinisierte Axone Â· lokale KreisstrÃ¶me Â· Ausbreitungsmechanismus</div>
+    </div>
+  </div>
+
+  <div class="bt">Mechanismus</div>
+  <p>Bei unmyelinisierten (marklosen) Axonen breitet sich das Aktionspotenzial durch <strong>lokale KreisstrÃ¶me</strong> aus: Die depolarisierte Membranregion (mit umgekehrter PolaritÃ¤t) depolarisiert durch elektrische KreisstrÃ¶me die benachbarte Membranregion. Das AP wandert so kontinuierlich entlang des Axons.</p>
+
+  <div class="dw">
+    <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="260" fill="#f8f8f6"/>
+      <text x="350" y="20" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Kontinuierliche Erregungsleitung: lokale KreisstrÃ¶me am unmyelinisierten Axon</text>
+
+      <!-- AXON (Rohr) -->
+      <rect x="30" y="100" width="640" height="60" rx="8" fill="#eef3fa" stroke="#1a3d6b" stroke-width="2"/>
+
+      <!-- Membransegmente -->
+      <!-- Segment A: Ruhepotenzial (links, noch nicht erregt) -->
+      <rect x="30" y="100" width="130" height="60" rx="8" fill="#c8e6d4" stroke="#2a6e4a" stroke-width="1.5"/>
+      <!-- Segment B: aktives AP (mitte-links) -->
+      <rect x="165" y="100" width="130" height="60" rx="0" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="2"/>
+      <!-- Segment C: Erregungsfront (mitte) -->
+      <rect x="298" y="100" width="130" height="60" rx="0" fill="#fdf3e0" stroke="#b07a10" stroke-width="2"/>
+      <!-- Segment D: noch unerregt (rechts) -->
+      <rect x="431" y="100" width="130" height="60" rx="0" fill="#c8e6d4" stroke="#2a6e4a" stroke-width="1.5"/>
+      <!-- Segment E: noch unerregt (ganz rechts) -->
+      <rect x="564" y="100" width="106" height="60" rx="8" fill="#c8e6d4" stroke="#2a6e4a" stroke-width="1.5"/>
+
+      <!-- Ladungssymbole AUSSEN -->
+      <text x="95"  y="93" font-size="11" fill="#ea580c" text-anchor="middle">+ + +</text>
+      <text x="228" y="93" font-size="11" fill="#1a3d6b" text-anchor="middle">â â â</text>
+      <text x="363" y="93" font-size="11" fill="#ea580c" text-anchor="middle">+ + +</text>
+      <text x="496" y="93" font-size="11" fill="#ea580c" text-anchor="middle">+ + +</text>
+      <text x="617" y="93" font-size="11" fill="#ea580c" text-anchor="middle">+ + +</text>
+      <!-- Ladungssymbole INNEN -->
+      <text x="95"  y="175" font-size="11" fill="#1a3d6b" text-anchor="middle">â â â</text>
+      <text x="228" y="175" font-size="11" fill="#ea580c" text-anchor="middle">+ + +</text>
+      <text x="363" y="175" font-size="11" fill="#1a3d6b" text-anchor="middle">â â â</text>
+      <text x="496" y="175" font-size="11" fill="#1a3d6b" text-anchor="middle">â â â</text>
+      <text x="617" y="175" font-size="11" fill="#1a3d6b" text-anchor="middle">â â â</text>
+
+      <!-- Kreisstrom: AuÃen von B nach C (rechts, in Ausbreitungsrichtung) -->
+      <path d="M295,93 Q340,60 408,93" fill="none" stroke="#1a3d6b" stroke-width="2" stroke-dasharray="5,2" marker-end="url(#akont1)"/>
+      <defs><marker id="akont1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1a3d6b"/></marker></defs>
+      <!-- Kreisstrom: Innen von C nach B (links) -->
+      <path d="M428,175 Q385,210 295,175" fill="none" stroke="#1a3d6b" stroke-width="2" stroke-dasharray="5,2" marker-end="url(#akont2)"/>
+      <defs><marker id="akont2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#1a3d6b"/></marker></defs>
+
+      <!-- Na+ Pfeile bei AP (B) -->
+      <line x1="210" y1="130" x2="210" y2="148" stroke="#ea580c" stroke-width="2.5" marker-end="url(#akont3)"/>
+      <defs><marker id="akont3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ea580c"/></marker></defs>
+      <text x="220" y="135" font-size="9" fill="#ea580c" font-weight="700">Naâº â</text>
+      <!-- K+ Pfeile bei Repol (B verlÃ¤sst) -->
+      <line x1="245" y1="148" x2="245" y2="130" stroke="#2563eb" stroke-width="2" marker-end="url(#akont4)"/>
+      <defs><marker id="akont4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#2563eb"/></marker></defs>
+      <text x="255" y="140" font-size="9" fill="#2563eb" font-weight="700">Kâº â</text>
+
+      <!-- Ausbreitungsrichtung -->
+      <line x1="130" y1="225" x2="560" y2="225" stroke="#2a6e4a" stroke-width="2.5" marker-end="url(#akont5)"/>
+      <defs><marker id="akont5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+      <text x="345" y="244" font-size="11" fill="#2a6e4a" text-anchor="middle" font-weight="600">Ausbreitungsrichtung</text>
+
+      <!-- RefraktÃ¤re Zone (links vom AP) -->
+      <line x1="165" y1="100" x2="165" y2="220" stroke="#9e2a1c" stroke-width="1.2" stroke-dasharray="4,3"/>
+      <text x="97"  y="222" font-size="9.5" fill="#9e2a1c" text-anchor="middle">refraktÃ¤r</text>
+      <text x="97"  y="234" font-size="9" fill="#9e2a1c" text-anchor="middle">(kein AP rÃ¼ckwÃ¤rts!)</text>
+
+      <!-- Callout-Boxen -->
+      <line x1="228" y1="100" x2="228" y2="55" stroke="#9e2a1c" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="148" y="42" width="160" height="16" rx="3" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="228" y="53" font-size="10" fill="#9e2a1c" text-anchor="middle" font-weight="700">AP-Zone (umgekehrte PolaritÃ¤t)</text>
+
+      <line x1="496" y1="100" x2="560" y2="55" stroke="#2a6e4a" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="478" y="42" width="150" height="16" rx="3" fill="#f0f7f2" stroke="#2a6e4a" stroke-width="1"/>
+      <text x="553" y="53" font-size="10" fill="#2a6e4a" text-anchor="middle" font-weight="700">unerregt (Ruhepotenzial)</text>
+    </svg>
+    <div class="dc">Kontinuierliche Leitung: Lokale KreisstrÃ¶me zwischen depolarisierter Zone (â) und ruhender Zone (+) depolarisieren den benachbarten Membranbereich. Das AP wandert nur vorwÃ¤rts (refraktÃ¤re Zone verhindert RÃ¼ckwÃ¤rtsleitung). Geschwindigkeit: 0,5â2 m/s.</div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: Kontinuierliche Leitung</div>
+    <strong>âWie eine brennende ZÃ¼ndschnur"</strong>: Das AP entzÃ¼ndet die benachbarte Stelle, die vorherige ist schon verbrannt (refraktÃ¤r) â kann sich nicht rÃ¼ckwÃ¤rts ausbreiten. Aber: Die ZÃ¼ndschnur brennt langsam. Unmyelinisierte Axone leiten daher langsam (~1 m/s).
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP4.1)</div>
+    KC: <em>âkontinuierliche und saltatorische Erregungsleitung am Axon simulieren und diskutieren"</em>. Wichtig: ErklÃ¤rung des VorwÃ¤rts-Prinzips durch RefraktÃ¤rzeit.
+  </div>
+</section>
+
+<!-- ââ S7: SALTATORISCHE LEITUNG ââ -->
+<section class="sec" id="s7">
+  <div class="sec-hd">
+    <div class="sec-num">7</div>
+    <div>
+      <div class="sec-ti">Saltatorische Erregungsleitung</div>
+      <div class="sec-su">Ranvierscher SchnÃ¼rring Â· Myelinscheide Â· Geschwindigkeitsvorteil</div>
+    </div>
+  </div>
+
+  <div class="bt">Prinzip &amp; Geschwindigkeitsvorteil</div>
+  <p>Bei myelinisierten Axonen ist die Membran durch die Myelinscheide elektrisch isoliert â IonenstrÃ¶me kÃ¶nnen nur an den <strong>Ranvierschen SchnÃ¼rringen</strong> flieÃen. Das AP âspringt" von SchnÃ¼rring zu SchnÃ¼rring (<em>lat. saltare</em> = springen). Dies erhÃ¶ht die Leitungsgeschwindigkeit erheblich.</p>
+
+  <div class="dw">
+    <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" font-family="Source Sans 3,sans-serif">
+      <rect width="700" height="260" fill="#ffffff"/>
+      <text x="350" y="20" font-size="12" fill="#2a6e4a" text-anchor="middle" font-weight="700">Saltatorische Erregungsleitung: AP springt von SchnÃ¼rring zu SchnÃ¼rring</text>
+
+      <!-- AXON mit Myelinscheide -->
+      <!-- Myelinscheiden-Segmente -->
+      <rect x="80"  y="105" width="110" height="50" rx="6" fill="#a5f3fc" stroke="#0891b2" stroke-width="2"/>
+      <rect x="230" y="105" width="110" height="50" rx="6" fill="#a5f3fc" stroke="#0891b2" stroke-width="2"/>
+      <rect x="380" y="105" width="110" height="50" rx="6" fill="#a5f3fc" stroke="#0891b2" stroke-width="2"/>
+      <rect x="530" y="105" width="110" height="50" rx="6" fill="#a5f3fc" stroke="#0891b2" stroke-width="2"/>
+
+      <!-- Axon-Kern (innen) -->
+      <line x1="30" y1="130" x2="670" y2="130" stroke="#1a3d6b" stroke-width="2.5"/>
+
+      <!-- Ranviersche SchnÃ¼rringe -->
+      <!-- SR 1 (aktiv, AP) -->
+      <rect x="190" y="102" width="40" height="56" rx="4" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="2.5"/>
+      <text x="210" y="132" font-size="10.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">Naâº</text>
+      <line x1="210" y1="118" x2="210" y2="135" stroke="#ea580c" stroke-width="2.5" marker-end="url(#asal1)"/>
+      <defs><marker id="asal1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#ea580c"/></marker></defs>
+      <!-- SR 2 (erregungsfront) -->
+      <rect x="340" y="102" width="40" height="56" rx="4" fill="#fdf3e0" stroke="#b07a10" stroke-width="2"/>
+      <text x="360" y="132" font-size="9" fill="#7a4e0a" text-anchor="middle">Schwelle</text>
+      <!-- SR 3 (noch unerregt) -->
+      <rect x="490" y="102" width="40" height="56" rx="4" fill="#edf7f2" stroke="#1e5c38" stroke-width="1.5"/>
+      <text x="510" y="132" font-size="9" fill="#1e5c38" text-anchor="middle">Ruhe</text>
+      <!-- SR 0 (refraktÃ¤r) -->
+      <rect x="40" y="105" width="40" height="50" rx="4" fill="#f3f4f6" stroke="#9ca3af" stroke-width="1.5"/>
+      <text x="60" y="132" font-size="9" fill="#6b7265" text-anchor="middle">refr.</text>
+
+      <!-- Sprung-Pfeile (saltatorisch) -->
+      <path d="M230,110 Q285,55 340,110" fill="none" stroke="#2a6e4a" stroke-width="2.5" marker-end="url(#asal2)"/>
+      <defs><marker id="asal2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+      <path d="M380,110 Q435,55 490,110" fill="none" stroke="#2a6e4a" stroke-width="2" stroke-dasharray="6,2" marker-end="url(#asal3)"/>
+      <defs><marker id="asal3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+      <text x="285" y="52" font-size="10" fill="#2a6e4a" text-anchor="middle" font-weight="700">Sprung!</text>
+      <text x="435" y="52" font-size="10" fill="#2a6e4a" text-anchor="middle">nÃ¤chster Sprung</text>
+
+      <!-- Ausbreitungsrichtung -->
+      <line x1="80" y1="200" x2="620" y2="200" stroke="#2a6e4a" stroke-width="2.5" marker-end="url(#asal4)"/>
+      <defs><marker id="asal4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2a6e4a"/></marker></defs>
+      <text x="350" y="218" font-size="11" fill="#2a6e4a" text-anchor="middle" font-weight="600">Ausbreitungsrichtung (bis 120 m/s!)</text>
+
+      <!-- Myelinscheide isoliert -->
+      <line x1="135" y1="105" x2="80" y2="72" stroke="#0891b2" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="10" y="58" width="140" height="18" rx="3" fill="#e0f2fe" stroke="#0891b2" stroke-width="1"/>
+      <text x="80" y="70" font-size="9.5" fill="#0e7490" text-anchor="middle" font-weight="700">Myelinscheide: isoliert (kein Ionenfluss)</text>
+
+      <!-- Callout Na+ SchnÃ¼rring -->
+      <line x1="210" y1="158" x2="210" y2="228" stroke="#9e2a1c" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="140" y="226" width="140" height="18" rx="3" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="210" y="238" font-size="9.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">AP = Naâº-Einstrom am SchnÃ¼rring</text>
+
+      <!-- Vorteil Box -->
+      <rect x="460" y="175" width="230" height="70" rx="6" fill="#edf7f2" stroke="#1e5c38" stroke-width="1.5"/>
+      <text x="575" y="191" font-size="10.5" fill="#1e5c38" text-anchor="middle" font-weight="700">Vorteile saltatorische Leitung:</text>
+      <text x="470" y="205" font-size="10" fill="#1e5c38">â¢ viel schneller (70â120 m/s vs. 1 m/s)</text>
+      <text x="470" y="218" font-size="10" fill="#1e5c38">â¢ energiesparender (weniger IonenkanÃ¤le)</text>
+      <text x="470" y="231" font-size="10" fill="#1e5c38">â¢ dÃ¼nnere Axone mÃ¶glich</text>
+    </svg>
+    <div class="dc">Saltatorische Leitung: Myelinscheide isoliert Membran elektrisch â Ionenfluss nur an Ranvierschen SchnÃ¼rringen mÃ¶glich. AP springt von SchnÃ¼rring zu SchnÃ¼rring. Geschwindigkeit: bis 120 m/s. Vorteil: schnell, energiesparend, platzsparend.</div>
+  </div>
+
+  <div class="g2">
+    <div class="kb">
+      <div class="kl">Vergleich: kontinuierlich vs. saltatorisch</div>
+      <div class="km" style="font-size:13.5px">Kont.: ~1 m/s Â· Saltatorisch: bis 120 m/s</div>
+      <div class="ke">
+        Kontinuierlich: alle Membranabschnitte werden nacheinander erregt<br>
+        Saltatorisch: Erregung springt zwischen SchnÃ¼rringen (1â2 mm Abstand)<br>
+        Faktor ~100Ã schneller! Vergleich: C-Fasern (Schmerz, marklos) vs. AÎ±-Fasern (Motorik, markhaltig)
+      </div>
+    </div>
+    <div class="kb" style="border-color:#3a2878">
+      <div class="kl" style="color:#3a2878">Multiple Sklerose â Demyelinisierung</div>
+      <div class="km" style="font-size:13.5px;color:#3a2878">ZerstÃ¶rung der Myelinscheide â LeitungsstÃ¶rung</div>
+      <div class="ke">Bei MS wird die Myelinscheide durch Autoimmunreaktion abgebaut â saltatorische Leitung gestÃ¶rt â verlangsamte oder fehlende Erregungsleitung â LÃ¤hmungen, SensibilitÃ¤tsstÃ¶rungen. Klinische Bedeutung der Myelinscheide!</div>
+    </div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: saltatorisch</div>
+    <strong>âSaltatorisch = Salto machen"</strong>: Das AP schlÃ¤gt einen Salto von SchnÃ¼rring zu SchnÃ¼rring â es Ã¼berspringt die isolierte Myelinscheide einfach. Energieersparnis: Die Naâº/Kâº-Pumpe muss nur an den SchnÃ¼rringen (kleiner Anteil) Ionen zurÃ¼ckpumpen!
+  </div>
+</section>
+
+<!-- ââ S8: SIMULATION ââ -->
+<section class="sec" id="s8">
+  <div class="sec-hd">
+    <div class="sec-num">8</div>
+    <div>
+      <div class="sec-ti">Simulation der Erregungsleitung <span class="ea-badge">eA</span></div>
+      <div class="sec-su">MÃ¶glichkeiten &amp; Grenzen des Modells Â· Bewertungskompetenz</div>
+    </div>
+  </div>
+
+  <div class="bt">Simulation als Erkenntnismethode</div>
+  <p>Computer-Simulationen (z.B. das <strong>Hodgkin-Huxley-Modell</strong>) kÃ¶nnen kontinuierliche und saltatorische Erregungsleitung modellieren. Sie ermÃ¶glichen Hypothesentests, die am realen Objekt schwierig wÃ¤ren. Allerdings haben Modelle immer Grenzen.</p>
+
+  <div class="ex">
+    <div class="ex-ti">ð¬ Operator: Diskutieren â MÃ¶glichkeiten &amp; Grenzen der Simulation</div>
+    <div class="step">
+      <div class="sn" style="background:#1e5c38">+</div>
+      <div><strong>MÃ¶glichkeit 1: Visualisierung:</strong> Ionenfluss und Membranpotenzial kÃ¶nnen zeitlich und rÃ¤umlich aufgelÃ¶st dargestellt werden â am realen Axon kaum mÃ¶glich.</div>
+    </div>
+    <div class="step">
+      <div class="sn" style="background:#1e5c38">+</div>
+      <div><strong>MÃ¶glichkeit 2: Parametervariationen:</strong> Kanalanzahl, Ionenkonzentration, Myelindicke kÃ¶nnen variiert werden â Hypothesen prÃ¼fbar (z.B. âWas passiert bei verringerter Naâº-Konzentration auÃen?").</div>
+    </div>
+    <div class="step">
+      <div class="sn" style="background:#1e5c38">+</div>
+      <div><strong>MÃ¶glichkeit 3: Ethisch unbedenklich:</strong> Keine Tiere oder Menschen nÃ¶tig â Simulationen kÃ¶nnen explorative Fragen beantworten.</div>
+    </div>
+    <div class="step">
+      <div class="sn" style="background:#9e2a1c">â</div>
+      <div><strong>Grenze 1: Vereinfachung:</strong> Reale Neuronen haben 3D-Struktur, viele Kanaltypen, Interaktionen mit Gliazellen â Simulation reduziert auf wesentliche Parameter â nicht vollstÃ¤ndig realitÃ¤tsgetreu.</div>
+    </div>
+    <div class="step">
+      <div class="sn" style="background:#9e2a1c">â</div>
+      <div><strong>Grenze 2: Validierung nÃ¶tig:</strong> Simulationsergebnisse mÃ¼ssen durch experimentelle Daten bestÃ¤tigt werden. Modell â  RealitÃ¤t!</div>
+    </div>
+    <div class="step">
+      <div class="sn" style="background:#9e2a1c">â</div>
+      <div><strong>Grenze 3: Biochemische KomplexitÃ¤t:</strong> Modulatoren, Neuromodulatoren, synaptische PlastizitÃ¤t â in einfachen Modellen nicht berÃ¼cksichtigt.</div>
+    </div>
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: Modell â  RealitÃ¤t</div>
+    In jeder Aufgabe zur Simulation/Modell: Immer sowohl MÃ¶glichkeiten (Vereinfachung ermÃ¶glicht Analyse) <em>als auch</em> Grenzen (Vereinfachung verfÃ¤lscht RealitÃ¤t) nennen! Niemals nur einseitig argumentieren.
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC eA (QP4.1)</div>
+    KC: <em>âkontinuierliche und saltatorische Erregungsleitung am Axon simulieren und MÃ¶glichkeiten und Grenzen des Modells diskutieren"</em>. Operator <strong>diskutieren</strong> = verschiedene Argumente gegenÃ¼berstellen, eigene Position formulieren (ohne abschlieÃendes Urteil erzwingen zu mÃ¼ssen).
+  </div>
+</section>
+
+<!-- ââââââââââââââââ PRÃFUNGSZUSAMMENFASSUNG ââââââââââââââââ -->
+<div class="sum" id="summary">
+  <div class="sum-ti">ð PrÃ¼fungszusammenfassung</div>
+
+  <div class="bt" style="margin-bottom:12px">Zentrale Konzepte &amp; Messwerte</div>
+  <div class="kg">
+    <div class="kc">
+      <div class="kl2">Ruhepotenzial</div>
+      <div class="kk">â70 mV Â· FlieÃgleichgewicht</div>
+      <div class="ke2">Kâº raus (Leckkanal) + Naâº/Kâº-Pumpe: 3Naâº raus, 2Kâº rein</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">Schwellenpotenzial</div>
+      <div class="kk">~â55 mV</div>
+      <div class="ke2">AuslÃ¶sung AP Â· Alles-oder-Nichts-Prinzip</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">Aktionspotenzial</div>
+      <div class="kk">+30 mV (Spitze) Â· ~1 ms</div>
+      <div class="ke2">Depol.: Naâº ein Â· Repol.: Kâº raus Â· Hyperp.: â80 mV</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">Kont. Leitung</div>
+      <div class="kk">0,5â2 m/s</div>
+      <div class="ke2">Unmyelinisiert Â· lokale KreisstrÃ¶me Â· langsam</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">Saltatorische Leitung</div>
+      <div class="kk">70â120 m/s</div>
+      <div class="ke2">Myelinisiert Â· Sprung an Ranvierschen SchnÃ¼rringen</div>
+    </div>
+    <div class="kc">
+      <div class="kl2">RefraktÃ¤rzeit</div>
+      <div class="kk">absolut: ~1 ms Â· relativ: ~2 ms</div>
+      <div class="ke2">Verhindert RÃ¼ckwÃ¤rtsleitung + begrenzt AP-Frequenz</div>
+    </div>
+  </div>
+
+  <div class="divider" style="background:#c8e6d4"></div>
+  <div class="bt" style="margin-bottom:12px">Typische eA-PrÃ¼fungsaufgaben mit LÃ¶sungsstrategie</div>
+  <div class="ag">
+    <div class="ac">
+      <div class="an">1</div>
+      <div class="at">Ruhepotenzial erlÃ¤utern</div>
+      <div class="as">1) Ionenverteilung (Kâº innen hoch, Naâº auÃen hoch) Â· 2) Kâº-Leckkanal: Diffusion nach auÃen (Konzentrationsgradient) Â· 3) Elektrischer Gegengradient: Inneres wird negativ â zieht Kâº zurÃ¼ck Â· 4) FlieÃgleichgewicht: Naâº/Kâº-Pumpe hÃ¤lt Gradienten aufrecht (ATP!) Â· 5) Ergebnis: â70 mV</div>
+      <div class="ah">â ï¸ FlieÃgleichgewicht betonen â kein statisches Gleichgewicht!</div>
+    </div>
+    <div class="ac">
+      <div class="an">2</div>
+      <div class="at">AP-Phasen aus Kurve ableiten</div>
+      <div class="as">Operator: ableiten Â· 1) Kurvenabschnitt benennen (ansteigend/abfallend/Plateau) Â· 2) Richtung der PotenzialÃ¤nderung â welches Ion strÃ¶mt wohin? Â· 3) Naâº: Einstrom â positiver Â· Kâº: Ausstrom â negativer Â· 4) Kanalzustand (offen/geschlossen/inaktiviert) angeben Â· 5) RefraktÃ¤rzeit erklÃ¤ren</div>
+      <div class="ah">Naâº-KanÃ¤le inaktivieren (geschlossen, refraktÃ¤r) â  schlieÃen!</div>
+    </div>
+    <div class="ac">
+      <div class="an">3</div>
+      <div class="at">Saltatorische vs. kontinuierliche Leitung vergleichen</div>
+      <div class="as">1) Kontinuierlich: unmyelinisiert, lokale KreisstrÃ¶me, alle Membranabschnitte, 0,5â2 m/s Â· 2) Saltatorisch: myelinisiert, SprÃ¼nge zwischen Ranvierschen SchnÃ¼rringen, 70â120 m/s Â· 3) Vorteile saltatorisch: schnell, energiesparend, dÃ¼nne Axone Â· 4) RefraktÃ¤rzeit â Einbahn-Leitung in beiden FÃ¤llen</div>
+      <div class="ah">Biologische Bedeutung: MS = Myelinverlust â LeistungseinbuÃe</div>
+    </div>
+    <div class="ac">
+      <div class="an">4</div>
+      <div class="at">Neuronstruktur skizzieren</div>
+      <div class="as">Pflichtbeschriftungen: Dendrit, Soma (mit Kern), AxonhÃ¼gel, Axon, Myelinscheide (Schwann-Zellen), Ranvierscher SchnÃ¼rring, EndknÃ¶pfchen/Synapse Â· Signalfluss-Pfeil Â· Funktion je Struktur kennen</div>
+      <div class="ah">Schwann-Zellen bilden Myelin â nicht Gliazellen im ZNS (da: Oligodendrozyten)!</div>
+    </div>
+    <div class="ac">
+      <div class="an">5</div>
+      <div class="at">Simulation diskutieren (eA)</div>
+      <div class="as">Operator: diskutieren Â· MÃ¶glichkeiten: Visualisierung, Parametervariationen, ethisch unbedenklich, Hypothesentests Â· Grenzen: Vereinfachung (3D fehlt), Validierung nÃ¶tig, biochemische KomplexitÃ¤t nicht erfasst Â· Fazit: Simulation ergÃ¤nzt â ersetzt nicht â das Experiment</div>
+      <div class="ah">Immer BEIDE Seiten darstellen!</div>
+    </div>
+    <div class="ac">
+      <div class="an">6</div>
+      <div class="at">FlieÃgleichgewicht begrÃ¼nden</div>
+      <div class="as">Operator: begrÃ¼nden Â· 1) Warum kein statisches Gleichgewicht? â Kâº strÃ¶mt stÃ¤ndig nach auÃen (Leckkanal offen) Â· 2) Warum bleibt â70 mV trotzdem stabil? â Naâº/Kâº-Pumpe kompensiert permanent den Kâº-Verlust Â· 3) Energiebedarf: ATP wird verbraucht â aktiver Transport Â· 4) Fazit: Dynamik = FlieÃgleichgewicht</div>
+      <div class="ah">Ohne ATP â kein FlieÃgleichgewicht â Ruhepotenzial bricht zusammen!</div>
+    </div>
+  </div>
+
+  <div class="divider" style="background:#c8e6d4;margin-top:20px"></div>
+  <div class="bt" style="margin-bottom:10px">Operatoren-Kurzreferenz (eA)</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:10px">
+    <div class="kc"><div class="kl2">erlÃ¤utern</div><div class="kk" style="font-size:12px">Beschreiben + HintergrÃ¼nde + ZusammenhÃ¤nge</div></div>
+    <div class="kc"><div class="kl2">ableiten</div><div class="kk" style="font-size:12px">Aus Daten logisch schlussfolgern</div></div>
+    <div class="kc"><div class="kl2">begrÃ¼nden</div><div class="kk" style="font-size:12px">Aussage mit Fakten/Argumenten stÃ¼tzen</div></div>
+    <div class="kc"><div class="kl2">diskutieren</div><div class="kk" style="font-size:12px">Pro + Contra gegenÃ¼berstellen</div></div>
+    <div class="kc"><div class="kl2">simulieren</div><div class="kk" style="font-size:12px">Modell anwenden + Grenzen reflektieren</div></div>
+    <div class="kc"><div class="kl2">skizzieren</div><div class="kk" style="font-size:12px">Vereinfachte beschriftete Zeichnung</div></div>
   </div>
 </div>
 
-<div class="sumrow">
-  <div class="sc">
-    <div class="sc-lbl">Ruhepotenzial</div>
-    <div class="sc-val">−70 mV</div>
-    <div class="sc-desc">K⁺-Gleichgewicht + Pumpe</div>
-  </div>
-  <div class="sc">
-    <div class="sc-lbl">Schwellenpotenzial</div>
-    <div class="sc-val">≈ −55 mV</div>
-    <div class="sc-desc">Kritischer Wert → AP</div>
-  </div>
-  <div class="sc">
-    <div class="sc-lbl">AP-Maximum</div>
-    <div class="sc-val">+35 mV</div>
-    <div class="sc-desc">Na⁺-Einstrom inaktiviert</div>
-  </div>
-  <div class="sc">
-    <div class="sc-lbl">Refraktärzeit</div>
-    <div class="sc-val">1–3 ms</div>
-    <div class="sc-desc">Kein 2. AP möglich</div>
-  </div>
-</div>
-
+</div><!-- /page -->
 </body>
 </html>

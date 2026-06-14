@@ -2,154 +2,1069 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=960">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<title>Atomhülle — Physik LK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernzettel Â· AtomhÃ¼lle â Potenzialtopf &amp; Spektren Â· Physik GK gA</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1e293b;font-size:14px;line-height:1.55}
-  .topbar{background:#1a3d6b;color:#fff;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
-  .t-left{display:flex;align-items:center;gap:10px}
-  .t-sub{font-size:18px;font-weight:700;letter-spacing:-.3px}
-  .t-topic{font-size:12px;font-weight:500;color:rgba(255,255,255,.7)}
-  .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
-  .chip-w{background:rgba(255,255,255,.18);color:#fff}
-  .chip-g{background:linear-gradient(135deg,#c8860a,#f5c842);color:#3b1f00}
-  .main{padding:18px 36px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
-  .diag-box{background:#e8f0fc;border:1.5px solid #c5d8f8;border-radius:10px;padding:16px}
-  .diag-title{font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:700;color:#1a3d6b;margin-bottom:12px}
-  .rcol{display:flex;flex-direction:column;gap:11px}
-  .fb{background:#f8faff;border:1.5px solid #1a3d6b;border-left-width:4px;border-radius:8px;padding:12px 14px}
-  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1a3d6b;margin-bottom:7px}
-  .fb-eq{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#1a3d6b;margin-bottom:3px;line-height:1.7}
-  .fb-desc{font-size:12px;color:#64748b;line-height:1.45}
-  .cb{border-radius:8px;padding:11px 13px}
-  .cb-e{background:#fffbeb;border-left:4px solid #d97706}
-  .cb-k{background:#f0fdf4;border-left:4px solid #16a34a}
-  .cb-i{background:#eff6ff;border-left:4px solid #2563eb}
-  .cb-t{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-  .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-i .cb-t{color:#1e40af}
-  .cb-txt{font-size:12.5px;line-height:1.5;color:#1e293b}
-  .sumrow{padding:14px 36px;background:#f8faff;border-top:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-  .sc{background:#fff;border:1px solid #e2e8f0;border-top:3px solid #1a3d6b;border-radius:7px;padding:10px}
-  .sc-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#94a3b8;margin-bottom:4px}
-  .sc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#1a3d6b}
-  .sc-desc{font-size:10.5px;color:#94a3b8;margin-top:3px}
+  :root{
+    --acc:#1a3d6b;--acc-mid:#2a5298;--acc-light:#4a72b8;
+    --pas:#eef3fa;--pas-dark:#d0dff5;
+    --bg:#ffffff;--surf:#ffffff;
+    --muted:#6b7280;--text:#1a1f2e;
+    --border:#d1dae8;--radius:10px;
+    --sh-sm:0 1px 5px rgba(26,61,107,.08);
+    --sh:0 3px 16px rgba(26,61,107,.10)
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.72}
+
+  .topbar{background:var(--acc);color:#fff;padding:0 32px;position:sticky;top:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;height:54px;
+    box-shadow:0 2px 14px rgba(26,61,107,.30)}
+  .tl{display:flex;align-items:center;gap:14px}
+  .ts{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;letter-spacing:-.2px}
+  .tc{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{padding:3px 11px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.4px}
+  .chip-l{background:#ffffff22;border:1px solid #ffffff55;color:#e8f0ff}
+  .chip-d{background:#c9b99a22;border:1px solid #c9b99a55;color:#e8d5b8}
+  .chip-e{background:#ef444420;border:1px solid #ef444455;color:#fca5a5}
+  .tr{font-size:11px;color:#9ab0d4;letter-spacing:.3px}
+
+  .page{max-width:880px;margin:0 auto;padding:40px 24px 80px}
+
+  .hero{border-left:5px solid var(--acc);padding:20px 26px;background:var(--pas);
+    border-radius:0 var(--radius) var(--radius) 0;margin-bottom:34px}
+  .hero-ey{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--acc-mid);margin-bottom:6px}
+  .hero-ti{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--acc);line-height:1.25;margin-bottom:8px}
+  .hero-me{font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+
+  .toc{background:var(--surf);border:1.5px solid var(--border);border-radius:var(--radius);
+    padding:20px 24px;margin-bottom:40px;box-shadow:var(--sh-sm)}
+  .toc-ti{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--acc);
+    text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}
+  .toc ol{padding-left:20px}
+  .toc li{margin:6px 0}
+  .toc a{color:var(--acc-mid);text-decoration:none;font-size:14px;font-weight:500;transition:color .15s}
+  .toc a:hover{color:var(--acc);text-decoration:underline}
+
+  .sec{margin-bottom:56px}
+  .sec-hd{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;
+    padding-bottom:14px;border-bottom:2px solid var(--pas-dark)}
+  .sec-num{width:38px;height:38px;background:var(--acc);color:#fff;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-size:17px;font-weight:700;flex-shrink:0;margin-top:2px}
+  .sec-ti{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--acc);line-height:1.3}
+  .sec-su{font-size:13px;color:var(--muted);margin-top:2px}
+
+  .bt{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--acc-mid);
+    margin-bottom:8px;display:flex;align-items:center;gap:6px}
+  .bt::before{content:'';display:block;width:16px;height:2px;background:var(--acc-light)}
+  p{margin-bottom:12px} p:last-child{margin-bottom:0}
+
+  .fb{background:var(--pas);border-left:4px solid var(--acc);
+    border-radius:0 var(--radius) var(--radius) 0;padding:13px 18px;margin:14px 0;box-shadow:var(--sh-sm)}
+  .fb .fl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--acc-mid);margin-bottom:6px}
+  .fb .fm{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--acc);letter-spacing:.4px}
+  .fb .fe{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.55}
+  code{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--pas);color:var(--acc);padding:1px 6px;border-radius:4px}
+
+  .callout{border-left:4px solid;border-radius:0 var(--radius) var(--radius) 0;
+    padding:11px 16px;margin:13px 0;font-size:13.5px;line-height:1.62}
+  .ct{font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+  .c-esel{background:#fdf3e0;border-color:#b07a10;color:#7a4e0a}
+  .c-esel .ct{color:#8a5c08}
+  .c-warn{background:#fdf0ee;border-color:#9e2a1c;color:#7a1c10}
+  .c-warn .ct{color:#8a1c10}
+  .c-kc{background:#edf7f2;border-color:#1e5c38;color:#1e4a2e}
+  .c-kc .ct{color:#1a5232}
+  .c-info{background:var(--pas);border-color:var(--acc);color:#1e3055}
+  .c-info .ct{color:var(--acc)}
+
+  .ex{background:#f6f9ff;border:1.5px solid var(--pas-dark);border-radius:var(--radius);padding:15px 20px;margin:13px 0}
+  .ex-ti{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--acc-mid);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+  .step{display:flex;gap:10px;margin-bottom:7px;font-size:13.5px;align-items:flex-start}
+  .sn{width:22px;height:22px;background:var(--acc);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+
+  .dw{background:#fff;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;margin:16px 0;box-shadow:var(--sh-sm);overflow-x:auto}
+  .dc{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;font-style:italic}
+
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:13px 0}
+  @media(max-width:600px){.g2{grid-template-columns:1fr}}
+  .divider{height:1px;background:var(--pas-dark);margin:26px 0}
+
+  .sum{background:var(--pas);border:2px solid var(--acc);border-radius:var(--radius);padding:28px;margin-top:48px}
+  .sum-ti{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--acc);margin-bottom:20px}
+  .kg{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:11px;margin-bottom:24px}
+  .kc{background:#fff;border-left:4px solid var(--acc);border-radius:0 8px 8px 0;padding:11px 14px;box-shadow:var(--sh-sm)}
+  .kc .kl{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .kc .kk{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--acc);font-weight:500}
+  .kc .ke{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:11px}
+  .ac{background:#fff;border-radius:var(--radius);border:1.5px solid var(--border);padding:13px;box-shadow:var(--sh-sm)}
+  .ac .an{width:24px;height:24px;background:var(--acc);color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:7px}
+  .ac .at{font-size:12px;font-weight:700;color:var(--acc);margin-bottom:4px}
+  .ac .as{font-size:12.5px;color:var(--text);line-height:1.52}
+  .ac .ah{font-size:11.5px;color:var(--muted);margin-top:6px;border-top:1px solid var(--border);padding-top:6px}
+
+  @media print{
+    body{background:#fff!important}
+    .topbar{display:none!important}
+    .dw,.fb,.callout,.ex,.ac,.kc{break-inside:avoid}
+    .page{padding:12px}
+  }
+
+  .chip-pro{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 11px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.3px;
+    background:linear-gradient(135deg,#C8860A 0%,#F5C842 45%,#D97706 100%);
+    color:#3b1f00;
+    box-shadow:0 1px 8px rgba(200,134,10,.4),inset 0 1px 0 rgba(255,255,255,.3);
+    position:relative;overflow:hidden;
+  }
+  .chip-pro::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.45) 50%,transparent 75%);
+    background-size:200% 100%;
+    animation:pro-shimmer 8s infinite ease-in-out;
+  }
+  @keyframes pro-shimmer{
+    0%{background-position:-200% center}
+    12%{background-position:200% center}
+    12.1%{background-position:-200% center}
+    100%{background-position:-200% center}
+  }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div class="t-left">
-    <span class="t-sub">Physik LK</span>
-    <span class="chip chip-w">Atomphysik</span>
-    <span class="t-topic">Atommodelle &amp; Energieniveaus</span>
+  <div class="tl">
+    <div class="ts">Physik GK Â· AtomhÃ¼lle â Potenzialtopf &amp; Spektren</div>
+    <div class="tc">
+      <span class="chip chip-l">gA Â· grundlegendes Anforderungsniveau</span>
+      <span class="chip chip-d">ð 14.04.2026</span>
+      <span class="chip chip-e">â¡ PrÃ¼fung: 23.04.2026</span>
+    </div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <span class="chip chip-g">✦ Pro Lernzettel</span>
-    <span style="font-size:12px;color:rgba(255,255,255,.55)">Klausur: 06.06.2026</span>
+  <div class="tr"><span class="chip chip-pro">&#10022; Pro Lernzettel</span></div>
+</div>
+
+<div class="page">
+
+<div class="hero">
+  <div class="hero-ey">Physik GK Niedersachsen Â· Qualifikationsphase Â· gA Â· Di 14.04.2026 Â· KW 16</div>
+  <div class="hero-ti">AtomhÃ¼lle â Potenzialtopf, Spektren &amp; Franck-Hertz</div>
+  <div class="hero-me">
+    <span>ð 14.04.2026 Â· Block 1+2</span>
+    <span>ð¯ Grundlegendes Anforderungsniveau (gA)</span>
+    <span>ð KC: AtomhÃ¼lle â Energiequantisierung &amp; Spektren</span>
   </div>
 </div>
 
-<div class="main">
-  <div>
-    <div class="diag-box">
-      <div class="diag-title">Bohr'sches Atommodell — Energieniveaus Wasserstoff</div>
-      <svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        <line x1="60" y1="10" x2="60" y2="268" stroke="#374151" stroke-width="1.5"/>
-        <line x1="60" y1="14" x2="380" y2="14" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
-        <text x="55" y="18" font-size="9" fill="#64748b" text-anchor="end">E=0</text>
-        <line x1="60" y1="258" x2="200" y2="258" stroke="#1a3d6b" stroke-width="2.5"/>
-        <text x="55" y="262" font-size="9" fill="#1a3d6b" text-anchor="end" font-weight="700">n=1</text>
-        <text x="205" y="262" font-size="9.5" fill="#1a3d6b" font-weight="700">−13,6 eV</text>
-        <line x1="60" y1="210" x2="200" y2="210" stroke="#1a3d6b" stroke-width="2"/>
-        <text x="55" y="214" font-size="9" fill="#1a3d6b" text-anchor="end" font-weight="700">n=2</text>
-        <text x="205" y="214" font-size="9.5" fill="#1a3d6b">−3,4 eV</text>
-        <line x1="60" y1="170" x2="200" y2="170" stroke="#1a3d6b" stroke-width="1.8"/>
-        <text x="55" y="174" font-size="9" fill="#1a3d6b" text-anchor="end">n=3</text>
-        <text x="205" y="174" font-size="9" fill="#64748b">−1,51 eV</text>
-        <line x1="60" y1="138" x2="200" y2="138" stroke="#1a3d6b" stroke-width="1.5"/>
-        <text x="55" y="142" font-size="9" fill="#1a3d6b" text-anchor="end">n=4</text>
-        <text x="205" y="142" font-size="9" fill="#64748b">−0,85 eV</text>
-        <line x1="60" y1="112" x2="200" y2="112" stroke="#1a3d6b" stroke-width="1.3"/>
-        <text x="55" y="116" font-size="9" fill="#1a3d6b" text-anchor="end">n=5</text>
-        <text x="205" y="116" font-size="9" fill="#94a3b8">−0,54 eV</text>
-        <defs>
-          <marker id="pa" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#7c3aed"/></marker>
-          <marker id="ba" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#0284c7"/></marker>
-          <marker id="ia" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#16a34a"/></marker>
-        </defs>
-        <path d="M 95 258 L 95 210" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#pa)"/>
-        <path d="M 108 258 L 108 170" fill="none" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#pa)"/>
-        <path d="M 121 258 L 121 138" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#pa)"/>
-        <rect x="62" y="230" width="48" height="14" rx="3" fill="#ede9fe"/>
-        <text x="86" y="241" font-size="8.5" fill="#6d28d9" text-anchor="middle" font-weight="700">Lyman (UV)</text>
-        <path d="M 152 210 L 152 170" fill="none" stroke="#0284c7" stroke-width="2" marker-end="url(#ba)"/>
-        <path d="M 165 210 L 165 138" fill="none" stroke="#0284c7" stroke-width="1.8" marker-end="url(#ba)"/>
-        <path d="M 178 210 L 178 112" fill="none" stroke="#0284c7" stroke-width="1.5" marker-end="url(#ba)"/>
-        <rect x="134" y="185" width="54" height="14" rx="3" fill="#e0f2fe"/>
-        <text x="161" y="196" font-size="8.5" fill="#0369a1" text-anchor="middle" font-weight="700">Balmer (sichtbar)</text>
-        <path d="M 186 170 L 186 138" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#ia)"/>
-        <path d="M 196 170 L 196 112" fill="none" stroke="#16a34a" stroke-width="1.5" marker-end="url(#ia)"/>
-        <rect x="168" y="148" width="46" height="14" rx="3" fill="#dcfce7"/>
-        <text x="191" y="159" font-size="8.5" fill="#15803d" text-anchor="middle" font-weight="700">Paschen (IR)</text>
-        <text x="290" y="60" font-size="10.5" fill="#1a3d6b" font-weight="700">hf = ΔE = Eₙ − Eₘ</text>
-        <text x="290" y="78" font-size="9.5" fill="#64748b">Emission: n→m (n&gt;m)</text>
-        <text x="290" y="94" font-size="9.5" fill="#64748b">Absorption: m→n (m&lt;n)</text>
-        <rect x="268" y="115" width="138" height="55" rx="6" fill="#f8faff" stroke="#c5d8f8" stroke-width="1.5"/>
-        <text x="337" y="132" font-size="9" fill="#1a3d6b" text-anchor="middle" font-weight="700">Bohr-Formel</text>
-        <text x="337" y="149" font-family="'JetBrains Mono',monospace" font-size="12" fill="#1a3d6b" text-anchor="middle" font-weight="600">Eₙ = −13,6/n²</text>
-        <text x="337" y="163" font-size="8.5" fill="#64748b" text-anchor="middle">[in eV]</text>
-        <text x="20" y="140" font-size="9.5" fill="#374151" font-weight="600" transform="rotate(-90,20,140)">Energie (eV)</text>
-      </svg>
+<nav class="toc">
+  <div class="toc-ti">ð Inhaltsverzeichnis</div>
+  <ol>
+    <li><a href="#s1">Eindimensionaler Potenzialtopf: Energiequantisierung &amp; Gesamtenergie</a></li>
+    <li><a href="#s2">Linienspektren: WellenlÃ¤nge aus Energieniveauschemata berechnen</a></li>
+    <li><a href="#s3">Resonanzabsorption: Versuch erlÃ¤utern</a></li>
+    <li><a href="#s4">Franck-Hertz-Versuch: diskrete Energieniveaus durch ElektronenstoÃ</a></li>
+    <li><a href="#s5">Balmer-Formel: Energieniveaus des Wasserstoffs</a></li>
+    <li><a href="#summary">ð PrÃ¼fungszusammenfassung</a></li>
+  </ol>
+</nav>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S1: POTENZIALTOPF
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s1">
+  <div class="sec-hd">
+    <div class="sec-num">1</div>
+    <div>
+      <div class="sec-ti">Eindimensionaler Potenzialtopf</div>
+      <div class="sec-su">Energiequantisierung Â· stehende Wellen Â· Gleichung fÃ¼r Gesamtenergie</div>
     </div>
   </div>
 
-  <div class="rcol">
+  <div class="bt">Grundidee &amp; Modell</div>
+  <p>Das <strong>Potenzialtopf-Modell</strong> beschreibt ein Elektron, das in einem eindimensionalen Kasten der Breite <em>L</em> eingesperrt ist. Die WÃ¤nde sind unendlich hoch (das Elektron kann nicht entkommen). Innerhalb des Topfes bewegt sich das Elektron frei â es verhÃ¤lt sich wie eine <strong>stehende Materiewelle</strong>.</p>
+  <p>Die Bedingung fÃ¼r stehende Wellen lautet: In der Breite <em>L</em> mÃ¼ssen ganzzahlige Vielfache der halben de-Broglie-WellenlÃ¤nge passen. Daraus folgt die <strong>Energiequantisierung</strong>.</p>
+
+  <div class="fb">
+    <div class="fl">Stehende-Wellen-Bedingung</div>
+    <div class="fm">L = n Â· (Î»/2) â Î»â = 2L/n &nbsp;&nbsp; (n = 1, 2, 3, â¦)</div>
+    <div class="fe">L = Breite des Potenzialtopfs (m) Â· n = Quantenzahl (positive ganze Zahl) Â· Î» = de-Broglie-WellenlÃ¤nge (m)</div>
+  </div>
+
+  <div class="fb">
+    <div class="fl">Gesamtenergie im Potenzialtopf (gA: Formel anwenden)</div>
+    <div class="fm">Eâ = nÂ² Â· Eâ</div>
+    <div class="fe">
+      Eâ = Energie im n-ten Zustand (J oder eV) Â· Eâ = Grundzustandsenergie (n=1)<br>
+      VollstÃ¤ndige Formel: Eâ = hÂ²/(8mLÂ²)<br>
+      h = 6,626Â·10â»Â³â´ JÂ·s Â· m = Elektronenmasse = 9,11Â·10â»Â³Â¹ kg Â· L = Topfbreite (m)<br>
+      <strong>FÃ¼r gA: Formel wird vorgegeben â Anwenden und qualitatives VerstÃ¤ndnis!
+    </div>
+  </div>
+
+  <!-- SVG: Potenzialtopf mit Energieniveaus -->
+  <div class="dw">
+    <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+      <rect width="700" height="380" fill="#ffffff"/>
+      <text x="350" y="22" font-size="12" fill="#1a3d6b" text-anchor="middle" font-weight="700">Eindimensionaler Potenzialtopf: Energieniveaus &amp; Wellenfunktionen</text>
+
+      <!-- Topf-WÃ¤nde -->
+      <!-- Linke Wand -->
+      <rect x="130" y="40" width="14" height="290" fill="#1a3d6b"/>
+      <!-- Rechte Wand -->
+      <rect x="456" y="40" width="14" height="290" fill="#1a3d6b"/>
+      <!-- Boden -->
+      <line x1="130" y1="330" x2="470" y2="330" stroke="#1a3d6b" stroke-width="3"/>
+
+      <!-- x-Achse und Beschriftung -->
+      <line x1="110" y1="330" x2="490" y2="330" stroke="#4b5563" stroke-width="1.5"/>
+      <text x="300" y="355" font-size="11" fill="#4b5563" text-anchor="middle">0 ââââââââ L ââââââââ</text>
+
+      <!-- ENERGIENIVEAUS (horizontal, farbig) -->
+      <!-- n=1: Eâ -->
+      <line x1="144" y1="295" x2="456" y2="295" stroke="#1a3d6b" stroke-width="2.5"/>
+      <!-- Wellenfunktion n=1 (halbe Sinuswelle) -->
+      <path d="M144,295 Q230,245 300,295 Q370,345 456,295" fill="none" stroke="#1a3d6b" stroke-width="2" stroke-dasharray="5,2" opacity=".6"/>
+
+      <!-- n=2: 4Â·Eâ -->
+      <line x1="144" y1="230" x2="456" y2="230" stroke="#2563eb" stroke-width="2.5"/>
+      <!-- Wellenfunktion n=2 (ganze Sinuswelle) -->
+      <path d="M144,230 Q185,195 222,230 Q259,265 300,230 Q341,195 378,230 Q415,265 456,230" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="5,2" opacity=".6"/>
+
+      <!-- n=3: 9Â·Eâ -->
+      <line x1="144" y1="148" x2="456" y2="148" stroke="#7c3aed" stroke-width="2.5"/>
+      <!-- Wellenfunktion n=3 (anderthalb Sinuswellen) -->
+      <path d="M144,148 Q172,116 200,148 Q228,180 256,148 Q284,116 312,148 Q340,180 368,148 Q396,116 424,148 Q452,180 456,148" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,2" opacity=".6"/>
+
+      <!-- n=4: 16Â·Eâ (nur Linie, kein Platz fÃ¼r Welle) -->
+      <line x1="144" y1="90" x2="456" y2="90" stroke="#ef4444" stroke-width="2.5"/>
+
+      <!-- Energiepfeile links -->
+      <line x1="115" y1="330" x2="115" y2="90" stroke="#4b5563" stroke-width="1.5" marker-end="url(#ap1)"/>
+      <defs><marker id="ap1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4b5563"/></marker></defs>
+      <text x="108" y="200" font-size="11" fill="#4b5563" text-anchor="middle" transform="rotate(-90,108,200)">Energie E</text>
+
+      <!-- Callouts rechts fÃ¼r Energieniveaus -->
+      <line x1="470" y1="295" x2="520" y2="295" stroke="#1a3d6b" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="520" y="283" width="165" height="24" rx="4" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1"/>
+      <text x="602" y="298" font-size="10.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">n=1: Eâ &nbsp;(Grundzustand)</text>
+
+      <line x1="470" y1="230" x2="520" y2="230" stroke="#2563eb" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="520" y="218" width="165" height="24" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+      <text x="602" y="233" font-size="10.5" fill="#1d4ed8" text-anchor="middle" font-weight="700">n=2: Eâ = 4Â·Eâ</text>
+
+      <line x1="470" y1="148" x2="520" y2="148" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="520" y="136" width="165" height="24" rx="4" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1"/>
+      <text x="602" y="151" font-size="10.5" fill="#5b21b6" text-anchor="middle" font-weight="700">n=3: Eâ = 9Â·Eâ</text>
+
+      <line x1="470" y1="90" x2="520" y2="90" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="520" y="78" width="165" height="24" rx="4" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="602" y="93" font-size="10.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">n=4: Eâ = 16Â·Eâ</text>
+
+      <!-- Knotenanzahl -->
+      <text x="300" y="312" font-size="9.5" fill="#6b7280" text-anchor="middle">n=1: 0 Knoten</text>
+      <text x="300" y="247" font-size="9.5" fill="#2563eb" text-anchor="middle">n=2: 1 Knoten</text>
+      <text x="300" y="165" font-size="9.5" fill="#7c3aed" text-anchor="middle">n=3: 2 Knoten</text>
+
+      <!-- Abstandsmarkierung L -->
+      <line x1="144" y1="342" x2="456" y2="342" stroke="#6b7280" stroke-width="1.5"/>
+      <line x1="144" y1="337" x2="144" y2="347" stroke="#6b7280" stroke-width="1.5"/>
+      <line x1="456" y1="337" x2="456" y2="347" stroke="#6b7280" stroke-width="1.5"/>
+      <text x="300" y="360" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="600">L (Breite des Potenzialtopfs)</text>
+
+      <!-- Formel-Reminder -->
+      <rect x="130" y="45" width="140" height="35" rx="4" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1"/>
+      <text x="200" y="58" font-size="9.5" fill="#1a3d6b" text-anchor="middle" font-family="JetBrains Mono,monospace" font-weight="700">Eâ = nÂ² Â· Eâ</text>
+      <text x="200" y="73" font-size="9" fill="#6b7280" text-anchor="middle">quadratische AbhÃ¤ngigkeit!</text>
+    </svg>
+    <div class="dc">Potenzialtopf: Nur stehende Wellen mit n Â· (Î»/2) = L passen hinein â diskrete Energieniveaus Eâ = nÂ²Â·Eâ. Mit steigendem n nimmt die Knotenanzahl und die Energie quadratisch zu.</div>
+  </div>
+
+  <div class="bt">Qualitative Eigenschaften</div>
+  <p>Wichtige Folgerungen aus dem Modell:</p>
+  <div class="g2">
     <div class="fb">
-      <div class="fb-lbl">Bohr'sche Energieformel</div>
-      <div class="fb-eq">Eₙ = −13,6 eV / n²</div>
-      <div class="fb-eq">f = ΔE / h = (Eₙ − Eₘ) / h</div>
-      <div class="fb-desc">n: Hauptquantenzahl (1,2,3,…) | h = 6,626·10⁻³⁴ J·s</div>
+      <div class="fl">Energie wÃ¤chst quadratisch</div>
+      <div class="fm" style="font-size:13.5px">Eâ = 4Eâ Â· Eâ = 9Eâ Â· Eâ = 16Eâ</div>
+      <div class="fe">Die AbstÃ¤nde zwischen den Niveaus werden mit steigendem n immer grÃ¶Ãer! (EââEâ = 3Eâ, EââEâ = 5Eâ, â¦)</div>
     </div>
-    <div class="cb cb-e">
-      <div class="cb-t">🐴 Eselsbrücke</div>
-      <div class="cb-txt"><strong>„Je tiefer die Schale, desto stabiler"</strong><br>n=1: −13,6 eV (stabilster Grundzustand). Angeregt = weniger negativ = labiler.</div>
+    <div class="fb" style="border-color:#9e2a1c">
+      <div class="fl" style="color:#8a1c10">Minimalenergie â  Null</div>
+      <div class="fm" style="font-size:13.5px;color:#7a1c10">Eâ &gt; 0 immer!</div>
+      <div class="fe">Das Elektron hat immer eine Mindestenergie (Nullpunktsenergie). Es kann nicht ruhen â das wÃ¤re quantenmechanisch verboten (Heisenbergsche UnschÃ¤rfe).</div>
     </div>
-    <div class="cb cb-k">
-      <div class="cb-t">📋 Kerncurriculum</div>
-      <div class="cb-txt">Energieniveaus erklären · Photonen-Frequenz berechnen · Franck-Hertz-Versuch interpretieren (AFB II)</div>
+  </div>
+
+  <div class="ex">
+    <div class="ex-ti">ð§® Beispielrechnung: Energieniveaus berechnen</div>
+    <p style="font-size:13.5px;margin-bottom:10px"><strong>Gegeben:</strong> Eâ = 0,38 eV (Grundzustandsenergie eines Potenzialtopfs)</p>
+    <div class="step"><div class="sn">1</div><div>Eâ = 2Â² Â· Eâ = 4 Â· 0,38 eV = <strong>1,52 eV</strong></div></div>
+    <div class="step"><div class="sn">2</div><div>Eâ = 3Â² Â· Eâ = 9 Â· 0,38 eV = <strong>3,42 eV</strong></div></div>
+    <div class="step"><div class="sn">3</div><div>Eâ = 4Â² Â· Eâ = 16 Â· 0,38 eV = <strong>6,08 eV</strong></div></div>
+    <div class="step"><div class="sn">4</div><div>Ãbergang n=3ân=1: ÎE = 3,42 â 0,38 = <strong>3,04 eV</strong> â Photon mit dieser Energie wird emittiert</div></div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: Potenzialtopf = Gitarren-Saite</div>
+    <strong>âDas Elektron ist eine Gitarrensaite im Kasten"</strong>: Auf der Saite passen nur bestimmte stehende Wellen: Grundton (n=1, halbe Welle), erste Oberschwingung (n=2, ganze Welle), usw. Genau so passen in den Potenzialtopf nur stehende Materiewellen mit ganzzahligem n. Je hÃ¶her n, desto mehr âHalbwellen" â und desto hÃ¶her die Energie.
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: nÂ² â nicht n!</div>
+    Die Energie wÃ¤chst mit dem <strong>Quadrat</strong> der Quantenzahl: Eâ = 9Eâ, nicht 3Eâ. Ein hÃ¤ufiger Fehler ist, linear zu interpolieren. Auch: Wenn n verdoppelt wird, vervierfacht sich die Energie!
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC gA</div>
+    KC: <em>âdie Quantisierung der Gesamtenergie von Elektronen in der AtomhÃ¼lle erlÃ¤utern"</em> und <em>âdas Modell vom eindimensionalen Potenzialtopf anwenden"</em>. FÃ¼r gA: Formel <code>Eâ = nÂ²Â·Eâ</code> anwenden, Energieniveaus berechnen, qualitative Eigenschaften (quadratisch, Nullpunktsenergie) beschreiben.
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S2: LINIENSPEKTREN
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s2">
+  <div class="sec-hd">
+    <div class="sec-num">2</div>
+    <div>
+      <div class="sec-ti">Linienspektren</div>
+      <div class="sec-su">WellenlÃ¤nge aus Energieniveaudiagramm berechnen Â· Emissions- &amp; Absorptionsspektrum</div>
     </div>
-    <div class="cb cb-i">
-      <div class="cb-t">ℹ️ Franck-Hertz-Versuch</div>
-      <div class="cb-txt">Elektronen übertragen nur diskrete 4,9 eV auf Hg-Atome. Direkter Nachweis der Energiequantisierung.</div>
+  </div>
+
+  <div class="bt">Photon-Energie und WellenlÃ¤nge</div>
+  <p>Wenn ein Elektron von einem hÃ¶heren Energieniveau (nâ) in ein niedrigeres (nâ) fÃ¤llt, wird ein <strong>Photon</strong> emittiert. Die Photonenenergie entspricht genau der Energiedifferenz der Niveaus. Daraus lÃ¤sst sich die WellenlÃ¤nge des emittierten Lichts berechnen.</p>
+
+  <div class="fb">
+    <div class="fl">Photonenenergie eines Ãbergangs</div>
+    <div class="fm">E_Photon = Eâ â Eâ = h Â· f = h Â· c / Î»</div>
+    <div class="fe">
+      E_Photon in J oder eV Â· h = 6,626Â·10â»Â³â´ JÂ·s Â· f = Frequenz (Hz) Â· c = 3Â·10â¸ m/s<br>
+      Umrechnung: 1 eV = 1,602Â·10â»Â¹â¹ J
     </div>
+  </div>
+
+  <div class="fb">
+    <div class="fl">WellenlÃ¤nge aus Energiedifferenz</div>
+    <div class="fm">Î» = h Â· c / ÎE</div>
+    <div class="fe">Î» in m Â· ÎE = E_Photon in Joule Â· hÂ·c = 1,99Â·10â»Â²âµ JÂ·m (praktischer Zahlenwert)<br>
+    Oder: Î» [nm] = 1240 / ÎE [eV] &nbsp;&nbsp;(praktische Kurzformel)</div>
+  </div>
+
+  <!-- SVG: Energieniveauschema mit ÃbergÃ¤ngen -->
+  <div class="dw">
+    <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+      <rect width="700" height="400" fill="#f8f8f6"/>
+      <text x="350" y="22" font-size="12" fill="#1a3d6b" text-anchor="middle" font-weight="700">Energieniveauschema: Emission &amp; Absorption von Spektrallinien</text>
+
+      <!-- Energieniveaus (horizontal) -->
+      <!-- n=1 (Grundzustand) -->
+      <line x1="120" y1="340" x2="380" y2="340" stroke="#1a3d6b" stroke-width="3"/>
+      <!-- n=2 -->
+      <line x1="120" y1="270" x2="380" y2="270" stroke="#1a3d6b" stroke-width="2.5"/>
+      <!-- n=3 -->
+      <line x1="120" y1="195" x2="380" y2="195" stroke="#1a3d6b" stroke-width="2.5"/>
+      <!-- n=4 -->
+      <line x1="120" y1="148" x2="380" y2="148" stroke="#1a3d6b" stroke-width="2"/>
+      <!-- n=5 -->
+      <line x1="120" y1="112" x2="380" y2="112" stroke="#1a3d6b" stroke-width="1.5"/>
+      <!-- Ionisationsgrenze -->
+      <line x1="120" y1="70" x2="380" y2="70" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+      <!-- Energieachse -->
+      <line x1="100" y1="350" x2="100" y2="60" stroke="#4b5563" stroke-width="1.5" marker-end="url(#aspec1)"/>
+      <defs><marker id="aspec1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4b5563"/></marker></defs>
+      <text x="88" y="200" font-size="11" fill="#4b5563" text-anchor="middle" transform="rotate(-90,88,200)">Energie E</text>
+
+      <!-- Niveau-Beschriftungen links -->
+      <text x="112" y="344" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=1</text>
+      <text x="112" y="274" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=2</text>
+      <text x="112" y="199" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=3</text>
+      <text x="112" y="152" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=4</text>
+      <text x="112" y="116" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=5</text>
+      <text x="112" y="74" font-size="10" fill="#ef4444" text-anchor="end">â (ion.)</text>
+
+      <!-- EMISSIONSÃBERGÃNGE (Pfeile nach unten, farbig nach Spektralbereich) -->
+      <!-- Ãbergang n=3ân=1 (UV, violett) -->
+      <line x1="175" y1="197" x2="175" y2="341" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#aem1)"/>
+      <defs><marker id="aem1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#8b5cf6"/></marker></defs>
+
+      <!-- Ãbergang n=2ân=1 (UV) -->
+      <line x1="205" y1="272" x2="205" y2="341" stroke="#a855f7" stroke-width="2.5" marker-end="url(#aem2)"/>
+      <defs><marker id="aem2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#a855f7"/></marker></defs>
+
+      <!-- Ãbergang n=4ân=2 (sichtbar, blau) -->
+      <line x1="245" y1="150" x2="245" y2="271" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#aem3)"/>
+      <defs><marker id="aem3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3b82f6"/></marker></defs>
+
+      <!-- Ãbergang n=3ân=2 (sichtbar, rot) -->
+      <line x1="285" y1="197" x2="285" y2="271" stroke="#ef4444" stroke-width="2.5" marker-end="url(#aem4)"/>
+      <defs><marker id="aem4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+
+      <!-- Ãbergang n=5ân=3 (IR, gestrichelt) -->
+      <line x1="325" y1="114" x2="325" y2="196" stroke="#d97706" stroke-width="2" stroke-dasharray="5,2" marker-end="url(#aem5)"/>
+      <defs><marker id="aem5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#d97706"/></marker></defs>
+
+      <!-- ABSORPTIONSPFEIL (nach oben, grÃ¼n) -->
+      <line x1="355" y1="339" x2="355" y2="195" stroke="#16a34a" stroke-width="2.5" marker-end="url(#aabs1)"/>
+      <defs><marker id="aabs1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#16a34a"/></marker></defs>
+
+      <!-- Callouts rechts fÃ¼r ÃbergÃ¤nge -->
+      <line x1="382" y1="270" x2="430" y2="250" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="430" y="236" width="178" height="28" rx="4" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1"/>
+      <text x="519" y="248" font-size="10" fill="#5b21b6" text-anchor="middle" font-weight="700">n=3ân=1: UV (Lyman-Serie)</text>
+      <text x="519" y="260" font-size="9.5" fill="#5b21b6" text-anchor="middle">ÎE = Eâ â Eâ (groÃ â kurzes Î»)</text>
+
+      <line x1="382" y1="235" x2="430" y2="215" stroke="#3b82f6" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="430" y="202" width="178" height="28" rx="4" fill="#eff6ff" stroke="#3b82f6" stroke-width="1"/>
+      <text x="519" y="214" font-size="10" fill="#1d4ed8" text-anchor="middle" font-weight="700">n=4ân=2: blau (Balmer-Serie)</text>
+      <text x="519" y="226" font-size="9.5" fill="#1d4ed8" text-anchor="middle">ÎE kleiner â lÃ¤ngeres Î»</text>
+
+      <line x1="382" y1="234" x2="430" y2="178" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="430" y="165" width="178" height="28" rx="4" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="519" y="177" font-size="10" fill="#9e2a1c" text-anchor="middle" font-weight="700">n=3ân=2: rot (HÎ±, Balmer)</text>
+      <text x="519" y="189" font-size="9.5" fill="#9e2a1c" text-anchor="middle">Î» â 656 nm (sichtbar)</text>
+
+      <line x1="382" y1="155" x2="430" y2="140" stroke="#d97706" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="430" y="128" width="178" height="25" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+      <text x="519" y="144" font-size="10" fill="#92400e" text-anchor="middle" font-weight="700">n=5ân=3: IR (Paschen-Serie)</text>
+
+      <line x1="382" y1="270" x2="430" y2="310" stroke="#16a34a" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="430" y="298" width="178" height="28" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="519" y="310" font-size="10" fill="#166534" text-anchor="middle" font-weight="700">â Absorption: n=1ân=3</text>
+      <text x="519" y="322" font-size="9.5" fill="#166534" text-anchor="middle">Photon wird absorbiert (â Pfeil)</text>
+
+      <!-- Spektrallinien unten (Farbbalken) -->
+      <text x="200" y="378" font-size="10" fill="#4b5563" text-anchor="middle" font-weight="700">Sichtbarer Spektralbereich (400â700 nm):</text>
+      <rect x="120" y="385" width="20" height="8" rx="1" fill="#8b00ff"/>
+      <rect x="143" y="385" width="20" height="8" rx="1" fill="#4b0082"/>
+      <rect x="166" y="385" width="20" height="8" rx="1" fill="#0000ff"/>
+      <rect x="189" y="385" width="30" height="8" rx="1" fill="#00ff00"/>
+      <rect x="222" y="385" width="30" height="8" rx="1" fill="#ffff00"/>
+      <rect x="255" y="385" width="30" height="8" rx="1" fill="#ffa500"/>
+      <rect x="288" y="385" width="30" height="8" rx="1" fill="#ff0000"/>
+      <text x="120" y="382" font-size="8.5" fill="#6b7280">400 nm</text>
+      <text x="318" y="382" font-size="8.5" fill="#6b7280">700 nm</text>
+    </svg>
+    <div class="dc">Energieniveauschema: EmissionsÃ¼bergÃ¤nge (Pfeile nach unten) â Photon wird ausgesandt. AbsorptionsÃ¼bergÃ¤nge (Pfeil nach oben, grÃ¼n) â Photon wird aufgenommen. GrÃ¶Ãeres ÎE = kÃ¼rzere WellenlÃ¤nge.</div>
+  </div>
+
+  <div class="ex">
+    <div class="ex-ti">ð§® Beispielrechnung: WellenlÃ¤nge eines Ãbergangs</div>
+    <p style="font-size:13.5px;margin-bottom:10px"><strong>Gegeben:</strong> Ãbergang von n=3 (Eâ = â1,51 eV) nach n=2 (Eâ = â3,40 eV) beim Wasserstoffatom</p>
+    <div class="step"><div class="sn">1</div><div>Energiedifferenz: <code>ÎE = Eâ â Eâ = (â1,51) â (â3,40) = 1,89 eV</code></div></div>
+    <div class="step"><div class="sn">2</div><div>WellenlÃ¤nge (Kurzformel): <code>Î» = 1240 eVÂ·nm / 1,89 eV = 656 nm</code></div></div>
+    <div class="step"><div class="sn">3</div><div>Einordnung: 656 nm liegt im roten Spektralbereich â <strong>HÎ±-Linie (sichtbar rot)</strong> â</div></div>
+    <div class="step"><div class="sn">4</div><div>Alternativ in SI: <code>ÎE = 1,89 Â· 1,602Â·10â»Â¹â¹ J = 3,03Â·10â»Â¹â¹ J</code><br><code>Î» = hÂ·c/ÎE = 6,63Â·10â»Â³â´ Â· 3Â·10â¸ / 3,03Â·10â»Â¹â¹ = 6,56Â·10â»â· m = 656 nm</code> â</div></div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: Kurzformel Î» = 1240/ÎE</div>
+    <strong>â1240 ist die magische Zahl"</strong>: Î» [nm] = 1240 / ÎE [eV]. Wenn ÎE = 2 eV â Î» = 620 nm (orange/rot). Wenn ÎE = 3 eV â Î» = 413 nm (violett). Einfach merken: GroÃes ÎE â kleines Î» (UV). Kleines ÎE â groÃes Î» (IR).
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: Vorzeichen bei Energieniveaus</div>
+    Beim Wasserstoff sind die Energieniveaus <strong>negativ</strong> (gebundene ZustÃ¤nde, Ionisationsenergie = 0). ÎE = E_oben â E_unten ist <strong>positiv</strong> (Emission) oder die Energie des absorbierten Photons. Niemals: Î» = hÂ·c / (E_Photon in eV) ohne Umrechnung in Joule! Einheit beachten.
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC gA</div>
+    KC: <em>âquantenhafte Emission anhand von Experimenten zu Linienspektren erlÃ¤utern"</em> und <em>âEnergieniveauschemata zur Berechnung der WellenlÃ¤nge von Spektrallinien nutzen"</em>. Formel <code>Î» = hÂ·c/ÎE</code> sicher anwenden kÃ¶nnen!
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S3: RESONANZABSORPTION
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s3">
+  <div class="sec-hd">
+    <div class="sec-num">3</div>
+    <div>
+      <div class="sec-ti">Resonanzabsorption</div>
+      <div class="sec-su">Absorption von Photonen mit exakt passender Energie Â· Versuchsaufbau erlÃ¤utern</div>
+    </div>
+  </div>
+
+  <div class="bt">Prinzip der Resonanzabsorption</div>
+  <p><strong>Resonanzabsorption</strong> tritt auf, wenn ein Atom ein Photon absorbiert, dessen Energie <em>exakt</em> der Energiedifferenz zwischen zwei Niveaus entspricht. Das Elektron wird in einen angeregten Zustand gehoben. AnschlieÃend fÃ¤llt es zurÃ¼ck und sendet ein Photon aus â aber in alle Richtungen (nicht nur in ursprÃ¼ngliche Ausbreitungsrichtung) â <strong>IntensitÃ¤tsverlust in Strahlungsrichtung</strong>.</p>
+
+  <div class="fb">
+    <div class="fl">Resonanzbedingung</div>
+    <div class="fm">E_Photon = ÎE = E_angeregt â E_Grundzustand</div>
+    <div class="fe">Nur Photonen mit <em>exakt</em> der richtigen Energie werden absorbiert. Alle anderen Photonenenergien werden nicht absorbiert â das Atom ist transparent fÃ¼r andere WellenlÃ¤ngen.</div>
+  </div>
+
+  <!-- SVG: Resonanzabsorption Versuchsaufbau -->
+  <div class="dw">
+    <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+      <rect width="700" height="300" fill="#ffffff"/>
+      <text x="350" y="22" font-size="12" fill="#1a3d6b" text-anchor="middle" font-weight="700">Resonanzabsorption â Versuchsaufbau &amp; Energieschema</text>
+
+      <!-- VERSUCHSAUFBAU (links) -->
+      <!-- Lichtquelle -->
+      <circle cx="65" cy="150" r="28" fill="#fdf3e0" stroke="#b07a10" stroke-width="2"/>
+      <text x="65" y="146" font-size="9.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">Licht-</text>
+      <text x="65" y="159" font-size="9.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">quelle</text>
+
+      <!-- WeiÃlicht-Strahlen (mehrere Farben) -->
+      <line x1="93" y1="145" x2="160" y2="145" stroke="#ef4444" stroke-width="2"/>
+      <line x1="93" y1="150" x2="160" y2="150" stroke="#16a34a" stroke-width="2"/>
+      <line x1="93" y1="155" x2="160" y2="155" stroke="#3b82f6" stroke-width="2"/>
+
+      <!-- Absorptionszelle (Dampf) -->
+      <rect x="160" y="125" width="100" height="50" rx="6" fill="#f0f9ff" stroke="#1a3d6b" stroke-width="2"/>
+      <text x="210" y="148" font-size="10" fill="#1a3d6b" text-anchor="middle" font-weight="700">Natrium-</text>
+      <text x="210" y="161" font-size="10" fill="#1a3d6b" text-anchor="middle" font-weight="700">Dampf</text>
+      <!-- Atome andeuten -->
+      <circle cx="185" cy="150" r="5" fill="#fbbf24" stroke="#b07a10" stroke-width="1" opacity=".7"/>
+      <circle cx="210" cy="143" r="5" fill="#fbbf24" stroke="#b07a10" stroke-width="1" opacity=".7"/>
+      <circle cx="235" cy="157" r="5" fill="#fbbf24" stroke="#b07a10" stroke-width="1" opacity=".7"/>
+
+      <!-- Strahlen nach Absorption (eine Linie fehlt!) -->
+      <line x1="260" y1="145" x2="340" y2="145" stroke="#ef4444" stroke-width="2"/>
+      <!-- GrÃ¼ner Strahl fehlt (absorbiert) -->
+      <line x1="260" y1="150" x2="285" y2="150" stroke="#16a34a" stroke-width="2" stroke-dasharray="3,3" opacity=".4"/>
+      <text x="296" y="148" font-size="12" fill="#16a34a" text-anchor="middle">â</text>
+      <line x1="260" y1="155" x2="340" y2="155" stroke="#3b82f6" stroke-width="2"/>
+
+      <!-- Spektrometer/Schirm -->
+      <rect x="340" y="115" width="50" height="70" rx="4" fill="#1a1f2e"/>
+      <text x="365" y="148" font-size="9" fill="#9ab0d4" text-anchor="middle" font-weight="700">Spek-</text>
+      <text x="365" y="160" font-size="9" fill="#9ab0d4" text-anchor="middle" font-weight="700">tro-</text>
+      <text x="365" y="172" font-size="9" fill="#9ab0d4" text-anchor="middle" font-weight="700">meter</text>
+      <!-- Spektrum mit dunkler Linie -->
+      <rect x="352" y="120" width="5" height="55" rx="0" fill="#8b00ff" opacity=".7"/>
+      <rect x="358" y="120" width="5" height="55" rx="0" fill="#3b82f6" opacity=".8"/>
+      <!-- Dunkle Linie (absorbiert) -->
+      <rect x="364" y="120" width="4" height="55" rx="0" fill="#1a1f2e"/>
+      <rect x="369" y="120" width="5" height="55" rx="0" fill="#16a34a" opacity=".8"/>
+      <rect x="375" y="120" width="6" height="55" rx="0" fill="#fbbf24" opacity=".8"/>
+      <rect x="382" y="120" width="7" height="55" rx="0" fill="#ef4444" opacity=".8"/>
+
+      <!-- Callout dunkle Linie -->
+      <line x1="366" y1="120" x2="390" y2="70" stroke="#1a3d6b" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="390" y="55" width="140" height="20" rx="3" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1"/>
+      <text x="460" y="68" font-size="9.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">dunkle Absorptionslinie!</text>
+
+      <!-- ENERGIESCHEMA (rechts) -->
+      <!-- Grundzustand -->
+      <line x1="560" y1="240" x2="680" y2="240" stroke="#1a3d6b" stroke-width="2.5"/>
+      <text x="554" y="244" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">Eâ</text>
+      <!-- Angeregter Zustand -->
+      <line x1="560" y1="120" x2="680" y2="120" stroke="#1a3d6b" stroke-width="2.5"/>
+      <text x="554" y="124" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">Eâ</text>
+
+      <!-- Absorption: Pfeil rauf (grÃ¼n) -->
+      <line x1="600" y1="237" x2="600" y2="123" stroke="#16a34a" stroke-width="2.5" marker-end="url(#ares1)"/>
+      <defs><marker id="ares1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#16a34a"/></marker></defs>
+      <text x="594" y="185" font-size="10.5" fill="#16a34a" text-anchor="end" font-weight="700">hf = ÎE</text>
+      <text x="594" y="198" font-size="9.5" fill="#16a34a" text-anchor="end">Absorption</text>
+
+      <!-- Reemission: Pfeil runter in andere Richtung (gestrichelt, multiple) -->
+      <line x1="640" y1="123" x2="640" y2="237" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#ares2)"/>
+      <defs><marker id="ares2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+      <!-- Reemission in andere Richtungen -->
+      <line x1="640" y1="123" x2="680" y2="85" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#ares3)"/>
+      <defs><marker id="ares3" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+      <line x1="640" y1="123" x2="668" y2="90" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#ares4)"/>
+      <defs><marker id="ares4" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+
+      <text x="655" y="185" font-size="10" fill="#ef4444" text-anchor="start">Reemission</text>
+      <text x="655" y="198" font-size="9.5" fill="#ef4444" text-anchor="start">in alle Richtungen!</text>
+
+      <!-- ÎE Markierung -->
+      <line x1="540" y1="120" x2="540" y2="240" stroke="#4b5563" stroke-width="1.5"/>
+      <line x1="535" y1="120" x2="545" y2="120" stroke="#4b5563" stroke-width="1.5"/>
+      <line x1="535" y1="240" x2="545" y2="240" stroke="#4b5563" stroke-width="1.5"/>
+      <text x="534" y="185" font-size="11" fill="#4b5563" text-anchor="end">ÎE</text>
+
+      <!-- Seiten-Pfeile (Reemission seitwÃ¤rts) -->
+      <line x1="625" y1="120" x2="625" y2="90" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="2,2" marker-end="url(#ares5)"/>
+      <defs><marker id="ares5" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+
+      <!-- Callouts Versuch -->
+      <line x1="65" y1="178" x2="65" y2="230" stroke="#b07a10" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="18" y="228" width="94" height="30" rx="3" fill="#fdf3e0" stroke="#b07a10" stroke-width="1"/>
+      <text x="65" y="242" font-size="9.5" fill="#7a4e0a" text-anchor="middle" font-weight="700">WeiÃlicht</text>
+      <text x="65" y="253" font-size="9" fill="#7a4e0a" text-anchor="middle">(alle WellenlÃ¤ngen)</text>
+
+      <line x1="210" y1="175" x2="210" y2="230" stroke="#1a3d6b" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="163" y="228" width="94" height="30" rx="3" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1"/>
+      <text x="210" y="242" font-size="9.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">Na-Dampf</text>
+      <text x="210" y="253" font-size="9" fill="#1a3d6b" text-anchor="middle">absorbiert Î»â</text>
+    </svg>
+    <div class="dc">Resonanzabsorption: WeiÃlicht durchdringt Natriumdampf. Photonen mit exakt der Resonanzenergie (ÎE) werden absorbiert und in alle Richtungen reemittiert â dunkle Absorptionslinie im Spektrum (Fraunhofer-Linien).</div>
+  </div>
+
+  <div class="bt">Fraunhofer-Linien â Resonanzabsorption in der Sonne</div>
+  <p>Die SonnenatmosphÃ¤re enthÃ¤lt kÃ¼hle Gasatome. Das heiÃe Innere sendet WeiÃlicht aus. Die Gasatome in der AtmosphÃ¤re absorbieren bestimmte WellenlÃ¤ngen (Resonanzabsorption) â <strong>Fraunhofer-Linien</strong>: dunkle Linien im Sonnenspektrum. So lÃ¤sst sich die chemische Zusammensetzung der SonnenatmosphÃ¤re bestimmen!</p>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: Resonanzabsorption</div>
+    <strong>âAtom als Stimmgabel"</strong>: Nur TÃ¶ne (Photonenenergien), die exakt der Eigenfrequenz entsprechen, werden absorbiert â wie eine Stimmgabel, die nur bei 440 Hz mitschwingt. Andere Frequenzen lassen sie kalt. Genauso: Das Atom absorbiert nur Photonen mit exakt ÎE.
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC gA</div>
+    KC: <em>âeinen Versuch zur Resonanzabsorption erlÃ¤utern"</em>. FÃ¼r gA: Aufbau (Lichtquelle â Gasprobe â Spektrometer), Beobachtung (dunkle Linie), ErklÃ¤rung (exakte EnergieÃ¼bereinstimmung nÃ¶tig, Reemission in alle Richtungen â IntensitÃ¤tsverlust in Strahlrichtung).
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S4: FRANCK-HERTZ-VERSUCH
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s4">
+  <div class="sec-hd">
+    <div class="sec-num">4</div>
+    <div>
+      <div class="sec-ti">Franck-Hertz-Versuch</div>
+      <div class="sec-su">Diskrete Energieniveaus durch ElektronenstoÃ nachweisen Â· Anregungsenergie</div>
+    </div>
+  </div>
+
+  <div class="bt">Versuchsidee &amp; Aufbau</div>
+  <p>James Franck und Gustav Hertz zeigten 1914: Elektronen, die durch ein Gas beschleunigt werden, kÃ¶nnen Atome nur in diskreten Energieschritten anregen. Wenn die kinetische Energie der Elektronen die <strong>Anregungsenergie</strong> erreicht, verlieren sie diese Energie im StoÃ â der AuffÃ¤ngestrom sinkt. Erst bei der nÃ¤chsten Beschleunigung ist der Strom wieder hÃ¶her â <strong>periodische Maxima und Minima</strong>.</p>
+
+  <div class="fb">
+    <div class="fl">Anregungsbedingung (Franck-Hertz)</div>
+    <div class="fm">e Â· U_A = ÎE = Eâ â Eâ</div>
+    <div class="fe">e = Elementarladung = 1,602Â·10â»Â¹â¹ C Â· U_A = Anregungsspannung (V)<br>
+    Abstand zwischen Maxima in der Kennlinie = Anregungsenergie in eV<br>
+    FÃ¼r Quecksilber: ÎE = 4,9 eV (erste Anregung) Â· Abstand der Maxima: 4,9 V</div>
+  </div>
+
+  <!-- SVG: Franck-Hertz Aufbau + Kennlinie -->
+  <div class="dw">
+    <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+      <rect width="700" height="380" fill="#f8f8f6"/>
+      <text x="350" y="22" font-size="12" fill="#1a3d6b" text-anchor="middle" font-weight="700">Franck-Hertz-Versuch â Aufbau und charakteristische Kennlinie</text>
+
+      <!-- AUFBAU (oben links) -->
+      <!-- VakuumrÃ¶hre -->
+      <rect x="25" y="50" width="290" height="120" rx="10" fill="#f0f4ff" stroke="#1a3d6b" stroke-width="2"/>
+      <text x="170" y="43" font-size="10" fill="#1a3d6b" text-anchor="middle" font-weight="700">Franck-Hertz-RÃ¶hre (Hg-Dampf)</text>
+
+      <!-- Kathode (links) -->
+      <rect x="42" y="80" width="12" height="60" rx="3" fill="#ef4444"/>
+      <text x="48" y="153" font-size="9" fill="#9e2a1c" text-anchor="middle" font-weight="700">K</text>
+      <!-- GlÃ¼hwendel Symbol -->
+      <path d="M44,90 Q50,84 56,90 Q50,96 44,90" fill="none" stroke="#fbbf24" stroke-width="2"/>
+
+      <!-- Gitter (Beschleunigungsgitter) -->
+      <line x1="140" y1="75" x2="140" y2="165" stroke="#4b5563" stroke-width="2"/>
+      <line x1="148" y1="75" x2="148" y2="165" stroke="#4b5563" stroke-width="2"/>
+      <!-- GitterstÃ¤be -->
+      <line x1="140" y1="90" x2="148" y2="90" stroke="#4b5563" stroke-width="1.5"/>
+      <line x1="140" y1="105" x2="148" y2="105" stroke="#4b5563" stroke-width="1.5"/>
+      <line x1="140" y1="120" x2="148" y2="120" stroke="#4b5563" stroke-width="1.5"/>
+      <line x1="140" y1="135" x2="148" y2="135" stroke="#4b5563" stroke-width="1.5"/>
+      <line x1="140" y1="150" x2="148" y2="150" stroke="#4b5563" stroke-width="1.5"/>
+      <text x="144" y="175" font-size="9" fill="#4b5563" text-anchor="middle" font-weight="700">G</text>
+
+      <!-- AuffÃ¤nger (rechts) -->
+      <rect x="255" y="80" width="10" height="60" rx="2" fill="#2a5298"/>
+      <text x="260" y="153" font-size="9" fill="#2a5298" text-anchor="middle" font-weight="700">A</text>
+
+      <!-- Elektronen-Strahlen (Punkte) -->
+      <circle cx="75" cy="120" r="3" fill="#fbbf24"/>
+      <circle cx="100" cy="118" r="3" fill="#fbbf24"/>
+      <circle cx="125" cy="120" r="3" fill="#fbbf24"/>
+      <!-- StoÃ bei ca. Mitte -->
+      <circle cx="155" cy="120" r="4" fill="#ef4444" opacity=".8"/>
+      <text x="155" y="110" font-size="8" fill="#9e2a1c" text-anchor="middle">StoÃ!</text>
+      <!-- Lichtemission beim StoÃ -->
+      <line x1="155" y1="100" x2="155" y2="85" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#afh1)"/>
+      <defs><marker id="afh1" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0,0 L5,3 L0,6 Z" fill="#fbbf24"/></marker></defs>
+      <text x="165" y="82" font-size="8" fill="#b07a10">hf</text>
+      <!-- Elektron nach StoÃ langsam -->
+      <circle cx="185" cy="120" r="2.5" fill="#9ca3af"/>
+      <circle cx="215" cy="120" r="2.5" fill="#9ca3af"/>
+      <circle cx="245" cy="120" r="2" fill="#9ca3af"/>
+
+      <!-- Spannungsquellen -->
+      <!-- Beschleunigungsspannung U -->
+      <line x1="48" y1="80" x2="48" y2="45" stroke="#1a3d6b" stroke-width="1.5"/>
+      <line x1="144" y1="75" x2="144" y2="45" stroke="#1a3d6b" stroke-width="1.5"/>
+      <line x1="48" y1="45" x2="90" y2="45" stroke="#1a3d6b" stroke-width="1.5"/>
+      <line x1="100" y1="45" x2="144" y2="45" stroke="#1a3d6b" stroke-width="1.5"/>
+      <!-- Batterie Symbol -->
+      <line x1="88" y1="40" x2="88" y2="50" stroke="#1a3d6b" stroke-width="3"/>
+      <line x1="93" y1="43" x2="93" y2="47" stroke="#1a3d6b" stroke-width="1.5"/>
+      <text x="96" y="56" font-size="10" fill="#1a3d6b" font-weight="700">U_B</text>
+
+      <!-- Gegenspannung und Amperemeter -->
+      <line x1="260" y1="110" x2="310" y2="110" stroke="#2a5298" stroke-width="1.5"/>
+      <circle cx="310" cy="110" r="12" fill="#fff" stroke="#2a5298" stroke-width="1.5"/>
+      <text x="310" y="114" font-size="10" fill="#2a5298" text-anchor="middle" font-weight="700">A</text>
+      <text x="320" y="100" font-size="9.5" fill="#2a5298">Strom I</text>
+
+      <!-- Callouts Aufbau -->
+      <line x1="48" y1="165" x2="48" y2="210" stroke="#9e2a1c" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="8" y="208" width="80" height="30" rx="3" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="48" y="222" font-size="9.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">Kathode K</text>
+      <text x="48" y="233" font-size="9" fill="#9e2a1c" text-anchor="middle">emittiert eâ»</text>
+
+      <line x1="144" y1="165" x2="144" y2="250" stroke="#4b5563" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="96" y="248" width="96" height="30" rx="3" fill="#f3f4f6" stroke="#4b5563" stroke-width="1"/>
+      <text x="144" y="262" font-size="9.5" fill="#4b5563" text-anchor="middle" font-weight="700">Gitter G</text>
+      <text x="144" y="273" font-size="9" fill="#4b5563" text-anchor="middle">Beschleunigung</text>
+
+      <line x1="260" y1="140" x2="260" y2="250" stroke="#2a5298" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="220" y="248" width="80" height="30" rx="3" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+      <text x="260" y="262" font-size="9.5" fill="#1d4ed8" text-anchor="middle" font-weight="700">AuffÃ¤nger A</text>
+      <text x="260" y="273" font-size="9" fill="#1d4ed8" text-anchor="middle">misst Strom</text>
+
+      <!-- KENNLINIE (rechts / unten) -->
+      <!-- Achsen -->
+      <line x1="390" y1="330" x2="680" y2="330" stroke="#4b5563" stroke-width="2" marker-end="url(#afh2)"/>
+      <defs><marker id="afh2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4b5563"/></marker></defs>
+      <line x1="390" y1="330" x2="390" y2="90" stroke="#4b5563" stroke-width="2" marker-end="url(#afh3)"/>
+      <defs><marker id="afh3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4b5563"/></marker></defs>
+      <text x="685" y="334" font-size="11" fill="#6b7280">U_B (V)</text>
+      <text x="393" y="86" font-size="11" fill="#6b7280">I</text>
+
+      <!-- Skalenticks -->
+      <g font-size="10" fill="#4b5563" text-anchor="middle">
+        <line x1="440" y1="326" x2="440" y2="334" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="440" y="345">4,9</text>
+        <line x1="490" y1="326" x2="490" y2="334" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="490" y="345">9,8</text>
+        <line x1="540" y1="326" x2="540" y2="334" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="540" y="345">14,7</text>
+        <line x1="590" y1="326" x2="590" y2="334" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="590" y="345">19,6</text>
+        <line x1="640" y1="326" x2="640" y2="334" stroke="#4b5563" stroke-width="1.5"/>
+        <text x="640" y="345">24,5</text>
+      </g>
+
+      <!-- KENNLINIE (charakteristische Kurve mit Maxima/Minima) -->
+      <path d="M395,325 Q415,320 428,310 Q435,300 440,285 Q445,300 450,320 Q455,326 462,320 Q468,312 478,290 Q484,275 490,258 Q497,275 503,295 Q508,315 514,324 Q518,326 526,318 Q534,305 540,285 Q547,265 550,248 Q555,265 560,285 Q565,310 570,322 Q574,327 581,319 Q590,305 596,283 Q602,265 605,248 Q610,232 610,220 Q615,235 620,255 Q626,278 632,300 Q638,318 642,324" fill="none" stroke="#1a3d6b" stroke-width="2.5"/>
+
+      <!-- Maxima-Markierungen -->
+      <circle cx="428" cy="285" r="5" fill="#1a3d6b" opacity=".8"/>
+      <circle cx="490" cy="258" r="5" fill="#1a3d6b" opacity=".8"/>
+      <circle cx="550" cy="248" r="5" fill="#1a3d6b" opacity=".8"/>
+      <circle cx="610" cy="220" r="5" fill="#1a3d6b" opacity=".8"/>
+
+      <!-- Minima-Markierungen -->
+      <circle cx="455" cy="324" r="4" fill="#ef4444" opacity=".7"/>
+      <circle cx="515" cy="325" r="4" fill="#ef4444" opacity=".7"/>
+      <circle cx="573" cy="325" r="4" fill="#ef4444" opacity=".7"/>
+
+      <!-- Abstandspfeil 4,9 V -->
+      <line x1="440" y1="200" x2="490" y2="200" stroke="#2a6e4a" stroke-width="1.5"/>
+      <line x1="440" y1="195" x2="440" y2="205" stroke="#2a6e4a" stroke-width="1.5"/>
+      <line x1="490" y1="195" x2="490" y2="205" stroke="#2a6e4a" stroke-width="1.5"/>
+      <text x="465" y="195" font-size="10" fill="#2a6e4a" text-anchor="middle" font-weight="700">4,9 V</text>
+      <text x="465" y="184" font-size="9.5" fill="#2a6e4a" text-anchor="middle">= Anregungsenergie</text>
+
+      <!-- Callouts Kennlinie -->
+      <line x1="428" y1="285" x2="408" y2="150" stroke="#1a3d6b" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="360" y="136" width="130" height="18" rx="3" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1"/>
+      <text x="425" y="148" font-size="9.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">Maximum: eâ» zu langsam</text>
+
+      <line x1="455" y1="324" x2="470" y2="355" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="460" y="358" width="130" height="18" rx="3" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+      <text x="525" y="370" font-size="9.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">Minimum: StoÃ gerade passiert</text>
+
+      <!-- Hg Legende -->
+      <text x="660" y="140" font-size="10.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">Hg-Dampf:</text>
+      <text x="660" y="155" font-size="10" fill="#1a3d6b" text-anchor="middle">ÎE = 4,9 eV</text>
+      <text x="660" y="170" font-size="10" fill="#1a3d6b" text-anchor="middle">Î» â 253 nm</text>
+      <text x="660" y="185" font-size="9.5" fill="#6b7280" text-anchor="middle">(UV-Emission)</text>
+    </svg>
+    <div class="dc">Franck-Hertz-Versuch: Elektronen werden durch Hg-Dampf beschleunigt. Bei U = nÂ·4,9 V kÃ¶nnen sie Hg-Atome anregen (inelastischer StoÃ) â Strom bricht ein. Periodische Kennlinie mit Abstand 4,9 V beweist diskrete Energieniveaus.</div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: Franck-Hertz-Kennlinie</div>
+    <strong>âBerg-Tal-Berg-Tal = Energie tanken, alles geben, tanken, alles geben"</strong>: Das Elektron wird beschleunigt (Strom steigt = Berg). Bei 4,9 V gibt es alles beim StoÃ ab (Strom fÃ¤llt = Tal). Dann wieder beschleunigen (neuer Berg). Bei 9,8 V wieder StoÃ. Und so weiter â wie ein Sprinter, der immer wieder auf eine Wand trifft.
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: Warum fÃ¤llt der Strom?</div>
+    Der Strom fÃ¤llt beim Minimum, weil das Elektron nach dem inelastischen StoÃ <strong>zu wenig kinetische Energie</strong> hat, um die Gegenspannung zu Ã¼berwinden â es erreicht den AuffÃ¤nger nicht mehr. Nicht: weil weniger Elektronen emittiert werden!
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC gA</div>
+    KC: <em>âeinen Franck-Hertz-Versuch beschreiben"</em> und <em>âdie Abnahme der StromstÃ¤rke als Folge von Anregungen von Atomen durch ElektronenstÃ¶Ãe deuten"</em>. Wichtig: Aus dem Abstand der Maxima die Anregungsenergie ablesen. Und: Die UV-Emission beim RÃ¼ckfall erklÃ¤rt die Leuchterscheinungen in der RÃ¶hre.
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââââââââ
+     S5: BALMER-FORMEL
+ââââââââââââââââââââââââââââââ -->
+<section class="sec" id="s5">
+  <div class="sec-hd">
+    <div class="sec-num">5</div>
+    <div>
+      <div class="sec-ti">Balmer-Formel</div>
+      <div class="sec-su">Energieniveaus des Wasserstoffatoms Â· Berechnung der Spektrallinien</div>
+    </div>
+  </div>
+
+  <div class="bt">Energieniveaus des Wasserstoffatoms</div>
+  <p>Das Wasserstoffatom ist das einfachste Atom â ein Elektron umkreist einen Protonenkern. Die mÃ¶glichen Energieniveaus folgen einer exakten Formel (Bohrsches Atommodell). Die Ionisationsenergie (von n=1 bis n=â) betrÃ¤gt 13,6 eV.</p>
+
+  <div class="fb">
+    <div class="fl">Energieniveaus des Wasserstoffs</div>
+    <div class="fm">Eâ = â 13,6 eV / nÂ²</div>
+    <div class="fe">
+      Eâ in eV Â· n = 1, 2, 3, â¦ (Hauptquantenzahl)<br>
+      Grundzustand (n=1): Eâ = â13,6 eV<br>
+      n=2: Eâ = â13,6/4 = â3,40 eV Â· n=3: Eâ = â13,6/9 = â1,51 eV<br>
+      Ionisation: Eâ = 0 (Elektron ist frei)
+    </div>
+  </div>
+
+  <div class="fb">
+    <div class="fl">Balmer-Formel (fÃ¼r WellenlÃ¤ngenberechnung)</div>
+    <div class="fm">1/Î» = R_H Â· (1/nâÂ² â 1/nâÂ²)</div>
+    <div class="fe">R_H = Rydberg-Konstante = 1,097Â·10â· mâ»Â¹ Â· nâ &lt; nâ<br>
+    Balmer-Serie: nâ = 2 (sichtbares Licht) Â· Lyman-Serie: nâ = 1 (UV) Â· Paschen-Serie: nâ = 3 (IR)<br>
+    <strong>FÃ¼r gA: Formel wird vorgegeben â anwenden und Ergebnisse interpretieren!</strong></div>
+  </div>
+
+  <!-- SVG: Wasserstoff-Energieniveauschema mit Serien -->
+  <div class="dw">
+    <svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" font-family="Inter,sans-serif">
+      <rect width="700" height="420" fill="#ffffff"/>
+      <text x="350" y="22" font-size="12" fill="#1a3d6b" text-anchor="middle" font-weight="700">Wasserstoff-Energieniveaus: Balmer-, Lyman- &amp; Paschen-Serie</text>
+
+      <!-- Energieachse -->
+      <line x1="90" y1="380" x2="90" y2="50" stroke="#4b5563" stroke-width="2" marker-end="url(#abal1)"/>
+      <defs><marker id="abal1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4b5563"/></marker></defs>
+      <text x="80" y="215" font-size="11" fill="#4b5563" text-anchor="middle" transform="rotate(-90,80,215)">Energie (eV)</text>
+
+      <!-- ENERGIENIVEAUS Wasserstoff -->
+      <!-- n=1: -13.6 eV â y=370 -->
+      <line x1="105" y1="370" x2="460" y2="370" stroke="#1a3d6b" stroke-width="3"/>
+      <text x="98" y="374" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=1</text>
+      <text x="98" y="363" font-size="9" fill="#6b7280" text-anchor="end">â13,6 eV</text>
+
+      <!-- n=2: -3.40 eV â y=255 -->
+      <line x1="105" y1="255" x2="460" y2="255" stroke="#1a3d6b" stroke-width="2.5"/>
+      <text x="98" y="259" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=2</text>
+      <text x="98" y="248" font-size="9" fill="#6b7280" text-anchor="end">â3,40 eV</text>
+
+      <!-- n=3: -1.51 eV â y=185 -->
+      <line x1="105" y1="185" x2="460" y2="185" stroke="#1a3d6b" stroke-width="2.5"/>
+      <text x="98" y="189" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=3</text>
+      <text x="98" y="178" font-size="9" fill="#6b7280" text-anchor="end">â1,51 eV</text>
+
+      <!-- n=4: -0.85 eV â y=155 -->
+      <line x1="105" y1="155" x2="460" y2="155" stroke="#1a3d6b" stroke-width="2"/>
+      <text x="98" y="159" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=4</text>
+      <text x="98" y="148" font-size="9" fill="#6b7280" text-anchor="end">â0,85 eV</text>
+
+      <!-- n=5: -0.54 eV â y=135 -->
+      <line x1="105" y1="135" x2="460" y2="135" stroke="#1a3d6b" stroke-width="1.5"/>
+      <text x="98" y="139" font-size="10.5" fill="#1a3d6b" text-anchor="end" font-weight="700">n=5</text>
+      <text x="98" y="128" font-size="9" fill="#6b7280" text-anchor="end">â0,54 eV</text>
+
+      <!-- n=â: 0 eV â y=90 (Ionisationsgrenze) -->
+      <line x1="105" y1="90" x2="460" y2="90" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="6,3"/>
+      <text x="98" y="94" font-size="10" fill="#ef4444" text-anchor="end">n=â</text>
+      <text x="98" y="83" font-size="9" fill="#ef4444" text-anchor="end">0 eV</text>
+
+      <!-- LYMAN-SERIE (UV, lila â nâ1) -->
+      <line x1="155" y1="255" x2="155" y2="371" stroke="#8b5cf6" stroke-width="2.5" marker-end="url(#alym1)"/>
+      <defs><marker id="alym1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#8b5cf6"/></marker></defs>
+      <line x1="180" y1="185" x2="180" y2="371" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#alym2)"/>
+      <defs><marker id="alym2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#7c3aed"/></marker></defs>
+      <line x1="205" y1="155" x2="205" y2="371" stroke="#6d28d9" stroke-width="2" marker-end="url(#alym3)"/>
+      <defs><marker id="alym3" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#6d28d9"/></marker></defs>
+
+      <!-- BALMER-SERIE (sichtbar â nâ2) -->
+      <line x1="255" y1="185" x2="255" y2="256" stroke="#ef4444" stroke-width="2.5" marker-end="url(#abal2)"/>
+      <defs><marker id="abal2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ef4444"/></marker></defs>
+      <line x1="280" y1="155" x2="280" y2="256" stroke="#3b82f6" stroke-width="2.5" marker-end="url(#abal3)"/>
+      <defs><marker id="abal3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#3b82f6"/></marker></defs>
+      <line x1="305" y1="135" x2="305" y2="256" stroke="#4f46e5" stroke-width="2" marker-end="url(#abal4)"/>
+      <defs><marker id="abal4" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4f46e5"/></marker></defs>
+
+      <!-- PASCHEN-SERIE (IR â nâ3) -->
+      <line x1="360" y1="155" x2="360" y2="186" stroke="#d97706" stroke-width="2.5" stroke-dasharray="5,2" marker-end="url(#apas1)"/>
+      <defs><marker id="apas1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#d97706"/></marker></defs>
+      <line x1="395" y1="135" x2="395" y2="186" stroke="#b45309" stroke-width="2" stroke-dasharray="5,2" marker-end="url(#apas2)"/>
+      <defs><marker id="apas2" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#b45309"/></marker></defs>
+
+      <!-- SERIEN-BESCHRIFTUNGEN (Callout-Boxen rechts) -->
+      <!-- Lyman -->
+      <line x1="205" y1="260" x2="475" y2="200" stroke="#8b5cf6" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="474" y="185" width="215" height="32" rx="4" fill="#f5f3ff" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="581" y="198" font-size="10.5" fill="#5b21b6" text-anchor="middle" font-weight="700">Lyman-Serie (nâ=1)</text>
+      <text x="581" y="211" font-size="9.5" fill="#5b21b6" text-anchor="middle">UV Â· Î» &lt; 400 nm Â· n=2,3,4â¦ân=1</text>
+
+      <!-- Balmer -->
+      <line x1="280" y1="215" x2="475" y2="250" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="474" y="237" width="215" height="32" rx="4" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1.5"/>
+      <text x="581" y="250" font-size="10.5" fill="#9e2a1c" text-anchor="middle" font-weight="700">Balmer-Serie (nâ=2)</text>
+      <text x="581" y="263" font-size="9.5" fill="#9e2a1c" text-anchor="middle">sichtb. Â· 400â700 nm Â· n=3,4,5â¦ân=2</text>
+
+      <!-- Paschen -->
+      <line x1="380" y1="170" x2="475" y2="295" stroke="#d97706" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="474" y="282" width="215" height="32" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+      <text x="581" y="295" font-size="10.5" fill="#92400e" text-anchor="middle" font-weight="700">Paschen-Serie (nâ=3)</text>
+      <text x="581" y="308" font-size="9.5" fill="#92400e" text-anchor="middle">IR Â· Î» &gt; 700 nm Â· n=4,5,6â¦ân=3</text>
+
+      <!-- SPEKTRALSTREIFEN (Balmer-Linien sichtbar) -->
+      <text x="350" y="340" font-size="11" fill="#1a3d6b" text-anchor="middle" font-weight="700">Balmer-Linien im sichtbaren Bereich:</text>
+      <rect x="105" y="350" width="350" height="30" rx="4" fill="#1a1f2e"/>
+      <!-- Regenbogen background -->
+      <defs>
+        <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:#8b00ff;stop-opacity:.4"/>
+          <stop offset="15%" style="stop-color:#4b0082;stop-opacity:.4"/>
+          <stop offset="30%" style="stop-color:#0000ff;stop-opacity:.4"/>
+          <stop offset="50%" style="stop-color:#00ff00;stop-opacity:.3"/>
+          <stop offset="70%" style="stop-color:#ffff00;stop-opacity:.3"/>
+          <stop offset="85%" style="stop-color:#ffa500;stop-opacity:.3"/>
+          <stop offset="100%" style="stop-color:#ff0000;stop-opacity:.4"/>
+        </linearGradient>
+      </defs>
+      <rect x="105" y="350" width="350" height="30" rx="4" fill="url(#rainbow)"/>
+      <!-- Balmer-Linien als Streifen -->
+      <line x1="155" y1="350" x2="155" y2="380" stroke="#ef4444" stroke-width="4" opacity=".9"/>
+      <text x="155" y="400" font-size="9" fill="#9e2a1c" text-anchor="middle">HÎ± 656nm</text>
+      <line x1="210" y1="350" x2="210" y2="380" stroke="#00c0ff" stroke-width="3.5" opacity=".9"/>
+      <text x="210" y="400" font-size="9" fill="#0369a1" text-anchor="middle">HÎ² 486nm</text>
+      <line x1="255" y1="350" x2="255" y2="380" stroke="#4040ff" stroke-width="3" opacity=".9"/>
+      <text x="255" y="400" font-size="9" fill="#3730a3" text-anchor="middle">HÎ³ 434nm</text>
+      <line x1="288" y1="350" x2="288" y2="380" stroke="#8080ff" stroke-width="2.5" opacity=".8"/>
+      <text x="288" y="400" font-size="9" fill="#5b21b6" text-anchor="middle">HÎ´ 410nm</text>
+      <!-- x-Achse Spektrum -->
+      <text x="110" y="408" font-size="9" fill="#6b7280">400 nm</text>
+      <text x="450" y="408" font-size="9" fill="#6b7280" text-anchor="end">700 nm</text>
+    </svg>
+    <div class="dc">Wasserstoff-EnergieniveaÃ¼schema: Lyman-Serie (UV, ân=1), Balmer-Serie (sichtbar, ân=2), Paschen-Serie (IR, ân=3). Die Balmer-Linien HÎ±(656nm), HÎ²(486nm), HÎ³(434nm) sind im sichtbaren Bereich messbar.</div>
+  </div>
+
+  <div class="ex">
+    <div class="ex-ti">ð§® Beispielrechnung: Balmer-Formel anwenden</div>
+    <p style="font-size:13.5px;margin-bottom:10px"><strong>Gesucht:</strong> WellenlÃ¤nge der HÎ²-Linie (n=4 â n=2)</p>
+    <div class="step"><div class="sn">1</div><div>Energiedifferenz: <code>ÎE = Eâ â Eâ = (â0,85) â (â3,40) = 2,55 eV</code></div></div>
+    <div class="step"><div class="sn">2</div><div>WellenlÃ¤nge (Kurzformel): <code>Î» = 1240 nmÂ·eV / 2,55 eV = 486 nm</code> â blau-grÃ¼n â</div></div>
+    <div class="step"><div class="sn">3</div><div>Alternativ mit Balmer-Formel: <code>1/Î» = 1,097Â·10â· Â· (1/4 â 1/16) = 1,097Â·10â· Â· 0,1875 = 2,057Â·10â¶ mâ»Â¹</code></div></div>
+    <div class="step"><div class="sn">4</div><div><code>Î» = 1/2,057Â·10â¶ = 4,86Â·10â»â· m = 486 nm</code> â Ãbereinstimmung!</div></div>
+  </div>
+
+  <div class="callout c-esel">
+    <div class="ct">ð§  EselsbrÃ¼cke: Balmer = sichtbar</div>
+    <strong>âBalmer = Bunt = sichtbar"</strong>: Die Balmer-Serie (nâ2) erzeugt sichtbares Licht. Lyman (nâ1) â grÃ¶Ãere Energiedifferenz â kÃ¼rzere WellenlÃ¤nge â UV (unsichtbar!). Paschen (nâ3) â kleinere Energiedifferenz â lÃ¤ngere WellenlÃ¤nge â IR (auch unsichtbar). Also: Nur Balmer sehen wir!
+  </div>
+
+  <div class="callout c-warn">
+    <div class="ct">â ï¸ PrÃ¼fungsfalle: Vorzeichen der Energieniveaus</div>
+    Die Energieniveaus des Wasserstoffs sind <strong>negativ</strong>: Eâ = â13,6 eV, Eâ = â3,40 eV. Die Energiedifferenz ÎE fÃ¼r Emission: E_oben â E_unten ist dann eine <strong>positive Zahl</strong>. Fehler: ÎE = â1,51 â (â3,40) = 1,89 eV (richtig!) vs. 3,40 â 1,51 = 1,89 eV (auch richtig, wenn man die BetrÃ¤ge nimmt). Aber: 1,51 â 3,40 = â1,89 eV wÃ¤re falsch!
+  </div>
+
+  <div class="callout c-kc">
+    <div class="ct">â KC gA</div>
+    KC: <em>âEnergieniveauschemata zur Berechnung der WellenlÃ¤nge von Spektrallinien benutzen"</em> und <em>âdie Energieniveaus von Wasserstoff mit der Balmerformel berechnen"</em>. Beide Formeln (Î» = 1240/ÎE und Balmer-Formel) anwenden kÃ¶nnen, Ergebnis in nm angeben und Spektralbereich (UV/sichtbar/IR) zuordnen.
+  </div>
+</section>
+
+<!-- ââââââââââââââââââââââââââââ
+     PRÃFUNGSZUSAMMENFASSUNG
+ââââââââââââââââââââââââââââ -->
+<div class="sum" id="summary">
+  <div class="sum-ti">ð PrÃ¼fungszusammenfassung</div>
+
+  <div class="bt" style="margin-bottom:12px">Alle Formeln auf einen Blick</div>
+  <div class="kg">
+    <div class="kc">
+      <div class="kl">Potenzialtopf-Energie</div>
+      <div class="kk">Eâ = nÂ² Â· Eâ</div>
+      <div class="ke">Eâ = Grundzustandsenergie Â· n = 1,2,3,â¦</div>
+    </div>
+    <div class="kc">
+      <div class="kl">Photonen-WellenlÃ¤nge</div>
+      <div class="kk">Î» = hÂ·c / ÎE</div>
+      <div class="ke">ÎE in Joule â Î» in Meter</div>
+    </div>
+    <div class="kc">
+      <div class="kl">Kurzformel (eV)</div>
+      <div class="kk">Î» [nm] = 1240 / ÎE [eV]</div>
+      <div class="ke">Praktisch: 2 eV â 620 nm Â· 3 eV â 413 nm</div>
+    </div>
+    <div class="kc">
+      <div class="kl">H-Energieniveaus</div>
+      <div class="kk">Eâ = â13,6 eV / nÂ²</div>
+      <div class="ke">Eâ=â13,6 Â· Eâ=â3,40 Â· Eâ=â1,51 eV</div>
+    </div>
+    <div class="kc">
+      <div class="kl">Balmer-Formel</div>
+      <div class="kk">1/Î» = R_HÂ·(1/nâÂ²â1/nâÂ²)</div>
+      <div class="ke">R_H = 1,097Â·10â· mâ»Â¹ Â· Balmer: nâ=2</div>
+    </div>
+    <div class="kc">
+      <div class="kl">Franck-Hertz</div>
+      <div class="kk">eÂ·U_A = ÎE</div>
+      <div class="ke">Abstand Maxima = Anregungsenergie in eV</div>
+    </div>
+  </div>
+
+  <div class="divider" style="background:#d0dff5"></div>
+  <div class="bt" style="margin-bottom:12px">Typische PrÃ¼fungsaufgaben (gA) mit LÃ¶sungsstrategie</div>
+  <div class="ag">
+    <div class="ac">
+      <div class="an">1</div>
+      <div class="at">Potenzialtopf: Energieniveaus berechnen</div>
+      <div class="as">1) Formel Eâ = nÂ²Â·Eâ aufschreiben Â· 2) Eâ aus Aufgabe entnehmen Â· 3) Niveaus berechnen: Eâ=4Eâ, Eâ=9Eâ, â¦ Â· 4) Energiedifferenz fÃ¼r Ãbergang: ÎE = Eââ â Eââ Â· 5) WellenlÃ¤nge: Î» = 1240/ÎE[eV] nm</div>
+      <div class="ah">â ï¸ Immer quadratisch, nicht linear!</div>
+    </div>
+    <div class="ac">
+      <div class="an">2</div>
+      <div class="at">Spektrallinie berechnen (Energieniveauschema)</div>
+      <div class="as">1) Ãbergang ablesen (von nâ zu nâ) Â· 2) ÎE = E_oben â E_unten (positiv!) Â· 3) In eV einsetzen: Î» = 1240/ÎE nm Â· 4) Spektralbereich: &lt;400 UV, 400â700 sichtbar, &gt;700 IR Â· 5) Linie benennen (HÎ±, HÎ², â¦)</div>
+      <div class="ah">Vorzeichen beachten! Negativ â Negativ = positiv</div>
+    </div>
+    <div class="ac">
+      <div class="an">3</div>
+      <div class="at">Resonanzabsorption erlÃ¤utern</div>
+      <div class="as">1) Aufbau: Lichtquelle â Gasprobe â Spektrometer Â· 2) WeiÃlicht enthÃ¤lt alle WellenlÃ¤ngen Â· 3) Nur Photonen mit E = ÎE werden absorbiert Â· 4) Reemission in alle Richtungen Â· 5) Beobachtung: dunkle Linie im Spektrum (Fraunhofer) Â· 6) Bedeutung: Nachweis diskreter Energieniveaus</div>
+      <div class="ah">Stich: Fraunhofer-Linien der Sonne!</div>
+    </div>
+    <div class="ac">
+      <div class="an">4</div>
+      <div class="at">Franck-Hertz beschreiben &amp; auswerten</div>
+      <div class="as">1) Aufbau: Kathode â Beschleunigung â Hg-Dampf â AuffÃ¤nger Â· 2) Kennlinie: periodische Maxima/Minima Â· 3) Abstand der Maxima = Anregungsenergie (4,9 eV bei Hg) Â· 4) ErklÃ¤rung: inelastischer StoÃ â eâ» zu langsam â erreicht AuffÃ¤nger nicht Â· 5) UV-Licht beim RÃ¼ckfall sichtbar</div>
+      <div class="ah">â ï¸ Strom fÃ¤llt wegen zu geringer kinetischer Energie!</div>
+    </div>
+    <div class="ac">
+      <div class="an">5</div>
+      <div class="at">Balmer-Formel anwenden</div>
+      <div class="as">1) nâ und nâ aus Aufgabe entnehmen Â· 2) Eâ = â13,6/nÂ² eV berechnen Â· 3) ÎE = |Eâ â Eâ| Â· 4) Î» = 1240/ÎE nm OR Balmer-Formel: 1/Î» = RÂ·(1/nâÂ²â1/nâÂ²) Â· 5) Î» in nm umrechnen Â· 6) Serie bestimmen: nâ=1 Lyman, nâ=2 Balmer, nâ=3 Paschen</div>
+      <div class="ah">R_H = 1,097Â·10â· mâ»Â¹ aus Formelsammlung!</div>
+    </div>
+    <div class="ac">
+      <div class="an">6</div>
+      <div class="at">Vergleich Emissions- vs. Absorptionsspektrum</div>
+      <div class="as">Emission: heiÃes Gas Â· Elektronen fallen herab Â· Photonen werden ausgesandt Â· helles Linienspektrum. Absorption: kÃ¼hles Gas vor heiÃer Quelle Â· Elektronen werden angeregt Â· dunkle Linien im Kontinuum. <strong>Gleiche WellenlÃ¤ngen!</strong> Kirchhoffsches Gesetz.</div>
+      <div class="ah">Absorption bei gleichen Î» wie Emission!</div>
+    </div>
+  </div>
+
+  <div class="divider" style="background:#d0dff5;margin-top:20px"></div>
+  <div class="bt" style="margin-bottom:10px">Wichtige Zahlenwerte</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:10px">
+    <div class="kc"><div class="kl">Plancksche Konstante</div><div class="kk">h = 6,626Â·10â»Â³â´ JÂ·s</div></div>
+    <div class="kc"><div class="kl">Lichtgeschwindigkeit</div><div class="kk">c = 3Â·10â¸ m/s</div></div>
+    <div class="kc"><div class="kl">Elementarladung</div><div class="kk">e = 1,602Â·10â»Â¹â¹ C</div></div>
+    <div class="kc"><div class="kl">Rydberg-Konstante</div><div class="kk">R_H = 1,097Â·10â· mâ»Â¹</div></div>
+    <div class="kc"><div class="kl">Ionisierungsenergie H</div><div class="kk">13,6 eV</div></div>
+    <div class="kc"><div class="kl">Umrechnung</div><div class="kk">1 eV = 1,602Â·10â»Â¹â¹ J</div></div>
   </div>
 </div>
 
-<div class="sumrow">
-  <div class="sc">
-    <div class="sc-lbl">Grundzustand H</div>
-    <div class="sc-val">E₁ = −13,6 eV</div>
-    <div class="sc-desc">Ionisierungsenergie</div>
-  </div>
-  <div class="sc">
-    <div class="sc-lbl">Lyman-Serie</div>
-    <div class="sc-val">→ n=1 (UV)</div>
-    <div class="sc-desc">n≥2 → n=1</div>
-  </div>
-  <div class="sc">
-    <div class="sc-lbl">Balmer-Serie</div>
-    <div class="sc-val">→ n=2 (sichtbar)</div>
-    <div class="sc-desc">Rot bis violett</div>
-  </div>
-  <div class="sc">
-    <div class="sc-lbl">Ionisation</div>
-    <div class="sc-val">E ≥ 13,6 eV</div>
-    <div class="sc-desc">Elektron verlässt Atom</div>
-  </div>
-</div>
-
+</div><!-- /page -->
 </body>
 </html>
