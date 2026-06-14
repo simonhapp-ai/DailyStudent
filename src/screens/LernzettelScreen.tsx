@@ -371,7 +371,7 @@ export function LernzettelScreen() {
       </div>
 
       {/* ── Pro Lernzettel Preview ──────────────────────────────── */}
-      {!isPro && <div className="mt-6">
+      <div className="mt-6">
         {/* Section header */}
         <div className="flex items-center gap-2 px-4 mb-2">
           <span className="badge-pro-gold px-2.5 py-1">✦ PRO</span>
@@ -448,21 +448,23 @@ export function LernzettelScreen() {
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="px-4 mt-3 mb-6">
-          <button
-            onClick={() => setShowPro(true)}
-            className="w-full py-3.5 rounded-[18px] font-bold text-[14px] press"
-            style={{
-              background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
-              color: '#3B1F00',
-              boxShadow: '0 4px 18px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.3)',
-            }}
-          >
-            Pro freischalten
-          </button>
-        </div>
-      </div>}
+        {/* CTA — nur für Free-User */}
+        {!isPro && (
+          <div className="px-4 mt-3 mb-6">
+            <button
+              onClick={() => setShowPro(true)}
+              className="w-full py-3.5 rounded-[18px] font-bold text-[14px] press"
+              style={{
+                background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
+                color: '#3B1F00',
+                boxShadow: '0 4px 18px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.3)',
+              }}
+            >
+              Pro freischalten
+            </button>
+          </div>
+        )}
+      </div>
 
       <ProModal feature="lernzettel" isOpen={showPro} onClose={() => setShowPro(false)} />
     </div>
