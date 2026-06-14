@@ -10,6 +10,37 @@ const G_LERNZETTEL = 'linear-gradient(145deg, #5AC8FA, #007BB8)'
 
 type View = 'library' | 'detail'
 
+const PREVIEWS = [
+  {
+    id: 'physik-quanten',
+    src: '/lernzettel-previews/physik-quantenobjekte.html',
+    subject: 'Physik LK',
+    title: 'Quantenobjekte & Doppelspalt',
+    color: '#1a3d6b',
+  },
+  {
+    id: 'bio-oeko',
+    src: '/lernzettel-previews/bio-oekologie.html',
+    subject: 'Biologie LK',
+    title: 'Kohlenstoffkreislauf & Ökosysteme',
+    color: '#2a6e4a',
+  },
+  {
+    id: 'bio-neuro',
+    src: '/lernzettel-previews/bio-neurobiologie.html',
+    subject: 'Biologie LK',
+    title: 'Neurobiologie & Aktionspotenzial',
+    color: '#2a6e4a',
+  },
+  {
+    id: 'physik-atom',
+    src: '/lernzettel-previews/physik-atomhulle.html',
+    subject: 'Physik LK',
+    title: 'Atommodelle & Energieniveaus',
+    color: '#1a3d6b',
+  },
+] as const
+
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' })
 }
@@ -337,6 +368,103 @@ export function LernzettelScreen() {
             })}
           </div>
         )}
+      </div>
+
+      {/* ── Pro Lernzettel Preview ──────────────────────────────── */}
+      <div className="mt-6">
+        {/* Section header */}
+        <div className="flex items-center gap-2 px-4 mb-2">
+          <span className="badge-pro-gold px-2.5 py-1">✦ PRO</span>
+          <p className="text-[15px] font-bold text-text-primary">Pro Lernzettel</p>
+          <span
+            className="ml-auto text-[10px] font-bold px-2.5 py-1 rounded-full"
+            style={{ background: 'linear-gradient(135deg,#FEF3C7,#FDE68A)', color: '#92400E' }}
+          >
+            Nächstes Update
+          </span>
+        </div>
+        <p className="text-[13px] text-text-muted px-4 mb-3 leading-snug">
+          KI-generierte Lernzettel mit SVG-Diagrammen, Formeln, Eselsbrücken und strukturierten Prüfungsübersichten — wie von einem Lehrer erstellt.
+        </p>
+
+        {/* Horizontal carousel */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '12px',
+            overflowX: 'auto',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            paddingBottom: '10px',
+            scrollbarWidth: 'none',
+            WebkitOverflowScrolling: 'touch',
+          } as React.CSSProperties}
+        >
+          {PREVIEWS.map((p) => (
+            <div
+              key={p.id}
+              style={{
+                position: 'relative',
+                width: '308px',
+                minWidth: '308px',
+                height: '193px',
+                borderRadius: '16px',
+                overflow: 'hidden',
+                boxShadow: '0 6px 28px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)',
+                flexShrink: 0,
+              }}
+            >
+              <iframe
+                src={p.src}
+                loading="lazy"
+                title={p.title}
+                style={{
+                  width: '960px',
+                  height: '601px',
+                  transform: 'scale(0.321)',
+                  transformOrigin: 'top left',
+                  border: 'none',
+                  pointerEvents: 'none',
+                  display: 'block',
+                }}
+              />
+              {/* Bottom gradient fade */}
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 42%, rgba(0,0,0,0.52) 100%)' }} />
+              {/* Subject badge */}
+              <div style={{ position: 'absolute', top: '9px', left: '9px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 700, padding: '3px 9px', borderRadius: '999px', background: p.color, color: '#fff', boxShadow: '0 1px 6px rgba(0,0,0,0.3)' }}>
+                  {p.subject}
+                </span>
+              </div>
+              {/* Pro badge top-right */}
+              <span
+                className="badge-pro-gold"
+                style={{ position: 'absolute', top: '9px', right: '9px', padding: '3px 8px', fontSize: '10px' }}
+              >
+                ✦ PRO
+              </span>
+              {/* Title at bottom */}
+              <div style={{ position: 'absolute', bottom: '10px', left: '11px', right: '11px' }}>
+                <p style={{ fontSize: '12px', fontWeight: 700, color: '#fff', textShadow: '0 1px 5px rgba(0,0,0,0.6)', lineHeight: 1.35 }}>{p.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="px-4 mt-3 mb-6">
+          <button
+            onClick={() => setShowPro(true)}
+            className="w-full py-3.5 rounded-[18px] font-bold text-[14px] press"
+            style={{
+              background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
+              color: '#3B1F00',
+              boxShadow: '0 4px 18px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.3)',
+            }}
+          >
+            ✦ Pro Lernzettel freischalten
+          </button>
+        </div>
       </div>
 
       <ProModal feature="lernzettel" isOpen={showPro} onClose={() => setShowPro(false)} />

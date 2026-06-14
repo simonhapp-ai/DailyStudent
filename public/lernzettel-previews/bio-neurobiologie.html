@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=960">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@700;900&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<title>Neurobiologie — Biologie LK</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Source Sans 3',system-ui,sans-serif;background:#faf8f4;color:#1c2b1e;font-size:14px;line-height:1.55}
+  .topbar{background:#2a6e4a;color:#fff;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
+  .t-sub{font-size:18px;font-weight:700;letter-spacing:-.3px}
+  .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
+  .chip-w{background:rgba(255,255,255,.18);color:#fff}
+  .chip-g{background:linear-gradient(135deg,#c8860a,#f5c842);color:#3b1f00}
+  .hero{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:5px solid #2a6e4a;padding:22px 36px}
+  .h-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2a6e4a;margin-bottom:6px}
+  .h-title{font-family:'Lora',Georgia,serif;font-size:30px;font-weight:900;color:#1a4731;line-height:1.15;margin-bottom:8px}
+  .h-sub{font-size:13px;color:#4b7358;line-height:1.5}
+  .main{padding:22px 36px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .diag-box{background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;padding:16px}
+  .diag-title{font-family:'Lora',Georgia,serif;font-size:13px;font-weight:700;color:#1a4731;margin-bottom:12px}
+  .rcol{display:flex;flex-direction:column;gap:12px}
+  .fb{background:#f0fdf4;border:1.5px solid #2a6e4a;border-left-width:4px;border-radius:8px;padding:13px 15px}
+  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#2a6e4a;margin-bottom:8px}
+  .fb-eq{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#1a4731;margin-bottom:4px;line-height:1.7}
+  .fb-desc{font-size:12px;color:#4b7358;line-height:1.45}
+  .cb{border-radius:8px;padding:12px 14px}
+  .cb-e{background:#fffbeb;border-left:4px solid #d97706}
+  .cb-k{background:#f0fdf4;border-left:4px solid #16a34a}
+  .cb-i{background:#eff6ff;border-left:4px solid #2563eb}
+  .cb-w{background:#fef2f2;border-left:4px solid #dc2626}
+  .cb-t{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+  .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-i .cb-t{color:#1e40af} .cb-w .cb-t{color:#991b1b}
+  .cb-txt{font-size:12.5px;line-height:1.5;color:#1c2b1e}
+  .sumrow{padding:18px 36px;background:#f0fdf4;border-top:1px solid #bbf7d0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .sc{background:#fff;border:1px solid #bbf7d0;border-top:3px solid #2a6e4a;border-radius:7px;padding:10px}
+  .sc-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#6b9478;margin-bottom:4px}
+  .sc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#1a4731}
+  .sc-desc{font-size:10.5px;color:#6b9478;margin-top:3px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="t-sub">Biologie LK</span>
+    <span class="chip chip-w">Neurobiologie</span>
+    <span class="chip chip-w">Klasse 13 · Niedersachsen</span>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="chip chip-g">✦ Pro Lernzettel</span>
+    <span style="font-size:12px;color:rgba(255,255,255,.65)">Klausur: 19.05.2026</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="h-lbl">Kapitel 3 · Neurobiologie</div>
+  <div class="h-title">Ruhepotenzial &amp;<br>Aktionspotenzial</div>
+  <div class="h-sub">Die elektrische Signalübertragung im Neuron basiert auf Ionengradienten. Das Aktionspotenzial entsteht durch spannungsgesteuerte Na⁺- und K⁺-Kanäle nach dem Alles-oder-Nichts-Prinzip.</div>
+</div>
+
+<div class="main">
+  <!-- Left: Neuron + AP curve -->
+  <div>
+    <div class="diag-box" style="margin-bottom:14px">
+      <div class="diag-title">Aufbau eines Neurons</div>
+      <svg viewBox="0 0 440 135" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <!-- Dendrites -->
+        <path d="M 55 68 Q 30 45 15 28" fill="none" stroke="#2a6e4a" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M 55 68 Q 28 60 10 58" fill="none" stroke="#2a6e4a" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M 55 68 Q 32 85 15 100" fill="none" stroke="#2a6e4a" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M 55 68 Q 25 95 18 118" fill="none" stroke="#2a6e4a" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- Soma -->
+        <ellipse cx="80" cy="68" rx="30" ry="28" fill="#bbf7d0" stroke="#2a6e4a" stroke-width="2"/>
+        <!-- Nucleus -->
+        <ellipse cx="80" cy="68" rx="14" ry="12" fill="#6ee7b7" stroke="#2a6e4a" stroke-width="1.5"/>
+        <text x="80" y="72" font-size="8.5" fill="#14532d" text-anchor="middle" font-weight="700">Kern</text>
+        <!-- Axon hillock -->
+        <path d="M 108 68 L 125 65 L 145 67" fill="none" stroke="#1a4731" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Axon (myelinated segments) -->
+        <rect x="145" y="60" width="50" height="16" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+        <rect x="205" y="60" width="50" height="16" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+        <rect x="265" y="60" width="50" height="16" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/>
+        <!-- Ranvier nodes -->
+        <circle cx="197" cy="68" r="4" fill="#ef4444" stroke="white" stroke-width="1.5"/>
+        <circle cx="257" cy="68" r="4" fill="#ef4444" stroke="white" stroke-width="1.5"/>
+        <circle cx="317" cy="68" r="4" fill="#ef4444" stroke="white" stroke-width="1.5"/>
+        <!-- Axon terminal -->
+        <path d="M 315 68 L 360 68" stroke="#1a4731" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="368" cy="58" r="8" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+        <circle cx="375" cy="72" r="7" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+        <circle cx="362" cy="78" r="6" fill="#fde68a" stroke="#d97706" stroke-width="1.5"/>
+        <!-- Labels -->
+        <text x="35" y="22" font-size="9.5" fill="#14532d" font-weight="600">Dendriten</text>
+        <text x="70" y="108" font-size="9.5" fill="#14532d" font-weight="600">Soma</text>
+        <text x="166" y="52" font-size="9" fill="#0369a1" font-weight="600" text-anchor="middle">Myelin-</text>
+        <text x="166" y="62" font-size="8.5" fill="#0369a1" font-weight="600" text-anchor="middle">scheide</text>
+        <text x="197" y="50" font-size="9" fill="#b91c1c" text-anchor="middle">Ranvier</text>
+        <text x="360" y="44" font-size="9.5" fill="#92400e" font-weight="600">Endknöpfchen</text>
+        <!-- AP direction arrow -->
+        <defs><marker id="ap" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#7c3aed"/></marker></defs>
+        <path d="M 145 88 L 310 88" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ap)"/>
+        <text x="228" y="100" font-size="9.5" fill="#7c3aed" text-anchor="middle" font-weight="600">saltatorische Erregungsleitung</text>
+      </svg>
+    </div>
+    <div class="diag-box">
+      <div class="diag-title">Aktionspotenzial — Zeitverlauf</div>
+      <svg viewBox="0 0 440 155" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <!-- Axes -->
+        <line x1="45" y1="130" x2="420" y2="130" stroke="#374151" stroke-width="1.5"/>
+        <line x1="45" y1="15" x2="45" y2="130" stroke="#374151" stroke-width="1.5"/>
+        <!-- Y-axis labels -->
+        <text x="40" y="19" font-size="9.5" fill="#374151" text-anchor="end">+35</text>
+        <text x="40" y="63" font-size="9.5" fill="#374151" text-anchor="end">  0</text>
+        <text x="40" y="97" font-size="9.5" fill="#374151" text-anchor="end">-55</text>
+        <text x="40" y="119" font-size="9.5" fill="#374151" text-anchor="end">-70</text>
+        <!-- Resting lines -->
+        <line x1="45" y1="119" x2="420" y2="119" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="45" y1="97" x2="420" y2="97" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3"/>
+        <!-- AP curve -->
+        <path d="M 45 119 L 100 119 Q 108 119 118 97 Q 125 80 155 17 Q 175 17 195 17 Q 215 62 230 119 Q 240 145 270 135 Q 295 128 340 119 L 420 119"
+              fill="none" stroke="#2a6e4a" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Phase labels -->
+        <text x="120" y="12" font-size="9.5" fill="#1e40af" font-weight="700">Depolarisation</text>
+        <text x="120" y="24" font-size="8.5" fill="#1e40af">Na⁺ einwärts</text>
+        <text x="220" y="55" font-size="9.5" fill="#dc2626" font-weight="700">Repol.</text>
+        <text x="220" y="67" font-size="8.5" fill="#dc2626">K⁺ auswärts</text>
+        <text x="270" y="132" font-size="9" fill="#7c3aed" font-weight="600">Hyperpolari-</text>
+        <text x="270" y="143" font-size="9" fill="#7c3aed" font-weight="600">sierung</text>
+        <!-- Threshold marker -->
+        <rect x="48" y="93" width="48" height="12" rx="3" fill="#fef2f2"/>
+        <text x="72" y="102" font-size="9" fill="#991b1b" text-anchor="middle" font-weight="700">Schwelle</text>
+        <!-- Stimulus -->
+        <line x1="108" y1="130" x2="108" y2="105" stroke="#0284c7" stroke-width="1.5"/>
+        <text x="108" y="143" font-size="9" fill="#0284c7" text-anchor="middle">Reiz</text>
+        <!-- X-axis label -->
+        <text x="420" y="143" font-size="10" fill="#374151" font-weight="600">Zeit (ms)</text>
+        <text x="18" y="75" font-size="10" fill="#374151" font-weight="600" transform="rotate(-90,18,75)">U (mV)</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Right column -->
+  <div class="rcol">
+    <div class="fb">
+      <div class="fb-lbl">Ionenverteilung — Ruhepotenzial</div>
+      <div class="fb-eq">innen: K⁺ hoch, Na⁺ tief</div>
+      <div class="fb-eq">außen: Na⁺ hoch, K⁺ tief</div>
+      <div class="fb-desc">Na⁺/K⁺-ATPase: 3 Na⁺ raus, 2 K⁺ rein pro ATP-Hydrolyse → Ruhepotenzial ≈ −70 mV</div>
+    </div>
+    <div class="cb cb-e">
+      <div class="cb-t">🐴 Eselsbrücke</div>
+      <div class="cb-txt"><strong>„−70 = Schlaf, +35 = Alarm"</strong><br>−70 mV: Neuron schläft (Ruhepotenzial). Beim Reiz öffnen Na⁺-Kanäle → Depolarisation bis +35 mV. Dann schließen und K⁺ raus → zurück.</div>
+    </div>
+    <div class="cb cb-k">
+      <div class="cb-t">📋 Kerncurriculum</div>
+      <div class="cb-txt">Ruhepotenzial und AP erklären · Saltatorische Leitung beschreiben · Synapse und Neurotransmitter · Alles-oder-Nichts-Prinzip bewerten (AFB I–III)</div>
+    </div>
+    <div class="cb cb-w">
+      <div class="cb-t">⚠️ Prüfungsfalle</div>
+      <div class="cb-txt"><strong>Na⁺/K⁺-ATPase ≠ AP-Auslöser!</strong> Die Pumpe erhält das Ruhepotenzial. Das AP wird durch spannungsgesteuerte Kanäle ausgelöst.</div>
+    </div>
+  </div>
+</div>
+
+<div class="sumrow">
+  <div class="sc">
+    <div class="sc-lbl">Ruhepotenzial</div>
+    <div class="sc-val">−70 mV</div>
+    <div class="sc-desc">K⁺-Gleichgewicht + Na⁺/K⁺-Pumpe</div>
+  </div>
+  <div class="sc">
+    <div class="sc-lbl">Schwellenpotenzial</div>
+    <div class="sc-val">≈ −55 mV</div>
+    <div class="sc-desc">Kritischer Wert → AP ausgelöst</div>
+  </div>
+  <div class="sc">
+    <div class="sc-lbl">AP-Maximalwert</div>
+    <div class="sc-val">+35 mV</div>
+    <div class="sc-desc">Na⁺-Einstrom inaktiviert Kanal</div>
+  </div>
+  <div class="sc">
+    <div class="sc-lbl">Refraktärzeit</div>
+    <div class="sc-val">1–3 ms</div>
+    <div class="sc-desc">Kein 2. AP in dieser Phase möglich</div>
+  </div>
+</div>
+
+</body>
+</html>
