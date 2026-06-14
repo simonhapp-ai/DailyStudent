@@ -50,23 +50,23 @@
     </g>
 
     <!-- Node halos -->
-    <g opacity="0.7">
-      <circle cx="256" cy="104" r="22" fill="url(#ng)"/>
-      <circle cx="388" cy="180" r="22" fill="url(#ng)"/>
-      <circle cx="388" cy="332" r="22" fill="url(#ng)"/>
-      <circle cx="256" cy="408" r="22" fill="url(#ng)"/>
-      <circle cx="124" cy="332" r="22" fill="url(#ng)"/>
-      <circle cx="124" cy="180" r="22" fill="url(#ng)"/>
+    <g opacity="0.75">
+      <circle cx="256" cy="104" r="30" fill="url(#ng)"/>
+      <circle cx="388" cy="180" r="30" fill="url(#ng)"/>
+      <circle cx="388" cy="332" r="30" fill="url(#ng)"/>
+      <circle cx="256" cy="408" r="30" fill="url(#ng)"/>
+      <circle cx="124" cy="332" r="30" fill="url(#ng)"/>
+      <circle cx="124" cy="180" r="30" fill="url(#ng)"/>
     </g>
 
     <!-- Node dots -->
     <g fill="#F5C842">
-      <circle cx="256" cy="104" r="10"/>
-      <circle cx="388" cy="180" r="10"/>
-      <circle cx="388" cy="332" r="10"/>
-      <circle cx="256" cy="408" r="10"/>
-      <circle cx="124" cy="332" r="10"/>
-      <circle cx="124" cy="180" r="10"/>
+      <circle cx="256" cy="104" r="15"/>
+      <circle cx="388" cy="180" r="15"/>
+      <circle cx="388" cy="332" r="15"/>
+      <circle cx="256" cy="408" r="15"/>
+      <circle cx="124" cy="332" r="15"/>
+      <circle cx="124" cy="180" r="15"/>
     </g>
 
     <!-- Center glow -->
