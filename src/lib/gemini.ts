@@ -153,31 +153,44 @@ AUFGABENFORMAT:
 - Materialverweise: (M 1), (M 2)
 
 AFB I — Reproduktion (4–8 BE):
-Operatoren: nennen, beschreiben, skizzieren, zusammenfassen, darstellen, angeben
-KEIN Material. Direktes Fachwissen.
+Operatoren (Textfächer): nennen, beschreiben, skizzieren, zusammenfassen, darstellen, angeben
+Operatoren (Mathematik): nennen, angeben, berechnen (Standardalgorithmus), skizzieren, einsetzen
+KEIN Material. Direktes Fachwissen oder Standardverfahren.
 
 AFB II — Transfer (8–12 BE):
-Operatoren: erläutern, erklären, auswerten, vergleichen, ermitteln, bestätigen, herleiten, interpretieren
-MIT Material ODER Transferkontext direkt in der Aufgabe (Szenario, Vergleich, selbstgewähltes Beispiel).
+Operatoren (Textfächer): erläutern, erklären, auswerten, vergleichen, ermitteln, bestätigen, herleiten, interpretieren
+Operatoren (Mathematik): beschreiben, begründen, überprüfen, darstellen, zeichnen, untersuchen
+MIT Material ODER Transferkontext / Sachzusammenhang direkt in der Aufgabe.
 
 AFB III — Bewertung (8–12 BE):
-Operatoren: beurteilen, bewerten, Stellung nehmen, erörtern, prüfen, entwickeln (Hypothese)
-Optional Material. Eigenständiges Urteil gefordert.
+Operatoren (Textfächer): beurteilen, bewerten, Stellung nehmen, erörtern, prüfen, entwickeln (Hypothese)
+Operatoren (Mathematik): beweisen, beurteilen, diskutieren, interpretieren, verallgemeinern
+Optional Material. Eigenständiges Urteil oder mathematischer Beweis gefordert.
 
-MATERIALREGELN:
+MATERIALREGELN (Naturwissenschaften & Mathematik):
 - Datentabelle: ≥6 Messpunkte, realistische Werte mit Einheiten, erkennbarer Trend
 - Diagramm: Als Text beschrieben, Achsenbeschriftung+Einheiten, Zahlenwerte
 - Versuchsaufbau: Bauteile mit Messwerten, klare Schritte
-- Informationstext: 3–6 Sätze, neue Fachinfo die NICHT die Antwort vorwegnimmt
 - Formeln: nur Unicode (x², √, π, ∫, ·, ≈, →, Δ) — KEIN LaTeX
+
+MATERIALREGELN (Geistes- & Sprachwissenschaften):
+- Sachtext/Zeitungsartikel: ca. 250–350 Wörter, klar strukturiert, fachlich relevant
+- Literarischer Text: Textauszug mit Autor und Jahreszahl, ggf. Textsortenhinweis
+- Politische Rede / Philosophischer Text: direktes Zitat oder Paratext, klar abgegrenzt
+- Statistik: einfache Tabelle mit Prozentwerten oder Fallzahlen, Quelle angeben
+- KEINE naturwissenschaftlichen Messreihen oder Laborversuchsbeschreibungen
 
 FACHSPEZIFISCH:
 Bio: I=Schemata/Prozesse; II=Materialauswertung+Fachwissen; III=Hypothesen/Ethik
 Physik: I=Begriffe/Schaltpläne; II=Messwerte auswerten/Gleichungen herleiten; III=Hypothesen
-Mathe: I=ohne GTR; II=Sachaufgabe+GTR; III=Begründen ohne Rechnung. Formeln in Unicode.
-Religion: I=Theologenpositionen; II=Vergleiche/biblische Bezüge; III=Ethische Erörterung
-Geschichte: I=Ereignisse/Begriffe; II=Quellen auswerten; III=These erörtern
-Englisch: Aufgaben auf ENGLISCH. I=Comprehension; II=Analysis; III=Comment
+Chemie: I=Reaktionsgleichungen/Strukturformeln; II=Experiment auswerten; III=Hypothesen/Bewertung
+Mathe: I=Standardverfahren ohne GTR, Operatoren nennen/angeben/berechnen/skizzieren; II=Sachaufgabe mit GTR, Operatoren begründen/überprüfen/beschreiben; III=Verallgemeinern/Beweisen ohne Rechnung, Operatoren beweisen/diskutieren/interpretieren. Formeln in Unicode.
+Deutsch: I=Wiedergabe/Beschreibung; II=Analyse/Interpretation des Textes; III=Erörterung/Stellungnahme. Material=Literarischer Text oder Sachtext ca. 300 Wörter.
+Englisch: Aufgaben auf ENGLISCH. I=Comprehension; II=Analysis; III=Comment. Material=English text ca. 300 words.
+Französisch/Spanisch/Latein: Aufgaben in Zielsprache. Material=Authentischer Originaltext.
+Geschichte: I=Ereignisse/Begriffe; II=Quelle auswerten; III=These erörtern. Material=Historische Quelle oder Historikertext ca. 250 Wörter.
+Politik: I=Sachkenntnis; II=Quelle/Daten auswerten; III=Politisches Urteil. Material=Zeitungsartikel oder Statistik.
+Philosophie/Religion/Ethik: I=Position darstellen; II=Vergleichen/Analysieren; III=Ethische Erörterung. Material=Philosophischer Text oder Zitat.
 
 Jedes Material in mind. 1 Aufgabe referenziert. Antworte ausschließlich mit validem JSON.`
 
@@ -212,16 +225,29 @@ function parseExam(raw: unknown, subject: string, subjectId: string, topic: stri
 }
 
 export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData): Promise<GeneratedExam> {
+  const isMath = subjectId === 'mathematik'
+
   const materialRule = afb === 'I'
     ? 'Kein Material (leeres Array).'
     : afb === 'II'
-      ? 'Genau 1 passendes Material (Tabelle oder Text).'
+      ? isMath
+        ? 'Optional: 1 Sachkontext (kurze Textbeschreibung einer realen Situation, KEINE Messreihe).'
+        : 'Genau 1 passendes Material (Tabelle oder Text).'
       : 'Optional 1 Material wenn nötig, sonst leer.'
+
+  const operatorHint = isMath
+    ? afb === 'I'
+      ? 'Operator muss einer sein von: nennen, angeben, berechnen, skizzieren, einsetzen. Standardalgorithmus anwenden.'
+      : afb === 'II'
+      ? 'Operator muss einer sein von: beschreiben, begründen, überprüfen, darstellen, zeichnen, untersuchen. Sachzusammenhang herstellen.'
+      : 'Operator muss einer sein von: beweisen, beurteilen, diskutieren, interpretieren, verallgemeinern. Mathematisches Argument ohne reines Rechnen.'
+    : ''
+
   const beRange = afb === 'I' ? '4–8' : '8–12'
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
   const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${kcBlock}
+    `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
 
 JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":[]}],"totalBE":8}`)
   return parseExam(raw, subject, subjectId, topic, 1)
@@ -247,14 +273,31 @@ JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","content":"..."},{
 
 export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
+
+  const isHumanities = [
+    'deutsch', 'englisch', 'franzoesisch', 'latein', 'spanisch', 'russisch', 'italienisch',
+    'griechisch', 'japanisch', 'geschichte', 'politik', 'philosophie', 'ethik', 'werteUndNormen',
+    'religion', 'seminarfach',
+  ].includes(subjectId)
+
+  const materialSpec = isHumanities
+    ? `M1=Authentischer Fachtext (ca. 250–350 Wörter, Sachtext/Zeitungsartikel/Quelle/Zitat/Literaturtext — je nach Fach), M2=optional (Statistik, zweiter Textauszug oder entfällt).`
+    : `M1=Kontexttext oder Versuchsaufbau, M2=Daten (Messdaten-Tabelle oder Diagramm mit ≥6 Werten), M3=optional.`
+
+  const taskSpec = isHumanities
+    ? `Aufg.1 AFB I 6–8 BE: Textinhalt wiedergeben / Fachwissen darstellen (kein Materialbezug).
+Aufg.2 AFB II 10–14 BE: Text analysieren / interpretieren / Fachwissen anwenden (Materialbezug M1).
+Aufg.3 AFB III 8–12 BE: Erörtern / Stellungnahme / Urteil über das Material hinaus.`
+    : `Aufg.1 AFB I 6–8 BE: Fachwissen zum Materialverständnis (kein Materialbezug).
+Aufg.2 AFB II 10–12 BE: Material direkt auswerten + Fachwissen verknüpfen (M1+M2).
+Aufg.3 AFB III 8–10 BE: Über Material hinaus (Hypothese, Bewertung, Stellungnahme).`
+
   const raw = await examFetch(GENERATION_SYSTEM,
     `Fach: ${subject} | Thema: ${topic} | Modus: Materialklausur${kcBlock}
-Regeln: M1=Kontext (Text/Versuch), M2=Daten (Tabelle/Diagramm), M3=optional.
-Aufg.1 AFB I 6–8 BE: Fachwissen nötig zum Materialverständnis (kein Materialbezug).
-Aufg.2 AFB II 10–12 BE: Material direkt auswerten + Fachwissen verknüpfen.
-Aufg.3 AFB III 8–10 BE: Über Material hinaus (Hypothese, Bewertung, Stellung).
+Materialien: ${materialSpec}
+${taskSpec}
 
-JSON: {"materials":[{"id":"M1","title":"...","type":"text","content":"..."},{"id":"M2","title":"...","type":"tabelle","content":"..."}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1","M2"]},{"id":"t3","label":"3","afb":"III","operator":"Entwickeln","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":28}`)
+JSON: {"materials":[{"id":"M1","title":"...","type":"text","content":"..."}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`)
   return parseExam(raw, subject, subjectId, topic, 3)
 }
 
