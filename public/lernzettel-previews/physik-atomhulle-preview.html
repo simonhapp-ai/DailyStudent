@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Atomhülle &amp; Potenzialtopf — Physik LK Vorschau</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI','Helvetica Neue',Arial,sans-serif;background:#fff;color:#1a1f2e;font-size:15px;line-height:1.65}
+.topbar{background:#1a3d6b;color:#fff;padding:0 24px;height:52px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(26,61,107,.3)}
+.subj{font-size:11px;font-weight:700;padding:3px 10px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:20px;white-space:nowrap}
+.ttl{font-size:13px;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chips{display:flex;gap:6px;margin-left:auto}
+.chip{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap}
+.cl{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#e8f0ff}
+.cd{background:rgba(201,185,154,.2);border:1px solid rgba(201,185,154,.35);color:#e8d5b8}
+
+.hero{border-left:5px solid #1a3d6b;padding:16px 22px;background:#eef3fa;margin:22px 24px 18px;border-radius:0 8px 8px 0}
+.hero-ey{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#2a5298;margin-bottom:5px}
+.hero-ti{font-size:21px;font-weight:800;color:#1a3d6b;line-height:1.2;margin-bottom:7px;font-family:Georgia,'Times New Roman',serif}
+.hero-me{font-size:11.5px;color:#6b7280;display:flex;gap:14px;flex-wrap:wrap}
+
+.sec-hd{display:flex;align-items:flex-start;gap:12px;margin:20px 24px 14px;padding-bottom:12px;border-bottom:2px solid #d0dff5}
+.sec-num{width:34px;height:34px;background:#1a3d6b;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0;font-family:Georgia,serif}
+.sec-ti{font-size:19px;font-weight:700;color:#1a3d6b;font-family:Georgia,serif}
+.sec-su{font-size:12px;color:#6b7280;margin-top:2px}
+
+.bt{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#2a5298;margin:0 24px 8px;display:flex;align-items:center;gap:5px}
+.bt::before{content:'';display:block;width:14px;height:2px;background:#4a72b8}
+p{margin:0 24px 10px;font-size:13.5px;line-height:1.65}
+
+.dw{background:#fff;border:1.5px solid #d1dae8;border-radius:8px;padding:12px;margin:14px 24px;overflow:hidden}
+.dc{font-size:11px;color:#6b7280;text-align:center;margin-top:7px;font-style:italic;line-height:1.4}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="subj">Physik LK</span>
+  <span class="ttl">Atomhülle — Potenzialtopf &amp; Spektren</span>
+  <div class="chips">
+    <span class="chip cl">gA · Grundlegendes Niveau</span>
+    <span class="chip cd">📅 19.04.2026</span>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-ey">Physik GK Niedersachsen · Qualifikationsphase · gA · KW 16</div>
+  <div class="hero-ti">Atomhülle II — Potenzialtopf &amp; Energieniveaus</div>
+  <div class="hero-me">
+    <span>📅 19.04.2026 · Block 3+4</span>
+    <span>🎯 Grundlegendes Anforderungsniveau (gA)</span>
+    <span>📚 KC: Atomhülle, Spektren</span>
+  </div>
+</div>
+
+<div class="sec-hd">
+  <div class="sec-num">1</div>
+  <div>
+    <div class="sec-ti">Potenzialtopf-Modell</div>
+    <div class="sec-su">Diskrete Energieniveaus durch stehende Materiewellen</div>
+  </div>
+</div>
+
+<div class="bt">Quantisierung der Energie</div>
+<p>Im Potenzialtopf-Modell sind nur stehende Materiewellen mit <strong>n · (λ/2) = L</strong> erlaubt. Das erzwingt diskrete Energieniveaus: <strong>E<sub>n</sub> = n² · E<sub>1</sub></strong>. Mit steigendem n wächst die Energie quadratisch und die Knotenanzahl nimmt um je 1 zu.</p>
+
+<div class="dw">
+  <svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Arial,sans-serif">
+    <rect width="700" height="380" fill="#ffffff"/>
+    <text x="350" y="22" font-size="12" fill="#1a3d6b" text-anchor="middle" font-weight="700">Eindimensionaler Potenzialtopf: Energieniveaus &amp; Wellenfunktionen</text>
+    <rect x="130" y="40" width="14" height="290" fill="#1a3d6b"/>
+    <rect x="456" y="40" width="14" height="290" fill="#1a3d6b"/>
+    <line x1="130" y1="330" x2="470" y2="330" stroke="#1a3d6b" stroke-width="3"/>
+    <line x1="110" y1="330" x2="490" y2="330" stroke="#4b5563" stroke-width="1.5"/>
+    <defs><marker id="ap1" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#4b5563"/></marker></defs>
+    <line x1="115" y1="330" x2="115" y2="90" stroke="#4b5563" stroke-width="1.5" marker-end="url(#ap1)"/>
+    <text x="108" y="200" font-size="11" fill="#4b5563" text-anchor="middle" transform="rotate(-90,108,200)">Energie E</text>
+    <line x1="144" y1="295" x2="456" y2="295" stroke="#1a3d6b" stroke-width="2.5"/>
+    <path d="M144,295 Q230,245 300,295 Q370,345 456,295" fill="none" stroke="#1a3d6b" stroke-width="2" stroke-dasharray="5,2" opacity=".6"/>
+    <line x1="144" y1="230" x2="456" y2="230" stroke="#2563eb" stroke-width="2.5"/>
+    <path d="M144,230 Q185,195 222,230 Q259,265 300,230 Q341,195 378,230 Q415,265 456,230" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="5,2" opacity=".6"/>
+    <line x1="144" y1="148" x2="456" y2="148" stroke="#7c3aed" stroke-width="2.5"/>
+    <path d="M144,148 Q172,116 200,148 Q228,180 256,148 Q284,116 312,148 Q340,180 368,148 Q396,116 424,148 Q452,180 456,148" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="5,2" opacity=".6"/>
+    <line x1="144" y1="90" x2="456" y2="90" stroke="#ef4444" stroke-width="2.5"/>
+    <line x1="470" y1="295" x2="520" y2="295" stroke="#1a3d6b" stroke-width="1" stroke-dasharray="3,2"/>
+    <rect x="520" y="283" width="165" height="24" rx="4" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1"/>
+    <text x="602" y="295" font-size="10" fill="#1a3d6b" text-anchor="middle" font-weight="700">n=1: E₁ (Grundzustand)</text>
+    <line x1="470" y1="230" x2="520" y2="230" stroke="#2563eb" stroke-width="1" stroke-dasharray="3,2"/>
+    <rect x="520" y="218" width="165" height="24" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1"/>
+    <text x="602" y="230" font-size="10" fill="#1d4ed8" text-anchor="middle" font-weight="700">n=2: E₂ = 4·E₁</text>
+    <line x1="470" y1="148" x2="520" y2="148" stroke="#7c3aed" stroke-width="1" stroke-dasharray="3,2"/>
+    <rect x="520" y="136" width="165" height="24" rx="4" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1"/>
+    <text x="602" y="148" font-size="10" fill="#5b21b6" text-anchor="middle" font-weight="700">n=3: E₃ = 9·E₁</text>
+    <line x1="470" y1="90" x2="520" y2="90" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+    <rect x="520" y="78" width="165" height="24" rx="4" fill="#fdf0ee" stroke="#9e2a1c" stroke-width="1"/>
+    <text x="602" y="90" font-size="10" fill="#9e2a1c" text-anchor="middle" font-weight="700">n=4: E₄ = 16·E₁</text>
+    <text x="300" y="312" font-size="9.5" fill="#6b7280" text-anchor="middle">n=1: 0 Knoten</text>
+    <text x="300" y="247" font-size="9.5" fill="#2563eb" text-anchor="middle">n=2: 1 Knoten</text>
+    <text x="300" y="165" font-size="9.5" fill="#7c3aed" text-anchor="middle">n=3: 2 Knoten</text>
+    <line x1="144" y1="342" x2="456" y2="342" stroke="#6b7280" stroke-width="1.5"/>
+    <line x1="144" y1="337" x2="144" y2="347" stroke="#6b7280" stroke-width="1.5"/>
+    <line x1="456" y1="337" x2="456" y2="347" stroke="#6b7280" stroke-width="1.5"/>
+    <text x="300" y="360" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="600">L (Breite des Potenzialtopfs)</text>
+    <rect x="130" y="45" width="140" height="35" rx="4" fill="#eef3fa" stroke="#1a3d6b" stroke-width="1"/>
+    <text x="200" y="58" font-size="10" fill="#1a3d6b" text-anchor="middle" font-weight="700">Eₙ = n² · E₁</text>
+    <text x="200" y="73" font-size="9" fill="#6b7280" text-anchor="middle">quadratische Abhängigkeit!</text>
+  </svg>
+  <div class="dc">Nur stehende Materiewellen mit n·(λ/2)=L passen in den Topf → diskrete Energieniveaus E=n²·E₁. Mit steigendem n wächst die Energie quadratisch, die Knotenanzahl nimmt um 1 zu.</div>
+</div>
+
+</body>
+</html>

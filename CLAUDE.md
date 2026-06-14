@@ -67,7 +67,7 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~98% (Stand: 13.06.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 14.06.2026)
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
@@ -99,7 +99,7 @@ Smart Notes
 - **`src/lib/supabaseSync.ts`** ✅ — Sync Queue mit Retry für alle Operationen inkl. `syncGradeData`
 - **`supabase/migrations/001_initial_schema.sql`** ✅ — Vollständiges DB-Schema mit 13 Tabellen, RLS, Trigger
 - **`supabase/migrations/002_grade_data.sql`** ✅ — Dedizierte `grade_data` Tabelle — ANGEWENDET 09.06.2026
-- **`supabase/migrations/003_custom_faecher.sql`** ⚠️ — `custom_faecher JSONB` Spalte in `profiles` — **NOCH NICHT ANGEWENDET** → `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_faecher JSONB DEFAULT NULL;`
+- **`supabase/migrations/003_custom_faecher.sql`** ✅ — `custom_faecher JSONB` Spalte in `profiles` — **ANGEWENDET 14.06.2026**
 - **`supabase/functions/groq-proxy/`** ✅ — deployed
 - **`supabase/functions/gemini-proxy/`** ✅ — deployed
 - **`supabase/functions/create-checkout-session/`** ✅ — Stripe Checkout, Live-Mode aktiv
@@ -113,7 +113,7 @@ Smart Notes
 - **Rechtliches — vollständig** ✅:
   - `ImpressumScreen` (`/profil/impressum`) — echte Daten, Steuernummer noch ausstehend
   - `DatenschutzScreen` (`/profil/datenschutz`) — 10 Abschnitte, DSGVO-konform, Account-Lösch-Button
-  - `AGBScreen` (`/profil/agb`) — 28 Sektionen, Termly-generiert
+  - `AGBScreen` (`/profil/agb`) — 29 Sektionen (inkl. 22a KI-Haftungsausschluss), Termly-generiert; Streitschlichtungshinweis (OS-Plattform) entfernt (Abmahngefahr)
   - Account-Löschung: DSGVO Art. 17 via `delete-account` Edge Function ✅ deployed
 - **LandingScreen** ✅ (`/landing`) — öffentliche Marketing-Seite, Framer Motion, Floating Bubble Navbar, Hero, Features, Pricing, Footer; conditional root: Unauthenticated → `/landing`, authenticated → App
 - **Bug-Report Widget** ✅ — Accordion-Card in ProfilScreen (kein Floating Button mehr), EmailJS
@@ -122,6 +122,11 @@ Smart Notes
 - **Custom Fächer Supabase-Sync** ✅ — `custom_faecher JSONB` Column via Migration `003_custom_faecher.sql`; SQL angewendet 14.06.2026
 - **Landing Page Scroll-Animationen** ✅ — `FadeUp` bidirektional (`once: false`), reverse beim Hochscrollen, kein Stagger beim Exit
 - **Rechtliches-Sektion im ProfilScreen** ✅ — Impressum, Datenschutz, AGB in eigene Sektion ganz unten ausgelagert
+- **Touch-Animation Polish** ✅ — `.press:active` auf `scale(0.985)`, `hover-lift` nur mit `@media (hover: hover) and (pointer: fine)` → kein Distorting auf Touchscreens
+- **Karteikarten-Generator Rewrite** ✅ — 3-Schritt-Flow: Fach → Notizen (Multi-Select) → Methode (KI/Manuell); wählbare Anzahl (5/10/15/20); manuelle Karten per Textarea-Paare; Custom Fächer via `resolveSubjectInfo()` sichtbar; Flip-Bug gefixt (`key={cardIndex}`)
+- **Probeklausur AFB-Operatoren Mathe** ✅ — `GENERATION_SYSTEM` in `gemini.ts` mit separaten Operator-Listen für Textfächer vs. Mathematik (AFB I–III)
+- **Probeklausur Mode 3 Materialtyp-Branching** ✅ — Geisteswissenschaften/Sprachen: Sachtext ~300 Wörter; Naturwissenschaften/Mathe: Messreihen + Tabellen
+- **Pro Lernzettel Preview** ✅ — `LernzettelScreen`: horizontales Karussell mit 4 Original-Lernzettel-HTMLs (aus Uploads extrahiert), skaliert als Preview-Cards; Fullscreen-Modal mit scrollbarem iframe; Gold-"Pro Lernzettel"-Badge in Topbar der HTMLs; CTA nur für Free-User; "Tippen zum Anzeigen" Caption
 
 ### Paywall-Strategie (Stand 10.06.2026):
 
@@ -152,24 +157,20 @@ Smart Notes
 
 ### To-Do — Priorisiert (Stand: 14.06.2026):
 
-#### Rechtlich / Dringend:
-1. **Impressum + AGB aktualisieren** — Streitschlichtungshinweis (OS-Plattform / §36 VSBG) **ENTFERNEN** — wurde abgeschaltet, darf nicht mehr angezeigt werden, sonst Abmahngefahr. Beide Screens durchgehen und bereinigen.
-
 #### UX / Features:
-2. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige (heute hervorgehoben, nächste Stunde prominent), Quick-Actions klarer, Klausur-Countdown prominenter
-3. **Tutorial / Onboarding-Walkthrough** — nach dem Onboarding einen kurzen interaktiven Tutorial-Modus: zeigt die wichtigsten Screens (Unterricht → Smart Note → Karteikarten → Klausurmodus), max. 4–5 Schritte, überspringbar, nur beim ersten Login
-4. **Lernplan funktionieren lassen** — Flow komplett testen: Konfigurator → Gemini → Detailansicht → Kalender-Export, bekannte Bugs fixen
-5. **Beta-Referral-System** — siehe Roadmap unten, vollständige Spec
-6. **Claude Lernzettel Preview** — Teaser-Card in LernzettelScreen ("Nächstes Update"-Badge)
-7. **Notenrechner UI** — ausklappbare Fach-Kacheln, Farbcoding grün/orange/rot
-8. **Import-Flow** — vollständig testen + Bugs fixen
-9. **Email Confirmation Flow** — Hinweis nach Signup
-10. **Design-Anpassungen** — allgemeines UI-Polish (zu klären welche Screens)
+1. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige (heute hervorgehoben, nächste Stunde prominent), Quick-Actions klarer, Klausur-Countdown prominenter
+2. **Tutorial / Onboarding-Walkthrough** — nach dem Onboarding einen kurzen interaktiven Tutorial-Modus: zeigt die wichtigsten Screens (Unterricht → Smart Note → Karteikarten → Klausurmodus), max. 4–5 Schritte, überspringbar, nur beim ersten Login
+3. **Lernplan funktionieren lassen** — Flow komplett testen: Konfigurator → Gemini → Detailansicht → Kalender-Export, bekannte Bugs fixen
+4. **Beta-Referral-System** — siehe Roadmap unten, vollständige Spec
+5. **Notenrechner UI** — ausklappbare Fach-Kacheln, Farbcoding grün/orange/rot
+6. **Landing Page Content** — Hero-Text, Feature-Sektionen, Social Proof verbessern
+7. **Import-Flow** — vollständig testen + Bugs fixen
+8. **Email Confirmation Flow** — Hinweis nach Signup
 
 #### Nach Launch:
-11. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
-12. **Push-Benachrichtigungen**
-13. **Studentenadaption**
+9. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
+10. **Push-Benachrichtigungen**
+11. **Studentenadaption**
 
 ---
 
@@ -420,7 +421,8 @@ src/
 └── types/
     └── index.ts                   # Alle TypeScript-Typen
 public/
-└── kc/                            # KC-JSONs: 16 Bundesländer × ~12 Fächer = ~196 Dateien
+├── kc/                            # KC-JSONs: 16 Bundesländer × ~12 Fächer = ~196 Dateien
+└── lernzettel-previews/           # 4 Original-Lernzettel-HTMLs für Pro Preview Karussell
 supabase/
 ├── migrations/
 │   ├── 001_initial_schema.sql     # 13 Tabellen, RLS, Trigger — ANGEWENDET
@@ -490,33 +492,36 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ---
 
-## Letzte Session (13.06.2026)
+## Letzte Session (14.06.2026)
 
-**UX-Polish, Landing Page, Icon-Updates, Custom Fächer Fix**
+**Feinschliff vor Launch — AGB, Karteikarten, Probeklausur, Pro Lernzettel Preview**
 
-**1. Landing Page (`LandingScreen.tsx`)**
-- Öffentliche Route `/landing` — Framer Motion Animationen, Hero, 4 Feature-Sections mit App-Mockups, Pricing, Footer
-- Floating Bubble Navbar: `fixed top-4`, `max-w-[800px] mx-auto`, `rounded-2xl`, Glassmorphism — löst Phone-Statusbar-Konflikt
-- Authenticated users → Sidebar bypass in `App.tsx` Layout; CTA "App öffnen" → navigiert zu Dashboard/Unterricht wenn eingeloggt
-- Logo.png statt 🎓 Emoji in Navbar und Footer
+**1. AGB & Rechtliches**
+- Streitschlichtungshinweis (OS-Plattform / §36 VSBG) aus `AGBScreen` entfernt — Abmahngefahr beseitigt
+- Neue Sektion 22a „Haftungsausschluss für KI-generierte Inhalte" eingefügt — keine Haftung für Noten/Prüfungsergebnisse
+- AGB jetzt 29 Sektionen
 
-**2. Nav UX — Emil Kowalski Style**
-- Hover-Scale `transform: scale(1.08)` auf `.nav-btn:hover` — sichtbares Feedback wenn Cursor über Nav-Button
-- `.nav-active` CSS-Klasse ersetzt inline `background` Style → CSS-Hover-Regeln feuern jetzt korrekt
-- Gold Pro Badge (`.badge-pro-gold`) mit 10s-Shimmer-Zyklus in Sidebar + ProfilScreen
-- `BottomNav` + `DesktopSidebar` (narrow + wide) gepatcht
+**2. Touch-Animation Polish**
+- `.press:active` → `scale(0.985)`, `.press-sm:active` → `scale(0.99)` (weniger aggressiv)
+- `.hover-lift:hover` nur noch unter `@media (hover: hover) and (pointer: fine)` aktiv → kein Distorting auf iPads/Touchscreens
 
-**3. App Icons**
-- `public/icon.svg` neu: Center-Orb (goldener radialer Gradient) + 6 Hex-Nodes + Spokes, dark purple Hintergrund — passt zum Logo-Motiv
-- `logo.png` in Sidebar und Landing-Navbar via `scale(1.38) overflow-hidden` gezoomt (Logo hat zu viel Padding)
+**3. Karteikarten-Generator Rewrite (`FlashCardGeneratorScreen.tsx`)**
+- 3-Schritt-Flow: **Fach → Notizen → Methode** mit Progress-Bar
+- Schritt 2: Multi-Select mit Kreis-Checkboxen — mehrere Notizen gleichzeitig für ein Deck auswählen
+- Schritt 3: Tab-Switcher KI / Manuell
+  - KI: Chip-Buttons für 5 / 10 / 15 / 20 Karten; bei Multi-Select wird `ceil(count/notes)` Karten je Notiz generiert und auf Zielanzahl beschnitten
+  - Manuell: Textarea-Paare (Vorderseite / Rückseite) mit + / − Buttons
+- Custom Fächer via `resolveSubjectInfo()` korrekt angezeigt (vorher nur `subjects[]`-Array → Custom-IDs fehlten)
+- **Flip-Bug gefixt:** `key={cardIndex}` auf `<FlashCard>` → Karte wird bei Weitergehen neu gemountet, Flip-State resettet
 
-**4. Custom Fächer — Datenverlust behoben + UI-Redesign**
-- Migration `003_custom_faecher.sql`: `ALTER TABLE profiles ADD COLUMN IF NOT EXISTS custom_faecher JSONB DEFAULT NULL;` — **manuell in Supabase anwenden!**
-- `syncProfile()` schreibt `custom_faecher`, `mapProfile()` liest es zurück → kein Datenverlust nach Logout
-- Retry Queue ebenfalls gepatcht
-- `FaecherEditScreen`: Full-Screen-Modal → Inline-Accordion-Widget; Chevron-Rotation, AnimatePresence, Chips-Ansicht im collapsed State
+**4. Probeklausur KI-Qualität (`gemini.ts`)**
+- `GENERATION_SYSTEM` erweitert: separate AFB I/II/III Operator-Listen für **Textfächer** vs. **Mathematik**
+- Mode 3 Materialklausur: `isHumanities`-Flag → Geisteswissenschaften/Sprachen bekommen Sachtext (~300 Wörter), Naturwissenschaften/Mathe bekommen Messreihen + Tabellen
 
-**Offene TODOs:**
-- Supabase Migration 003 manuell anwenden (SQL Editor)
-- Rechtliche Links in ProfilScreen in eigene "Rechtliches"-Sektion verschieben
-- Lernplan-Flow testen und Bugs fixen
+**5. Pro Lernzettel Preview (`LernzettelScreen.tsx` + `public/lernzettel-previews/`)**
+- 4 Original-Lernzettel-HTMLs (aus Konversations-Transkript extrahiert) in `public/lernzettel-previews/`
+- Horizontales Karussell: iframe-Cards (308×193px, scale 0.321) mit Bottom-Fade, Subject-Badge, Gold-PRO-Shimmer-Badge
+- Pro-Badge in Topbar aller 4 HTML-Dateien injiziert (Python-Script)
+- Kartenklick → Fullscreen-Modal: Bottom Sheet, farbiger Header-Streifen, scrollbarer iframe `height: calc(92vh - 56px)`
+- „Tippen zum Anzeigen"-Caption unter jede Karte
+- CTA-Button „Pro freischalten" nur für Free-User sichtbar; Karussell immer sichtbar (auch für Pro)

@@ -13,28 +13,32 @@ type View = 'library' | 'detail'
 const PREVIEWS = [
   {
     id: 'physik-quanten',
-    src: '/lernzettel-previews/physik-quantenobjekte.html',
+    src: '/lernzettel-previews/physik-quantenobjekte-preview.html',
+    fullSrc: '/lernzettel-previews/physik-quantenobjekte.html',
     subject: 'Physik LK',
     title: 'Quantenobjekte & Doppelspalt',
     color: '#1a3d6b',
   },
   {
     id: 'bio-oeko',
-    src: '/lernzettel-previews/bio-oekologie.html',
+    src: '/lernzettel-previews/bio-oekologie-preview.html',
+    fullSrc: '/lernzettel-previews/bio-oekologie.html',
     subject: 'Biologie LK',
     title: 'Kohlenstoffkreislauf & Ökosysteme',
     color: '#2a6e4a',
   },
   {
     id: 'bio-neuro',
-    src: '/lernzettel-previews/bio-neurobiologie.html',
+    src: '/lernzettel-previews/bio-neurobiologie-preview.html',
+    fullSrc: '/lernzettel-previews/bio-neurobiologie.html',
     subject: 'Biologie LK',
     title: 'Neurobiologie & Aktionspotenzial',
     color: '#2a6e4a',
   },
   {
     id: 'physik-atom',
-    src: '/lernzettel-previews/physik-atomhulle.html',
+    src: '/lernzettel-previews/physik-atomhulle-preview.html',
+    fullSrc: '/lernzettel-previews/physik-atomhulle.html',
     subject: 'Physik LK',
     title: 'Atommodelle & Energieniveaus',
     color: '#1a3d6b',
@@ -517,7 +521,7 @@ export function LernzettelScreen() {
             </div>
             {/* iframe — explizite Höhe damit Scroll funktioniert */}
             <iframe
-              src={openPreview.src}
+              src={openPreview.fullSrc}
               title={openPreview.title}
               style={{ width: '100%', height: 'calc(92vh - 56px)', border: 'none', display: 'block' }}
             />
