@@ -10,32 +10,30 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1e293b;font-size:14px;line-height:1.55}
   .topbar{background:#1a3d6b;color:#fff;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
+  .t-left{display:flex;align-items:center;gap:10px}
   .t-sub{font-size:18px;font-weight:700;letter-spacing:-.3px}
+  .t-topic{font-size:12px;font-weight:500;color:rgba(255,255,255,.7)}
   .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
   .chip-w{background:rgba(255,255,255,.18);color:#fff}
   .chip-g{background:linear-gradient(135deg,#c8860a,#f5c842);color:#3b1f00}
-  .hero{background:linear-gradient(135deg,#f8faff,#e8f0fc);border-left:5px solid #1a3d6b;padding:22px 36px}
-  .h-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1a3d6b;margin-bottom:6px}
-  .h-title{font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:900;color:#1a3d6b;line-height:1.15;margin-bottom:8px}
-  .h-sub{font-size:13px;color:#64748b;line-height:1.5}
-  .main{padding:22px 36px;display:grid;grid-template-columns:1.4fr 1fr;gap:24px}
+  .main{padding:18px 36px 18px;display:grid;grid-template-columns:1.45fr 1fr;gap:22px}
   .diag-box{background:#e8f0fc;border:1.5px solid #c5d8f8;border-radius:10px;padding:16px}
   .diag-title{font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:700;color:#1a3d6b;margin-bottom:12px}
-  .rcol{display:flex;flex-direction:column;gap:12px}
-  .fb{background:#f8faff;border:1.5px solid #1a3d6b;border-left-width:4px;border-radius:8px;padding:13px 15px}
-  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1a3d6b;margin-bottom:8px}
+  .rcol{display:flex;flex-direction:column;gap:11px}
+  .fb{background:#f8faff;border:1.5px solid #1a3d6b;border-left-width:4px;border-radius:8px;padding:12px 14px}
+  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1a3d6b;margin-bottom:7px}
   .fb-eq{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:#1a3d6b;margin-bottom:4px}
   .fb-desc{font-size:12px;color:#64748b;line-height:1.45}
-  .cb{border-radius:8px;padding:12px 14px}
+  .cb{border-radius:8px;padding:11px 13px}
   .cb-e{background:#fffbeb;border-left:4px solid #d97706}
   .cb-k{background:#f0fdf4;border-left:4px solid #16a34a}
   .cb-w{background:#fef2f2;border-left:4px solid #dc2626}
   .cb-t{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
   .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-w .cb-t{color:#991b1b}
   .cb-txt{font-size:12.5px;line-height:1.5;color:#1e293b}
-  .sumrow{padding:18px 36px;background:#f8faff;border-top:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .sc{background:#fff;border:1px solid #e2e8f0;border-top:3px solid #1a3d6b;border-radius:7px;padding:11px}
-  .sc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin-bottom:5px}
+  .sumrow{padding:14px 36px;background:#f8faff;border-top:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .sc{background:#fff;border:1px solid #e2e8f0;border-top:3px solid #1a3d6b;border-radius:7px;padding:10px}
+  .sc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin-bottom:4px}
   .sc-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#1a3d6b}
   .sc-desc{font-size:11px;color:#94a3b8;margin-top:3px}
 </style>
@@ -43,65 +41,59 @@
 <body>
 
 <div class="topbar">
-  <div style="display:flex;align-items:center;gap:12px">
+  <div class="t-left">
     <span class="t-sub">Physik LK</span>
     <span class="chip chip-w">Quantenphysik</span>
-    <span class="chip chip-w">Klasse 13 · Niedersachsen</span>
+    <span class="t-topic">Quantenobjekte &amp; Welle-Teilchen-Dualismus</span>
   </div>
   <div style="display:flex;gap:8px;align-items:center">
     <span class="chip chip-g">✦ Pro Lernzettel</span>
-    <span style="font-size:12px;color:rgba(255,255,255,.65)">Klausur: 06.06.2026</span>
+    <span style="font-size:12px;color:rgba(255,255,255,.55)">Klausur: 06.06.2026</span>
   </div>
-</div>
-
-<div class="hero">
-  <div class="h-lbl">Kapitel 4 · Quantenphysik</div>
-  <div class="h-title">Quantenobjekte &amp;<br>Welle-Teilchen-Dualismus</div>
-  <div class="h-sub">Elektronen, Neutronen und Fullerene zeigen Wellen- und Teilcheneigenschaften — je nach Beobachtung. Die de-Broglie-Hypothese verbindet Impuls und Wellenlänge.</div>
 </div>
 
 <div class="main">
   <div>
     <div class="diag-box">
       <div class="diag-title">Doppelspaltversuch mit Quantenobjekten</div>
-      <svg viewBox="0 0 520 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        <rect x="18" y="120" width="48" height="72" rx="5" fill="#1a3d6b" opacity=".9"/>
-        <text x="42" y="161" font-size="10" fill="white" text-anchor="middle" font-weight="700">Quelle</text>
-        <line x1="66" y1="142" x2="155" y2="133" stroke="#2a5a9f" stroke-width="1.5" stroke-dasharray="5,3" opacity=".55"/>
-        <line x1="66" y1="156" x2="155" y2="156" stroke="#2a5a9f" stroke-width="1.5" stroke-dasharray="5,3" opacity=".55"/>
-        <line x1="66" y1="170" x2="155" y2="178" stroke="#2a5a9f" stroke-width="1.5" stroke-dasharray="5,3" opacity=".55"/>
-        <rect x="158" y="22" width="16" height="104" rx="3" fill="#374151"/>
-        <rect x="158" y="184" width="16" height="104" rx="3" fill="#374151"/>
-        <rect x="154" y="130" width="24" height="20" rx="2" fill="#e8f0fc" stroke="#2a5a9f" stroke-width="1.5"/>
-        <rect x="154" y="162" width="24" height="22" rx="2" fill="#e8f0fc" stroke="#2a5a9f" stroke-width="1.5"/>
-        <text x="166" y="144" font-size="9.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">S₁</text>
-        <text x="166" y="177" font-size="9.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">S₂</text>
-        <ellipse cx="166" cy="140" rx="38" ry="20" fill="none" stroke="#3b82f6" stroke-width="1.2" opacity=".5"/>
-        <ellipse cx="166" cy="140" rx="72" ry="42" fill="none" stroke="#3b82f6" stroke-width="1.1" opacity=".4"/>
-        <ellipse cx="166" cy="140" rx="106" ry="64" fill="none" stroke="#3b82f6" stroke-width="1" opacity=".3"/>
-        <ellipse cx="166" cy="140" rx="142" ry="88" fill="none" stroke="#3b82f6" stroke-width=".9" opacity=".2"/>
-        <ellipse cx="166" cy="174" rx="38" ry="20" fill="none" stroke="#7c3aed" stroke-width="1.2" opacity=".5"/>
-        <ellipse cx="166" cy="174" rx="72" ry="42" fill="none" stroke="#7c3aed" stroke-width="1.1" opacity=".4"/>
-        <ellipse cx="166" cy="174" rx="106" ry="64" fill="none" stroke="#7c3aed" stroke-width="1" opacity=".3"/>
-        <ellipse cx="166" cy="174" rx="142" ry="88" fill="none" stroke="#7c3aed" stroke-width=".9" opacity=".2"/>
-        <rect x="410" y="14" width="11" height="282" rx="3" fill="#374151"/>
-        <rect x="422" y="140" width="38" height="26" rx="3" fill="#1a3d6b" opacity=".95"/>
-        <rect x="422" y="92" width="38" height="17" rx="3" fill="#1a3d6b" opacity=".65"/>
-        <rect x="422" y="193" width="38" height="17" rx="3" fill="#1a3d6b" opacity=".65"/>
-        <rect x="422" y="57" width="38" height="11" rx="3" fill="#1a3d6b" opacity=".38"/>
-        <rect x="422" y="228" width="38" height="11" rx="3" fill="#1a3d6b" opacity=".38"/>
-        <rect x="422" y="30" width="38" height="7" rx="3" fill="#1a3d6b" opacity=".2"/>
-        <rect x="422" y="257" width="38" height="7" rx="3" fill="#1a3d6b" opacity=".2"/>
-        <text x="462" y="165" font-size="10" fill="#1a3d6b" font-weight="700" transform="rotate(90,462,165)">Intensität</text>
-        <rect x="168" y="258" width="220" height="38" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
-        <text x="278" y="273" font-size="10" fill="#92400e" text-anchor="middle" font-weight="700">⚡ Einzelquant-Paradoxon</text>
-        <text x="278" y="289" font-size="9.5" fill="#78350f" text-anchor="middle">Jedes Quant „geht durch beide Spalte gleichzeitig"!</text>
-        <text x="42" y="212" font-size="10" fill="#64748b" text-anchor="middle">Elektronen-</text>
-        <text x="42" y="225" font-size="10" fill="#64748b" text-anchor="middle">kanone</text>
-        <text x="166" y="13" font-size="10" fill="#374151" text-anchor="middle" font-weight="600">Doppelspalt</text>
-        <text x="431" y="8" font-size="10" fill="#374151" text-anchor="middle" font-weight="600">Detektor</text>
+      <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <rect x="18" y="115" width="48" height="72" rx="5" fill="#1a3d6b" opacity=".9"/>
+        <text x="42" y="156" font-size="10" fill="white" text-anchor="middle" font-weight="700">Quelle</text>
+        <line x1="66" y1="137" x2="155" y2="128" stroke="#2a5a9f" stroke-width="1.5" stroke-dasharray="5,3" opacity=".55"/>
+        <line x1="66" y1="151" x2="155" y2="151" stroke="#2a5a9f" stroke-width="1.5" stroke-dasharray="5,3" opacity=".55"/>
+        <line x1="66" y1="165" x2="155" y2="173" stroke="#2a5a9f" stroke-width="1.5" stroke-dasharray="5,3" opacity=".55"/>
+        <rect x="158" y="20" width="16" height="100" rx="3" fill="#374151"/>
+        <rect x="158" y="180" width="16" height="100" rx="3" fill="#374151"/>
+        <rect x="154" y="126" width="24" height="20" rx="2" fill="#e8f0fc" stroke="#2a5a9f" stroke-width="1.5"/>
+        <rect x="154" y="158" width="24" height="22" rx="2" fill="#e8f0fc" stroke="#2a5a9f" stroke-width="1.5"/>
+        <text x="166" y="140" font-size="9.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">S₁</text>
+        <text x="166" y="173" font-size="9.5" fill="#1a3d6b" text-anchor="middle" font-weight="700">S₂</text>
+        <ellipse cx="166" cy="136" rx="38" ry="20" fill="none" stroke="#3b82f6" stroke-width="1.2" opacity=".5"/>
+        <ellipse cx="166" cy="136" rx="72" ry="42" fill="none" stroke="#3b82f6" stroke-width="1.1" opacity=".4"/>
+        <ellipse cx="166" cy="136" rx="108" ry="64" fill="none" stroke="#3b82f6" stroke-width="1" opacity=".28"/>
+        <ellipse cx="166" cy="136" rx="144" ry="88" fill="none" stroke="#3b82f6" stroke-width=".9" opacity=".18"/>
+        <ellipse cx="166" cy="169" rx="38" ry="20" fill="none" stroke="#7c3aed" stroke-width="1.2" opacity=".5"/>
+        <ellipse cx="166" cy="169" rx="72" ry="42" fill="none" stroke="#7c3aed" stroke-width="1.1" opacity=".4"/>
+        <ellipse cx="166" cy="169" rx="108" ry="64" fill="none" stroke="#7c3aed" stroke-width="1" opacity=".28"/>
+        <ellipse cx="166" cy="169" rx="144" ry="88" fill="none" stroke="#7c3aed" stroke-width=".9" opacity=".18"/>
+        <rect x="410" y="12" width="11" height="276" rx="3" fill="#374151"/>
+        <rect x="422" y="137" width="38" height="26" rx="3" fill="#1a3d6b" opacity=".95"/>
+        <rect x="422" y="89" width="38" height="17" rx="3" fill="#1a3d6b" opacity=".65"/>
+        <rect x="422" y="190" width="38" height="17" rx="3" fill="#1a3d6b" opacity=".65"/>
+        <rect x="422" y="55" width="38" height="11" rx="3" fill="#1a3d6b" opacity=".38"/>
+        <rect x="422" y="224" width="38" height="11" rx="3" fill="#1a3d6b" opacity=".38"/>
+        <rect x="422" y="28" width="38" height="7" rx="3" fill="#1a3d6b" opacity=".2"/>
+        <rect x="422" y="253" width="38" height="7" rx="3" fill="#1a3d6b" opacity=".2"/>
+        <text x="462" y="162" font-size="10" fill="#1a3d6b" font-weight="700" transform="rotate(90,462,162)">Intensität</text>
+        <rect x="168" y="252" width="220" height="36" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+        <text x="278" y="267" font-size="10" fill="#92400e" text-anchor="middle" font-weight="700">⚡ Einzelquant-Paradoxon</text>
+        <text x="278" y="282" font-size="9.5" fill="#78350f" text-anchor="middle">Jedes Quant „geht durch beide Spalte gleichzeitig"!</text>
+        <text x="42" y="208" font-size="10" fill="#64748b" text-anchor="middle">Elektronen-</text>
+        <text x="42" y="221" font-size="10" fill="#64748b" text-anchor="middle">kanone</text>
+        <text x="166" y="11" font-size="10" fill="#374151" text-anchor="middle" font-weight="600">Doppelspalt</text>
+        <text x="431" y="6" font-size="10" fill="#374151" text-anchor="middle" font-weight="600">Detektor</text>
         <defs><marker id="arr" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#94a3b8"/></marker></defs>
-        <path d="M 280 157 L 405 157" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+        <path d="M 280 152 L 405 152" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#arr)"/>
       </svg>
     </div>
   </div>
@@ -110,19 +102,19 @@
     <div class="fb">
       <div class="fb-lbl">de-Broglie-Beziehung</div>
       <div class="fb-eq">λ = h / p = h / (m·v)</div>
-      <div class="fb-desc">λ: Wellenlänge | h: Planck-Konstante (6,626·10⁻³⁴ J·s) | p: Impuls | m: Masse | v: Geschwindigkeit</div>
+      <div class="fb-desc">λ: Wellenlänge | h: 6,626·10⁻³⁴ J·s | p: Impuls</div>
     </div>
     <div class="cb cb-e">
       <div class="cb-t">🐴 Eselsbrücke</div>
-      <div class="cb-txt"><strong>„Klein, schnell, masselos = WELLE"</strong><br>Je kleiner die Masse, desto größer λ und desto deutlicher das Interferenzmuster. Elektronen: messbar. Golfball: nicht.</div>
+      <div class="cb-txt"><strong>„Klein, schnell, masselos = WELLE"</strong><br>Je kleiner die Masse, desto größer λ. Elektronen: messbar. Golfball: nicht.</div>
     </div>
     <div class="cb cb-k">
       <div class="cb-t">📋 Kerncurriculum</div>
-      <div class="cb-txt">Doppelspaltversuch beschreiben · de-Broglie-Wellenlänge berechnen · Welle-Teilchen-Dualismus diskutieren (AFB III)</div>
+      <div class="cb-txt">Doppelspalt erklären · de-Broglie berechnen · Dualismus diskutieren (AFB III)</div>
     </div>
     <div class="cb cb-w">
       <div class="cb-t">⚠️ Prüfungsfalle</div>
-      <div class="cb-txt">Quantenobjekte sind <em>nicht</em> Welle UND Teilchen gleichzeitig — je nach Experiment entweder-oder (Komplementarität nach Bohr).</div>
+      <div class="cb-txt">Quantenobjekte sind <em>nicht</em> Welle UND Teilchen gleichzeitig (Komplementarität nach Bohr).</div>
     </div>
   </div>
 </div>
@@ -136,7 +128,7 @@
   <div class="sc">
     <div class="sc-lbl">Wellenlänge Elektron (100 eV)</div>
     <div class="sc-val">λ ≈ 0,12 nm</div>
-    <div class="sc-desc">Vergleichbar mit Gitterabstand → Beugung möglich</div>
+    <div class="sc-desc">Vergleichbar mit Gitterabstand → Beugung</div>
   </div>
   <div class="sc">
     <div class="sc-lbl">Unschärferelation</div>

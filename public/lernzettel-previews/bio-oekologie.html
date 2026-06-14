@@ -10,33 +10,30 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Source Sans 3',system-ui,sans-serif;background:#faf8f4;color:#1c2b1e;font-size:14px;line-height:1.55}
   .topbar{background:#2a6e4a;color:#fff;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
+  .t-left{display:flex;align-items:center;gap:10px}
   .t-sub{font-size:18px;font-weight:700;letter-spacing:-.3px}
+  .t-topic{font-size:12px;font-weight:500;color:rgba(255,255,255,.7)}
   .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
   .chip-w{background:rgba(255,255,255,.18);color:#fff}
   .chip-g{background:linear-gradient(135deg,#c8860a,#f5c842);color:#3b1f00}
-  .hero{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left:5px solid #2a6e4a;padding:22px 36px}
-  .h-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#2a6e4a;margin-bottom:6px}
-  .h-title{font-family:'Lora',Georgia,serif;font-size:30px;font-weight:900;color:#1a4731;line-height:1.15;margin-bottom:8px}
-  .h-sub{font-size:13px;color:#4b7358;line-height:1.5}
-  .main{padding:22px 36px;display:grid;grid-template-columns:1.4fr 1fr;gap:24px}
+  .main{padding:18px 36px;display:grid;grid-template-columns:1.45fr 1fr;gap:22px}
   .diag-box{background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;padding:16px}
   .diag-title{font-family:'Lora',Georgia,serif;font-size:13px;font-weight:700;color:#1a4731;margin-bottom:12px}
-  .rcol{display:flex;flex-direction:column;gap:12px}
-  .fb{background:#f0fdf4;border:1.5px solid #2a6e4a;border-left-width:4px;border-radius:8px;padding:13px 15px}
-  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#2a6e4a;margin-bottom:8px}
+  .rcol{display:flex;flex-direction:column;gap:11px}
+  .fb{background:#f0fdf4;border:1.5px solid #2a6e4a;border-left-width:4px;border-radius:8px;padding:12px 14px}
+  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#2a6e4a;margin-bottom:7px}
   .fb-eq{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#1a4731;margin-bottom:4px;line-height:1.6}
   .fb-desc{font-size:12px;color:#4b7358;line-height:1.45}
-  .cb{border-radius:8px;padding:12px 14px}
+  .cb{border-radius:8px;padding:11px 13px}
   .cb-e{background:#fffbeb;border-left:4px solid #d97706}
   .cb-k{background:#f0fdf4;border-left:4px solid #16a34a}
   .cb-i{background:#eff6ff;border-left:4px solid #2563eb}
-  .cb-w{background:#fef2f2;border-left:4px solid #dc2626}
   .cb-t{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-  .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-i .cb-t{color:#1e40af} .cb-w .cb-t{color:#991b1b}
+  .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-i .cb-t{color:#1e40af}
   .cb-txt{font-size:12.5px;line-height:1.5;color:#1c2b1e}
-  .sumrow{padding:18px 36px;background:#f0fdf4;border-top:1px solid #bbf7d0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  .sc{background:#fff;border:1px solid #bbf7d0;border-top:3px solid #2a6e4a;border-radius:7px;padding:11px}
-  .sc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6b9478;margin-bottom:5px}
+  .sumrow{padding:14px 36px;background:#f0fdf4;border-top:1px solid #bbf7d0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .sc{background:#fff;border:1px solid #bbf7d0;border-top:3px solid #2a6e4a;border-radius:7px;padding:10px}
+  .sc-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6b9478;margin-bottom:4px}
   .sc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#1a4731}
   .sc-desc{font-size:11px;color:#6b9478;margin-top:3px}
 </style>
@@ -44,72 +41,56 @@
 <body>
 
 <div class="topbar">
-  <div style="display:flex;align-items:center;gap:12px">
+  <div class="t-left">
     <span class="t-sub">Biologie LK</span>
     <span class="chip chip-w">Ökologie</span>
-    <span class="chip chip-w">Klasse 13 · Niedersachsen</span>
+    <span class="t-topic">Stoffkreisläufe &amp; Nachhaltigkeit</span>
   </div>
   <div style="display:flex;gap:8px;align-items:center">
     <span class="chip chip-g">✦ Pro Lernzettel</span>
-    <span style="font-size:12px;color:rgba(255,255,255,.65)">Klausur: 12.05.2026</span>
+    <span style="font-size:12px;color:rgba(255,255,255,.55)">Klausur: 12.05.2026</span>
   </div>
-</div>
-
-<div class="hero">
-  <div class="h-lbl">Kapitel 6 · Ökologie</div>
-  <div class="h-title">Stoffkreisläufe &amp;<br>Nachhaltigkeit</div>
-  <div class="h-sub">Der Kohlenstoffkreislauf, Stickstoffkreislauf und nachhaltige Entwicklung sind zentrale Themen der Ökologie — mit direktem Bezug zu Klimawandel und Biodiversitätsverlust.</div>
 </div>
 
 <div class="main">
   <div>
     <div class="diag-box">
       <div class="diag-title">Globaler Kohlenstoffkreislauf (vereinfacht)</div>
-      <svg viewBox="0 0 520 295" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        <!-- Atmosphere box -->
-        <rect x="155" y="12" width="210" height="44" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.5"/>
-        <text x="260" y="31" font-size="11" fill="#1e40af" text-anchor="middle" font-weight="700">Atmosphäre</text>
-        <text x="260" y="47" font-size="10" fill="#1e40af" text-anchor="middle">CO₂: 421 ppm (↑)</text>
-        <!-- Plants box -->
-        <rect x="22" y="110" width="145" height="44" rx="8" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.5"/>
-        <text x="95" y="129" font-size="11" fill="#14532d" text-anchor="middle" font-weight="700">Pflanzen / Algen</text>
-        <text x="95" y="147" font-size="10" fill="#14532d" text-anchor="middle">Photosynthese &amp; Veratmung</text>
-        <!-- Animals box -->
-        <rect x="355" y="110" width="143" height="44" rx="8" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
-        <text x="427" y="129" font-size="11" fill="#9a3412" text-anchor="middle" font-weight="700">Konsumenten</text>
-        <text x="427" y="147" font-size="10" fill="#9a3412" text-anchor="middle">Zellatmung → CO₂</text>
-        <!-- Soil box -->
-        <rect x="155" y="222" width="210" height="44" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
-        <text x="260" y="241" font-size="11" fill="#713f12" text-anchor="middle" font-weight="700">Boden / Sediment</text>
-        <text x="260" y="258" font-size="10" fill="#713f12" text-anchor="middle">Fossile Brennstoffe · Humus</text>
-        <!-- Arrows atmosphere ↔ plants -->
-        <path d="M155 34 L95 110" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#ga)"/>
-        <path d="M95 110 L155 34" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ra)"/>
-        <text x="93" y="76" font-size="9.5" fill="#14532d" font-weight="600">Photo-</text>
-        <text x="93" y="88" font-size="9.5" fill="#14532d" font-weight="600">synthese</text>
-        <text x="146" y="68" font-size="9.5" fill="#b91c1c">Atmung</text>
-        <!-- Arrows atmosphere ↔ consumers -->
-        <path d="M365 110 L345 56" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#ra)"/>
-        <text x="348" y="80" font-size="9.5" fill="#b91c1c" font-weight="600">CO₂ ↑</text>
-        <!-- Arrows plants → consumers -->
-        <path d="M167 132 L355 132" fill="none" stroke="#ca8a04" stroke-width="1.8" marker-end="url(#ya)"/>
-        <text x="260" y="126" font-size="10" fill="#a16207" text-anchor="middle" font-weight="600">Fressen (Energie)</text>
-        <!-- Arrows to soil -->
-        <path d="M95 154 L185 222" fill="none" stroke="#a16207" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ya)"/>
-        <path d="M427 154 L335 222" fill="none" stroke="#a16207" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ya)"/>
-        <text x="140" y="200" font-size="9.5" fill="#a16207">Abbau</text>
-        <text x="345" y="200" font-size="9.5" fill="#a16207">Abbau</text>
-        <!-- Combustion arrow up -->
-        <path d="M260 222 L260 56" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#ra)"/>
-        <rect x="264" y="130" width="66" height="24" rx="4" fill="#fef2f2"/>
-        <text x="297" y="142" font-size="10" fill="#991b1b" text-anchor="middle" font-weight="700">Verbrennung</text>
-        <text x="297" y="154" font-size="9" fill="#991b1b" text-anchor="middle">fossiler Energie</text>
-        <!-- Defs -->
+      <svg viewBox="0 0 520 285" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <rect x="155" y="10" width="210" height="44" rx="8" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.5"/>
+        <text x="260" y="29" font-size="11" fill="#1e40af" text-anchor="middle" font-weight="700">Atmosphäre</text>
+        <text x="260" y="46" font-size="10" fill="#1e40af" text-anchor="middle">CO₂: 421 ppm (↑)</text>
+        <rect x="22" y="106" width="145" height="44" rx="8" fill="#bbf7d0" stroke="#16a34a" stroke-width="1.5"/>
+        <text x="95" y="125" font-size="11" fill="#14532d" text-anchor="middle" font-weight="700">Pflanzen / Algen</text>
+        <text x="95" y="143" font-size="10" fill="#14532d" text-anchor="middle">Photosynthese &amp; Veratmung</text>
+        <rect x="355" y="106" width="143" height="44" rx="8" fill="#fed7aa" stroke="#ea580c" stroke-width="1.5"/>
+        <text x="427" y="125" font-size="11" fill="#9a3412" text-anchor="middle" font-weight="700">Konsumenten</text>
+        <text x="427" y="143" font-size="10" fill="#9a3412" text-anchor="middle">Zellatmung → CO₂</text>
+        <rect x="155" y="216" width="210" height="44" rx="8" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+        <text x="260" y="235" font-size="11" fill="#713f12" text-anchor="middle" font-weight="700">Boden / Sediment</text>
+        <text x="260" y="252" font-size="10" fill="#713f12" text-anchor="middle">Fossile Brennstoffe · Humus</text>
         <defs>
           <marker id="ga" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#16a34a"/></marker>
           <marker id="ra" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#ef4444"/></marker>
           <marker id="ya" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#ca8a04"/></marker>
         </defs>
+        <path d="M155 32 L95 106" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#ga)"/>
+        <path d="M95 106 L155 32" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ra)"/>
+        <text x="89" y="70" font-size="9.5" fill="#14532d" font-weight="600">Photo-</text>
+        <text x="89" y="82" font-size="9.5" fill="#14532d" font-weight="600">synthese</text>
+        <text x="143" y="64" font-size="9.5" fill="#b91c1c">Atmung</text>
+        <path d="M365 106 L345 54" fill="none" stroke="#ef4444" stroke-width="2" marker-end="url(#ra)"/>
+        <text x="348" y="78" font-size="9.5" fill="#b91c1c" font-weight="600">CO₂ ↑</text>
+        <path d="M167 128 L355 128" fill="none" stroke="#ca8a04" stroke-width="1.8" marker-end="url(#ya)"/>
+        <text x="260" y="122" font-size="10" fill="#a16207" text-anchor="middle" font-weight="600">Fressen (Energie)</text>
+        <path d="M95 150 L185 216" fill="none" stroke="#a16207" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ya)"/>
+        <path d="M427 150 L335 216" fill="none" stroke="#a16207" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ya)"/>
+        <text x="134" y="194" font-size="9.5" fill="#a16207">Abbau</text>
+        <text x="342" y="194" font-size="9.5" fill="#a16207">Abbau</text>
+        <path d="M260 216 L260 54" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#ra)"/>
+        <rect x="263" y="126" width="66" height="22" rx="4" fill="#fef2f2"/>
+        <text x="296" y="138" font-size="10" fill="#991b1b" text-anchor="middle" font-weight="700">Verbrennung</text>
+        <text x="296" y="150" font-size="9" fill="#991b1b" text-anchor="middle">fossiler Energie</text>
       </svg>
     </div>
   </div>
@@ -117,21 +98,21 @@
   <div class="rcol">
     <div class="fb">
       <div class="fb-lbl">Produktivitätsformeln</div>
-      <div class="fb-eq">NPP = BPP − Ratmung</div>
-      <div class="fb-eq">Wirkungsgrad = NPP(n+1) / NPP(n)</div>
-      <div class="fb-desc">NPP: Nettoprimärproduktion | BPP: Bruttoprimärproduktion | Wirkungsgrad trophischer Stufen: ca. 10 %</div>
+      <div class="fb-eq">NPP = BPP − R<sub>atmung</sub></div>
+      <div class="fb-eq">η = NPP(n+1) / NPP(n)</div>
+      <div class="fb-desc">NPP: Nettoprimärproduktion | η (Wirkungsgrad) je Stufe ≈ 10 %</div>
     </div>
     <div class="cb cb-e">
       <div class="cb-t">🐴 Eselsbrücke</div>
-      <div class="cb-txt"><strong>„Nur 10 % schaffen die Reise"</strong><br>Von Stufe zu Stufe gehen 90 % der Energie als Wärme verloren. Fleischessen ist daher energetisch ineffizienter als Pflanzenkost.</div>
+      <div class="cb-txt"><strong>„Nur 10 % schaffen die Reise"</strong><br>90 % Energie gehen als Wärme verloren. Fleischessen ist 10× ineffizienter als Pflanzenkost.</div>
     </div>
     <div class="cb cb-k">
       <div class="cb-t">📋 Kerncurriculum</div>
-      <div class="cb-txt">Kohlenstoff- und Stickstoffkreislauf erklären · Nachhaltigkeit an konkreten Beispielen bewerten · Treibhauseffekt und Klimawandel analysieren (AFB II–III)</div>
+      <div class="cb-txt">C- und N-Kreislauf erklären · Nachhaltigkeit bewerten · Treibhauseffekt analysieren (AFB II–III)</div>
     </div>
     <div class="cb cb-i">
       <div class="cb-t">ℹ️ Klimarelevanz</div>
-      <div class="cb-txt">CO₂-Konzentration 2024: 421 ppm (vorindustriell: 280 ppm). Haupttreiber: fossile Brennstoffe + Entwaldung.</div>
+      <div class="cb-txt">CO₂: 421 ppm (vorindustriell: 280 ppm). CH₄ hat 28× stärkeren Treibhauseffekt.</div>
     </div>
   </div>
 </div>
@@ -139,18 +120,18 @@
 <div class="sumrow">
   <div class="sc">
     <div class="sc-lbl">Treibhausgase</div>
-    <div class="sc-val">CO₂, CH₄, N₂O, H₂O</div>
-    <div class="sc-desc">CH₄ hat 28× stärkeren Treibhauseffekt als CO₂ (100 a)</div>
+    <div class="sc-val">CO₂, CH₄, N₂O</div>
+    <div class="sc-desc">CH₄ = 28× wirksamer als CO₂ (100 Jahre)</div>
   </div>
   <div class="sc">
     <div class="sc-lbl">Energiefluss je Stufe</div>
     <div class="sc-val">≈ 10 % weiter</div>
-    <div class="sc-desc">90 % gehen als Wärme verloren (2. Thermodynamik)</div>
+    <div class="sc-desc">90 % Wärmeverlust (2. Thermodynamik)</div>
   </div>
   <div class="sc">
     <div class="sc-lbl">Biodiversitätsverlust</div>
-    <div class="sc-val">6. Massenaussterben</div>
-    <div class="sc-desc">Aktuell 1.000× schneller als natürliche Hintergrundrate</div>
+    <div class="sc-val">6. Massensterben</div>
+    <div class="sc-desc">1.000× schneller als natürliche Rate</div>
   </div>
 </div>
 

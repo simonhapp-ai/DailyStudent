@@ -371,15 +371,12 @@ export function LernzettelScreen() {
       </div>
 
       {/* ── Pro Lernzettel Preview ──────────────────────────────── */}
-      <div className="mt-6">
+      {!isPro && <div className="mt-6">
         {/* Section header */}
         <div className="flex items-center gap-2 px-4 mb-2">
           <span className="badge-pro-gold px-2.5 py-1">✦ PRO</span>
           <p className="text-[15px] font-bold text-text-primary">Pro Lernzettel</p>
-          <span
-            className="ml-auto text-[10px] font-bold px-2.5 py-1 rounded-full"
-            style={{ background: 'linear-gradient(135deg,#FEF3C7,#FDE68A)', color: '#92400E' }}
-          >
+          <span className="ml-auto text-[11px] text-text-muted font-normal">
             Nächstes Update
           </span>
         </div>
@@ -462,10 +459,10 @@ export function LernzettelScreen() {
               boxShadow: '0 4px 18px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.3)',
             }}
           >
-            ✦ Pro Lernzettel freischalten
+            Pro freischalten
           </button>
         </div>
-      </div>
+      </div>}
 
       <ProModal feature="lernzettel" isOpen={showPro} onClose={() => setShowPro(false)} />
     </div>

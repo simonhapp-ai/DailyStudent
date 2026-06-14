@@ -10,31 +10,28 @@
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Inter',system-ui,sans-serif;background:#fff;color:#1e293b;font-size:14px;line-height:1.55}
   .topbar{background:#1a3d6b;color:#fff;padding:12px 36px;display:flex;align-items:center;justify-content:space-between}
+  .t-left{display:flex;align-items:center;gap:10px}
   .t-sub{font-size:18px;font-weight:700;letter-spacing:-.3px}
+  .t-topic{font-size:12px;font-weight:500;color:rgba(255,255,255,.7)}
   .chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700}
   .chip-w{background:rgba(255,255,255,.18);color:#fff}
   .chip-g{background:linear-gradient(135deg,#c8860a,#f5c842);color:#3b1f00}
-  .hero{background:linear-gradient(135deg,#f8faff,#e8f0fc);border-left:5px solid #1a3d6b;padding:22px 36px}
-  .h-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#1a3d6b;margin-bottom:6px}
-  .h-title{font-family:'Playfair Display',Georgia,serif;font-size:30px;font-weight:900;color:#1a3d6b;line-height:1.15;margin-bottom:8px}
-  .h-sub{font-size:13px;color:#64748b;line-height:1.5}
-  .main{padding:22px 36px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .main{padding:18px 36px;display:grid;grid-template-columns:1fr 1fr;gap:22px}
   .diag-box{background:#e8f0fc;border:1.5px solid #c5d8f8;border-radius:10px;padding:16px}
   .diag-title{font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:700;color:#1a3d6b;margin-bottom:12px}
-  .rcol{display:flex;flex-direction:column;gap:12px}
-  .fb{background:#f8faff;border:1.5px solid #1a3d6b;border-left-width:4px;border-radius:8px;padding:13px 15px}
-  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1a3d6b;margin-bottom:8px}
-  .fb-eq{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#1a3d6b;margin-bottom:4px;line-height:1.7}
+  .rcol{display:flex;flex-direction:column;gap:11px}
+  .fb{background:#f8faff;border:1.5px solid #1a3d6b;border-left-width:4px;border-radius:8px;padding:12px 14px}
+  .fb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1a3d6b;margin-bottom:7px}
+  .fb-eq{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:#1a3d6b;margin-bottom:3px;line-height:1.7}
   .fb-desc{font-size:12px;color:#64748b;line-height:1.45}
-  .cb{border-radius:8px;padding:12px 14px}
+  .cb{border-radius:8px;padding:11px 13px}
   .cb-e{background:#fffbeb;border-left:4px solid #d97706}
   .cb-k{background:#f0fdf4;border-left:4px solid #16a34a}
   .cb-i{background:#eff6ff;border-left:4px solid #2563eb}
-  .cb-w{background:#fef2f2;border-left:4px solid #dc2626}
   .cb-t{font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-  .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-i .cb-t{color:#1e40af} .cb-w .cb-t{color:#991b1b}
+  .cb-e .cb-t{color:#92400e} .cb-k .cb-t{color:#14532d} .cb-i .cb-t{color:#1e40af}
   .cb-txt{font-size:12.5px;line-height:1.5;color:#1e293b}
-  .sumrow{padding:18px 36px;background:#f8faff;border-top:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .sumrow{padding:14px 36px;background:#f8faff;border-top:1px solid #e2e8f0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
   .sc{background:#fff;border:1px solid #e2e8f0;border-top:3px solid #1a3d6b;border-radius:7px;padding:10px}
   .sc-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#94a3b8;margin-bottom:4px}
   .sc-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#1a3d6b}
@@ -44,103 +41,89 @@
 <body>
 
 <div class="topbar">
-  <div style="display:flex;align-items:center;gap:12px">
+  <div class="t-left">
     <span class="t-sub">Physik LK</span>
     <span class="chip chip-w">Atomphysik</span>
-    <span class="chip chip-w">Klasse 13 · Niedersachsen</span>
+    <span class="t-topic">Atommodelle &amp; Energieniveaus</span>
   </div>
   <div style="display:flex;gap:8px;align-items:center">
     <span class="chip chip-g">✦ Pro Lernzettel</span>
-    <span style="font-size:12px;color:rgba(255,255,255,.65)">Klausur: 06.06.2026</span>
+    <span style="font-size:12px;color:rgba(255,255,255,.55)">Klausur: 06.06.2026</span>
   </div>
 </div>
 
-<div class="hero">
-  <div class="h-lbl">Kapitel 5 · Atomphysik</div>
-  <div class="h-title">Atommodelle &amp;<br>Energieniveaus</div>
-  <div class="h-sub">Bohr'sche Bahnen, diskrete Energieniveaus und Spektralserien lassen sich durch die Quantisierung des Drehimpulses erklären. Der Franck-Hertz-Versuch beweist Energiequantisierung direkt.</div>
-</div>
-
 <div class="main">
-  <!-- Left: Diagrams -->
-  <div style="display:flex;flex-direction:column;gap:14px">
+  <div>
     <div class="diag-box">
-      <div class="diag-title">Bohr'sches Atommodell — Energieniveaus</div>
-      <svg viewBox="0 0 420 185" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-        <!-- Energy axis -->
-        <line x1="60" y1="10" x2="60" y2="175" stroke="#374151" stroke-width="1.5"/>
-        <!-- E=0 level -->
+      <div class="diag-title">Bohr'sches Atommodell — Energieniveaus Wasserstoff</div>
+      <svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+        <line x1="60" y1="10" x2="60" y2="268" stroke="#374151" stroke-width="1.5"/>
         <line x1="60" y1="14" x2="380" y2="14" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>
         <text x="55" y="18" font-size="9" fill="#64748b" text-anchor="end">E=0</text>
-        <!-- n=1 ground state -->
-        <line x1="60" y1="168" x2="200" y2="168" stroke="#1a3d6b" stroke-width="2.5"/>
-        <text x="55" y="172" font-size="9" fill="#1a3d6b" text-anchor="end" font-weight="700">n=1</text>
-        <text x="205" y="172" font-size="9.5" fill="#1a3d6b" font-weight="700">−13,6 eV</text>
-        <!-- n=2 -->
-        <line x1="60" y1="126" x2="200" y2="126" stroke="#1a3d6b" stroke-width="2"/>
-        <text x="55" y="130" font-size="9" fill="#1a3d6b" text-anchor="end" font-weight="700">n=2</text>
-        <text x="205" y="130" font-size="9.5" fill="#1a3d6b">−3,4 eV</text>
-        <!-- n=3 -->
-        <line x1="60" y1="93" x2="200" y2="93" stroke="#1a3d6b" stroke-width="1.8"/>
-        <text x="55" y="97" font-size="9" fill="#1a3d6b" text-anchor="end">n=3</text>
-        <text x="205" y="97" font-size="9" fill="#64748b">−1,51 eV</text>
-        <!-- n=4 -->
-        <line x1="60" y1="69" x2="200" y2="69" stroke="#1a3d6b" stroke-width="1.5"/>
-        <text x="55" y="73" font-size="9" fill="#1a3d6b" text-anchor="end">n=4</text>
-        <text x="205" y="73" font-size="9" fill="#64748b">−0,85 eV</text>
-        <!-- n=5 -->
-        <line x1="60" y1="50" x2="200" y2="50" stroke="#1a3d6b" stroke-width="1.3"/>
-        <text x="55" y="54" font-size="9" fill="#1a3d6b" text-anchor="end">n=5</text>
-        <!-- Lyman series (UV) -->
-        <path d="M 100 168 L 100 126" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#pa)"/>
-        <path d="M 110 168 L 110 93" fill="none" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#pa)"/>
-        <path d="M 120 168 L 120 69" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#pa)"/>
-        <rect x="65" y="142" width="44" height="14" rx="3" fill="#ede9fe"/>
-        <text x="87" y="152" font-size="8.5" fill="#6d28d9" text-anchor="middle" font-weight="700">Lyman (UV)</text>
-        <!-- Balmer series (visible) -->
-        <path d="M 150 126 L 150 93" fill="none" stroke="#0284c7" stroke-width="2" marker-end="url(#ba)"/>
-        <path d="M 162 126 L 162 69" fill="none" stroke="#0284c7" stroke-width="1.8" marker-end="url(#ba)"/>
-        <rect x="136" y="104" width="52" height="14" rx="3" fill="#e0f2fe"/>
-        <text x="162" y="114" font-size="8.5" fill="#0369a1" text-anchor="middle" font-weight="700">Balmer (sichtbar)</text>
-        <!-- Paschen series (IR) -->
-        <path d="M 185" y1="93" x2="185" y2="69" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#ia)"/>
-        <path d="M 185 93 L 185 69" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#ia)"/>
-        <rect x="170" y="72" width="44" height="14" rx="3" fill="#dcfce7"/>
-        <text x="192" y="82" font-size="8.5" fill="#15803d" text-anchor="middle" font-weight="700">Paschen (IR)</text>
-        <!-- Photon labels -->
-        <text x="290" y="50" font-size="10" fill="#7c3aed">hf = ΔE = Eₙ − Eₘ</text>
-        <text x="290" y="65" font-size="9.5" fill="#64748b">Emission: n→m (n>m)</text>
-        <text x="290" y="80" font-size="9.5" fill="#64748b">Absorption: m→n (m&lt;n)</text>
-        <!-- Axis label -->
-        <text x="20" y="90" font-size="9.5" fill="#374151" font-weight="600" transform="rotate(-90,20,90)">Energie (eV)</text>
+        <line x1="60" y1="258" x2="200" y2="258" stroke="#1a3d6b" stroke-width="2.5"/>
+        <text x="55" y="262" font-size="9" fill="#1a3d6b" text-anchor="end" font-weight="700">n=1</text>
+        <text x="205" y="262" font-size="9.5" fill="#1a3d6b" font-weight="700">−13,6 eV</text>
+        <line x1="60" y1="210" x2="200" y2="210" stroke="#1a3d6b" stroke-width="2"/>
+        <text x="55" y="214" font-size="9" fill="#1a3d6b" text-anchor="end" font-weight="700">n=2</text>
+        <text x="205" y="214" font-size="9.5" fill="#1a3d6b">−3,4 eV</text>
+        <line x1="60" y1="170" x2="200" y2="170" stroke="#1a3d6b" stroke-width="1.8"/>
+        <text x="55" y="174" font-size="9" fill="#1a3d6b" text-anchor="end">n=3</text>
+        <text x="205" y="174" font-size="9" fill="#64748b">−1,51 eV</text>
+        <line x1="60" y1="138" x2="200" y2="138" stroke="#1a3d6b" stroke-width="1.5"/>
+        <text x="55" y="142" font-size="9" fill="#1a3d6b" text-anchor="end">n=4</text>
+        <text x="205" y="142" font-size="9" fill="#64748b">−0,85 eV</text>
+        <line x1="60" y1="112" x2="200" y2="112" stroke="#1a3d6b" stroke-width="1.3"/>
+        <text x="55" y="116" font-size="9" fill="#1a3d6b" text-anchor="end">n=5</text>
+        <text x="205" y="116" font-size="9" fill="#94a3b8">−0,54 eV</text>
         <defs>
           <marker id="pa" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#7c3aed"/></marker>
           <marker id="ba" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#0284c7"/></marker>
           <marker id="ia" markerWidth="7" markerHeight="7" refX="7" refY="3" orient="auto"><path d="M0,0L0,6L7,3z" fill="#16a34a"/></marker>
         </defs>
+        <path d="M 95 258 L 95 210" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#pa)"/>
+        <path d="M 108 258 L 108 170" fill="none" stroke="#7c3aed" stroke-width="1.8" marker-end="url(#pa)"/>
+        <path d="M 121 258 L 121 138" fill="none" stroke="#7c3aed" stroke-width="1.5" marker-end="url(#pa)"/>
+        <rect x="62" y="230" width="48" height="14" rx="3" fill="#ede9fe"/>
+        <text x="86" y="241" font-size="8.5" fill="#6d28d9" text-anchor="middle" font-weight="700">Lyman (UV)</text>
+        <path d="M 152 210 L 152 170" fill="none" stroke="#0284c7" stroke-width="2" marker-end="url(#ba)"/>
+        <path d="M 165 210 L 165 138" fill="none" stroke="#0284c7" stroke-width="1.8" marker-end="url(#ba)"/>
+        <path d="M 178 210 L 178 112" fill="none" stroke="#0284c7" stroke-width="1.5" marker-end="url(#ba)"/>
+        <rect x="134" y="185" width="54" height="14" rx="3" fill="#e0f2fe"/>
+        <text x="161" y="196" font-size="8.5" fill="#0369a1" text-anchor="middle" font-weight="700">Balmer (sichtbar)</text>
+        <path d="M 186 170 L 186 138" fill="none" stroke="#16a34a" stroke-width="1.8" marker-end="url(#ia)"/>
+        <path d="M 196 170 L 196 112" fill="none" stroke="#16a34a" stroke-width="1.5" marker-end="url(#ia)"/>
+        <rect x="168" y="148" width="46" height="14" rx="3" fill="#dcfce7"/>
+        <text x="191" y="159" font-size="8.5" fill="#15803d" text-anchor="middle" font-weight="700">Paschen (IR)</text>
+        <text x="290" y="60" font-size="10.5" fill="#1a3d6b" font-weight="700">hf = ΔE = Eₙ − Eₘ</text>
+        <text x="290" y="78" font-size="9.5" fill="#64748b">Emission: n→m (n&gt;m)</text>
+        <text x="290" y="94" font-size="9.5" fill="#64748b">Absorption: m→n (m&lt;n)</text>
+        <rect x="268" y="115" width="138" height="55" rx="6" fill="#f8faff" stroke="#c5d8f8" stroke-width="1.5"/>
+        <text x="337" y="132" font-size="9" fill="#1a3d6b" text-anchor="middle" font-weight="700">Bohr-Formel</text>
+        <text x="337" y="149" font-family="'JetBrains Mono',monospace" font-size="12" fill="#1a3d6b" text-anchor="middle" font-weight="600">Eₙ = −13,6/n²</text>
+        <text x="337" y="163" font-size="8.5" fill="#64748b" text-anchor="middle">[in eV]</text>
+        <text x="20" y="140" font-size="9.5" fill="#374151" font-weight="600" transform="rotate(-90,20,140)">Energie (eV)</text>
       </svg>
     </div>
   </div>
 
-  <!-- Right column -->
   <div class="rcol">
     <div class="fb">
       <div class="fb-lbl">Bohr'sche Energieformel</div>
       <div class="fb-eq">Eₙ = −13,6 eV / n²</div>
       <div class="fb-eq">f = ΔE / h = (Eₙ − Eₘ) / h</div>
-      <div class="fb-desc">n: Hauptquantenzahl (1, 2, 3, …) | h: Planck (6,626·10⁻³⁴ J·s) | Emission: n &gt; m</div>
+      <div class="fb-desc">n: Hauptquantenzahl (1,2,3,…) | h = 6,626·10⁻³⁴ J·s</div>
     </div>
     <div class="cb cb-e">
       <div class="cb-t">🐴 Eselsbrücke</div>
-      <div class="cb-txt"><strong>„Je tiefer die Schale, desto negativer (stabiler)"</strong><br>n=1: −13,6 eV (Grundzustand, stabilster). Angeregter Zustand = weniger negativ = labiler.</div>
+      <div class="cb-txt"><strong>„Je tiefer die Schale, desto stabiler"</strong><br>n=1: −13,6 eV (stabilster Grundzustand). Angeregt = weniger negativ = labiler.</div>
     </div>
     <div class="cb cb-k">
       <div class="cb-t">📋 Kerncurriculum</div>
-      <div class="cb-txt">Energieniveaus und Spektralserien erklären · Frequenz/Wellenlänge emittierter Photonen berechnen · Franck-Hertz-Versuch interpretieren (AFB II)</div>
+      <div class="cb-txt">Energieniveaus erklären · Photonen-Frequenz berechnen · Franck-Hertz-Versuch interpretieren (AFB II)</div>
     </div>
     <div class="cb cb-i">
       <div class="cb-t">ℹ️ Franck-Hertz-Versuch</div>
-      <div class="cb-txt">Elektronen stoßen mit Hg-Atomen und übertragen nur diskrete Energiemengen (4,9 eV für Hg). Direkter Nachweis der Energiequantisierung in Atomen.</div>
+      <div class="cb-txt">Elektronen übertragen nur diskrete 4,9 eV auf Hg-Atome. Direkter Nachweis der Energiequantisierung.</div>
     </div>
   </div>
 </div>
@@ -149,22 +132,22 @@
   <div class="sc">
     <div class="sc-lbl">Grundzustand H</div>
     <div class="sc-val">E₁ = −13,6 eV</div>
-    <div class="sc-desc">Ionisierungsenergie von Wasserstoff</div>
+    <div class="sc-desc">Ionisierungsenergie</div>
   </div>
   <div class="sc">
     <div class="sc-lbl">Lyman-Serie</div>
     <div class="sc-val">→ n=1 (UV)</div>
-    <div class="sc-desc">n≥2 → n=1, ultraviolettes Licht</div>
+    <div class="sc-desc">n≥2 → n=1</div>
   </div>
   <div class="sc">
     <div class="sc-lbl">Balmer-Serie</div>
     <div class="sc-val">→ n=2 (sichtbar)</div>
-    <div class="sc-desc">Rote bis violette Spektrallinien</div>
+    <div class="sc-desc">Rot bis violett</div>
   </div>
   <div class="sc">
     <div class="sc-lbl">Ionisation</div>
     <div class="sc-val">E ≥ 13,6 eV</div>
-    <div class="sc-desc">Elektron verlässt Atom vollständig</div>
+    <div class="sc-desc">Elektron verlässt Atom</div>
   </div>
 </div>
 
