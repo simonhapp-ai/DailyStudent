@@ -101,6 +101,7 @@ export function LernzettelScreen() {
   const [view, setView] = useState<View>('library')
   const [activeLz, setActiveLz] = useState<Lernzettel | null>(null)
   const [showPro, setShowPro] = useState(false)
+  const [openPreview, setOpenPreview] = useState<typeof PREVIEWS[number] | null>(null)
 
   const today = new Date().toISOString().slice(0, 10)
   const createdToday = lernzettel.filter(lz => lz.generatedAt?.slice(0, 10) === today).length
@@ -400,6 +401,7 @@ export function LernzettelScreen() {
           {PREVIEWS.map((p) => (
             <div
               key={p.id}
+              onClick={() => setOpenPreview(p)}
               style={{
                 position: 'relative',
                 width: '308px',
@@ -409,6 +411,7 @@ export function LernzettelScreen() {
                 overflow: 'hidden',
                 boxShadow: '0 6px 28px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)',
                 flexShrink: 0,
+                cursor: 'pointer',
               }}
             >
               <iframe
@@ -465,6 +468,57 @@ export function LernzettelScreen() {
           </div>
         )}
       </div>
+
+      {/* ── Fullscreen Preview Modal ────────────────────────────── */}
+      {openPreview && (
+        <div
+          className="fixed inset-0 z-[60] flex flex-col items-center justify-end sm:justify-center"
+          style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(10px)' }}
+          onClick={() => setOpenPreview(null)}
+        >
+          <div
+            className="flex flex-col animate-sheet-up sm:animate-fade-in"
+            style={{
+              width: '100%',
+              maxWidth: '960px',
+              height: '92vh',
+              borderRadius: '20px 20px 0 0',
+              overflow: 'hidden',
+              background: '#fff',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header bar */}
+            <div
+              className="flex items-center gap-3 px-4 py-3 shrink-0"
+              style={{ background: openPreview.color, borderRadius: '20px 20px 0 0' }}
+            >
+              <span
+                className="text-[11px] font-bold px-2.5 py-1 rounded-full"
+                style={{ background: 'rgba(255,255,255,0.22)', color: '#fff' }}
+              >
+                {openPreview.subject}
+              </span>
+              <p className="text-white font-semibold text-[14px] flex-1 truncate">{openPreview.title}</p>
+              <button
+                onClick={() => setOpenPreview(null)}
+                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={{ background: 'rgba(255,255,255,0.2)' }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6L6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            {/* iframe */}
+            <iframe
+              src={openPreview.src}
+              title={openPreview.title}
+              style={{ width: '100%', flex: 1, border: 'none', display: 'block' }}
+            />
+          </div>
+        </div>
+      )}
 
       <ProModal feature="lernzettel" isOpen={showPro} onClose={() => setShowPro(false)} />
     </div>
