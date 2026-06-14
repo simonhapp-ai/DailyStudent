@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
 import { generateFlashcards } from '../lib/groq'
-import { subjects } from '../data/mockData'
+import { resolveSubjectInfo } from '../data/subjectInfo'
 import type { FlashCard } from '../types'
 
 type Step = 'fach' | 'note' | 'generating'
@@ -56,7 +56,10 @@ export function FlashCardGeneratorScreen() {
     })()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const availableSubjects = subjects.filter((s) => profile?.faecher.includes(s.id))
+  const availableSubjects = (profile?.faecher ?? []).map((id) => ({
+    id,
+    ...resolveSubjectInfo(id, profile?.customFaecher),
+  }))
 
   const notesForSubject = selectedSubjectId
     ? userNotes
@@ -64,7 +67,9 @@ export function FlashCardGeneratorScreen() {
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     : []
 
-  const selectedSubject = subjects.find((s) => s.id === selectedSubjectId)
+  const selectedSubject = selectedSubjectId
+    ? resolveSubjectInfo(selectedSubjectId, profile?.customFaecher)
+    : null
 
   const handleSelectSubject = (subjectId: string) => {
     setSelectedSubjectId(subjectId)

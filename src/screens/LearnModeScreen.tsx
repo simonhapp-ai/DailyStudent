@@ -4,7 +4,7 @@ import { FlashCard } from '../components/learn/FlashCard'
 import { Button } from '../components/ui/Button'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
-import { subjects } from '../data/mockData'
+import { resolveSubjectInfo } from '../data/subjectInfo'
 import type { FlashCard as FlashCardType } from '../types'
 
 const GREEN = 'linear-gradient(145deg, #34D399 0%, #059669 100%)'
@@ -28,7 +28,7 @@ export function LearnModeScreen() {
   const [cardIndex, setCardIndex] = useState(0)
   const [knownCount, setKnownCount] = useState(0)
   const navigate = useNavigate()
-  const { generatedFlashCards, userNotes } = useUser()
+  const { generatedFlashCards, userNotes, profile } = useUser()
 
   // ── Build decks ────────────────────────────────────────────────────────────
   const deckMap = generatedFlashCards.reduce<Record<string, FlashCardType[]>>((acc, card) => {
@@ -39,16 +39,17 @@ export function LearnModeScreen() {
   }, {})
 
   const decks: Deck[] = Object.entries(deckMap).map(([noteId, cards]) => {
-    const subject = subjects.find((s) => s.id === cards[0]?.subjectId)
+    const subjectId = cards[0]?.subjectId ?? ''
+    const info = resolveSubjectInfo(subjectId, profile?.customFaecher)
     const note = userNotes.find((n) => n.id === noteId)
     return {
       noteId,
       cards,
       noteTitle: note?.title ?? 'Notiz',
-      subjectId: subject?.id ?? '',
-      subjectName: subject?.name ?? cards[0]?.subjectId ?? '',
-      subjectColor: subject?.color ?? '#7C3AED',
-      subjectIcon: subject?.icon ?? '📚',
+      subjectId,
+      subjectName: info.name,
+      subjectColor: info.color,
+      subjectIcon: info.icon,
       createdAt: cards[0]?.createdAt ?? '',
     }
   }).sort((a, b) => b.createdAt.localeCompare(a.createdAt))
@@ -64,7 +65,7 @@ export function LearnModeScreen() {
   // ── Session controls ───────────────────────────────────────────────────────
   const sessionCards = activeDeck?.cards ?? []
   const currentCard = sessionCards[cardIndex]
-  const cardSubject = currentCard ? subjects.find((s) => s.id === currentCard.subjectId) : undefined
+  const cardSubject = currentCard ? resolveSubjectInfo(currentCard.subjectId, profile?.customFaecher) : undefined
 
   const startSession = (deck: Deck) => {
     setActiveDeck(deck)
@@ -121,6 +122,7 @@ export function LearnModeScreen() {
 
             <div className="relative" style={{ height: '260px' }}>
               <FlashCard
+                key={cardIndex}
                 front={currentCard.front}
                 back={currentCard.back}
                 subjectName={cardSubject?.name}

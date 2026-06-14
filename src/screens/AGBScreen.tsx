@@ -13,7 +13,7 @@ export function AGBScreen() {
         {/* Meta */}
         <div className="bg-surface border border-border/60 rounded-[20px] p-4 shadow-card-adaptive">
           <p className="text-[11px] text-text-muted uppercase font-semibold tracking-wide mb-1">Letzte Aktualisierung</p>
-          <p className="text-text-primary font-semibold">10. Juni 2026</p>
+          <p className="text-text-primary font-semibold">14. Juni 2026</p>
         </div>
 
         {/* Agreement */}
@@ -170,9 +170,7 @@ export function AGBScreen() {
         {/* 20 */}
         <Section title="20. DISPUTE RESOLUTION">
           <SubHeading>Informal Negotiations</SubHeading>
-          <p>To expedite resolution and control the cost of any dispute, controversy, or claim related to these Legal Terms (each a "Dispute" and collectively, the "Disputes") brought by either you or us (individually, a "Party" and collectively, the "Parties"), the Parties agree to first attempt to negotiate any Dispute (except those Disputes expressly provided below) informally for at least thirty (30) days before initiating arbitration. Such informal negotiations commence upon written notice from one Party to the other Party.</p>
-          <SubHeading>EU Online Dispute Resolution</SubHeading>
-          <p>The European Commission provides an online dispute resolution platform, which you can access at: <strong>https://ec.europa.eu/consumers/odr</strong>. We are not obligated to participate in online dispute resolution before a consumer arbitration board.</p>
+          <p>To expedite resolution and control the cost of any dispute, controversy, or claim related to these Legal Terms (each a "Dispute" and collectively, the "Disputes") brought by either you or us (individually, a "Party" and collectively, the "Parties"), the Parties agree to first attempt to negotiate any Dispute informally for at least thirty (30) days before initiating any legal proceedings. Such informal negotiations commence upon written notice from one Party to the other Party. Please contact us at <strong>simonhapp161@gmail.com</strong> to resolve any concerns.</p>
         </Section>
 
         {/* 21 */}
@@ -183,6 +181,14 @@ export function AGBScreen() {
         {/* 22 */}
         <Section title="22. DISCLAIMER">
           <p>THE SERVICES ARE PROVIDED ON AN AS-IS AND AS-AVAILABLE BASIS. YOU AGREE THAT YOUR USE OF THE SERVICES WILL BE AT YOUR SOLE RISK. TO THE FULLEST EXTENT PERMITTED BY LAW, WE DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, IN CONNECTION WITH THE SERVICES AND YOUR USE THEREOF, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE MAKE NO WARRANTIES OR REPRESENTATIONS ABOUT THE ACCURACY OR COMPLETENESS OF THE SERVICES' CONTENT OR THE CONTENT OF ANY WEBSITES OR MOBILE APPLICATIONS LINKED TO THE SERVICES AND WE WILL ASSUME NO LIABILITY OR RESPONSIBILITY FOR ANY (1) ERRORS, MISTAKES, OR INACCURACIES OF CONTENT AND MATERIALS, (2) PERSONAL INJURY OR PROPERTY DAMAGE, OF ANY NATURE WHATSOEVER, RESULTING FROM YOUR ACCESS TO AND USE OF THE SERVICES, (3) ANY UNAUTHORISED ACCESS TO OR USE OF OUR SECURE SERVERS AND/OR ANY AND ALL PERSONAL INFORMATION AND/OR FINANCIAL INFORMATION STORED THEREIN.</p>
+        </Section>
+
+        {/* 22a */}
+        <Section title="22a. HAFTUNGSAUSSCHLUSS FÜR KI-GENERIERTE INHALTE">
+          <p><strong>KI-generierte Inhalte sind keine Garantie für schulischen Erfolg.</strong> DailyStudent nutzt KI-Technologien (u.&nbsp;a. Groq, Google Gemini) zur Generierung von Lernmaterialien wie Zusammenfassungen, Karteikarten, Lernzetteln, Probeklausuren und Lernplänen. Diese Inhalte werden automatisiert erzeugt und können inhaltliche Fehler, Ungenauigkeiten oder veraltete Informationen enthalten.</p>
+          <p className="mt-2"><strong>Keine Haftung für Noten oder Prüfungsergebnisse.</strong> Wir übernehmen ausdrücklich <strong>keine Haftung</strong> für schulische Noten, Prüfungsergebnisse oder sonstige Leistungsbeurteilungen, die im Zusammenhang mit der Nutzung von DailyStudent entstehen. Die KI-generierten Materialien ersetzen nicht den Unterricht, die Beratung durch Lehrkräfte oder eigenes kritisches Denken.</p>
+          <p className="mt-2"><strong>Eigenverantwortung des Nutzers.</strong> Du bist selbst dafür verantwortlich, KI-generierte Inhalte zu prüfen, mit verlässlichen Quellen abzugleichen und eigenständig zu beurteilen. Insbesondere bei fachspezifischen Themen wie Mathematik, Naturwissenschaften oder Fremdsprachen können die KI-Antworten von den gültigen Lehrplaninhalten abweichen.</p>
+          <p className="mt-2"><strong>Kein Ersatz für professionellen Rat.</strong> DailyStudent ist ein Lernhilfsmittel und kein zertifiziertes Bildungsprodukt. Für verbindliche Aussagen zu Lehrplaninhalten wende dich an deine Schule oder zuständige Bildungsbehörde.</p>
         </Section>
 
         {/* 23 */}
