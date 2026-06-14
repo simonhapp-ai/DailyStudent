@@ -401,52 +401,57 @@ export function LernzettelScreen() {
           {PREVIEWS.map((p) => (
             <div
               key={p.id}
-              onClick={() => setOpenPreview(p)}
-              style={{
-                position: 'relative',
-                width: '308px',
-                minWidth: '308px',
-                height: '193px',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                boxShadow: '0 6px 28px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)',
-                flexShrink: 0,
-                cursor: 'pointer',
-              }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '7px', flexShrink: 0 }}
             >
-              <iframe
-                src={p.src}
-                loading="lazy"
-                title={p.title}
+              {/* Card */}
+              <div
+                onClick={() => setOpenPreview(p)}
                 style={{
-                  width: '960px',
-                  height: '601px',
-                  transform: 'scale(0.321)',
-                  transformOrigin: 'top left',
-                  border: 'none',
-                  pointerEvents: 'none',
-                  display: 'block',
+                  position: 'relative',
+                  width: '308px',
+                  height: '193px',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 6px 28px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)',
+                  cursor: 'pointer',
                 }}
-              />
-              {/* Bottom gradient fade */}
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 42%, rgba(0,0,0,0.52) 100%)' }} />
-              {/* Subject badge */}
-              <div style={{ position: 'absolute', top: '9px', left: '9px' }}>
-                <span style={{ fontSize: '10px', fontWeight: 700, padding: '3px 9px', borderRadius: '999px', background: p.color, color: '#fff', boxShadow: '0 1px 6px rgba(0,0,0,0.3)' }}>
-                  {p.subject}
-                </span>
-              </div>
-              {/* Pro badge top-right */}
-              <span
-                className="badge-pro-gold"
-                style={{ position: 'absolute', top: '9px', right: '9px', padding: '3px 8px', fontSize: '10px' }}
               >
-                ✦ PRO
-              </span>
-              {/* Title at bottom */}
-              <div style={{ position: 'absolute', bottom: '10px', left: '11px', right: '11px' }}>
-                <p style={{ fontSize: '12px', fontWeight: 700, color: '#fff', textShadow: '0 1px 5px rgba(0,0,0,0.6)', lineHeight: 1.35 }}>{p.title}</p>
+                <iframe
+                  src={p.src}
+                  loading="lazy"
+                  title={p.title}
+                  style={{
+                    width: '960px',
+                    height: '601px',
+                    transform: 'scale(0.321)',
+                    transformOrigin: 'top left',
+                    border: 'none',
+                    pointerEvents: 'none',
+                    display: 'block',
+                  }}
+                />
+                {/* Bottom gradient fade */}
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 42%, rgba(0,0,0,0.52) 100%)' }} />
+                {/* Subject badge */}
+                <div style={{ position: 'absolute', top: '9px', left: '9px' }}>
+                  <span style={{ fontSize: '10px', fontWeight: 700, padding: '3px 9px', borderRadius: '999px', background: p.color, color: '#fff', boxShadow: '0 1px 6px rgba(0,0,0,0.3)' }}>
+                    {p.subject}
+                  </span>
+                </div>
+                {/* Pro badge top-right */}
+                <span
+                  className="badge-pro-gold"
+                  style={{ position: 'absolute', top: '9px', right: '9px', padding: '3px 8px', fontSize: '10px' }}
+                >
+                  ✦ PRO
+                </span>
+                {/* Title at bottom */}
+                <div style={{ position: 'absolute', bottom: '10px', left: '11px', right: '11px' }}>
+                  <p style={{ fontSize: '12px', fontWeight: 700, color: '#fff', textShadow: '0 1px 5px rgba(0,0,0,0.6)', lineHeight: 1.35 }}>{p.title}</p>
+                </div>
               </div>
+              {/* Caption */}
+              <p className="text-[11px] text-text-muted">Tippen zum Anzeigen</p>
             </div>
           ))}
         </div>
@@ -510,11 +515,11 @@ export function LernzettelScreen() {
                 </svg>
               </button>
             </div>
-            {/* iframe */}
+            {/* iframe — explizite Höhe damit Scroll funktioniert */}
             <iframe
               src={openPreview.src}
               title={openPreview.title}
-              style={{ width: '100%', flex: 1, border: 'none', display: 'block' }}
+              style={{ width: '100%', height: 'calc(92vh - 56px)', border: 'none', display: 'block' }}
             />
           </div>
         </div>
