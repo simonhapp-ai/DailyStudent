@@ -95,14 +95,19 @@ function Coin({
   )
 }
 
-// ── Tier 0: Three scattered coins (0–99) ───────────────────────────────────
+// ── Tier 0: Stack of 3 coins + 1 leaning against them (0–99) ─────────────
 
 function T0_ThreeCoins() {
   return (
     <g filter="url(#ci-shadow)">
-      <Coin cx={16} cy={24} rx={14} ry={5.5} edge={4.5} bright={0.68} dim/>
-      <Coin cx={58} cy={27} rx={13} ry={5}   edge={4}   bright={0.70} dim/>
-      <Coin cx={37} cy={43} rx={18} ry={7}   edge={5.5} bright={1}/>
+      {/* Stack of 3 coins */}
+      <Coin cx={30} cy={55} rx={15} ry={5.5} edge={4.5} bright={0.52} dim/>
+      <Coin cx={30} cy={46} rx={15} ry={5.5} edge={4.5} bright={0.68} dim/>
+      <Coin cx={30} cy={37} rx={15} ry={5.5} edge={4.5} bright={1}/>
+      {/* 1 coin leaning to the right against the stack, tilted ~−25° */}
+      <g transform="rotate(-25 57 43)">
+        <Coin cx={57} cy={43} rx={15} ry={5.5} edge={4.5} bright={0.88}/>
+      </g>
     </g>
   )
 }

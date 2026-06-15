@@ -1,6 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
-import { CoinIcon } from './CoinIcon'
 
 const NAV_ITEMS = [
   {
@@ -147,7 +146,7 @@ export function DesktopSidebar() {
 export function DesktopSidebarWide() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { profile, isPro, appStats } = useUser()
+  const { profile, isPro } = useUser()
 
   function isActive(path: string) {
     return location.pathname === path || location.pathname.startsWith(path + '/')
@@ -200,23 +199,6 @@ export function DesktopSidebarWide() {
 
       {/* Divider */}
       <div className="mx-4 border-t border-border/30 mb-3" />
-
-      {/* Coins Counter */}
-      <div className="px-3 mb-2">
-        <button
-          onClick={() => navigate('/profil')}
-          className="w-full flex items-center justify-between px-3 py-2 rounded-[12px] press-sm transition-opacity hover:opacity-80"
-          style={{ background: 'rgba(245,158,11,0.10)', border: '1px solid rgba(245,158,11,0.22)' }}
-        >
-          <div className="flex items-center gap-2">
-            <CoinIcon coins={appStats.coins ?? 0} size={22} tilt={false}/>
-            <span className="text-[13px] font-semibold" style={{ color: '#F59E0B' }}>Coins</span>
-          </div>
-          <span className="text-[15px] font-bold tabular-nums" style={{ color: '#F59E0B' }}>
-            {appStats.coins ?? 0}
-          </span>
-        </button>
-      </div>
 
       {/* Profil */}
       <div className="px-3 pb-6">

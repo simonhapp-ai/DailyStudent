@@ -28,6 +28,7 @@ import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSide
 import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
 import { CoinToast } from '../components/ui/CoinToast'
 import { CoinIconGlobalDefs } from '../components/ui/CoinIcon'
+import { StreakBadge } from '../components/ui/StreakBadge'
 import { UserProvider, useUser } from '../context/UserContext'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { KalenderScreen } from '../screens/KalenderScreen'
@@ -260,6 +261,7 @@ function Layout() {
           <AppRoutes />
           <SyncErrorBanner />
         </main>
+        <StreakBadge />
         <CoinToast />
       </div>
     )
@@ -271,6 +273,7 @@ function Layout() {
       <AppRoutes />
       {!hideNav && <BottomNav />}
       <SyncErrorBanner />
+      <StreakBadge />
       <CoinToast />
     </div>
   )

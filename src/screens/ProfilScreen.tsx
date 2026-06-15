@@ -1,6 +1,6 @@
 import { useUser, type AppTheme } from '../context/UserContext'
 import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { supabase } from '../lib/supabase'
@@ -44,7 +44,7 @@ function getCurrentStreak(streak: number, lastStudyDate: string | null): number 
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast, debugSetCoins } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, personalEntries, lernzettel, generatedFlashCards, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast, debugSetCoins } = useUser()
   const [proToast, setProToast] = useState(false)
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
@@ -118,11 +118,15 @@ export function ProfilScreen() {
 
   const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
 
-  const stats = [
-    { label: 'Streak',    value: activeStreak.toString(),              unit: 'Tage', icon: '🔥' },
-    { label: 'Notizen',   value: userNotes.length.toString(),          unit: '',     icon: '📝' },
-    { label: 'Klausuren', value: appStats.examCount.toString(),        unit: '',     icon: '📋' },
-    { label: 'Ø Note',    value: profile?.abiGesamtnote ?? '—',        unit: '',     icon: '⭐' },
+  const stats: { label: string; value: string; unit?: string; icon: ReactNode }[] = [
+    { label: 'Streak',    value: activeStreak.toString(),                   unit: 'T', icon: '🔥' },
+    { label: 'Notizen',   value: userNotes.length.toString(),               unit: '',  icon: '📝' },
+    { label: 'Fotos',     value: (appStats.scanCount ?? 0).toString(),      unit: '',  icon: '📷' },
+    { label: 'Klausuren', value: appStats.examCount.toString(),             unit: '',  icon: '📋' },
+    { label: 'Zettel',    value: lernzettel.length.toString(),              unit: '',  icon: '📄' },
+    { label: 'Karten',    value: generatedFlashCards.length.toString(),     unit: '',  icon: '🃏' },
+    { label: 'Coins',     value: (appStats.coins ?? 0).toString(),          unit: '',  icon: <CoinIcon coins={appStats.coins ?? 0} size={16} tilt={false} noAnimation/> },
+    { label: 'Kalender',  value: personalEntries.length.toString(),         unit: '',  icon: '📅' },
   ]
 
   const subtitle = profile
@@ -272,17 +276,24 @@ export function ProfilScreen() {
           </div>
         )}
 
-        {/* ── Stats — compact single row + insights link ──────────── */}
+        {/* ── Stats — 4-col 2-row grid on mobile, single row on desktop ── */}
         <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
-          <div className="flex items-stretch divide-x divide-border/40">
-            {stats.map((stat) => (
-              <div key={stat.label} className="flex-1 flex flex-col items-center justify-center py-4 px-2 gap-0.5">
-                <span className="text-[17px] leading-none">{stat.icon}</span>
-                <p className="text-text-primary font-bold text-[19px] leading-none tabular-nums mt-1.5">
+          <div className="grid grid-cols-4 lg:flex lg:items-stretch lg:divide-x lg:divide-border/40">
+            {stats.map((stat, i) => (
+              <div
+                key={stat.label}
+                className={[
+                  'flex flex-col items-center justify-center py-2 lg:py-3 px-1 gap-0 lg:flex-1',
+                  i % 4 !== 3 ? 'border-r border-border/40 lg:border-r-0' : '',
+                  i < 4 ? 'border-b border-border/40 lg:border-b-0' : '',
+                ].join(' ')}
+              >
+                <span className="flex items-center justify-center leading-none" style={{ height: '14px' }}>{stat.icon}</span>
+                <p className="text-text-primary font-bold text-[13px] lg:text-[17px] leading-none tabular-nums mt-1">
                   {stat.value}
-                  {stat.unit && <span className="text-[11px] font-normal text-text-muted ml-0.5">{stat.unit}</span>}
+                  {stat.unit && <span className="text-[8px] lg:text-[11px] font-normal text-text-muted ml-0.5">{stat.unit}</span>}
                 </p>
-                <p className="text-text-muted text-[10px] font-medium uppercase tracking-wide mt-0.5">{stat.label}</p>
+                <p className="text-text-muted text-[8px] lg:text-[10px] font-medium uppercase tracking-wide mt-0.5 text-center">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -307,7 +318,7 @@ export function ProfilScreen() {
 
         {/* ── Coins — 2 col on desktop, accordion on mobile ──────── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <CoinsRabattWidget coins={appStats.coins ?? 0} streak={activeStreak} />
+          <CoinsRabattWidget coins={appStats.coins ?? 0} cooldowns={appStats.cooldowns ?? []} />
           <CoinsShopWidget
             coins={appStats.coins ?? 0}
             freezeCount={appStats.streakFreezes ?? 0}
@@ -655,28 +666,29 @@ export function ProfilScreen() {
   )
 }
 
-// ── Coins & Rabatt Widget ─────────────────────────────────────────────────
+// ── Coins & Daily Checklist Widget ───────────────────────────────────────
 // Mobile: accordion (starts collapsed). Desktop lg: always expanded.
 
-function CoinsRabattWidget({ coins, streak }: { coins: number; streak: number }) {
-  void streak
-  const [open, setOpen] = useState(false)
+const DAILY_TASKS = [
+  { key: 'LOGIN',            label: 'Einloggen',              reward: 5,  icon: '🔑' },
+  { key: 'SMART_NOTE',       label: 'Smart Note erstellen',   reward: 5,  icon: '📷' },
+  { key: 'FLASHCARD_LEARNED',label: 'Karteikarten lernen',    reward: 10, icon: '🃏' },
+  { key: 'BLURTING',         label: 'Blurting abschließen',   reward: 10, icon: '🧠' },
+  { key: 'LERNZETTEL',       label: 'Lernzettel erstellen',   reward: 20, icon: '📄' },
+  { key: 'LERNPLAN_DAY',     label: 'Lernplan-Tag erledigen', reward: 15, icon: '📅' },
+  { key: 'PROBEKLAUSUR',     label: 'Probeklausur machen',    reward: 50, icon: '📋' },
+] as const
 
-  const RABATT_15_COINS = 2500
-  const RABATT_30_COINS = 5000
-  const has15 = coins >= RABATT_15_COINS
-  const has30 = coins >= RABATT_30_COINS
-  const progress15 = Math.min((coins / RABATT_15_COINS) * 100, 100)
-  const progress30 = Math.min((coins / RABATT_30_COINS) * 100, 100)
-  const coinsTo15 = Math.max(0, RABATT_15_COINS - coins)
-  const coinsTo30 = Math.max(0, RABATT_30_COINS - coins)
+function CoinsRabattWidget({ coins, cooldowns }: { coins: number; cooldowns: string[] }) {
+  const [open, setOpen] = useState(false)
+  const today = new Date().toISOString().slice(0, 10)
 
   return (
     <div
       className="rounded-card border overflow-hidden"
       style={{ background: 'linear-gradient(140deg, rgba(245,158,11,0.08) 0%, rgba(239,68,68,0.04) 100%)', borderColor: 'rgba(245,158,11,0.22)' }}
     >
-      {/* ── Accordion header — tappable on mobile, static on desktop ── */}
+      {/* ── Accordion header ── */}
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center gap-3 px-4 py-3.5 lg:cursor-default press-sm lg:active:scale-100"
@@ -687,11 +699,8 @@ function CoinsRabattWidget({ coins, streak }: { coins: number; streak: number })
           <p className="text-text-muted text-[12px] mt-0.5">
             <span className="font-semibold tabular-nums" style={{ color: '#F59E0B' }}>{coins}</span>
             {' '}· {COIN_TIERS[getCoinTier(coins)].label}
-            {has15 && <span className="ml-1.5 text-[10px] font-bold" style={{ color: '#34D399' }}>15% Rabatt ✓</span>}
-            {has30 && <span className="ml-1 text-[10px] font-bold" style={{ color: '#34D399' }}>30% Rabatt ✓</span>}
           </p>
         </div>
-        {/* Chevron — hidden on desktop (always expanded there) */}
         <svg
           className={`lg:hidden shrink-0 text-text-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
           width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -700,63 +709,50 @@ function CoinsRabattWidget({ coins, streak }: { coins: number; streak: number })
         </svg>
       </button>
 
-      {/* ── Expandable body ─────────────────────────────────────────── */}
+      {/* ── Expandable body ── */}
       <div className={open ? 'block' : 'hidden lg:block'}>
-        <div className="px-4 pb-4 space-y-4">
-          <div className="h-px" style={{ background: 'rgba(245,158,11,0.18)' }}/>
+        <div className="px-4 pb-4">
+          <div className="h-px mb-3" style={{ background: 'rgba(245,158,11,0.18)' }}/>
 
-          {/* 15% Rabatt */}
-          <div className={has15 ? '' : 'opacity-70'}>
-            <div className="flex items-start justify-between gap-3 mb-2">
-              <div>
-                <p className="text-text-primary font-bold text-[14px]">15% Rabatt</p>
-                <p className="text-text-muted text-[12px]">€6,80 statt €7,99/Mo</p>
-              </div>
-              {has15 && (
-                <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap shrink-0"
-                  style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>✓ Verfügbar</span>
-              )}
-            </div>
-            {!has15 && (
-              <>
-                <div className="h-2 rounded-pill overflow-hidden mb-1.5" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
-                  <div className="h-full rounded-pill transition-all duration-500"
-                    style={{ width: `${progress15}%`, background: 'linear-gradient(90deg, #F59E0B, #EF4444)' }}/>
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-2">Heute verdienen</p>
+
+          <div className="space-y-1.5">
+            {DAILY_TASKS.map(task => {
+              const done = cooldowns.includes(`${task.key}:${today}`)
+              return (
+                <div key={task.key} className="flex items-center gap-2">
+                  <div
+                    className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                    style={done
+                      ? { background: '#34D399' }
+                      : { border: '1.5px solid rgba(var(--color-border), 0.7)' }}
+                  >
+                    {done && (
+                      <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 6l3 3 5-5"/>
+                      </svg>
+                    )}
+                  </div>
+                  <span className={`text-[11px] flex-1 leading-none ${done ? 'line-through text-text-muted' : 'text-text-secondary'}`}>
+                    {task.icon} {task.label}
+                  </span>
+                  {!done && (
+                    <span className="text-[11px] font-bold tabular-nums" style={{ color: '#F59E0B' }}>
+                      +{task.reward}
+                    </span>
+                  )}
                 </div>
-                <p className="text-text-muted text-[11px]">Noch {coinsTo15} Coins</p>
-              </>
-            )}
+              )
+            })}
           </div>
 
-          {/* 30% Rabatt */}
-          <div className={has30 ? '' : 'opacity-50'}>
-            <div className="flex items-start justify-between gap-3 mb-2">
-              <div>
-                <p className="text-text-primary font-bold text-[14px]">30% Rabatt</p>
-                <p className="text-text-muted text-[12px]">€5,59 statt €7,99/Mo</p>
-              </div>
-              {has30 && (
-                <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap shrink-0"
-                  style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>✓ Verfügbar</span>
-              )}
-            </div>
-            {!has30 && (
-              <>
-                <div className="h-2 rounded-pill overflow-hidden mb-1.5" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
-                  <div className="h-full rounded-pill transition-all duration-500"
-                    style={{ width: `${progress30}%`, background: 'linear-gradient(90deg, #D97706, #DC2626)' }}/>
-                </div>
-                <p className="text-text-muted text-[11px]">Noch {coinsTo30} Coins</p>
-              </>
-            )}
+          <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(var(--color-border), 0.4)' }}>
+            <p className="text-text-muted text-[11px]">
+              Coins im{' '}
+              <span className="font-semibold" style={{ color: '#5AC8FA' }}>Coins Shop →</span>
+              {' '}einlösen
+            </p>
           </div>
-
-          {(has15 || has30) && (
-            <button className="w-full py-3 rounded-card text-white text-[14px] font-bold press transition-opacity hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #F59E0B, #EF4444)' }}>
-              Dein Rabatt-Code →
-            </button>
-          )}
         </div>
       </div>
     </div>
@@ -776,12 +772,19 @@ function CoinsShopWidget({
   const FREEZE_COST = 500
   const canAfford = coins >= FREEZE_COST
 
+  const RABATT_15 = 2500
+  const RABATT_30 = 5000
+  const has15 = coins >= RABATT_15
+  const has30 = coins >= RABATT_30
+  const progress15 = Math.min((coins / RABATT_15) * 100, 100)
+  const progress30 = Math.min((coins / RABATT_30) * 100, 100)
+
   return (
     <div
       className="rounded-card border overflow-hidden"
       style={{ background: 'linear-gradient(140deg, rgba(90,200,250,0.08) 0%, rgba(99,102,241,0.04) 100%)', borderColor: 'rgba(90,200,250,0.22)' }}
     >
-      {/* ── Accordion header ─────────────────────────────────────────── */}
+      {/* ── Accordion header ── */}
       <button
         onClick={() => setOpen(o => !o)}
         className="w-full flex items-center gap-3 px-4 py-3.5 lg:cursor-default press-sm lg:active:scale-100"
@@ -806,16 +809,16 @@ function CoinsShopWidget({
         </svg>
       </button>
 
-      {/* ── Expandable body ─────────────────────────────────────────── */}
+      {/* ── Expandable body ── */}
       <div className={open ? 'block' : 'hidden lg:block'}>
-        <div className="px-4 pb-4 space-y-3">
+        <div className="px-4 pb-4 space-y-4">
           <div className="h-px" style={{ background: 'rgba(90,200,250,0.18)' }}/>
 
-          {/* Streak Freeze item */}
+          {/* ─ Streak Freeze ─ */}
           <div className="flex items-center gap-3">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                <p className="text-text-primary font-bold text-[14px]">Streak Freeze</p>
+                <p className="text-text-primary font-bold text-[14px]">Streak Freeze 🧊</p>
                 {freezeCount > 0 && (
                   <span className="text-[10px] font-bold px-2 py-0.5 rounded-pill"
                     style={{ background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' }}>
@@ -826,7 +829,9 @@ function CoinsShopWidget({
               <p className="text-text-muted text-[11px] leading-snug">
                 Erhält die Streak bei einem verpassten Tag
               </p>
-              <p className="font-bold text-[12px] mt-1" style={{ color: '#F59E0B' }}>500 🪙</p>
+              <span className="inline-flex items-center gap-1 font-bold text-[12px] mt-1" style={{ color: '#F59E0B' }}>
+                500 <CoinIcon coins={coins} size={13} tilt={false} noAnimation/>
+              </span>
             </div>
             <button
               onClick={onBuyFreeze}
@@ -849,13 +854,66 @@ function CoinsShopWidget({
           {freezeToast === 'error' && (
             <div className="rounded-[10px] px-3 py-2 border text-center"
               style={{ background: 'rgba(239,68,68,0.08)', borderColor: 'rgba(239,68,68,0.25)' }}>
-              <p className="text-[12px] font-semibold" style={{ color: '#EF4444' }}>Nicht genug Coins — 500 🪙 nötig</p>
+              <p className="text-[12px] font-semibold" style={{ color: '#EF4444' }}>
+                Nicht genug Coins —{' '}
+                <span className="inline-flex items-center gap-0.5">
+                  500 <CoinIcon coins={0} size={11} tilt={false} noAnimation/>
+                </span>{' '}
+                nötig
+              </p>
             </div>
           )}
           {!canAfford && !freezeToast && (
             <p className="text-text-muted text-[11px] text-center">
               Noch {Math.max(0, FREEZE_COST - coins)} Coins bis zum Kauf
             </p>
+          )}
+
+          <div className="h-px" style={{ borderTop: '1px solid rgba(var(--color-border), 0.4)' }}/>
+
+          {/* ─ 15% Rabatt progress ─ */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <div>
+                <p className="text-text-primary font-bold text-[13px]">15% Rabatt</p>
+                <p className="text-text-muted text-[10px]">€6,80 statt €7,99/Mo</p>
+              </div>
+              {has15
+                ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-pill shrink-0"
+                    style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>✓ Verfügbar</span>
+                : <span className="text-text-muted text-[10px] shrink-0">Noch {Math.max(0, RABATT_15 - coins)}</span>
+              }
+            </div>
+            <div className="h-2 rounded-pill overflow-hidden" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
+              <div className="h-full rounded-pill transition-all duration-500"
+                style={{ width: `${progress15}%`, background: 'linear-gradient(90deg, #34D399, #059669)' }}/>
+            </div>
+          </div>
+
+          {/* ─ 30% Rabatt progress ─ */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <div>
+                <p className="text-text-primary font-bold text-[13px]">30% Rabatt</p>
+                <p className="text-text-muted text-[10px]">€5,59 statt €7,99/Mo</p>
+              </div>
+              {has30
+                ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-pill shrink-0"
+                    style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>✓ Verfügbar</span>
+                : <span className="text-text-muted text-[10px] shrink-0">Noch {Math.max(0, RABATT_30 - coins)}</span>
+              }
+            </div>
+            <div className="h-2 rounded-pill overflow-hidden" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
+              <div className="h-full rounded-pill transition-all duration-500"
+                style={{ width: `${progress30}%`, background: 'linear-gradient(90deg, #34D399, #059669)' }}/>
+            </div>
+          </div>
+
+          {(has15 || has30) && (
+            <button className="w-full py-3 rounded-card text-white text-[14px] font-bold press transition-opacity hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}>
+              Rabatt-Code anzeigen →
+            </button>
           )}
         </div>
       </div>
