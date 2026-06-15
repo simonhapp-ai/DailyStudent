@@ -67,7 +67,7 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 14.06.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 15.06.2026)
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
