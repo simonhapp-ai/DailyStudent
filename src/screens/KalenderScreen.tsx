@@ -9,14 +9,6 @@ import { totalPunkteAllHalbjahre, pktToNoteAbi, noteColorAbi } from './AbiRechne
 import { parseStundenplanFromImage } from '../lib/groq'
 import { LernvorschlagWidget } from '../components/ui/LernvorschlagWidget'
 
-function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
-  if (!lastStudyDate) return 0
-  const today = new Date().toISOString().slice(0, 10)
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  return lastStudyDate === today || lastStudyDate === yesterday.toISOString().slice(0, 10)
-    ? streak : 0
-}
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -123,10 +115,8 @@ function CloseIcon({ size = 14 }: { size?: number }) {
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export function KalenderScreen() {
-  const { profile, personalEntries, addEntry, removeEntry, updateProfile, addKlausurtermin, userNotes, completedHomeworkIds, standaloneHomework, appStats } = useUser()
+  const { profile, personalEntries, addEntry, removeEntry, updateProfile, addKlausurtermin, userNotes, completedHomeworkIds, standaloneHomework } = useUser()
   const navigate = useNavigate()
-  const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
-
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const todayStr = toDateStr(today)
 
