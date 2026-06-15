@@ -26,8 +26,14 @@
   --si-c-from: 237 233 254;   /* violet-100 */
   --si-c-to:   167 139 250;   /* violet-400 */
 
-  --nav-pill-bg:     rgba(255, 255, 255, 0.88);
-  --nav-pill-border: rgba(0, 0, 0, 0.09);
+  /* Liquid Glass nav pill — light mode */
+  --nav-pill-bg:     rgba(255, 255, 255, 0.58);
+  --nav-pill-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.06),
+    0 0 0 0.75px rgba(0, 0, 0, 0.07),
+    0 8px 40px rgba(0, 0, 0, 0.13),
+    0 2px 6px rgba(0, 0, 0, 0.07);
 
   color-scheme: light;
 }
@@ -46,8 +52,14 @@
   --color-text-secondary:205 205 210;
   --color-text-muted:    140 140 150;
 
-  --nav-pill-bg:     rgba(52, 52, 58, 0.88);
-  --nav-pill-border: rgba(255, 255, 255, 0.14);
+  /* Liquid Glass nav pill — dark mode */
+  --nav-pill-bg:     rgba(36, 36, 42, 0.72);
+  --nav-pill-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.4),
+    0 0 0 0.75px rgba(255, 255, 255, 0.11),
+    0 8px 40px rgba(0, 0, 0, 0.48),
+    0 2px 8px rgba(0, 0, 0, 0.28);
 
   /* Subject icon radial gradients — dark mode: deep purple sphere */
   --si-a-from:  91  33 182;   /* violet-800 */
