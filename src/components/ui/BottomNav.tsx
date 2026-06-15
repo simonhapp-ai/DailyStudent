@@ -69,7 +69,7 @@ export function BottomNav() {
     <nav
       className="fixed left-4 right-4 z-50"
       style={{
-        bottom: 'max(6px, calc(env(safe-area-inset-bottom, 0px) + 4px))',
+        bottom: 'max(4px, calc(env(safe-area-inset-bottom, 0px) - 12px))',
       }}
     >
       <div
