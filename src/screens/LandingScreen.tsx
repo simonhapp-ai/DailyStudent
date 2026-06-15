@@ -660,22 +660,11 @@ export function LandingScreen() {
                 </span>
               </motion.h1>
 
-              {/* Accent */}
-              <motion.p
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: E, delay: 0.09 }}
-                className="text-[18px] md:text-[20px] font-semibold mb-4"
-                style={{ color: '#483C5F', letterSpacing: '-0.01em' }}
-              >
-                Organisation wie ein Einser-Schüler.
-              </motion.p>
-
               {/* Subtext */}
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.58, ease: E, delay: 0.18 }}
+                transition={{ duration: 0.58, ease: E, delay: 0.09 }}
                 className="text-[16px] md:text-[17px] leading-relaxed mb-8 max-w-lg"
                 style={{ color: '#988CAF' }}
               >
@@ -686,7 +675,7 @@ export function LandingScreen() {
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, ease: E, delay: 0.28 }}
+                transition={{ duration: 0.55, ease: E, delay: 0.19 }}
                 className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 mb-8"
               >
                 <button
@@ -715,7 +704,7 @@ export function LandingScreen() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: E, delay: 0.38 }}
+                transition={{ duration: 0.5, ease: E, delay: 0.28 }}
                 className="flex items-center justify-center md:justify-start gap-2 text-[13px]"
                 style={{ color: '#988CAF' }}
               >
