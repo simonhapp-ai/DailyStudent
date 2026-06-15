@@ -430,12 +430,12 @@ function TriangleSystem() {
   ]
 
   return (
-    <div className="relative max-w-3xl mx-auto">
+    <div className="relative max-w-5xl mx-auto">
       {/* Desktop triangle layout */}
       <div className="hidden md:block">
         {/* Top node — centered */}
         <div className="flex justify-center mb-2">
-          <FadeUp delay={0.04} className="w-[340px]">
+          <FadeUp delay={0.04} className="w-[440px]">
             <TriangleNode {...nodes[0]} />
           </FadeUp>
         </div>
@@ -556,9 +556,9 @@ function FeatureSection({
 }) {
   return (
     <section id={id} className="py-20 md:py-28">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-12 md:gap-20`}>
-          <div className="flex-1 min-w-0">
+      <div className="max-w-7xl mx-auto px-6 lg:px-12">
+        <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-12 md:gap-16 lg:gap-24`}>
+          <div className="flex-1 min-w-0 md:max-w-[420px]">
             <FadeUp>
               <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5" style={{ background: `${badgeColor}15`, color: badgeColor }}>
                 {badge}
@@ -587,7 +587,7 @@ function FeatureSection({
               ))}
             </div>
           </div>
-          <FadeUp delay={0.08} className="flex-1 w-full">
+          <FadeUp delay={0.08} className="flex-1 w-full min-w-0">
             {mockup}
           </FadeUp>
         </div>
@@ -633,8 +633,8 @@ export function LandingScreen() {
           }}
         />
 
-        <div className="max-w-6xl mx-auto px-6 py-20 w-full">
-          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-20 w-full">
+          <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20 lg:gap-28">
 
             {/* Left — Text */}
             <div className="flex-1 min-w-0 text-center md:text-left">
@@ -644,8 +644,8 @@ export function LandingScreen() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.65, ease: E, delay: 0 }}
-                className="font-black leading-[1.08] mb-4"
-                style={{ fontSize: 'clamp(36px, 6.5vw, 72px)', color: '#160E28', letterSpacing: '-0.03em' }}
+                className="font-black leading-[1.06] mb-4"
+                style={{ fontSize: 'clamp(38px, 6.5vw, 80px)', color: '#160E28', letterSpacing: '-0.035em' }}
               >
                 Dein KI-Lernsystem
                 <br />
@@ -720,7 +720,7 @@ export function LandingScreen() {
               initial={{ opacity: 0, x: 28, y: 8 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.8, ease: E, delay: 0.14 }}
-              className="flex-1 w-full max-w-[360px] md:max-w-none"
+              className="w-full md:w-[45%] lg:w-[42%] shrink-0 max-w-[420px] md:max-w-none"
             >
               <SmartNoteMockup />
             </motion.div>
@@ -731,7 +731,7 @@ export function LandingScreen() {
       {/* ── Stats Bar ─────────────────────────────────────────────────────── */}
       <FadeUp>
         <div className="border-y" style={{ background: 'white', borderColor: 'rgba(209,209,214,0.4)' }}>
-          <div className="max-w-6xl mx-auto px-6 py-6">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x" style={{ '--tw-divide-opacity': '0.3' } as React.CSSProperties}>
               {[
                 { value: '4.000+', label: 'Schüler auf Discord' },
@@ -755,25 +755,30 @@ export function LandingScreen() {
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 60% at 80% 50%, rgba(124,58,237,0.12) 0%, transparent 65%)' }} />
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 40% at 15% 80%, rgba(99,102,241,0.08) 0%, transparent 60%)' }} />
 
-        <div className="max-w-6xl mx-auto px-6 relative">
-          <div className="max-w-2xl">
-            <FadeUp>
-              <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6" style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.5)' }}>
-                Klingt bekannt?
-              </span>
-            </FadeUp>
-            <FadeUp delay={0.06}>
-              <h2 className="font-black text-white mb-6 leading-tight" style={{ fontSize: 'clamp(34px, 5.5vw, 60px)', letterSpacing: '-0.03em' }}>
-                Nie wieder auf Verdacht lernen.
-              </h2>
-            </FadeUp>
-            <FadeUp delay={0.12}>
-              <p className="text-[17px] leading-relaxed mb-10" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                Die meisten Schüler lernen ohne System — und merken es erst in der Klausur.
-              </p>
-            </FadeUp>
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 relative">
+          <div className="flex flex-col md:flex-row md:items-start gap-12 md:gap-16 lg:gap-24">
 
-            <div className="space-y-4">
+            {/* Left — headline */}
+            <div className="md:w-[42%] shrink-0">
+              <FadeUp>
+                <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6" style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.5)' }}>
+                  Klingt bekannt?
+                </span>
+              </FadeUp>
+              <FadeUp delay={0.06}>
+                <h2 className="font-black text-white mb-6 leading-tight" style={{ fontSize: 'clamp(34px, 4vw, 56px)', letterSpacing: '-0.03em' }}>
+                  Nie wieder auf Verdacht lernen.
+                </h2>
+              </FadeUp>
+              <FadeUp delay={0.12}>
+                <p className="text-[17px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                  Die meisten Schüler lernen ohne System — und merken es erst in der Klausur.
+                </p>
+              </FadeUp>
+            </div>
+
+            {/* Right — pain points */}
+            <div className="flex-1 space-y-4">
               {[
                 {
                   text: 'Notizen ohne Struktur — du schreibst mit, weißt aber nicht was davon wirklich klausurrelevant ist.',
@@ -788,23 +793,24 @@ export function LandingScreen() {
                   color: '#A78BFA',
                 },
               ].map((item, i) => (
-                <FadeUp key={i} delay={0.16 + i * 0.08}>
-                  <div className="flex items-start gap-4 p-4 rounded-2xl" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                <FadeUp key={i} delay={0.1 + i * 0.09}>
+                  <div className="flex items-start gap-4 p-5 rounded-2xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
                     <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${item.color}25` }}>
                       <div className="w-1.5 h-1.5 rounded-full" style={{ background: item.color }} />
                     </div>
-                    <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>{item.text}</p>
+                    <p className="text-[15px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>{item.text}</p>
                   </div>
                 </FadeUp>
               ))}
             </div>
+
           </div>
         </div>
       </section>
 
       {/* ── Das System — Triangle ─────────────────────────────────────────── */}
       <section id="system" className="py-20 md:py-28" style={{ background: '#FAFAFD' }}>
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <FadeUp className="text-center mb-14">
             <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
               Das System
@@ -901,7 +907,7 @@ export function LandingScreen() {
 
       {/* ── Social Proof ──────────────────────────────────────────────────── */}
       <section style={{ background: '#FAFAFD' }} className="py-20">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <FadeUp>
             <div
               className="rounded-3xl p-10 md:p-14 text-center"
@@ -924,7 +930,7 @@ export function LandingScreen() {
 
       {/* ── Pricing ───────────────────────────────────────────────────────── */}
       <section id="preise" className="py-20 md:py-28" style={{ background: 'white' }}>
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <FadeUp className="text-center mb-12">
             <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
               Preise
@@ -1006,7 +1012,7 @@ export function LandingScreen() {
       {/* ── Final CTA ─────────────────────────────────────────────────────── */}
       <FadeUp>
         <section className="py-20 md:py-28" style={{ background: '#FAFAFD' }}>
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="rounded-3xl p-10 md:p-16 text-center relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #160E28 0%, #2A1B5C 100%)' }}>
               <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% -10%, rgba(124,58,237,0.35) 0%, transparent 60%)' }} />
               <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 40% at 80% 110%, rgba(99,102,241,0.2) 0%, transparent 60%)' }} />
@@ -1037,7 +1043,7 @@ export function LandingScreen() {
 
       {/* ── Footer ────────────────────────────────────────────────────────── */}
       <footer className="border-t py-8" style={{ background: 'white', borderColor: 'rgba(209,209,214,0.4)' }}>
-        <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-lg overflow-hidden shrink-0">
               <img src="/logo.png" alt="DailyStudent" className="w-full h-full object-cover" style={{ transform: 'scale(1.38)', transformOrigin: 'center' }} />
