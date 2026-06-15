@@ -47,6 +47,18 @@ export interface KlausurTermin {
   topic?: string
 }
 
+export const COIN_VALUES = {
+  LOGIN: 5,
+  SMART_NOTE: 5,
+  FLASHCARD_LEARNED: 10,
+  BLURTING: 10,
+  LERNZETTEL: 20,
+  PROBEKLAUSUR: 50,
+  LERNPLAN_DAY: 15,
+} as const
+
+export type CoinAction = keyof typeof COIN_VALUES
+
 export interface UserProfile {
   name: string
   klasse: string
@@ -85,6 +97,10 @@ const DEFAULT_APP_STATS: AppStats = {
   lastStudyDate: null,
   studiedDays: [],
   examScores: [],
+  coins: 0,
+  cooldowns: [],
+  streakFreezes: 0,
+  freezeUsedDates: [],
 }
 
 interface StorageData {
@@ -140,9 +156,16 @@ interface UserContextValue {
   completeHomework: (id: string) => void
   addStandaloneHomework: (item: Omit<StandaloneHomeworkItem, 'id' | 'createdAt'>) => void
   appStats: AppStats
-  recordStudyDay: () => void
+  recordStudyDay: () => number
   recordExam: (score: ExamScoreRecord) => void
+  addCoins: (action: CoinAction) => number
+  recordLogin: () => void
+  buyStreakFreeze: () => boolean
   incrementScanCount: () => void
+  coinToastVisible: boolean
+  coinToastAmount: number
+  showCoinToast: (amount: number) => void
+  hideCoinToast: () => void
   kcCache: Record<string, KcSubjectData>
   kcFallbacks: string[]
   getKc: (subjectId: string) => KcSubjectData | null
@@ -443,6 +466,17 @@ export function UserProvider({ children }: { children: ReactNode }) {
       })()
     }
   }, [authUser?.id])
+  const [coinToastVisible, setCoinToastVisible] = useState(false)
+  const [coinToastAmount, setCoinToastAmount] = useState(0)
+
+  const showCoinToast = (amount: number) => {
+    if (amount <= 0) return
+    setCoinToastAmount(amount)
+    setCoinToastVisible(true)
+  }
+
+  const hideCoinToast = () => setCoinToastVisible(false)
+
   const [lernzettel, setLernzettel] = useState<Lernzettel[]>(stored.lernzettel ?? [])
   const [savedProbeklausuren, setSavedProbeklausuren] = useState<SavedProbeklausur[]>(stored.savedProbeklausuren ?? [])
   const [inProgressProbeklausuren, setInProgressProbeklausuren] = useState<InProgressProbeklausur[]>(stored.inProgressProbeklausuren ?? [])
@@ -502,6 +536,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.bundeslandId])
+
+  // Grant daily login bonus once per calendar day when user is logged in
+  useEffect(() => {
+    if (authUser && profile) {
+      recordLogin()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser?.id])
 
   const getKc = useCallback(
     (subjectId: string): KcSubjectData | null => kcCache[subjectId] ?? null,
@@ -685,6 +727,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setSavedProbeklausuren(updated)
     saveStorage({ ...loadStorage(), savedProbeklausuren: updated })
     recordExam({ id: pk.id, date: pk.completedAt, subjectId: pk.subjectId, gradeLabel: pk.gradeLabel, totalNP: pk.totalNP, source: 'probeklausur' })
+    // Only mode 2 (Vollständige 90-Min-Klausur) earns coins
+    if (pk.mode === 2) {
+      const coinGain = addCoins('PROBEKLAUSUR')
+      if (coinGain > 0) showCoinToast(coinGain)
+    }
     if (authUser) void syncProbeklausur(authUser.id, pk)
   }
 
@@ -759,25 +806,108 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) void syncCompletedHomework(authUser.id, [id])
   }
 
-  const recordStudyDay = () => {
+  // All stat functions read from loadStorage() rather than the React state closure
+  // to avoid stale-state bugs when multiple functions run in the same event handler.
+
+  const recordStudyDay = (): number => {
     const today = new Date().toISOString().slice(0, 10)
-    if (appStats.lastStudyDate === today) return
-    const yesterday = new Date()
-    yesterday.setDate(yesterday.getDate() - 1)
-    const yesterdayStr = yesterday.toISOString().slice(0, 10)
-    const newStreak = appStats.lastStudyDate === yesterdayStr ? appStats.streak + 1 : 1
-    const studiedDays = [...new Set([...appStats.studiedDays, today])].slice(-90)
-    const updated: AppStats = { ...appStats, streak: newStreak, lastStudyDate: today, studiedDays }
+    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    if (current.lastStudyDate === today) return 0
+
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
+    const dayBeforeYesterday = new Date(Date.now() - 2 * 86400000).toISOString().slice(0, 10)
+
+    let newStreak: number
+    let freezeUsedDates = current.freezeUsedDates ?? []
+    let streakFreezes = current.streakFreezes ?? 0
+
+    if (current.lastStudyDate === yesterday) {
+      // Normal: studied yesterday, streak continues
+      newStreak = current.streak + 1
+    } else if (
+      current.lastStudyDate === dayBeforeYesterday &&
+      streakFreezes > 0 &&
+      !freezeUsedDates.includes(yesterday)
+    ) {
+      // Missed exactly 1 day + freeze available → auto-use freeze
+      newStreak = current.streak + 1
+      streakFreezes -= 1
+      freezeUsedDates = [...freezeUsedDates.slice(-6), yesterday]
+      showCoinToast(0) // toast suppressed but we could show freeze notification later
+    } else {
+      // Streak broken
+      newStreak = 1
+    }
+
+    const studiedDays = [...new Set([...current.studiedDays, today])].slice(-90)
+
+    // Streak milestones (bonus coins)
+    let bonusCoins = 0
+    if (newStreak === 5)  bonusCoins = 25
+    if (newStreak === 10) bonusCoins = 50
+    if (newStreak === 30) bonusCoins = 100
+    if (newStreak === 60) bonusCoins = 500
+
+    const updated: AppStats = {
+      ...current,
+      streak: newStreak,
+      lastStudyDate: today,
+      studiedDays,
+      streakFreezes,
+      freezeUsedDates,
+      coins: (current.coins ?? 0) + bonusCoins,
+    }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })
     if (authUser) void syncAppStats(authUser.id, updated)
+    return bonusCoins
+  }
+
+  // Buy a streak freeze for 500 coins. Returns true if purchase succeeded.
+  const buyStreakFreeze = (): boolean => {
+    const FREEZE_COST = 500
+    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    if ((current.coins ?? 0) < FREEZE_COST) return false
+    const updated: AppStats = {
+      ...current,
+      coins: current.coins - FREEZE_COST,
+      streakFreezes: (current.streakFreezes ?? 0) + 1,
+    }
+    setAppStats(updated)
+    saveStorage({ ...loadStorage(), appStats: updated })
+    if (authUser) void syncAppStats(authUser.id, updated)
+    return true
+  }
+
+  // Grant daily login coins — call once per session, cooldown prevents duplicates
+  const recordLogin = () => {
+    const gain = addCoins('LOGIN')
+    if (gain > 0) showCoinToast(gain)
+  }
+
+  const addCoins = (action: CoinAction): number => {
+    const today = new Date().toISOString().slice(0, 10)
+    const cooldownKey = `${action}:${today}`
+    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    if ((current.cooldowns ?? []).includes(cooldownKey)) return 0
+    const amount = COIN_VALUES[action]
+    const updated: AppStats = {
+      ...current,
+      coins: (current.coins ?? 0) + amount,
+      cooldowns: [...(current.cooldowns ?? []), cooldownKey],
+    }
+    setAppStats(updated)
+    saveStorage({ ...loadStorage(), appStats: updated })
+    if (authUser) void syncAppStats(authUser.id, updated)
+    return amount
   }
 
   const recordExam = (score: ExamScoreRecord) => {
+    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
     const updated: AppStats = {
-      ...appStats,
-      examCount: appStats.examCount + 1,
-      examScores: [...appStats.examScores, score],
+      ...current,
+      examCount: current.examCount + 1,
+      examScores: [...current.examScores, score],
     }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })
@@ -786,7 +916,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const incrementScanCount = () => {
-    const updated: AppStats = { ...appStats, scanCount: appStats.scanCount + 1 }
+    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const updated: AppStats = { ...current, scanCount: current.scanCount + 1 }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })
     if (authUser) void syncAppStats(authUser.id, updated)
@@ -901,7 +1032,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
         appStats,
         recordStudyDay,
         recordExam,
+        addCoins,
+        recordLogin,
+        buyStreakFreeze,
         incrementScanCount,
+        coinToastVisible,
+        coinToastAmount,
+        showCoinToast,
+        hideCoinToast,
         kcCache,
         kcFallbacks,
         getKc,

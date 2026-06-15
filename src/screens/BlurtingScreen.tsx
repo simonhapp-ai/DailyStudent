@@ -59,7 +59,7 @@ function buildNoteRef(note: GeneratedSmartNote): string {
 
 export function BlurtingScreen() {
   const navigate = useNavigate()
-  const { generatedNotes, userNotes, profile, getKc } = useUser()
+  const { generatedNotes, userNotes, profile, getKc, recordStudyDay, addCoins, showCoinToast } = useUser()
 
   const [phase, setPhase] = useState<'select' | 'notepick' | 'write' | 'loading' | 'feedback'>('select')
   const [selected, setSelected] = useState<SelectedTopic | null>(null)
@@ -174,14 +174,20 @@ export function BlurtingScreen() {
     setPhase('write')
   }
 
+  const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0
+  const MIN_WORDS = 20
+
   async function handleAuswerten() {
-    if (!text.trim() || !selected) return
+    if (!text.trim() || wordCount < MIN_WORDS || !selected) return
     setPhase('loading')
     setError(null)
     try {
       const res = await evaluateBlurting(text, selected.referenceContent, getKc(notePickSubject?.id ?? '') ?? undefined)
       setResult(res)
       setPhase('feedback')
+      recordStudyDay()
+      const gain = addCoins('BLURTING')
+      if (gain > 0) showCoinToast(gain)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unbekannter Fehler')
       setPhase('write')
@@ -352,10 +358,16 @@ export function BlurtingScreen() {
             />
           </div>
           {error && <p className="px-4 pb-2 text-[13px] text-center" style={{ color: '#F87171' }}>{error}</p>}
-          <div className="px-4 pb-10 shrink-0">
+          <div className="px-4 pb-10 shrink-0 space-y-2">
+            {/* Wort-Counter */}
+            {text.trim().length > 0 && (
+              <p className="text-center text-[12px]" style={{ color: wordCount >= MIN_WORDS ? '#34D399' : '#94A3B8' }}>
+                {wordCount} / {MIN_WORDS} Wörter {wordCount >= MIN_WORDS ? '✓' : 'min.'}
+              </p>
+            )}
             <button
               onClick={handleAuswerten}
-              disabled={!text.trim()}
+              disabled={!text.trim() || wordCount < MIN_WORDS}
               className="w-full py-4 rounded-card text-white text-[15px] font-semibold press disabled:opacity-40 transition-opacity"
               style={{ background: BLURTING_GRADIENT }}
             >

@@ -12,7 +12,7 @@ type Step = 'fach' | 'select' | 'generating'
 
 export function LernzettelGeneratorScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, generatedNotes, getKc, saveLernzettel } = useUser()
+  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast } = useUser()
 
   const [step, setStep] = useState<Step>('fach')
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null)
@@ -88,6 +88,9 @@ export function LernzettelGeneratorScreen() {
       }
 
       saveLernzettel(lz)
+      recordStudyDay()
+      const gain = addCoins('LERNZETTEL')
+      if (gain > 0) showCoinToast(gain)
       navigate('/klausurmodus/lernzettel', { replace: true })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Fehler beim Generieren')

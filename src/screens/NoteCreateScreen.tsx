@@ -112,7 +112,7 @@ export function NoteCreateScreen() {
   const { id, folderId } = useParams<{ id?: string; folderId?: string }>()
   const navigate = useNavigate()
   const location = useLocation()
-  const { profile, saveNote, userFolders, userNotes, saveToOhneFachFolder, addFolder } = useUser()
+  const { profile, saveNote, userFolders, userNotes, saveToOhneFachFolder, addFolder, recordStudyDay, addCoins, showCoinToast } = useUser()
 
   const [noteId] = useState(() => {
     const uid = typeof crypto?.randomUUID === 'function'
@@ -483,6 +483,9 @@ export function NoteCreateScreen() {
   const doSave = (subjectId: string, resolvedFolderId: string, generatedNote?: GeneratedSmartNote) => {
     saveNote(buildNote(subjectId, resolvedFolderId), generatedNote ?? buildGeneratedNote())
     setShowSaveModal(false)
+    recordStudyDay()
+    const gain = addCoins('SMART_NOTE')
+    if (gain > 0) showCoinToast(gain)
     if (resolvedFolderId && subjectId) navigate(`/unterricht/${subjectId}/ordner/${resolvedFolderId}`, { replace: true })
     else if (subjectId) navigate(`/unterricht/${subjectId}`, { replace: true })
     else navigate('/unterricht', { replace: true })

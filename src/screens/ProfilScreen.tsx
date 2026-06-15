@@ -43,7 +43,7 @@ function getCurrentStreak(streak: number, lastStudyDate: string | null): number 
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser, updateProfile } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast } = useUser()
   const [proToast, setProToast] = useState(false)
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
@@ -52,6 +52,19 @@ export function ProfilScreen() {
   const [deleteInput, setDeleteInput] = useState('')
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [freezeToast, setFreezeToast] = useState<'success' | 'error' | null>(null)
+
+  const handleBuyFreeze = () => {
+    const ok = buyStreakFreeze()
+    if (ok) {
+      showCoinToast(0)
+      setFreezeToast('success')
+      setTimeout(() => setFreezeToast(null), 2200)
+    } else {
+      setFreezeToast('error')
+      setTimeout(() => setFreezeToast(null), 2200)
+    }
+  }
 
   const avatarBg = profile?.avatarBg ?? 'linear-gradient(145deg, #A78BFA, #7C3AED)'
   const avatarEmoji = profile?.avatarEmoji ?? '🎓'
@@ -274,6 +287,17 @@ export function ProfilScreen() {
             ))}
           </div>
         </div>
+
+        {/* ── Coins & Rabatte ────────────────────────────────────── */}
+        <CoinsRabattWidget coins={appStats.coins ?? 0} streak={activeStreak} />
+
+        {/* ── Coins Shop ─────────────────────────────────────────── */}
+        <CoinsShopWidget
+          coins={appStats.coins ?? 0}
+          freezeCount={appStats.streakFreezes ?? 0}
+          onBuyFreeze={handleBuyFreeze}
+          freezeToast={freezeToast}
+        />
 
         {/* ── Statistiken & Insights Button ──────────────────────── */}
         <button
@@ -596,6 +620,204 @@ export function ProfilScreen() {
         <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-pill bg-destructive/10 border border-destructive/30 shadow-float animate-fade-in">
           <p className="text-destructive text-[13px] font-semibold whitespace-nowrap">Fehler beim Checkout. Bitte erneut versuchen.</p>
         </div>
+      )}
+    </div>
+  )
+}
+
+// ── Coins & Rabatt Widget ──────────────────────────────────────────────────
+
+function CoinsRabattWidget({ coins, streak }: { coins: number; streak: number }) {
+  const RABATT_15_COINS = 2500
+  const RABATT_30_COINS = 5000
+
+  const has15 = coins >= RABATT_15_COINS
+  const has30 = coins >= RABATT_30_COINS
+
+  const progress15 = Math.min((coins / RABATT_15_COINS) * 100, 100)
+  const progress30 = Math.min((coins / RABATT_30_COINS) * 100, 100)
+
+  const coinsTo15 = Math.max(0, RABATT_15_COINS - coins)
+  const coinsTo30 = Math.max(0, RABATT_30_COINS - coins)
+  void streak
+
+  return (
+    <div
+      className="rounded-card border p-5 space-y-4"
+      style={{ background: 'linear-gradient(140deg, rgba(245,158,11,0.08) 0%, rgba(239,68,68,0.04) 100%)', borderColor: 'rgba(245,158,11,0.22)' }}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="section-label mb-0">Deine Coins</h2>
+          <div className="flex items-baseline gap-1.5 mt-1">
+            <span className="text-[32px] font-black tabular-nums leading-none" style={{ color: '#F59E0B' }}>{coins}</span>
+            <span className="text-[22px] leading-none">🪙</span>
+          </div>
+          <p className="text-text-muted text-[12px] mt-1">Verdient durch tägliches Lernen</p>
+        </div>
+      </div>
+
+      <div className="h-px" style={{ background: 'rgba(245,158,11,0.18)' }} />
+
+      {/* 15% Rabatt */}
+      <div className={has15 ? '' : 'opacity-70'}>
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <div>
+            <p className="text-text-primary font-bold text-[14px]">15% Rabatt</p>
+            <p className="text-text-muted text-[12px]">€6,80 statt €7,99/Mo</p>
+          </div>
+          {has15 && (
+            <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap shrink-0"
+              style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
+              ✓ Verfügbar
+            </span>
+          )}
+        </div>
+        {!has15 && (
+          <>
+            <div className="h-2 rounded-pill overflow-hidden mb-1.5" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
+              <div
+                className="h-full rounded-pill transition-all duration-500"
+                style={{ width: `${progress15}%`, background: 'linear-gradient(90deg, #F59E0B, #EF4444)' }}
+              />
+            </div>
+            <p className="text-text-muted text-[11px]">Noch {coinsTo15} Coins</p>
+          </>
+        )}
+      </div>
+
+      {/* 30% Rabatt */}
+      <div className={has30 ? '' : 'opacity-50'}>
+        <div className="flex items-start justify-between gap-3 mb-2">
+          <div>
+            <p className="text-text-primary font-bold text-[14px]">30% Rabatt</p>
+            <p className="text-text-muted text-[12px]">€5,59 statt €7,99/Mo</p>
+          </div>
+          {has30 && (
+            <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap shrink-0"
+              style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
+              ✓ Verfügbar
+            </span>
+          )}
+        </div>
+        {!has30 && (
+          <>
+            <div className="h-2 rounded-pill overflow-hidden mb-1.5" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
+              <div
+                className="h-full rounded-pill transition-all duration-500"
+                style={{ width: `${progress30}%`, background: 'linear-gradient(90deg, #D97706, #DC2626)' }}
+              />
+            </div>
+            <p className="text-text-muted text-[11px]">Noch {coinsTo30} Coins</p>
+          </>
+        )}
+      </div>
+
+      {/* CTA — nur wenn Rabatt verfügbar */}
+      {(has15 || has30) && (
+        <button className="w-full py-3 rounded-card text-white text-[14px] font-bold press transition-opacity hover:opacity-90"
+          style={{ background: 'linear-gradient(135deg, #F59E0B, #EF4444)' }}>
+          Dein Rabatt-Code →
+        </button>
+      )}
+    </div>
+  )
+}
+
+// ── Coins Shop Widget ──────────────────────────────────────────────────────
+
+function CoinsShopWidget({
+  coins,
+  freezeCount,
+  onBuyFreeze,
+  freezeToast,
+}: {
+  coins: number
+  freezeCount: number
+  onBuyFreeze: () => void
+  freezeToast: 'success' | 'error' | null
+}) {
+  const FREEZE_COST = 500
+  const canAfford = coins >= FREEZE_COST
+
+  return (
+    <div
+      className="rounded-card border p-5 space-y-4"
+      style={{ background: 'linear-gradient(140deg, rgba(90,200,250,0.08) 0%, rgba(99,102,241,0.04) 100%)', borderColor: 'rgba(90,200,250,0.22)' }}
+    >
+      {/* Header */}
+      <div>
+        <h2 className="section-label mb-0">Coins Shop</h2>
+        <p className="text-text-muted text-[12px] mt-1">Tausche deine Coins gegen nützliche Items ein</p>
+      </div>
+
+      <div className="h-px" style={{ background: 'rgba(90,200,250,0.18)' }} />
+
+      {/* Streak Freeze Item */}
+      <div className="flex items-center gap-4">
+        {/* Icon */}
+        <div
+          className="w-14 h-14 rounded-[16px] flex items-center justify-center shrink-0 text-[28px]"
+          style={{ background: 'linear-gradient(145deg, rgba(90,200,250,0.25), rgba(99,102,241,0.20))', border: '1px solid rgba(90,200,250,0.30)' }}
+        >
+          🧊
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <p className="text-text-primary font-bold text-[15px]">Streak Freeze</p>
+            {freezeCount > 0 && (
+              <span
+                className="text-[11px] font-bold px-2 py-0.5 rounded-pill"
+                style={{ background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' }}
+              >
+                {freezeCount}× vorhanden
+              </span>
+            )}
+          </div>
+          <p className="text-text-muted text-[12px] leading-snug">
+            Erhält deine Streak bei einem verpassten Tag automatisch
+          </p>
+          <p className="font-bold text-[13px] mt-1.5" style={{ color: '#F59E0B' }}>
+            500 🪙
+          </p>
+        </div>
+
+        {/* Buy button */}
+        <button
+          onClick={onBuyFreeze}
+          disabled={!canAfford}
+          className="shrink-0 px-4 py-2.5 rounded-[12px] text-[13px] font-bold press-sm transition-all disabled:opacity-40"
+          style={canAfford
+            ? { background: 'linear-gradient(135deg, #5AC8FA, #6366F1)', color: '#fff', boxShadow: '0 3px 10px rgba(90,200,250,0.30)' }
+            : { background: 'rgba(var(--color-border), 0.5)', color: 'var(--color-text-muted)' }
+          }
+        >
+          Kaufen
+        </button>
+      </div>
+
+      {/* Feedback toast inline */}
+      {freezeToast === 'success' && (
+        <div className="rounded-[10px] px-3 py-2.5 border text-center"
+          style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.25)' }}>
+          <p className="text-[13px] font-semibold" style={{ color: '#34D399' }}>🧊 Streak Freeze gekauft! Wird automatisch aktiviert.</p>
+        </div>
+      )}
+      {freezeToast === 'error' && (
+        <div className="rounded-[10px] px-3 py-2.5 border text-center"
+          style={{ background: 'rgba(239,68,68,0.08)', borderColor: 'rgba(239,68,68,0.25)' }}>
+          <p className="text-[13px] font-semibold" style={{ color: '#EF4444' }}>Nicht genug Coins. Du brauchst 500 🪙</p>
+        </div>
+      )}
+
+      {/* Coins remaining hint */}
+      {!canAfford && (
+        <p className="text-text-muted text-[11px] text-center">
+          Noch {Math.max(0, FREEZE_COST - coins)} Coins bis zum nächsten Kauf
+        </p>
       )}
     </div>
   )

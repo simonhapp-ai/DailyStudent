@@ -239,6 +239,10 @@ export interface AppStats {
   lastStudyDate: string | null  // 'YYYY-MM-DD'
   studiedDays: string[]         // 'YYYY-MM-DD', last 90 days max
   examScores: ExamScoreRecord[]
+  coins: number                 // Gamification coins, default 0
+  cooldowns: string[]           // Format: "ACTION_TYPE:YYYY-MM-DD" — prevents daily exploit
+  streakFreezes: number         // Available freeze count (each costs 500 coins to buy)
+  freezeUsedDates: string[]     // Dates where a freeze was auto-applied, last 7 entries
 }
 
 /* ─── Lernzettel ────────────────────────────────────────────── */

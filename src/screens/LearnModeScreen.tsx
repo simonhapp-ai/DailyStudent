@@ -28,7 +28,7 @@ export function LearnModeScreen() {
   const [cardIndex, setCardIndex] = useState(0)
   const [knownCount, setKnownCount] = useState(0)
   const navigate = useNavigate()
-  const { generatedFlashCards, userNotes, profile } = useUser()
+  const { generatedFlashCards, userNotes, profile, recordStudyDay, addCoins, showCoinToast } = useUser()
 
   // ── Build decks ────────────────────────────────────────────────────────────
   const deckMap = generatedFlashCards.reduce<Record<string, FlashCardType[]>>((acc, card) => {
@@ -77,6 +77,9 @@ export function LearnModeScreen() {
   const handleKnown = () => {
     setKnownCount((n) => n + 1)
     setCardIndex((i) => (i + 1) % sessionCards.length)
+    recordStudyDay()
+    const gain = addCoins('FLASHCARD_LEARNED')
+    if (gain > 0) showCoinToast(gain)
   }
 
   const handleAgain = () => {

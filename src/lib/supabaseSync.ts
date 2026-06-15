@@ -293,6 +293,10 @@ function mapAppStats(r: Row): AppStats {
     lastStudyDate: r.last_study_date,
     studiedDays: r.studied_days ?? [],
     examScores: r.exam_scores ?? [],
+    coins: r.coins ?? 0,
+    cooldowns: r.cooldowns ?? [],
+    streakFreezes: r.streak_freezes ?? 0,
+    freezeUsedDates: r.freeze_used_dates ?? [],
   }
 }
 
@@ -374,7 +378,7 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
       supabase.from('grade_data').select('abi_halbjahre').eq('user_id', userId).maybeSingle(),
     ])
 
-    const DEFAULT_STATS: AppStats = { scanCount: 0, examCount: 0, streak: 0, lastStudyDate: null, studiedDays: [], examScores: [] }
+    const DEFAULT_STATS: AppStats = { scanCount: 0, examCount: 0, streak: 0, lastStudyDate: null, studiedDays: [], examScores: [], coins: 0, cooldowns: [], streakFreezes: 0, freezeUsedDates: [] }
 
     // isPro = manual override in profiles.is_pro OR active/trialing subscription
     const isPro =
@@ -492,6 +496,10 @@ export async function syncAppStats(userId: string, stats: AppStats): Promise<voi
       last_study_date: stats.lastStudyDate,
       studied_days: stats.studiedDays,
       exam_scores: stats.examScores,
+      coins: stats.coins ?? 0,
+      cooldowns: stats.cooldowns ?? [],
+      streak_freezes: stats.streakFreezes ?? 0,
+      freeze_used_dates: stats.freezeUsedDates ?? [],
     })
   } catch (err) { console.warn('[Supabase] syncAppStats', err) }
 }
