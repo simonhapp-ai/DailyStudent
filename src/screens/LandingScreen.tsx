@@ -731,6 +731,90 @@ function CompactPhaseNode({ node, isActive, onClick }: { node: PhaseNode; isActi
   )
 }
 
+function TriangleArrows() {
+  const ref = useRef<SVGSVGElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  return (
+    <div className="relative h-16 pointer-events-none select-none" aria-hidden>
+      <svg ref={ref} viewBox="0 0 640 64" className="w-full h-full" fill="none">
+        <defs>
+          <linearGradient id="tg-l" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#5AC8FA" stopOpacity="0.75" />
+          </linearGradient>
+          <linearGradient id="tg-r" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#34D399" stopOpacity="0.75" />
+          </linearGradient>
+        </defs>
+
+        {/* Left curved arrow — from bottom-left of top card to top of Kalender */}
+        <motion.path
+          d="M 192 2 C 168 22 148 42 136 60"
+          stroke="url(#tg-l)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+          transition={{ duration: 0.65, ease: E, delay: 0.1 }}
+        />
+        {/* Dot at left end */}
+        <motion.circle
+          cx={136} cy={60} r={3.5}
+          fill="#5AC8FA"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 0.85 } : { opacity: 0 }}
+          transition={{ duration: 0.25, delay: 0.75 }}
+        />
+        {/* Pulse ring at left end */}
+        <motion.circle
+          cx={136} cy={60} r={3.5}
+          fill="none"
+          stroke="#5AC8FA"
+          strokeWidth={1.5}
+          style={{ transformOrigin: '136px 60px' }}
+          initial={{ scale: 1, opacity: 0 }}
+          animate={inView ? { scale: [1, 2.8], opacity: [0.5, 0] } : { scale: 1, opacity: 0 }}
+          transition={{ duration: 1.1, delay: 0.8, repeat: Infinity, repeatDelay: 2.2, ease: 'easeOut' }}
+        />
+
+        {/* Right curved arrow — from bottom-right of top card to top of Klausurenphase */}
+        <motion.path
+          d="M 448 2 C 472 22 492 42 504 60"
+          stroke="url(#tg-r)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+          transition={{ duration: 0.65, ease: E, delay: 0.2 }}
+        />
+        {/* Dot at right end */}
+        <motion.circle
+          cx={504} cy={60} r={3.5}
+          fill="#34D399"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 0.85 } : { opacity: 0 }}
+          transition={{ duration: 0.25, delay: 0.85 }}
+        />
+        {/* Pulse ring at right end */}
+        <motion.circle
+          cx={504} cy={60} r={3.5}
+          fill="none"
+          stroke="#34D399"
+          strokeWidth={1.5}
+          style={{ transformOrigin: '504px 60px' }}
+          initial={{ scale: 1, opacity: 0 }}
+          animate={inView ? { scale: [1, 2.8], opacity: [0.5, 0] } : { scale: 1, opacity: 0 }}
+          transition={{ duration: 1.1, delay: 0.9, repeat: Infinity, repeatDelay: 2.2, ease: 'easeOut' }}
+        />
+      </svg>
+    </div>
+  )
+}
+
 function ClickableTriangleDefault({ onSelect }: { onSelect: (phase: Phase) => void }) {
   return (
     <div className="relative max-w-5xl mx-auto">
@@ -757,28 +841,7 @@ function ClickableTriangleDefault({ onSelect }: { onSelect: (phase: Phase) => vo
         </motion.div>
       </div>
 
-      <div className="relative h-14 flex items-center justify-center pointer-events-none select-none" aria-hidden>
-        <svg viewBox="0 0 640 56" className="w-full h-full" fill="none">
-          <defs>
-            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#5AC8FA" stopOpacity="0.45" />
-            </linearGradient>
-            <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#34D399" stopOpacity="0.45" />
-            </linearGradient>
-            <marker id="arrow-l" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L6,3 z" fill="rgba(90,200,250,0.5)" />
-            </marker>
-            <marker id="arrow-r" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L6,3 z" fill="rgba(52,211,153,0.5)" />
-            </marker>
-          </defs>
-          <line x1="290" y1="0" x2="148" y2="56" stroke="url(#lg1)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#arrow-l)" />
-          <line x1="350" y1="0" x2="492" y2="56" stroke="url(#lg2)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#arrow-r)" />
-        </svg>
-      </div>
+      <TriangleArrows />
 
       <div className="grid grid-cols-2 gap-5">
         {[PHASE_NODES[1], PHASE_NODES[2]].map(node => (
@@ -806,19 +869,7 @@ function ClickableTriangleDefault({ onSelect }: { onSelect: (phase: Phase) => vo
         ))}
       </div>
 
-      <div className="relative h-3 pointer-events-none select-none overflow-visible mt-0.5" aria-hidden>
-        <svg viewBox="0 0 640 12" className="w-full overflow-visible" fill="none">
-          <defs>
-            <linearGradient id="botGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#5AC8FA" stopOpacity="0.45" />
-              <stop offset="100%" stopColor="#34D399" stopOpacity="0.45" />
-            </linearGradient>
-          </defs>
-          <line x1="160" y1="6" x2="490" y2="6" stroke="url(#botGrad)" strokeWidth="1.5" strokeDasharray="5 4" />
-        </svg>
-      </div>
-
-      <p className="text-center text-[12px] mt-5" style={{ color: '#988CAF' }}>Klicke auf eine Phase, um eine Vorschau zu sehen</p>
+      <p className="text-center text-[12px] mt-4" style={{ color: '#988CAF' }}>Klicke auf eine Phase, um eine Vorschau zu sehen</p>
     </div>
   )
 }
@@ -1226,8 +1277,8 @@ export function LandingScreen() {
       {/* ── Reorder wrapper: mobile = System → Stats → Nie wieder, desktop = Stats → Nie wieder → System ── */}
       <div className="flex flex-col">
 
-      {/* ── Stats Bar — desktop: order 1, mobile: order 2 ─────────────────── */}
-      <FadeUp className="order-2 md:order-1">
+      {/* ── Stats Bar ─────────────────────────────────────────────────────── */}
+      <FadeUp>
         <div className="border-y" style={{ background: 'white', borderColor: 'rgba(209,209,214,0.4)' }}>
           <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x" style={{ '--tw-divide-opacity': '0.3' } as React.CSSProperties}>
@@ -1247,8 +1298,8 @@ export function LandingScreen() {
         </div>
       </FadeUp>
 
-      {/* ── Nie wieder — desktop: order 2, mobile: order 3 ────────────────── */}
-      <section className="py-20 md:py-28 relative overflow-hidden order-3 md:order-2" style={{ background: '#160E28' }}>
+      {/* ── Nie wieder ─────────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-28 relative overflow-hidden" style={{ background: '#160E28' }}>
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 60% at 80% 50%, rgba(124,58,237,0.12) 0%, transparent 65%)' }} />
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 40% at 15% 80%, rgba(99,102,241,0.08) 0%, transparent 60%)' }} />
@@ -1318,8 +1369,8 @@ export function LandingScreen() {
         </div>
       </section>
 
-      {/* ── Das System — Triangle — desktop: order 3, mobile: order 1 ─────── */}
-      <section id="system" className="py-20 md:py-28 order-1 md:order-3" style={{ background: '#FAFAFD' }}>
+      {/* ── Das System — Triangle ─────────────────────────────────────────── */}
+      <section id="system" className="py-20 md:py-28" style={{ background: '#FAFAFD' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <FadeUp className="text-center mb-14">
             <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
