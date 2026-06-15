@@ -307,6 +307,7 @@ function SubjectCard({
   const matchesPreset = SM_RATIOS.some((r) => r.ratio === ratio)
   const [manualOpen, setManualOpen] = useState(!matchesPreset)
   const [manualPct, setManualPct] = useState(Math.round(ratio * 100))
+  const [expanded, setExpanded] = useState(false)
 
   // Commit grade arrays + keep legacy single-value fields in sync
   const commit = (newS: (number | null)[], newM: (number | null)[], extra?: Partial<AbiGradeEntry>) => {
@@ -326,8 +327,12 @@ function SubjectCard({
   return (
     <div className={`bg-surface border border-border/60 rounded-[18px] overflow-hidden transition-opacity ${isExcluded ? 'opacity-50' : ''}`}>
 
-      {/* ── Top bar: icon · name · LK toggle · Endnote ── */}
-      <div className="flex items-center justify-between px-4 py-3">
+      {/* ── Top bar: icon · name · LK toggle · Endnote · expand chevron ── */}
+      <button
+        className="w-full flex items-center justify-between px-4 py-3 text-left press-sm"
+        onClick={() => !entry.notBelegt && setExpanded(e => !e)}
+        style={{ cursor: entry.notBelegt ? 'default' : 'pointer' }}
+      >
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
           <div
             className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
@@ -344,7 +349,7 @@ function SubjectCard({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0 ml-2">
+        <div className="flex items-center gap-1.5 shrink-0 ml-2" onClick={e => e.stopPropagation()}>
           {/* Nicht belegt toggle */}
           <button
             onClick={() => onChange({ ...entry, notBelegt: !entry.notBelegt })}
@@ -385,11 +390,22 @@ function SubjectCard({
               onReset={() => onChange({ ...entry, endnoteOverride: undefined })}
             />
           )}
+          {/* Expand chevron */}
+          {!entry.notBelegt && (
+            <svg
+              width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              className="text-text-muted shrink-0 transition-transform duration-200 ml-0.5"
+              style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            >
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          )}
         </div>
-      </div>
+      </button>
 
-      {/* ── Body: hidden when not belegt ── */}
-      {!entry.notBelegt && (
+      {/* ── Body: visible only when expanded ── */}
+      {!entry.notBelegt && expanded && (
       <>
       {/* ── Schriftlich | Mündlich columns ── */}
       <div className="flex border-t border-border/30">

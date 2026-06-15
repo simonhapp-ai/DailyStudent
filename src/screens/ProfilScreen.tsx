@@ -1,6 +1,6 @@
 import { useUser, type AppTheme } from '../context/UserContext'
 import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
-import { useState, useEffect, type ReactNode } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { supabase } from '../lib/supabase'
@@ -44,7 +44,7 @@ function getCurrentStreak(streak: number, lastStudyDate: string | null): number 
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, personalEntries, lernzettel, generatedFlashCards, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast, debugSetCoins } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast, debugSetCoins } = useUser()
   const [proToast, setProToast] = useState(false)
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
@@ -118,15 +118,11 @@ export function ProfilScreen() {
 
   const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
 
-  const stats: { label: string; value: string; unit?: string; icon: ReactNode }[] = [
-    { label: 'Streak',    value: activeStreak.toString(),                   unit: 'T', icon: '🔥' },
-    { label: 'Notizen',   value: userNotes.length.toString(),               unit: '',  icon: '📝' },
-    { label: 'Fotos',     value: (appStats.scanCount ?? 0).toString(),      unit: '',  icon: '📷' },
-    { label: 'Klausuren', value: appStats.examCount.toString(),             unit: '',  icon: '📋' },
-    { label: 'Zettel',    value: lernzettel.length.toString(),              unit: '',  icon: '📄' },
-    { label: 'Karten',    value: generatedFlashCards.length.toString(),     unit: '',  icon: '🃏' },
-    { label: 'Coins',     value: (appStats.coins ?? 0).toString(),          unit: '',  icon: <CoinIcon coins={appStats.coins ?? 0} size={16} tilt={false} noAnimation/> },
-    { label: 'Kalender',  value: personalEntries.length.toString(),         unit: '',  icon: '📅' },
+  const stats = [
+    { label: 'Streak',    value: activeStreak.toString(), unit: 'Tage', icon: '🔥' },
+    { label: 'Notizen',   value: userNotes.length.toString(),            icon: '📝' },
+    { label: 'Klausuren', value: appStats.examCount.toString(),          icon: '📋' },
+    { label: 'Ø Note',    value: profile?.abiGesamtnote ?? '—',          icon: '⭐' },
   ]
 
   const subtitle = profile
@@ -276,24 +272,17 @@ export function ProfilScreen() {
           </div>
         )}
 
-        {/* ── Stats — 4-col 2-row grid on mobile, single row on desktop ── */}
+        {/* ── Stats — compact single row + insights link ──────────── */}
         <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
-          <div className="grid grid-cols-4 lg:flex lg:items-stretch lg:divide-x lg:divide-border/40">
-            {stats.map((stat, i) => (
-              <div
-                key={stat.label}
-                className={[
-                  'flex flex-col items-center justify-center py-2 lg:py-3 px-1 gap-0 lg:flex-1',
-                  i % 4 !== 3 ? 'border-r border-border/40 lg:border-r-0' : '',
-                  i < 4 ? 'border-b border-border/40 lg:border-b-0' : '',
-                ].join(' ')}
-              >
-                <span className="flex items-center justify-center leading-none" style={{ height: '14px' }}>{stat.icon}</span>
-                <p className="text-text-primary font-bold text-[13px] lg:text-[17px] leading-none tabular-nums mt-1">
+          <div className="flex items-stretch divide-x divide-border/40">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex-1 flex flex-col items-center justify-center py-4 px-2 gap-0.5">
+                <span className="text-[17px] leading-none">{stat.icon}</span>
+                <p className="text-text-primary font-bold text-[19px] leading-none tabular-nums mt-1.5">
                   {stat.value}
-                  {stat.unit && <span className="text-[8px] lg:text-[11px] font-normal text-text-muted ml-0.5">{stat.unit}</span>}
+                  {stat.unit && <span className="text-[11px] font-normal text-text-muted ml-0.5">{stat.unit}</span>}
                 </p>
-                <p className="text-text-muted text-[8px] lg:text-[10px] font-medium uppercase tracking-wide mt-0.5 text-center">{stat.label}</p>
+                <p className="text-text-muted text-[10px] font-medium uppercase tracking-wide mt-0.5">{stat.label}</p>
               </div>
             ))}
           </div>

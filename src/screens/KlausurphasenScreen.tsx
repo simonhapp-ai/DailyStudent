@@ -135,7 +135,7 @@ function Chevron() {
 
 export function KlausurphasenScreen() {
   const navigate = useNavigate()
-  const { generatedFlashCards, profile, appStats, lernplaene, userNotes, savedProbeklausuren, lernzettel } = useUser()
+  const { generatedFlashCards, profile, appStats, lernplaene, userNotes, savedProbeklausuren, lernzettel, personalEntries } = useUser()
 
   const totalCards = generatedFlashCards.length
   const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
@@ -398,15 +398,17 @@ export function KlausurphasenScreen() {
                 <MiniBarChart halbjahre={profile?.abiHalbjahre ?? []} faecher={profile?.faecher ?? []} />
               </div>
 
-              {/* Right: 6 stats */}
+              {/* Right: 8 stats (2 col × 4 row) */}
               <div className="grid grid-cols-2 gap-1 content-start">
                 {([
-                  { icon: '🔥', value: activeStreak, label: 'Streak' },
-                  { icon: '📝', value: userNotes.length, label: 'Notizen' },
-                  { icon: '📸', value: totalPhotos, label: 'Fotos' },
-                  { icon: '📋', value: savedProbeklausuren.length, label: 'PK' },
-                  { icon: '📄', value: lernzettel.length, label: 'LZ' },
-                  { icon: '🎴', value: generatedFlashCards.length, label: 'Karten' },
+                  { icon: '🔥', value: activeStreak,                   label: 'Streak'   },
+                  { icon: '📝', value: userNotes.length,               label: 'Notizen'  },
+                  { icon: '📸', value: totalPhotos,                    label: 'Fotos'    },
+                  { icon: '📋', value: savedProbeklausuren.length,     label: 'PK'       },
+                  { icon: '📄', value: lernzettel.length,              label: 'LZ'       },
+                  { icon: '🎴', value: generatedFlashCards.length,     label: 'Karten'   },
+                  { icon: '🪙', value: appStats.coins ?? 0,            label: 'Coins'    },
+                  { icon: '📅', value: personalEntries.length,         label: 'Kalender' },
                 ] as const).map(s => (
                   <div key={s.label} className="bg-background rounded-[8px] px-2 py-1.5">
                     <div className="flex items-center justify-between">
