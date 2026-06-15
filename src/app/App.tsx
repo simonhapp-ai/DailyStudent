@@ -27,6 +27,7 @@ import { BottomNav } from '../components/ui/BottomNav'
 import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSidebar'
 import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
 import { CoinToast } from '../components/ui/CoinToast'
+import { CoinIconGlobalDefs } from '../components/ui/CoinIcon'
 import { UserProvider, useUser } from '../context/UserContext'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { KalenderScreen } from '../screens/KalenderScreen'
@@ -278,6 +279,7 @@ function Layout() {
 export function App() {
   return (
     <ErrorBoundary>
+      <CoinIconGlobalDefs />
       <UserProvider>
         <ThemeApplier />
         <BrowserRouter>

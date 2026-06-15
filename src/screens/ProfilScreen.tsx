@@ -1,4 +1,5 @@
 import { useUser, type AppTheme } from '../context/UserContext'
+import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
@@ -43,7 +44,7 @@ function getCurrentStreak(streak: number, lastStudyDate: string | null): number 
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast, debugSetCoins } = useUser()
   const [proToast, setProToast] = useState(false)
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
@@ -371,6 +372,41 @@ export function ProfilScreen() {
                   />
                 </button>
               </div>
+
+              {/* ── Coins Configurator ─────────────────────── */}
+              <div className="border-t border-border/40 px-4 py-3.5">
+                <div className="flex items-center gap-3 mb-3">
+                  <CoinIcon coins={appStats.coins ?? 0} size={36} tilt={false}/>
+                  <div className="flex-1">
+                    <p className="text-text-primary text-[15px] font-medium">Coins</p>
+                    <p className="text-text-muted text-[12px] mt-0.5">
+                      {appStats.coins ?? 0} · Tier {getCoinTier(appStats.coins ?? 0)}: {COIN_TIERS[getCoinTier(appStats.coins ?? 0)].label}
+                    </p>
+                  </div>
+                  <span className="text-[22px] font-black tabular-nums" style={{ color: '#F59E0B' }}>
+                    {appStats.coins ?? 0}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={0} max={6000} step={50}
+                  value={appStats.coins ?? 0}
+                  onChange={e => debugSetCoins(Number(e.target.value))}
+                  className="w-full h-1.5 rounded-full appearance-none outline-none cursor-pointer"
+                  style={{ accentColor: '#F59E0B' }}
+                />
+                <div className="flex justify-between mt-1.5">
+                  {[0, 100, 500, 1000, 2500, 5000].map(v => (
+                    <button
+                      key={v}
+                      onClick={() => debugSetCoins(v)}
+                      className="text-[10px] text-text-muted hover:text-amber-500 transition-colors press-sm"
+                    >
+                      {v}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -648,13 +684,19 @@ function CoinsRabattWidget({ coins, streak }: { coins: number; streak: number })
     >
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
+        <div className="flex-1">
           <h2 className="section-label mb-0">Deine Coins</h2>
-          <div className="flex items-baseline gap-1.5 mt-1">
-            <span className="text-[32px] font-black tabular-nums leading-none" style={{ color: '#F59E0B' }}>{coins}</span>
-            <span className="text-[22px] leading-none">🪙</span>
+          <div className="flex items-center gap-3 mt-2">
+            <CoinIcon coins={coins} size={52}/>
+            <div>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-[34px] font-black tabular-nums leading-none" style={{ color: '#F59E0B' }}>{coins}</span>
+              </div>
+              <p className="text-text-muted text-[12px] mt-0.5">
+                {COIN_TIERS[getCoinTier(coins)].label} · durch tägliches Lernen
+              </p>
+            </div>
           </div>
-          <p className="text-text-muted text-[12px] mt-1">Verdient durch tägliches Lernen</p>
         </div>
       </div>
 

@@ -161,6 +161,7 @@ interface UserContextValue {
   addCoins: (action: CoinAction) => number
   recordLogin: () => void
   buyStreakFreeze: () => boolean
+  debugSetCoins: (amount: number) => void
   incrementScanCount: () => void
   coinToastVisible: boolean
   coinToastAmount: number
@@ -879,6 +880,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
     return true
   }
 
+  // Dev-only: directly set coin balance (used by ProfilScreen slider)
+  const debugSetCoins = (amount: number) => {
+    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const updated: AppStats = { ...current, coins: Math.max(0, Math.min(6000, amount)) }
+    setAppStats(updated)
+    saveStorage({ ...loadStorage(), appStats: updated })
+  }
+
   // Grant daily login coins — call once per session, cooldown prevents duplicates
   const recordLogin = () => {
     const gain = addCoins('LOGIN')
@@ -1035,6 +1044,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         addCoins,
         recordLogin,
         buyStreakFreeze,
+        debugSetCoins,
         incrementScanCount,
         coinToastVisible,
         coinToastAmount,

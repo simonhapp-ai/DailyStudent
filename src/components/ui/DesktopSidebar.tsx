@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
+import { CoinIcon } from './CoinIcon'
 
 const NAV_ITEMS = [
   {
@@ -204,11 +205,11 @@ export function DesktopSidebarWide() {
       <div className="px-3 mb-2">
         <button
           onClick={() => navigate('/profil')}
-          className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-[12px] press-sm transition-opacity hover:opacity-80"
+          className="w-full flex items-center justify-between px-3 py-2 rounded-[12px] press-sm transition-opacity hover:opacity-80"
           style={{ background: 'rgba(245,158,11,0.10)', border: '1px solid rgba(245,158,11,0.22)' }}
         >
           <div className="flex items-center gap-2">
-            <span className="text-[18px] leading-none">🪙</span>
+            <CoinIcon coins={appStats.coins ?? 0} size={22} tilt={false}/>
             <span className="text-[13px] font-semibold" style={{ color: '#F59E0B' }}>Coins</span>
           </div>
           <span className="text-[15px] font-bold tabular-nums" style={{ color: '#F59E0B' }}>
