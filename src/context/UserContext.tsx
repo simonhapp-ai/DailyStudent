@@ -385,7 +385,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
               setGeneratedFlashCards(supabaseData.generatedFlashCards)
               setCompletedHomeworkIds(supabaseData.completedHomeworkIds)
               setStandaloneHomework(supabaseData.standaloneHomework)
-              setAppStats(supabaseData.appStats)
+              // Merge cooldowns: any coins/cooldowns added locally since the fetch started
+              // must survive — otherwise the stale Supabase response overwrites them.
+              const localCooldowns = loadStorage().appStats?.cooldowns ?? []
+              const mergedStats: AppStats = {
+                ...supabaseData.appStats,
+                cooldowns: [...new Set([...(supabaseData.appStats.cooldowns ?? []), ...localCooldowns])],
+              }
+              setAppStats(mergedStats)
               setLernzettel(supabaseData.lernzettel)
               setSavedProbeklausuren(supabaseData.savedProbeklausuren)
               setLernplaene(supabaseData.lernplaene)
@@ -394,7 +401,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 profile: supabaseData.profile,
                 theme: supabaseData.theme,
                 isPro: supabaseData.isPro,
-                appStats: supabaseData.appStats,
+                appStats: mergedStats,
                 userFolders: supabaseData.userFolders,
                 userNotes: supabaseData.userNotes,
                 generatedNotes: supabaseData.generatedNotes,
@@ -538,13 +545,23 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.bundeslandId])
 
-  // Grant daily login bonus once per calendar day when user is logged in
+  // Per-session guard so the login bonus only fires once even if deps re-trigger
+  const loginBonusGrantedRef = useRef(false)
   useEffect(() => {
-    if (authUser && profile) {
+    loginBonusGrantedRef.current = false
+  }, [authUser?.id])
+
+  // Grant daily login bonus AFTER Supabase data has loaded.
+  // Firing before the load completes caused a race: the Supabase response (fetched before
+  // addCoins ran) would overwrite localStorage with stale data, erasing the cooldown key —
+  // so every login appeared to be the first one of the day.
+  useEffect(() => {
+    if (authUser && profile && !supabaseDataLoading && !loginBonusGrantedRef.current) {
+      loginBonusGrantedRef.current = true
       recordLogin()
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authUser?.id])
+  }, [authUser?.id, supabaseDataLoading, !!profile])
 
   const getKc = useCallback(
     (subjectId: string): KcSubjectData | null => kcCache[subjectId] ?? null,

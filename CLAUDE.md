@@ -127,6 +127,16 @@ Smart Notes
 - **Probeklausur AFB-Operatoren Mathe** ✅ — `GENERATION_SYSTEM` in `gemini.ts` mit separaten Operator-Listen für Textfächer vs. Mathematik (AFB I–III)
 - **Probeklausur Mode 3 Materialtyp-Branching** ✅ — Geisteswissenschaften/Sprachen: Sachtext ~300 Wörter; Naturwissenschaften/Mathe: Messreihen + Tabellen
 - **Pro Lernzettel Preview** ✅ — `LernzettelScreen`: horizontales Karussell mit 4 Original-Lernzettel-HTMLs (aus Uploads extrahiert), skaliert als Preview-Cards; Fullscreen-Modal mit scrollbarem iframe; Gold-"Pro Lernzettel"-Badge in Topbar der HTMLs; CTA nur für Free-User; "Tippen zum Anzeigen" Caption
+- **Gamification / Coins-System** ✅ — `COIN_VALUES` in `UserContext.tsx`, `AppStats.coins` + `AppStats.cooldowns` in DB + localStorage, `addCoins(action)` mit tagesbasierter Cooldown-Key-Logik (`ACTION:YYYY-MM-DD`), `buyStreakFreeze()` (500 Coins → `streakFreezes++`), `CoinToast` + `CoinIcon` SVG-Komponenten, `CoinToastDisplay` in App.tsx; 7 tägliche Aktionen mit je eigenem Reward
+- **StreakBadge** ✅ — `src/components/ui/StreakBadge.tsx`: fixes Pill top-right (🔥 + Zahl), schwarzer Hintergrund + Blur, klickt zu `/profil`, versteckt auf `/profil/*` + `/landing` + `/auth`, verschiebt sich auf SmartNotes-Screens (`right: 136px`) um Action-Button-Overlap zu vermeiden; in beiden Layout-Branches von `App.tsx` gerendert
+- **`src/lib/streak.ts`** ✅ — Single source of truth: `getActiveStreak(streak, lastStudyDate)` — gibt 0 wenn `lastStudyDate` weder heute noch gestern ist; ersetzt 4 duplizierte `getCurrentStreak`-Funktionen in `DashboardScreen`, `InsightsScreen`, `KlausurphasenScreen`, `ProfilScreen`, `KalenderScreen`
+- **CoinIcon T0 (Drei-Münzen-Stack)** ✅ — 3 übereinanderliegende Münzen + 1 angelehnte Münze (SVG `rotate(-25 cx cy)`); löst alten Side-by-Side-Stack ab
+- **KlausurphasenScreen Statistik-Widget** ✅ — 8 Pills (war 6): + Coins + Kalendereinträge — alle live an Pipeline angeschlossen
+- **AbiRechnerScreen Accordion** ✅ — `SubjectCard` startet eingeklappt; Chevron togglet Schriftlich/Mündlich-Eingaben + S/M-Gewichtung; innere Controls nutzen `e.stopPropagation()` damit Klick auf LK/Buttons nicht die Card schließt
+- **KalenderScreen** ✅ — altes orangenes 🔥-Streak-Pill aus Header entfernt (überlappte mit StreakBadge)
+- **DesktopSidebar** ✅ — Amber Coins-Pill aus `DesktopSidebarWide` entfernt
+- **ProfilScreen Coins-Widgets** ✅ — `CoinsRabattWidget`: zeigt Coin-Count + 7-Task-Checkliste (grüne Checkmarks für done) + "Coins im Shop einlösen"-Footer; `CoinsShopWidget`: Streak Freeze zuerst (mit `<CoinIcon>` statt Emoji), dann zwei grüne Progress-Bars (15%/30% Rabatt-Milestones)
+- **Coin/Streak Bug-Fixes (15.06.2026)** ✅ — Race Condition behoben: `recordLogin()` feuert jetzt erst NACH Supabase-Daten-Load (`supabaseDataLoading` Flag als Dep); `loginBonusGrantedRef` verhindert Doppel-Grant pro Session; beim Supabase-Load werden Cooldowns aus localStorage mit Supabase-Daten zusammengeführt (`Set`-Merge) statt überschrieben → Login-Bonus-Bug (+5 bei jedem Login) gefixt; Checkliste zeigt korrekte Done-States session-übergreifend
 
 ### Paywall-Strategie (Stand 10.06.2026):
 
@@ -148,24 +158,29 @@ Smart Notes
 **Paywall-Pattern:** Kein Blur. Free-User sehen eine klare Lock-Card mit konkreten Feature-Bullets. Klick öffnet `ProModal` als Bottom Sheet von unten mit Stripe-Checkout.  
 **ProModal:** `src/components/ui/ProModal.tsx` — `feature` Prop steuert Headline + Bullets. Stripe-Checkout direkt im Modal.
 
-### Known Issues (Stand: 14.06.2026):
+### Known Issues (Stand: 15.06.2026):
 
 **MINOR:**
 1. **Apple OAuth** — Button in AuthScreen vorhanden, aber NICHT GETESTET
 2. **Email Confirmation Flow** — kein UI-Hinweis nach Signup
 3. **Impressum Steuernummer** — Platzhalter, nach Eingang vom Finanzamt Harburg nachtragen
 
-### To-Do — Priorisiert (Stand: 14.06.2026):
+### To-Do — Priorisiert (Stand: 15.06.2026):
 
-#### UX / Features:
-1. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige (heute hervorgehoben, nächste Stunde prominent), Quick-Actions klarer, Klausur-Countdown prominenter
-2. **Tutorial / Onboarding-Walkthrough** — nach dem Onboarding einen kurzen interaktiven Tutorial-Modus: zeigt die wichtigsten Screens (Unterricht → Smart Note → Karteikarten → Klausurmodus), max. 4–5 Schritte, überspringbar, nur beim ersten Login
-3. **Lernplan funktionieren lassen** — Flow komplett testen: Konfigurator → Gemini → Detailansicht → Kalender-Export, bekannte Bugs fixen
-4. **Beta-Referral-System** — siehe Roadmap unten, vollständige Spec
-5. **Notenrechner UI** — ausklappbare Fach-Kacheln, Farbcoding grün/orange/rot
-6. **Landing Page Content** — Hero-Text, Feature-Sektionen, Social Proof verbessern
-7. **Import-Flow** — vollständig testen + Bugs fixen
-8. **Email Confirmation Flow** — Hinweis nach Signup
+#### Nächste Session:
+1. **Landing Page edits** — Hero-Text, Feature-Sektionen, Social Proof verbessern
+2. **Schnelleres Laden der App** — Lazy loading, Code-Splitting, Bundle-Analyse
+3. **Streak erklären + Animations** — ProfilScreen Streak-Erklärungsbereich; Milestone-Animationen (7, 30, 100 Tage)
+4. **14 Tage Pro wenn man 5 Leute holt** — Referral-System (siehe Roadmap Spec unten)
+5. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
+
+#### UX / Features (mittelfristig):
+6. **Coins-Rabatt via Stripe** — Discount-Code-System implementieren (siehe Roadmap Spec unten)
+7. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige
+8. **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
+9. **Lernplan funktionieren lassen** — Flow komplett testen + Bugs fixen
+10. **Import-Flow** — vollständig testen + Bugs fixen
+11. **Email Confirmation Flow** — Hinweis nach Signup
 
 #### Nach Launch:
 9. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
@@ -177,6 +192,20 @@ Smart Notes
 ## Upcoming Features (Roadmap)
 
 ### Nächste Session (priorisiert)
+
+#### 0. Coins-Rabatt via Stripe — Discount direkt im Checkout
+**Ziel:** Wenn User 2.500 / 5.000 Coins erreicht, können sie ihren Rabatt direkt als Stripe-Checkout einlösen — kein Code-Kopieren, automatisch angewendet.
+
+**Spec:**
+- **Stripe Dashboard (1× manuell, 5 Min):** Zwei Coupons anlegen:
+  - ID `coins-discount-15`, 15% off, Duration: `once`, kein Ablaufdatum
+  - ID `coins-discount-30`, 30% off, Duration: `once`, kein Ablaufdatum
+- **Edge Function `create-checkout-session`**: Akzeptiert optionalen `couponId` Body-Param → wenn vorhanden: `discounts[0][coupon]` in Stripe-Params setzen (Achtung: `allow_promotion_codes` und `discounts` schließen sich aus!)
+- **`src/lib/stripe.ts`**: `createCheckoutSession(plan, couponId?)` — reicht `couponId` an Edge Function durch
+- **`UserContext.tsx`**: Neue Funktion `redeemDiscount(tier: '15' | '30'): Promise<boolean>` — prüft Coins (2.500/5.000), zieht Coins ab, setzt permanente Cooldown-Keys `DISCOUNT_15:USED` / `DISCOUNT_30:USED` (kein Datums-Suffix — einmalig permanent), synct zu Supabase, gibt couponId zurück
+- **`ProfilScreen.tsx` CoinsShopWidget**: "Rabatt einlösen"-Button wenn Schwelle erreicht UND noch nicht genutzt → ruft `redeemDiscount` auf → öffnet direkt `createCheckoutSession(plan, couponId)` → User wählt Plan im Modal → rabattierter Checkout öffnet; "Bereits genutzt" Badge wenn `DISCOUNT_15:USED` in cooldowns
+- **Keine DB-Migration nötig** — `cooldowns`-Array in `app_stats` reicht aus
+- **Coins werden sofort abgezogen** (beim Klick auf "Einlösen"), bevor Checkout öffnet — User hat die Entscheidung getroffen
 
 #### 1. Beta-Referral-System — 14 Tage Pro bei 5 Signups
 **Ziel:** Beta-Tester (Discord-Community) erhalten 14 Tage Pro gratis, wenn 5 neue echte User über ihren Link/QR-Code sich registrieren.
@@ -416,6 +445,7 @@ src/
 │   ├── stripe.ts                  # createCheckoutSession() — ruft create-checkout-session Edge Fn auf
 │   ├── supabase.ts                # Supabase Client
 │   ├── supabaseSync.ts            # Sync-Layer: syncProfile, syncGradeData, syncNote, etc. + Queue
+│   ├── streak.ts                  # getActiveStreak(streak, lastStudyDate) — single source of truth
 │   └── pdf.ts                     # PDF → Bilder Konvertierung (pdfjs)
 ├── screens/                       # Ein Screen pro Route (34 Screens — alle aktiv)
 └── types/

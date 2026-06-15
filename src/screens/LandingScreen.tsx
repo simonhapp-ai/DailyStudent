@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { useUser } from '../context/UserContext'
 
-// Emil Kowalski: custom strong ease-out curve — starts fast, feels instant
 const E = [0.23, 1, 0.32, 1] as const
 
 function FadeUp({
@@ -19,13 +18,11 @@ function FadeUp({
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: false, margin: '-72px' })
-  // Track whether element is above or below viewport when offscreen
   const [offscreen, setOffscreen] = useState<'above' | 'below'>('below')
 
   useEffect(() => {
     if (!inView && ref.current) {
       const rect = ref.current.getBoundingClientRect()
-      // If center of element is above midpoint → element is above viewport (scrolled past)
       setOffscreen(rect.top + rect.height / 2 < window.innerHeight / 2 ? 'above' : 'below')
     }
   }, [inView])
@@ -50,13 +47,11 @@ function FadeUp({
 function SmartNoteMockup() {
   return (
     <div className="relative w-full max-w-sm mx-auto select-none">
-      {/* Phone shell */}
       <div
         className="rounded-[36px] p-3 shadow-2xl"
         style={{ background: 'linear-gradient(145deg, #1a1a1f, #0d0d12)' }}
       >
         <div className="rounded-[28px] overflow-hidden bg-[#F4F4F4]">
-          {/* Status bar */}
           <div className="flex items-center justify-between px-5 pt-3 pb-1">
             <span className="text-[11px] font-semibold text-[#160E28]">9:41</span>
             <div className="flex gap-1 items-center">
@@ -65,9 +60,7 @@ function SmartNoteMockup() {
             </div>
           </div>
 
-          {/* App content */}
           <div className="px-4 pb-5 pt-1">
-            {/* Header */}
             <div className="flex items-center justify-between mb-3">
               <div>
                 <p className="text-[10px] font-semibold text-[#988CAF] uppercase tracking-wide">Smart Note</p>
@@ -83,7 +76,6 @@ function SmartNoteMockup() {
               </div>
             </div>
 
-            {/* KI Summary card */}
             <div className="bg-white rounded-2xl p-3 mb-2.5 shadow-sm border border-black/5">
               <p className="text-[9px] font-semibold text-[#7C3AED] uppercase tracking-wide mb-1.5">KI-Zusammenfassung</p>
               <div className="space-y-1">
@@ -94,7 +86,6 @@ function SmartNoteMockup() {
               </div>
             </div>
 
-            {/* Keywords */}
             <div className="bg-white rounded-2xl p-3 mb-2.5 shadow-sm border border-black/5">
               <p className="text-[9px] font-semibold text-[#988CAF] uppercase tracking-wide mb-2">Schlüsselbegriffe</p>
               <div className="flex flex-wrap gap-1.5">
@@ -104,7 +95,6 @@ function SmartNoteMockup() {
               </div>
             </div>
 
-            {/* Exam topics */}
             <div className="bg-white rounded-2xl p-3 shadow-sm border border-black/5">
               <p className="text-[9px] font-semibold text-[#988CAF] uppercase tracking-wide mb-1.5">Klausurthemen</p>
               {['Lichtreaktion vs. Dunkelreaktion', 'ATP-Synthese erklären'].map(t => (
@@ -118,7 +108,6 @@ function SmartNoteMockup() {
         </div>
       </div>
 
-      {/* Floating badge */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -142,7 +131,12 @@ function SmartNoteMockup() {
         transition={{ duration: 0.5, ease: E, delay: 0.6 }}
         className="absolute -left-4 bottom-20 bg-white rounded-2xl px-3 py-2 shadow-xl border border-black/5 flex items-center gap-2"
       >
-        <span className="text-base">📷</span>
+        <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+            <circle cx="12" cy="13" r="4" />
+          </svg>
+        </div>
         <div>
           <p className="text-[10px] font-bold text-[#160E28] leading-tight">Foto gescannt</p>
           <p className="text-[9px] text-[#988CAF]">in 1.2 Sek. analysiert</p>
@@ -156,7 +150,6 @@ function FlashcardMockup() {
   return (
     <div className="relative w-full max-w-sm mx-auto select-none">
       <div className="bg-white rounded-3xl shadow-2xl border border-black/5 overflow-hidden">
-        {/* Header */}
         <div className="px-5 pt-5 pb-3 flex items-center justify-between border-b border-black/5">
           <div>
             <p className="text-[11px] font-semibold text-[#988CAF] uppercase tracking-wide">Karteikarten</p>
@@ -165,7 +158,6 @@ function FlashcardMockup() {
           <span className="text-[12px] font-medium text-[#7C3AED] bg-violet-50 px-2.5 py-1 rounded-full">4 / 12</span>
         </div>
 
-        {/* Flashcard */}
         <div className="p-5">
           <div
             className="rounded-2xl p-5 text-center min-h-[120px] flex flex-col items-center justify-center mb-4"
@@ -177,24 +169,21 @@ function FlashcardMockup() {
             </p>
           </div>
 
-          {/* Answer revealed */}
           <div className="rounded-2xl p-4 mb-4 border-2 border-emerald-200 bg-emerald-50">
             <p className="text-[11px] font-semibold text-emerald-600 uppercase tracking-wide mb-1">Antwort</p>
             <p className="text-[13px] font-medium text-[#160E28]">Das Mitochondrium — auch „Kraftwerk der Zelle" genannt.</p>
           </div>
 
-          {/* Buttons */}
           <div className="flex gap-2">
             <button className="flex-1 py-2.5 rounded-xl text-[12px] font-semibold text-red-500 bg-red-50">
-              ✗ Nochmal
+              Nochmal
             </button>
             <button className="flex-1 py-2.5 rounded-xl text-[12px] font-semibold text-white" style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}>
-              ✓ Gewusst
+              Gewusst
             </button>
           </div>
         </div>
 
-        {/* Progress */}
         <div className="px-5 pb-5">
           <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
             <div className="h-full rounded-full" style={{ width: '33%', background: 'linear-gradient(90deg, #7C3AED, #A78BFA)' }} />
@@ -209,7 +198,6 @@ function ExamMockup() {
   return (
     <div className="relative w-full max-w-sm mx-auto select-none">
       <div className="bg-white rounded-3xl shadow-2xl border border-black/5 overflow-hidden">
-        {/* Header */}
         <div className="px-5 pt-5 pb-3 flex items-center justify-between" style={{ background: 'linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%)' }}>
           <div>
             <p className="text-[10px] font-semibold text-white/70 uppercase tracking-wide">Probeklausur</p>
@@ -221,7 +209,6 @@ function ExamMockup() {
         </div>
 
         <div className="p-5">
-          {/* Question */}
           <div className="mb-4">
             <p className="text-[10px] font-semibold text-[#988CAF] uppercase tracking-wide mb-2">Aufgabe 2 von 5 · 8 Punkte</p>
             <p className="text-[13px] text-[#160E28] leading-relaxed">
@@ -229,7 +216,6 @@ function ExamMockup() {
             </p>
           </div>
 
-          {/* Answer field */}
           <div className="rounded-2xl border border-[#7C3AED]/30 bg-violet-50/50 p-3 mb-4 min-h-[72px]">
             <div className="space-y-1.5">
               <div className="h-1.5 bg-[#160E28]/15 rounded-full w-full" />
@@ -238,7 +224,6 @@ function ExamMockup() {
             </div>
           </div>
 
-          {/* KI Feedback */}
           <div className="rounded-2xl p-3.5 border border-emerald-200 bg-emerald-50">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-5 h-5 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}>
@@ -246,7 +231,7 @@ function ExamMockup() {
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
               </div>
-              <p className="text-[10px] font-bold text-emerald-700">✦ KI-Korrektur · 7 / 8 Punkte</p>
+              <p className="text-[10px] font-bold text-emerald-700">KI-Korrektur · 7 / 8 Punkte</p>
             </div>
             <div className="space-y-1">
               <div className="h-1.5 bg-emerald-200 rounded-full w-full" />
@@ -261,24 +246,16 @@ function ExamMockup() {
 
 function LernplanMockup() {
   const days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
-  const subjects = [
-    { name: 'Mathe', color: '#7C3AED', days: [0, 2, 4] },
-    { name: 'Biologie', color: '#059669', days: [1, 3] },
-    { name: 'Deutsch', color: '#DC2626', days: [2, 5] },
-    { name: 'Englisch', color: '#2563EB', days: [4, 6] },
-  ]
 
   return (
     <div className="relative w-full max-w-sm mx-auto select-none">
       <div className="bg-white rounded-3xl shadow-2xl border border-black/5 overflow-hidden">
-        {/* Header */}
         <div className="px-5 pt-5 pb-4 border-b border-black/5">
           <p className="text-[11px] font-semibold text-[#988CAF] uppercase tracking-wide">Lernplan</p>
-          <p className="text-[15px] font-bold text-[#160E28]">Abitur — 3 Wochen</p>
+          <p className="text-[15px] font-bold text-[#160E28]">3 Wochen bis zur Klausur</p>
         </div>
 
         <div className="p-5">
-          {/* Week calendar */}
           <div className="grid grid-cols-7 gap-1 mb-4">
             {days.map((day, i) => (
               <div key={day} className="text-center">
@@ -296,10 +273,12 @@ function LernplanMockup() {
             ))}
           </div>
 
-          {/* Sessions today */}
           <div className="space-y-2">
             <p className="text-[10px] font-semibold text-[#988CAF] uppercase tracking-wide">Heute geplant</p>
-            {subjects.slice(0, 2).map(s => (
+            {[
+              { name: 'Mathe', color: '#7C3AED' },
+              { name: 'Biologie', color: '#059669' },
+            ].map(s => (
               <div key={s.name} className="flex items-center gap-3 bg-[#F8F7FF] rounded-xl px-3 py-2.5">
                 <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: s.color }} />
                 <div className="flex-1 min-w-0">
@@ -335,7 +314,6 @@ function Navbar({ onCta }: { onCta: () => void }) {
           boxShadow: '0 4px 28px rgba(22,14,40,0.09), 0 1px 4px rgba(22,14,40,0.05)',
         }}
       >
-        {/* Logo */}
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-[9px] overflow-hidden shrink-0">
             <img
@@ -348,9 +326,8 @@ function Navbar({ onCta }: { onCta: () => void }) {
           <span className="font-bold text-[15px] text-[#160E28] tracking-tight">DailyStudent</span>
         </div>
 
-        {/* Nav links (desktop only) */}
         <div className="hidden md:flex items-center gap-6">
-          {[['#features', 'Features'], ['#vorteile', 'Vorteile'], ['#preise', 'Preise']].map(([href, label]) => (
+          {[['#system', 'Wie es funktioniert'], ['#features', 'Features'], ['#preise', 'Preise']].map(([href, label]) => (
             <a
               key={href}
               href={href}
@@ -361,7 +338,6 @@ function Navbar({ onCta }: { onCta: () => void }) {
           ))}
         </div>
 
-        {/* CTA */}
         <button
           onClick={onCta}
           className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0"
@@ -402,7 +378,6 @@ function FeatureSection({
     <section id={id} className="py-20 md:py-28">
       <div className="max-w-6xl mx-auto px-6">
         <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-12 md:gap-20`}>
-          {/* Text */}
           <div className="flex-1 min-w-0">
             <FadeUp>
               <span
@@ -444,7 +419,6 @@ function FeatureSection({
             </div>
           </div>
 
-          {/* Mockup */}
           <FadeUp delay={0.08} className="flex-1 w-full">
             {mockup}
           </FadeUp>
@@ -474,7 +448,6 @@ export function LandingScreen() {
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="relative min-h-dvh flex items-center overflow-hidden pt-24">
-        {/* Background glow */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -485,7 +458,6 @@ export function LandingScreen() {
           }}
         />
 
-        {/* Subtle grid */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.025]"
           style={{
@@ -498,27 +470,16 @@ export function LandingScreen() {
           <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
             {/* Left — Text */}
             <div className="flex-1 min-w-0 text-center md:text-left">
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: E }}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-7 border"
-                style={{ background: 'rgba(124,58,237,0.06)', borderColor: 'rgba(124,58,237,0.2)' }}
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-[#34D399]" />
-                <span className="text-[12px] font-semibold text-[#7C3AED]">Kostenlos für Schüler der Klasse 10–13</span>
-              </motion.div>
 
-              {/* H1 */}
+              {/* H1 — first to appear */}
               <motion.h1
-                initial={{ opacity: 0, y: 18 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, ease: E, delay: 0.07 }}
-                className="font-black leading-[1.08] mb-5"
+                transition={{ duration: 0.65, ease: E, delay: 0 }}
+                className="font-black leading-[1.08] mb-4"
                 style={{ fontSize: 'clamp(36px, 6.5vw, 72px)', color: '#160E28', letterSpacing: '-0.03em' }}
               >
-                Dein KI-Assistent
+                Das KI-Lernsystem
                 <br />
                 <span
                   style={{
@@ -529,26 +490,37 @@ export function LandingScreen() {
                     backgroundClip: 'text',
                   }}
                 >
-                  fürs Abitur.
+                  für bessere Noten.
                 </span>
               </motion.h1>
 
-              {/* Subtext */}
+              {/* Accent line — second */}
+              <motion.p
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: E, delay: 0.09 }}
+                className="text-[18px] md:text-[20px] font-semibold mb-4"
+                style={{ color: '#483C5F', letterSpacing: '-0.01em' }}
+              >
+                Organisation wie ein Einser-Schüler.
+              </motion.p>
+
+              {/* Subtext — third */}
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: E, delay: 0.14 }}
-                className="text-[17px] md:text-[18px] leading-relaxed mb-8 max-w-lg"
-                style={{ color: '#483C5F' }}
+                transition={{ duration: 0.58, ease: E, delay: 0.18 }}
+                className="text-[16px] md:text-[17px] leading-relaxed mb-8 max-w-lg"
+                style={{ color: '#988CAF' }}
               >
-                Smart Notes aus Fotos, KI-Karteikarten, Probeklausuren mit Rotstift-Korrektur und persönlicher Lernplan — alles auf deine Fächer und dein Bundesland abgestimmt.
+                Die App versteht alles, was in deinem Schulalltag passiert, und erstellt daraus automatisch ein personalisiertes Lernsystem — für Schüler und Studenten.
               </motion.p>
 
-              {/* CTAs */}
+              {/* CTAs — fourth */}
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, ease: E, delay: 0.2 }}
+                transition={{ duration: 0.55, ease: E, delay: 0.28 }}
                 className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3 mb-8"
               >
                 <button
@@ -556,7 +528,6 @@ export function LandingScreen() {
                   className="relative w-full sm:w-auto px-7 py-3.5 rounded-full text-[15px] font-bold text-white shadow-lg press-sm overflow-hidden"
                   style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)' }}
                 >
-                  {/* Shimmer */}
                   <span
                     className="absolute inset-0 pointer-events-none"
                     style={{
@@ -581,26 +552,26 @@ export function LandingScreen() {
                 </a>
               </motion.div>
 
-              {/* Trust line */}
+              {/* Trust — fifth */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.32 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: E, delay: 0.38 }}
                 className="flex items-center justify-center md:justify-start gap-2 text-[13px]"
                 style={{ color: '#988CAF' }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 6L9 17l-5-5" />
                 </svg>
-                Bereits <strong className="text-[#160E28]">5.000+ Schüler</strong> in unserer Discord-Community
+                Bereits <strong className="text-[#160E28]">4.000+ Schüler</strong> in unserer Discord-Community
               </motion.div>
             </div>
 
-            {/* Right — App mockup */}
+            {/* Right — App mockup — appears with hero, slightly delayed */}
             <motion.div
-              initial={{ opacity: 0, x: 32 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.75, ease: E, delay: 0.18 }}
+              initial={{ opacity: 0, x: 28, y: 8 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              transition={{ duration: 0.8, ease: E, delay: 0.14 }}
               className="flex-1 w-full max-w-[360px] md:max-w-none"
             >
               <SmartNoteMockup />
@@ -615,13 +586,13 @@ export function LandingScreen() {
           <div className="max-w-6xl mx-auto px-6 py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x" style={{ '--tw-divide-opacity': '0.3' } as React.CSSProperties}>
               {[
-                { value: '5.000+', label: 'Schüler auf Discord' },
-                { value: 'KI-gestützt', label: 'Groq & Gemini' },
-                { value: '4 Modi', label: 'Probeklausur-Typen' },
+                { value: '4.000+', label: 'Schüler auf Discord' },
+                { value: '4 Methoden', label: 'Smart Notes, Karten, Klausur, Plan' },
+                { value: '16 Bundesländer', label: 'Kerncurriculum inklusive' },
                 { value: 'Kostenlos', label: 'Core-Features gratis' },
               ].map((stat, i) => (
                 <div key={i} className="text-center md:px-8">
-                  <p className="font-black text-[22px] text-[#160E28] leading-tight" style={{ letterSpacing: '-0.02em' }}>{stat.value}</p>
+                  <p className="font-black text-[20px] text-[#160E28] leading-tight" style={{ letterSpacing: '-0.02em' }}>{stat.value}</p>
                   <p className="text-[12px] mt-0.5" style={{ color: '#988CAF' }}>{stat.label}</p>
                 </div>
               ))}
@@ -630,51 +601,68 @@ export function LandingScreen() {
         </div>
       </FadeUp>
 
-      {/* ── Problem Section ────────────────────────────────────────────────── */}
-      <section id="vorteile" className="py-20 md:py-28" style={{ background: 'white' }}>
+      {/* ── System Section ──────────────────────────────────────────────────── */}
+      <section id="system" className="py-20 md:py-28" style={{ background: 'white' }}>
         <div className="max-w-6xl mx-auto px-6">
           <FadeUp className="text-center mb-14">
             <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4"
-              style={{ background: 'rgba(255,59,48,0.08)', color: '#FF453A' }}>
-              Das Problem
+              style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
+              Das System
             </span>
             <h2
               className="font-black leading-tight mb-4"
               style={{ fontSize: 'clamp(28px, 4.5vw, 48px)', color: '#160E28', letterSpacing: '-0.025em' }}
             >
-              Lernen ohne System kostet dich das Abitur.
+              Organisation wie ein Einser-Schüler.
             </h2>
             <p className="text-[17px] leading-relaxed max-w-2xl mx-auto" style={{ color: '#483C5F' }}>
-              Karteikarten ohne Kontext, Lernzettel ohne Struktur, Probeklausuren ohne Korrektur — und kein Plan was du wann lernen sollst.
+              Die App versteht alles, was in deinem Schulalltag passiert, und erstellt daraus automatisch ein personalisiertes Lernsystem.
             </p>
           </FadeUp>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {
-                icon: '📝',
-                title: 'Notizen ohne Struktur',
-                text: 'Du schreibst mit — aber was davon wirklich klausurrelevant ist, bleibt unklar. DailyStudent analysiert deine Notizen automatisch.',
-                color: '#FF453A',
+                icon: (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                    <circle cx="12" cy="13" r="4" />
+                  </svg>
+                ),
+                iconBg: 'linear-gradient(135deg, #34D399, #059669)',
+                title: 'Stoff erfassen',
+                text: 'Foto, PDF oder Text — die KI analysiert sofort, erkennt Klausurthemen und erstellt eine strukturierte Smart Note.',
+                color: '#059669',
               },
               {
-                icon: '🃏',
-                title: 'Karteikarten ohne System',
-                text: 'Händisch erstellt, ohne Bezug zu Klausurthemen. Die KI generiert passende Karten direkt aus deinen Smart Notes.',
-                color: '#FF9F0A',
-              },
-              {
-                icon: '📅',
-                title: 'Kein Lernplan',
-                text: 'Lernen auf den letzten Drücker. Dein persönlicher Lernplan kennt deinen Stundenplan und plant realistische Sessions.',
+                icon: (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z" />
+                  </svg>
+                ),
+                iconBg: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+                title: 'KI generiert alles',
+                text: 'Karteikarten, Lernzettel und Probeklausuren entstehen direkt aus deinen eigenen Notizen — auf dein Fach und Bundesland abgestimmt.',
                 color: '#7C3AED',
               },
+              {
+                icon: (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+                    <polyline points="16 7 22 7 22 13" />
+                  </svg>
+                ),
+                iconBg: 'linear-gradient(135deg, #5AC8FA, #2563EB)',
+                title: 'Besser werden',
+                text: 'Dein Lernplan kennt deinen Stundenplan und plant realistische Sessions. Fortschritt verfolgen, Noten verbessern — alles vernetzt.',
+                color: '#2563EB',
+              },
             ].map((item, i) => (
-              <FadeUp key={item.title} delay={i * 0.07}>
-                <div className="rounded-2xl p-6 h-full border" style={{ background: `${item.color}05`, borderColor: `${item.color}15` }}>
+              <FadeUp key={item.title} delay={i * 0.08}>
+                <div className="rounded-2xl p-6 h-full border border-black/5" style={{ background: '#FAFAFD' }}>
                   <div
-                    className="w-11 h-11 rounded-[14px] flex items-center justify-center text-[22px] mb-4"
-                    style={{ background: `${item.color}15` }}
+                    className="w-11 h-11 rounded-[14px] flex items-center justify-center mb-4"
+                    style={{ background: item.iconBg }}
                   >
                     {item.icon}
                   </div>
@@ -690,7 +678,7 @@ export function LandingScreen() {
       {/* ── Feature Sections ──────────────────────────────────────────────── */}
       <div id="features" style={{ background: '#FAFAFD' }}>
         <FeatureSection
-          badge="📷 Smart Notes"
+          badge="Smart Notes"
           badgeColor="#7C3AED"
           title="Foto scannen, fertige Zusammenfassung."
           description="Knips dein Tafelbild oder deine handschriftlichen Notizen — die KI analysiert den Inhalt, extrahiert Schlüsselbegriffe und zeigt dir, was klausurrelevant ist."
@@ -705,13 +693,13 @@ export function LandingScreen() {
 
       <div style={{ background: 'white' }}>
         <FeatureSection
-          badge="🃏 KI-Karteikarten"
+          badge="Karteikarten"
           badgeColor="#5AC8FA"
           title="KI generiert dein Lernset automatisch."
-          description="Aus jeder Smart Note entstehen mit einem Klick Karteikarten — nach dem FSRS-Algorithmus sortiert, der dir genau zeigt was du noch nicht sicher kannst."
+          description="Aus jeder Smart Note entstehen mit einem Klick Karteikarten — sortiert nach dem, was du noch nicht sicher kannst."
           bullets={[
             'Karteikarten direkt aus deinen Notizen generiert',
-            'Lernstatus: Wusste ich / Nochmal',
+            'Lernstatus nach jeder Runde angepasst',
             'Fach-übergreifend organisiert',
           ]}
           mockup={<FlashcardMockup />}
@@ -721,14 +709,14 @@ export function LandingScreen() {
 
       <div style={{ background: '#FAFAFD' }}>
         <FeatureSection
-          badge="📝 Probeklausur"
+          badge="Probeklausur"
           badgeColor="#FF453A"
-          title="Übe mit echten Klausuren — KI korrigiert."
-          description="Vier verschiedene Modi: AFB-Trainer, vollständige Klausur, Materialklausur und Klausur ohne Material. Die KI gibt dir danach echtes Rotstift-Feedback."
+          title="Klausur schreiben — KI korrigiert."
+          description="Vier verschiedene Modi für jede Prüfungssituation. Die KI gibt danach echtes Rotstift-Feedback mit Punktevergabe und Verbesserungshinweisen."
           bullets={[
-            '4 Klausur-Modi wie im echten Abi',
-            'KI-Korrektur mit Punktevergabe und Verbesserungshinweisen',
-            'Auswertung und Fortschritt über alle Klausuren',
+            '4 Klausur-Modi für unterschiedliche Aufgabenformate',
+            'KI-Korrektur mit konkreten Verbesserungsvorschlägen',
+            'Fortschritt über alle Klausuren im Blick',
           ]}
           mockup={<ExamMockup />}
         />
@@ -736,10 +724,10 @@ export function LandingScreen() {
 
       <div style={{ background: 'white' }}>
         <FeatureSection
-          badge="📅 Lernplan"
+          badge="Lernplan"
           badgeColor="#34D399"
           title="Dein persönlicher Plan bis zur Klausur."
-          description="Gib deine Klausurtermine ein — der Lernplan kennt deinen Stundenplan und plant realistische Sessions ohne Überschneidungen. Exportierbar in deinen Kalender."
+          description="Gib deine Klausurtermine ein — der Lernplan kennt deinen Stundenplan und plant realistische Sessions ohne Überschneidungen."
           bullets={[
             'Automatisch um deinen Stundenplan herum geplant',
             'Einzel-, Vollständig- und Abitur-Planung',
@@ -759,7 +747,7 @@ export function LandingScreen() {
               style={{ background: 'linear-gradient(145deg, rgba(124,58,237,0.07) 0%, rgba(99,102,241,0.04) 100%)', border: '1px solid rgba(124,58,237,0.12)' }}
             >
               <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 text-3xl"
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
                 style={{ background: 'linear-gradient(135deg, #5865F2, #4752C4)' }}
               >
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
@@ -767,11 +755,11 @@ export function LandingScreen() {
                 </svg>
               </div>
               <p className="font-black text-[52px] md:text-[64px] text-[#160E28] leading-none mb-2" style={{ letterSpacing: '-0.03em' }}>
-                5.000+
+                4.000+
               </p>
               <p className="text-[18px] font-semibold text-[#160E28] mb-2">Schüler in unserer Discord-Community</p>
               <p className="text-[15px] max-w-md mx-auto leading-relaxed" style={{ color: '#483C5F' }}>
-                Tausch dich mit anderen Schülern aus, bekomme Support und bleibe up-to-date bei neuen Features.
+                Tausch dich aus, bekomme Support und bleibe up-to-date bei neuen Features.
               </p>
             </div>
           </FadeUp>
@@ -833,7 +821,6 @@ export function LandingScreen() {
                 className="rounded-2xl p-7 h-full relative overflow-hidden"
                 style={{ background: 'linear-gradient(145deg, #160E28 0%, #2A1B5C 100%)' }}
               >
-                {/* Glow */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{ background: 'radial-gradient(ellipse 60% 40% at 80% 0%, rgba(167,139,250,0.2) 0%, transparent 60%)' }}
@@ -895,7 +882,6 @@ export function LandingScreen() {
               className="rounded-3xl p-10 md:p-16 text-center relative overflow-hidden"
               style={{ background: 'linear-gradient(145deg, #160E28 0%, #2A1B5C 100%)' }}
             >
-              {/* Glows */}
               <div className="absolute inset-0 pointer-events-none"
                 style={{ background: 'radial-gradient(ellipse 60% 50% at 50% -10%, rgba(124,58,237,0.35) 0%, transparent 60%)' }} />
               <div className="absolute inset-0 pointer-events-none"
@@ -907,10 +893,10 @@ export function LandingScreen() {
                   className="font-black text-white mb-5"
                   style={{ fontSize: 'clamp(30px, 5vw, 56px)', letterSpacing: '-0.025em', lineHeight: 1.1 }}
                 >
-                  Jetzt durchstarten.
+                  Jetzt besser werden.
                 </h2>
                 <p className="text-[16px] text-white/60 leading-relaxed mb-9 max-w-lg mx-auto">
-                  Erstell dein kostenloses Konto, gib deine Fächer ein und lass die KI für dich arbeiten.
+                  Konto erstellen, Fächer eingeben, KI arbeiten lassen.
                 </p>
                 <button
                   onClick={goToApp}
@@ -967,7 +953,6 @@ export function LandingScreen() {
         </div>
       </footer>
 
-      {/* Shimmer keyframe */}
       <style>{`
         @keyframes shimmer {
           0% { background-position: -200% center; }
