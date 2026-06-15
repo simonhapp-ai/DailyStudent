@@ -479,10 +479,19 @@ function TriangleSystem() {
           ))}
         </div>
 
-        {/* Bottom horizontal connector */}
-        <div className="relative h-0 flex items-start justify-center pointer-events-none select-none -mt-px" aria-hidden>
-          <svg viewBox="0 0 640 24" className="w-full" fill="none">
-            <line x1="160" y1="0" x2="480" y2="0" stroke="url(#lg3)" strokeWidth="1.5" strokeDasharray="5 4" />
+        {/* Bottom horizontal connector — Kalender → Klausurenphase */}
+        <div className="relative h-3 pointer-events-none select-none overflow-visible" aria-hidden>
+          <svg viewBox="0 0 640 12" className="w-full overflow-visible" fill="none">
+            <defs>
+              <linearGradient id="botGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stopColor="#5AC8FA" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#34D399" stopOpacity="0.45" />
+              </linearGradient>
+              <marker id="botArrow" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+                <path d="M0,1 L0,7 L6,4 z" fill="rgba(52,211,153,0.5)" />
+              </marker>
+            </defs>
+            <line x1="160" y1="6" x2="475" y2="6" stroke="url(#botGrad)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#botArrow)" />
           </svg>
         </div>
       </div>
@@ -777,28 +786,40 @@ export function LandingScreen() {
               </FadeUp>
             </div>
 
-            {/* Right — pain points */}
-            <div className="flex-1 space-y-4">
+            {/* Right — pain points, premium numbered list */}
+            <div className="flex-1">
               {[
                 {
-                  text: 'Notizen ohne Struktur — du schreibst mit, weißt aber nicht was davon wirklich klausurrelevant ist.',
-                  color: '#FF453A',
+                  num: '01',
+                  title: 'Notizen ohne Kontext',
+                  text: 'Du schreibst mit — aber was davon klausurrelevant ist, bleibt unklar.',
                 },
                 {
-                  text: 'Karteikarten von Hand — stundenlang erstellen, ohne Bezug zum eigentlichen Unterrichtsstoff.',
-                  color: '#FF9F0A',
+                  num: '02',
+                  title: 'Karteikarten ohne System',
+                  text: 'Stundenlang von Hand erstellt, ohne Bezug zum eigentlichen Unterrichtsstoff.',
                 },
                 {
-                  text: 'Lernen auf den letzten Drücker — weil kein Plan existiert, der deinen Stundenplan kennt.',
-                  color: '#A78BFA',
+                  num: '03',
+                  title: 'Kein Plan, kein Ende',
+                  text: 'Lernen auf den letzten Drücker — weil niemand weiß, was wann kommt.',
                 },
               ].map((item, i) => (
                 <FadeUp key={i} delay={0.1 + i * 0.09}>
-                  <div className="flex items-start gap-4 p-5 rounded-2xl" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: `${item.color}25` }}>
-                      <div className="w-1.5 h-1.5 rounded-full" style={{ background: item.color }} />
+                  <div
+                    className="flex items-start gap-6 py-7"
+                    style={{ borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}
+                  >
+                    <span
+                      className="text-[11px] font-bold tracking-[0.15em] mt-1 shrink-0 tabular-nums"
+                      style={{ color: 'rgba(255,255,255,0.18)' }}
+                    >
+                      {item.num}
+                    </span>
+                    <div>
+                      <p className="font-bold text-white mb-2" style={{ fontSize: '17px', letterSpacing: '-0.01em' }}>{item.title}</p>
+                      <p className="text-[14px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>{item.text}</p>
                     </div>
-                    <p className="text-[15px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.65)' }}>{item.text}</p>
                   </div>
                 </FadeUp>
               ))}
@@ -827,8 +848,27 @@ export function LandingScreen() {
         </div>
       </section>
 
+      {/* ── Features Header ───────────────────────────────────────────────── */}
+      <section id="features" className="pt-24 pb-6" style={{ background: 'white' }}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <FadeUp>
+            <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
+              Features
+            </span>
+            <h2
+              className="font-black leading-[1.07]"
+              style={{ fontSize: 'clamp(32px, 5vw, 60px)', color: '#160E28', letterSpacing: '-0.03em', maxWidth: '600px' }}
+            >
+              Von der Notiz
+              <br />
+              bis zur Note.
+            </h2>
+          </FadeUp>
+        </div>
+      </section>
+
       {/* ── Features ──────────────────────────────────────────────────────── */}
-      <div id="features" style={{ background: 'white' }}>
+      <div style={{ background: 'white' }}>
         <FeatureSection
           badge="Smart Notes"
           badgeColor="#7C3AED"
