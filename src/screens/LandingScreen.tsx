@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { useUser } from '../context/UserContext'
 
 const E = [0.23, 1, 0.32, 1] as const
@@ -383,162 +383,651 @@ function Navbar({ onCta }: { onCta: () => void }) {
   )
 }
 
-// ── Triangle System ──────────────────────────────────────────────────────────
+// ── Interactive Triangle System ───────────────────────────────────────────────
 
-function TriangleSystem() {
-  const nodes = [
-    {
-      phase: 'Unterrichtsphase',
-      title: 'Stoff erfassen',
-      desc: 'Fotos, PDFs und Mitschriften werden zu strukturierten Smart Notes mit KI-Analyse — automatisch auf dein Kerncurriculum abgestimmt.',
-      color: '#7C3AED',
-      grad: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-        </svg>
-      ),
-    },
-    {
-      phase: 'Kalender',
-      title: 'Personalisierung',
-      desc: 'Klausurtermine, Stundenplan und Lernfortschritt fließen zusammen. Die App lernt deinen Alltag kennen und plant um ihn herum.',
-      color: '#5AC8FA',
-      grad: 'linear-gradient(135deg, #5AC8FA, #2563EB)',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-          <line x1="16" y1="2" x2="16" y2="6" />
-          <line x1="8" y1="2" x2="8" y2="6" />
-          <line x1="3" y1="10" x2="21" y2="10" />
-        </svg>
-      ),
-    },
-    {
-      phase: 'Klausurenphase',
-      title: 'Effektiv lernen',
-      desc: 'Karteikarten, Lernzettel und Probeklausuren — alles aus deinen eigenen Notizen generiert, damit du weißt was dich erwartet.',
-      color: '#34D399',
-      grad: 'linear-gradient(135deg, #34D399, #059669)',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 11l3 3L22 4" />
-          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
-        </svg>
-      ),
-    },
-  ]
+type Phase = 'unterricht' | 'kalender' | 'klausur'
 
-  return (
-    <div className="relative max-w-5xl mx-auto">
-      {/* Desktop triangle layout */}
-      <div className="hidden md:block">
-        {/* Top node — centered */}
-        <div className="flex justify-center mb-2">
-          <FadeUp delay={0.04} className="w-[440px]">
-            <TriangleNode {...nodes[0]} />
-          </FadeUp>
-        </div>
-
-        {/* SVG connecting lines — between top and bottom row */}
-        <div className="relative h-14 flex items-center justify-center pointer-events-none select-none" aria-hidden>
-          <svg viewBox="0 0 640 56" className="w-full h-full" fill="none">
-            <defs>
-              <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#5AC8FA" stopOpacity="0.5" />
-              </linearGradient>
-              <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#34D399" stopOpacity="0.5" />
-              </linearGradient>
-              <linearGradient id="lg3" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#5AC8FA" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#34D399" stopOpacity="0.5" />
-              </linearGradient>
-              <marker id="arrow-l" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-                <path d="M0,0 L0,6 L6,3 z" fill="rgba(90,200,250,0.5)" />
-              </marker>
-              <marker id="arrow-r" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-                <path d="M0,0 L0,6 L6,3 z" fill="rgba(52,211,153,0.5)" />
-              </marker>
-            </defs>
-            {/* Top → bottom-left */}
-            <line x1="290" y1="0" x2="148" y2="56" stroke="url(#lg1)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#arrow-l)" />
-            {/* Top → bottom-right */}
-            <line x1="350" y1="0" x2="492" y2="56" stroke="url(#lg2)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#arrow-r)" />
-          </svg>
-        </div>
-
-        {/* Bottom two nodes */}
-        <div className="grid grid-cols-2 gap-5">
-          {[nodes[1], nodes[2]].map((node, i) => (
-            <FadeUp key={node.phase} delay={0.1 + i * 0.07}>
-              <TriangleNode {...node} />
-            </FadeUp>
-          ))}
-        </div>
-
-        {/* Bottom horizontal connector — Kalender → Klausurenphase */}
-        <div className="relative h-3 pointer-events-none select-none overflow-visible" aria-hidden>
-          <svg viewBox="0 0 640 12" className="w-full overflow-visible" fill="none">
-            <defs>
-              <linearGradient id="botGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stopColor="#5AC8FA" stopOpacity="0.45" />
-                <stop offset="100%" stopColor="#34D399" stopOpacity="0.45" />
-              </linearGradient>
-              <marker id="botArrow" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
-                <path d="M0,1 L0,7 L6,4 z" fill="rgba(52,211,153,0.5)" />
-              </marker>
-            </defs>
-            <line x1="160" y1="6" x2="475" y2="6" stroke="url(#botGrad)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#botArrow)" />
-          </svg>
-        </div>
-      </div>
-
-      {/* Mobile: vertical stack */}
-      <div className="flex flex-col gap-4 md:hidden">
-        {nodes.map((node, i) => (
-          <FadeUp key={node.phase} delay={i * 0.08}>
-            <TriangleNode {...node} />
-          </FadeUp>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function TriangleNode({
-  phase,
-  title,
-  desc,
-  color,
-  grad,
-  icon,
-}: {
+interface PhaseNode {
+  id: Phase
   phase: string
   title: string
   desc: string
   color: string
   grad: string
   icon: React.ReactNode
-}) {
+}
+
+const PHASE_NODES: PhaseNode[] = [
+  {
+    id: 'unterricht',
+    phase: 'Unterrichtsphase',
+    title: 'Stoff erfassen',
+    desc: 'Fotos, PDFs und Mitschriften werden zu Smart Notes — automatisch auf dein Kerncurriculum abgestimmt.',
+    color: '#7C3AED',
+    grad: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'kalender',
+    phase: 'Kalender',
+    title: 'Personalisierung',
+    desc: 'Klausurtermine und Stundenplan fließen zusammen. Die App plant automatisch um deinen Alltag herum.',
+    color: '#5AC8FA',
+    grad: 'linear-gradient(135deg, #5AC8FA, #2563EB)',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+        <line x1="16" y1="2" x2="16" y2="6" />
+        <line x1="8" y1="2" x2="8" y2="6" />
+        <line x1="3" y1="10" x2="21" y2="10" />
+      </svg>
+    ),
+  },
+  {
+    id: 'klausur',
+    phase: 'Klausurenphase',
+    title: 'Effektiv lernen',
+    desc: 'Karteikarten, Lernzettel und Probeklausuren — alles aus deinen eigenen Notizen generiert.',
+    color: '#34D399',
+    grad: 'linear-gradient(135deg, #34D399, #059669)',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 11l3 3L22 4" />
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+      </svg>
+    ),
+  },
+]
+
+function TrafficLight({ bg, onClick, symbol }: { bg: string; onClick?: () => void; symbol?: string }) {
+  const [hov, setHov] = useState(false)
   return (
-    <div
-      className="rounded-2xl p-5 border h-full"
-      style={{ background: '#fff', borderColor: `${color}25` }}
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      className="w-3 h-3 rounded-full flex items-center justify-center shrink-0"
+      style={{ background: bg, boxShadow: 'inset 0 0 0 0.5px rgba(0,0,0,0.18)' }}
     >
-      <div className="flex items-start gap-4">
-        <div className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: grad }}>
-          {icon}
+      {hov && symbol && (
+        <span style={{ fontSize: '7px', fontWeight: 900, color: 'rgba(0,0,0,0.45)', lineHeight: 1, userSelect: 'none' }}>
+          {symbol}
+        </span>
+      )}
+    </button>
+  )
+}
+
+function UnterrichtPreviewContent() {
+  const subjects = ['Biologie', 'Mathe', 'Englisch', 'Physik']
+  return (
+    <div className="p-4" style={{ background: '#F5F5F7' }}>
+      <div className="flex gap-2 mb-4 overflow-x-auto pb-0.5">
+        {subjects.map((s, i) => (
+          <div
+            key={s}
+            className="px-3 py-1.5 rounded-xl text-[11px] font-semibold shrink-0"
+            style={{
+              background: i === 0 ? '#7C3AED' : 'white',
+              color: i === 0 ? 'white' : '#483C5F',
+              border: i === 0 ? 'none' : '1px solid rgba(0,0,0,0.08)',
+            }}
+          >
+            {s}
+          </div>
+        ))}
+      </div>
+      <div className="bg-white rounded-2xl p-4 shadow-sm" style={{ border: '1px solid rgba(0,0,0,0.04)' }}>
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <p className="text-[9px] font-bold text-[#988CAF] uppercase tracking-widest">Smart Note</p>
+            <p className="text-[14px] font-bold text-[#160E28]">Photosynthese</p>
+          </div>
+          <div className="px-2.5 py-1 rounded-full text-[10px] font-bold" style={{ background: 'rgba(124,58,237,0.1)', color: '#7C3AED' }}>
+            KI-Analyse
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color }}>{phase}</p>
-          <p className="text-[15px] font-bold text-[#160E28] mb-1.5">{title}</p>
-          <p className="text-[13px] leading-relaxed" style={{ color: '#483C5F' }}>{desc}</p>
+        <div className="mb-3">
+          <p className="text-[9px] font-bold text-[#7C3AED] uppercase tracking-widest mb-1.5">Zusammenfassung</p>
+          <div className="space-y-1.5">
+            {[1, 0.85, 0.67].map((w, i) => (
+              <div key={i} className="h-1.5 rounded-full" style={{ width: `${w * 100}%`, background: 'rgba(22,14,40,0.09)' }} />
+            ))}
+          </div>
+        </div>
+        <div className="mb-3">
+          <p className="text-[9px] font-bold text-[#988CAF] uppercase tracking-widest mb-1.5">Schlüsselbegriffe</p>
+          <div className="flex flex-wrap gap-1.5">
+            {['Chlorophyll', 'ATP', 'Calvin-Zyklus', 'CO₂'].map(k => (
+              <span key={k} className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>{k}</span>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className="text-[9px] font-bold text-[#988CAF] uppercase tracking-widest mb-1.5">Klausurthemen</p>
+          {['Lichtreaktion vs. Dunkelreaktion', 'ATP-Synthese Mechanismus'].map(t => (
+            <div key={t} className="flex items-center gap-2 mb-1">
+              <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#7C3AED' }} />
+              <p className="text-[11px]" style={{ color: '#483C5F' }}>{t}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
+  )
+}
+
+function KalenderPreviewContent() {
+  const days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
+  const events = [
+    { color: '#FF453A', label: 'Mathe-Klausur', time: '08:00' },
+    { color: '#7C3AED', label: 'Lerneinheit Bio', time: '14:00' },
+    { color: '#34D399', label: 'Englisch Karten', time: '16:30' },
+  ]
+  return (
+    <div style={{ background: '#F5F5F7' }}>
+      <div className="flex items-center justify-between px-4 py-2.5 bg-white" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C7C7CC" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <p className="text-[12px] font-bold text-[#160E28]">9. – 15. Juni 2026</p>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C7C7CC" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </div>
+      <div className="grid grid-cols-7 bg-white" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+        {days.map((d, i) => (
+          <div key={d} className="text-center py-2">
+            <p className="text-[9px] font-medium text-[#988CAF]">{d}</p>
+            <div
+              className="w-5 h-5 rounded-full mx-auto mt-0.5 flex items-center justify-center text-[11px] font-bold"
+              style={{ background: i === 0 ? '#FF453A' : 'transparent', color: i === 0 ? 'white' : '#160E28' }}
+            >
+              {i + 9}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="p-4 space-y-2.5">
+        {events.map((ev, i) => (
+          <div key={i} className="flex items-center gap-3">
+            <p className="text-[10px] text-[#988CAF] w-9 shrink-0 tabular-nums">{ev.time}</p>
+            <div
+              className="flex-1 rounded-xl px-3 py-2.5"
+              style={{ background: `${ev.color}12`, borderLeft: `3px solid ${ev.color}` }}
+            >
+              <p className="text-[12px] font-semibold text-[#160E28]">{ev.label}</p>
+            </div>
+          </div>
+        ))}
+        {[0, 1].map(i => (
+          <div key={i} className="flex items-center gap-3">
+            <p className="text-[10px] w-9 shrink-0 tabular-nums" style={{ color: 'rgba(152,140,175,0.4)' }}>{`${18 + i * 2}:00`}</p>
+            <div className="flex-1 h-9 rounded-xl" style={{ border: '1.5px dashed rgba(0,0,0,0.08)' }} />
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function KlausurPreviewContent() {
+  const [tab, setTab] = useState<'cards' | 'exam' | 'notes'>('cards')
+  const tabs: { id: 'cards' | 'exam' | 'notes'; label: string }[] = [
+    { id: 'cards', label: 'Karteikarten' },
+    { id: 'exam', label: 'Probeklausur' },
+    { id: 'notes', label: 'Lernzettel' },
+  ]
+  return (
+    <div style={{ background: '#F5F5F7' }}>
+      <div className="flex bg-white" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+        {tabs.map(t => (
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className="flex-1 py-2.5 text-[11px] font-semibold relative transition-colors duration-150"
+            style={{ color: tab === t.id ? '#7C3AED' : '#988CAF' }}
+          >
+            {t.label}
+            {tab === t.id && (
+              <motion.div
+                layoutId="klausur-tab-ind"
+                className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full"
+                style={{ background: '#7C3AED' }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
+      <div className="p-4">
+        <AnimatePresence mode="wait">
+          {tab === 'cards' && (
+            <motion.div key="cards" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.16, ease: E }}>
+              <div className="rounded-2xl p-5 mb-3 text-center" style={{ background: 'linear-gradient(145deg, rgba(124,58,237,0.07), rgba(124,58,237,0.02))' }}>
+                <p className="text-[9px] font-bold text-[#7C3AED] uppercase tracking-widest mb-2">Frage</p>
+                <p className="text-[13px] font-semibold text-[#160E28]">Welche Organelle ist für die Energiegewinnung zuständig?</p>
+              </div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(0,0,0,0.07)' }}>
+                  <div className="h-full rounded-full" style={{ width: '66%', background: '#7C3AED' }} />
+                </div>
+                <span className="text-[10px] text-[#988CAF]">8 / 12</span>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {[{ n: '8', label: 'Gewusst', color: '#34D399' }, { n: '3', label: 'Nochmal', color: '#FF453A' }].map(s => (
+                  <div key={s.label} className="bg-white rounded-xl p-3 text-center" style={{ border: '1px solid rgba(0,0,0,0.05)' }}>
+                    <p className="text-[22px] font-black" style={{ color: s.color }}>{s.n}</p>
+                    <p className="text-[10px] text-[#988CAF]">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+          {tab === 'exam' && (
+            <motion.div key="exam" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.16, ease: E }}>
+              <div className="bg-white rounded-2xl p-4" style={{ border: '1px solid rgba(0,0,0,0.05)' }}>
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <p className="text-[9px] font-bold text-[#7C3AED] uppercase tracking-widest">Probeklausur</p>
+                    <p className="text-[14px] font-bold text-[#160E28]">Biologie · 60 Min</p>
+                  </div>
+                  <div className="px-3 py-1.5 rounded-xl text-white text-[13px] font-bold" style={{ background: '#7C3AED' }}>28:42</div>
+                </div>
+                <p className="text-[10px] text-[#988CAF] mb-2">Aufgabe 1 von 4</p>
+                <div className="space-y-1.5 mb-3">
+                  {[1, 0.85, 0.7].map((w, i) => (
+                    <div key={i} className="h-1.5 rounded-full" style={{ width: `${w * 100}%`, background: 'rgba(22,14,40,0.09)' }} />
+                  ))}
+                </div>
+                <div className="h-14 rounded-xl" style={{ border: '1.5px solid rgba(124,58,237,0.18)', background: 'rgba(124,58,237,0.04)' }} />
+              </div>
+            </motion.div>
+          )}
+          {tab === 'notes' && (
+            <motion.div key="notes" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.16, ease: E }}>
+              <div className="space-y-2.5">
+                {[
+                  { title: 'Zellbiologie — Kompakt', color: 'rgba(124,58,237,0.1)', time: 'vor 1 Tag' },
+                  { title: 'Photosynthese Zusammenfassung', color: 'rgba(52,211,153,0.1)', time: 'vor 3 Tagen' },
+                ].map((item, i) => (
+                  <div key={i} className="bg-white rounded-xl p-3.5 flex items-center gap-3" style={{ border: '1px solid rgba(0,0,0,0.05)' }}>
+                    <div className="w-9 h-9 rounded-xl shrink-0" style={{ background: item.color }} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[12px] font-semibold text-[#160E28] truncate">{item.title}</p>
+                      <p className="text-[10px] text-[#988CAF]">{item.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  )
+}
+
+function MacWindow({ phase, onClose }: { phase: Phase; onClose: () => void }) {
+  const titles: Record<Phase, string> = {
+    unterricht: 'Unterricht — Biologie',
+    kalender: 'Kalender — Juni 2026',
+    klausur: 'Klausurmodus',
+  }
+  return (
+    <div className="rounded-xl overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(0,0,0,0.08), 0 24px 60px rgba(0,0,0,0.14), 0 6px 18px rgba(0,0,0,0.06)' }}>
+      <div className="h-9 flex items-center gap-2 px-3.5 select-none" style={{ background: 'linear-gradient(180deg, #E8E8E8 0%, #DCDCDC 100%)', borderBottom: '1px solid rgba(0,0,0,0.12)' }}>
+        <TrafficLight bg="#FF5F57" onClick={onClose} symbol="✕" />
+        <TrafficLight bg="#FEBC2E" symbol="−" />
+        <TrafficLight bg="#28C840" symbol="+" />
+        <p className="flex-1 text-center text-[11px] font-medium" style={{ color: '#666', letterSpacing: '-0.01em' }}>{titles[phase]}</p>
+        <div style={{ width: 52 }} />
+      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={phase}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.14 }}
+        >
+          {phase === 'unterricht' && <UnterrichtPreviewContent />}
+          {phase === 'kalender' && <KalenderPreviewContent />}
+          {phase === 'klausur' && <KlausurPreviewContent />}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  )
+}
+
+function CompactPhaseNode({ node, isActive, onClick }: { node: PhaseNode; isActive: boolean; onClick: () => void }) {
+  return (
+    <motion.button onClick={onClick} className="w-full text-left" whileTap={{ scale: 0.985 }}>
+      <div
+        className="p-3.5 rounded-2xl border transition-all duration-200"
+        style={{
+          background: isActive ? 'white' : 'rgba(255,255,255,0.6)',
+          borderColor: isActive ? `${node.color}30` : 'rgba(0,0,0,0.07)',
+          boxShadow: isActive ? `0 0 0 1.5px ${node.color}18, 0 4px 16px rgba(0,0,0,0.07)` : 'none',
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-[11px] flex items-center justify-center shrink-0" style={{ background: node.grad }}>
+            {node.icon}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: node.color }}>{node.phase}</p>
+            <p className="text-[13px] font-bold text-[#160E28]">{node.title}</p>
+          </div>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={isActive ? node.color : '#C7C7CC'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-colors duration-200">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </div>
+      </div>
+    </motion.button>
+  )
+}
+
+function ClickableTriangleDefault({ onSelect }: { onSelect: (phase: Phase) => void }) {
+  return (
+    <div className="relative max-w-5xl mx-auto">
+      <div className="flex justify-center mb-2">
+        <motion.div
+          className="w-[440px] cursor-pointer"
+          whileHover={{ scale: 1.025, y: -2 }}
+          whileTap={{ scale: 0.985 }}
+          transition={{ duration: 0.22, ease: E }}
+          onClick={() => onSelect(PHASE_NODES[0].id)}
+        >
+          <div className="rounded-2xl p-5 border h-full" style={{ background: '#fff', borderColor: `${PHASE_NODES[0].color}22`, boxShadow: '0 2px 12px rgba(124,58,237,0.06)' }}>
+            <div className="flex items-start gap-4">
+              <div className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: PHASE_NODES[0].grad }}>
+                {PHASE_NODES[0].icon}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: PHASE_NODES[0].color }}>{PHASE_NODES[0].phase}</p>
+                <p className="text-[15px] font-bold text-[#160E28] mb-1">{PHASE_NODES[0].title}</p>
+                <p className="text-[13px] leading-relaxed" style={{ color: '#483C5F' }}>{PHASE_NODES[0].desc}</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      <div className="relative h-14 flex items-center justify-center pointer-events-none select-none" aria-hidden>
+        <svg viewBox="0 0 640 56" className="w-full h-full" fill="none">
+          <defs>
+            <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#5AC8FA" stopOpacity="0.45" />
+            </linearGradient>
+            <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#34D399" stopOpacity="0.45" />
+            </linearGradient>
+            <marker id="arrow-l" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L6,3 z" fill="rgba(90,200,250,0.5)" />
+            </marker>
+            <marker id="arrow-r" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L6,3 z" fill="rgba(52,211,153,0.5)" />
+            </marker>
+          </defs>
+          <line x1="290" y1="0" x2="148" y2="56" stroke="url(#lg1)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#arrow-l)" />
+          <line x1="350" y1="0" x2="492" y2="56" stroke="url(#lg2)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#arrow-r)" />
+        </svg>
+      </div>
+
+      <div className="grid grid-cols-2 gap-5">
+        {[PHASE_NODES[1], PHASE_NODES[2]].map(node => (
+          <motion.div
+            key={node.id}
+            className="cursor-pointer"
+            whileHover={{ scale: 1.025, y: -2 }}
+            whileTap={{ scale: 0.985 }}
+            transition={{ duration: 0.22, ease: E }}
+            onClick={() => onSelect(node.id)}
+          >
+            <div className="rounded-2xl p-5 border h-full" style={{ background: '#fff', borderColor: `${node.color}22`, boxShadow: `0 2px 12px ${node.color}08` }}>
+              <div className="flex items-start gap-4">
+                <div className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: node.grad }}>
+                  {node.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: node.color }}>{node.phase}</p>
+                  <p className="text-[15px] font-bold text-[#160E28] mb-1">{node.title}</p>
+                  <p className="text-[13px] leading-relaxed" style={{ color: '#483C5F' }}>{node.desc}</p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="relative h-3 pointer-events-none select-none overflow-visible mt-0.5" aria-hidden>
+        <svg viewBox="0 0 640 12" className="w-full overflow-visible" fill="none">
+          <defs>
+            <linearGradient id="botGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#5AC8FA" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#34D399" stopOpacity="0.45" />
+            </linearGradient>
+            <marker id="botArrow" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
+              <path d="M0,1 L0,7 L6,4 z" fill="rgba(52,211,153,0.5)" />
+            </marker>
+          </defs>
+          <line x1="160" y1="6" x2="475" y2="6" stroke="url(#botGrad)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#botArrow)" />
+        </svg>
+      </div>
+
+      <p className="text-center text-[12px] mt-5" style={{ color: '#988CAF' }}>Klicke auf eine Phase, um eine Vorschau zu sehen</p>
+    </div>
+  )
+}
+
+function InteractiveTriangle() {
+  const [active, setActive] = useState<Phase | null>(null)
+  const pendingDir = useRef<'left' | 'right'>('left')
+
+  const direction: 'left' | 'right' = active === 'kalender' ? 'right' : 'left'
+
+  function handleSelect(phase: Phase) {
+    pendingDir.current = phase === 'kalender' ? 'right' : 'left'
+    setActive(phase)
+  }
+
+  function handleClose() {
+    setActive(null)
+  }
+
+  return (
+    <>
+      {/* Desktop — animated triangle ↔ preview */}
+      <div className="hidden md:block">
+        <AnimatePresence custom={pendingDir.current} mode="popLayout">
+          {active === null ? (
+            <motion.div
+              key="default"
+              custom={pendingDir.current}
+              variants={{
+                initial: { opacity: 0, scale: 0.97, y: 10 },
+                animate: { opacity: 1, scale: 1, y: 0 },
+                exit: (dir: 'left' | 'right') => ({
+                  opacity: 0,
+                  x: dir === 'right' ? 80 : -80,
+                  rotate: dir === 'right' ? 3 : -3,
+                  scale: 0.94,
+                  transition: { duration: 0.36, ease: E },
+                }),
+              }}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={{ duration: 0.38, ease: E }}
+            >
+              <ClickableTriangleDefault onSelect={handleSelect} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key={`active-${direction}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.26, ease: E }}
+              className={`flex items-stretch gap-5 ${direction === 'right' ? 'flex-row-reverse' : 'flex-row'}`}
+            >
+              {/* Sidebar */}
+              <motion.div
+                className="flex flex-col gap-2.5 w-64 shrink-0"
+                initial={{ x: direction === 'right' ? 32 : -32, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.42, ease: E }}
+              >
+                {PHASE_NODES.map((node, i) => (
+                  <motion.div
+                    key={node.id}
+                    initial={{ opacity: 0, x: direction === 'right' ? 20 : -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.38, ease: E, delay: i * 0.06 }}
+                  >
+                    <CompactPhaseNode
+                      node={node}
+                      isActive={active === node.id}
+                      onClick={() => handleSelect(node.id)}
+                    />
+                  </motion.div>
+                ))}
+                <motion.p
+                  className="text-[11px] px-1"
+                  style={{ color: '#988CAF' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.4, ease: E, delay: 0.22 }}
+                >
+                  Andere Phase wählen oder{' '}
+                  <button
+                    onClick={handleClose}
+                    className="underline underline-offset-2 transition-colors"
+                    style={{ color: '#988CAF' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = '#483C5F')}
+                    onMouseLeave={e => (e.currentTarget.style.color = '#988CAF')}
+                  >
+                    Vorschau schließen
+                  </button>
+                </motion.p>
+              </motion.div>
+
+              {/* Mac preview window */}
+              <motion.div
+                className="flex-1 min-w-0"
+                initial={{ x: direction === 'right' ? -32 : 32, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.44, ease: E, delay: 0.05 }}
+              >
+                <MacWindow phase={active} onClose={handleClose} />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Mobile — cards shrink to icon row when active */}
+      <div className="md:hidden">
+        <AnimatePresence mode="popLayout">
+          {active === null ? (
+            <motion.div
+              key="mob-default"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.28, ease: E }}
+              className="flex flex-col gap-2.5"
+            >
+              {PHASE_NODES.map(node => (
+                <motion.button
+                  key={node.id}
+                  onClick={() => handleSelect(node.id)}
+                  className="w-full text-left"
+                  whileTap={{ scale: 0.985 }}
+                >
+                  <div
+                    className="p-3.5 rounded-2xl border"
+                    style={{ background: 'white', borderColor: `${node.color}15`, boxShadow: `0 2px 8px ${node.color}06` }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <motion.div
+                        layoutId={`m-icon-${node.id}`}
+                        className="w-9 h-9 rounded-[11px] flex items-center justify-center shrink-0"
+                        style={{ background: node.grad }}
+                      >
+                        {node.icon}
+                      </motion.div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[9px] font-bold uppercase tracking-widest mb-0.5" style={{ color: node.color }}>{node.phase}</p>
+                        <p className="text-[13px] font-bold text-[#160E28]">{node.title}</p>
+                      </div>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C7C7CC" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M9 18l6-6-6-6" />
+                      </svg>
+                    </div>
+                  </div>
+                </motion.button>
+              ))}
+              <p className="text-center text-[11px] mt-1" style={{ color: '#C7C7CC' }}>Tippe auf eine Phase</p>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="mob-active"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.22, ease: E }}
+              className="flex flex-col"
+            >
+              {/* Mini icon row */}
+              <div className="flex justify-center gap-8 mb-6">
+                {PHASE_NODES.map(node => (
+                  <button
+                    key={node.id}
+                    onClick={() => handleSelect(node.id)}
+                    className="flex flex-col items-center gap-1.5"
+                  >
+                    <motion.div
+                      layoutId={`m-icon-${node.id}`}
+                      className="w-12 h-12 rounded-[14px] flex items-center justify-center"
+                      style={{
+                        background: node.grad,
+                        boxShadow: active === node.id
+                          ? `0 0 0 2.5px white, 0 0 0 5px ${node.color}`
+                          : '0 2px 10px rgba(0,0,0,0.14)',
+                      }}
+                    >
+                      {node.icon}
+                    </motion.div>
+                    <p
+                      className="text-[10px] font-semibold transition-colors duration-200"
+                      style={{ color: active === node.id ? node.color : '#C7C7CC' }}
+                    >
+                      {node.id === 'unterricht' ? 'Unterricht' : node.id === 'kalender' ? 'Kalender' : 'Klausur'}
+                    </p>
+                  </button>
+                ))}
+              </div>
+
+              {/* Mac preview */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: E, delay: 0.1 }}
+              >
+                <MacWindow phase={active} onClose={handleClose} />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
   )
 }
 
@@ -709,12 +1198,12 @@ export function LandingScreen() {
                 </a>
               </motion.div>
 
-              {/* Trust */}
+              {/* Trust — desktop only */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: E, delay: 0.28 }}
-                className="flex items-center justify-center md:justify-start gap-2 text-[13px]"
+                className="hidden md:flex items-center justify-center md:justify-start gap-2 text-[13px]"
                 style={{ color: '#988CAF' }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -724,12 +1213,12 @@ export function LandingScreen() {
               </motion.div>
             </div>
 
-            {/* Right — Mockup */}
+            {/* Right — Mockup (desktop only) */}
             <motion.div
               initial={{ opacity: 0, x: 28, y: 8 }}
               animate={{ opacity: 1, x: 0, y: 0 }}
               transition={{ duration: 0.8, ease: E, delay: 0.14 }}
-              className="w-full md:w-[45%] lg:w-[42%] shrink-0 max-w-[420px] md:max-w-none"
+              className="hidden md:block w-full md:w-[45%] lg:w-[42%] shrink-0 max-w-[420px] md:max-w-none"
             >
               <SmartNoteMockup />
             </motion.div>
@@ -737,8 +1226,11 @@ export function LandingScreen() {
         </div>
       </section>
 
-      {/* ── Stats Bar ─────────────────────────────────────────────────────── */}
-      <FadeUp>
+      {/* ── Reorder wrapper: mobile = System → Stats → Nie wieder, desktop = Stats → Nie wieder → System ── */}
+      <div className="flex flex-col">
+
+      {/* ── Stats Bar — desktop: order 1, mobile: order 2 ─────────────────── */}
+      <FadeUp className="order-2 md:order-1">
         <div className="border-y" style={{ background: 'white', borderColor: 'rgba(209,209,214,0.4)' }}>
           <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x" style={{ '--tw-divide-opacity': '0.3' } as React.CSSProperties}>
@@ -758,8 +1250,8 @@ export function LandingScreen() {
         </div>
       </FadeUp>
 
-      {/* ── Nie wieder ─────────────────────────────────────────────────────── */}
-      <section className="py-20 md:py-28 relative overflow-hidden" style={{ background: '#160E28' }}>
+      {/* ── Nie wieder — desktop: order 2, mobile: order 3 ────────────────── */}
+      <section className="py-20 md:py-28 relative overflow-hidden order-3 md:order-2" style={{ background: '#160E28' }}>
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 60% at 80% 50%, rgba(124,58,237,0.12) 0%, transparent 65%)' }} />
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 40% at 15% 80%, rgba(99,102,241,0.08) 0%, transparent 60%)' }} />
@@ -829,8 +1321,8 @@ export function LandingScreen() {
         </div>
       </section>
 
-      {/* ── Das System — Triangle ─────────────────────────────────────────── */}
-      <section id="system" className="py-20 md:py-28" style={{ background: '#FAFAFD' }}>
+      {/* ── Das System — Triangle — desktop: order 3, mobile: order 1 ─────── */}
+      <section id="system" className="py-20 md:py-28 order-1 md:order-3" style={{ background: '#FAFAFD' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <FadeUp className="text-center mb-14">
             <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
@@ -844,9 +1336,11 @@ export function LandingScreen() {
             </p>
           </FadeUp>
 
-          <TriangleSystem />
+          <InteractiveTriangle />
         </div>
       </section>
+
+      </div>{/* end reorder wrapper */}
 
       {/* ── Features Header ───────────────────────────────────────────────── */}
       <section id="features" className="pt-24 pb-6" style={{ background: 'white' }}>
