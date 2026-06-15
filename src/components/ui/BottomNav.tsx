@@ -75,11 +75,11 @@ export function BottomNav() {
       <div
         className="flex items-center rounded-full px-2 py-[5px]"
         style={{
-          backdropFilter: 'saturate(200%) blur(32px)',
-          WebkitBackdropFilter: 'saturate(200%) blur(32px)',
-          backgroundColor: 'rgb(var(--color-surface) / 0.85)',
-          border: '0.5px solid rgb(var(--color-border) / 0.35)',
-          boxShadow: '0 4px 36px rgba(0,0,0,0.18), 0 1px 6px rgba(0,0,0,0.08)',
+          backdropFilter: 'saturate(180%) blur(36px)',
+          WebkitBackdropFilter: 'saturate(180%) blur(36px)',
+          backgroundColor: 'var(--nav-pill-bg)',
+          border: '1px solid var(--nav-pill-border)',
+          boxShadow: '0 6px 40px rgba(0,0,0,0.22), 0 1px 8px rgba(0,0,0,0.10)',
         }}
       >
         {navItems.map((item) => {

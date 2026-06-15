@@ -26,6 +26,9 @@
   --si-c-from: 237 233 254;   /* violet-100 */
   --si-c-to:   167 139 250;   /* violet-400 */
 
+  --nav-pill-bg:     rgba(255, 255, 255, 0.88);
+  --nav-pill-border: rgba(0, 0, 0, 0.09);
+
   color-scheme: light;
 }
 
@@ -42,6 +45,9 @@
   --color-text-primary:  255 255 255;
   --color-text-secondary:205 205 210;
   --color-text-muted:    140 140 150;
+
+  --nav-pill-bg:     rgba(52, 52, 58, 0.88);
+  --nav-pill-border: rgba(255, 255, 255, 0.14);
 
   /* Subject icon radial gradients — dark mode: deep purple sphere */
   --si-a-from:  91  33 182;   /* violet-800 */
