@@ -67,20 +67,20 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50"
+      className="fixed left-1/2 z-50"
       style={{
-        backdropFilter: 'saturate(200%) blur(28px)',
-        WebkitBackdropFilter: 'saturate(200%) blur(28px)',
-        backgroundColor: 'rgba(var(--color-surface), 0.92)',
-        borderTop: '0.5px solid rgba(var(--color-border), 0.3)',
-        boxShadow: '0 -4px 24px rgba(0,0,0,0.07)',
+        transform: 'translateX(-50%)',
+        bottom: 'max(20px, calc(env(safe-area-inset-bottom, 0px) + 14px))',
       }}
     >
       <div
-        className="flex items-center max-w-lg mx-auto px-2"
+        className="flex items-center rounded-full px-2 py-[6px]"
         style={{
-          paddingTop: '8px',
-          paddingBottom: 'max(12px, env(safe-area-inset-bottom, 12px))',
+          backdropFilter: 'saturate(200%) blur(32px)',
+          WebkitBackdropFilter: 'saturate(200%) blur(32px)',
+          backgroundColor: 'rgb(var(--color-surface) / 0.82)',
+          border: '0.5px solid rgb(var(--color-border) / 0.35)',
+          boxShadow: '0 4px 36px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.08)',
         }}
       >
         {navItems.map((item) => {
@@ -89,17 +89,16 @@ export function BottomNav() {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className="flex-1 flex justify-center items-center"
-              style={{ minHeight: 44 }}
+              className="relative flex items-center justify-center"
+              style={{ minHeight: 44, minWidth: 44 }}
             >
-              {/* Pill container — auto-sizes to content */}
               <div className="relative inline-flex items-center gap-[5px] px-3 py-[6px]">
-                {/* Sliding bubble via layoutId — Emil Kowalski technique */}
+                {/* Sliding active bubble */}
                 {active && (
                   <motion.div
                     layoutId="nav-bubble"
                     className="absolute inset-0 rounded-full"
-                    style={{ backgroundColor: 'rgba(var(--color-accent), 0.13)' }}
+                    style={{ backgroundColor: 'rgb(var(--color-accent) / 0.13)' }}
                     transition={{
                       type: 'spring',
                       stiffness: 400,
@@ -109,13 +108,13 @@ export function BottomNav() {
                   />
                 )}
 
-                {/* Icon — always visible, color transitions */}
+                {/* Icon */}
                 <span
                   className="relative z-10 flex shrink-0"
                   style={{
                     color: active
                       ? 'rgb(var(--color-accent))'
-                      : 'rgb(var(--color-text-muted))',
+                      : 'rgb(var(--color-text-primary) / 0.5)',
                     transition: 'color 180ms ease',
                   }}
                 >
