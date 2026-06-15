@@ -813,11 +813,8 @@ function ClickableTriangleDefault({ onSelect }: { onSelect: (phase: Phase) => vo
               <stop offset="0%" stopColor="#5AC8FA" stopOpacity="0.45" />
               <stop offset="100%" stopColor="#34D399" stopOpacity="0.45" />
             </linearGradient>
-            <marker id="botArrow" markerWidth="8" markerHeight="8" refX="5" refY="4" orient="auto">
-              <path d="M0,1 L0,7 L6,4 z" fill="rgba(52,211,153,0.5)" />
-            </marker>
           </defs>
-          <line x1="160" y1="6" x2="475" y2="6" stroke="url(#botGrad)" strokeWidth="1.5" strokeDasharray="5 4" markerEnd="url(#botArrow)" />
+          <line x1="160" y1="6" x2="490" y2="6" stroke="url(#botGrad)" strokeWidth="1.5" strokeDasharray="5 4" />
         </svg>
       </div>
 
