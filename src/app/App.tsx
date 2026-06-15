@@ -64,6 +64,7 @@ import { LernplanKonfiguratorScreen } from '../screens/LernplanKonfiguratorScree
 import { LernplanDetailScreen } from '../screens/LernplanDetailScreen'
 import { LernplanListScreen } from '../screens/LernplanListScreen'
 import { AuthScreen } from '../screens/AuthScreen'
+import { BetaGateScreen, BETA_KEY } from '../screens/BetaGateScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
 import { LandingScreen } from '../screens/LandingScreen'
 import { DrawingCanvasScreen } from '../screens/DrawingCanvasScreen'
@@ -166,6 +167,7 @@ function AppRoutes() {
 function Layout() {
   const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
+  const [betaUnlocked, setBetaUnlocked] = useState(() => localStorage.getItem(BETA_KEY) === '1')
   // True if localStorage has a previous session — lets us skip the spinner for returning users
   const [hasLocalSession] = useState(() => {
     try {
@@ -217,6 +219,7 @@ function Layout() {
   // Only redirect to auth once Supabase has confirmed there's no valid session
   if (!authLoading && !authUser) {
     if (location.pathname === '/') return <Navigate to="/landing" replace />
+    if (!betaUnlocked) return <BetaGateScreen onUnlock={() => setBetaUnlocked(true)} />
     return <AuthScreen />
   }
 
