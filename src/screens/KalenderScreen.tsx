@@ -243,10 +243,6 @@ export function KalenderScreen() {
               {getGreeting(profile?.name ?? 'Max')}
             </h1>
           </div>
-          <span className="mt-1 shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-pill bg-warning/10 text-warning font-bold text-[13px] whitespace-nowrap">
-            <span>🔥</span>
-            <span>{activeStreak}</span>
-          </span>
         </div>
       </div>
 
