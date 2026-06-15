@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { supabase } from '../lib/supabase'
 import { BugReportWidget } from '../components/ui/BugReportWidget'
+import { getActiveStreak } from '../lib/streak'
 
 const AVATAR_BG_OPTIONS = [
   { id: 'purple', gradient: 'linear-gradient(145deg, #A78BFA, #7C3AED)' },
@@ -33,13 +34,6 @@ const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
   { value: 'system', label: 'System' },
 ]
 
-function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
-  if (!lastStudyDate) return 0
-  const today = new Date().toISOString().slice(0, 10)
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  return lastStudyDate === today || lastStudyDate === yesterday.toISOString().slice(0, 10) ? streak : 0
-}
 
 export function ProfilScreen() {
   const navigate = useNavigate()
@@ -116,7 +110,7 @@ export function ProfilScreen() {
     setTimeout(() => setProToast(false), 2000)
   }
 
-  const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
+  const activeStreak = getActiveStreak(appStats.streak, appStats.lastStudyDate)
 
   const stats = [
     { label: 'Streak',    value: activeStreak.toString(), unit: 'Tage', icon: '🔥' },

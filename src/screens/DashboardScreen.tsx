@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
+import { getActiveStreak } from '../lib/streak'
 import type { StundenplanSlot } from '../types'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -42,14 +43,6 @@ function daysUntil(dateStr: string): number {
   return Math.ceil((target.getTime() - today.getTime()) / 86400000)
 }
 
-function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
-  if (!lastStudyDate) return 0
-  const today = new Date().toISOString().slice(0, 10)
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  return lastStudyDate === today || lastStudyDate === yesterday.toISOString().slice(0, 10)
-    ? streak : 0
-}
 
 function getTimeAgo(isoStr: string): string {
   const diff = Date.now() - new Date(isoStr).getTime()
@@ -495,7 +488,7 @@ export function DashboardScreen() {
   }, [profile?.klausurtermine])
 
   // Streak
-  const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
+  const activeStreak = getActiveStreak(appStats.streak, appStats.lastStudyDate)
 
   // Last 7 days for streak visualization
   const last7Days = useMemo(() => {

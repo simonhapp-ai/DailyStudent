@@ -4,15 +4,9 @@ import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import { endnoteForEntry } from './AbiRechnerScreen'
 import { LernvorschlagWidget } from '../components/ui/LernvorschlagWidget'
+import { getActiveStreak } from '../lib/streak'
 import type { AbiHalbjahr } from '../types'
 
-function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
-  if (!lastStudyDate) return 0
-  const today = new Date().toISOString().slice(0, 10)
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  return lastStudyDate === today || lastStudyDate === yesterday.toISOString().slice(0, 10) ? streak : 0
-}
 
 function daysUntil(dateStr: string): number {
   const target = new Date(dateStr)
@@ -138,7 +132,7 @@ export function KlausurphasenScreen() {
   const { generatedFlashCards, profile, appStats, lernplaene, userNotes, savedProbeklausuren, lernzettel, personalEntries } = useUser()
 
   const totalCards = generatedFlashCards.length
-  const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
+  const activeStreak = getActiveStreak(appStats.streak, appStats.lastStudyDate)
 
   // Next upcoming exam
   const nextExam = useMemo(() => {

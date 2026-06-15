@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import { endnoteForEntry } from './AbiRechnerScreen'
+import { getActiveStreak } from '../lib/streak'
 import type { AbiHalbjahr } from '../types'
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -74,14 +75,6 @@ function zielnoteToNP(z: string): number {
   return 17 - parseFloat(z.replace(',', '.')) * 3
 }
 
-function getCurrentStreak(streak: number, lastStudyDate: string | null): number {
-  if (!lastStudyDate) return 0
-  const today = new Date().toISOString().slice(0, 10)
-  const yesterday = new Date()
-  yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayStr = yesterday.toISOString().slice(0, 10)
-  return lastStudyDate === today || lastStudyDate === yesterdayStr ? streak : 0
-}
 
 // ── Grade Line Chart ───────────────────────────────────────────────────────
 
@@ -435,7 +428,7 @@ export function InsightsScreen() {
   const zielnote = profile?.zielnote
   const abiGesamtnote = profile?.abiGesamtnote
 
-  const activeStreak = getCurrentStreak(appStats.streak, appStats.lastStudyDate)
+  const activeStreak = getActiveStreak(appStats.streak, appStats.lastStudyDate)
 
   const totalPhotos = useMemo(
     () => userNotes.reduce((acc, n) => acc + (n.attachments?.length ?? 0), 0),
