@@ -272,55 +272,49 @@ export function ProfilScreen() {
           </div>
         )}
 
-        {/* ── Stats ──────────────────────────────────────────────── */}
-        <div>
-          <h2 className="section-label mb-3">Statistiken</h2>
-          <div className="grid grid-cols-2 gap-3">
+        {/* ── Stats — compact single row + insights link ──────────── */}
+        <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+          <div className="flex items-stretch divide-x divide-border/40">
             {stats.map((stat) => (
-              <div key={stat.label} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 text-center">
-                <p className="text-[24px] mb-2">{stat.icon}</p>
-                <p className="text-text-primary font-bold text-[22px] leading-none">
+              <div key={stat.label} className="flex-1 flex flex-col items-center justify-center py-4 px-2 gap-0.5">
+                <span className="text-[17px] leading-none">{stat.icon}</span>
+                <p className="text-text-primary font-bold text-[19px] leading-none tabular-nums mt-1.5">
                   {stat.value}
-                  {stat.unit && <span className="text-[13px] font-normal text-text-muted ml-1">{stat.unit}</span>}
+                  {stat.unit && <span className="text-[11px] font-normal text-text-muted ml-0.5">{stat.unit}</span>}
                 </p>
-                <p className="text-text-muted text-[12px] mt-1">{stat.label}</p>
+                <p className="text-text-muted text-[10px] font-medium uppercase tracking-wide mt-0.5">{stat.label}</p>
               </div>
             ))}
           </div>
+          <button
+            onClick={() => navigate('/insights')}
+            className="w-full border-t border-border/40 flex items-center justify-between px-4 py-2.5 press-sm"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 rounded-[6px] flex items-center justify-center shrink-0"
+                style={{ background: 'linear-gradient(145deg, #6366F1, #4C1D95)' }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+              </div>
+              <span className="text-text-secondary text-[13px] font-medium">Statistiken & Insights</span>
+            </div>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+              <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
 
-        {/* ── Coins & Rabatte ────────────────────────────────────── */}
-        <CoinsRabattWidget coins={appStats.coins ?? 0} streak={activeStreak} />
-
-        {/* ── Coins Shop ─────────────────────────────────────────── */}
-        <CoinsShopWidget
-          coins={appStats.coins ?? 0}
-          freezeCount={appStats.streakFreezes ?? 0}
-          onBuyFreeze={handleBuyFreeze}
-          freezeToast={freezeToast}
-        />
-
-        {/* ── Statistiken & Insights Button ──────────────────────── */}
-        <button
-          onClick={() => navigate('/insights')}
-          className="w-full bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-4 flex items-center gap-3 press"
-        >
-          <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 glow-indigo"
-            style={{ background: 'linear-gradient(145deg, #6366F1, #4C1D95)' }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="20" x2="18" y2="10" />
-              <line x1="12" y1="20" x2="12" y2="4" />
-              <line x1="6" y1="20" x2="6" y2="14" />
-            </svg>
-          </div>
-          <div className="flex-1 text-left">
-            <p className="text-text-primary font-semibold text-[15px]">Statistiken & Insights</p>
-            <p className="text-text-muted text-[12px] mt-0.5">Notenverlauf, Fächer & Lerntipps</p>
-          </div>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
-            <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
+        {/* ── Coins — 2 col on desktop, accordion on mobile ──────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <CoinsRabattWidget coins={appStats.coins ?? 0} streak={activeStreak} />
+          <CoinsShopWidget
+            coins={appStats.coins ?? 0}
+            freezeCount={appStats.streakFreezes ?? 0}
+            onBuyFreeze={handleBuyFreeze}
+            freezeToast={freezeToast}
+          />
+        </div>
 
         {/* ── Erscheinungsbild ───────────────────────────────────── */}
         <div>
@@ -661,206 +655,210 @@ export function ProfilScreen() {
   )
 }
 
-// ── Coins & Rabatt Widget ──────────────────────────────────────────────────
+// ── Coins & Rabatt Widget ─────────────────────────────────────────────────
+// Mobile: accordion (starts collapsed). Desktop lg: always expanded.
 
 function CoinsRabattWidget({ coins, streak }: { coins: number; streak: number }) {
+  void streak
+  const [open, setOpen] = useState(false)
+
   const RABATT_15_COINS = 2500
   const RABATT_30_COINS = 5000
-
   const has15 = coins >= RABATT_15_COINS
   const has30 = coins >= RABATT_30_COINS
-
   const progress15 = Math.min((coins / RABATT_15_COINS) * 100, 100)
   const progress30 = Math.min((coins / RABATT_30_COINS) * 100, 100)
-
   const coinsTo15 = Math.max(0, RABATT_15_COINS - coins)
   const coinsTo30 = Math.max(0, RABATT_30_COINS - coins)
-  void streak
 
   return (
     <div
-      className="rounded-card border p-5 space-y-4"
+      className="rounded-card border overflow-hidden"
       style={{ background: 'linear-gradient(140deg, rgba(245,158,11,0.08) 0%, rgba(239,68,68,0.04) 100%)', borderColor: 'rgba(245,158,11,0.22)' }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <h2 className="section-label mb-0">Deine Coins</h2>
-          <div className="flex items-center gap-3 mt-2">
-            <CoinIcon coins={coins} size={52}/>
-            <div>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-[34px] font-black tabular-nums leading-none" style={{ color: '#F59E0B' }}>{coins}</span>
+      {/* ── Accordion header — tappable on mobile, static on desktop ── */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-3 px-4 py-3.5 lg:cursor-default press-sm lg:active:scale-100"
+      >
+        <CoinIcon coins={coins} size={38} tilt={false} noAnimation/>
+        <div className="flex-1 text-left min-w-0">
+          <p className="text-text-primary font-bold text-[15px] leading-none">Deine Coins</p>
+          <p className="text-text-muted text-[12px] mt-0.5">
+            <span className="font-semibold tabular-nums" style={{ color: '#F59E0B' }}>{coins}</span>
+            {' '}· {COIN_TIERS[getCoinTier(coins)].label}
+            {has15 && <span className="ml-1.5 text-[10px] font-bold" style={{ color: '#34D399' }}>15% Rabatt ✓</span>}
+            {has30 && <span className="ml-1 text-[10px] font-bold" style={{ color: '#34D399' }}>30% Rabatt ✓</span>}
+          </p>
+        </div>
+        {/* Chevron — hidden on desktop (always expanded there) */}
+        <svg
+          className={`lg:hidden shrink-0 text-text-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+        >
+          <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* ── Expandable body ─────────────────────────────────────────── */}
+      <div className={open ? 'block' : 'hidden lg:block'}>
+        <div className="px-4 pb-4 space-y-4">
+          <div className="h-px" style={{ background: 'rgba(245,158,11,0.18)' }}/>
+
+          {/* 15% Rabatt */}
+          <div className={has15 ? '' : 'opacity-70'}>
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div>
+                <p className="text-text-primary font-bold text-[14px]">15% Rabatt</p>
+                <p className="text-text-muted text-[12px]">€6,80 statt €7,99/Mo</p>
               </div>
-              <p className="text-text-muted text-[12px] mt-0.5">
-                {COIN_TIERS[getCoinTier(coins)].label} · durch tägliches Lernen
-              </p>
+              {has15 && (
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap shrink-0"
+                  style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>✓ Verfügbar</span>
+              )}
             </div>
+            {!has15 && (
+              <>
+                <div className="h-2 rounded-pill overflow-hidden mb-1.5" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
+                  <div className="h-full rounded-pill transition-all duration-500"
+                    style={{ width: `${progress15}%`, background: 'linear-gradient(90deg, #F59E0B, #EF4444)' }}/>
+                </div>
+                <p className="text-text-muted text-[11px]">Noch {coinsTo15} Coins</p>
+              </>
+            )}
           </div>
-        </div>
-      </div>
 
-      <div className="h-px" style={{ background: 'rgba(245,158,11,0.18)' }} />
-
-      {/* 15% Rabatt */}
-      <div className={has15 ? '' : 'opacity-70'}>
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <div>
-            <p className="text-text-primary font-bold text-[14px]">15% Rabatt</p>
-            <p className="text-text-muted text-[12px]">€6,80 statt €7,99/Mo</p>
+          {/* 30% Rabatt */}
+          <div className={has30 ? '' : 'opacity-50'}>
+            <div className="flex items-start justify-between gap-3 mb-2">
+              <div>
+                <p className="text-text-primary font-bold text-[14px]">30% Rabatt</p>
+                <p className="text-text-muted text-[12px]">€5,59 statt €7,99/Mo</p>
+              </div>
+              {has30 && (
+                <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap shrink-0"
+                  style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>✓ Verfügbar</span>
+              )}
+            </div>
+            {!has30 && (
+              <>
+                <div className="h-2 rounded-pill overflow-hidden mb-1.5" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
+                  <div className="h-full rounded-pill transition-all duration-500"
+                    style={{ width: `${progress30}%`, background: 'linear-gradient(90deg, #D97706, #DC2626)' }}/>
+                </div>
+                <p className="text-text-muted text-[11px]">Noch {coinsTo30} Coins</p>
+              </>
+            )}
           </div>
-          {has15 && (
-            <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap shrink-0"
-              style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
-              ✓ Verfügbar
-            </span>
+
+          {(has15 || has30) && (
+            <button className="w-full py-3 rounded-card text-white text-[14px] font-bold press transition-opacity hover:opacity-90"
+              style={{ background: 'linear-gradient(135deg, #F59E0B, #EF4444)' }}>
+              Dein Rabatt-Code →
+            </button>
           )}
         </div>
-        {!has15 && (
-          <>
-            <div className="h-2 rounded-pill overflow-hidden mb-1.5" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
-              <div
-                className="h-full rounded-pill transition-all duration-500"
-                style={{ width: `${progress15}%`, background: 'linear-gradient(90deg, #F59E0B, #EF4444)' }}
-              />
-            </div>
-            <p className="text-text-muted text-[11px]">Noch {coinsTo15} Coins</p>
-          </>
-        )}
       </div>
-
-      {/* 30% Rabatt */}
-      <div className={has30 ? '' : 'opacity-50'}>
-        <div className="flex items-start justify-between gap-3 mb-2">
-          <div>
-            <p className="text-text-primary font-bold text-[14px]">30% Rabatt</p>
-            <p className="text-text-muted text-[12px]">€5,59 statt €7,99/Mo</p>
-          </div>
-          {has30 && (
-            <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill whitespace-nowrap shrink-0"
-              style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
-              ✓ Verfügbar
-            </span>
-          )}
-        </div>
-        {!has30 && (
-          <>
-            <div className="h-2 rounded-pill overflow-hidden mb-1.5" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
-              <div
-                className="h-full rounded-pill transition-all duration-500"
-                style={{ width: `${progress30}%`, background: 'linear-gradient(90deg, #D97706, #DC2626)' }}
-              />
-            </div>
-            <p className="text-text-muted text-[11px]">Noch {coinsTo30} Coins</p>
-          </>
-        )}
-      </div>
-
-      {/* CTA — nur wenn Rabatt verfügbar */}
-      {(has15 || has30) && (
-        <button className="w-full py-3 rounded-card text-white text-[14px] font-bold press transition-opacity hover:opacity-90"
-          style={{ background: 'linear-gradient(135deg, #F59E0B, #EF4444)' }}>
-          Dein Rabatt-Code →
-        </button>
-      )}
     </div>
   )
 }
 
-// ── Coins Shop Widget ──────────────────────────────────────────────────────
+// ── Coins Shop Widget ─────────────────────────────────────────────────────
+// Mobile: accordion (starts collapsed). Desktop lg: always expanded.
 
 function CoinsShopWidget({
-  coins,
-  freezeCount,
-  onBuyFreeze,
-  freezeToast,
+  coins, freezeCount, onBuyFreeze, freezeToast,
 }: {
-  coins: number
-  freezeCount: number
-  onBuyFreeze: () => void
-  freezeToast: 'success' | 'error' | null
+  coins: number; freezeCount: number
+  onBuyFreeze: () => void; freezeToast: 'success' | 'error' | null
 }) {
+  const [open, setOpen] = useState(false)
   const FREEZE_COST = 500
   const canAfford = coins >= FREEZE_COST
 
   return (
     <div
-      className="rounded-card border p-5 space-y-4"
+      className="rounded-card border overflow-hidden"
       style={{ background: 'linear-gradient(140deg, rgba(90,200,250,0.08) 0%, rgba(99,102,241,0.04) 100%)', borderColor: 'rgba(90,200,250,0.22)' }}
     >
-      {/* Header */}
-      <div>
-        <h2 className="section-label mb-0">Coins Shop</h2>
-        <p className="text-text-muted text-[12px] mt-1">Tausche deine Coins gegen nützliche Items ein</p>
-      </div>
-
-      <div className="h-px" style={{ background: 'rgba(90,200,250,0.18)' }} />
-
-      {/* Streak Freeze Item */}
-      <div className="flex items-center gap-4">
-        {/* Icon */}
-        <div
-          className="w-14 h-14 rounded-[16px] flex items-center justify-center shrink-0 text-[28px]"
-          style={{ background: 'linear-gradient(145deg, rgba(90,200,250,0.25), rgba(99,102,241,0.20))', border: '1px solid rgba(90,200,250,0.30)' }}
-        >
+      {/* ── Accordion header ─────────────────────────────────────────── */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-3 px-4 py-3.5 lg:cursor-default press-sm lg:active:scale-100"
+      >
+        <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 text-[20px]"
+          style={{ background: 'linear-gradient(145deg, rgba(90,200,250,0.28), rgba(99,102,241,0.22))', border: '1px solid rgba(90,200,250,0.30)' }}>
           🧊
         </div>
-
-        {/* Info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-0.5">
-            <p className="text-text-primary font-bold text-[15px]">Streak Freeze</p>
-            {freezeCount > 0 && (
-              <span
-                className="text-[11px] font-bold px-2 py-0.5 rounded-pill"
-                style={{ background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' }}
-              >
-                {freezeCount}× vorhanden
-              </span>
-            )}
-          </div>
-          <p className="text-text-muted text-[12px] leading-snug">
-            Erhält deine Streak bei einem verpassten Tag automatisch
-          </p>
-          <p className="font-bold text-[13px] mt-1.5" style={{ color: '#F59E0B' }}>
-            500 🪙
+        <div className="flex-1 text-left min-w-0">
+          <p className="text-text-primary font-bold text-[15px] leading-none">Coins Shop</p>
+          <p className="text-text-muted text-[12px] mt-0.5">
+            {freezeCount > 0
+              ? <span style={{ color: '#5AC8FA' }}>{freezeCount}× Streak Freeze</span>
+              : 'Items mit Coins kaufen'}
           </p>
         </div>
-
-        {/* Buy button */}
-        <button
-          onClick={onBuyFreeze}
-          disabled={!canAfford}
-          className="shrink-0 px-4 py-2.5 rounded-[12px] text-[13px] font-bold press-sm transition-all disabled:opacity-40"
-          style={canAfford
-            ? { background: 'linear-gradient(135deg, #5AC8FA, #6366F1)', color: '#fff', boxShadow: '0 3px 10px rgba(90,200,250,0.30)' }
-            : { background: 'rgba(var(--color-border), 0.5)', color: 'var(--color-text-muted)' }
-          }
+        <svg
+          className={`lg:hidden shrink-0 text-text-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
         >
-          Kaufen
-        </button>
+          <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* ── Expandable body ─────────────────────────────────────────── */}
+      <div className={open ? 'block' : 'hidden lg:block'}>
+        <div className="px-4 pb-4 space-y-3">
+          <div className="h-px" style={{ background: 'rgba(90,200,250,0.18)' }}/>
+
+          {/* Streak Freeze item */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                <p className="text-text-primary font-bold text-[14px]">Streak Freeze</p>
+                {freezeCount > 0 && (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-pill"
+                    style={{ background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' }}>
+                    {freezeCount}× vorhanden
+                  </span>
+                )}
+              </div>
+              <p className="text-text-muted text-[11px] leading-snug">
+                Erhält die Streak bei einem verpassten Tag
+              </p>
+              <p className="font-bold text-[12px] mt-1" style={{ color: '#F59E0B' }}>500 🪙</p>
+            </div>
+            <button
+              onClick={onBuyFreeze}
+              disabled={!canAfford}
+              className="shrink-0 px-4 py-2.5 rounded-[12px] text-[13px] font-bold press-sm transition-all disabled:opacity-40"
+              style={canAfford
+                ? { background: 'linear-gradient(135deg, #5AC8FA, #6366F1)', color: '#fff', boxShadow: '0 3px 10px rgba(90,200,250,0.28)' }
+                : { background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}
+            >
+              Kaufen
+            </button>
+          </div>
+
+          {freezeToast === 'success' && (
+            <div className="rounded-[10px] px-3 py-2 border text-center"
+              style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.25)' }}>
+              <p className="text-[12px] font-semibold" style={{ color: '#34D399' }}>🧊 Streak Freeze gekauft!</p>
+            </div>
+          )}
+          {freezeToast === 'error' && (
+            <div className="rounded-[10px] px-3 py-2 border text-center"
+              style={{ background: 'rgba(239,68,68,0.08)', borderColor: 'rgba(239,68,68,0.25)' }}>
+              <p className="text-[12px] font-semibold" style={{ color: '#EF4444' }}>Nicht genug Coins — 500 🪙 nötig</p>
+            </div>
+          )}
+          {!canAfford && !freezeToast && (
+            <p className="text-text-muted text-[11px] text-center">
+              Noch {Math.max(0, FREEZE_COST - coins)} Coins bis zum Kauf
+            </p>
+          )}
+        </div>
       </div>
-
-      {/* Feedback toast inline */}
-      {freezeToast === 'success' && (
-        <div className="rounded-[10px] px-3 py-2.5 border text-center"
-          style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.25)' }}>
-          <p className="text-[13px] font-semibold" style={{ color: '#34D399' }}>🧊 Streak Freeze gekauft! Wird automatisch aktiviert.</p>
-        </div>
-      )}
-      {freezeToast === 'error' && (
-        <div className="rounded-[10px] px-3 py-2.5 border text-center"
-          style={{ background: 'rgba(239,68,68,0.08)', borderColor: 'rgba(239,68,68,0.25)' }}>
-          <p className="text-[13px] font-semibold" style={{ color: '#EF4444' }}>Nicht genug Coins. Du brauchst 500 🪙</p>
-        </div>
-      )}
-
-      {/* Coins remaining hint */}
-      {!canAfford && (
-        <p className="text-text-muted text-[11px] text-center">
-          Noch {Math.max(0, FREEZE_COST - coins)} Coins bis zum nächsten Kauf
-        </p>
-      )}
     </div>
   )
 }
