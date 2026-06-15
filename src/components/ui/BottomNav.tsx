@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const navItems = [
   {
@@ -67,20 +67,19 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed left-1/2 z-50"
+      className="fixed left-4 right-4 z-50"
       style={{
-        transform: 'translateX(-50%)',
         bottom: 'max(20px, calc(env(safe-area-inset-bottom, 0px) + 14px))',
       }}
     >
       <div
-        className="flex items-center rounded-full px-2 py-[6px]"
+        className="flex items-center rounded-full px-2 py-[5px]"
         style={{
           backdropFilter: 'saturate(200%) blur(32px)',
           WebkitBackdropFilter: 'saturate(200%) blur(32px)',
-          backgroundColor: 'rgb(var(--color-surface) / 0.82)',
+          backgroundColor: 'rgb(var(--color-surface) / 0.85)',
           border: '0.5px solid rgb(var(--color-border) / 0.35)',
-          boxShadow: '0 4px 36px rgba(0,0,0,0.16), 0 1px 6px rgba(0,0,0,0.08)',
+          boxShadow: '0 4px 36px rgba(0,0,0,0.18), 0 1px 6px rgba(0,0,0,0.08)',
         }}
       >
         {navItems.map((item) => {
@@ -89,64 +88,47 @@ export function BottomNav() {
             <button
               key={item.path}
               onClick={() => navigate(item.path)}
-              className="relative flex items-center justify-center"
-              style={{ minHeight: 44, minWidth: 44 }}
+              className="flex-1 relative flex flex-col items-center justify-center gap-[3px] rounded-full py-[9px] px-2"
             >
-              <div className="relative inline-flex items-center gap-[5px] px-3 py-[6px]">
-                {/* Sliding active bubble */}
-                {active && (
-                  <motion.div
-                    layoutId="nav-bubble"
-                    className="absolute inset-0 rounded-full"
-                    style={{ backgroundColor: 'rgb(var(--color-accent) / 0.13)' }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 400,
-                      damping: 30,
-                      mass: 0.8,
-                    }}
-                  />
-                )}
+              {/* Sliding active bubble */}
+              {active && (
+                <motion.div
+                  layoutId="nav-bubble"
+                  className="absolute inset-0 rounded-full"
+                  style={{ backgroundColor: 'rgb(var(--color-accent) / 0.13)' }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30, mass: 0.8 }}
+                />
+              )}
 
-                {/* Icon */}
-                <span
-                  className="relative z-10 flex shrink-0"
-                  style={{
-                    color: active
-                      ? 'rgb(var(--color-accent))'
-                      : 'rgb(var(--color-text-primary) / 0.5)',
-                    transition: 'color 180ms ease',
-                  }}
-                >
-                  {item.icon(active)}
-                </span>
+              {/* Icon */}
+              <span
+                className="relative z-10 flex shrink-0"
+                style={{
+                  color: active
+                    ? 'rgb(var(--color-accent))'
+                    : 'rgb(var(--color-text-primary) / 0.5)',
+                  transition: 'color 180ms ease',
+                }}
+              >
+                {item.icon(active)}
+              </span>
 
-                {/* Label — slides in beside icon when active */}
-                <AnimatePresence>
-                  {active && (
-                    <motion.span
-                      key={`label-${item.path}`}
-                      initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
-                      exit={{ opacity: 0, width: 0 }}
-                      transition={{
-                        opacity: { duration: 0.18, ease: 'easeOut' },
-                        width: { duration: 0.22, ease: [0.23, 1, 0.32, 1] },
-                      }}
-                      className="relative z-10 overflow-hidden whitespace-nowrap"
-                      style={{
-                        color: 'rgb(var(--color-accent))',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        lineHeight: 1,
-                        letterSpacing: '-0.01em',
-                      }}
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </div>
+              {/* Label — centered below icon */}
+              <span
+                className="relative z-10 whitespace-nowrap"
+                style={{
+                  color: active
+                    ? 'rgb(var(--color-accent))'
+                    : 'rgb(var(--color-text-primary) / 0.5)',
+                  fontSize: '10px',
+                  fontWeight: active ? 600 : 400,
+                  lineHeight: 1,
+                  letterSpacing: '-0.01em',
+                  transition: 'color 180ms ease',
+                }}
+              >
+                {item.label}
+              </span>
             </button>
           )
         })}
