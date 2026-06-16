@@ -68,6 +68,7 @@ import { AuthScreen } from '../screens/AuthScreen'
 import { BetaGateScreen, BETA_KEY } from '../screens/BetaGateScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
 import { LandingScreen } from '../screens/LandingScreen'
+import { EarlyAccessScreen } from '../screens/EarlyAccessScreen'
 import { DrawingCanvasScreen } from '../screens/DrawingCanvasScreen'
 import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
 import { TwoFactorSetupScreen } from '../screens/TwoFactorSetupScreen'
@@ -117,6 +118,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/landing" element={<LandingScreen />} />
+      <Route path="/early-access" element={<EarlyAccessScreen />} />
       <Route path="/impressum" element={<ImpressumScreen />} />
       <Route path="/datenschutz" element={<DatenschutzScreen />} />
       <Route path="/agb" element={<AGBScreen />} />
@@ -213,6 +215,7 @@ function Layout() {
 
   // Public routes — always accessible without auth
   if (location.pathname === '/landing') return <LandingScreen />
+  if (location.pathname === '/early-access') return <EarlyAccessScreen />
   if (location.pathname === '/impressum') return <ImpressumScreen />
   if (location.pathname === '/datenschutz') return <DatenschutzScreen />
   if (location.pathname === '/agb') return <AGBScreen />
