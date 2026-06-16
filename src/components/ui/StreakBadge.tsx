@@ -7,19 +7,17 @@ export function StreakBadge() {
   const location = useLocation()
   const { appStats } = useUser()
 
-  // Hide where streak is already prominently displayed or irrelevant
+  const segments = location.pathname.split('/').filter(Boolean)
+  // Hide on /profil, /landing, /auth, and everywhere under /unterricht except the home screen
+  // itself (note creation + folder/lesson/smart-notes views all have their own top-right buttons)
   if (
     location.pathname.startsWith('/profil') ||
     location.pathname === '/landing' ||
-    location.pathname.startsWith('/auth')
+    location.pathname.startsWith('/auth') ||
+    (segments[0] === 'unterricht' && segments.length > 1)
   ) return null
 
   const streak = getActiveStreak(appStats.streak ?? 0, appStats.lastStudyDate ?? null)
-
-  // SmartNotes detail screens have action buttons at top-right — shift badge left to avoid overlap
-  const segments = location.pathname.split('/').filter(Boolean)
-  const isSmartNotes =
-    segments[0] === 'unterricht' && segments.length >= 3 && !segments.includes('neue-notiz')
 
   return (
     <button
@@ -28,7 +26,7 @@ export function StreakBadge() {
       className="fixed z-40 flex items-center gap-1.5 select-none press-sm"
       style={{
         top: 'max(14px, calc(env(safe-area-inset-top, 0px) + 10px))',
-        right: isSmartNotes ? '136px' : '16px',
+        right: '16px',
         padding: '5px 10px 5px 8px',
         borderRadius: '20px',
         background: 'rgba(10,10,10,0.88)',
