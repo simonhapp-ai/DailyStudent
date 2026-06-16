@@ -50,15 +50,16 @@ export function ProfilScreen() {
   const [freezeToast, setFreezeToast] = useState<'success' | 'error' | null>(null)
 
   const handleBuyFreeze = () => {
-    const ok = buyStreakFreeze()
-    if (ok) {
-      showCoinToast(0)
-      setFreezeToast('success')
-      setTimeout(() => setFreezeToast(null), 2200)
-    } else {
-      setFreezeToast('error')
-      setTimeout(() => setFreezeToast(null), 2200)
-    }
+    void buyStreakFreeze().then((ok) => {
+      if (ok) {
+        showCoinToast(0)
+        setFreezeToast('success')
+        setTimeout(() => setFreezeToast(null), 2200)
+      } else {
+        setFreezeToast('error')
+        setTimeout(() => setFreezeToast(null), 2200)
+      }
+    })
   }
 
   const avatarBg = profile?.avatarBg ?? 'linear-gradient(145deg, #A78BFA, #7C3AED)'

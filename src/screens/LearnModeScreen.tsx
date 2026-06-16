@@ -78,8 +78,7 @@ export function LearnModeScreen() {
     setKnownCount((n) => n + 1)
     setCardIndex((i) => (i + 1) % sessionCards.length)
     recordStudyDay()
-    const gain = addCoins('FLASHCARD_LEARNED')
-    if (gain > 0) showCoinToast(gain)
+    void addCoins('FLASHCARD_LEARNED').then((gain) => { if (gain > 0) showCoinToast(gain) })
   }
 
   const handleAgain = () => {

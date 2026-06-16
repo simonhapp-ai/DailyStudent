@@ -504,6 +504,36 @@ export async function syncAppStats(userId: string, stats: AppStats): Promise<voi
   } catch (err) { console.warn('[Supabase] syncAppStats', err) }
 }
 
+// Atomic coin grant via RPC (row-locked on the server) — safe against concurrent
+// tabs/devices racing on the same daily cooldown. Returns null if the call failed
+// (offline, RLS, etc.) so the caller can fall back to a local-only optimistic grant.
+export async function grantCoinsRemote(
+  userId: string, amount: number, cooldownKey: string,
+): Promise<{ granted: number; coins: number; cooldowns: string[] } | null> {
+  try {
+    const { data, error } = await supabase.rpc('grant_coins', {
+      p_user_id: userId, p_amount: amount, p_cooldown_key: cooldownKey,
+    })
+    if (error || !data?.[0]) { console.warn('[Supabase] grantCoinsRemote', error); return null }
+    const row = data[0]
+    return { granted: row.granted, coins: row.new_coins, cooldowns: row.new_cooldowns ?? [] }
+  } catch (err) { console.warn('[Supabase] grantCoinsRemote', err); return null }
+}
+
+// Atomic streak-freeze purchase via RPC — same row-lock guarantee as grantCoinsRemote.
+export async function buyStreakFreezeRemote(
+  userId: string, cost: number,
+): Promise<{ success: boolean; coins: number; streakFreezes: number } | null> {
+  try {
+    const { data, error } = await supabase.rpc('buy_streak_freeze', {
+      p_user_id: userId, p_cost: cost,
+    })
+    if (error || !data?.[0]) { console.warn('[Supabase] buyStreakFreezeRemote', error); return null }
+    const row = data[0]
+    return { success: row.success, coins: row.new_coins, streakFreezes: row.new_streak_freezes }
+  } catch (err) { console.warn('[Supabase] buyStreakFreezeRemote', err); return null }
+}
+
 export async function syncFolder(userId: string, folder: UserFolder): Promise<void> {
   try {
     await supabase.from('user_folders').upsert({

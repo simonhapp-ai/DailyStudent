@@ -89,7 +89,7 @@ export function LernzettelGeneratorScreen() {
 
       saveLernzettel(lz)
       recordStudyDay()
-      const gain = addCoins('LERNZETTEL')
+      const gain = await addCoins('LERNZETTEL')
       if (gain > 0) showCoinToast(gain)
       navigate('/klausurmodus/lernzettel', { replace: true })
     } catch (e) {

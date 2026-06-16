@@ -7,7 +7,7 @@ import { loadKcForUser, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from '../lib/supabase'
 import {
   loadUserDataFromSupabase, migrateToSupabase,
-  syncProfile, syncGradeData, syncAppStats,
+  syncProfile, syncGradeData, syncAppStats, grantCoinsRemote, buyStreakFreezeRemote,
   syncFolder, syncFoldersBatch, deleteFoldersFromDB,
   syncNote, deleteNotesFromDB,
   syncSmartNote,
@@ -158,9 +158,9 @@ interface UserContextValue {
   appStats: AppStats
   recordStudyDay: () => number
   recordExam: (score: ExamScoreRecord) => void
-  addCoins: (action: CoinAction) => number
+  addCoins: (action: CoinAction) => Promise<number>
   recordLogin: () => void
-  buyStreakFreeze: () => boolean
+  buyStreakFreeze: () => Promise<boolean>
   debugSetCoins: (amount: number) => void
   incrementScanCount: () => void
   coinToastVisible: boolean
@@ -747,8 +747,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     recordExam({ id: pk.id, date: pk.completedAt, subjectId: pk.subjectId, gradeLabel: pk.gradeLabel, totalNP: pk.totalNP, source: 'probeklausur' })
     // Only mode 2 (Vollständige 90-Min-Klausur) earns coins
     if (pk.mode === 2) {
-      const coinGain = addCoins('PROBEKLAUSUR')
-      if (coinGain > 0) showCoinToast(coinGain)
+      void addCoins('PROBEKLAUSUR').then((coinGain) => { if (coinGain > 0) showCoinToast(coinGain) })
     }
     if (authUser) void syncProbeklausur(authUser.id, pk)
   }
@@ -882,8 +881,23 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   // Buy a streak freeze for 500 coins. Returns true if purchase succeeded.
-  const buyStreakFreeze = (): boolean => {
+  // Goes through an atomic server RPC when logged in — a client-side
+  // read-modify-write would let two open tabs both "see" enough coins and
+  // double-spend, since only the last write survives in the DB.
+  const buyStreakFreeze = async (): Promise<boolean> => {
     const FREEZE_COST = 500
+
+    if (authUser) {
+      const result = await buyStreakFreezeRemote(authUser.id, FREEZE_COST)
+      if (result) {
+        const updated: AppStats = { ...(loadStorage().appStats ?? DEFAULT_APP_STATS), coins: result.coins, streakFreezes: result.streakFreezes }
+        setAppStats(updated)
+        saveStorage({ ...loadStorage(), appStats: updated })
+        return result.success
+      }
+      // RPC unreachable (offline) — fall through to local-only optimistic path below
+    }
+
     const current = loadStorage().appStats ?? DEFAULT_APP_STATS
     if ((current.coins ?? 0) < FREEZE_COST) return false
     const updated: AppStats = {
@@ -907,16 +921,30 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   // Grant daily login coins — call once per session, cooldown prevents duplicates
   const recordLogin = () => {
-    const gain = addCoins('LOGIN')
-    if (gain > 0) showCoinToast(gain)
+    void addCoins('LOGIN').then((gain) => { if (gain > 0) showCoinToast(gain) })
   }
 
-  const addCoins = (action: CoinAction): number => {
+  // Atomic via server RPC when logged in — the cooldown check-and-increment happens
+  // under a row lock on app_stats, so two tabs/devices racing on the same daily
+  // cooldown key serialize instead of both granting coins that only one write keeps.
+  const addCoins = async (action: CoinAction): Promise<number> => {
     const today = new Date().toISOString().slice(0, 10)
     const cooldownKey = `${action}:${today}`
+    const amount = COIN_VALUES[action]
+
+    if (authUser) {
+      const result = await grantCoinsRemote(authUser.id, amount, cooldownKey)
+      if (result) {
+        const updated: AppStats = { ...(loadStorage().appStats ?? DEFAULT_APP_STATS), coins: result.coins, cooldowns: result.cooldowns }
+        setAppStats(updated)
+        saveStorage({ ...loadStorage(), appStats: updated })
+        return result.granted
+      }
+      // RPC unreachable (offline) — fall through to local-only optimistic path below
+    }
+
     const current = loadStorage().appStats ?? DEFAULT_APP_STATS
     if ((current.cooldowns ?? []).includes(cooldownKey)) return 0
-    const amount = COIN_VALUES[action]
     const updated: AppStats = {
       ...current,
       coins: (current.coins ?? 0) + amount,
