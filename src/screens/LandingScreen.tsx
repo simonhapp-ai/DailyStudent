@@ -371,14 +371,18 @@ function Navbar({ onCta, onEarlyAccess }: { onCta: () => void; onEarlyAccess: ()
         <div className="flex items-center gap-2">
           <button
             onClick={onEarlyAccess}
-            className="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0"
-            style={{ background: 'linear-gradient(135deg, #34D399, #059669)', boxShadow: '0 2px 8px rgba(52,211,153,0.3)' }}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0 relative overflow-hidden"
+            style={{ background: 'linear-gradient(135deg, #34D399, #059669)', animation: 'ea-glow 2.4s ease-in-out infinite' }}
           >
-            Early Access
+            <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.28) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
+            <span className="relative flex items-center gap-1.5">
+              <span className="hidden sm:inline">Early Access</span>
+              <span className="sm:hidden">Early Access</span>
+            </span>
           </button>
           <button
             onClick={onCta}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0"
+            className="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0"
             style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}
           >
             App öffnen
@@ -1256,10 +1260,11 @@ export function LandingScreen() {
                 </a>
                 <button
                   onClick={goToEarlyAccess}
-                  className="w-full sm:w-auto px-7 py-3.5 rounded-full text-[15px] font-semibold text-white press-sm text-center"
-                  style={{ background: 'linear-gradient(135deg, #34D399, #059669)', boxShadow: '0 4px 14px rgba(52,211,153,0.3)' }}
+                  className="relative w-full sm:w-auto px-7 py-3.5 rounded-full text-[15px] font-semibold text-white press-sm text-center overflow-hidden"
+                  style={{ background: 'linear-gradient(135deg, #34D399, #059669)', animation: 'ea-glow 2.4s ease-in-out infinite' }}
                 >
-                  Early Access sichern
+                  <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
+                  <span className="relative">Early Access sichern</span>
                 </button>
               </motion.div>
 
@@ -1662,6 +1667,10 @@ export function LandingScreen() {
         @keyframes shimmer {
           0% { background-position: -200% center; }
           100% { background-position: 200% center; }
+        }
+        @keyframes ea-glow {
+          0%, 100% { box-shadow: 0 2px 10px rgba(52,211,153,0.35), 0 0 0 0 rgba(52,211,153,0); }
+          50% { box-shadow: 0 4px 20px rgba(52,211,153,0.6), 0 0 18px 2px rgba(52,211,153,0.2); }
         }
       `}</style>
     </div>
