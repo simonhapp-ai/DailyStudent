@@ -2,6 +2,11 @@ import type { GeneratedSmartNote, StundenplanSlot } from '../types'
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from './supabase'
 
+async function getAuthHeader(): Promise<Record<string, string>> {
+  const { data: { session } } = await supabase.auth.getSession()
+  return session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}
+}
+
 const VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct'
 const TEXT_MODEL = 'llama-3.3-70b-versatile'
 
@@ -27,34 +32,52 @@ interface GroqResponse {
   choices: { message: { content: string } }[]
 }
 
-
 function parseRetryAfterMs(errorText: string): number {
   const match = /try again in ([\d.]+)s/i.exec(errorText)
   return match ? Math.ceil(parseFloat(match[1]) * 1000) + 500 : 5000
 }
 
 async function groqFetch(body: Record<string, unknown>): Promise<string> {
-  const attempt = async () => supabase.functions.invoke('groq-proxy', { body })
+  const attempt = async (): Promise<GroqResponse> => {
+    // Dev: call Groq directly (key in .env, not public). Prod: Vercel Edge Function hides the key.
+    const res = import.meta.env.DEV
+      ? await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY as string}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        })
+      : await fetch('/api/groq', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...await getAuthHeader(),
+          },
+          body: JSON.stringify(body),
+        })
+    const text = await res.text()
+    if (!res.ok) throw new Error(`Groq ${res.status}: ${text}`)
+    return JSON.parse(text) as GroqResponse
+  }
 
-  let { data, error } = await attempt()
-
-  if (error) {
-    // 429 retry
-    const msg = error.message ?? ''
+  let data: GroqResponse
+  try {
+    data = await attempt()
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
     if (msg.includes('429') || msg.includes('rate')) {
       const waitMs = parseRetryAfterMs(msg)
       await new Promise((r) => setTimeout(r, waitMs))
-      const retry = await attempt()
-      data = retry.data
-      error = retry.error
+      data = await attempt()
+    } else {
+      throw err
     }
   }
 
-  if (error) throw new Error(error.message ?? 'Groq Edge Function Fehler')
-
-  const res = data as GroqResponse
-  if (!res?.choices?.[0]?.message?.content) throw new Error('Unerwartete Antwort von Groq')
-  return res.choices[0].message.content
+  if (!data?.choices?.[0]?.message?.content) throw new Error('Unerwartete Antwort von Groq')
+  return data.choices[0].message.content
 }
 
 export async function extractTopicsFromImage(dataUrl: string): Promise<string[]> {

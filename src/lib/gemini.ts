@@ -2,9 +2,19 @@ import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTas
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from './supabase'
 
+async function getAuthHeader(): Promise<Record<string, string>> {
+  const { data: { session } } = await supabase.auth.getSession()
+  return session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}
+}
+
 interface GeminiProxyResult {
   geminiStatus: number
   geminiData: unknown
+}
+
+const GEMINI_URLS: Record<string, string> = {
+  'flash': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+  'flash-lite': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
 }
 
 async function geminiProxy(
@@ -12,9 +22,29 @@ async function geminiProxy(
   body: Record<string, unknown>,
   signal?: AbortSignal,
 ): Promise<GeminiProxyResult> {
-  const { data, error } = await supabase.functions.invoke('gemini-proxy', { body: { model, body }, signal })
-  if (error) throw new Error(error.message ?? 'Gemini Edge Function Fehler')
-  return data as GeminiProxyResult
+  if (import.meta.env.DEV) {
+    // Dev: call Gemini directly (key in .env, not public). Prod: Vercel Edge Function hides the key.
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string
+    const url = GEMINI_URLS[model] ?? GEMINI_URLS['flash']
+    const res = await fetch(`${url}?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal,
+    })
+    const geminiData = await res.json()
+    return { geminiStatus: res.status, geminiData }
+  }
+  const res = await fetch('/api/gemini', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...await getAuthHeader(),
+    },
+    body: JSON.stringify({ model, body }),
+    signal,
+  })
+  return await res.json() as GeminiProxyResult
 }
 
 interface GeminiJSON {
