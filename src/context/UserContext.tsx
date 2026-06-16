@@ -168,6 +168,9 @@ interface UserContextValue {
   coinToastAmount: number
   showCoinToast: (amount: number) => void
   hideCoinToast: () => void
+  localAttachmentToastVisible: boolean
+  showLocalAttachmentToast: () => void
+  hideLocalAttachmentToast: () => void
   kcCache: Record<string, KcSubjectData>
   kcFallbacks: string[]
   getKc: (subjectId: string) => KcSubjectData | null
@@ -485,6 +488,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const hideCoinToast = () => setCoinToastVisible(false)
+
+  const [localAttachmentToastVisible, setLocalAttachmentToastVisible] = useState(false)
+  const showLocalAttachmentToast = () => setLocalAttachmentToastVisible(true)
+  const hideLocalAttachmentToast = () => setLocalAttachmentToastVisible(false)
 
   const [lernzettel, setLernzettel] = useState<Lernzettel[]>(stored.lernzettel ?? [])
   const [savedProbeklausuren, setSavedProbeklausuren] = useState<SavedProbeklausur[]>(stored.savedProbeklausuren ?? [])
@@ -1105,6 +1112,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
         coinToastAmount,
         showCoinToast,
         hideCoinToast,
+        localAttachmentToastVisible,
+        showLocalAttachmentToast,
+        hideLocalAttachmentToast,
         kcCache,
         kcFallbacks,
         getKc,

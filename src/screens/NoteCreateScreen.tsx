@@ -84,6 +84,10 @@ function makeHomeworkBlock(id: string): HomeworkBlock {
   return { id, type: 'homework', subjectId: '', description: '', dueDate: '', aiHelp: null, aiLoading: false }
 }
 
+function noteHasPhotos(note: UserNote): boolean {
+  return (note.attachments?.length ?? 0) > 0 || (note.drawingAttachments?.length ?? 0) > 0
+}
+
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
@@ -112,7 +116,7 @@ export function NoteCreateScreen() {
   const { id, folderId } = useParams<{ id?: string; folderId?: string }>()
   const navigate = useNavigate()
   const location = useLocation()
-  const { profile, saveNote, userFolders, userNotes, saveToOhneFachFolder, addFolder, recordStudyDay, addCoins, showCoinToast } = useUser()
+  const { profile, saveNote, userFolders, userNotes, saveToOhneFachFolder, addFolder, recordStudyDay, addCoins, showCoinToast, showLocalAttachmentToast } = useUser()
 
   const [noteId] = useState(() => {
     const uid = typeof crypto?.randomUUID === 'function'
@@ -481,10 +485,14 @@ export function NoteCreateScreen() {
     blocks.some(b => (b.type === 'text' || b.type === 'photo' || b.type === 'drawing') && b.aiResult !== null)
 
   const doSave = (subjectId: string, resolvedFolderId: string, generatedNote?: GeneratedSmartNote) => {
-    saveNote(buildNote(subjectId, resolvedFolderId), generatedNote ?? buildGeneratedNote())
+    const note = buildNote(subjectId, resolvedFolderId)
+    saveNote(note, generatedNote ?? buildGeneratedNote())
     setShowSaveModal(false)
     recordStudyDay()
-    void addCoins('SMART_NOTE').then((gain) => { if (gain > 0) showCoinToast(gain) })
+    void addCoins('SMART_NOTE').then((gain) => {
+      if (gain > 0) showCoinToast(gain)
+      if (noteHasPhotos(note)) setTimeout(showLocalAttachmentToast, gain > 0 ? 2100 : 0)
+    })
     if (resolvedFolderId && subjectId) navigate(`/unterricht/${subjectId}/ordner/${resolvedFolderId}`, { replace: true })
     else if (subjectId) navigate(`/unterricht/${subjectId}`, { replace: true })
     else navigate('/unterricht', { replace: true })
@@ -571,8 +579,10 @@ export function NoteCreateScreen() {
 
   const acceptSuggestion = () => {
     if (!suggestion) return
-    saveNote(buildNote(suggestion.subjectId, undefined), buildGeneratedNote())
+    const note = buildNote(suggestion.subjectId, undefined)
+    saveNote(note, buildGeneratedNote())
     setShowNoSubjectModal(false)
+    if (noteHasPhotos(note)) showLocalAttachmentToast()
     navigate(`/unterricht/${suggestion.subjectId}`, { replace: true })
   }
 
@@ -580,6 +590,7 @@ export function NoteCreateScreen() {
     const note = buildNote(undefined, 'folder-no-subject')
     saveToOhneFachFolder(note, buildGeneratedNote())
     setShowNoSubjectModal(false)
+    if (noteHasPhotos(note)) showLocalAttachmentToast()
     navigate('/unterricht/ohne-fach/ordner/folder-no-subject', { replace: true })
   }
 

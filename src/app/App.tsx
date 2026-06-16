@@ -27,6 +27,7 @@ import { BottomNav } from '../components/ui/BottomNav'
 import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSidebar'
 import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
 import { CoinToast } from '../components/ui/CoinToast'
+import { AttachmentToast } from '../components/ui/AttachmentToast'
 import { CoinIconGlobalDefs } from '../components/ui/CoinIcon'
 import { StreakBadge } from '../components/ui/StreakBadge'
 import { UserProvider, useUser } from '../context/UserContext'
@@ -266,6 +267,7 @@ function Layout() {
         </main>
         <StreakBadge />
         <CoinToast />
+        <AttachmentToast />
       </div>
     )
   }
@@ -278,6 +280,7 @@ function Layout() {
       <SyncErrorBanner />
       <StreakBadge />
       <CoinToast />
+      <AttachmentToast />
     </div>
   )
 }
