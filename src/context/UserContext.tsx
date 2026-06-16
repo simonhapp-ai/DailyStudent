@@ -19,6 +19,7 @@ import {
   syncHomeworkBatch, syncCompletedHomework,
   retrySyncQueue, getSyncQueueStats,
 } from '../lib/supabaseSync'
+import { localizeNoteAttachments, deleteAttachmentsForNotes } from '../lib/noteStorage'
 
 export interface StandaloneHomeworkItem {
   id: string
@@ -625,14 +626,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) void syncSmartNote(authUser.id, lessonId, note)
   }
 
-  const addUserNote = (note: UserNote) => {
+  const addUserNote = (rawNote: UserNote) => {
+    const note = localizeNoteAttachments(rawNote)
     const updated = [...userNotes, note]
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
     if (authUser) void syncNote(authUser.id, note)
   }
 
-  const saveNote = (note: UserNote, generated?: GeneratedSmartNote) => {
+  const saveNote = (rawNote: UserNote, generated?: GeneratedSmartNote) => {
+    const note = localizeNoteAttachments(rawNote)
     const updatedNotes = [...userNotes, note]
     const updatedGenerated = generated
       ? { ...generatedNotes, [note.id]: generated }
@@ -646,7 +649,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const updateUserNote = (note: UserNote) => {
+  const updateUserNote = (rawNote: UserNote) => {
+    const note = localizeNoteAttachments(rawNote)
     const updated = userNotes.map((n) => (n.id === note.id ? note : n))
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
@@ -654,12 +658,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const deleteUserNote = (noteId: string) => {
+    const deletedNote = userNotes.find((n) => n.id === noteId)
     const updatedNotes = userNotes.filter((n) => n.id !== noteId)
     const updatedGenerated = { ...generatedNotes }
     delete updatedGenerated[noteId]
     setUserNotes(updatedNotes)
     setGeneratedNotes(updatedGenerated)
     persist(profile, personalEntries, updatedGenerated, updatedNotes, userFolders)
+    if (deletedNote) void deleteAttachmentsForNotes([deletedNote])
     if (authUser) void deleteNotesFromDB(authUser.id, [noteId])
   }
 
@@ -670,7 +676,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) void syncFolder(authUser.id, folder)
   }
 
-  const saveToOhneFachFolder = (note: UserNote, generated?: GeneratedSmartNote) => {
+  const saveToOhneFachFolder = (rawNote: UserNote, generated?: GeneratedSmartNote) => {
+    const note = localizeNoteAttachments(rawNote)
     const folderExists = userFolders.some((f) => f.id === 'folder-no-subject')
     const newFolder: UserFolder = { id: 'folder-no-subject', subjectId: 'ohne-fach', name: 'Schnellnotizen', createdAt: new Date().toISOString() }
     const updatedFolders = folderExists ? userFolders : [...userFolders, newFolder]
@@ -991,12 +998,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const deleteFolder = (folderId: string) => {
     const childIds = userFolders.filter((f) => f.parentFolderId === folderId).map((f) => f.id)
-    const deletedNoteIds = userNotes.filter((n) => n.folderId === folderId).map((n) => n.id)
+    const deletedNotes = userNotes.filter((n) => n.folderId === folderId)
+    const deletedNoteIds = deletedNotes.map((n) => n.id)
     const updatedFolders = userFolders.filter((f) => f.id !== folderId && f.parentFolderId !== folderId)
     const updatedNotes = userNotes.filter((n) => n.folderId !== folderId)
     setUserFolders(updatedFolders)
     setUserNotes(updatedNotes)
     persist(profile, personalEntries, generatedNotes, updatedNotes, updatedFolders)
+    if (deletedNotes.length) void deleteAttachmentsForNotes(deletedNotes)
     if (authUser) {
       void deleteFoldersFromDB(authUser.id, [folderId, ...childIds])
       if (deletedNoteIds.length) void deleteNotesFromDB(authUser.id, deletedNoteIds)
@@ -1012,9 +1021,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const deletedFolderIds = new Set(
       userFolders.filter((f) => deletedFaecherIds.includes(f.subjectId)).map((f) => f.id)
     )
-    const deletedNoteIds = userNotes
+    const deletedNotes = userNotes
       .filter((n) => deletedFaecherIds.includes(n.subjectId ?? '') || deletedFolderIds.has(n.folderId ?? ''))
-      .map((n) => n.id)
+    const deletedNoteIds = deletedNotes.map((n) => n.id)
     const updatedFolders = userFolders.filter((f) => !deletedFolderIds.has(f.id))
     const updatedNotes = userNotes.filter(
       (n) => !deletedFaecherIds.includes(n.subjectId ?? '') && !deletedFolderIds.has(n.folderId ?? '')
@@ -1032,6 +1041,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserFolders(finalFolders)
     setUserNotes(updatedNotes)
     persist(updatedProfile, personalEntries, generatedNotes, updatedNotes, finalFolders)
+    if (deletedNotes.length) void deleteAttachmentsForNotes(deletedNotes)
     if (authUser) {
       void syncProfile(authUser.id, updatedProfile, theme, isPro)
       if (deletedFolderIds.size) void deleteFoldersFromDB(authUser.id, [...deletedFolderIds])

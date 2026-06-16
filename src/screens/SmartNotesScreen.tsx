@@ -5,6 +5,7 @@ import { MathRenderer } from '../components/ui/MathRenderer'
 import { useUser } from '../context/UserContext'
 import { explainKeyword, extractTextFromImage, generateFlashcards, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
+import { getAttachment, useResolvedAttachments, hasLocalOnlyAttachments, transferNoteAttachmentsToCloud } from '../lib/noteStorage'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { FlashCard, GeneratedSmartNote, UserNote } from '../types'
 
@@ -41,7 +42,7 @@ type AnalysisStatus = 'idle' | 'analyzing' | 'done' | 'error'
 export function SmartNotesScreen() {
   const { id, lessonId } = useParams<{ id: string; lessonId: string }>()
   const navigate = useNavigate()
-  const { generatedNotes, userNotes, completedHomeworkIds, saveGeneratedNote, updateUserNote, deleteUserNote, saveFlashCards, getKc } = useUser()
+  const { generatedNotes, userNotes, completedHomeworkIds, saveGeneratedNote, updateUserNote, deleteUserNote, saveFlashCards, getKc, authUser } = useUser()
 
   const subject = SUBJECT_INFO[id ?? '']
   const userNote = userNotes.find((n) => n.id === lessonId)
@@ -75,8 +76,21 @@ export function SmartNotesScreen() {
   const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null)
   const [explanations, setExplanations] = useState<Record<string, string>>({})
   const [loadingKeyword, setLoadingKeyword] = useState<string | null>(null)
+  const [transferStatus, setTransferStatus] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
   const cameraRef = useRef<HTMLInputElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+
+  const transferToCloud = async () => {
+    if (!userNote || !authUser) return
+    setTransferStatus('uploading')
+    try {
+      const updated = await transferNoteAttachmentsToCloud(authUser.id, userNote)
+      if (updated) updateUserNote(updated)
+      setTransferStatus('done')
+    } catch {
+      setTransferStatus('error')
+    }
+  }
 
   const startEdit = () => {
     setEditTitle(userNote?.title ?? '')
@@ -154,8 +168,10 @@ export function SmartNotesScreen() {
     setAnalysisError('')
     try {
       let rawText = editContent.trim()
-      const allImages = [...editAttachments, ...(userNote?.drawingAttachments ?? [])]
+      const allRefs = [...editAttachments, ...(userNote?.drawingAttachments ?? [])]
+      const allImages = await Promise.all(allRefs.map((ref) => getAttachment(ref)))
       for (const img of allImages) {
+        if (!img) continue
         const ocrText = await extractTextFromImage(img)
         if (ocrText.trim()) rawText = rawText ? `${rawText}\n\n${ocrText}` : ocrText
       }
@@ -195,14 +211,17 @@ export function SmartNotesScreen() {
     }
   }
 
+  const drawingSet = new Set(userNote?.drawingAttachments ?? [])
+  const photos = isEditing ? editAttachments : (userNote?.attachments ?? []).filter(url => !drawingSet.has(url))
+  const drawings = userNote?.drawingAttachments ?? []
+  const resolvedPhotos = useResolvedAttachments(photos)
+  const resolvedDrawings = useResolvedAttachments(drawings)
+  const resolvedEditAttachments = useResolvedAttachments(editAttachments)
+
   // ── Guard ────────────────────────────────────────────────────────────────
   if (!userNote) {
     return <div className="p-4 text-text-secondary">Notiz nicht gefunden.</div>
   }
-
-  const drawingSet = new Set(userNote?.drawingAttachments ?? [])
-  const photos = isEditing ? editAttachments : (userNote?.attachments ?? []).filter(url => !drawingSet.has(url))
-  const drawings = userNote?.drawingAttachments ?? []
 
   // ── Edit mode ────────────────────────────────────────────────────────────
   if (isEditing && userNote) {
@@ -243,7 +262,7 @@ export function SmartNotesScreen() {
           <div>
             <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Fotos / Arbeitsblätter</p>
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
-              {editAttachments.map((src, i) => (
+              {resolvedEditAttachments.map((src, i) => (
                 <div key={i} className="relative shrink-0">
                   <img src={src} alt={`Seite ${i + 1}`} className="w-24 h-24 object-cover rounded-card border border-border" />
                   <button
@@ -400,7 +419,7 @@ export function SmartNotesScreen() {
             badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{photos.length}</span>}
           >
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
-              {photos.map((src, i) => (
+              {resolvedPhotos.map((src, i) => (
                 <button key={i} onClick={() => setLightbox(src)} className="relative shrink-0 focus:outline-none">
                   <img
                     src={src}
@@ -424,7 +443,7 @@ export function SmartNotesScreen() {
             badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{drawings.length}</span>}
           >
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
-              {drawings.map((src, i) => (
+              {resolvedDrawings.map((src, i) => (
                 <button key={i} onClick={() => setLightbox(src)} className="relative shrink-0 focus:outline-none">
                   <img
                     src={src}
@@ -439,6 +458,37 @@ export function SmartNotesScreen() {
             </div>
             <p className="text-xs text-text-muted mt-2">Antippen zum Vergrößern</p>
           </CollapsibleSection>
+        )}
+
+        {/* Cross-device transfer — attachments are local-only by default */}
+        {authUser && (photos.length > 0 || drawings.length > 0) && hasLocalOnlyAttachments(userNote) && (
+          <div className="flex items-center gap-3 px-4 py-3 bg-surface rounded-card shadow-card-adaptive border border-border/60">
+            <div className="w-9 h-9 rounded-btn bg-accent/10 flex items-center justify-center shrink-0">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
+                <polyline points="17 8 12 3 7 8" strokeLinecap="round" strokeLinejoin="round" />
+                <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-text-primary text-sm font-medium">Fotos sind nur auf diesem Gerät gespeichert</p>
+              <p className="text-text-muted text-xs mt-0.5">
+                {transferStatus === 'done' ? 'Übertragen — auf anderen Geräten verfügbar'
+                  : transferStatus === 'error' ? 'Übertragung fehlgeschlagen — nochmal versuchen'
+                  : 'Zum Abrufen auf anderen Geräten übertragen'}
+              </p>
+            </div>
+            <button
+              onClick={() => void transferToCloud()}
+              disabled={transferStatus === 'uploading' || transferStatus === 'done'}
+              className={`shrink-0 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
+                transferStatus === 'done' ? 'bg-success/10 text-success border border-success/20'
+                : 'grad-accent text-white hover:opacity-90'
+              }`}
+            >
+              {transferStatus === 'uploading' ? 'Läuft…' : transferStatus === 'done' ? 'Übertragen ✓' : 'Übertragen'}
+            </button>
+          </div>
         )}
 
         {/* PDFs */}
