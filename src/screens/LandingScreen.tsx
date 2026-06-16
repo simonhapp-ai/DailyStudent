@@ -1110,24 +1110,24 @@ function FeatureSection({
   id?: string
 }) {
   return (
-    <section id={id} className="py-20 md:py-28">
+    <section id={id} className="py-10 md:py-28">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-12 md:gap-16 lg:gap-24`}>
+        <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-6 md:gap-16 lg:gap-24`}>
           <div className="flex-1 min-w-0 md:max-w-[420px]">
             <FadeUp>
-              <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5" style={{ background: `${badgeColor}15`, color: badgeColor }}>
+              <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-3 md:mb-5" style={{ background: `${badgeColor}15`, color: badgeColor }}>
                 {badge}
               </span>
             </FadeUp>
             <FadeUp delay={0.05}>
-              <h2 className="font-bold leading-tight mb-4" style={{ fontSize: 'clamp(26px, 4vw, 40px)', color: '#160E28', letterSpacing: '-0.02em' }}>
+              <h2 className="font-bold leading-tight mb-2 md:mb-4" style={{ fontSize: 'clamp(22px, 4vw, 40px)', color: '#160E28', letterSpacing: '-0.02em' }}>
                 {title}
               </h2>
             </FadeUp>
             <FadeUp delay={0.1}>
-              <p className="text-[16px] leading-relaxed mb-6" style={{ color: '#483C5F' }}>{description}</p>
+              <p className="text-[15px] leading-relaxed mb-4 md:mb-6" style={{ color: '#483C5F' }}>{description}</p>
             </FadeUp>
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               {bullets.map((b, i) => (
                 <FadeUp key={b} delay={0.12 + i * 0.06}>
                   <div className="flex items-start gap-3">
@@ -1136,13 +1136,13 @@ function FeatureSection({
                         <path d="M20 6L9 17l-5-5" />
                       </svg>
                     </div>
-                    <p className="text-[14px] leading-relaxed" style={{ color: '#483C5F' }}>{b}</p>
+                    <p className="text-[13px] md:text-[14px] leading-relaxed" style={{ color: '#483C5F' }}>{b}</p>
                   </div>
                 </FadeUp>
               ))}
             </div>
           </div>
-          <FadeUp delay={0.08} className="flex-1 w-full min-w-0">
+          <FadeUp delay={0.08} className="hidden md:block flex-1 w-full min-w-0">
             {mockup}
           </FadeUp>
         </div>
@@ -1297,8 +1297,8 @@ export function LandingScreen() {
       {/* ── Stats Bar ─────────────────────────────────────────────────────── */}
       <FadeUp>
         <div className="border-y" style={{ background: 'white', borderColor: 'rgba(209,209,214,0.4)' }}>
-          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x" style={{ '--tw-divide-opacity': '0.3' } as React.CSSProperties}>
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 py-4 md:py-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x" style={{ '--tw-divide-opacity': '0.3' } as React.CSSProperties}>
               {[
                 { value: '4.000+', label: 'Schüler auf Discord' },
                 { value: '5 Features', label: 'Smart Notes, Karten, Klausur & mehr' },
@@ -1316,7 +1316,7 @@ export function LandingScreen() {
       </FadeUp>
 
       {/* ── Nie wieder ─────────────────────────────────────────────────────── */}
-      <section className="py-20 md:py-28 relative overflow-hidden" style={{ background: '#160E28' }}>
+      <section className="py-10 md:py-28 relative overflow-hidden" style={{ background: '#160E28' }}>
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 60% at 80% 50%, rgba(124,58,237,0.12) 0%, transparent 65%)' }} />
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 40% at 15% 80%, rgba(99,102,241,0.08) 0%, transparent 60%)' }} />
@@ -1364,7 +1364,7 @@ export function LandingScreen() {
               ].map((item, i) => (
                 <FadeUp key={i} delay={0.1 + i * 0.09}>
                   <div
-                    className="flex items-start gap-6 py-7"
+                    className="flex items-start gap-6 py-4 md:py-7"
                     style={{ borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}
                   >
                     <span
@@ -1387,9 +1387,9 @@ export function LandingScreen() {
       </section>
 
       {/* ── Das System — Triangle ─────────────────────────────────────────── */}
-      <section id="system" className="py-20 md:py-28" style={{ background: '#FAFAFD' }}>
+      <section id="system" className="py-10 md:py-28" style={{ background: '#FAFAFD' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <FadeUp className="text-center mb-14">
+          <FadeUp className="text-center mb-8 md:mb-14">
             <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
               Das System
             </span>
@@ -1408,7 +1408,7 @@ export function LandingScreen() {
       </div>{/* end reorder wrapper */}
 
       {/* ── Features Header ───────────────────────────────────────────────── */}
-      <section id="features" className="pt-24 pb-6" style={{ background: 'white' }}>
+      <section id="features" className="pt-12 md:pt-24 pb-3 md:pb-6" style={{ background: 'white' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <FadeUp>
             <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
@@ -1505,11 +1505,11 @@ export function LandingScreen() {
       </div>
 
       {/* ── Social Proof ──────────────────────────────────────────────────── */}
-      <section style={{ background: '#FAFAFD' }} className="py-20">
+      <section style={{ background: '#FAFAFD' }} className="py-10 md:py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <FadeUp>
             <div
-              className="rounded-3xl p-10 md:p-14 text-center"
+              className="rounded-3xl p-7 md:p-14 text-center"
               style={{ background: 'linear-gradient(145deg, rgba(124,58,237,0.07) 0%, rgba(99,102,241,0.04) 100%)', border: '1px solid rgba(124,58,237,0.12)' }}
             >
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5" style={{ background: 'linear-gradient(135deg, #5865F2, #4752C4)' }}>
@@ -1528,9 +1528,9 @@ export function LandingScreen() {
       </section>
 
       {/* ── Pricing ───────────────────────────────────────────────────────── */}
-      <section id="preise" className="py-20 md:py-28" style={{ background: 'white' }}>
+      <section id="preise" className="py-10 md:py-28" style={{ background: 'white' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <FadeUp className="text-center mb-12">
+          <FadeUp className="text-center mb-6 md:mb-12">
             <span className="inline-block text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-4" style={{ background: 'rgba(124,58,237,0.08)', color: '#7C3AED' }}>
               Preise
             </span>
@@ -1541,7 +1541,7 @@ export function LandingScreen() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
             <FadeUp delay={0.04}>
-              <div className="rounded-2xl p-7 h-full border" style={{ background: '#FAFAFD', borderColor: 'rgba(209,209,214,0.6)' }}>
+              <div className="rounded-2xl p-5 md:p-7 h-full border" style={{ background: '#FAFAFD', borderColor: 'rgba(209,209,214,0.6)' }}>
                 <p className="text-[13px] font-semibold text-[#988CAF] mb-1">Free</p>
                 <p className="font-black text-[36px] text-[#160E28] mb-5" style={{ letterSpacing: '-0.03em' }}>€0</p>
                 <div className="space-y-3 mb-7">
@@ -1568,7 +1568,7 @@ export function LandingScreen() {
             </FadeUp>
 
             <FadeUp delay={0.1}>
-              <div className="rounded-2xl p-7 h-full relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #160E28 0%, #2A1B5C 100%)' }}>
+              <div className="rounded-2xl p-5 md:p-7 h-full relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #160E28 0%, #2A1B5C 100%)' }}>
                 <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 40% at 80% 0%, rgba(167,139,250,0.2) 0%, transparent 60%)' }} />
                 <div className="relative">
                   <div className="flex items-center justify-between mb-1">
@@ -1610,9 +1610,9 @@ export function LandingScreen() {
 
       {/* ── Final CTA ─────────────────────────────────────────────────────── */}
       <FadeUp>
-        <section className="py-20 md:py-28" style={{ background: '#FAFAFD' }}>
+        <section className="py-10 md:py-28" style={{ background: '#FAFAFD' }}>
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="rounded-3xl p-10 md:p-16 text-center relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #160E28 0%, #2A1B5C 100%)' }}>
+            <div className="rounded-3xl p-8 md:p-16 text-center relative overflow-hidden" style={{ background: 'linear-gradient(145deg, #160E28 0%, #2A1B5C 100%)' }}>
               <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 60% 50% at 50% -10%, rgba(124,58,237,0.35) 0%, transparent 60%)' }} />
               <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 40% 40% at 80% 110%, rgba(99,102,241,0.2) 0%, transparent 60%)' }} />
               <div className="relative">
