@@ -19,7 +19,7 @@ import {
   syncHomeworkBatch, syncCompletedHomework,
   retrySyncQueue, getSyncQueueStats,
 } from '../lib/supabaseSync'
-import { localizeNoteAttachments, deleteAttachmentsForNotes } from '../lib/noteStorage'
+import { localizeNoteAttachments, deleteAttachmentsForNotes, migrateLegacyNoteAttachments } from '../lib/noteStorage'
 
 export interface StandaloneHomeworkItem {
   id: string
@@ -417,6 +417,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 standaloneHomework: supabaseData.standaloneHomework,
                 completedHomeworkIds: supabaseData.completedHomeworkIds,
               })
+              // One-time cleanup: notes synced before the IndexedDB switch still carry
+              // full base64 in Postgres — localize them now and shrink that row on next sync.
+              const legacyMigration = migrateLegacyNoteAttachments(supabaseData.userNotes)
+              if (legacyMigration) {
+                setUserNotes(legacyMigration.notes)
+                saveStorage({ ...loadStorage(), userNotes: legacyMigration.notes })
+                for (const note of legacyMigration.changed) void syncNote(userId, note)
+              }
             } else if (cacheIsOwn && s.profile && s.profile.faecher?.length) {
               // Supabase empty, localStorage has THIS user's onboarded data → migrate once
               await migrateToSupabase(userId, {

@@ -174,6 +174,25 @@ export function localizeNoteAttachments(note: UserNote): UserNote {
   return { ...note, attachments, drawingAttachments }
 }
 
+/**
+ * One-time cleanup for notes synced before the IndexedDB switch: any note still carrying
+ * raw base64 data: URLs (sent in full to Postgres) gets localized to small refs. Called
+ * after loading notes from Supabase — the device that loads them already has the actual
+ * image bytes, so writing them into its own IndexedDB loses nothing, and the next sync
+ * shrinks that row down to ref strings instead of base64.
+ */
+export function migrateLegacyNoteAttachments(notes: UserNote[]): { notes: UserNote[]; changed: UserNote[] } | null {
+  const changed: UserNote[] = []
+  const result = notes.map((n) => {
+    const hasLegacy = [...(n.attachments ?? []), ...(n.drawingAttachments ?? [])].some((v) => v.startsWith('data:'))
+    if (!hasLegacy) return n
+    const localized = localizeNoteAttachments(n)
+    changed.push(localized)
+    return localized
+  })
+  return changed.length > 0 ? { notes: result, changed } : null
+}
+
 function collectManagedRefs(note: UserNote): string[] {
   return [...(note.attachments ?? []), ...(note.drawingAttachments ?? [])]
     .filter((v) => isLocalRef(v) || isCloudRef(v))
