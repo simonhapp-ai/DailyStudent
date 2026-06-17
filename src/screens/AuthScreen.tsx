@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
+async function callHandleReferral(referralCode: string) {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) return
+    await supabase.functions.invoke('handle-referral', {
+      body: { referralCode },
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    })
+  } catch { /* non-fatal */ }
+}
+
 type Mode = 'login' | 'signup' | 'forgot' | 'reset'
 
 function translateError(msg: string): string {
@@ -46,6 +57,12 @@ export function AuthScreen() {
       if (mode === 'signup') {
         const { error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
+        // Fire referral tracking after signup (non-blocking)
+        const pendingRef = sessionStorage.getItem('referral_code')
+        if (pendingRef) {
+          sessionStorage.removeItem('referral_code')
+          void callHandleReferral(pendingRef)
+        }
         setSuccessMsg('Bestätigungs-E-Mail gesendet. Bitte prüfe dein Postfach.')
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })

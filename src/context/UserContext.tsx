@@ -18,7 +18,13 @@ import {
   syncEntry, syncEntriesBatch, deleteEntryFromDB,
   syncHomeworkBatch, syncCompletedHomework,
   retrySyncQueue, getSyncQueueStats,
+  syncReferralCode,
 } from '../lib/supabaseSync'
+
+function generateReferralCode(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  return Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
+}
 import { localizeNoteAttachments, deleteAttachmentsForNotes, migrateLegacyNoteAttachments } from '../lib/noteStorage'
 
 export interface StandaloneHomeworkItem {
@@ -192,6 +198,9 @@ interface UserContextValue {
   signOut: () => Promise<void>
   syncQueueStatus: { pending: number; failed: number }
   retrySyncQueue: () => Promise<void>
+  referralCode: string | null
+  referralCount: number
+  trialEndsAt: string | null
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -400,6 +409,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
               setLernzettel(supabaseData.lernzettel)
               setSavedProbeklausuren(supabaseData.savedProbeklausuren)
               setLernplaene(supabaseData.lernplaene)
+              setReferralCode(supabaseData.referralCode)
+              setReferralCount(supabaseData.referralCount)
+              setTrialEndsAt(supabaseData.trialEndsAt)
+              if (!supabaseData.referralCode) {
+                const newCode = generateReferralCode()
+                setReferralCode(newCode)
+                void syncReferralCode(userId, newCode)
+              }
               saveStorage({
                 userId,
                 profile: supabaseData.profile,
@@ -486,6 +503,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
       })()
     }
   }, [authUser?.id])
+  const [referralCode, setReferralCode] = useState<string | null>(null)
+  const [referralCount, setReferralCount] = useState(0)
+  const [trialEndsAt, setTrialEndsAt] = useState<string | null>(null)
+
   const [coinToastVisible, setCoinToastVisible] = useState(false)
   const [coinToastAmount, setCoinToastAmount] = useState(0)
 
@@ -596,6 +617,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) {
       void syncProfile(authUser.id, p, theme, isPro)
       if (merged.length) void syncFoldersBatch(authUser.id, merged)
+      if (!referralCode) {
+        const newCode = generateReferralCode()
+        setReferralCode(newCode)
+        void syncReferralCode(authUser.id, newCode)
+      }
     }
   }
 
@@ -1073,6 +1099,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     console.log(`[Sync] Manual retry: ${result.success} success, ${result.failed} failed`)
   }
 
+  const effectiveIsPro = isPro || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
+
   return (
     <UserContext.Provider
       value={{
@@ -1085,7 +1113,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         generatedFlashCards,
         theme,
         setTheme,
-        isPro,
+        isPro: effectiveIsPro,
         setIsPro,
         completeOnboarding,
         updateProfile,
@@ -1144,6 +1172,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
         signOut,
         syncQueueStatus,
         retrySyncQueue: manualRetrySyncQueue,
+        referralCode,
+        referralCount,
+        trialEndsAt,
       }}
     >
       {children}

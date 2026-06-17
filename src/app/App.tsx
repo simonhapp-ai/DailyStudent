@@ -30,6 +30,7 @@ import { CoinToast } from '../components/ui/CoinToast'
 import { AttachmentToast } from '../components/ui/AttachmentToast'
 import { CoinIconGlobalDefs } from '../components/ui/CoinIcon'
 import { StreakBadge } from '../components/ui/StreakBadge'
+import { ReferralPill } from '../components/ui/ReferralPill'
 import { UserProvider, useUser } from '../context/UserContext'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { KalenderScreen } from '../screens/KalenderScreen'
@@ -108,6 +109,18 @@ function ThemeApplier() {
 // Also works in Chrome DevTools device simulation (DevTools changes the UA).
 const IS_DESKTOP = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
 
+function FixedBadges() {
+  return (
+    <div
+      className="fixed z-40 flex items-center gap-2"
+      style={{ top: 'max(14px, calc(env(safe-area-inset-top, 0px) + 10px))', right: '16px' }}
+    >
+      <ReferralPill />
+      <StreakBadge inline />
+    </div>
+  )
+}
+
 function SmartRedirect() {
   return <Navigate to={IS_DESKTOP ? '/dashboard' : '/unterricht'} replace />
 }
@@ -170,6 +183,13 @@ function AppRoutes() {
 function Layout() {
   const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
+
+  // Capture ?ref= before redirect strips the query param (e.g. /?ref=CODE → /landing)
+  useEffect(() => {
+    const ref = new URLSearchParams(location.search).get('ref')
+    if (ref) sessionStorage.setItem('referral_code', ref)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const [betaUnlocked, setBetaUnlocked] = useState(() => localStorage.getItem(BETA_KEY) === '1')
   // True if localStorage has a previous session — lets us skip the spinner for returning users
   const [hasLocalSession] = useState(() => {
@@ -268,7 +288,7 @@ function Layout() {
           <AppRoutes />
           <SyncErrorBanner />
         </main>
-        <StreakBadge />
+        <FixedBadges />
         <CoinToast />
         <AttachmentToast />
       </div>

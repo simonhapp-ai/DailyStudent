@@ -67,7 +67,7 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 15.06.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 16.06.2026)
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
@@ -131,7 +131,7 @@ Smart Notes
 - **Probeklausur Mode 3 Materialtyp-Branching** ✅ — Geisteswissenschaften/Sprachen: Sachtext ~300 Wörter; Naturwissenschaften/Mathe: Messreihen + Tabellen
 - **Pro Lernzettel Preview** ✅ — `LernzettelScreen`: horizontales Karussell mit 4 Original-Lernzettel-HTMLs (aus Uploads extrahiert), skaliert als Preview-Cards; Fullscreen-Modal mit scrollbarem iframe; Gold-"Pro Lernzettel"-Badge in Topbar der HTMLs; CTA nur für Free-User; "Tippen zum Anzeigen" Caption
 - **Gamification / Coins-System** ✅ — `COIN_VALUES` in `UserContext.tsx`, `AppStats.coins` + `AppStats.cooldowns` in DB + localStorage, `addCoins(action)` mit tagesbasierter Cooldown-Key-Logik (`ACTION:YYYY-MM-DD`), `buyStreakFreeze()` (500 Coins → `streakFreezes++`), `CoinToast` + `CoinIcon` SVG-Komponenten, `CoinToastDisplay` in App.tsx; 7 tägliche Aktionen mit je eigenem Reward
-- **StreakBadge** ✅ — `src/components/ui/StreakBadge.tsx`: fixes Pill top-right (🔥 + Zahl), schwarzer Hintergrund + Blur, klickt zu `/profil`, versteckt auf `/profil/*` + `/landing` + `/auth`, verschiebt sich auf SmartNotes-Screens (`right: 136px`) um Action-Button-Overlap zu vermeiden; in beiden Layout-Branches von `App.tsx` gerendert
+- **StreakBadge** ✅ — `src/components/ui/StreakBadge.tsx`: fixes Pill top-right (🔥 + Zahl), schwarzer Hintergrund + Blur, klickt zu `/profil`, versteckt auf `/profil/*` + `/landing` + `/auth` + überall unter `/unterricht/*` außer dem Home-Screen selbst (`/unterricht`) — verhinderte Overlap mit Action-Buttons in neue-Notiz/Ordner/Lesson/SmartNotes-Screens; in beiden Layout-Branches von `App.tsx` gerendert
 - **`src/lib/streak.ts`** ✅ — Single source of truth: `getActiveStreak(streak, lastStudyDate)` — gibt 0 wenn `lastStudyDate` weder heute noch gestern ist; ersetzt 4 duplizierte `getCurrentStreak`-Funktionen in `DashboardScreen`, `InsightsScreen`, `KlausurphasenScreen`, `ProfilScreen`, `KalenderScreen`
 - **CoinIcon T0 (Drei-Münzen-Stack)** ✅ — 3 übereinanderliegende Münzen + 1 angelehnte Münze (SVG `rotate(-25 cx cy)`); löst alten Side-by-Side-Stack ab
 - **KlausurphasenScreen Statistik-Widget** ✅ — 8 Pills (war 6): + Coins + Kalendereinträge — alle live an Pipeline angeschlossen
@@ -140,6 +140,10 @@ Smart Notes
 - **DesktopSidebar** ✅ — Amber Coins-Pill aus `DesktopSidebarWide` entfernt
 - **ProfilScreen Coins-Widgets** ✅ — `CoinsRabattWidget`: zeigt Coin-Count + 7-Task-Checkliste (grüne Checkmarks für done) + "Coins im Shop einlösen"-Footer; `CoinsShopWidget`: Streak Freeze zuerst (mit `<CoinIcon>` statt Emoji), dann zwei grüne Progress-Bars (15%/30% Rabatt-Milestones)
 - **Coin/Streak Bug-Fixes (15.06.2026)** ✅ — Race Condition behoben: `recordLogin()` feuert jetzt erst NACH Supabase-Daten-Load (`supabaseDataLoading` Flag als Dep); `loginBonusGrantedRef` verhindert Doppel-Grant pro Session; beim Supabase-Load werden Cooldowns aus localStorage mit Supabase-Daten zusammengeführt (`Set`-Merge) statt überschrieben → Login-Bonus-Bug (+5 bei jedem Login) gefixt; Checkliste zeigt korrekte Done-States session-übergreifend
+- **Smart Notes Local-First Storage (16.06.2026)** ✅ — `src/lib/noteStorage.ts`: Foto/Zeichnung-Attachments laufen nicht mehr als Base64 durch `localStorage` + Supabase Postgres, sondern liegen lokal in IndexedDB. Drei Ref-Formate in `UserNote.attachments`/`drawingAttachments`: `data:...` (Legacy, wird weiter unterstützt), `idb:<uuid>` (lokal-only), `cloud:<uuid>:<pfad>` (explizit hochgeladen, lokal gecacht). Zentral abgefangen in `UserContext.tsx` (`saveNote`, `addUserNote`, `updateUserNote`, `saveToOhneFachFolder` lokalisieren automatisch; `deleteUserNote`/`deleteFolder`/`applyFaecherChanges` räumen IndexedDB + Storage auf)
+- **Cross-Device Transfer** ✅ — `supabase/migrations/007_note_attachments_storage.sql` — **ANGEWENDET 16.06.2026**: privater Storage Bucket `note-attachments` (15 MB Limit) + RLS (Pfad-Präfix `{user_id}/...`). „Übertragen"-Button in `SmartNotesScreen.tsx` lädt lokal-only Attachments einer Notiz explizit hoch — kein Auto-Upload, User entscheidet pro Notiz
+- **Legacy-Migration** ✅ — `migrateLegacyNoteAttachments()` in `noteStorage.ts`, läuft automatisch nach jedem Supabase-Load in `UserContext.tsx`: Notizen mit altem Base64 in Postgres werden beim nächsten Laden lokalisiert (IndexedDB) und mit kleiner Ref zurückgesynct — selbstbegrenzend, läuft nur einmal pro Notiz
+- **AttachmentToast** ✅ — `src/components/ui/AttachmentToast.tsx`: erscheint bei jedem Speichern einer Smart Note mit Foto/Zeichnung ("Foto nur auf diesem Gerät — in der Notiz übertragbar"), zeitlich gestaffelt nach `CoinToast` (kein Overlap), in `NoteCreateScreen.tsx` getriggert (`doSave`, `acceptSuggestion`, `saveToOhneFach`)
 
 ### Paywall-Strategie (Stand 10.06.2026):
 
@@ -168,22 +172,24 @@ Smart Notes
 2. **Email Confirmation Flow** — kein UI-Hinweis nach Signup
 3. **Impressum Steuernummer** — Platzhalter, nach Eingang vom Finanzamt Harburg nachtragen
 
-### To-Do — Priorisiert (Stand: 15.06.2026):
+### To-Do — Priorisiert (Stand: 16.06.2026):
 
 #### Nächste Session:
-1. **Landing Page edits** — Hero-Text, Feature-Sektionen, Social Proof verbessern
-2. **Schnelleres Laden der App** — Lazy loading, Code-Splitting, Bundle-Analyse
-3. **Streak erklären + Animations** — ProfilScreen Streak-Erklärungsbereich; Milestone-Animationen (7, 30, 100 Tage)
-4. **14 Tage Pro wenn man 5 Leute holt** — Referral-System (siehe Roadmap Spec unten)
-5. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
+1. **14 Tage Pro wenn man 5 Leute holt** — Referral-System (siehe Roadmap Spec unten)
+2. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
+3. **Foto-Scan: Auswahl/Crop-Tool** — beim Foto-Scan soll man per Drag einen Ausschnitt markieren können, statt immer das komplette Foto an die KI zu schicken (User will oft nur einen Teil der Seite analysiert haben, nicht alles)
+4. **Ausführlichere/bessere KI-Antworten** — Smart Note-Analyse (Groq) soll tiefer gehen; dabei auch „Stilpunkte"/Darstellungsleistung mitdenken, nicht nur Inhaltspunkte (relevant für Probeklausur-Korrektur + Lernzettel-Qualität)
+5. **Landing Page edits** — Hero-Text, Feature-Sektionen, Social Proof verbessern
+6. **Schnelleres Laden der App** — Lazy loading, Code-Splitting, Bundle-Analyse
+7. **Streak erklären + Animations** — ProfilScreen Streak-Erklärungsbereich; Milestone-Animationen (7, 30, 100 Tage)
 
 #### UX / Features (mittelfristig):
-6. **Coins-Rabatt via Stripe** — Discount-Code-System implementieren (siehe Roadmap Spec unten)
-7. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige
-8. **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
-9. **Lernplan funktionieren lassen** — Flow komplett testen + Bugs fixen
-10. **Import-Flow** — vollständig testen + Bugs fixen
-11. **Email Confirmation Flow** — Hinweis nach Signup
+8. **Coins-Rabatt via Stripe** — Discount-Code-System implementieren (siehe Roadmap Spec unten)
+9. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige
+10. **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
+11. **Lernplan funktionieren lassen** — Flow komplett testen + Bugs fixen
+12. **Import-Flow** — vollständig testen + Bugs fixen
+13. **Email Confirmation Flow** — Hinweis nach Signup
 
 #### Nach Launch:
 9. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
@@ -339,6 +345,7 @@ KC-Daten liegen als JSON-Dateien in `public/kc/{Bundesland}/{fach}.json`.
 - **Nav-Button Hover:** `.nav-btn` + `.nav-active` CSS-Klassen in `index.css` steuern Hintergrund. **Kein inline `background` Style** auf Nav-Buttons — das würde CSS-Hover (`:hover { transform: scale(1.08) }`) blockieren. Active-State → `nav-active` Klasse, nicht inline.
 - **Supabase SQL Editor — Queries immer benennen:** Wenn Simon eine neue Migration manuell im Supabase SQL Editor ausführen muss, IMMER explizit dazuschreiben: „Speichere die Query als `<migrations-dateiname ohne .sql>`" (z.B. `007_note_attachments_storage`), statt sie als „Untitled query" im Verlauf stehen zu lassen — sonst sind alte Änderungen im SQL-Editor-Verlauf nicht mehr unterscheidbar.
 - **Custom Fächer:** `profile.customFaecher` Array in `UserProfile`. `resolveSubjectInfo(id, customFaecher)` in `subjectInfo.ts` liefert Fallback-Icon 📚 + Farbe für custom IDs. `syncProfile` schreibt `custom_faecher` nach Supabase, `mapProfile` liest es zurück.
+- **Note-Attachments sind lokal-first (IndexedDB), nicht Base64:** `UserNote.attachments`/`drawingAttachments` enthalten nach dem Speichern `idb:<uuid>` (lokal) oder `cloud:<uuid>:<pfad>` (explizit übertragen) statt Base64 — Auflösung immer über `getAttachment()`/`useResolvedAttachments()` aus `src/lib/noteStorage.ts`, nie `note.attachments` direkt als `<img src>` rendern. Lokalisierung passiert zentral in `UserContext.tsx` (`saveNote`/`updateUserNote`/etc.) — neue Save-Pfade für Notizen müssen über diese Funktionen laufen, sonst bleibt Base64 ungefiltert in Postgres. Kein Auto-Upload in die Cloud — nur über den expliziten „Übertragen"-Button.
 
 ---
 
@@ -526,36 +533,26 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ---
 
-## Letzte Session (14.06.2026)
+## Letzte Session (16.06.2026)
 
-**Feinschliff vor Launch — AGB, Karteikarten, Probeklausur, Pro Lernzettel Preview**
+**Smart Notes Storage-Architektur — local-first auf IndexedDB umgestellt, App-Store-Vorbereitung**
 
-**1. AGB & Rechtliches**
-- Streitschlichtungshinweis (OS-Plattform / §36 VSBG) aus `AGBScreen` entfernt — Abmahngefahr beseitigt
-- Neue Sektion 22a „Haftungsausschluss für KI-generierte Inhalte" eingefügt — keine Haftung für Noten/Prüfungsergebnisse
-- AGB jetzt 29 Sektionen
+Ausgangsproblem: Foto/Zeichnung-Attachments liefen als komplettes Base64 durch `localStorage` UND Supabase Postgres (`user_notes.attachments` TEXT[]). Bei vielen Usern + Free-Plan-Smart-Notes wäre das ein DB-Storage-Kostenproblem. Lösung: GoodNotes-Prinzip — Originalbilder bleiben lokal auf dem Gerät, nur die KI-Text-Analyse (`GeneratedSmartNote`, eh schon winzig) synct immer in die Cloud.
 
-**2. Touch-Animation Polish**
-- `.press:active` → `scale(0.985)`, `.press-sm:active` → `scale(0.99)` (weniger aggressiv)
-- `.hover-lift:hover` nur noch unter `@media (hover: hover) and (pointer: fine)` aktiv → kein Distorting auf iPads/Touchscreens
+**1. `src/lib/noteStorage.ts` (neu)** — IndexedDB-Wrapper, drei Ref-Formate in `attachments`/`drawingAttachments`: `data:...` (Legacy/Fallback), `idb:<uuid>` (lokal-only), `cloud:<uuid>:<pfad>` (hochgeladen, lokal gecacht). `localizeNoteAttachments()`, `getAttachment()`, `useResolvedAttachments()`-Hook, `deleteAttachmentsForNotes()`, `transferNoteAttachmentsToCloud()`, `migrateLegacyNoteAttachments()`.
 
-**3. Karteikarten-Generator Rewrite (`FlashCardGeneratorScreen.tsx`)**
-- 3-Schritt-Flow: **Fach → Notizen → Methode** mit Progress-Bar
-- Schritt 2: Multi-Select mit Kreis-Checkboxen — mehrere Notizen gleichzeitig für ein Deck auswählen
-- Schritt 3: Tab-Switcher KI / Manuell
-  - KI: Chip-Buttons für 5 / 10 / 15 / 20 Karten; bei Multi-Select wird `ceil(count/notes)` Karten je Notiz generiert und auf Zielanzahl beschnitten
-  - Manuell: Textarea-Paare (Vorderseite / Rückseite) mit + / − Buttons
-- Custom Fächer via `resolveSubjectInfo()` korrekt angezeigt (vorher nur `subjects[]`-Array → Custom-IDs fehlten)
-- **Flip-Bug gefixt:** `key={cardIndex}` auf `<FlashCard>` → Karte wird bei Weitergehen neu gemountet, Flip-State resettet
+**2. Zentrale Abfangstelle in `UserContext.tsx`** — `saveNote`/`addUserNote`/`updateUserNote`/`saveToOhneFachFolder` lokalisieren Attachments automatisch beim Speichern; `deleteUserNote`/`deleteFolder`/`applyFaecherChanges` räumen IndexedDB + Storage Bucket auf. `NoteCreateScreen.tsx`/`SmartNotesScreen.tsx` selbst unverändert in der Foto-Capture-Logik (brauchen Base64 live für OCR-Vorschau) — Umwandlung passiert erst beim Hand-off an den Context.
 
-**4. Probeklausur KI-Qualität (`gemini.ts`)**
-- `GENERATION_SYSTEM` erweitert: separate AFB I/II/III Operator-Listen für **Textfächer** vs. **Mathematik**
-- Mode 3 Materialklausur: `isHumanities`-Flag → Geisteswissenschaften/Sprachen bekommen Sachtext (~300 Wörter), Naturwissenschaften/Mathe bekommen Messreihen + Tabellen
+**3. Cross-Device-Transfer** — `supabase/migrations/007_note_attachments_storage.sql` (privater Bucket `note-attachments`, RLS pfadbasiert) — **ANGEWENDET 16.06.2026**. „Übertragen"-Button in `SmartNotesScreen.tsx`: lädt eine Notiz explizit hoch, kein Auto-Upload.
 
-**5. Pro Lernzettel Preview (`LernzettelScreen.tsx` + `public/lernzettel-previews/`)**
-- 4 Original-Lernzettel-HTMLs (aus Konversations-Transkript extrahiert) in `public/lernzettel-previews/`
-- Horizontales Karussell: iframe-Cards (308×193px, scale 0.321) mit Bottom-Fade, Subject-Badge, Gold-PRO-Shimmer-Badge
-- Pro-Badge in Topbar aller 4 HTML-Dateien injiziert (Python-Script)
-- Kartenklick → Fullscreen-Modal: Bottom Sheet, farbiger Header-Streifen, scrollbarer iframe `height: calc(92vh - 56px)`
-- „Tippen zum Anzeigen"-Caption unter jede Karte
-- CTA-Button „Pro freischalten" nur für Free-User sichtbar; Karussell immer sichtbar (auch für Pro)
+**4. Legacy-Migration** — alte Notizen mit Base64 in Postgres werden beim nächsten Supabase-Load automatisch lokalisiert + zurückgesynct, schrumpft die DB-Zeile dauerhaft. Selbstbegrenzend (läuft nur einmal pro Notiz).
+
+**5. `AttachmentToast`** — kurzer Hinweis-Toast bei jedem Speichern einer Foto-Notiz ("Foto nur auf diesem Gerät"), gestaffelt nach dem `CoinToast` damit sie nicht überlappen.
+
+**6. StreakBadge-Fix** — Flamme überlappte mit Action-Buttons in `NoteCreateScreen` + allen Ordner-/Lesson-/SmartNotes-Ansichten unter `/unterricht/*`. Jetzt nur noch auf `/unterricht` (Home) sichtbar, überall darunter versteckt.
+
+**Getestet:** TypeScript-Build clean, IndexedDB-Roundtrip (localize → resolve → dedup → delete) + Legacy-Migration im echten Chromium-Browser gegen das echte Modul verifiziert. Cross-Device-Upload von Simon live in Supabase Storage bestätigt (Datei taucht im Bucket auf).
+
+**Architektur-Entscheidung:** Note-Attachments sind ab jetzt lokal-first — siehe neuer Punkt unter „Architektur-Entscheidungen" oben. Künftige Save-Pfade für Notizen müssen über die bestehenden `UserContext`-Funktionen laufen, sonst landet wieder ungefiltertes Base64 in Postgres.
+
+**Offene Folge-Idee (noch nicht gebaut):** Wenn ein `idb:`-Ref auf einem fremden Gerät nicht auflösbar ist (nicht übertragen), zeigt `<img>` aktuell ein kaputtes Bild-Icon statt eines Platzhalters — kleine Politur für später.

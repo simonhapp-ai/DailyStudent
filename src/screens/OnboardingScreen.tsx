@@ -243,6 +243,21 @@ export function OnboardingScreen() {
                   Überspringen
                 </button>
               )}
+              {/* Referral teaser */}
+              <div
+                className="rounded-[14px] p-4 flex items-center gap-3"
+                style={{ background: 'rgba(255,185,0,0.08)', border: '1px solid rgba(255,185,0,0.2)' }}
+              >
+                <span className="text-[22px] shrink-0">🎁</span>
+                <div>
+                  <p className="text-text-primary font-semibold text-[13px]">
+                    14 Tage Pro — kostenlos
+                  </p>
+                  <p className="text-text-muted text-[11px] mt-0.5">
+                    Lade nach dem Start 5 Freunde ein. Zu finden im Profil.
+                  </p>
+                </div>
+              </div>
             </div>
           )}
         </div>

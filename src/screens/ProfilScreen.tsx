@@ -38,7 +38,7 @@ const THEME_OPTIONS: { value: AppTheme; label: string }[] = [
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast, debugSetCoins } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, signOut, authUser, updateProfile, buyStreakFreeze, showCoinToast, debugSetCoins, referralCode, referralCount, trialEndsAt } = useUser()
   const [proToast, setProToast] = useState(false)
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
@@ -48,6 +48,21 @@ export function ProfilScreen() {
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [freezeToast, setFreezeToast] = useState<'success' | 'error' | null>(null)
+  const [copyToast, setCopyToast] = useState(false)
+
+  const referralLink = referralCode
+    ? `${window.location.origin}/?ref=${referralCode}`
+    : null
+
+  const handleCopyReferral = () => {
+    if (!referralLink) return
+    void navigator.clipboard.writeText(referralLink).then(() => {
+      setCopyToast(true)
+      setTimeout(() => setCopyToast(false), 2200)
+    })
+  }
+
+  const trialActive = trialEndsAt ? new Date(trialEndsAt) > new Date() : false
 
   const handleBuyFreeze = () => {
     void buyStreakFreeze().then((ok) => {
@@ -264,6 +279,123 @@ export function ProfilScreen() {
             >
               {checkoutLoading === 'monthly' ? 'Wird geladen…' : 'Oder monatlich: €7,99/Monat'}
             </button>
+          </div>
+        )}
+
+        {/* ── Referral Widget ────────────────────────────────────── */}
+        {!trialActive && (
+          <div
+            className="rounded-card border overflow-hidden"
+            style={{ borderColor: 'rgba(255,185,0,0.25)', background: 'linear-gradient(140deg, rgba(255,185,0,0.07) 0%, rgba(255,185,0,0.02) 100%)' }}
+          >
+            <div className="p-5">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
+                    style={{ background: 'linear-gradient(145deg, #FFD700, #FF8C00)' }}
+                  >
+                    🎁
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
+                      <span
+                        className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide"
+                        style={{ background: 'rgba(255,185,0,0.15)', color: '#FFB800' }}
+                      >
+                        Nur kurze Zeit
+                      </span>
+                    </div>
+                    <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-text-muted text-[12px]">Fortschritt</span>
+                  <span className="text-text-primary font-bold text-[13px] tabular-nums">{referralCount}/5</span>
+                </div>
+                <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(100, (referralCount / 5) * 100)}%`,
+                      background: 'linear-gradient(90deg, #FFD700, #FF8C00)',
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between mt-1.5">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <span
+                      key={n}
+                      className="text-[10px] font-medium"
+                      style={{ color: referralCount >= n ? '#FFB800' : 'rgb(var(--color-text-muted))' }}
+                    >
+                      {n === 5 ? '🎉' : `${n}`}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* QR + share */}
+              {referralCode && (
+                <div className="flex items-center gap-3">
+                  <div
+                    className="shrink-0 rounded-[10px] overflow-hidden"
+                    style={{ width: 64, height: 64, background: '#fff' }}
+                  >
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(referralLink ?? '')}&size=128x128&margin=4`}
+                      alt="QR Code"
+                      width={64}
+                      height={64}
+                      className="w-full h-full"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
+                    <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
+                    <button
+                      onClick={handleCopyReferral}
+                      className="w-full py-2 rounded-btn text-[13px] font-semibold press-sm transition-all"
+                      style={{
+                        background: copyToast
+                          ? 'rgba(48,209,88,0.15)'
+                          : 'rgba(255,185,0,0.12)',
+                        color: copyToast ? '#30D158' : '#FFB800',
+                        border: `1px solid ${copyToast ? 'rgba(48,209,88,0.3)' : 'rgba(255,185,0,0.25)'}`,
+                      }}
+                    >
+                      {copyToast ? '✓ Kopiert!' : 'Link kopieren'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Trial active success card */}
+        {trialActive && trialEndsAt && (
+          <div
+            className="rounded-card border p-5 flex items-center gap-4"
+            style={{ borderColor: 'rgba(48,209,88,0.25)', background: 'linear-gradient(140deg, rgba(48,209,88,0.07) 0%, rgba(48,209,88,0.02) 100%)' }}
+          >
+            <div
+              className="w-11 h-11 rounded-[12px] flex items-center justify-center text-[22px] shrink-0"
+              style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+            >
+              🎉
+            </div>
+            <div>
+              <p className="text-text-primary font-bold text-[15px]">14 Tage Pro aktiv!</p>
+              <p className="text-text-muted text-[12px] mt-0.5">
+                Endet am {new Date(trialEndsAt).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' })}
+              </p>
+            </div>
           </div>
         )}
 

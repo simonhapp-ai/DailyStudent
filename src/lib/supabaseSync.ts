@@ -338,6 +338,9 @@ export interface SupabaseUserData {
   personalEntries: PersonalEntry[]
   standaloneHomework: StandaloneHomeworkItem[]
   completedHomeworkIds: string[]
+  referralCode: string | null
+  referralCount: number
+  trialEndsAt: string | null
 }
 
 export async function loadUserDataFromSupabase(userId: string): Promise<SupabaseUserData | null> {
@@ -362,6 +365,7 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
       { data: completedRows },
       { data: subRow },
       { data: gradeRow },
+      { count: referralCount },
     ] = await Promise.all([
       supabase.from('app_stats').select('*').eq('user_id', userId).single(),
       supabase.from('user_folders').select('*').eq('user_id', userId),
@@ -376,6 +380,7 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
       supabase.from('completed_homework_ids').select('homework_id').eq('user_id', userId),
       supabase.from('subscriptions').select('status').eq('user_id', userId).maybeSingle(),
       supabase.from('grade_data').select('abi_halbjahre').eq('user_id', userId).maybeSingle(),
+      supabase.from('referrals').select('*', { count: 'exact', head: true }).eq('referrer_id', userId),
     ])
 
     const DEFAULT_STATS: AppStats = { scanCount: 0, examCount: 0, streak: 0, lastStudyDate: null, studiedDays: [], examScores: [], coins: 0, cooldowns: [], streakFreezes: 0, freezeUsedDates: [] }
@@ -405,6 +410,9 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
       personalEntries: (entryRows ?? []).map(mapEntry),
       standaloneHomework: (homeworkRows ?? []).map(mapHomework),
       completedHomeworkIds: (completedRows ?? []).map((r) => r.homework_id as string),
+      referralCode: profileRow.referral_code ?? null,
+      referralCount: referralCount ?? 0,
+      trialEndsAt: profileRow.trial_ends_at ?? null,
     }
   } catch (err) {
     console.warn('[Supabase] loadUserData failed', err)
@@ -472,6 +480,13 @@ export async function syncProfile(userId: string, profile: UserProfile, theme: A
 
 // Dedicated grade sync — isolated from profile sync to prevent overwrite races.
 // grade_data table is the authoritative source for abiHalbjahre.
+// Sets referral_code only when the column is still NULL — safe to call repeatedly.
+export async function syncReferralCode(userId: string, code: string): Promise<void> {
+  try {
+    await supabase.from('profiles').update({ referral_code: code }).eq('id', userId).is('referral_code', null)
+  } catch (err) { console.warn('[Supabase] syncReferralCode', err) }
+}
+
 export async function syncGradeData(userId: string, abiHalbjahre: AbiHalbjahr[]): Promise<void> {
   try {
     await supabase.from('grade_data').upsert({
