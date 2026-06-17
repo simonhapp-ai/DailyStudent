@@ -172,9 +172,7 @@ export function NoteCreateScreen() {
   // Lightbox
   const [lightbox, setLightbox] = useState<string | null>(null)
 
-  // Document scan mode — tracks which photo blocks are in "Dokument" mode
-  const [docScanModes, setDocScanModes] = useState<Record<string, boolean>>({})
-  // Pending scan — set when a photo is captured in doc-scan mode, triggers DocumentCropTool overlay
+  // Pending scan — set when "Dokument Scannen" is tapped, triggers DocumentCropTool overlay
   const [pendingScan, setPendingScan] = useState<{ blockId: string; rawDataUrl: string } | null>(null)
 
   // No-subject save modal
@@ -183,7 +181,7 @@ export function NoteCreateScreen() {
   const [suggestion, setSuggestion] = useState<{ subjectId: string; subjectName: string; reason: string } | null>(null)
 
   // Per-photo-block file refs (keyed by block id)
-  const photoRefs = useRef<Record<string, { camera: HTMLInputElement | null; file: HTMLInputElement | null }>>({})
+  const photoRefs = useRef<Record<string, { camera: HTMLInputElement | null; file: HTMLInputElement | null; docScan: HTMLInputElement | null }>>({})
 
   // Handle returning from DrawingCanvasScreen with updated block data
   useEffect(() => {
@@ -340,13 +338,6 @@ export function NoteCreateScreen() {
       return
     }
     if (block.attachments.length >= PHOTO_LIMIT) return
-    // Document scan mode: show crop tool instead of adding directly
-    if (docScanModes[blockId]) {
-      const reader = new FileReader()
-      reader.onload = (e) => setPendingScan({ blockId, rawDataUrl: e.target?.result as string })
-      reader.readAsDataURL(file)
-      return
-    }
     const reader = new FileReader()
     reader.onload = (e) => {
       setBlocks((prev) => prev.map((b) => {
@@ -355,6 +346,15 @@ export function NoteCreateScreen() {
         return { ...b, pdfFile: null, attachments: [...b.attachments, e.target?.result as string] }
       }))
     }
+    reader.readAsDataURL(file)
+  }
+
+  const handleDocScanFile = (blockId: string, file: File | undefined) => {
+    if (!file || !file.type.startsWith('image/')) return
+    const block = blocks.find((b) => b.id === blockId) as PhotoBlock | undefined
+    if (!block || block.attachments.length >= PHOTO_LIMIT) return
+    const reader = new FileReader()
+    reader.onload = (e) => setPendingScan({ blockId, rawDataUrl: e.target?.result as string })
     reader.readAsDataURL(file)
   }
 
@@ -773,7 +773,7 @@ export function NoteCreateScreen() {
 
   const renderPhotoBlock = (block: PhotoBlock, index: number, isDefault: boolean) => {
     const canAnalyze = (block.attachments.length > 0 || !!block.pdfFile) && block.aiStatus !== 'analyzing' && !block.pdfLoading
-    if (!photoRefs.current[block.id]) photoRefs.current[block.id] = { camera: null, file: null }
+    if (!photoRefs.current[block.id]) photoRefs.current[block.id] = { camera: null, file: null, docScan: null }
     const refs = photoRefs.current[block.id]
 
     return (
@@ -817,55 +817,43 @@ export function NoteCreateScreen() {
               </div>
             </div>
           ) : block.attachments.length === 0 && !block.pdfLoading ? (
-            <div className="flex flex-col items-center gap-0">
-              {/* Mode pills */}
-              <div className="flex items-center gap-2 pt-2.5">
-                <button
-                  onClick={() => setDocScanModes(prev => ({ ...prev, [block.id]: false }))}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                    !docScanModes[block.id]
-                      ? 'bg-accent/10 text-accent border border-accent/30'
-                      : 'text-text-muted border border-border/60 hover:bg-surface-hover'
-                  }`}
-                >
-                  📷 Foto
-                </button>
-                <button
-                  onClick={() => setDocScanModes(prev => ({ ...prev, [block.id]: true }))}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                    docScanModes[block.id]
-                      ? 'bg-accent/10 text-accent border border-accent/30'
-                      : 'text-text-muted border border-border/60 hover:bg-surface-hover'
-                  }`}
-                >
-                  📄 Dokument Scannen
-                </button>
-              </div>
-              <div className="flex gap-3 py-4 justify-center">
-                <button
-                  onClick={() => refs.camera?.click()}
-                  className="flex flex-col items-center gap-1.5 px-5 py-3 rounded-card border-2 border-dashed border-border hover:border-accent hover:bg-accent/5 transition-colors"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-muted">
-                    <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
-                    <circle cx="12" cy="13" r="4" />
-                  </svg>
-                  <span className="text-xs text-text-muted font-medium">
-                    {docScanModes[block.id] ? 'Kamera' : 'Foto'}
-                  </span>
-                </button>
-                <button
-                  onClick={() => refs.file?.click()}
-                  className="flex flex-col items-center gap-1.5 px-5 py-3 rounded-card border-2 border-dashed border-border hover:border-accent hover:bg-accent/5 transition-colors"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-muted">
-                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
-                  </svg>
-                  <span className="text-xs text-text-muted font-medium">Datei / PDF</span>
-                </button>
-              </div>
+            <div className="flex gap-2 py-4">
+              <button
+                onClick={() => refs.camera?.click()}
+                className="flex-1 flex flex-col items-center gap-1.5 py-3 rounded-card border-2 border-dashed border-border hover:border-accent hover:bg-accent/5 transition-colors"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-muted">
+                  <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+                <span className="text-[11px] text-text-muted font-medium">Foto</span>
+              </button>
+              <button
+                onClick={() => refs.file?.click()}
+                className="flex-1 flex flex-col items-center gap-1.5 py-3 rounded-card border-2 border-dashed border-border hover:border-accent hover:bg-accent/5 transition-colors"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-muted">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
+                </svg>
+                <span className="text-[11px] text-text-muted font-medium">Datei</span>
+              </button>
+              <button
+                onClick={() => refs.docScan?.click()}
+                className="flex-1 flex flex-col items-center gap-1.5 py-3 rounded-card border-2 border-dashed border-border hover:border-accent hover:bg-accent/5 transition-colors"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-muted">
+                  <path d="M4 8V5a1 1 0 011-1h3" strokeLinecap="round" />
+                  <path d="M16 4h3a1 1 0 011 1v3" strokeLinecap="round" />
+                  <path d="M20 16v3a1 1 0 01-1 1h-3" strokeLinecap="round" />
+                  <path d="M8 20H5a1 1 0 01-1-1v-3" strokeLinecap="round" />
+                  <line x1="8" y1="10" x2="16" y2="10" strokeLinecap="round" />
+                  <line x1="8" y1="13" x2="16" y2="13" strokeLinecap="round" />
+                  <line x1="8" y1="16" x2="13" y2="16" strokeLinecap="round" />
+                </svg>
+                <span className="text-[11px] text-text-muted font-medium">Dokument</span>
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-3 gap-2 py-2">
@@ -1022,6 +1010,11 @@ export function NoteCreateScreen() {
           ref={(el) => { if (photoRefs.current[block.id]) photoRefs.current[block.id].file = el }}
           type="file" accept="image/*,.pdf" className="hidden"
           onChange={(e) => handlePhotoFile(block.id, e.target.files?.[0])}
+        />
+        <input
+          ref={(el) => { if (photoRefs.current[block.id]) photoRefs.current[block.id].docScan = el }}
+          type="file" accept="image/*" capture="environment" className="hidden"
+          onChange={(e) => handleDocScanFile(block.id, e.target.files?.[0])}
         />
       </div>
     )
