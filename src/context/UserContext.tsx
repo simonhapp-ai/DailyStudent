@@ -459,6 +459,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 personalEntries: s.personalEntries ?? [],
                 standaloneHomework: s.standaloneHomework ?? [],
                 completedHomeworkIds: s.completedHomeworkIds ?? [],
+                referralCode: null,
+                referralCount: 0,
+                trialEndsAt: null,
               })
             }
           } finally {
