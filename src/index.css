@@ -377,3 +377,27 @@ textarea::placeholder {
   background-size: 200% 100%;
   animation: gold-shimmer 10s infinite ease-in-out;
 }
+
+/* ── Referral copy button — gold shimmer ────────────────────── */
+.btn-copy-shimmer {
+  position: relative;
+  overflow: hidden;
+  color: #3B1F00;
+  background: linear-gradient(135deg, #C8860A 0%, #F5C842 35%, #FFD700 50%, #D4AF37 65%, #C07700 100%);
+  box-shadow: 0 1px 6px rgba(200,134,10,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+  text-shadow: 0 1px 1px rgba(255,255,255,0.2);
+}
+
+.btn-copy-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 25%,
+    rgba(255,255,255,0.55) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  animation: gold-shimmer 4s infinite ease-in-out;
+}

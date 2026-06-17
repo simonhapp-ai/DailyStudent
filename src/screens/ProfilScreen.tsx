@@ -283,11 +283,8 @@ export function ProfilScreen() {
         )}
 
         {/* ── Referral Widget ────────────────────────────────────── */}
-        {!trialActive && (
-          <div
-            className="rounded-card border overflow-hidden"
-            style={{ borderColor: 'rgba(255,185,0,0.25)', background: 'linear-gradient(140deg, rgba(255,185,0,0.07) 0%, rgba(255,185,0,0.02) 100%)' }}
-          >
+        {!isPro && !trialActive && (
+          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
             <div className="p-5">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
@@ -300,12 +297,7 @@ export function ProfilScreen() {
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
-                      <span
-                        className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide"
-                        style={{ background: 'rgba(255,185,0,0.15)', color: '#FFB800' }}
-                      >
-                        Nur kurze Zeit
-                      </span>
+                      <span className="badge-pro-gold px-2.5 py-0.5">Nur kurze Zeit</span>
                     </div>
                     <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
                   </div>
@@ -318,12 +310,12 @@ export function ProfilScreen() {
                   <span className="text-text-muted text-[12px]">Fortschritt</span>
                   <span className="text-text-primary font-bold text-[13px] tabular-nums">{referralCount}/5</span>
                 </div>
-                <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(128,128,128,0.15)' }}>
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${Math.min(100, (referralCount / 5) * 100)}%`,
-                      background: 'linear-gradient(90deg, #FFD700, #FF8C00)',
+                      background: 'linear-gradient(90deg, #C8860A, #F5C842, #FFD700)',
                     }}
                   />
                 </div>
@@ -332,7 +324,7 @@ export function ProfilScreen() {
                     <span
                       key={n}
                       className="text-[10px] font-medium"
-                      style={{ color: referralCount >= n ? '#FFB800' : 'rgb(var(--color-text-muted))' }}
+                      style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
                     >
                       {n === 5 ? '🎉' : `${n}`}
                     </span>
@@ -358,19 +350,19 @@ export function ProfilScreen() {
                   <div className="flex-1 min-w-0">
                     <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
                     <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
-                    <button
-                      onClick={handleCopyReferral}
-                      className="w-full py-2 rounded-btn text-[13px] font-semibold press-sm transition-all"
-                      style={{
-                        background: copyToast
-                          ? 'rgba(48,209,88,0.15)'
-                          : 'rgba(255,185,0,0.12)',
-                        color: copyToast ? '#30D158' : '#FFB800',
-                        border: `1px solid ${copyToast ? 'rgba(48,209,88,0.3)' : 'rgba(255,185,0,0.25)'}`,
-                      }}
-                    >
-                      {copyToast ? '✓ Kopiert!' : 'Link kopieren'}
-                    </button>
+                    {copyToast ? (
+                      <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
+                        style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>
+                        ✓ Kopiert!
+                      </div>
+                    ) : (
+                      <button
+                        onClick={handleCopyReferral}
+                        className="btn-copy-shimmer w-full py-2 rounded-btn text-[13px] font-semibold press-sm"
+                      >
+                        Link kopieren
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
