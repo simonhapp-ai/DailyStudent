@@ -603,6 +603,34 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authUser?.id, supabaseDataLoading, !!profile])
 
+  // Pro perk: one free Streak Freeze per calendar month.
+  // Uses the same cooldowns array as coins — key FREE_FREEZE:YYYY-MM ensures
+  // it only fires once per month even across sessions/devices.
+  const monthlyFreezeGrantedRef = useRef(false)
+  useEffect(() => {
+    monthlyFreezeGrantedRef.current = false
+  }, [authUser?.id])
+
+  useEffect(() => {
+    if (!authUser || !profile || supabaseDataLoading || monthlyFreezeGrantedRef.current) return
+    const isProNow = isPro || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
+    if (!isProNow) return
+    const thisMonth = new Date().toISOString().slice(0, 7)
+    const cooldownKey = `FREE_FREEZE:${thisMonth}`
+    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    if ((current.cooldowns ?? []).includes(cooldownKey)) return
+    monthlyFreezeGrantedRef.current = true
+    const updated: AppStats = {
+      ...current,
+      streakFreezes: (current.streakFreezes ?? 0) + 1,
+      cooldowns: [...(current.cooldowns ?? []), cooldownKey],
+    }
+    setAppStats(updated)
+    saveStorage({ ...loadStorage(), appStats: updated })
+    if (authUser) void syncAppStats(authUser.id, updated)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authUser?.id, isPro, trialEndsAt, supabaseDataLoading, !!profile])
+
   const getKc = useCallback(
     (subjectId: string): KcSubjectData | null => kcCache[subjectId] ?? null,
     [kcCache],
