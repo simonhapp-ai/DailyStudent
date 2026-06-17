@@ -4,7 +4,7 @@ import { useUser } from '../../context/UserContext'
 export function ReferralPill() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { referralCount, trialEndsAt } = useUser()
+  const { referralCount, trialEndsAt, isPro } = useUser()
 
   const segments = location.pathname.split('/').filter(Boolean)
   if (
@@ -14,7 +14,7 @@ export function ReferralPill() {
     (segments[0] === 'unterricht' && segments.length > 1)
   ) return null
 
-  // Mission complete — hide pill once trial is active
+  if (isPro) return null
   if (trialEndsAt && new Date(trialEndsAt) > new Date()) return null
   if (referralCount >= 5) return null
 
