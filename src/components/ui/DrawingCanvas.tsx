@@ -215,7 +215,7 @@ function detectGeomShape(pts: number[][]): GeomShape {
   const diag = Math.hypot(bw, bh)
   const first = pts[0], last = pts[pts.length - 1]
   const closeDist = Math.hypot(last[0] - first[0], last[1] - first[1])
-  const isClosed = closeDist < diag * 0.28 && pts.length > 10
+  const isClosed = closeDist < diag * 0.35 && pts.length > 6
 
   // Line: very thin bounding box
   if (!isClosed && Math.min(bw, bh) < diag * 0.18)
@@ -571,6 +571,25 @@ export function DrawingCanvas({
   // Long-press detection (for paste menu)
   const longPressTimerRef   = useRef<ReturnType<typeof setTimeout> | null>(null)
   const longPressStartRef   = useRef<{ clientX: number; clientY: number; canvasX: number; canvasY: number } | null>(null)
+
+  // Stable ref so the keyboard listener always calls the current handlePaste
+  const handlePasteRef = useRef<(cx: number, cy: number) => void>(() => {})
+
+  // Ctrl+V / Cmd+V keyboard paste
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || e.key !== 'v') return
+      if (copiedStrokesRef.current.length === 0) return
+      e.preventDefault()
+      const fg = fgCanvasRef.current
+      if (!fg) return
+      const { width: w, height: h } = fg.getBoundingClientRect()
+      const { tx, ty, scale } = viewTransformRef.current
+      handlePasteRef.current((w / 2 - tx) / scale, (h / 2 - ty) / scale)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
 
   // ── Color helpers ─────────────────────────────────────────────────────────
 
@@ -986,6 +1005,9 @@ export function DrawingCanvas({
     setPasteMenuPos(null)
   }
 
+  // Keep the Ctrl+V listener's ref current on every render
+  handlePasteRef.current = handlePaste
+
   const snapCurrentStroke = () => {
     if (geomHoldTimerRef.current) { clearTimeout(geomHoldTimerRef.current); geomHoldTimerRef.current = null }
     const active = activeRef.current
@@ -1187,15 +1209,9 @@ export function DrawingCanvas({
 
     if (!activeRef.current || e.buttons === 0) return
     if (isPinchingRef.current || activePointerIdsRef.current.size > 1) return
-    if (hasSeenPenRef.current && e.pointerType === 'touch') return
+    if (penIsActiveRef.current && e.pointerType === 'touch') return
 
     activeRef.current.points.push(getXY(e))
-
-    // Geometry: reset hold timer on every move (snap fires after stillness)
-    if (tool === 'geometry') {
-      if (geomHoldTimerRef.current) clearTimeout(geomHoldTimerRef.current)
-      geomHoldTimerRef.current = setTimeout(snapCurrentStroke, GEOM_HOLD_MS)
-    }
 
     if (activeRef.current.tool === 'eraser') {
       const sk = skCanvasRef.current; if (!sk) return
@@ -1282,12 +1298,16 @@ export function DrawingCanvas({
     const stroke = activeRef.current
     activeRef.current = null
 
-    // Geometry hold timer: user released early — cancel snap, discard the freehand preview
+    // Geometry: snap immediately on pointer up (no hold required)
     if (tool === 'geometry') {
       if (geomHoldTimerRef.current) { clearTimeout(geomHoldTimerRef.current); geomHoldTimerRef.current = null }
-      // If released early (no snap yet) just clear fg and don't commit freehand
-      const fg = fgCanvasRef.current
-      if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+      if (activeRef.current && activeRef.current.points.length >= 3) {
+        snapCurrentStroke()
+      } else {
+        activeRef.current = null
+        const fg = fgCanvasRef.current
+        if (fg) { const ctx = fg.getContext('2d'); const { w, h } = getCSS(); if (ctx) ctx.clearRect(0, 0, w, h) }
+      }
       return
     }
 
@@ -1590,6 +1610,7 @@ export function DrawingCanvas({
                   const next = !penOnlyMode
                   setPenOnlyMode(next)
                   localStorage.setItem(PEN_ONLY_KEY, next ? '1' : '0')
+                  if (!next) hasSeenPenRef.current = false  // allow fingers to draw again
                 }}
                 className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
                 onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
@@ -2193,27 +2214,37 @@ export function DrawingCanvas({
                   pointerEvents: 'auto',
                 }}>
                   <button
-                    onPointerDown={e => e.stopPropagation()}
+                    onPointerDown={e => { e.stopPropagation(); (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.94)' }}
+                    onPointerUp={e => { (e.currentTarget as HTMLButtonElement).style.transform = '' }}
+                    onPointerCancel={e => { (e.currentTarget as HTMLButtonElement).style.transform = '' }}
                     onClick={handleDeleteSelection}
                     style={{
-                      height: 32, paddingInline: 14,
-                      borderRadius: 10, border: 'none',
+                      height: 44, paddingInline: 20,
+                      borderRadius: 12, border: 'none',
                       background: '#FF453A', color: 'white',
-                      fontSize: 13, fontWeight: 700,
+                      fontSize: 14, fontWeight: 700,
                       boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
                       cursor: 'pointer',
+                      touchAction: 'manipulation',
+                      transition: 'transform 0.1s',
+                      minWidth: 80,
                     }}
                   >Löschen</button>
                   <button
-                    onPointerDown={e => e.stopPropagation()}
+                    onPointerDown={e => { e.stopPropagation(); (e.currentTarget as HTMLButtonElement).style.transform = 'scale(0.94)' }}
+                    onPointerUp={e => { (e.currentTarget as HTMLButtonElement).style.transform = '' }}
+                    onPointerCancel={e => { (e.currentTarget as HTMLButtonElement).style.transform = '' }}
                     onClick={() => handleCopySelection()}
                     style={{
-                      height: 32, paddingInline: 14,
-                      borderRadius: 10, border: '1.5px solid rgba(124,58,237,0.5)',
+                      height: 44, paddingInline: 20,
+                      borderRadius: 12, border: '1.5px solid rgba(124,58,237,0.5)',
                       background: 'white', color: '#7C3AED',
-                      fontSize: 13, fontWeight: 700,
+                      fontSize: 14, fontWeight: 700,
                       boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
                       cursor: 'pointer',
+                      touchAction: 'manipulation',
+                      transition: 'transform 0.1s',
+                      minWidth: 90,
                     }}
                   >Kopieren</button>
                 </div>

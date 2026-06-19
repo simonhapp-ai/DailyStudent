@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { useNavigate, useParams, useLocation } from 'react-router-dom'
+import { useNavigate, useParams, useLocation, useBlocker } from 'react-router-dom'
 import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
 import type { HomeworkItem } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
@@ -9,6 +9,7 @@ import { useUser } from '../context/UserContext'
 import { subjects, halfYears } from '../data/mockData'
 import type { GeneratedSmartNote, UserNote } from '../types'
 import DocumentCropTool from '../components/ui/DocumentCropTool'
+import { drawingBlockTransfer } from '../lib/drawingBlockTransfer'
 
 // ── Local block types ────────────────────────────────────────────────────────
 
@@ -166,6 +167,19 @@ export function NoteCreateScreen() {
   const [askLoading, setAskLoading] = useState(false)
   const [qaItems, setQaItems] = useState<{ q: string; a: string; open: boolean }[]>([])
 
+  // Derived — computed early so useBlocker can reference it
+  const hasUserContent = blocks.some((b) =>
+    b.type === 'text' ? b.content.trim().length > 0
+    : b.type === 'photo' ? (b.attachments.length > 0 || !!b.pdfFile)
+    : b.type === 'drawing'
+      ? (b.dataUrl !== null || b.pages.length > 1 || b.pages.some(p => p.strokes.length > 0))
+    : b.type === 'homework' ? b.description.trim().length > 0
+    : false
+  ) || qaItems.length > 0
+
+  // Blocker — intercepts lateral DesktopSidebar / programmatic navigation when user has content
+  const blocker = useBlocker(hasUserContent)
+
   // Cancel confirm
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
 
@@ -183,20 +197,12 @@ export function NoteCreateScreen() {
   // Per-photo-block file refs (keyed by block id)
   const photoRefs = useRef<Record<string, { camera: HTMLInputElement | null; file: HTMLInputElement | null; docScan: HTMLInputElement | null }>>({})
 
-  // Handle returning from DrawingCanvasScreen with updated block data
+  // Handle returning from DrawingCanvasScreen — DrawingCanvasScreen uses navigate(-1)
+  // which restores THIS component instance (blocks state preserved). The drawing block
+  // data is passed via drawingBlockTransfer to avoid the remount bug from navigate(returnTo).
   useEffect(() => {
-    const st = location.state as Record<string, unknown> | null
-    if (!st?.updatedBlock) return
-    const upd = st.updatedBlock as {
-      blockId?: string
-      pages?: CanvasPageData[]
-      dataUrl?: string | null
-      aiStatus?: DrawingBlock['aiStatus']
-      aiError?: string
-      transcription?: string | null
-      aiResult?: DrawingBlock['aiResult']
-    }
-    if (!upd.blockId) return
+    const upd = drawingBlockTransfer.consume()
+    if (!upd?.blockId) return
     setBlocks(prev => prev.map(b => {
       if (b.id !== upd.blockId || b.type !== 'drawing') return b
       const patch: Partial<DrawingBlock> = {
@@ -204,18 +210,21 @@ export function NoteCreateScreen() {
         dataUrl: upd.dataUrl ?? (b as DrawingBlock).dataUrl,
       }
       if (upd.aiStatus && upd.aiStatus !== 'idle') {
-        patch.aiStatus     = upd.aiStatus
-        patch.aiError      = upd.aiError ?? ''
+        patch.aiStatus      = upd.aiStatus as DrawingBlock['aiStatus']
+        patch.aiError       = upd.aiError ?? ''
         patch.transcription = upd.transcription ?? null
-        patch.aiResult     = upd.aiResult ?? null
+        patch.aiResult      = upd.aiResult ?? null
       }
       return { ...b, ...patch } as DrawingBlock
     }))
-    // Clear router state to prevent re-firing
-    navigate(location.pathname, { replace: true, state: null })
-  // location.state changes are what we watch; navigate/pathname are stable
+  // location.key changes every time we arrive at this route (navigate(-1) included)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.state])
+  }, [location.key])
+
+  // Show cancel confirm when the Router blocker fires (e.g. DesktopSidebar navigation)
+  useEffect(() => {
+    if (blocker.state === 'blocked') setShowCancelConfirm(true)
+  }, [blocker.state])
 
   const profileSubjects = (profile?.faecher ?? [])
     .map((sid) => subjects.find((s) => s.id === sid))
@@ -606,14 +615,6 @@ export function NoteCreateScreen() {
     if (noteHasPhotos(note)) showLocalAttachmentToast()
     navigate('/unterricht/ohne-fach/ordner/folder-no-subject', { replace: true })
   }
-
-  const hasUserContent = blocks.some((b) =>
-    b.type === 'text' ? b.content.trim().length > 0
-    : b.type === 'photo' ? (b.attachments.length > 0 || !!b.pdfFile)
-    : b.type === 'drawing' ? b.dataUrl !== null
-    : b.type === 'homework' ? b.description.trim().length > 0
-    : false
-  ) || qaItems.length > 0
 
   const currentFolder = folderId ? userFolders.find((f) => f.id === folderId) : null
 
@@ -1711,14 +1712,21 @@ export function NoteCreateScreen() {
                 </button>
               )}
               <button
-                onClick={() => { setShowCancelConfirm(false); navigate('/unterricht', { replace: true }) }}
+                onClick={() => {
+                  setShowCancelConfirm(false)
+                  if (blocker.state === 'blocked') { blocker.proceed(); return }
+                  navigate('/unterricht', { replace: true })
+                }}
                 className="w-full py-3 rounded-card border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
                 style={{ borderColor: 'rgba(248,113,113,0.3)', color: '#F87171' }}
               >
                 Trotzdem verlassen
               </button>
               <button
-                onClick={() => setShowCancelConfirm(false)}
+                onClick={() => {
+                  setShowCancelConfirm(false)
+                  if (blocker.state === 'blocked') blocker.reset()
+                }}
                 className="w-full py-3 rounded-card bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
               >
                 Zurück

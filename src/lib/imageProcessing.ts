@@ -93,7 +93,7 @@ export async function applyPerspectiveWarp(
   outW = 0,
   outH = 0
 ): Promise<string> {
-  const { canvas: src, scale } = await loadImageToCanvas(srcDataUrl, 1500)
+  const { canvas: src, scale } = await loadImageToCanvas(srcDataUrl, 2500)
   const ctx = src.getContext('2d')!
   const srcData = ctx.getImageData(0, 0, src.width, src.height)
 
@@ -106,8 +106,8 @@ export async function applyPerspectiveWarp(
     const ys = corners.map(c => c[1])
     const bboxW = Math.max(...xs) - Math.min(...xs)
     const bboxH = Math.max(...ys) - Math.min(...ys)
-    // Preserve aspect ratio, cap at 1500px
-    const capScale = Math.min(1, 1500 / Math.max(bboxW, bboxH))
+    // Preserve aspect ratio, cap at 2000px
+    const capScale = Math.min(1, 2000 / Math.max(bboxW, bboxH))
     outW = Math.round(bboxW * capScale)
     outH = Math.round(bboxH * capScale)
   }
@@ -141,7 +141,7 @@ export async function applyPerspectiveWarp(
   }
 
   outCtx.putImageData(outData, 0, 0)
-  return outCanvas.toDataURL('image/jpeg', 0.92)
+  return outCanvas.toDataURL('image/jpeg', 0.97)
 }
 
 /**
@@ -166,7 +166,7 @@ export async function enhanceDocumentScan(
       }
       ctx.filter = filters[mode]
       ctx.drawImage(img, 0, 0)
-      resolve(canvas.toDataURL('image/jpeg', 0.92))
+      resolve(canvas.toDataURL('image/jpeg', 0.97))
     }
     img.onerror = reject
     img.src = dataUrl

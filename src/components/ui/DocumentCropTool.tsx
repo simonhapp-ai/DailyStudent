@@ -49,10 +49,10 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
     const r = getImageDisplayRect(imgRef.current)
     const inset = 0.08
     setCorners([
-      [r.left + r.width * inset, r.top + r.height * inset],        // TL
-      [r.left + r.width * (1 - inset), r.top + r.height * inset],  // TR
-      [r.left + r.width * (1 - inset), r.top + r.height * (1 - inset)], // BR
-      [r.left + r.width * inset, r.top + r.height * (1 - inset)],  // BL
+      [r.left + r.width * inset, r.top + r.height * inset],
+      [r.left + r.width * (1 - inset), r.top + r.height * inset],
+      [r.left + r.width * (1 - inset), r.top + r.height * (1 - inset)],
+      [r.left + r.width * inset, r.top + r.height * (1 - inset)],
     ])
     setImgLoaded(true)
   }, [])
@@ -94,7 +94,6 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
       const scaleX = imgRef.current.naturalWidth / imgRect.width
       const scaleY = imgRef.current.naturalHeight / imgRect.height
 
-      // Convert display coords → image pixel coords
       const pixelCorners: Point[] = corners.map(([cx, cy]) => [
         (cx - imgRect.left) * scaleX,
         (cy - imgRect.top) * scaleY,
@@ -117,32 +116,53 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
 
   const polygonPoints = relCorners.map(([x, y]) => `${x},${y}`).join(' ')
 
-  const modeLabels: { key: ScanMode; label: string }[] = [
-    { key: 'color', label: 'Farbe' },
-    { key: 'grayscale', label: 'Graustufen' },
-    { key: 'bw', label: 'S/W' },
+  const modeLabels: { key: ScanMode; label: string; icon: string }[] = [
+    { key: 'color', label: 'Farbe', icon: '🎨' },
+    { key: 'grayscale', label: 'Graustufen', icon: '⬛' },
+    { key: 'bw', label: 'S/W', icon: '◼' },
   ]
 
+  const cornerColors = ['#7C3AED', '#7C3AED', '#7C3AED', '#7C3AED']
+
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-black">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 shrink-0">
-        <span className="text-white font-semibold text-base">Dokument scannen</span>
+    <div className="fixed inset-0 z-50 flex flex-col" style={{ background: '#0a0a0a' }}>
+
+      {/* ── Header ── */}
+      <div
+        className="shrink-0 flex items-center justify-between px-5"
+        style={{
+          paddingTop: 'max(14px, env(safe-area-inset-top, 14px))',
+          paddingBottom: 12,
+          background: 'rgba(10,10,10,0.85)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '0.5px solid rgba(255,255,255,0.08)',
+        }}
+      >
         <button
           onClick={onCancel}
-          className="text-white/70 text-sm active:opacity-50"
+          className="flex items-center gap-1.5 active:opacity-60 transition-opacity"
+          style={{ color: 'rgba(255,255,255,0.75)', fontSize: 15, fontWeight: 500 }}
         >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
           Abbrechen
         </button>
+
+        <span style={{ color: 'white', fontSize: 16, fontWeight: 700 }}>Dokument scannen</span>
+
+        <div style={{ width: 90 }} />
       </div>
 
-      {/* Image + overlay */}
+      {/* ── Image + overlay ── */}
       <div
         ref={containerRef}
         className="relative flex-1 overflow-hidden"
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
         onPointerCancel={onPointerUp}
+        style={{ touchAction: 'none' }}
       >
         <img
           ref={imgRef}
@@ -151,47 +171,44 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
           className="absolute inset-0 w-full h-full object-contain select-none"
           draggable={false}
           alt=""
+          style={{ userSelect: 'none' }}
         />
 
         {imgLoaded && (
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ touchAction: 'none' }}>
-            {/* Dark overlay outside the quad */}
+          <svg className="absolute inset-0 w-full h-full" style={{ pointerEvents: 'none', touchAction: 'none' }}>
             <defs>
-              <mask id="doc-mask">
+              <mask id="doc-crop-mask">
                 <rect width="100%" height="100%" fill="white" />
                 <polygon points={polygonPoints} fill="black" />
               </mask>
             </defs>
-            <rect width="100%" height="100%" fill="rgba(0,0,0,0.5)" mask="url(#doc-mask)" />
+
+            {/* Dark overlay outside selection */}
+            <rect width="100%" height="100%" fill="rgba(0,0,0,0.55)" mask="url(#doc-crop-mask)" />
+
+            {/* Edge lines */}
+            {[0, 1, 2, 3].map(i => {
+              const [x1, y1] = relCorners[i]
+              const [x2, y2] = relCorners[(i + 1) % 4]
+              return (
+                <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                  stroke="#7C3AED" strokeWidth="2.5" strokeOpacity="0.95"
+                />
+              )
+            })}
 
             {/* Quad border */}
             <polygon
               points={polygonPoints}
               fill="none"
               stroke="#7C3AED"
-              strokeWidth="2"
+              strokeWidth="2.5"
               strokeOpacity="0.9"
             />
-
-            {/* Edge lines for clarity */}
-            {[0, 1, 2, 3].map(i => {
-              const [x1, y1] = relCorners[i]
-              const [x2, y2] = relCorners[(i + 1) % 4]
-              return (
-                <line
-                  key={i}
-                  x1={x1} y1={y1}
-                  x2={x2} y2={y2}
-                  stroke="#7C3AED"
-                  strokeWidth="2"
-                  strokeOpacity="0.85"
-                />
-              )
-            })}
           </svg>
         )}
 
-        {/* Drag handles — rendered in DOM so pointer events work */}
+        {/* Corner drag handles — large iOS-style */}
         {imgLoaded && relCorners.map(([x, y], idx) => (
           <div
             key={idx}
@@ -201,51 +218,159 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
               left: x,
               top: y,
               transform: 'translate(-50%, -50%)',
-              width: 32,
-              height: 32,
+              width: 52,
+              height: 52,
               touchAction: 'none',
               cursor: 'grab',
+              zIndex: 10,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-            className="rounded-full bg-white shadow-lg border-2 border-purple-500 active:scale-110 z-10"
-          />
+          >
+            {/* Outer ring (hit target) */}
+            <div style={{
+              width: 44,
+              height: 44,
+              borderRadius: '50%',
+              background: 'rgba(124,58,237,0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 0 0 1.5px rgba(124,58,237,0.4)',
+            }}>
+              {/* Inner circle */}
+              <div style={{
+                width: 24,
+                height: 24,
+                borderRadius: '50%',
+                background: 'white',
+                border: `2.5px solid ${cornerColors[idx]}`,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.45), 0 1px 3px rgba(0,0,0,0.3)',
+              }} />
+            </div>
+          </div>
         ))}
+
+        {/* Corner index hints (small numbers) */}
+        {imgLoaded && relCorners.map(([x, y], idx) => {
+          const offsets = [[-18, -18], [18, -18], [18, 18], [-18, 18]]
+          return (
+            <div
+              key={`hint-${idx}`}
+              style={{
+                position: 'absolute',
+                left: x + offsets[idx][0],
+                top: y + offsets[idx][1],
+                pointerEvents: 'none',
+                zIndex: 9,
+              }}
+            >
+              <div style={{
+                background: 'rgba(124,58,237,0.85)',
+                color: 'white',
+                fontSize: 9,
+                fontWeight: 800,
+                width: 16,
+                height: 16,
+                borderRadius: 5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>{idx + 1}</div>
+            </div>
+          )
+        })}
       </div>
 
-      {/* Bottom panel */}
-      <div className="shrink-0 bg-black/80 backdrop-blur-sm px-4 pt-3 pb-6 space-y-3">
+      {/* ── Bottom panel ── */}
+      <div
+        className="shrink-0"
+        style={{
+          background: 'rgba(18,18,22,0.96)',
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
+          borderRadius: '20px 20px 0 0',
+          borderTop: '0.5px solid rgba(255,255,255,0.1)',
+          paddingTop: 16,
+          paddingBottom: 'max(28px, env(safe-area-inset-bottom, 28px))',
+          paddingInline: 20,
+        }}
+      >
+        {/* Drag pill */}
+        <div style={{
+          width: 36, height: 4, borderRadius: 2,
+          background: 'rgba(255,255,255,0.18)',
+          margin: '0 auto 16px',
+        }} />
+
         {/* Scan mode pills */}
-        <div className="flex items-center gap-2 justify-center">
+        <div className="flex items-center gap-2 justify-center mb-4">
           {modeLabels.map(({ key, label }) => (
             <button
               key={key}
               onClick={() => setScanMode(key)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                scanMode === key
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
-              }`}
+              style={{
+                height: 38,
+                paddingInline: 16,
+                borderRadius: 20,
+                border: scanMode === key ? 'none' : '1.5px solid rgba(255,255,255,0.15)',
+                background: scanMode === key ? '#7C3AED' : 'rgba(255,255,255,0.07)',
+                color: scanMode === key ? 'white' : 'rgba(255,255,255,0.6)',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                touchAction: 'manipulation',
+                transition: 'all 0.18s',
+                minWidth: 80,
+              }}
             >
               {label}
             </button>
           ))}
         </div>
 
-        {/* Action button */}
+        {/* Scan button */}
         <button
           onClick={handleScan}
           disabled={processing || !imgLoaded}
-          className="w-full py-3.5 rounded-2xl font-semibold text-white text-base bg-gradient-to-r from-purple-600 to-violet-600 active:opacity-80 disabled:opacity-50 flex items-center justify-center gap-2"
+          style={{
+            width: '100%',
+            height: 54,
+            borderRadius: 16,
+            border: 'none',
+            background: processing || !imgLoaded
+              ? 'rgba(124,58,237,0.4)'
+              : 'linear-gradient(135deg, #7C3AED 0%, #9B59B6 100%)',
+            color: 'white',
+            fontSize: 16,
+            fontWeight: 700,
+            cursor: processing || !imgLoaded ? 'not-allowed' : 'pointer',
+            touchAction: 'manipulation',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            boxShadow: processing || !imgLoaded ? 'none' : '0 4px 20px rgba(124,58,237,0.45)',
+            transition: 'all 0.2s',
+          }}
         >
           {processing ? (
             <>
-              <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+              <svg className="animate-spin" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="rgba(255,255,255,0.3)" strokeWidth="3" />
+                <path d="M12 2a10 10 0 0110 10" stroke="white" strokeWidth="3" strokeLinecap="round" />
               </svg>
-              Wird gescannt…
+              Wird verarbeitet…
             </>
           ) : (
-            'Scannen'
+            <>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+              Scannen
+            </>
           )}
         </button>
       </div>

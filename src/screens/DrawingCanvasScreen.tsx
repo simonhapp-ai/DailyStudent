@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { DrawingCanvas } from '../components/ui/DrawingCanvas'
 import type { CanvasPageData } from '../components/ui/DrawingCanvas'
 import { extractTextFromImage, generateSmartNote } from '../lib/groq'
+import { drawingBlockTransfer } from '../lib/drawingBlockTransfer'
 
 interface PhotoBlockAIResult {
   transcription: string
@@ -96,21 +97,44 @@ export function DrawingCanvasScreen() {
   const [analysisResult,  setAnalysisResult]  = useState<PhotoBlockAIResult | null>(null)
   const [showAnalysis,    setShowAnalysis]     = useState(false)
 
+  // NavBar warning modal — shown when user taps a nav item that would abandon the canvas
+  const [warnNavTarget, setWarnNavTarget] = useState<string | null>(null)
+
+  const buildPatch = () => ({
+    blockId:  incoming.blockId ?? '',
+    pages,
+    dataUrl,
+    ...(analysisStatus !== 'idle' ? {
+      aiStatus:      analysisStatus,
+      aiError:       analysisError,
+      transcription,
+      aiResult:      analysisResult,
+    } : {}),
+  })
+
   const handleBack = () => {
-    const patch: Record<string, unknown> = {
-      blockId:  incoming.blockId,
-      pages,
-      dataUrl,
+    drawingBlockTransfer.store(buildPatch())
+    navigate(-1)
+  }
+
+  const handleNavAway = (path: string) => {
+    // If there are any drawn strokes or multiple pages, warn the user
+    const hasDrawings = pages.some(p => p.strokes.length > 0 || (p.images?.length ?? 0) > 0) || pages.length > 1
+    if (hasDrawings) {
+      setWarnNavTarget(path)
+    } else {
+      navigate(path)
     }
-    if (analysisStatus !== 'idle') {
-      patch.aiStatus      = analysisStatus
-      patch.aiError       = analysisError
-      patch.transcription = transcription
-      patch.aiResult      = analysisResult
-    }
-    navigate(incoming.returnTo ?? '/unterricht', {
-      state: { updatedBlock: patch },
-    })
+  }
+
+  const confirmNavAway = () => {
+    if (!warnNavTarget) return
+    const target = warnNavTarget
+    setWarnNavTarget(null)
+    drawingBlockTransfer.store(buildPatch())
+    navigate(-1)  // restore NoteCreateScreen state
+    // Then navigate onward after a tick so history is correct
+    setTimeout(() => navigate(target, { replace: true }), 0)
   }
 
   const handleAnalyzeRequest = async (pageDataUrl: string) => {
@@ -232,7 +256,7 @@ export function DrawingCanvasScreen() {
               key={item.label}
               onClick={() => {
                 if (item.path === null) { handleBack(); return }
-                navigate(item.path)
+                handleNavAway(item.path)
               }}
               className="flex flex-col items-center gap-[3px] min-w-[56px] py-1 press-sm"
               style={{ color: 'rgb(var(--color-text-muted))' }}
@@ -255,6 +279,47 @@ export function DrawingCanvasScreen() {
           ))}
         </div>
       </nav>
+
+      {/* NavBar warning modal — shown when user tries to navigate away with drawings */}
+      {warnNavTarget && (
+        <div className="fixed inset-0 z-[60] flex flex-col justify-end">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setWarnNavTarget(null)} />
+          <div
+            className="relative max-w-lg mx-auto w-full z-10"
+            style={{
+              background: 'rgb(var(--color-surface))',
+              borderTop: '0.5px solid rgba(var(--color-border), 0.5)',
+              borderRadius: '20px 20px 0 0',
+            }}
+          >
+            <div className="px-5 pt-5 pb-2">
+              <div className="w-10 h-1 bg-border rounded-full mx-auto mb-4" />
+              <h2 className="text-base font-bold text-text-primary mb-1">Zeichnung verlassen?</h2>
+              <p className="text-text-muted text-sm">
+                Deine Mitschrift wird gespeichert und du kannst sie später weiter bearbeiten.
+              </p>
+            </div>
+            <div
+              className="px-4 py-4 space-y-2.5"
+              style={{ paddingBottom: 'max(1.5rem, env(safe-area-inset-bottom, 0px))' }}
+            >
+              <button
+                onClick={confirmNavAway}
+                className="w-full py-3 rounded-card border text-sm font-semibold transition-all active:scale-95"
+                style={{ borderColor: 'rgba(248,113,113,0.3)', color: '#F87171' }}
+              >
+                Trotzdem verlassen
+              </button>
+              <button
+                onClick={() => setWarnNavTarget(null)}
+                className="w-full py-3 rounded-card bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
+              >
+                Weiter zeichnen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
