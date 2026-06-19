@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { supabase } from '../lib/supabase'
+import { clearConsent, getConsent } from '../lib/consent'
 
 const SECTIONS = [
   {
@@ -34,7 +35,7 @@ const SECTIONS = [
   },
   {
     title: '8. Cookies & Tracking',
-    text: 'DailyStudent verwendet keine Tracking-Cookies und keine Analyse-Tools von Drittanbietern (kein Google Analytics, kein Meta-Pixel). Es findet kein verhaltensbasiertes Tracking statt. Zur Sitzungsverwaltung wird ausschließlich ein technisch notwendiger Auth-Token im LocalStorage des Browsers gespeichert.',
+    text: 'DailyStudent verwendet keine Tracking-Cookies und kein verhaltensbasiertes Tracking.\n\nOptional (nur mit deiner Einwilligung):\n• Vercel Analytics: anonyme Seitenstatistiken (Seitenaufrufe, Herkunftsland, Gerättyp) — cookielos, keine persönlichen Daten, kein Cross-Site-Tracking. Betreiber: Vercel Inc., USA. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung).\n\nTechnisch notwendig (keine Einwilligung erforderlich):\n• Auth-Token im LocalStorage zur Sitzungsverwaltung\n• App-Daten im LocalStorage (Offline-Nutzung)\n\nDu kannst deine Einwilligung jederzeit über den Button „Cookie-Einstellungen zurücksetzen" widerrufen.',
   },
   {
     title: '9. Deine Rechte (DSGVO)',
@@ -63,6 +64,9 @@ export function DatenschutzScreen() {
   const [confirmInput, setConfirmInput] = useState('')
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [consentReset, setConsentReset] = useState(false)
+
+  const currentConsent = getConsent()
 
   const canDelete = confirmInput.toLowerCase() === 'löschen'
 
@@ -128,6 +132,61 @@ export function DatenschutzScreen() {
 
         {/* ── Trennlinie ──────────────────────────────────────── */}
         <div className="pt-3 pb-1">
+          <div className="h-px bg-border/40" />
+        </div>
+
+        {/* ── Cookie-Einstellungen ─────────────────────────────── */}
+        <div>
+          <h2 className="section-label mb-2.5">Cookie-Einstellungen</h2>
+          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-text-primary font-semibold text-[14px]">Notwendige Cookies</p>
+                <p className="text-text-muted text-[12px] mt-0.5">Auth-Token, App-Daten — immer aktiv</p>
+              </div>
+              <span className="mt-0.5 shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[11px] font-semibold text-green-500">
+                Aktiv
+              </span>
+            </div>
+            <div className="h-px bg-border/30" />
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-text-primary font-semibold text-[14px]">Analytics (Vercel)</p>
+                <p className="text-text-muted text-[12px] mt-0.5">Anonyme Seitenstatistiken</p>
+              </div>
+              {currentConsent === null ? (
+                <span className="mt-0.5 shrink-0 rounded-full bg-border/40 px-2 py-0.5 text-[11px] font-semibold text-text-muted">
+                  Ausstehend
+                </span>
+              ) : currentConsent.analytics ? (
+                <span className="mt-0.5 shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[11px] font-semibold text-green-500">
+                  Akzeptiert
+                </span>
+              ) : (
+                <span className="mt-0.5 shrink-0 rounded-full bg-border/40 px-2 py-0.5 text-[11px] font-semibold text-text-muted">
+                  Abgelehnt
+                </span>
+              )}
+            </div>
+            {consentReset ? (
+              <p className="text-[12px] text-green-500 font-medium pt-1">
+                Einstellungen zurückgesetzt — beim nächsten Laden erscheint der Banner erneut.
+              </p>
+            ) : (
+              <button
+                onClick={() => {
+                  clearConsent()
+                  setConsentReset(true)
+                }}
+                className="w-full mt-1 py-2.5 rounded-[12px] border border-border/60 text-text-secondary text-[13px] font-medium press-sm hover:bg-surface-hover transition-colors"
+              >
+                Cookie-Einstellungen zurücksetzen
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="pt-1 pb-1">
           <div className="h-px bg-border/40" />
         </div>
 

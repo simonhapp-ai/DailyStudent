@@ -75,6 +75,8 @@ import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
 import { TwoFactorSetupScreen } from '../screens/TwoFactorSetupScreen'
 import { supabase } from '../lib/supabase'
 import { Analytics } from '@vercel/analytics/react'
+import { CookieBanner } from '../components/ui/CookieBanner'
+import { analyticsAllowed, hasConsent } from '../lib/consent'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -309,6 +311,9 @@ function Layout() {
 }
 
 export function App() {
+  const [consentGiven, setConsentGiven] = useState(() => hasConsent())
+  const [analyticsOn, setAnalyticsOn] = useState(() => analyticsAllowed())
+
   return (
     <ErrorBoundary>
       <CoinIconGlobalDefs />
@@ -316,8 +321,16 @@ export function App() {
         <ThemeApplier />
         <BrowserRouter>
           <Layout />
+          {!consentGiven && (
+            <CookieBanner
+              onConsent={(analytics) => {
+                setConsentGiven(true)
+                setAnalyticsOn(analytics)
+              }}
+            />
+          )}
         </BrowserRouter>
-        <Analytics />
+        {analyticsOn && <Analytics />}
       </UserProvider>
     </ErrorBoundary>
   )
