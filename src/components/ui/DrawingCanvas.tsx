@@ -538,7 +538,6 @@ export function DrawingCanvas({
   useEffect(() => { if (tool !== 'lasso') { selectionRef.current = null; setSelection(null) } }, [tool])
 
   // Geometry snap
-  const GEOM_HOLD_MS = 400
   const geomHoldTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [selectedGeomId, setSelectedGeomId] = useState<string | null>(null)
   const selectedGeomIdRef = useRef<string | null>(null)
@@ -1296,12 +1295,11 @@ export function DrawingCanvas({
     }
 
     const stroke = activeRef.current
-    activeRef.current = null
 
     // Geometry: snap immediately on pointer up (no hold required)
     if (tool === 'geometry') {
       if (geomHoldTimerRef.current) { clearTimeout(geomHoldTimerRef.current); geomHoldTimerRef.current = null }
-      if (activeRef.current && activeRef.current.points.length >= 3) {
+      if (stroke && stroke.points.length >= 3) {
         snapCurrentStroke()
       } else {
         activeRef.current = null
@@ -1310,6 +1308,8 @@ export function DrawingCanvas({
       }
       return
     }
+
+    activeRef.current = null
 
     if (!stroke || stroke.points.length === 0) return
 
