@@ -1,7 +1,8 @@
 import { useRef, useState, useEffect } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
-import type { HomeworkItem } from '../types'
+import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, extractTextFromImage, suggestNoteSubject, analyzeTextBlock } from '../lib/groq'
+import { loadKcForSubject } from '../data/kcLoader'
+import type { HomeworkItem, TextBlockAnalysis } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import type { CanvasPageData } from '../components/ui/DrawingCanvas'
@@ -31,6 +32,7 @@ interface TextBlock {
   aiStatus: BlockAIStatus
   aiError: string
   aiResult: PhotoBlockAIResult | null
+  textAiResult: TextBlockAnalysis | null
 }
 
 interface PhotoBlock {
@@ -70,7 +72,7 @@ interface HomeworkBlock {
 type NoteBlock = TextBlock | PhotoBlock | DrawingBlock | HomeworkBlock
 
 function makeTextBlock(id: string): TextBlock {
-  return { id, type: 'text', content: '', aiStatus: 'idle', aiError: '', aiResult: null }
+  return { id, type: 'text', content: '', aiStatus: 'idle', aiError: '', aiResult: null, textAiResult: null }
 }
 function makePhotoBlock(id: string): PhotoBlock {
   return { id, type: 'photo', attachments: [], pdfFile: null, pdfLoading: false, aiStatus: 'idle', aiError: '', aiResult: null, transcriptionOpen: false, aiMessage: '' }
@@ -254,16 +256,32 @@ export function NoteCreateScreen() {
     if (!block.content.trim()) return
     updateBlock(block.id, { aiStatus: 'analyzing', aiError: '' })
     try {
-      const smartNote = await generateSmartNote(block.content, subject?.name ?? 'Allgemein', block.id)
-      const result: PhotoBlockAIResult = {
+      const klasse = parseInt(profile.klasse, 10)
+      const isOberstufe = profile.schultyp === 'g8' ? klasse >= 11 : klasse >= 12
+      const isLK = profile.lkFaecher?.includes(selectedSubjectId) ?? false
+      const kcData = selectedSubjectId && profile.bundeslandId
+        ? await loadKcForSubject(profile.bundeslandId, selectedSubjectId)
+        : null
+
+      const analysis = await analyzeTextBlock(
+        block.content,
+        subject?.name ?? 'Allgemein',
+        isLK,
+        isOberstufe,
+        kcData ?? undefined,
+      )
+
+      // Populate aiResult with ergaenzungsbegriffe for the keyword suggestions row
+      const aiResult: PhotoBlockAIResult = {
         transcription: block.content,
-        contentType: smartNote.contentType ?? 'info',
-        summary: smartNote.summary,
-        keywords: smartNote.keywords,
-        examTopics: smartNote.examTopics,
-        tasks: smartNote.tasks ?? [],
+        contentType: 'info',
+        summary: analysis.erkanntesTopic,
+        keywords: analysis.ergaenzungsbegriffe,
+        examTopics: [],
+        tasks: [],
       }
-      updateBlock(block.id, { aiStatus: 'done', aiResult: result })
+
+      updateBlock(block.id, { aiStatus: 'done', textAiResult: analysis, aiResult })
     } catch (e) {
       updateBlock(block.id, { aiStatus: 'error', aiError: e instanceof Error ? e.message : 'Fehler' })
     }
@@ -518,7 +536,23 @@ export function NoteCreateScreen() {
     setSmartNoteError('')
     let generatedNote: GeneratedSmartNote | undefined
     try {
-      let combinedText = blocks.filter((b): b is TextBlock => b.type === 'text').map(b => b.content.trim()).filter(Boolean).join('\n\n')
+      // Use elaborated content from analyzeTextBlock if available — richer input → richer Smart Note
+      let combinedText = blocks
+        .filter((b): b is TextBlock => b.type === 'text')
+        .map((b) => {
+          if (b.textAiResult && b.textAiResult.elaborations.length > 0) {
+            const elaborated = b.textAiResult.elaborations
+              .map((e) => `${e.punkt}: ${e.vertiefung}`)
+              .join('\n')
+            const defs = b.textAiResult.definitionen.length > 0
+              ? '\n\nDefinitionen:\n' + b.textAiResult.definitionen.map((d) => `${d.begriff}: ${d.definition}`).join('\n')
+              : ''
+            return `${b.content.trim()}\n\n${elaborated}${defs}`
+          }
+          return b.content.trim()
+        })
+        .filter(Boolean)
+        .join('\n\n')
       for (const b of blocks.filter((b): b is PhotoBlock => b.type === 'photo')) {
         for (const img of b.attachments) {
           const t = await extractTextFromImage(img)
@@ -703,61 +737,148 @@ export function NoteCreateScreen() {
           </button>
         </div>
 
-        {/* Text KI result */}
-        {block.aiResult && (
-          <div className="border-t border-border px-4 py-3 space-y-3 bg-accent/3">
-            {block.aiResult.keywords.length > 0 && (
-              <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Schlüsselbegriffe</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {block.aiResult.keywords.map((kw) => (
-                    <span key={kw} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold"
-                      style={{ background: 'rgba(var(--color-accent),0.1)', color: 'rgb(var(--color-accent))' }}>{kw}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {block.aiResult.examTopics.length > 0 && (
-              <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Klausurthemen</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {block.aiResult.examTopics.map((t) => (
-                    <span key={t} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold"
-                      style={{ background: 'rgba(16,185,129,0.08)', color: '#059669', border: '1px solid rgba(16,185,129,0.2)' }}>{t}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-            {block.aiResult.summary && (
-              <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Zusammenfassung</p>
-                <p className="text-text-secondary text-sm leading-relaxed">{block.aiResult.summary}</p>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Rich text block AI result */}
+        {block.textAiResult && (
+          <div className="border-t border-border divide-y divide-border/40" style={{ background: 'rgba(var(--color-accent),0.015)' }}>
 
-        {/* Keyword suggestions from all analyzed blocks */}
-        {analysisKeywordSuggestions.length > 0 && (
-          <div className="border-t border-border/60 px-4 py-2.5">
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-accent">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Vorschläge aus Analyse
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {analysisKeywordSuggestions.slice(0, 8).map((kw) => (
-                <button
-                  key={kw}
-                  onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${kw}` : kw })}
-                  className="px-2.5 py-1 rounded-pill text-xs font-medium border border-accent/25 text-accent hover:bg-accent/10 active:scale-95 transition-all"
-                  style={{ backgroundColor: 'rgba(var(--color-accent),0.06)' }}
-                >
-                  + {kw}
-                </button>
-              ))}
-            </div>
+            {/* KC-Tiefe progress */}
+            {block.textAiResult.kcTiefeTotal > 0 && (
+              <div className="px-4 py-3">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">KC-Tiefe</p>
+                  <span className="text-[10px] font-medium truncate max-w-[180px]" style={{ color: 'rgb(var(--color-accent))' }}>
+                    {block.textAiResult.erkanntesTopic}
+                  </span>
+                </div>
+                <div className="flex gap-1 mb-1.5">
+                  {(['basis', 'erweitert', 'fortgeschritten'] as const).map((level, i) => {
+                    const activeIdx = ['basis', 'erweitert', 'fortgeschritten'].indexOf(block.textAiResult!.kcTiefe)
+                    return (
+                      <div
+                        key={level}
+                        className="flex-1 h-1.5 rounded-full transition-all"
+                        style={{
+                          background: i < activeIdx
+                            ? 'rgba(var(--color-accent),0.4)'
+                            : i === activeIdx
+                            ? 'rgb(var(--color-accent))'
+                            : 'rgb(var(--color-border))',
+                        }}
+                      />
+                    )
+                  })}
+                </div>
+                <div className="flex justify-between">
+                  {['Basis', 'Erweitert', 'Fortgeschritten'].map((label, i) => {
+                    const isCurrent = ['basis', 'erweitert', 'fortgeschritten'][i] === block.textAiResult!.kcTiefe
+                    return (
+                      <span
+                        key={label}
+                        className="text-[10px]"
+                        style={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))' }}
+                      >
+                        {label}
+                      </span>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Vertiefung — one entry per bullet point */}
+            {block.textAiResult.elaborations.length > 0 && (
+              <div className="px-4 py-3">
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2.5">Vertiefung</p>
+                <div className="space-y-3">
+                  {block.textAiResult.elaborations.map((e, i) => (
+                    <div key={i}>
+                      <p className="text-xs font-semibold text-text-primary leading-snug">{e.punkt}</p>
+                      <p className="text-[11px] text-text-secondary leading-relaxed mt-0.5">{e.vertiefung}</p>
+                      {e.eselsbruecke && (
+                        <p className="text-[11px] mt-1 flex items-start gap-1" style={{ color: 'rgb(217 119 6)' }}>
+                          <span className="shrink-0">💡</span>
+                          <span>{e.eselsbruecke}</span>
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Definitionen */}
+            {block.textAiResult.definitionen.length > 0 && (
+              <div className="px-4 py-3">
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Definitionen</p>
+                <div className="space-y-2">
+                  {block.textAiResult.definitionen.map((d, i) => (
+                    <div key={i} className="flex gap-1.5">
+                      <span className="text-[11px] font-bold shrink-0" style={{ color: 'rgb(var(--color-accent))' }}>{d.begriff}:</span>
+                      <span className="text-[11px] text-text-secondary leading-relaxed">{d.definition}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Häufige Fehler */}
+            {block.textAiResult.haeufigeFehler.length > 0 && (
+              <div className="px-4 py-3">
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2 flex items-center gap-1">
+                  <span style={{ color: 'rgb(249 115 22)' }}>⚠</span> Häufige Fehler
+                </p>
+                <ul className="space-y-1.5">
+                  {block.textAiResult.haeufigeFehler.map((f, i) => (
+                    <li key={i} className="text-[11px] text-text-secondary flex gap-1.5">
+                      <span className="shrink-0 mt-0.5" style={{ color: 'rgb(249 115 22)' }}>•</span>
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Verwandte Themen */}
+            {block.textAiResult.verbindungen.length > 0 && (
+              <div className="px-4 py-3">
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Verwandte Themen</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {block.textAiResult.verbindungen.map((v, i) => (
+                    <span key={i} className="px-2.5 py-1 rounded-pill text-[11px] font-medium border border-border text-text-secondary">
+                      → {v}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Offene KC-Punkte — click to add to note */}
+            {block.textAiResult.offeneKcPunkte.length > 0 && (
+              <div className="px-4 py-3">
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Noch nicht in deinen Notizen</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {block.textAiResult.offeneKcPunkte.map((p, i) => (
+                    <button
+                      key={i}
+                      onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${p}` : p })}
+                      className="px-2.5 py-1 rounded-pill text-[11px] font-medium border border-dashed active:scale-95 transition-all hover:opacity-80"
+                      style={{ borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+                    >
+                      + {p}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Klausurhinweis */}
+            {block.textAiResult.klausurhinweis && (
+              <div className="px-4 py-3">
+                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">📋 Klausurhinweis</p>
+                <p className="text-[11px] text-text-secondary leading-relaxed">{block.textAiResult.klausurhinweis}</p>
+              </div>
+            )}
+
           </div>
         )}
       </div>

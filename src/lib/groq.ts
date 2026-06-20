@@ -1,4 +1,4 @@
-import type { GeneratedSmartNote, StundenplanSlot } from '../types'
+import type { GeneratedSmartNote, StundenplanSlot, TextBlockAnalysis } from '../types'
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from './supabase'
 
@@ -134,51 +134,131 @@ interface SmartNoteJSON {
   solution?: { steps: string[]; answer: string; proof?: string }
 }
 
-interface TextBlockJSON {
-  additionalKeywords: string[]
-  suggestExplain: string[]
-  summary: string
+interface TextBlockAnalysisJSON {
+  erkanntesTopic: string
+  kcHauptthema: string
+  elaborations: { punkt: string; vertiefung: string; eselsbruecke?: string }[]
+  definitionen: { begriff: string; definition: string }[]
+  haeufigeFehler: string[]
+  verbindungen: string[]
+  klausurhinweis: string
+  offeneKcPunkte: string[]
+  ergaenzungsbegriffe: string[]
 }
 
 export async function analyzeTextBlock(
   text: string,
   subjectName: string,
+  isLK: boolean,
+  isOberstufe: boolean,
   kcData?: KcSubjectData,
-): Promise<{ additionalKeywords: string[]; suggestExplain: string[]; summary: string }> {
-  const kcBlock = kcData ? `\n\n${buildKcPromptContext(kcData, 'oberstufe')}` : ''
+): Promise<TextBlockAnalysis> {
+  const stufe = isOberstufe ? 'oberstufe' : 'mittelstufe'
+  const kursTyp = isOberstufe ? (isLK ? 'Leistungskurs (LK)' : 'Grundkurs (GK)') : 'Regelunterricht'
+  const kcContextBlock = kcData ? `\n\n${buildKcPromptContext(kcData, stufe)}` : ''
+  const kcThemenList = kcData && kcData.hauptthemen.length > 0
+    ? `\nVerfügbare KC-Hauptthemen (verwende exakt einen dieser Namen als kcHauptthema):\n${kcData.hauptthemen.map((h, i) => `${i + 1}. ${h.thema}`).join('\n')}`
+    : ''
+
   const content = await groqFetch({
     model: TEXT_MODEL,
-    max_tokens: 512,
+    max_tokens: 3000,
     temperature: 0.2,
     response_format: { type: 'json_object' },
     messages: [
       {
         role: 'system',
-        content: `Du bist ein Lernassistent für deutsche Gymnasiasten (Klasse 10–13). Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.${kcBlock}`,
+        content: `Du bist ein erfahrener Gymnasiallehrer für ${subjectName} (${kursTyp}, ${isOberstufe ? 'Oberstufe' : 'Mittelstufe'}). Du erhältst kurze Schülermitschriften — Stichpunkte aus dem Unterricht — und reichst sie mit Lehrerwissen an. Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.${kcContextBlock}`,
       },
       {
         role: 'user',
-        content: `Fach: ${subjectName}
+        content: `Fach: ${subjectName} | Kurstyp: ${kursTyp}
+${kcThemenList}
 
-Schülernotizen:
-${text.slice(0, 800)}
+Schülermitschrift (Stichpunkte aus dem Unterricht):
+${text.slice(0, 1500)}
 
-JSON:
+Erstelle eine vollständige Analyse als JSON:
 {
-  "additionalKeywords": ["Fachbegriff nicht im Text aber relevant"],
-  "suggestExplain": ["Begriff aus dem Text der erklärt werden sollte"],
-  "summary": "2–3 Sätze Kontext-Zusammenfassung"
+  "erkanntesTopic": "Fach — Themenbereich: konkretes Thema (z.B. 'Biologie — Genetik: DNA-Replikation')",
+  "kcHauptthema": "Exakter Name aus der KC-Themenliste oben (leerer String wenn kein KC verfügbar)",
+  "elaborations": [
+    {
+      "punkt": "Stichpunkt exakt wie in der Mitschrift",
+      "vertiefung": "Was der Lehrer dazu erklärt hätte: Warum? Wie? Wozu? Zusammenhänge. 2–4 Sätze.",
+      "eselsbruecke": "Optionaler Merksatz — nur wenn wirklich hilfreich, sonst Feld weglassen"
+    }
+  ],
+  "definitionen": [
+    { "begriff": "Fachbegriff aus der Mitschrift", "definition": "Präzise, klausurtaugliche Definition in 1–2 Sätzen" }
+  ],
+  "haeufigeFehler": [
+    "Konkreter Fehler den Schüler bei diesem Thema in Klausuren machen — was Lehrer oft anstreichen"
+  ],
+  "verbindungen": ["Direkt verwandtes Thema das auf diesem Stoff aufbaut oder damit zusammenhängt"],
+  "klausurhinweis": "Welche Aufgabentypen und Operatoren kommen zu diesem Thema typischerweise in Klausuren vor",
+  "offeneKcPunkte": ["Unterthema aus dem erkannten KC-Hauptthema das in der Mitschrift noch fehlt"],
+  "ergaenzungsbegriffe": ["Wichtiger Fachbegriff zum Thema der in der Mitschrift nicht vorkommt aber bekannt sein sollte"]
 }
-additionalKeywords: 3–6 Fachbegriffe die zum Thema gehören aber NICHT im Text stehen.
-suggestExplain: 2–4 Begriffe die IM Text vorkommen und für einen Schüler erklärenswert sind.`,
+
+Regeln:
+- elaborations: Genau 1 Eintrag pro Stichpunkt, in identischer Reihenfolge wie in der Mitschrift
+- definitionen: Nur Begriffe die tatsächlich IN der Mitschrift vorkommen (3–6 Begriffe)
+- haeufigeFehler: 2–3 fachspezifische, konkrete Fehler — keine Allgemeinplätze
+- verbindungen: 2–4 konkrete Themen die direkt auf diesem Stoff aufbauen
+- offeneKcPunkte: Nur Unterthemen des erkannten kcHauptthemas, maximal 4
+- ergaenzungsbegriffe: 3–5 Begriffe die ein Lehrer in diesem Kontext erwarten würde
+- klausurhinweis: Konkret mit Operatoren und Aufgabentyp, kein "könnte vorkommen"`,
       },
     ],
   })
-  const parsed = JSON.parse(content) as TextBlockJSON
+
+  const parsed = JSON.parse(content) as TextBlockAnalysisJSON
+
+  // Determine KC depth by matching the AI-returned hauptthema against the ordered KC list
+  let kcTiefe: 'basis' | 'erweitert' | 'fortgeschritten' = 'basis'
+  let kcTiefeIndex = -1
+  const kcTiefeTotal = kcData?.hauptthemen.length ?? 0
+
+  if (kcData && parsed.kcHauptthema && kcTiefeTotal > 0) {
+    const lower = parsed.kcHauptthema.toLowerCase()
+    const idx = kcData.hauptthemen.findIndex(
+      (h) =>
+        h.thema.toLowerCase() === lower ||
+        h.thema.toLowerCase().includes(lower) ||
+        lower.includes(h.thema.toLowerCase()),
+    )
+    if (idx !== -1) {
+      kcTiefeIndex = idx
+      const ratio = idx / Math.max(kcTiefeTotal - 1, 1)
+      kcTiefe = ratio < 0.34 ? 'basis' : ratio < 0.67 ? 'erweitert' : 'fortgeschritten'
+    }
+  }
+
   return {
-    additionalKeywords: Array.isArray(parsed.additionalKeywords) ? parsed.additionalKeywords : [],
-    suggestExplain: Array.isArray(parsed.suggestExplain) ? parsed.suggestExplain : [],
-    summary: parsed.summary ?? '',
+    erkanntesTopic: String(parsed.erkanntesTopic ?? ''),
+    kcHauptthema: String(parsed.kcHauptthema ?? ''),
+    kcTiefe,
+    kcTiefeIndex,
+    kcTiefeTotal,
+    elaborations: Array.isArray(parsed.elaborations)
+      ? parsed.elaborations.map((e) => ({
+          punkt: String(e.punkt ?? ''),
+          vertiefung: String(e.vertiefung ?? ''),
+          eselsbruecke: e.eselsbruecke ? String(e.eselsbruecke) : undefined,
+        }))
+      : [],
+    definitionen: Array.isArray(parsed.definitionen)
+      ? parsed.definitionen.map((d) => ({
+          begriff: String(d.begriff ?? ''),
+          definition: String(d.definition ?? ''),
+        }))
+      : [],
+    haeufigeFehler: Array.isArray(parsed.haeufigeFehler) ? parsed.haeufigeFehler.map(String) : [],
+    verbindungen: Array.isArray(parsed.verbindungen) ? parsed.verbindungen.map(String) : [],
+    klausurhinweis: String(parsed.klausurhinweis ?? ''),
+    offeneKcPunkte: Array.isArray(parsed.offeneKcPunkte) ? parsed.offeneKcPunkte.map(String) : [],
+    ergaenzungsbegriffe: Array.isArray(parsed.ergaenzungsbegriffe) ? parsed.ergaenzungsbegriffe.map(String) : [],
   }
 }
 

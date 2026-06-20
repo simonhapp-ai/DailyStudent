@@ -245,6 +245,34 @@ export interface AppStats {
   freezeUsedDates: string[]     // Dates where a freeze was auto-applied, last 7 entries
 }
 
+/* ─── Text Block Analysis ───────────────────────────────────── */
+
+export interface TextBlockElaboration {
+  punkt: string
+  vertiefung: string
+  eselsbruecke?: string
+}
+
+export interface TextBlockDefinition {
+  begriff: string
+  definition: string
+}
+
+export interface TextBlockAnalysis {
+  erkanntesTopic: string
+  kcHauptthema: string
+  kcTiefe: 'basis' | 'erweitert' | 'fortgeschritten'
+  kcTiefeIndex: number
+  kcTiefeTotal: number
+  elaborations: TextBlockElaboration[]
+  definitionen: TextBlockDefinition[]
+  haeufigeFehler: string[]
+  verbindungen: string[]
+  klausurhinweis: string
+  offeneKcPunkte: string[]
+  ergaenzungsbegriffe: string[]
+}
+
 /* ─── Lernzettel ────────────────────────────────────────────── */
 
 export interface Lernzettel {
