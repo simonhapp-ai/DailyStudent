@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { useUser } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
+import { callHandleReferral } from '../lib/referral'
 import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS } from '../lib/gemini'
 import type { UserNote, StundenplanSlot } from '../types'
 import { SUBJECT_INFO, SUBJECT_GROUPS, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
@@ -123,6 +124,11 @@ export function OnboardingScreen() {
         ? { slots: stundenplanSlots, createdAt: new Date().toISOString() }
         : undefined,
       userType: userType || undefined,
+    }
+    const pendingRef = localStorage.getItem('referral_code')
+    if (pendingRef) {
+      localStorage.removeItem('referral_code')
+      void callHandleReferral(pendingRef)
     }
     setTimeout(() => { completeOnboarding(profile); navigate('/unterricht') }, 800)
   }

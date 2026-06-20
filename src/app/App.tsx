@@ -189,7 +189,7 @@ function Layout() {
   // Capture ?ref= before redirect strips the query param (e.g. /?ref=CODE → /landing)
   useEffect(() => {
     const ref = new URLSearchParams(location.search).get('ref')
-    if (ref) sessionStorage.setItem('referral_code', ref)
+    if (ref) localStorage.setItem('referral_code', ref)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const [betaUnlocked, setBetaUnlocked] = useState(() => localStorage.getItem(BETA_KEY) === '1')

@@ -144,6 +144,7 @@ Smart Notes
 - **Cross-Device Transfer** ✅ — `supabase/migrations/007_note_attachments_storage.sql` — **ANGEWENDET 16.06.2026**: privater Storage Bucket `note-attachments` (15 MB Limit) + RLS (Pfad-Präfix `{user_id}/...`). „Übertragen"-Button in `SmartNotesScreen.tsx` lädt lokal-only Attachments einer Notiz explizit hoch — kein Auto-Upload, User entscheidet pro Notiz
 - **Legacy-Migration** ✅ — `migrateLegacyNoteAttachments()` in `noteStorage.ts`, läuft automatisch nach jedem Supabase-Load in `UserContext.tsx`: Notizen mit altem Base64 in Postgres werden beim nächsten Laden lokalisiert (IndexedDB) und mit kleiner Ref zurückgesynct — selbstbegrenzend, läuft nur einmal pro Notiz
 - **AttachmentToast** ✅ — `src/components/ui/AttachmentToast.tsx`: erscheint bei jedem Speichern einer Smart Note mit Foto/Zeichnung ("Foto nur auf diesem Gerät — in der Notiz übertragbar"), zeitlich gestaffelt nach `CoinToast` (kein Overlap), in `NoteCreateScreen.tsx` getriggert (`doSave`, `acceptSuggestion`, `saveToOhneFach`)
+- **Referral-System (20.06.2026)** ✅ — `supabase/migrations/009_referral_system.sql` (ANGEWENDET), Edge Function `handle-referral` (deployed), `src/lib/referral.ts` (shared helper), Trigger bei Onboarding-Abschluss (nicht Signup), `localStorage` für Code-Persistenz über Email-Confirmation-Flow; `effectiveIsPro` inkl. `trial_ends_at`; UI in `ProfilScreen` + `ReferralPill`
 
 ### Paywall-Strategie (Stand 10.06.2026):
 
@@ -172,29 +173,26 @@ Smart Notes
 2. **Email Confirmation Flow** — kein UI-Hinweis nach Signup
 3. **Impressum Steuernummer** — Platzhalter, nach Eingang vom Finanzamt Harburg nachtragen
 
-### To-Do — Priorisiert (Stand: 16.06.2026):
+### To-Do — Priorisiert (Stand: 20.06.2026):
 
 #### Nächste Session:
-1. **14 Tage Pro wenn man 5 Leute holt** — Referral-System (siehe Roadmap Spec unten)
-2. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
-3. **Foto-Scan: Auswahl/Crop-Tool** — beim Foto-Scan soll man per Drag einen Ausschnitt markieren können, statt immer das komplette Foto an die KI zu schicken (User will oft nur einen Teil der Seite analysiert haben, nicht alles)
-4. **Ausführlichere/bessere KI-Antworten** — Smart Note-Analyse (Groq) soll tiefer gehen; dabei auch „Stilpunkte"/Darstellungsleistung mitdenken, nicht nur Inhaltspunkte (relevant für Probeklausur-Korrektur + Lernzettel-Qualität)
-5. **Landing Page edits** — Hero-Text, Feature-Sektionen, Social Proof verbessern
-6. **Schnelleres Laden der App** — Lazy loading, Code-Splitting, Bundle-Analyse
-7. **Streak erklären + Animations** — ProfilScreen Streak-Erklärungsbereich; Milestone-Animationen (7, 30, 100 Tage)
+1. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
+2. **Foto-Scan: Auswahl/Crop-Tool** — beim Foto-Scan soll man per Drag einen Ausschnitt markieren können, statt immer das komplette Foto an die KI zu schicken (User will oft nur einen Teil der Seite analysiert haben, nicht alles)
+3. **Ausführlichere/bessere KI-Antworten** — Smart Note-Analyse (Groq) soll tiefer gehen; dabei auch „Stilpunkte"/Darstellungsleistung mitdenken, nicht nur Inhaltspunkte (relevant für Probeklausur-Korrektur + Lernzettel-Qualität)
+4. **Streak erklären + Animationen** — ProfilScreen Streak-Erklärungsbereich; Milestone-Animationen (7, 30, 100 Tage)
+5. **Coins-Rabatt via Stripe** — Flow noch zu klären (siehe Roadmap Spec unten)
+6. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige
 
 #### UX / Features (mittelfristig):
-8. **Coins-Rabatt via Stripe** — Discount-Code-System implementieren (siehe Roadmap Spec unten)
-9. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige
-10. **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
-11. **Lernplan funktionieren lassen** — Flow komplett testen + Bugs fixen
-12. **Import-Flow** — vollständig testen + Bugs fixen
-13. **Email Confirmation Flow** — Hinweis nach Signup
+7. **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
+8. **Lernplan funktionieren lassen** — Flow komplett testen + Bugs fixen
+9. **Import-Flow** — vollständig testen + Bugs fixen
+10. **Email Confirmation Flow** — Hinweis nach Signup
 
 #### Nach Launch:
-9. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
-10. **Push-Benachrichtigungen**
-11. **Studentenadaption**
+1. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
+2. **Push-Benachrichtigungen**
+3. **Studentenadaption**
 
 ---
 
@@ -216,25 +214,14 @@ Smart Notes
 - **Keine DB-Migration nötig** — `cooldowns`-Array in `app_stats` reicht aus
 - **Coins werden sofort abgezogen** (beim Klick auf "Einlösen"), bevor Checkout öffnet — User hat die Entscheidung getroffen
 
-#### 1. Beta-Referral-System — 14 Tage Pro bei 5 Signups
-**Ziel:** Beta-Tester (Discord-Community) erhalten 14 Tage Pro gratis, wenn 5 neue echte User über ihren Link/QR-Code sich registrieren.
-
-**Spec:**
-- Jeder neue User bekommt automatisch einen persönlichen Referral-Code (z.B. `SIMON-X4K2`) bei Signup
-- Referral-Link: `dailystudent.de/?ref=SIMON-X4K2`
-- QR-Code im ProfilScreen — zeigt auf den Referral-Link (kein externes Paket nötig: `https://api.qrserver.com/v1/create-qr-code/?data=URL` oder `qrcode`-NPM)
-- IP-Tracking beim Signup: Supabase Edge Function speichert IP der neuen Anmeldung — verhindert Fake-Accounts von derselben IP (max. 1 Signup pro IP pro Referral-Code)
-- Bei 5 validen Referrals → `trial_ends_at = now() + 14 days` beim Referrer setzen (kein Stripe!)
-- `isPro` Logik in `UserContext`: `isPro = isPro || (trial_ends_at && new Date(trial_ends_at) > new Date())`
-- Counter im ProfilScreen: "3/5 Freunden eingeladen — noch 2 bis 14 Tage Pro"
-
-**Braucht:**
-- Supabase Migration: `referral_code TEXT UNIQUE` + `trial_ends_at TIMESTAMPTZ` in `profiles`
-- Neue Tabelle `referrals`: `id, referrer_id, referee_id, referee_ip, created_at, is_valid BOOL`
-- Edge Function `handle-referral`: aufgerufen nach Signup, prüft IP, trägt Referral ein, zählt valide Referrals, setzt ggf. `trial_ends_at`
-- `UserContext`: `trial_ends_at` laden, `isPro`-Check erweitern
-- `ProfilScreen`: QR-Code-Widget + Counter-Card + Share-Button (Link kopieren)
-- `AuthScreen`/`OnboardingScreen`: `?ref=CODE` aus URL auslesen und bei Signup übergeben
+#### 1. Beta-Referral-System — 14 Tage Pro bei 5 Signups ✅ FERTIG (20.06.2026)
+- Migration `009_referral_system.sql` angewendet: `referral_code` + `trial_ends_at` in `profiles`, `referrals`-Tabelle mit RLS
+- Edge Function `handle-referral` deployed: validiert Auth, verhindert Selbst-Referral, UNIQUE auf `referee_id` verhindert Doppelzählung, setzt `trial_ends_at` bei 5 Referrals
+- `src/lib/referral.ts`: shared `callHandleReferral()` Helper
+- Trigger: `localStorage` speichert `referral_code` aus `?ref=` URL (überlebt Browser-Close + Email-Confirmation-Flow), wird beim Abschluss des Onboardings (`OnboardingScreen`) gefeuert — nicht bei Signup
+- `UserContext`: `referralCode`, `referralCount`, `trialEndsAt` State; `effectiveIsPro` inkl. Trial-Check
+- `ProfilScreen`: QR-Code-Widget + Progress-Bar (x/5) + Copy-Button
+- `ReferralPill`: fixes Counter-Pill in der App
 
 #### 2. Claude Lernzettel Preview (Teaser)
 **Ziel:** Free- und Pro-User sehen eine Vorschau des kommenden "Claude Pro Lernzettel"-Features. Noch nicht implementiert — nur UI-Teaser.
@@ -533,7 +520,21 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ---
 
-## Letzte Session (16.06.2026)
+## Letzte Session (20.06.2026)
+
+**Referral-System Bug-Fix — Trigger von Signup auf Onboarding-Abschluss verschoben**
+
+Das Referral-System (Migration 009, Edge Function `handle-referral`, UI in ProfilScreen) war bereits vollständig gebaut, hat aber nicht zuverlässig funktioniert: Der `callHandleReferral()`-Call feuerte direkt nach `signUp()` in `AuthScreen` — zu diesem Zeitpunkt ist bei aktivierter Email-Confirmation `getSession()` oft `null` → silent fail. Zusätzlich wurde der Code in `sessionStorage` gespeichert, der stirbt wenn der Browser zwischen Signup und Onboarding geschlossen wird.
+
+**Fixes:**
+1. `src/lib/referral.ts` (neu) — `callHandleReferral()` als shared Helper extrahiert
+2. `App.tsx` — `sessionStorage` → `localStorage` für `referral_code` (überlebt Email-Confirmation-Flow)
+3. `AuthScreen.tsx` — Referral-Call bei Signup komplett entfernt
+4. `OnboardingScreen.tsx` — Referral-Call beim Abschluss des Onboardings: User ist jetzt authentifiziert ✅, Session aktiv ✅, Onboarding abgeschlossen ✅
+
+---
+
+## Session davor (16.06.2026)
 
 **Smart Notes Storage-Architektur — local-first auf IndexedDB umgestellt, App-Store-Vorbereitung**
 
