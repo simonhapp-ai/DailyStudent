@@ -256,6 +256,7 @@ export function NoteCreateScreen() {
     if (!block.content.trim()) return
     updateBlock(block.id, { aiStatus: 'analyzing', aiError: '' })
     try {
+      if (!profile) return
       const klasse = parseInt(profile.klasse, 10)
       const isOberstufe = profile.schultyp === 'g8' ? klasse >= 11 : klasse >= 12
       const isLK = profile.lkFaecher?.includes(selectedSubjectId) ?? false
@@ -665,15 +666,6 @@ export function NoteCreateScreen() {
     + blocks.filter((b): b is DrawingBlock => b.type === 'drawing' && b.dataUrl !== null).length
 
   // ── Render helpers ───────────────────────────────────────────────────────
-
-  // Collect unique keywords from all analyzed blocks — used as text suggestions
-  const analysisKeywordSuggestions = [
-    ...new Set(
-      blocks
-        .filter((b): b is PhotoBlock | DrawingBlock => (b.type === 'photo' || b.type === 'drawing') && b.aiResult !== null)
-        .flatMap((b) => b.aiResult!.keywords)
-    ),
-  ]
 
   const renderTextBlock = (block: TextBlock, index: number, isDefault: boolean) => {
     const canAnalyze = block.content.trim().length > 5 && block.aiStatus !== 'analyzing'
