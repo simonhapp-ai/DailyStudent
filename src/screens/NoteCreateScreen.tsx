@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { useNavigate, useParams, useLocation, useBlocker } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, extractTextFromImage, suggestNoteSubject } from '../lib/groq'
 import type { HomeworkItem } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
@@ -177,9 +177,6 @@ export function NoteCreateScreen() {
     : false
   ) || qaItems.length > 0
 
-  // Blocker — intercepts lateral DesktopSidebar / programmatic navigation when user has content
-  const blocker = useBlocker(hasUserContent)
-
   // Cancel confirm
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
 
@@ -220,11 +217,6 @@ export function NoteCreateScreen() {
   // location.key changes every time we arrive at this route (navigate(-1) included)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key])
-
-  // Show cancel confirm when the Router blocker fires (e.g. DesktopSidebar navigation)
-  useEffect(() => {
-    if (blocker.state === 'blocked') setShowCancelConfirm(true)
-  }, [blocker.state])
 
   const profileSubjects = (profile?.faecher ?? [])
     .map((sid) => subjects.find((s) => s.id === sid))
@@ -1714,7 +1706,6 @@ export function NoteCreateScreen() {
               <button
                 onClick={() => {
                   setShowCancelConfirm(false)
-                  if (blocker.state === 'blocked') { blocker.proceed(); return }
                   navigate('/unterricht', { replace: true })
                 }}
                 className="w-full py-3 rounded-card border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
@@ -1725,7 +1716,6 @@ export function NoteCreateScreen() {
               <button
                 onClick={() => {
                   setShowCancelConfirm(false)
-                  if (blocker.state === 'blocked') blocker.reset()
                 }}
                 className="w-full py-3 rounded-card bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
               >
