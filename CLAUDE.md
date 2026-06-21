@@ -17,7 +17,7 @@ Die App bietet keinen einzelnen Lernweg, sondern einen **vernetzten Mix aus Lern
 **Das Ergebnis** ist ein kohärentes System, in dem jeder Output (Karteikarten, Probeklausur, Lernzettel, Lernplan) auf denselben Inputs basiert: Smart Notes + KC-Daten + Nutzerprofil.
 
 **Zielgruppe:** Gymnasiasten Klasse 10–13, Mittelstufe und Oberstufe — Studentenanpassung in Planung  
-**Wachstumshebel:** Discord-Community mit 5.000+ Schülern  
+**Wachstumshebel:** TikTok-Marketing (funktioniert bereits) + Email-Liste mit ~100 warmen Leads vom Landing Page. Discord hat 4.200 User, aber ~3.500 waren Abi-Jahrgänge die jetzt den Server verlassen → nur noch ~1.500 echter Niche. Discord ist NICHT mehr primärer Kanal.  
 **Monetarisierung:** Freemium — Free Tier mit Lock-Paywall (kein Blur!), Pro für €7,99/Mo oder €59,99/Jahr
 
 ---
@@ -176,15 +176,18 @@ Smart Notes
 ### To-Do — Priorisiert (Stand: 20.06.2026):
 
 #### Nächste Session:
-1. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
-2. **Foto-Scan: Auswahl/Crop-Tool** — beim Foto-Scan soll man per Drag einen Ausschnitt markieren können, statt immer das komplette Foto an die KI zu schicken (User will oft nur einen Teil der Seite analysiert haben, nicht alles)
-3. **Ausführlichere/bessere KI-Antworten** — Smart Note-Analyse (Groq) soll tiefer gehen; dabei auch „Stilpunkte"/Darstellungsleistung mitdenken, nicht nur Inhaltspunkte (relevant für Probeklausur-Korrektur + Lernzettel-Qualität)
-4. **Streak erklären + Animationen** — ProfilScreen Streak-Erklärungsbereich; Milestone-Animationen (7, 30, 100 Tage)
-5. **Coins-Rabatt via Stripe** — Flow noch zu klären (siehe Roadmap Spec unten)
-6. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige
+1. **Onboarding Soft-Start** — Nutzer bekommt sofort App-Zugang (kein Gate), sieht aber auf jedem Screen eine Bubble/Banner: "Personalisierung in 1 Min abschließen → bessere KI-Ergebnisse". Ziel: sofortiger Wow-Effekt bevor Onboarding-Hürde kommt.
+2. **Email-Liste aktivieren** — ~100 warme Leads (TikTok/Landing Page) sind höchste Conversion-Priorität. Onboarding-Flow + erster Email-Kontakt klären.
+3. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
+4. **Foto-Scan: Auswahl/Crop-Tool** — beim Foto-Scan soll man per Drag einen Ausschnitt markieren können, statt immer das komplette Foto an die KI zu schicken (User will oft nur einen Teil der Seite analysiert haben, nicht alles)
+5. **Ausführlichere/bessere KI-Antworten** — Smart Note-Analyse (Groq) soll tiefer gehen; dabei auch „Stilpunkte"/Darstellungsleistung mitdenken, nicht nur Inhaltspunkte (relevant für Probeklausur-Korrektur + Lernzettel-Qualität)
+6. **Streak erklären + Animationen** — ProfilScreen Streak-Erklärungsbereich; Milestone-Animationen (7, 30, 100 Tage)
+7. **Coins-Rabatt via Stripe** — Flow noch zu klären (siehe Roadmap Spec unten)
+8. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige
 
 #### UX / Features (mittelfristig):
-7. **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
+7. **KI-Erklärungs-Chat** — interaktiver Chat im SmartNotesScreen: "Erkläre mir das genauer", "Ich verstehe X nicht" → Groq antwortet kontextbezogen auf die Note. Schließt die Lücke zum Privatlehrer ("sofortiges Verständnis in 1 Gespräch").
+8. **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
 8. **Lernplan funktionieren lassen** — Flow komplett testen + Bugs fixen
 9. **Import-Flow** — vollständig testen + Bugs fixen
 10. **Email Confirmation Flow** — Hinweis nach Signup

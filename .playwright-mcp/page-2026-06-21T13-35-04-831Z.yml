@@ -1,0 +1,9 @@
+- dialog "Cookie-Einstellungen" [ref=e3]:
+  - generic [ref=e5]:
+    - paragraph [ref=e6]:
+      - text: Wir nutzen Vercel Analytics für anonyme Seitenstatistiken — keine Cookies, keine persönlichen Daten.
+      - link "Datenschutzerklärung" [ref=e7] [cursor=pointer]:
+        - /url: /profil/datenschutz
+    - generic [ref=e8]:
+      - button "Nur notwendige" [ref=e9] [cursor=pointer]
+      - button "Alle akzeptieren" [ref=e10] [cursor=pointer]

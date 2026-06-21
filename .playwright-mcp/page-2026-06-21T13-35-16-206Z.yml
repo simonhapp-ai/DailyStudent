@@ -1,0 +1,29 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - img "DailyStudent" [ref=e6]
+      - generic [ref=e7]: DailyStudent
+    - generic [ref=e8]:
+      - img [ref=e11]
+      - generic [ref=e16]: Geschlossene Beta
+      - heading "Beta-Zugang erforderlich" [level=1] [ref=e17]
+      - paragraph [ref=e18]: DailyStudent befindet sich in der geschlossenen Beta. Gib deinen Zugangscode ein, um die App zu nutzen.
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - textbox "Beta-Passwort" [active] [ref=e21]
+          - button [ref=e22] [cursor=pointer]:
+            - img [ref=e23]
+        - button "Weiter" [disabled] [ref=e26]:
+          - text: Weiter
+          - img [ref=e27]
+      - paragraph [ref=e29]: Kein Zugangscode? Werde Beta-Tester auf unserem Discord.
+    - paragraph [ref=e30]: © 2026 DailyStudent — Alle Rechte vorbehalten
+  - dialog "Cookie-Einstellungen" [ref=e31]:
+    - generic [ref=e33]:
+      - paragraph [ref=e34]:
+        - text: Wir nutzen Vercel Analytics für anonyme Seitenstatistiken — keine Cookies, keine persönlichen Daten.
+        - link "Datenschutzerklärung" [ref=e35] [cursor=pointer]:
+          - /url: /profil/datenschutz
+      - generic [ref=e36]:
+        - button "Nur notwendige" [ref=e37] [cursor=pointer]
+        - button "Alle akzeptieren" [ref=e38] [cursor=pointer]

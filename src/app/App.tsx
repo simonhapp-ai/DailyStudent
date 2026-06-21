@@ -69,6 +69,7 @@ import { AuthScreen } from '../screens/AuthScreen'
 import { BetaGateScreen, BETA_KEY } from '../screens/BetaGateScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
 import { LandingScreen } from '../screens/LandingScreen'
+import { DemoScreen } from '../screens/DemoScreen'
 import { EarlyAccessScreen } from '../screens/EarlyAccessScreen'
 import { DrawingCanvasScreen } from '../screens/DrawingCanvasScreen'
 import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
@@ -193,6 +194,8 @@ function Layout() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const [betaUnlocked, setBetaUnlocked] = useState(() => localStorage.getItem(BETA_KEY) === '1')
+  // Snapshot once at mount — prevents Supabase re-renders from re-reading after DemoScreen sets it
+  const [demoShown] = useState(() => localStorage.getItem('demoShown') === 'true')
   // True if localStorage has a previous session — lets us skip the spinner for returning users
   const [hasLocalSession] = useState(() => {
     try {
@@ -238,13 +241,17 @@ function Layout() {
   // Public routes — always accessible without auth
   if (location.pathname === '/landing') return <LandingScreen />
   if (location.pathname === '/early-access') return <EarlyAccessScreen />
+  if (location.pathname === '/demo') return <DemoScreen />
   if (location.pathname === '/impressum') return <ImpressumScreen />
   if (location.pathname === '/datenschutz') return <DatenschutzScreen />
   if (location.pathname === '/agb') return <AGBScreen />
 
   // Only redirect to auth once Supabase has confirmed there's no valid session
   if (!authLoading && !authUser) {
-    if (location.pathname === '/') return <Navigate to="/landing" replace />
+    if (location.pathname === '/') {
+      if (!demoShown) return <DemoScreen />
+      return <Navigate to="/auth" replace />
+    }
     if (!betaUnlocked) return <BetaGateScreen onUnlock={() => setBetaUnlocked(true)} />
     return <AuthScreen />
   }

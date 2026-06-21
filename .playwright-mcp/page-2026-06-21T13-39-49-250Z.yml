@@ -1,0 +1,13 @@
+- generic [ref=e3]:
+  - button "Anmelden" [ref=e4] [cursor=pointer]
+  - generic [ref=e29]:
+    - generic [ref=e31]:
+      - generic [ref=e32]:
+        - paragraph [ref=e33]: Karteikarte · Frage
+        - paragraph [ref=e34]: Welche zwei Hauptphasen hat die Photosynthese?
+        - paragraph [ref=e35]: dreht sich gleich um...
+      - generic [ref=e36]:
+        - paragraph [ref=e37]: Antwort
+        - paragraph [ref=e38]: Lichtreaktion (Thylakoid) + Calvin-Zyklus (Stroma). Lichtreaktion erzeugt ATP/NADPH, Calvin-Zyklus fixiert CO₂ zu Glukose.
+        - paragraph [ref=e39]: Tippen zum Zurückdrehen
+    - paragraph [ref=e40]: Das passiert mit jeder Notiz. Automatisch.
