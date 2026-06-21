@@ -6,7 +6,7 @@ import { subjects, topics, halfYears } from '../data/mockData'
 import { loadKcForUser, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from '../lib/supabase'
 import {
-  loadUserDataFromSupabase, migrateToSupabase,
+  loadUserDataFromSupabase, loadUserMetaFromSupabase, migrateToSupabase,
   syncProfile, syncGradeData, syncAppStats, grantCoinsRemote, buyStreakFreezeRemote,
   syncFolder, syncFoldersBatch, deleteFoldersFromDB,
   syncNote, deleteNotesFromDB,
@@ -127,6 +127,7 @@ interface StorageData {
   savedProbeklausuren?: SavedProbeklausur[]
   inProgressProbeklausuren?: InProgressProbeklausur[]
   lernplaene?: Lernplan[]
+  supabaseFullLoadAt?: string
 }
 
 interface UserContextValue {
@@ -383,86 +384,134 @@ export function UserProvider({ children }: { children: ReactNode }) {
         }
 
         // Async: load from Supabase (authoritative)
+        // Cache-first: if this device did a full load within the last 24 h, only refresh
+        // the 5 lightweight metadata tables (profile, stats, isPro, referral).
+        // All content data (notes, lernzettel, flashcards…) stays from localStorage.
+        // Full re-sync only when cache is absent or stale (new device, first login, >24 h old).
+        const FULL_LOAD_TTL_MS = 24 * 60 * 60 * 1000
+        const lastFullLoad = s.supabaseFullLoadAt ? Date.parse(s.supabaseFullLoadAt) : 0
+        const cacheIsFresh = cacheIsOwn && !!s.profile && (Date.now() - lastFullLoad < FULL_LOAD_TTL_MS)
+
         setSupabaseDataLoading(true)
         void (async () => {
           try {
-            const supabaseData = await loadUserDataFromSupabase(userId)
-            if (supabaseData) {
-              setProfile(supabaseData.profile)
-              setThemeState(supabaseData.theme)
-              setIsProState(supabaseData.isPro)
-              setPersonalEntries(supabaseData.personalEntries)
-              setGeneratedNotes(supabaseData.generatedNotes)
-              setUserNotes(supabaseData.userNotes)
-              setUserFolders(supabaseData.userFolders)
-              setGeneratedFlashCards(supabaseData.generatedFlashCards)
-              setCompletedHomeworkIds(supabaseData.completedHomeworkIds)
-              setStandaloneHomework(supabaseData.standaloneHomework)
-              // Merge cooldowns: any coins/cooldowns added locally since the fetch started
-              // must survive — otherwise the stale Supabase response overwrites them.
-              const localCooldowns = loadStorage().appStats?.cooldowns ?? []
-              const mergedStats: AppStats = {
-                ...supabaseData.appStats,
-                cooldowns: [...new Set([...(supabaseData.appStats.cooldowns ?? []), ...localCooldowns])],
+            if (cacheIsFresh) {
+              // Lightweight refresh: metadata only — 5 queries instead of 14
+              const meta = await loadUserMetaFromSupabase(userId)
+              if (meta) {
+                setProfile(meta.profile)
+                setThemeState(meta.theme)
+                setIsProState(meta.isPro)
+                // Merge cooldowns so locally-added ones survive the Supabase response
+                const localCooldowns = loadStorage().appStats?.cooldowns ?? []
+                const mergedStats: AppStats = {
+                  ...meta.appStats,
+                  cooldowns: [...new Set([...(meta.appStats.cooldowns ?? []), ...localCooldowns])],
+                }
+                setAppStats(mergedStats)
+                setReferralCode(meta.referralCode)
+                setReferralCount(meta.referralCount)
+                setTrialEndsAt(meta.trialEndsAt)
+                if (!meta.referralCode) {
+                  const newCode = generateReferralCode()
+                  setReferralCode(newCode)
+                  void syncReferralCode(userId, newCode)
+                }
+                saveStorage({
+                  ...loadStorage(),
+                  profile: meta.profile,
+                  theme: meta.theme,
+                  isPro: meta.isPro,
+                  appStats: mergedStats,
+                })
+                // Legacy base64 migration is idempotent — still run on cached notes
+                const legacyMigration = migrateLegacyNoteAttachments(s.userNotes ?? [])
+                if (legacyMigration) {
+                  setUserNotes(legacyMigration.notes)
+                  saveStorage({ ...loadStorage(), userNotes: legacyMigration.notes })
+                  for (const note of legacyMigration.changed) void syncNote(userId, note)
+                }
               }
-              setAppStats(mergedStats)
-              setLernzettel(supabaseData.lernzettel)
-              setSavedProbeklausuren(supabaseData.savedProbeklausuren)
-              setLernplaene(supabaseData.lernplaene)
-              setReferralCode(supabaseData.referralCode)
-              setReferralCount(supabaseData.referralCount)
-              setTrialEndsAt(supabaseData.trialEndsAt)
-              if (!supabaseData.referralCode) {
-                const newCode = generateReferralCode()
-                setReferralCode(newCode)
-                void syncReferralCode(userId, newCode)
+            } else {
+              // Full load: download all 14 tables and stamp the cache timestamp
+              const supabaseData = await loadUserDataFromSupabase(userId)
+              if (supabaseData) {
+                setProfile(supabaseData.profile)
+                setThemeState(supabaseData.theme)
+                setIsProState(supabaseData.isPro)
+                setPersonalEntries(supabaseData.personalEntries)
+                setGeneratedNotes(supabaseData.generatedNotes)
+                setUserNotes(supabaseData.userNotes)
+                setUserFolders(supabaseData.userFolders)
+                setGeneratedFlashCards(supabaseData.generatedFlashCards)
+                setCompletedHomeworkIds(supabaseData.completedHomeworkIds)
+                setStandaloneHomework(supabaseData.standaloneHomework)
+                // Merge cooldowns: locally-added ones must survive the Supabase response
+                const localCooldowns = loadStorage().appStats?.cooldowns ?? []
+                const mergedStats: AppStats = {
+                  ...supabaseData.appStats,
+                  cooldowns: [...new Set([...(supabaseData.appStats.cooldowns ?? []), ...localCooldowns])],
+                }
+                setAppStats(mergedStats)
+                setLernzettel(supabaseData.lernzettel)
+                setSavedProbeklausuren(supabaseData.savedProbeklausuren)
+                setLernplaene(supabaseData.lernplaene)
+                setReferralCode(supabaseData.referralCode)
+                setReferralCount(supabaseData.referralCount)
+                setTrialEndsAt(supabaseData.trialEndsAt)
+                if (!supabaseData.referralCode) {
+                  const newCode = generateReferralCode()
+                  setReferralCode(newCode)
+                  void syncReferralCode(userId, newCode)
+                }
+                saveStorage({
+                  userId,
+                  profile: supabaseData.profile,
+                  theme: supabaseData.theme,
+                  isPro: supabaseData.isPro,
+                  appStats: mergedStats,
+                  userFolders: supabaseData.userFolders,
+                  userNotes: supabaseData.userNotes,
+                  generatedNotes: supabaseData.generatedNotes,
+                  generatedFlashCards: supabaseData.generatedFlashCards,
+                  lernzettel: supabaseData.lernzettel,
+                  savedProbeklausuren: supabaseData.savedProbeklausuren,
+                  lernplaene: supabaseData.lernplaene,
+                  personalEntries: supabaseData.personalEntries,
+                  standaloneHomework: supabaseData.standaloneHomework,
+                  completedHomeworkIds: supabaseData.completedHomeworkIds,
+                  supabaseFullLoadAt: new Date().toISOString(),
+                })
+                // One-time cleanup: notes synced before the IndexedDB switch still carry
+                // full base64 in Postgres — localize them now and shrink the row on next sync.
+                const legacyMigration = migrateLegacyNoteAttachments(supabaseData.userNotes)
+                if (legacyMigration) {
+                  setUserNotes(legacyMigration.notes)
+                  saveStorage({ ...loadStorage(), userNotes: legacyMigration.notes })
+                  for (const note of legacyMigration.changed) void syncNote(userId, note)
+                }
+              } else if (cacheIsOwn && s.profile && s.profile.faecher?.length) {
+                // Supabase empty, localStorage has THIS user's onboarded data → migrate once
+                await migrateToSupabase(userId, {
+                  profile: s.profile,
+                  theme: s.theme ?? 'dark',
+                  isPro: s.isPro ?? false,
+                  appStats: s.appStats ?? DEFAULT_APP_STATS,
+                  userFolders: s.userFolders ?? [],
+                  userNotes: s.userNotes ?? [],
+                  generatedNotes: s.generatedNotes ?? {},
+                  generatedFlashCards: s.generatedFlashCards ?? [],
+                  lernzettel: s.lernzettel ?? [],
+                  savedProbeklausuren: s.savedProbeklausuren ?? [],
+                  lernplaene: s.lernplaene ?? [],
+                  personalEntries: s.personalEntries ?? [],
+                  standaloneHomework: s.standaloneHomework ?? [],
+                  completedHomeworkIds: s.completedHomeworkIds ?? [],
+                  referralCode: null,
+                  referralCount: 0,
+                  trialEndsAt: null,
+                })
               }
-              saveStorage({
-                userId,
-                profile: supabaseData.profile,
-                theme: supabaseData.theme,
-                isPro: supabaseData.isPro,
-                appStats: mergedStats,
-                userFolders: supabaseData.userFolders,
-                userNotes: supabaseData.userNotes,
-                generatedNotes: supabaseData.generatedNotes,
-                generatedFlashCards: supabaseData.generatedFlashCards,
-                lernzettel: supabaseData.lernzettel,
-                savedProbeklausuren: supabaseData.savedProbeklausuren,
-                lernplaene: supabaseData.lernplaene,
-                personalEntries: supabaseData.personalEntries,
-                standaloneHomework: supabaseData.standaloneHomework,
-                completedHomeworkIds: supabaseData.completedHomeworkIds,
-              })
-              // One-time cleanup: notes synced before the IndexedDB switch still carry
-              // full base64 in Postgres — localize them now and shrink that row on next sync.
-              const legacyMigration = migrateLegacyNoteAttachments(supabaseData.userNotes)
-              if (legacyMigration) {
-                setUserNotes(legacyMigration.notes)
-                saveStorage({ ...loadStorage(), userNotes: legacyMigration.notes })
-                for (const note of legacyMigration.changed) void syncNote(userId, note)
-              }
-            } else if (cacheIsOwn && s.profile && s.profile.faecher?.length) {
-              // Supabase empty, localStorage has THIS user's onboarded data → migrate once
-              await migrateToSupabase(userId, {
-                profile: s.profile,
-                theme: s.theme ?? 'dark',
-                isPro: s.isPro ?? false,
-                appStats: s.appStats ?? DEFAULT_APP_STATS,
-                userFolders: s.userFolders ?? [],
-                userNotes: s.userNotes ?? [],
-                generatedNotes: s.generatedNotes ?? {},
-                generatedFlashCards: s.generatedFlashCards ?? [],
-                lernzettel: s.lernzettel ?? [],
-                savedProbeklausuren: s.savedProbeklausuren ?? [],
-                lernplaene: s.lernplaene ?? [],
-                personalEntries: s.personalEntries ?? [],
-                standaloneHomework: s.standaloneHomework ?? [],
-                completedHomeworkIds: s.completedHomeworkIds ?? [],
-                referralCode: null,
-                referralCount: 0,
-                trialEndsAt: null,
-              })
             }
           } finally {
             setSupabaseDataLoading(false)

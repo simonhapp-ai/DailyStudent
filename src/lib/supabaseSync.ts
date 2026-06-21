@@ -480,6 +480,64 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
   }
 }
 
+// ─── Lightweight metadata load (cache-first strategy) ─────────────────────
+// Fetches only the 5 small metadata tables — no notes, no lernzettel content,
+// no flashcards. Used when localStorage cache is fresh (< 24 h) to avoid
+// re-downloading the user's entire dataset on every session start.
+
+export interface SupabaseUserMeta {
+  profile: UserProfile
+  theme: AppTheme
+  isPro: boolean
+  appStats: AppStats
+  referralCode: string | null
+  referralCount: number
+  trialEndsAt: string | null
+}
+
+export async function loadUserMetaFromSupabase(userId: string): Promise<SupabaseUserMeta | null> {
+  try {
+    const [
+      { data: profileRow },
+      { data: statsRow },
+      { data: subRow },
+      { data: gradeRow },
+      { count: referralCount },
+    ] = await Promise.all([
+      supabase.from('profiles').select('*').eq('id', userId).single(),
+      supabase.from('app_stats').select('*').eq('user_id', userId).single(),
+      supabase.from('subscriptions').select('status').eq('user_id', userId).maybeSingle(),
+      supabase.from('grade_data').select('abi_halbjahre').eq('user_id', userId).maybeSingle(),
+      supabase.from('referrals').select('*', { count: 'exact', head: true }).eq('referrer_id', userId),
+    ])
+
+    if (!profileRow || (profileRow.faecher as string[]).length === 0) return null
+
+    const isPro =
+      (profileRow.is_pro ?? false) ||
+      (subRow?.status === 'active' || subRow?.status === 'trialing')
+    const resolvedAbiHalbjahre = gradeRow?.abi_halbjahre ?? profileRow.abi_halbjahre ?? null
+    const DEFAULT_STATS: AppStats = {
+      scanCount: 0, examCount: 0, streak: 0, lastStudyDate: null,
+      studiedDays: [], examScores: [], coins: 0, cooldowns: [],
+      streakFreezes: 0, freezeUsedDates: [],
+    }
+
+    return {
+      profile: mapProfile(profileRow, resolvedAbiHalbjahre),
+      theme: (profileRow.theme as AppTheme) ?? 'dark',
+      isPro,
+      appStats: statsRow ? mapAppStats(statsRow) : DEFAULT_STATS,
+      referralCode: profileRow.referral_code ?? null,
+      referralCount: referralCount ?? 0,
+      trialEndsAt: profileRow.trial_ends_at ?? null,
+    }
+  } catch (err) {
+    console.warn('[Supabase] loadUserMeta failed', err)
+    return null
+  }
+}
+
 // ─── One-time migration: localStorage → Supabase ───────────────────────────
 
 export async function migrateToSupabase(userId: string, data: SupabaseUserData): Promise<void> {
