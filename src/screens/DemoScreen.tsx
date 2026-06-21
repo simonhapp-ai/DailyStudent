@@ -187,6 +187,7 @@ export function DemoScreen() {
 
   // Stage 1 — loading
   const [loadingLabelIdx, setLoadingLabelIdx] = useState(0)
+  const [activeTerms, setActiveTerms] = useState<string[]>([])
 
   // Stage 2 — note
   const [noteData, setNoteData] = useState<SmartNoteData | null>(null)
@@ -258,34 +259,28 @@ export function DemoScreen() {
   }, [cardFlipped])
 
   function handleAnalyze(terms: string[], fallbackKey: string) {
-    let resolved = false
     setStage(1)
+    setActiveTerms(terms)
 
-    const fallbackTimer = setTimeout(() => {
-      if (!resolved) {
-        resolved = true
-        setNoteData({ ...FALLBACKS[fallbackKey], keywords: terms.slice(0, 5) })
-        addTimer(setTimeout(() => setStage(2), 500))
-      }
-    }, 8000)
-    addTimer(fallbackTimer)
+    const fallback: SmartNoteData = FALLBACKS[fallbackKey] ?? {
+      summary: `${terms.join(', ')} sind zentrale Begriffe aus dem Niedersachsen-Kerncurriculum der Oberstufe. Mit DailyStudent analysierst du deine Notizen und erstellst daraus automatisch Karteikarten, Lernzettel und Probeklausuren.`,
+      keywords: terms.slice(0, 5),
+      examTopics: [
+        `Zusammenhänge zwischen ${terms[0]} und ${terms[1] ?? terms[0]} erklären`,
+        `${terms[0]} an einem konkreten Beispiel erläutern`,
+      ],
+      cardFront: `Welche Bedeutung hat ${terms[0]} für ${terms.slice(1).join(' und ')}?`,
+      cardBack: `${terms[0]} beschreibt ein zentrales Konzept, das mit ${terms.slice(1, 3).join(' und ')} eng zusammenhängt und klausurrelevant ist.`,
+    }
 
     callGroqDemo(terms)
       .then((data) => {
-        if (!resolved) {
-          resolved = true
-          clearTimeout(fallbackTimer)
-          setNoteData(data)
-          addTimer(setTimeout(() => setStage(2), 500))
-        }
+        setNoteData(data)
+        addTimer(setTimeout(() => setStage(2), 400))
       })
       .catch(() => {
-        if (!resolved) {
-          resolved = true
-          clearTimeout(fallbackTimer)
-          setNoteData({ ...FALLBACKS[fallbackKey] })
-          addTimer(setTimeout(() => setStage(2), 500))
-        }
+        setNoteData(fallback)
+        addTimer(setTimeout(() => setStage(2), 400))
       })
   }
 
@@ -520,10 +515,10 @@ export function DemoScreen() {
           {stage === 1 && (
             <motion.div
               key="loading"
-              className="flex flex-col items-center gap-6"
+              className="flex flex-col items-center gap-6 w-full"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
+              exit={{ opacity: 0, scale: 0.88 }}
               transition={{ duration: 0.4, ease: E }}
             >
               {/* Vibrating circle with pulsing rings */}
@@ -541,6 +536,15 @@ export function DemoScreen() {
                     transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.5, ease: 'easeInOut' }}
                   />
                 ))}
+                {/* Orbiting dot */}
+                <motion.div
+                  className="absolute"
+                  style={{ width: 130, height: 130 }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                >
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full" style={{ background: '#7C3AED', boxShadow: '0 0 6px rgba(124,58,237,0.8)' }} />
+                </motion.div>
                 {/* Center vibrating core */}
                 <motion.div
                   className="relative z-10 rounded-full flex items-center justify-center"
@@ -551,10 +555,7 @@ export function DemoScreen() {
                     border: '1.5px solid rgba(124,58,237,0.6)',
                     boxShadow: '0 0 24px rgba(124,58,237,0.4)',
                   }}
-                  animate={{
-                    scale: [1, 1.05, 0.97, 1.03, 1],
-                    rotate: [0, 1, -1, 0.5, 0],
-                  }}
+                  animate={{ scale: [1, 1.05, 0.97, 1.03, 1], rotate: [0, 1, -1, 0.5, 0] }}
                   transition={{ duration: 0.45, repeat: Infinity, ease: 'easeInOut' }}
                 >
                   <span style={{ fontSize: 26 }}>✦</span>
@@ -564,7 +565,7 @@ export function DemoScreen() {
               {/* Cycling label */}
               <div className="text-center">
                 <p className="text-[11px] font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em' }}>
-                  KI VERARBEITET
+                  SMART NOTE WIRD ERSTELLT
                 </p>
                 <AnimatePresence mode="wait">
                   <motion.p
@@ -579,6 +580,39 @@ export function DemoScreen() {
                     {LOADING_LABELS[loadingLabelIdx]}
                   </motion.p>
                 </AnimatePresence>
+              </div>
+
+              {/* Active terms being analyzed */}
+              {activeTerms.length > 0 && (
+                <motion.div
+                  className="flex flex-wrap justify-center gap-2"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.4 }}
+                >
+                  {activeTerms.map((t, i) => (
+                    <motion.span
+                      key={t}
+                      className="px-2.5 py-1 rounded-full text-[11px] font-medium"
+                      style={{ background: 'rgba(124,58,237,0.18)', color: 'rgba(196,181,253,0.85)', border: '1px solid rgba(124,58,237,0.3)' }}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 + i * 0.1, duration: 0.25 }}
+                    >
+                      {t}
+                    </motion.span>
+                  ))}
+                </motion.div>
+              )}
+
+              {/* Pulsing progress bar */}
+              <div className="w-48 h-0.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{ background: 'linear-gradient(90deg, rgba(124,58,237,0.6), rgba(124,58,237,1))' }}
+                  animate={{ x: ['-100%', '100%'] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                />
               </div>
             </motion.div>
           )}
