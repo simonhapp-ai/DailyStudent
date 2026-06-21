@@ -340,7 +340,7 @@ function FlashcardMockup() {
 
 // ── Navbar ──────────────────────────────────────────────────────────────────
 
-function Navbar({ onCta, onEarlyAccess }: { onCta: () => void; onEarlyAccess: () => void }) {
+function Navbar({ onCta, onEarlyAccess, ctaLabel = 'App öffnen' }: { onCta: () => void; onEarlyAccess: () => void; ctaLabel?: string }) {
   return (
     <div className="fixed top-4 sm:top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
       <motion.div
@@ -385,7 +385,7 @@ function Navbar({ onCta, onEarlyAccess }: { onCta: () => void; onEarlyAccess: ()
             className="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0"
             style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}
           >
-            App öffnen
+            {ctaLabel}
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -1160,19 +1160,19 @@ function FeatureSection({
 export function LandingScreen() {
   const navigate = useNavigate()
   const { authUser } = useUser()
+  const isDesktop = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
   const goToApp = () => {
     if (authUser) {
-      const isDesktop = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
       navigate(isDesktop ? '/dashboard' : '/unterricht')
     } else {
-      navigate('/auth')
+      navigate('/demo')
     }
   }
   const goToEarlyAccess = () => navigate('/early-access')
 
   return (
     <div className="min-h-dvh" style={{ background: '#FAFAFD', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif' }}>
-      <Navbar onCta={goToApp} onEarlyAccess={goToEarlyAccess} />
+      <Navbar onCta={goToApp} onEarlyAccess={goToEarlyAccess} ctaLabel={authUser ? 'App öffnen' : 'Demo starten'} />
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="relative min-h-dvh flex items-center overflow-hidden pt-24">

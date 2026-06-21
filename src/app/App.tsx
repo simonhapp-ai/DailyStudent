@@ -194,8 +194,6 @@ function Layout() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const [betaUnlocked, setBetaUnlocked] = useState(() => localStorage.getItem(BETA_KEY) === '1')
-  // Snapshot once at mount — prevents Supabase re-renders from re-reading after DemoScreen sets it
-  const [demoShown] = useState(() => localStorage.getItem('demoShown') === 'true')
   // True if localStorage has a previous session — lets us skip the spinner for returning users
   const [hasLocalSession] = useState(() => {
     try {
@@ -248,10 +246,7 @@ function Layout() {
 
   // Only redirect to auth once Supabase has confirmed there's no valid session
   if (!authLoading && !authUser) {
-    if (location.pathname === '/') {
-      if (!demoShown) return <DemoScreen />
-      return <Navigate to="/auth" replace />
-    }
+    if (location.pathname === '/') return <Navigate to="/landing" replace />
     if (!betaUnlocked) return <BetaGateScreen onUnlock={() => setBetaUnlocked(true)} />
     return <AuthScreen />
   }
