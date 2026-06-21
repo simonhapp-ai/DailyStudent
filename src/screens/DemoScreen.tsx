@@ -86,15 +86,6 @@ const FALLBACKS: Record<string, SmartNoteData> = {
     cardBack:
       'Die Europäische Kommission — nur sie darf offiziell Gesetzesvorschläge einbringen. Parlament und Rat können sie jedoch dazu auffordern.',
   },
-  custom: {
-    summary:
-      'Mitose ist die Kernteilung, bei der eine Zelle zwei genetisch identische Tochterzellen erzeugt. Sie verläuft in den Phasen Prophase, Metaphase, Anaphase und Telophase. Zellteilung ist essenziell für Wachstum und Gewebereparatur.',
-    keywords: ['Mitose', 'Zellteilung', 'Metaphase', 'Chromosomen', 'Tochterzellen'],
-    examTopics: ['Phasen der Mitose in Reihenfolge benennen', 'Unterschied Mitose vs. Meiose'],
-    cardFront: 'Welche Phasen hat die Mitose?',
-    cardBack:
-      'Prophase → Metaphase → Anaphase → Telophase. Ergebnis: zwei genetisch identische Tochterzellen mit diploidem Chromosomensatz.',
-  },
 }
 
 async function callGroqDemo(terms: string[]): Promise<SmartNoteData> {
@@ -102,7 +93,7 @@ async function callGroqDemo(terms: string[]): Promise<SmartNoteData> {
   if (!key) throw new Error('no key')
 
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 8000)
+  const timeout = setTimeout(() => controller.abort(), 12000)
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -183,7 +174,7 @@ export function DemoScreen() {
   const [customTags, setCustomTags] = useState<string[]>([])
   const [customInput, setCustomInput] = useState('')
   const customInputRef = useRef<HTMLInputElement>(null)
-  const SUGGESTIONS = ['Mitose', 'Zellteilung', 'Metaphase']
+  const SUGGESTIONS = ['Photosynthese', 'Demokratie', 'Pythagoras']
 
   // Stage 1 — loading
   const [loadingLabelIdx, setLoadingLabelIdx] = useState(0)
@@ -258,20 +249,24 @@ export function DemoScreen() {
     addTimer(setTimeout(() => setShowFlipCta(true), 700))
   }, [cardFlipped])
 
-  function handleAnalyze(terms: string[], fallbackKey: string) {
-    setStage(1)
-    setActiveTerms(terms)
-
-    const fallback: SmartNoteData = FALLBACKS[fallbackKey] ?? {
-      summary: `${terms.join(', ')} sind zentrale Begriffe aus dem Niedersachsen-Kerncurriculum der Oberstufe. Mit DailyStudent analysierst du deine Notizen und erstellst daraus automatisch Karteikarten, Lernzettel und Probeklausuren.`,
+  function buildFallback(terms: string[], key: string): SmartNoteData {
+    if (FALLBACKS[key]) return FALLBACKS[key]
+    return {
+      summary: `${terms.join(', ')} sind zentrale Begriffe aus dem Niedersachsen-Kerncurriculum der Oberstufe, die regelmäßig in Klausuren abgefragt werden.`,
       keywords: terms.slice(0, 5),
       examTopics: [
         `Zusammenhänge zwischen ${terms[0]} und ${terms[1] ?? terms[0]} erklären`,
         `${terms[0]} an einem konkreten Beispiel erläutern`,
       ],
-      cardFront: `Welche Bedeutung hat ${terms[0]} für ${terms.slice(1).join(' und ')}?`,
-      cardBack: `${terms[0]} beschreibt ein zentrales Konzept, das mit ${terms.slice(1, 3).join(' und ')} eng zusammenhängt und klausurrelevant ist.`,
+      cardFront: `Welche Bedeutung hat ${terms[0]} im Zusammenhang mit ${terms.slice(1).join(' und ')}?`,
+      cardBack: `${terms[0]} beschreibt ein zentrales Konzept, das eng mit ${terms.slice(1, 3).join(' und ')} zusammenhängt.`,
     }
+  }
+
+  function handleAnalyze(terms: string[], fallbackKey: string) {
+    setStage(1)
+    setActiveTerms(terms)
+    const fallback = buildFallback(terms, fallbackKey)
 
     callGroqDemo(terms)
       .then((data) => {
