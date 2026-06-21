@@ -341,7 +341,8 @@ export function DemoScreen() {
       </motion.button>
 
 {/* ── main content ── */}
-      <div className="flex flex-col items-center h-full overflow-y-auto px-5 max-w-md mx-auto" style={{ paddingTop: stage >= 4 ? '10vh' : '0', justifyContent: stage < 4 ? 'center' : 'flex-start' }}>
+      <div className="h-full overflow-y-auto" style={{ width: '100%' }}>
+      <div className="flex flex-col items-center px-5 mx-auto" style={{ width: '100%', maxWidth: IS_DESKTOP ? 560 : 448, minHeight: '100%', paddingTop: '10vh', paddingBottom: '10vh', justifyContent: 'center' }}>
         <AnimatePresence mode="wait">
 
           {/* ────── STAGE 0: input ────── */}
@@ -904,6 +905,7 @@ export function DemoScreen() {
           )}
 
         </AnimatePresence>
+      </div>
       </div>
     </div>
   )
