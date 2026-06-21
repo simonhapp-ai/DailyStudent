@@ -4,16 +4,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useUser } from '../context/UserContext'
 
 const IS_DESKTOP = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
-
 const E = [0.23, 1, 0.32, 1] as const
 
-const TOPICS = [
-  { label: 'Photosynthese', subject: 'Biologie' },
-  { label: 'Weimarer Republik', subject: 'Geschichte' },
-  { label: 'Pythagoras', subject: 'Mathematik' },
-  { label: 'Newtons Gesetze', subject: 'Physik' },
-  { label: 'Impressionismus', subject: 'Kunst' },
-  { label: 'EU-Institutionen', subject: 'Politik' },
+// ─── Topic clusters (3 hint terms each, no explicit label) ───────────────────
+const CLUSTERS = [
+  { terms: ['Chlorophyll', 'ATP', 'Calvin-Zyklus'], fallbackKey: 'photosynthese' },
+  { terms: ['Inflation', 'Reichstag', '1933'], fallbackKey: 'weimar' },
+  { terms: ['Kathete', 'Hypotenuse', 'Winkel'], fallbackKey: 'pythagoras' },
+  { terms: ['Trägheit', 'Kraft', 'Beschleunigung'], fallbackKey: 'newton' },
+  { terms: ['Monet', 'Licht', 'Pinselstrich'], fallbackKey: 'impressionismus' },
+  { terms: ['Parlament', 'Kommission', 'Rat'], fallbackKey: 'eu' },
+]
+
+const LOADING_LABELS = [
+  'KC-Inhalte · Niedersachsen',
+  'Begriffe werden verarbeitet',
+  'Definitionen werden eingebunden',
+  'Einordnung in Unterrichtsmaterialien',
 ]
 
 interface SmartNoteData {
@@ -22,112 +29,108 @@ interface SmartNoteData {
   examTopics: string[]
   cardFront: string
   cardBack: string
-  folderLabel: string
 }
 
 const FALLBACKS: Record<string, SmartNoteData> = {
-  Photosynthese: {
+  photosynthese: {
     summary:
-      'Photosynthese ist der Prozess, bei dem Pflanzen Lichtenergie in chemische Energie umwandeln. In der Lichtreaktion wird Wasser gespalten und ATP sowie NADPH erzeugt. Im Calvin-Zyklus wird CO₂ mithilfe dieser Energie zu Glukose fixiert.',
-    keywords: ['Chlorophyll', 'ATP', 'Calvin-Zyklus', 'Lichtreaktion', 'CO₂-Fixierung'],
-    examTopics: ['Lichtreaktion vs. Dunkelreaktion erklären', 'Energieumwandlung in der Chloroplaste'],
+      'Photosynthese ist der Prozess, bei dem Pflanzen Lichtenergie in chemische Energie umwandeln. In der Lichtreaktion wird Wasser gespalten und ATP sowie NADPH erzeugt. Im Calvin-Zyklus wird CO₂ zu Glukose fixiert.',
+    keywords: ['Chlorophyll', 'ATP', 'NADPH', 'Calvin-Zyklus', 'Thylakoid'],
+    examTopics: ['Lichtreaktion vs. Dunkelreaktion erklären', 'Energieumwandlung in Chloroplasten'],
     cardFront: 'Welche zwei Hauptphasen hat die Photosynthese?',
     cardBack:
       'Lichtreaktion (Thylakoid) + Calvin-Zyklus (Stroma). Lichtreaktion erzeugt ATP/NADPH, Calvin-Zyklus fixiert CO₂ zu Glukose.',
-    folderLabel: 'Biologie',
   },
-  'Weimarer Republik': {
+  weimar: {
     summary:
-      'Die Weimarer Republik (1919–1933) war Deutschlands erste Demokratie nach dem Ersten Weltkrieg. Sie scheiterte an wirtschaftlichen Krisen, politischer Instabilität, der Dolchstoßlegende und dem Aufstieg extremer Parteien wie der NSDAP.',
+      'Die Weimarer Republik (1919–1933) war Deutschlands erste Demokratie nach dem Ersten Weltkrieg. Sie scheiterte an wirtschaftlichen Krisen, politischer Instabilität und dem Aufstieg der NSDAP.',
     keywords: ['Hyperinflation', 'Reichsverfassung', 'Dolchstoßlegende', 'NSDAP', 'Reichstag'],
-    examTopics: ['Gründe für das Scheitern der Weimarer Republik', 'Verfassung und Schwächen des Systems'],
+    examTopics: ['Gründe für das Scheitern der Weimarer Republik', 'Verfassung und ihre Schwächen'],
     cardFront: 'Warum scheiterte die Weimarer Republik?',
     cardBack:
-      'Mehrere Faktoren: Hyperinflation (1923), Weltwirtschaftskrise (1929), Dolchstoßlegende, fehlende demokratische Tradition, Aufstieg der NSDAP.',
-    folderLabel: 'Geschichte',
+      'Hyperinflation (1923), Weltwirtschaftskrise (1929), Dolchstoßlegende, fehlende demokratische Tradition, Aufstieg der NSDAP bis 1933.',
   },
-  Pythagoras: {
+  pythagoras: {
     summary:
-      'Der Satz des Pythagoras besagt: In jedem rechtwinkligen Dreieck gilt a² + b² = c², wobei c die Hypotenuse ist. Er ermöglicht die Berechnung unbekannter Seiten und kann umgekehrt zur Überprüfung rechter Winkel verwendet werden.',
-    keywords: ['Hypotenuse', 'Kathete', 'rechtwinkliges Dreieck', 'Quadratwurzel', 'Umkehrung'],
-    examTopics: ['Anwendung des Satzes auf konkrete Dreiecke', 'Umkehrung zur Winkelprüfung'],
+      'Der Satz des Pythagoras: a² + b² = c², wobei c die Hypotenuse ist. Er ermöglicht die Berechnung unbekannter Seiten rechtwinkliger Dreiecke und kann umgekehrt zur Winkelprüfung verwendet werden.',
+    keywords: ['Hypotenuse', 'Kathete', 'rechtwinkliges Dreieck', 'Quadratwurzel', 'Satz'],
+    examTopics: ['Satz auf konkrete Dreiecke anwenden', 'Umkehrung zur Winkelprüfung'],
     cardFront: 'Wie lautet der Satz des Pythagoras?',
     cardBack:
       'a² + b² = c² — c ist die Hypotenuse (längste Seite, gegenüber dem rechten Winkel). Gilt nur in rechtwinkligen Dreiecken.',
-    folderLabel: 'Mathematik',
   },
-  'Newtons Gesetze': {
+  newton: {
     summary:
-      'Newtons drei Bewegungsgesetze bilden die Grundlage der klassischen Mechanik. Das Trägheitsprinzip beschreibt die Beibehaltung des Bewegungszustands, F = m·a verknüpft Kraft mit Beschleunigung, und das Actio-Reactio-Prinzip besagt, dass Kräfte immer paarweise auftreten.',
+      'Newtons drei Gesetze bilden die Grundlage der klassischen Mechanik: Trägheitsprinzip, F = m·a sowie Actio-Reactio. Kräfte treten immer paarweise auf und erzeugen proportionale Beschleunigungen.',
     keywords: ['Trägheit', 'F = m·a', 'Actio-Reactio', 'Beschleunigung', 'Masse'],
-    examTopics: ['Anwendung von F = m·a auf Aufgaben', 'Unterschied zwischen Masse und Gewichtskraft'],
+    examTopics: ['F = m·a auf Aufgaben anwenden', 'Unterschied Masse vs. Gewichtskraft'],
     cardFront: 'Was besagt Newtons zweites Gesetz?',
     cardBack:
       'F = m · a — Kraft (N) = Masse (kg) × Beschleunigung (m/s²). Je größer die Kraft bei gleicher Masse, desto größer die Beschleunigung.',
-    folderLabel: 'Physik',
   },
-  Impressionismus: {
+  impressionismus: {
     summary:
-      'Der Impressionismus (ca. 1860–1890) stellte statt exakter Realität das subjektive Lichtempfinden und flüchtige Augenblicke dar. Typisch sind kurze, sichtbare Pinselstriche, helle Farben, Plein-air-Malerei und die Auflösung klarer Konturen.',
+      'Der Impressionismus (ca. 1860–1890) stellte das subjektive Lichtempfinden und flüchtige Augenblicke dar. Typisch: kurze Pinselstriche, helle Farben, Plein-air-Malerei und Auflösung klarer Konturen.',
     keywords: ['Pinselduktus', 'Plein-air', 'Lichtspiel', 'Monet', 'Komplementärfarben'],
-    examTopics: ['Stilmerkmale des Impressionismus benennen', 'Abgrenzung zu vorangehenden Kunststilen'],
+    examTopics: ['Stilmerkmale des Impressionismus benennen', 'Abgrenzung zu vorangehenden Stilen'],
     cardFront: 'Was sind typische Merkmale des Impressionismus?',
     cardBack:
-      'Kurze, sichtbare Pinselstriche · helle, reine Farben · Darstellung von Lichteffekten · Plein-air-Malerei · Auflösung scharfer Konturen · flüchtige Augenblicke.',
-    folderLabel: 'Kunst',
+      'Kurze Pinselstriche · helle Farben · Darstellung von Lichteffekten · Plein-air · Auflösung scharfer Konturen · flüchtige Augenblicke.',
   },
-  'EU-Institutionen': {
+  eu: {
     summary:
-      'Die EU hat vier Hauptinstitutionen: Der Europäische Rat legt Grundsatzziele fest, die Kommission hat das Initiativrecht für Gesetze, das Europäische Parlament vertritt die Bürger und der Rat der EU beschließt Gesetze gemeinsam mit dem Parlament.',
+      'Die EU hat vier Hauptinstitutionen: Europäischer Rat (Grundsatzziele), Kommission (Initiativrecht), Europäisches Parlament (Bürgervertretung) und Rat der EU (Gesetzgebung gemeinsam mit dem Parlament).',
     keywords: ['Europäischer Rat', 'Kommission', 'Europäisches Parlament', 'Initiativrecht', 'Subsidiarität'],
-    examTopics: ['Aufgaben der vier Hauptinstitutionen unterscheiden', 'Das demokratische Defizit der EU'],
-    cardFront: 'Welche EU-Institution hat das Initiativrecht für Gesetze?',
+    examTopics: ['Aufgaben der vier Hauptinstitutionen', 'Das demokratische Defizit der EU'],
+    cardFront: 'Welche EU-Institution hat das Initiativrecht?',
     cardBack:
-      'Die Europäische Kommission — nur sie darf offiziell Gesetzesvorschläge einbringen. Parlament und Rat können die Kommission jedoch auffordern, tätig zu werden.',
-    folderLabel: 'Politik',
+      'Die Europäische Kommission — nur sie darf offiziell Gesetzesvorschläge einbringen. Parlament und Rat können sie jedoch dazu auffordern.',
+  },
+  custom: {
+    summary:
+      'Mitose ist die Kernteilung, bei der eine Zelle zwei genetisch identische Tochterzellen erzeugt. Sie verläuft in den Phasen Prophase, Metaphase, Anaphase und Telophase. Zellteilung ist essenziell für Wachstum und Gewebereparatur.',
+    keywords: ['Mitose', 'Zellteilung', 'Metaphase', 'Chromosomen', 'Tochterzellen'],
+    examTopics: ['Phasen der Mitose in Reihenfolge benennen', 'Unterschied Mitose vs. Meiose'],
+    cardFront: 'Welche Phasen hat die Mitose?',
+    cardBack:
+      'Prophase → Metaphase → Anaphase → Telophase. Ergebnis: zwei genetisch identische Tochterzellen mit diploidem Chromosomensatz.',
   },
 }
 
-async function callGroqDemo(topic: string): Promise<SmartNoteData> {
-  const fallback = FALLBACKS[topic]
+async function callGroqDemo(terms: string[]): Promise<SmartNoteData> {
+  const key = import.meta.env.VITE_GROQ_API_KEY as string
+  if (!key) throw new Error('no key')
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY as string}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+    signal: AbortSignal.timeout(7500),
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
-      max_tokens: 600,
+      max_tokens: 500,
       temperature: 0.2,
       response_format: { type: 'json_object' },
       messages: [
         {
           role: 'system',
           content:
-            'Du bist ein Lernassistent für deutsche Gymnasiasten. Antworte ausschließlich auf Deutsch. Gib immer valides JSON zurück.',
+            'Du bist ein Lernassistent für Gymnasiasten in Niedersachsen (Oberstufe). Antworte auf Deutsch. Gib ausschließlich valides JSON zurück.',
         },
         {
           role: 'user',
-          content: `Erstelle eine prägnante Smart Note für "${topic}". Antworte NUR mit diesem JSON:\n{"summary":"Kernaussage in 2-3 Sätzen","keywords":["Begriff1","Begriff2","Begriff3","Begriff4","Begriff5"],"examTopics":["Klausurthema 1","Klausurthema 2"]}`,
+          content: `Erstelle eine kompakte Smart Note basierend auf diesen Begriffen aus dem Niedersachsen-Kerncurriculum:\nBegriffe: ${terms.join(', ')}\n\nAntworte NUR mit diesem JSON:\n{"summary":"Kernaussage in 2-3 Sätzen (max 220 Zeichen)","keywords":["Begriff1","Begriff2","Begriff3","Begriff4","Begriff5"],"examTopics":["Klausurthema 1","Klausurthema 2"]}`,
         },
       ],
     }),
   })
   if (!res.ok) throw new Error(`groq ${res.status}`)
   const data = (await res.json()) as { choices: { message: { content: string } }[] }
-  const parsed = JSON.parse(data.choices[0].message.content) as {
-    summary: string
-    keywords: string[]
-    examTopics: string[]
-  }
+  const parsed = JSON.parse(data.choices[0].message.content) as Partial<SmartNoteData>
   return {
-    summary: typeof parsed.summary === 'string' ? parsed.summary : fallback.summary,
-    keywords: Array.isArray(parsed.keywords) ? parsed.keywords : fallback.keywords,
-    examTopics: Array.isArray(parsed.examTopics) ? parsed.examTopics : fallback.examTopics,
-    cardFront: fallback.cardFront,
-    cardBack: fallback.cardBack,
-    folderLabel: fallback.folderLabel,
+    summary: typeof parsed.summary === 'string' && parsed.summary.length > 20 ? parsed.summary : FALLBACKS.custom.summary,
+    keywords: Array.isArray(parsed.keywords) ? parsed.keywords.slice(0, 5) : terms.slice(0, 5),
+    examTopics: Array.isArray(parsed.examTopics) ? parsed.examTopics.slice(0, 2) : FALLBACKS.custom.examTopics,
+    cardFront: FALLBACKS.custom.cardFront,
+    cardBack: FALLBACKS.custom.cardBack,
   }
 }
 
@@ -137,15 +140,34 @@ export function DemoScreen() {
   const navigate = useNavigate()
   const { authUser } = useUser()
   const appHome = IS_DESKTOP ? '/dashboard' : '/unterricht'
+
   const [stage, setStage] = useState<Stage>(0)
-  const [selectedTopic, setSelectedTopic] = useState<string | null>(null)
+  const [colorMode, setColorMode] = useState<'purple' | 'mint'>('purple')
+
+  // Stage 0 — input
+  const [customOpen, setCustomOpen] = useState(false)
+  const [customTags, setCustomTags] = useState(['Mitose', 'Zellteilung', 'Metaphase'])
+  const [customInput, setCustomInput] = useState('')
+  const customInputRef = useRef<HTMLInputElement>(null)
+
+  // Stage 1 — loading
+  const [loadingLabelIdx, setLoadingLabelIdx] = useState(0)
+
+  // Stage 2 — note
   const [noteData, setNoteData] = useState<SmartNoteData | null>(null)
   const [displayedSummary, setDisplayedSummary] = useState('')
-  const [displayedKeywords, setDisplayedKeywords] = useState<string[]>([])
-  const [displayedExamTopics, setDisplayedExamTopics] = useState<string[]>([])
-  const [cardFlipped, setCardFlipped] = useState(false)
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([])
+  const [showKeywords, setShowKeywords] = useState(false)
+  const [showExamTopics, setShowExamTopics] = useState(false)
+  const [noteSaved, setNoteSaved] = useState(false)
 
+  // Stage 3 — method selection
+  const [methodHighlighted, setMethodHighlighted] = useState(false)
+
+  // Stage 4 — flashcard
+  const [cardFlipped, setCardFlipped] = useState(false)
+  const [showFlipCta, setShowFlipCta] = useState(false)
+
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([])
   function addTimer(t: ReturnType<typeof setTimeout>) {
     timers.current.push(t)
   }
@@ -155,291 +177,391 @@ export function DemoScreen() {
     return () => timers.current.forEach(clearTimeout)
   }, [])
 
-  function handleTopicSelect(topic: string) {
-    setSelectedTopic(topic)
-    setStage(1)
+  // Loading label rotation
+  useEffect(() => {
+    if (stage !== 1) return
+    let idx = 0
+    const next = () => {
+      idx = (idx + 1) % LOADING_LABELS.length
+      setLoadingLabelIdx(idx)
+      addTimer(setTimeout(next, 1700))
+    }
+    addTimer(setTimeout(next, 1700))
+  }, [stage])
 
+  // Typewriter on stage 2
+  useEffect(() => {
+    if (stage !== 2 || !noteData) return
+    setDisplayedSummary('')
+    setShowKeywords(false)
+    setShowExamTopics(false)
+    let i = 0
+    const typeNext = () => {
+      i++
+      setDisplayedSummary(noteData.summary.slice(0, i))
+      if (i < noteData.summary.length) {
+        addTimer(setTimeout(typeNext, Math.max(10, 28 - Math.floor(i / 7))))
+      } else {
+        addTimer(setTimeout(() => setShowKeywords(true), 300))
+        addTimer(setTimeout(() => setShowExamTopics(true), 650))
+      }
+    }
+    addTimer(setTimeout(typeNext, 500))
+  }, [stage, noteData])
+
+  // Method auto-highlight in stage 3
+  useEffect(() => {
+    if (stage !== 3) return
+    setMethodHighlighted(false)
+    addTimer(setTimeout(() => setMethodHighlighted(true), 1000))
+  }, [stage])
+
+  // Show next CTA after card flip
+  useEffect(() => {
+    if (!cardFlipped) return
+    addTimer(setTimeout(() => setShowFlipCta(true), 700))
+  }, [cardFlipped])
+
+  function handleAnalyze(terms: string[], fallbackKey: string) {
     let resolved = false
+    setStage(1)
 
     const fallbackTimer = setTimeout(() => {
       if (!resolved) {
         resolved = true
-        setNoteData(FALLBACKS[topic])
-        setStage(2)
+        setNoteData({ ...FALLBACKS[fallbackKey], keywords: terms.slice(0, 5) })
+        addTimer(setTimeout(() => setStage(2), 500))
       }
     }, 8000)
     addTimer(fallbackTimer)
 
-    callGroqDemo(topic)
+    callGroqDemo(terms)
       .then((data) => {
         if (!resolved) {
           resolved = true
           clearTimeout(fallbackTimer)
           setNoteData(data)
-          setStage(2)
+          addTimer(setTimeout(() => setStage(2), 500))
         }
       })
       .catch(() => {
         if (!resolved) {
           resolved = true
           clearTimeout(fallbackTimer)
-          setNoteData(FALLBACKS[topic])
-          setStage(2)
+          setNoteData({ ...FALLBACKS[fallbackKey] })
+          addTimer(setTimeout(() => setStage(2), 500))
         }
       })
   }
 
-  // Typewriter effect when stage === 2
-  useEffect(() => {
-    if (stage !== 2 || !noteData) return
-    setDisplayedSummary('')
-    setDisplayedKeywords([])
-    setDisplayedExamTopics([])
-
-    const summary = noteData.summary
-    let i = 0
-
-    const typeNext = () => {
-      i++
-      setDisplayedSummary(summary.slice(0, i))
-      if (i < summary.length) {
-        const delay = Math.max(8, 28 - Math.floor(i / 8))
-        addTimer(setTimeout(typeNext, delay))
-      } else {
-        addTimer(
-          setTimeout(() => {
-            setDisplayedKeywords(noteData.keywords)
-            addTimer(
-              setTimeout(() => {
-                setDisplayedExamTopics(noteData.examTopics)
-                addTimer(setTimeout(() => setStage(3), 1100))
-              }, 450),
-            )
-          }, 350),
-        )
-      }
-    }
-    addTimer(setTimeout(typeNext, 20))
-  }, [stage]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Folder → card transition
-  useEffect(() => {
-    if (stage !== 3) return
-    addTimer(setTimeout(() => setStage(4), 1700))
-  }, [stage])
-
-  // Card auto-flip → show choice
-  useEffect(() => {
-    if (stage !== 4) return
-    setCardFlipped(false)
+  function handleSaveToFolder() {
+    setNoteSaved(true)
     addTimer(
       setTimeout(() => {
-        setCardFlipped(true)
-        addTimer(setTimeout(() => setStage(5), 1300))
-      }, 1200),
+        setColorMode('mint')
+        addTimer(setTimeout(() => setStage(3), 900))
+      }, 200),
     )
-  }, [stage])
+  }
+
+  function handleCustomTagAdd(e?: React.KeyboardEvent) {
+    if (e && e.key !== 'Enter' && e.key !== ',') return
+    const val = customInput.trim().replace(/,$/, '')
+    if (!val || customTags.includes(val)) { setCustomInput(''); return }
+    setCustomTags((p) => [...p, val])
+    setCustomInput('')
+  }
+
+  const mint = '#34D399'
+  const purple = '#7C3AED'
+  const accentColor = colorMode === 'mint' ? mint : purple
 
   return (
-    <div
-      className="fixed inset-0 flex flex-col items-center overflow-y-auto"
-      style={{
-        background: '#0d0d12',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
-      }}
-    >
-      {/* Background glow */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          background: [
-            'radial-gradient(ellipse 70% 50% at 50% 0%, rgba(124,58,237,0.22) 0%, transparent 65%)',
-            'radial-gradient(ellipse 40% 30% at 80% 80%, rgba(90,200,250,0.05) 0%, transparent 60%)',
-          ].join(', '),
-        }}
+    <div className="fixed inset-0 overflow-hidden" style={{ background: '#0a0a0f' }}>
+      {/* ── ambient glow: cross-fade purple ↔ mint ── */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: `radial-gradient(ellipse at 50% 110%, rgba(124,58,237,0.4) 0%, transparent 65%)` }}
+        animate={{ opacity: colorMode === 'purple' ? 1 : 0 }}
+        transition={{ duration: 1.4, ease: 'easeInOut' }}
+      />
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: `radial-gradient(ellipse at 50% 110%, rgba(52,211,153,0.35) 0%, transparent 65%)` }}
+        animate={{ opacity: colorMode === 'mint' ? 1 : 0 }}
+        transition={{ duration: 1.4, ease: 'easeInOut' }}
       />
 
-      {/* Fixed Anmelden link */}
+      {/* ── top-right button ── */}
       <motion.button
-        className="fixed top-4 right-4 z-50 text-[13px] font-semibold px-4 py-2 rounded-full"
-        style={{ color: 'rgba(255,255,255,0.45)', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
+        className="fixed top-4 right-4 z-50 px-4 py-2 rounded-full text-[13px] font-medium"
+        style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}
+        whileHover={{ scale: 1.04 }}
+        whileTap={{ scale: 0.97 }}
         onClick={() => navigate(authUser ? appHome : '/auth')}
-        whileHover={{ color: 'rgba(255,255,255,0.8)' }}
-        whileTap={{ scale: 0.95 }}
       >
-        Anmelden
+        {authUser ? 'Zurück zur App' : 'Anmelden'}
       </motion.button>
 
-      {/* Centered content */}
-      <div className="relative z-10 w-full max-w-[480px] px-5 py-16 flex flex-col items-center min-h-full justify-center">
+      {/* ── mode badge (stage 3+) ── */}
+      <AnimatePresence>
+        {stage >= 3 && (
+          <motion.div
+            className="fixed top-4 left-4 z-50 flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-semibold"
+            style={{ background: 'rgba(52,211,153,0.15)', color: mint, border: `1px solid rgba(52,211,153,0.3)` }}
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: E }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: mint }} />
+            Klausurenmodus
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── main content ── */}
+      <div className="flex flex-col items-center h-full overflow-y-auto px-5 max-w-md mx-auto" style={{ paddingTop: stage >= 4 ? '10vh' : '0', justifyContent: stage < 4 ? 'center' : 'flex-start' }}>
         <AnimatePresence mode="wait">
-          {/* ── Stage 0: Hook ──────────────────────────────────────────── */}
+
+          {/* ────── STAGE 0: input ────── */}
           {stage === 0 && (
             <motion.div
-              key="hook"
-              className="text-center w-full"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, y: -16, transition: { duration: 0.25 } }}
+              key="input"
+              className="w-full"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.55, ease: E }}
             >
               <motion.h1
-                className="font-black text-white mb-3 leading-tight"
-                style={{ fontSize: 'clamp(26px, 7vw, 38px)', letterSpacing: '-0.03em' }}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: E }}
+                className="text-center font-bold text-white leading-tight mb-2"
+                style={{ fontSize: IS_DESKTOP ? 36 : 28 }}
               >
                 Deine Notizen.{' '}
-                <span
-                  style={{
-                    background: 'linear-gradient(135deg, #A78BFA, #7C3AED)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  Deine Klausur.
-                </span>{' '}
+                <span style={{ color: purple }}>Deine Klausur.</span>{' '}
                 Dein Lernplan.
               </motion.h1>
+              <p className="text-center text-[14px] mb-8" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                Wähle ein Thema — oder gib deine eigenen Begriffe ein.
+              </p>
 
-              <motion.p
-                className="text-[15px] mb-10"
-                style={{ color: 'rgba(255,255,255,0.42)' }}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, ease: E, delay: 0.38 }}
-              >
-                Sieh selbst wie es funktioniert.
-              </motion.p>
-
-              <div className="flex flex-wrap gap-2.5 justify-center">
-                {TOPICS.map((t, i) => (
+              {/* 6 term clusters */}
+              <div className="grid grid-cols-2 gap-2.5 mb-3">
+                {CLUSTERS.map((c) => (
                   <motion.button
-                    key={t.label}
-                    onClick={() => handleTopicSelect(t.label)}
-                    className="px-4 py-2 rounded-full text-[13px] font-semibold"
+                    key={c.terms[0]}
+                    className="rounded-2xl px-3 py-3 text-left"
                     style={{
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                      color: 'rgba(255,255,255,0.82)',
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: 'rgba(255,255,255,0.85)',
                     }}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.42, ease: E, delay: 0.68 + i * 0.07 }}
-                    whileHover={{ scale: 1.06, y: -1, backgroundColor: 'rgba(124,58,237,0.18)', borderColor: 'rgba(124,58,237,0.4)' }}
-                    whileTap={{ scale: 0.94 }}
+                    whileHover={{ scale: 1.03, background: 'rgba(124,58,237,0.15)' }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => handleAnalyze(c.terms, c.fallbackKey)}
                   >
-                    {t.label}
+                    <span className="text-[12px] font-medium leading-snug block">
+                      {c.terms.join(' · ')}
+                    </span>
                   </motion.button>
                 ))}
               </div>
+
+              {/* Custom input button / expanded */}
+              <AnimatePresence mode="wait">
+                {!customOpen ? (
+                  <motion.button
+                    key="custom-collapsed"
+                    className="w-full rounded-2xl py-4 text-[14px] font-semibold flex items-center justify-center gap-2"
+                    style={{
+                      background: 'rgba(124,58,237,0.12)',
+                      border: `1.5px dashed rgba(124,58,237,0.4)`,
+                      color: 'rgba(167,139,250,0.9)',
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.25 }}
+                    onClick={() => {
+                      setCustomOpen(true)
+                      setTimeout(() => customInputRef.current?.focus(), 100)
+                    }}
+                  >
+                    <span className="text-[16px]">✏️</span>
+                    Eigene Notiz erstellen
+                  </motion.button>
+                ) : (
+                  <motion.div
+                    key="custom-expanded"
+                    className="w-full rounded-2xl p-4"
+                    style={{ background: 'rgba(124,58,237,0.1)', border: `1.5px solid rgba(124,58,237,0.35)` }}
+                    initial={{ opacity: 0, scale: 0.95, y: 8 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3, ease: E }}
+                  >
+                    <p className="text-[11px] font-semibold mb-2.5" style={{ color: 'rgba(167,139,250,0.8)' }}>
+                      DEINE BEGRIFFE
+                    </p>
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {customTags.map((t) => (
+                        <span
+                          key={t}
+                          className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[12px] font-medium"
+                          style={{ background: 'rgba(124,58,237,0.25)', color: '#C4B5FD' }}
+                        >
+                          {t}
+                          <button
+                            onClick={() => setCustomTags((p) => p.filter((x) => x !== t))}
+                            className="opacity-60 hover:opacity-100 transition-opacity"
+                          >
+                            ×
+                          </button>
+                        </span>
+                      ))}
+                      <input
+                        ref={customInputRef}
+                        value={customInput}
+                        onChange={(e) => setCustomInput(e.target.value)}
+                        onKeyDown={handleCustomTagAdd}
+                        onBlur={() => { if (customInput.trim()) handleCustomTagAdd() }}
+                        placeholder="Begriff eingeben + Enter"
+                        className="bg-transparent text-[12px] text-white placeholder-white/30 outline-none min-w-[140px] flex-1"
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                        {customTags.length >= 3
+                          ? `${customTags.length} Begriffe — bereit!`
+                          : `${customTags.length}/3 Begriffe mindestens`}
+                      </span>
+                      <motion.button
+                        className="px-4 py-2 rounded-xl text-[13px] font-semibold"
+                        style={{
+                          background: customTags.length >= 3 ? purple : 'rgba(255,255,255,0.08)',
+                          color: customTags.length >= 3 ? '#fff' : 'rgba(255,255,255,0.3)',
+                          transition: 'background 0.3s',
+                        }}
+                        disabled={customTags.length < 3}
+                        whileHover={customTags.length >= 3 ? { scale: 1.04 } : {}}
+                        whileTap={customTags.length >= 3 ? { scale: 0.96 } : {}}
+                        onClick={() => handleAnalyze(customTags, 'custom')}
+                      >
+                        Analysieren →
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
 
-          {/* ── Stage 1: Loading ────────────────────────────────────────── */}
+          {/* ────── STAGE 1: loading ────── */}
           {stage === 1 && (
             <motion.div
               key="loading"
               className="flex flex-col items-center gap-6"
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.2 } }}
-              transition={{ duration: 0.3, ease: E }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.4, ease: E }}
             >
-              <motion.div
-                className="px-5 py-2.5 rounded-full text-[15px] font-bold"
-                style={{
-                  background: 'rgba(124,58,237,0.2)',
-                  border: '1.5px solid rgba(124,58,237,0.45)',
-                  color: '#A78BFA',
-                }}
-                initial={{ scale: 0.9 }}
-                animate={{ scale: 1.05 }}
-                transition={{ duration: 0.35, ease: E }}
-              >
-                {selectedTopic}
-              </motion.div>
-
-              <div className="relative w-14 h-14">
-                {[0, 1].map((i) => (
+              {/* Vibrating circle with pulsing rings */}
+              <div className="relative flex items-center justify-center" style={{ width: 140, height: 140 }}>
+                {[0, 1, 2].map((i) => (
                   <motion.div
                     key={i}
-                    className="absolute inset-0 rounded-full"
-                    style={{ border: '2px solid rgba(124,58,237,0.5)' }}
-                    animate={{ scale: [1, 1.6 + i * 0.3], opacity: [0.7, 0] }}
-                    transition={{ duration: 1.4, repeat: Infinity, ease: 'easeOut', delay: i * 0.35 }}
+                    className="absolute rounded-full"
+                    style={{
+                      width: 70 + i * 30,
+                      height: 70 + i * 30,
+                      border: `1px solid rgba(124,58,237,${0.5 - i * 0.14})`,
+                    }}
+                    animate={{ scale: [1, 1.25, 1], opacity: [0.7, 0, 0.7] }}
+                    transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.5, ease: 'easeInOut' }}
                   />
                 ))}
-                <div
-                  className="absolute rounded-full"
-                  style={{ inset: '14px', background: 'linear-gradient(135deg, #7C3AED, #A78BFA)' }}
-                />
+                {/* Center vibrating core */}
+                <motion.div
+                  className="relative z-10 rounded-full flex items-center justify-center"
+                  style={{
+                    width: 64,
+                    height: 64,
+                    background: 'radial-gradient(circle, rgba(124,58,237,0.5) 0%, rgba(124,58,237,0.15) 100%)',
+                    border: '1.5px solid rgba(124,58,237,0.6)',
+                    boxShadow: '0 0 24px rgba(124,58,237,0.4)',
+                  }}
+                  animate={{
+                    scale: [1, 1.05, 0.97, 1.03, 1],
+                    rotate: [0, 1, -1, 0.5, 0],
+                  }}
+                  transition={{ duration: 0.45, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <span style={{ fontSize: 26 }}>✦</span>
+                </motion.div>
               </div>
 
-              <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                Analysiere Thema...
-              </p>
+              {/* Cycling label */}
+              <div className="text-center">
+                <p className="text-[11px] font-semibold mb-2" style={{ color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em' }}>
+                  KI VERARBEITET
+                </p>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={loadingLabelIdx}
+                    className="text-[15px] font-medium"
+                    style={{ color: 'rgba(255,255,255,0.8)' }}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.35, ease: E }}
+                  >
+                    {LOADING_LABELS[loadingLabelIdx]}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
             </motion.div>
           )}
 
-          {/* ── Stages 2-5: Note flow ──────────────────────────────────── */}
-          {stage >= 2 && (
+          {/* ────── STAGE 2: note reveal + save ────── */}
+          {stage === 2 && noteData && (
             <motion.div
-              key="note-flow"
-              className="w-full flex flex-col items-center gap-5"
+              key="note"
+              className="w-full"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.35, ease: E }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.4, ease: E }}
             >
-              {/* Smart Note card — visible stages 2 & 3 */}
-              {stage <= 3 && noteData && (
-                <motion.div
-                  className="w-full rounded-2xl p-5"
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={
-                    stage === 3
-                      ? { opacity: 0, scale: 0.62, y: 90, transition: { duration: 0.55, ease: [0.4, 0, 0.6, 1] } }
-                      : { opacity: 1, y: 0, scale: 1, transition: { duration: 0.42, ease: E } }
-                  }
-                >
-                  {/* Header */}
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <div
-                      className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                      style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)' }}
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#A78BFA' }}>
-                        Smart Note
-                      </p>
-                      <p className="text-[12px] font-bold text-white">{selectedTopic}</p>
-                    </div>
-                  </div>
+              {/* Note card folds open */}
+              <motion.div
+                className="rounded-2xl overflow-hidden mb-4"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                initial={{ scaleY: 0.08, opacity: 0, originY: 0 }}
+                animate={{ scaleY: 1, opacity: 1 }}
+                transition={{ duration: 0.55, ease: E }}
+              >
+                {/* Subject bar */}
+                <div className="px-4 py-2.5 flex items-center gap-2" style={{ background: 'rgba(124,58,237,0.15)', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                  <span className="text-[18px]">🧠</span>
+                  <span className="text-[12px] font-semibold" style={{ color: '#A78BFA' }}>Smart Note — KI generiert</span>
+                </div>
 
-                  {/* Summary typewriter */}
-                  <div className="mb-4">
-                    <p className="text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'rgba(167,139,250,0.7)' }}>
-                      Zusammenfassung
+                <div className="p-4 space-y-3">
+                  {/* Summary with typewriter */}
+                  <div>
+                    <p className="text-[10px] font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em' }}>
+                      ZUSAMMENFASSUNG
                     </p>
-                    <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.8)', minHeight: 56 }}>
+                    <p className="text-[13px] leading-relaxed" style={{ color: 'rgba(255,255,255,0.82)', minHeight: 52 }}>
                       {displayedSummary}
                       {displayedSummary.length < noteData.summary.length && (
                         <motion.span
-                          className="inline-block w-[2px] h-[14px] ml-0.5 align-middle rounded-full"
+                          className="inline-block w-[2px] h-[13px] ml-0.5 align-middle rounded-full"
                           style={{ background: '#A78BFA' }}
                           animate={{ opacity: [1, 0] }}
                           transition={{ duration: 0.7, repeat: Infinity, ease: 'linear', repeatType: 'mirror' }}
@@ -450,32 +572,24 @@ export function DemoScreen() {
 
                   {/* Keywords */}
                   <AnimatePresence>
-                    {displayedKeywords.length > 0 && (
+                    {showKeywords && (
                       <motion.div
-                        className="mb-4"
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.32, ease: E }}
+                        transition={{ duration: 0.35, ease: E }}
                       >
-                        <p className="text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                          Schlüsselbegriffe
+                        <p className="text-[10px] font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em' }}>
+                          SCHLÜSSELBEGRIFFE
                         </p>
                         <div className="flex flex-wrap gap-1.5">
-                          {displayedKeywords.map((kw, i) => (
-                            <motion.span
+                          {noteData.keywords.map((kw) => (
+                            <span
                               key={kw}
-                              className="text-[11px] font-medium px-2.5 py-0.5 rounded-full"
-                              style={{
-                                background: 'rgba(124,58,237,0.2)',
-                                border: '1px solid rgba(124,58,237,0.32)',
-                                color: '#A78BFA',
-                              }}
-                              initial={{ opacity: 0, scale: 0.82 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: i * 0.07, duration: 0.22, ease: E }}
+                              className="px-2.5 py-0.5 rounded-full text-[11px] font-medium"
+                              style={{ background: 'rgba(124,58,237,0.2)', color: '#C4B5FD', border: '1px solid rgba(124,58,237,0.3)' }}
                             >
                               {kw}
-                            </motion.span>
+                            </span>
                           ))}
                         </div>
                       </motion.div>
@@ -484,198 +598,222 @@ export function DemoScreen() {
 
                   {/* Exam topics */}
                   <AnimatePresence>
-                    {displayedExamTopics.length > 0 && (
+                    {showExamTopics && (
                       <motion.div
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.32, ease: E }}
+                        transition={{ duration: 0.35, ease: E }}
                       >
-                        <p className="text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                          Klausurthemen
+                        <p className="text-[10px] font-semibold mb-1.5" style={{ color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em' }}>
+                          KLAUSURTHEMEN
                         </p>
-                        {displayedExamTopics.map((t, i) => (
-                          <motion.div
-                            key={t}
-                            className="flex items-center gap-2 mb-1.5"
-                            initial={{ opacity: 0, x: -8 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.1, duration: 0.28, ease: E }}
-                          >
-                            <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: '#A78BFA' }} />
-                            <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.72)' }}>
-                              {t}
-                            </p>
-                          </motion.div>
-                        ))}
+                        <div className="space-y-1">
+                          {noteData.examTopics.map((t) => (
+                            <div key={t} className="flex items-start gap-2">
+                              <span style={{ color: purple, fontSize: 12, marginTop: 1 }}>▸</span>
+                              <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.7)' }}>{t}</span>
+                            </div>
+                          ))}
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </motion.div>
-              )}
+                </div>
 
-              {/* Folder save — stage 3 */}
-              <AnimatePresence>
-                {stage === 3 && noteData && (
-                  <motion.div
-                    key="folder"
-                    className="flex flex-col items-center gap-2"
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.32, ease: E }}
-                  >
-                    <motion.div
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                      style={{
-                        background: 'rgba(124,58,237,0.18)',
-                        border: '1.5px solid rgba(124,58,237,0.38)',
-                      }}
-                      animate={{ scale: [1, 1.18, 1] }}
-                      transition={{ duration: 0.55, ease: E, delay: 0.28 }}
-                    >
-                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />
-                      </svg>
-                    </motion.div>
-                    <motion.p
-                      className="text-[12px] font-medium"
-                      style={{ color: 'rgba(255,255,255,0.38)' }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.4 }}
-                    >
-                      Gespeichert in {noteData.folderLabel}
-                    </motion.p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                {/* Footer hint */}
+                <div className="px-4 py-2.5" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                    📷 Normalerweise fügst du auch Fotos & Schreibnotizen hinzu
+                  </p>
+                </div>
+              </motion.div>
 
-              {/* Flashcard — stages 4 & 5 */}
+              {/* Save button */}
               <AnimatePresence>
-                {stage >= 4 && noteData && (
-                  <motion.div
-                    key="flashcard"
-                    className="w-full flex flex-col items-center gap-4"
-                    initial={{ opacity: 0, y: 22 }}
+                {showExamTopics && (
+                  <motion.button
+                    className="w-full py-3.5 rounded-2xl text-[15px] font-semibold flex items-center justify-center gap-2"
+                    style={{
+                      background: noteSaved ? 'rgba(52,211,153,0.2)' : 'rgba(255,255,255,0.09)',
+                      color: noteSaved ? mint : 'rgba(255,255,255,0.85)',
+                      border: `1.5px solid ${noteSaved ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.15)'}`,
+                      transition: 'all 0.4s',
+                    }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.45, ease: E }}
+                    transition={{ duration: 0.4, ease: E, delay: 0.2 }}
+                    whileHover={!noteSaved ? { scale: 1.02 } : {}}
+                    whileTap={!noteSaved ? { scale: 0.97 } : {}}
+                    onClick={!noteSaved ? handleSaveToFolder : undefined}
                   >
-                    <div style={{ width: '100%', perspective: '1000px', height: 180 }}>
-                      <div
-                        className={`flashcard-inner w-full h-full${cardFlipped ? ' flipped' : ''}`}
-                        style={{ minHeight: 180 }}
-                      >
-                        {/* Front */}
-                        <div
-                          className="flashcard-face absolute inset-0 rounded-2xl p-5 flex flex-col justify-between"
-                          style={{
-                            background: 'rgba(255,255,255,0.06)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                          }}
-                        >
-                          <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#A78BFA' }}>
-                            Karteikarte · Frage
-                          </p>
-                          <p className="text-[15px] font-semibold text-white text-center leading-snug flex-1 flex items-center justify-center px-2">
-                            {noteData.cardFront}
-                          </p>
-                          <p className="text-[10px] text-center" style={{ color: 'rgba(255,255,255,0.2)' }}>
-                            dreht sich gleich um...
-                          </p>
-                        </div>
-
-                        {/* Back */}
-                        <div
-                          className="flashcard-back absolute inset-0 rounded-2xl p-5 flex flex-col justify-between"
-                          style={{
-                            background: 'rgba(124,58,237,0.14)',
-                            border: '1px solid rgba(124,58,237,0.32)',
-                          }}
-                        >
-                          <p className="text-[9px] font-bold uppercase tracking-widest" style={{ color: '#A78BFA' }}>
-                            Antwort
-                          </p>
-                          <p className="text-[14px] text-white leading-relaxed flex-1 flex items-center px-1">
-                            {noteData.cardBack}
-                          </p>
-                          <p className="text-[10px] text-center" style={{ color: 'rgba(255,255,255,0.2)' }}>
-                            Tippen zum Zurückdrehen
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <AnimatePresence>
-                      {cardFlipped && (
-                        <motion.p
-                          className="text-[13px] font-medium text-center"
-                          style={{ color: 'rgba(255,255,255,0.52)' }}
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.4, ease: E }}
-                        >
-                          Das passiert mit jeder Notiz. Automatisch.
-                        </motion.p>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Choice — stage 5 */}
-              <AnimatePresence>
-                {stage === 5 && (
-                  <motion.div
-                    key="choice"
-                    className="w-full flex flex-col items-center gap-3 pt-2"
-                    initial={{ opacity: 0, y: 22 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.48, ease: E, delay: 0.08 }}
-                  >
-                    <motion.button
-                      onClick={() => navigate(authUser ? appHome : '/auth')}
-                      className="w-full py-3.5 rounded-2xl text-[15px] font-bold text-white relative overflow-hidden"
-                      style={{
-                        background: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
-                        boxShadow: '0 4px 24px rgba(124,58,237,0.45)',
-                      }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      <span
-                        className="absolute inset-0 pointer-events-none"
-                        style={{
-                          background:
-                            'linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.18) 50%, transparent 62%)',
-                          backgroundSize: '200% 100%',
-                          animation: 'shimmer 3s infinite linear',
-                        }}
-                      />
-                      <span className="relative">Jetzt personalisieren →</span>
-                    </motion.button>
-
-                    <motion.button
-                      onClick={() => navigate(authUser ? appHome : '/auth')}
-                      className="w-full py-3 rounded-2xl text-[14px] font-semibold"
-                      style={{
-                        background: 'transparent',
-                        border: '1.5px solid rgba(255,255,255,0.14)',
-                        color: 'rgba(255,255,255,0.65)',
-                      }}
-                      whileHover={{ scale: 1.01, borderColor: 'rgba(255,255,255,0.28)', color: 'rgba(255,255,255,0.9)' }}
-                      whileTap={{ scale: 0.97 }}
-                    >
-                      Anmelden
-                    </motion.button>
-
-                    <p className="text-[12px]" style={{ color: 'rgba(255,255,255,0.28)' }}>
-                      Personalisierung dauert ~2 Minuten
-                    </p>
-                  </motion.div>
+                    {noteSaved ? (
+                      <>✓ In Ordner gespeichert</>
+                    ) : (
+                      <>📂 In Ordner speichern</>
+                    )}
+                  </motion.button>
                 )}
               </AnimatePresence>
             </motion.div>
           )}
+
+          {/* ────── STAGE 3: method selection (mint theme) ────── */}
+          {stage === 3 && (
+            <motion.div
+              key="methods"
+              className="w-full"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: E }}
+            >
+              {/* Mode change banner */}
+              <motion.div
+                className="flex items-center justify-center gap-2 mb-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.35)' }}>Unterrichtsmodus</span>
+                <span className="text-[12px]" style={{ color: 'rgba(255,255,255,0.25)' }}>→</span>
+                <span className="text-[12px] font-semibold" style={{ color: mint }}>Klausurenmodus</span>
+              </motion.div>
+
+              <p className="text-[17px] font-bold text-white text-center mb-1">
+                Was möchtest du aus deiner Notiz machen?
+              </p>
+              <p className="text-[13px] text-center mb-6" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                Die KI erstellt beides automatisch aus deinen Inhalten.
+              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                {/* Probeklausur card */}
+                <motion.div
+                  className="rounded-2xl p-4 cursor-pointer"
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    opacity: methodHighlighted ? 0.45 : 1,
+                    transition: 'opacity 0.4s',
+                  }}
+                >
+                  <div className="text-[24px] mb-2">📝</div>
+                  <p className="text-[14px] font-bold text-white mb-1">Probeklausur</p>
+                  <p className="text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                    KI-generiert · 4 Modi · mit Korrektur
+                  </p>
+                </motion.div>
+
+                {/* Karteikarten card — auto-highlighted */}
+                <motion.button
+                  className="rounded-2xl p-4 text-left"
+                  animate={
+                    methodHighlighted
+                      ? { scale: 1.04, boxShadow: `0 0 0 2px ${mint}, 0 8px 32px rgba(52,211,153,0.2)` }
+                      : { scale: 1, boxShadow: '0 0 0 1px rgba(255,255,255,0.1)' }
+                  }
+                  style={{ background: methodHighlighted ? 'rgba(52,211,153,0.1)' : 'rgba(255,255,255,0.04)', transition: 'background 0.4s' }}
+                  transition={{ duration: 0.45, ease: E }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => { setCardFlipped(false); setShowFlipCta(false); setStage(4) }}
+                >
+                  <div className="text-[24px] mb-2">🃏</div>
+                  <p className="text-[14px] font-bold text-white mb-1">Karteikarten</p>
+                  <p className="text-[11px]" style={{ color: methodHighlighted ? 'rgba(52,211,153,0.7)' : 'rgba(255,255,255,0.4)', transition: 'color 0.4s' }}>
+                    {methodHighlighted ? 'Jetzt erstellen ✓' : 'KI-generiert · spaced repetition'}
+                  </p>
+                </motion.button>
+              </div>
+
+              <p className="text-center text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                In der App: Lernzettel, Lernplan, Blurting und mehr
+              </p>
+            </motion.div>
+          )}
+
+          {/* ────── STAGE 4: flashcard (manual flip) ────── */}
+          {stage === 4 && noteData && (
+            <motion.div
+              key="flashcard"
+              className="w-full flex flex-col items-center gap-6"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: E }}
+            >
+              <div className="text-center">
+                <p className="text-[17px] font-bold text-white mb-1">Deine erste Karteikarte</p>
+                <p className="text-[13px]" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  KI-generiert aus deiner Smart Note
+                </p>
+              </div>
+
+              {/* Flashcard — cross-fade faces (avoids 3D overflow) */}
+              <div
+                className="relative w-full cursor-pointer"
+                style={{ height: 180 }}
+                onClick={() => setCardFlipped((f) => !f)}
+              >
+                {/* Front face */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center p-5 text-center"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: `1.5px solid rgba(52,211,153,0.25)` }}
+                  animate={{ opacity: cardFlipped ? 0 : 1, scale: cardFlipped ? 0.94 : 1 }}
+                  transition={{ duration: 0.32, ease: E }}
+                >
+                  <p className="text-[10px] font-semibold mb-3" style={{ color: mint, letterSpacing: '0.08em' }}>FRAGE</p>
+                  <p className="text-[14px] font-medium text-white leading-snug">{noteData.cardFront}</p>
+                  <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>Tippen zum Umdrehen</p>
+                </motion.div>
+                {/* Back face */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center p-5 text-center"
+                  style={{ background: 'rgba(52,211,153,0.09)', border: `1.5px solid rgba(52,211,153,0.45)` }}
+                  animate={{ opacity: cardFlipped ? 1 : 0, scale: cardFlipped ? 1 : 0.94 }}
+                  transition={{ duration: 0.32, ease: E }}
+                >
+                  <p className="text-[10px] font-semibold mb-3" style={{ color: mint, letterSpacing: '0.08em' }}>ANTWORT</p>
+                  <p className="text-[13px] text-white leading-snug">{noteData.cardBack}</p>
+                  <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>Tippen zum Zurückdrehen</p>
+                </motion.div>
+              </div>
+
+              {/* CTA appears after flip — always in DOM to keep flex layout stable */}
+              <motion.div
+                className="w-full space-y-2.5"
+                initial={false}
+                animate={{ opacity: showFlipCta ? 1 : 0, y: showFlipCta ? 0 : 16 }}
+                transition={{ duration: 0.45, ease: E }}
+                style={{ pointerEvents: showFlipCta ? 'auto' : 'none' }}
+              >
+                    <p className="text-center text-[13px]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                      Das passiert mit jeder Notiz. Automatisch.
+                    </p>
+                    <motion.button
+                      className="w-full py-3.5 rounded-2xl text-[15px] font-semibold text-white"
+                      style={{ background: `linear-gradient(135deg, #7C3AED, #5B21B6)`, boxShadow: '0 4px 20px rgba(124,58,237,0.4)' }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => navigate(authUser ? appHome : '/auth')}
+                    >
+                      Jetzt personalisieren →
+                    </motion.button>
+                    <motion.button
+                      className="w-full py-3 rounded-2xl text-[14px] font-medium"
+                      style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.1)' }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => navigate(authUser ? appHome : '/auth')}
+                    >
+                      {authUser ? 'Zurück zur App' : 'Anmelden'}
+                    </motion.button>
+                    <p className="text-center text-[11px]" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                      Personalisierung dauert ~2 Minuten
+                    </p>
+                  </motion.div>
+            </motion.div>
+          )}
+
         </AnimatePresence>
       </div>
     </div>

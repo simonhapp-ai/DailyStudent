@@ -1,0 +1,20 @@
+- generic [ref=e3]:
+  - button "Anmelden" [ref=e4] [cursor=pointer]
+  - generic [ref=e55]: Klausurenmodus
+  - generic [ref=e57]:
+    - generic [ref=e58]:
+      - generic [ref=e59]: Unterrichtsmodus
+      - generic [ref=e60]: →
+      - generic [ref=e61]: Klausurenmodus
+    - paragraph [ref=e62]: Was möchtest du aus deiner Notiz machen?
+    - paragraph [ref=e63]: Die KI erstellt beides automatisch aus deinen Inhalten.
+    - generic [ref=e64]:
+      - generic [ref=e65] [cursor=pointer]:
+        - generic [ref=e66]: 📝
+        - paragraph [ref=e67]: Probeklausur
+        - paragraph [ref=e68]: KI-generiert · 4 Modi · mit Korrektur
+      - button "🃏 Karteikarten Jetzt erstellen ✓" [ref=e69] [cursor=pointer]:
+        - generic [ref=e70]: 🃏
+        - paragraph [ref=e71]: Karteikarten
+        - paragraph [ref=e72]: Jetzt erstellen ✓
+    - paragraph [ref=e73]: "In der App: Lernzettel, Lernplan, Blurting und mehr"

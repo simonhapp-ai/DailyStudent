@@ -472,6 +472,25 @@ supabase/
 
 ---
 
+## Design-Sprache — Upcoming Redesign (Inspiration: Landing Page)
+
+**Status:** In Planung. Die Landing Page (`/landing`) mit ihrem dunklen Hintergrund, purple/mint Akzenten und Premium-Atmosphäre ist die Referenz für den App-Redesign. Neue Features und Screens sollen bereits in diese Richtung gehen.
+
+### Farbsystem — 4-Color Palette
+
+| Rolle | Farbe | Hex | Verwendung |
+|-------|-------|-----|------------|
+| Neutral Dark | Black | `#0a0a0f` | Backgrounds, dunkle Oberflächen |
+| Neutral Light | White | `#FFFFFF` | Text, helle Oberflächen |
+| Unterrichtsmodus | Premium Purple | `#7C3AED` | Alles rund um Notizen, Unterricht, Smart Notes |
+| Klausurenmodus | Mint | `#34D399` | Alles rund um Klausur, Karteikarten, Lernplan, Probeklausur |
+
+**Prinzip:** Weniger ist mehr. Nicht jede Farbe gleichzeitig zeigen. Purple dominiert im Unterrichtskontext, Mint dominiert im Klausurenkontext. Details in anderen Farben (Streak-Orange, Fehler-Rot etc.) bleiben als Signalfarben erhalten, werden aber nicht als UI-Akzentfarben eingesetzt.
+
+**DemoScreen als Vorbild:** Der Demo-Bildschirm zeigt die Farbumgebung bereits korrekt — Purple-Glow bei der Notiz-Erstellung (Unterrichtsmodus), Mint-Glow nach dem Speichern (Klausurenmodus übergang). Dieses Muster auf die App übertragen.
+
+---
+
 ## Design-Prinzipien — iOS / Apple Quality Standard
 
 DailyStudent soll sich anfühlen wie eine native Apple-App.
@@ -496,8 +515,9 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 - Grün (`#30D158`) = erledigt / Erfolg
 - Orange (`#FF9F0A`) = Warnung / Streak
 - Rot (`#FF453A`) = kritisch / Klausur
-- Lila Accent (`#7C3AED`) = primäre Aktion / Brand
-- Teal (`#5AC8FA`) = Kalender / neutral
+- **Lila (`#7C3AED`) = Unterrichtsmodus / Brand / primäre Aktion**
+- **Mint (`#34D399`) = Klausurenmodus / Lernmethoden**
+- Teal (`#5AC8FA`) = Kalender / neutral (bleibt als Detail)
 
 **8. Typografie-Hierarchie**
 | Rolle | Größe | Gewicht |

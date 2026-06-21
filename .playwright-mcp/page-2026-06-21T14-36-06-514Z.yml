@@ -1,0 +1,21 @@
+- generic [ref=e3]:
+  - button "Anmelden" [ref=e4] [cursor=pointer]
+  - generic [ref=e55]: Klausurenmodus
+  - generic [ref=e74]:
+    - generic [ref=e75]:
+      - paragraph [ref=e76]: Deine erste Karteikarte
+      - paragraph [ref=e77]: KI-generiert aus deiner Smart Note
+    - generic [ref=e78] [cursor=pointer]:
+      - generic [ref=e79]:
+        - paragraph [ref=e80]: FRAGE
+        - paragraph [ref=e81]: Welche Phasen hat die Mitose?
+        - paragraph [ref=e82]: Tippen zum Umdrehen
+      - generic [ref=e83]:
+        - paragraph [ref=e84]: ANTWORT
+        - paragraph [ref=e85]: "Prophase → Metaphase → Anaphase → Telophase. Ergebnis: zwei genetisch identische Tochterzellen mit diploidem Chromosomensatz."
+        - paragraph [ref=e86]: Tippen zum Zurückdrehen
+    - generic [ref=e87]:
+      - paragraph [ref=e88]: Das passiert mit jeder Notiz. Automatisch.
+      - button "Jetzt personalisieren →" [ref=e89] [cursor=pointer]
+      - button "Anmelden" [ref=e90] [cursor=pointer]
+      - paragraph [ref=e91]: Personalisierung dauert ~2 Minuten

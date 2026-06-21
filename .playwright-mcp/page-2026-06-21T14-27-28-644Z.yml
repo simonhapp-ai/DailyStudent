@@ -1,0 +1,30 @@
+- generic [ref=e3]:
+  - button "Anmelden" [ref=e4] [cursor=pointer]
+  - generic [ref=e24]:
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: 🧠
+        - generic [ref=e28]: Smart Note — KI generiert
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - paragraph [ref=e31]: ZUSAMMENFASSUNG
+          - paragraph [ref=e32]: Chlorophyll absorbiert Licht, ATP wird produziert, Calvin-Zyklus nutzt ATP
+        - generic [ref=e36]:
+          - paragraph [ref=e37]: SCHLÜSSELBEGRIFFE
+          - generic [ref=e38]:
+            - generic [ref=e39]: Chlorophyll
+            - generic [ref=e40]: ATP
+            - generic [ref=e41]: Calvin-Zyklus
+            - generic [ref=e42]: Photosynthese
+            - generic [ref=e43]: Energieumwandlung
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: KLAUSURTHEMEN
+          - generic [ref=e46]:
+            - generic [ref=e47]:
+              - generic [ref=e48]: ▸
+              - generic [ref=e49]: Photosynthese
+            - generic [ref=e50]:
+              - generic [ref=e51]: ▸
+              - generic [ref=e52]: Energieumwandlung in der Zelle
+      - paragraph [ref=e35]: 📷 Normalerweise fügst du auch Fotos & Schreibnotizen hinzu
+    - button "📂 In Ordner speichern" [ref=e53] [cursor=pointer]
