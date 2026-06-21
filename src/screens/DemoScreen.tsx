@@ -442,7 +442,7 @@ export function DemoScreen() {
                           className="inline-block w-[2px] h-[14px] ml-0.5 align-middle rounded-full"
                           style={{ background: '#A78BFA' }}
                           animate={{ opacity: [1, 0] }}
-                          transition={{ duration: 0.7, repeat: Infinity, ease: 'steps(2)' }}
+                          transition={{ duration: 0.7, repeat: Infinity, ease: 'linear', repeatType: 'mirror' }}
                         />
                       )}
                     </p>
