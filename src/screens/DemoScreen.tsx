@@ -274,7 +274,6 @@ export function DemoScreen() {
 
   const mint = '#34D399'
   const purple = '#7C3AED'
-  const accentColor = colorMode === 'mint' ? mint : purple
 
   return (
     <div className="fixed inset-0 overflow-hidden" style={{ background: '#0a0a0f' }}>
