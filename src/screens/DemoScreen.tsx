@@ -100,37 +100,71 @@ const FALLBACKS: Record<string, SmartNoteData> = {
 async function callGroqDemo(terms: string[]): Promise<SmartNoteData> {
   const key = import.meta.env.VITE_GROQ_API_KEY as string
   if (!key) throw new Error('no key')
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-    signal: AbortSignal.timeout(7500),
-    body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
-      max_tokens: 500,
-      temperature: 0.2,
-      response_format: { type: 'json_object' },
-      messages: [
-        {
-          role: 'system',
-          content:
-            'Du bist ein Lernassistent für Gymnasiasten in Niedersachsen (Oberstufe). Antworte auf Deutsch. Gib ausschließlich valides JSON zurück.',
-        },
-        {
-          role: 'user',
-          content: `Erstelle eine kompakte Smart Note basierend auf diesen Begriffen aus dem Niedersachsen-Kerncurriculum:\nBegriffe: ${terms.join(', ')}\n\nAntworte NUR mit diesem JSON:\n{"summary":"Kernaussage in 2-3 Sätzen (max 220 Zeichen)","keywords":["Begriff1","Begriff2","Begriff3","Begriff4","Begriff5"],"examTopics":["Klausurthema 1","Klausurthema 2"]}`,
-        },
-      ],
-    }),
-  })
-  if (!res.ok) throw new Error(`groq ${res.status}`)
-  const data = (await res.json()) as { choices: { message: { content: string } }[] }
-  const parsed = JSON.parse(data.choices[0].message.content) as Partial<SmartNoteData>
-  return {
-    summary: typeof parsed.summary === 'string' && parsed.summary.length > 20 ? parsed.summary : FALLBACKS.custom.summary,
-    keywords: Array.isArray(parsed.keywords) ? parsed.keywords.slice(0, 5) : terms.slice(0, 5),
-    examTopics: Array.isArray(parsed.examTopics) ? parsed.examTopics.slice(0, 2) : FALLBACKS.custom.examTopics,
-    cardFront: FALLBACKS.custom.cardFront,
-    cardBack: FALLBACKS.custom.cardBack,
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 8000)
+
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        max_tokens: 700,
+        temperature: 0.3,
+        response_format: { type: 'json_object' },
+        messages: [
+          {
+            role: 'system',
+            content:
+              'Du bist ein Lernassistent für Gymnasiasten in Niedersachsen (Oberstufe, G9). Antworte immer auf Deutsch. Gib ausschließlich valides JSON ohne Markdown zurück.',
+          },
+          {
+            role: 'user',
+            content: `Erstelle eine vollständige Smart Note für folgende Begriffe aus dem Niedersachsen-Kerncurriculum:
+Begriffe: ${terms.join(', ')}
+
+Antworte NUR mit diesem JSON (alle Felder ausfüllen):
+{
+  "summary": "Erkläre die Zusammenhänge zwischen den Begriffen in 2-3 vollständigen Sätzen für die Oberstufe",
+  "keywords": ["${terms[0] || 'Begriff1'}", "Begriff2", "Begriff3", "Begriff4", "Begriff5"],
+  "examTopics": ["Konkretes Klausurthema 1 als vollständiger Satz", "Konkretes Klausurthema 2 als vollständiger Satz"],
+  "cardFront": "Eine typische Klausurfrage zu diesen Begriffen (vollständiger Fragesatz)",
+  "cardBack": "Präzise Antwort in 1-2 Sätzen"
+}`,
+          },
+        ],
+      }),
+    })
+
+    clearTimeout(timeout)
+    if (!res.ok) throw new Error(`groq ${res.status}`)
+
+    const data = (await res.json()) as { choices: { message: { content: string } }[] }
+    const raw = data.choices[0].message.content
+    const parsed = JSON.parse(raw) as Partial<SmartNoteData>
+
+    return {
+      summary: typeof parsed.summary === 'string' && parsed.summary.length > 40
+        ? parsed.summary
+        : `${terms.join(', ')} sind zentrale Begriffe im Niedersachsen-Kerncurriculum der Oberstufe.`,
+      keywords: Array.isArray(parsed.keywords) && parsed.keywords.length >= 2
+        ? parsed.keywords.slice(0, 5)
+        : terms.slice(0, 5),
+      examTopics: Array.isArray(parsed.examTopics) && parsed.examTopics.length >= 1
+        ? parsed.examTopics.slice(0, 2)
+        : [`Erkläre die Zusammenhänge zwischen ${terms.slice(0, 2).join(' und ')}`],
+      cardFront: typeof parsed.cardFront === 'string' && parsed.cardFront.length > 10
+        ? parsed.cardFront
+        : `Erkläre den Begriff ${terms[0]} und seine Bedeutung für ${terms.slice(1).join(', ')}.`,
+      cardBack: typeof parsed.cardBack === 'string' && parsed.cardBack.length > 10
+        ? parsed.cardBack
+        : `${terms[0]} bezeichnet einen zentralen Prozess, der mit ${terms.slice(1, 3).join(' und ')} eng verbunden ist.`,
+    }
+  } catch (err) {
+    clearTimeout(timeout)
+    throw err
   }
 }
 
@@ -146,9 +180,10 @@ export function DemoScreen() {
 
   // Stage 0 — input
   const [customOpen, setCustomOpen] = useState(false)
-  const [customTags, setCustomTags] = useState(['Mitose', 'Zellteilung', 'Metaphase'])
+  const [customTags, setCustomTags] = useState<string[]>([])
   const [customInput, setCustomInput] = useState('')
   const customInputRef = useRef<HTMLInputElement>(null)
+  const SUGGESTIONS = ['Mitose', 'Zellteilung', 'Metaphase']
 
   // Stage 1 — loading
   const [loadingLabelIdx, setLoadingLabelIdx] = useState(0)
@@ -277,6 +312,13 @@ export function DemoScreen() {
 
   return (
     <div className="fixed inset-0 overflow-hidden" style={{ background: '#0a0a0f' }}>
+      <style>{`
+        @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+        @keyframes ea-glow {
+          0%, 100% { box-shadow: 0 2px 14px rgba(52,211,153,0.35), 0 0 0 0 rgba(52,211,153,0); }
+          50% { box-shadow: 0 4px 24px rgba(52,211,153,0.65), 0 0 20px 2px rgba(52,211,153,0.22); }
+        }
+      `}</style>
       {/* ── ambient glow: cross-fade purple ↔ mint ── */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
@@ -302,24 +344,7 @@ export function DemoScreen() {
         {authUser ? 'Zurück zur App' : 'Anmelden'}
       </motion.button>
 
-      {/* ── mode badge (stage 3+) ── */}
-      <AnimatePresence>
-        {stage >= 3 && (
-          <motion.div
-            className="fixed top-4 left-4 z-50 flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-semibold"
-            style={{ background: 'rgba(52,211,153,0.15)', color: mint, border: `1px solid rgba(52,211,153,0.3)` }}
-            initial={{ opacity: 0, x: -16 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: E }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full" style={{ background: mint }} />
-            Klausurenmodus
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── main content ── */}
+{/* ── main content ── */}
       <div className="flex flex-col items-center h-full overflow-y-auto px-5 max-w-md mx-auto" style={{ paddingTop: stage >= 4 ? '10vh' : '0', justifyContent: stage < 4 ? 'center' : 'flex-start' }}>
         <AnimatePresence mode="wait">
 
@@ -405,32 +430,64 @@ export function DemoScreen() {
                     <p className="text-[11px] font-semibold mb-2.5" style={{ color: 'rgba(167,139,250,0.8)' }}>
                       DEINE BEGRIFFE
                     </p>
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {customTags.map((t) => (
-                        <span
-                          key={t}
-                          className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[12px] font-medium"
-                          style={{ background: 'rgba(124,58,237,0.25)', color: '#C4B5FD' }}
-                        >
-                          {t}
-                          <button
-                            onClick={() => setCustomTags((p) => p.filter((x) => x !== t))}
-                            className="opacity-60 hover:opacity-100 transition-opacity"
+
+                    {/* Selected tags */}
+                    <div className="flex flex-wrap gap-2 mb-2 min-h-[28px]">
+                      <AnimatePresence mode="popLayout">
+                        {customTags.map((t) => (
+                          <motion.span
+                            key={t}
+                            layout
+                            initial={{ opacity: 0, scale: 0.7 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.6 }}
+                            transition={{ duration: 0.22, ease: E }}
+                            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[12px] font-medium"
+                            style={{ background: 'rgba(124,58,237,0.3)', color: '#C4B5FD', border: '1px solid rgba(124,58,237,0.4)' }}
                           >
-                            ×
-                          </button>
-                        </span>
-                      ))}
+                            {t}
+                            <button
+                              onClick={() => setCustomTags((p) => p.filter((x) => x !== t))}
+                              className="opacity-60 hover:opacity-100 transition-opacity leading-none"
+                            >
+                              ×
+                            </button>
+                          </motion.span>
+                        ))}
+                      </AnimatePresence>
                       <input
                         ref={customInputRef}
                         value={customInput}
                         onChange={(e) => setCustomInput(e.target.value)}
                         onKeyDown={handleCustomTagAdd}
                         onBlur={() => { if (customInput.trim()) handleCustomTagAdd() }}
-                        placeholder="Begriff eingeben + Enter"
-                        className="bg-transparent text-[12px] text-white placeholder-white/30 outline-none min-w-[140px] flex-1"
+                        placeholder={customTags.length === 0 ? 'Begriff eingeben + Enter …' : 'Weiterer Begriff …'}
+                        className="bg-transparent text-[12px] text-white placeholder-white/30 outline-none min-w-[130px] flex-1 py-1"
                       />
+                    </div>
+
+                    {/* Suggestion chips */}
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      <span className="text-[10px] self-center" style={{ color: 'rgba(255,255,255,0.25)' }}>Ideen:</span>
+                      <AnimatePresence mode="popLayout">
+                        {SUGGESTIONS.filter((s) => !customTags.includes(s)).map((s) => (
+                          <motion.button
+                            key={s}
+                            layout
+                            initial={{ opacity: 0, scale: 0.7 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            transition={{ duration: 0.2, ease: E }}
+                            className="px-2 py-0.5 rounded-full text-[11px]"
+                            style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.12)' }}
+                            whileHover={{ scale: 1.06, background: 'rgba(124,58,237,0.2)', color: '#C4B5FD' }}
+                            whileTap={{ scale: 0.92 }}
+                            onClick={() => setCustomTags((p) => [...p, s])}
+                          >
+                            + {s}
+                          </motion.button>
+                        ))}
+                      </AnimatePresence>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
@@ -747,34 +804,31 @@ export function DemoScreen() {
                 </p>
               </div>
 
-              {/* Flashcard — cross-fade faces (avoids 3D overflow) */}
+              {/* Flashcard — real 3D flip */}
               <div
-                className="relative w-full cursor-pointer"
-                style={{ height: 180 }}
+                className="relative w-full cursor-pointer select-none"
+                style={{ height: 180, perspective: '1000px' }}
                 onClick={() => setCardFlipped((f) => !f)}
               >
-                {/* Front face */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center p-5 text-center"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: `1.5px solid rgba(52,211,153,0.25)` }}
-                  animate={{ opacity: cardFlipped ? 0 : 1, scale: cardFlipped ? 0.94 : 1 }}
-                  transition={{ duration: 0.32, ease: E }}
-                >
-                  <p className="text-[10px] font-semibold mb-3" style={{ color: mint, letterSpacing: '0.08em' }}>FRAGE</p>
-                  <p className="text-[14px] font-medium text-white leading-snug">{noteData.cardFront}</p>
-                  <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>Tippen zum Umdrehen</p>
-                </motion.div>
-                {/* Back face */}
-                <motion.div
-                  className="absolute inset-0 rounded-2xl flex flex-col items-center justify-center p-5 text-center"
-                  style={{ background: 'rgba(52,211,153,0.09)', border: `1.5px solid rgba(52,211,153,0.45)` }}
-                  animate={{ opacity: cardFlipped ? 1 : 0, scale: cardFlipped ? 1 : 0.94 }}
-                  transition={{ duration: 0.32, ease: E }}
-                >
-                  <p className="text-[10px] font-semibold mb-3" style={{ color: mint, letterSpacing: '0.08em' }}>ANTWORT</p>
-                  <p className="text-[13px] text-white leading-snug">{noteData.cardBack}</p>
-                  <p className="text-[11px] mt-4" style={{ color: 'rgba(255,255,255,0.3)' }}>Tippen zum Zurückdrehen</p>
-                </motion.div>
+                <div className={`flashcard-inner w-full h-full${cardFlipped ? ' flipped' : ''}`}>
+                  {/* Front face */}
+                  <div
+                    className="flashcard-face absolute inset-0 rounded-2xl flex flex-col items-center justify-center p-5 text-center"
+                    style={{ background: 'rgba(255,255,255,0.06)', border: `1.5px solid rgba(52,211,153,0.25)` }}
+                  >
+                    <p className="text-[10px] font-semibold mb-3" style={{ color: mint, letterSpacing: '0.08em' }}>FRAGE</p>
+                    <p className="text-[14px] font-medium text-white leading-snug">{noteData.cardFront}</p>
+                    <p className="text-[10px] mt-3.5" style={{ color: 'rgba(255,255,255,0.28)' }}>Tippen zum Umdrehen</p>
+                  </div>
+                  {/* Back face */}
+                  <div
+                    className="flashcard-back absolute inset-0 rounded-2xl flex flex-col items-center justify-center p-5 text-center"
+                    style={{ background: 'rgba(52,211,153,0.09)', border: `1.5px solid rgba(52,211,153,0.45)` }}
+                  >
+                    <p className="text-[10px] font-semibold mb-3" style={{ color: mint, letterSpacing: '0.08em' }}>ANTWORT</p>
+                    <p className="text-[13px] text-white leading-snug">{noteData.cardBack}</p>
+                  </div>
+                </div>
               </div>
 
               {/* CTA appears after flip — always in DOM to keep flex layout stable */}
@@ -789,13 +843,14 @@ export function DemoScreen() {
                       Das passiert mit jeder Notiz. Automatisch.
                     </p>
                     <motion.button
-                      className="w-full py-3.5 rounded-2xl text-[15px] font-semibold text-white"
-                      style={{ background: `linear-gradient(135deg, #7C3AED, #5B21B6)`, boxShadow: '0 4px 20px rgba(124,58,237,0.4)' }}
+                      className="w-full py-3.5 rounded-2xl text-[15px] font-semibold text-white relative overflow-hidden"
+                      style={{ background: 'linear-gradient(135deg, #34D399, #059669)', animation: 'ea-glow 2.4s ease-in-out infinite' }}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.97 }}
                       onClick={() => navigate(authUser ? appHome : '/auth')}
                     >
-                      Jetzt personalisieren →
+                      <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.28) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
+                      <span className="relative">Jetzt personalisieren →</span>
                     </motion.button>
                     <motion.button
                       className="w-full py-3 rounded-2xl text-[14px] font-medium"

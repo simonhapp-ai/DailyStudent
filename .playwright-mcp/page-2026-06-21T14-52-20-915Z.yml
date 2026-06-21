@@ -1,0 +1,21 @@
+- generic [ref=e3]:
+  - button "Anmelden" [ref=e4] [cursor=pointer]
+  - generic [ref=e6]:
+    - heading "Deine Notizen. Deine Klausur. Dein Lernplan." [level=1] [ref=e7]
+    - paragraph [ref=e8]: Wähle ein Thema — oder gib deine eigenen Begriffe ein.
+    - generic [ref=e9]:
+      - button "Chlorophyll · ATP · Calvin-Zyklus" [ref=e10] [cursor=pointer]:
+        - generic [ref=e11]: Chlorophyll · ATP · Calvin-Zyklus
+      - button "Inflation · Reichstag · 1933" [ref=e12] [cursor=pointer]:
+        - generic [ref=e13]: Inflation · Reichstag · 1933
+      - button "Kathete · Hypotenuse · Winkel" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: Kathete · Hypotenuse · Winkel
+      - button "Trägheit · Kraft · Beschleunigung" [ref=e16] [cursor=pointer]:
+        - generic [ref=e17]: Trägheit · Kraft · Beschleunigung
+      - button "Monet · Licht · Pinselstrich" [ref=e18] [cursor=pointer]:
+        - generic [ref=e19]: Monet · Licht · Pinselstrich
+      - button "Parlament · Kommission · Rat" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: Parlament · Kommission · Rat
+    - button "✏️ Eigene Notiz erstellen" [ref=e22] [cursor=pointer]:
+      - generic [ref=e23]: ✏️
+      - text: Eigene Notiz erstellen

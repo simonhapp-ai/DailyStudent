@@ -1,0 +1,30 @@
+- generic [ref=e3]:
+  - button "Anmelden" [ref=e4] [cursor=pointer]
+  - generic [ref=e34]:
+    - generic [ref=e35]:
+      - generic [ref=e36]:
+        - generic [ref=e37]: 🧠
+        - generic [ref=e38]: Smart Note — KI generiert
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - paragraph [ref=e41]: ZUSAMMENFASSUNG
+          - paragraph [ref=e42]: Chlorophyll spielt eine zentrale Rolle bei der Photosynthese, indem es Lichtenergie absorbiert und in chemische Energie umwandelt, die in Form von ATP gespeichert wird. Der Calvin-Zyklus ist ein wichtiger Teil der Photosynthese, bei dem Kohlendioxid mithilfe der Energie aus ATP in Glukose umgewandelt wird. Durch diese Prozesse können Pflanzen Energie und organische Verbindungen produzieren, die für ihr Wachstum und ihre Entwicklung notwendig sind.
+        - generic [ref=e43]:
+          - paragraph [ref=e44]: SCHLÜSSELBEGRIFFE
+          - generic [ref=e45]:
+            - generic [ref=e46]: Chlorophyll
+            - generic [ref=e47]: ATP
+            - generic [ref=e48]: Calvin-Zyklus
+            - generic [ref=e49]: Photosynthese
+            - generic [ref=e50]: Kohlendioxid
+        - generic [ref=e51]:
+          - paragraph [ref=e52]: KLAUSURTHEMEN
+          - generic [ref=e53]:
+            - generic [ref=e54]:
+              - generic [ref=e55]: ▸
+              - generic [ref=e56]: Beschreiben Sie den Prozess der Photosynthese und die Rolle von Chlorophyll und ATP dabei.
+            - generic [ref=e57]:
+              - generic [ref=e58]: ▸
+              - generic [ref=e59]: Erklären Sie den Calvin-Zyklus und seine Bedeutung für die Pflanzen
+      - paragraph [ref=e61]: 📷 Normalerweise fügst du auch Fotos & Schreibnotizen hinzu
+    - button "📂 In Ordner speichern" [ref=e62] [cursor=pointer]
