@@ -17,10 +17,11 @@ const CLUSTERS = [
 ]
 
 const LOADING_LABELS = [
-  'KC-Inhalte · Niedersachsen',
-  'Begriffe werden verarbeitet',
-  'Definitionen werden eingebunden',
-  'Einordnung in Unterrichtsmaterialien',
+  'KC-Inhalte analysieren',
+  'Schlüsselbegriffe erkennen',
+  'Zusammenfassen',
+  'Klausurthemen finden',
+  'Definitionen erstellen',
 ]
 
 interface SmartNoteData {
@@ -93,7 +94,7 @@ async function callGroqDemo(terms: string[]): Promise<SmartNoteData> {
   if (!key) throw new Error('no key')
 
   const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 12000)
+  const timeout = setTimeout(() => controller.abort(), 15000)
 
   try {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -102,27 +103,28 @@ async function callGroqDemo(terms: string[]): Promise<SmartNoteData> {
       signal: controller.signal,
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens: 700,
-        temperature: 0.3,
+        max_tokens: 900,
+        temperature: 0.4,
         response_format: { type: 'json_object' },
         messages: [
           {
             role: 'system',
             content:
-              'Du bist ein Lernassistent für Gymnasiasten in Niedersachsen (Oberstufe, G9). Antworte immer auf Deutsch. Gib ausschließlich valides JSON ohne Markdown zurück.',
+              'Du bist ein Lernassistent für Gymnasiasten (Oberstufe, G9). Antworte immer auf Deutsch. Gib ausschließlich valides JSON ohne Markdown zurück. Schreibe fachlich präzise, inhaltlich tiefe Texte — keine Floskeln wie "sind zentrale Begriffe" oder "regelmäßig in Klausuren". Erkläre was Konzepte wirklich bedeuten.',
           },
           {
             role: 'user',
-            content: `Erstelle eine vollständige Smart Note für folgende Begriffe aus dem Niedersachsen-Kerncurriculum:
-Begriffe: ${terms.join(', ')}
+            content: `Erstelle eine vollständige Smart Note für folgende Lernbegriffe: ${terms.join(', ')}
 
-Antworte NUR mit diesem JSON (alle Felder ausfüllen):
+Die Zusammenfassung soll INHALTLICH erklären was diese Konzepte bedeuten — Definitionen, Mechanismen, Funktionsweisen, Zusammenhänge. 3 vollständige, lehrreiche Sätze. Kein Verweis auf Lehrpläne oder Bundesländer.
+
+Antworte NUR mit diesem JSON:
 {
-  "summary": "Erkläre die Zusammenhänge zwischen den Begriffen in 2-3 vollständigen Sätzen für die Oberstufe",
-  "keywords": ["${terms[0] || 'Begriff1'}", "Begriff2", "Begriff3", "Begriff4", "Begriff5"],
-  "examTopics": ["Konkretes Klausurthema 1 als vollständiger Satz", "Konkretes Klausurthema 2 als vollständiger Satz"],
-  "cardFront": "Eine typische Klausurfrage zu diesen Begriffen (vollständiger Fragesatz)",
-  "cardBack": "Präzise Antwort in 1-2 Sätzen"
+  "summary": "3 vollständige Sätze die fachlich erklären was die Begriffe bedeuten, wie sie funktionieren und welche Kernaussagen wichtig sind",
+  "keywords": ["Fachbegriff1", "Fachbegriff2", "Fachbegriff3", "Fachbegriff4", "Fachbegriff5"],
+  "examTopics": ["Konkretes Klausurthema als vollständiger Aufgabensatz", "Zweites prüfungsrelevantes Thema als vollständiger Satz"],
+  "cardFront": "Präzise Klausurfrage zu einem der Kernkonzepte als vollständiger Fragesatz",
+  "cardBack": "Genaue, inhaltlich vollständige Antwort in 1-2 Sätzen"
 }`,
           },
         ],
@@ -136,22 +138,24 @@ Antworte NUR mit diesem JSON (alle Felder ausfüllen):
     const raw = data.choices[0].message.content
     const parsed = JSON.parse(raw) as Partial<SmartNoteData>
 
+    const t0 = terms[0] ?? 'Begriff'
+    const t1 = terms[1] ?? terms[0] ?? 'Begriff'
     return {
-      summary: typeof parsed.summary === 'string' && parsed.summary.length > 40
+      summary: typeof parsed.summary === 'string' && parsed.summary.length > 60
         ? parsed.summary
-        : `${terms.join(', ')} sind zentrale Begriffe im Niedersachsen-Kerncurriculum der Oberstufe.`,
+        : `${t0} ist ein grundlegendes Fachkonzept, das präzises Verständnis erfordert. Im Zusammenhang mit ${t1} zeigen sich wichtige inhaltliche Bezüge, die für Klausuren relevant sind. Eine sichere Kenntnis der Definitionen und Zusammenhänge ist entscheidend.`,
       keywords: Array.isArray(parsed.keywords) && parsed.keywords.length >= 2
         ? parsed.keywords.slice(0, 5)
         : terms.slice(0, 5),
       examTopics: Array.isArray(parsed.examTopics) && parsed.examTopics.length >= 1
         ? parsed.examTopics.slice(0, 2)
-        : [`Erkläre die Zusammenhänge zwischen ${terms.slice(0, 2).join(' und ')}`],
+        : [`${t0} definieren und an einem Beispiel erläutern`, `Zusammenhänge zwischen ${terms.slice(0, 2).join(' und ')} erklären`],
       cardFront: typeof parsed.cardFront === 'string' && parsed.cardFront.length > 10
         ? parsed.cardFront
-        : `Erkläre den Begriff ${terms[0]} und seine Bedeutung für ${terms.slice(1).join(', ')}.`,
+        : `Was versteht man unter ${t0} und welche Bedeutung hat es im Kontext von ${terms.slice(1).join(', ')}?`,
       cardBack: typeof parsed.cardBack === 'string' && parsed.cardBack.length > 10
         ? parsed.cardBack
-        : `${terms[0]} bezeichnet einen zentralen Prozess, der mit ${terms.slice(1, 3).join(' und ')} eng verbunden ist.`,
+        : `${t0} bezeichnet ein zentrales Fachkonzept, das eng mit ${terms.slice(1, 3).join(' und ')} verbunden ist und in verschiedenen Kontexten angewendet werden kann.`,
     }
   } catch (err) {
     clearTimeout(timeout)
@@ -251,15 +255,17 @@ export function DemoScreen() {
 
   function buildFallback(terms: string[], key: string): SmartNoteData {
     if (FALLBACKS[key]) return FALLBACKS[key]
+    const t0 = terms[0] ?? 'Begriff'
+    const t1 = terms[1] ?? terms[0] ?? 'Begriff'
     return {
-      summary: `${terms.join(', ')} sind zentrale Begriffe aus dem Niedersachsen-Kerncurriculum der Oberstufe, die regelmäßig in Klausuren abgefragt werden.`,
+      summary: `${t0} ist ein grundlegendes Fachkonzept, das präzises Verständnis der zugrunde liegenden Mechanismen und Definitionen erfordert. Im Zusammenhang mit ${t1} zeigen sich wichtige inhaltliche Bezüge, die für ein tiefes Verständnis des Themas essenziell sind. Die sichere Beherrschung dieser Konzepte bildet die Grundlage für Klausurlösungen auf Oberstufenniveau.`,
       keywords: terms.slice(0, 5),
       examTopics: [
-        `Zusammenhänge zwischen ${terms[0]} und ${terms[1] ?? terms[0]} erklären`,
-        `${terms[0]} an einem konkreten Beispiel erläutern`,
+        `${t0} definieren und anhand eines konkreten Beispiels erläutern`,
+        `Zusammenhänge zwischen ${terms.slice(0, 2).join(' und ')} fachlich korrekt beschreiben`,
       ],
-      cardFront: `Welche Bedeutung hat ${terms[0]} im Zusammenhang mit ${terms.slice(1).join(' und ')}?`,
-      cardBack: `${terms[0]} beschreibt ein zentrales Konzept, das eng mit ${terms.slice(1, 3).join(' und ')} zusammenhängt.`,
+      cardFront: `Was versteht man unter ${t0} und welche Rolle spielt es im Zusammenhang mit ${t1}?`,
+      cardBack: `${t0} bezeichnet ein zentrales Fachkonzept, das eng mit ${terms.slice(1, 3).join(' und ')} verbunden ist und in verschiedenen fachlichen Kontexten angewendet werden kann.`,
     }
   }
 
