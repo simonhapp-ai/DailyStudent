@@ -307,7 +307,7 @@ export function DemoScreen() {
   const purple = '#7C3AED'
 
   return (
-    <div className="fixed inset-0 overflow-hidden" style={{ background: '#0a0a0f' }}>
+    <div className="fixed inset-0 overflow-hidden" style={{ background: '#0a0a0f', paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
       <style>{`
         @keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
         @keyframes ea-glow {
@@ -331,8 +331,8 @@ export function DemoScreen() {
 
       {/* ── top-right button ── */}
       <motion.button
-        className="fixed top-4 right-4 z-50 px-4 py-2 rounded-full text-[13px] font-medium"
-        style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}
+        className="fixed right-4 z-50 px-4 py-2 rounded-full text-[13px] font-medium"
+        style={{ top: 'max(20px, calc(env(safe-area-inset-top, 0px) + 16px))', background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.12)' }}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.97 }}
         onClick={() => navigate(authUser ? appHome : '/auth')}
@@ -342,7 +342,7 @@ export function DemoScreen() {
 
 {/* ── main content ── */}
       <div className="h-full overflow-y-auto" style={{ width: '100%' }}>
-      <div className="flex flex-col items-center px-5 mx-auto" style={{ width: '100%', maxWidth: IS_DESKTOP ? 560 : 448, minHeight: '100%', paddingTop: '10vh', paddingBottom: '10vh', justifyContent: 'center' }}>
+      <div className="flex flex-col items-center px-5 mx-auto" style={{ width: '100%', maxWidth: IS_DESKTOP ? 560 : 448, minHeight: '100%', paddingTop: 'max(10vh, calc(env(safe-area-inset-top, 0px) + 48px))', paddingBottom: '12vh', justifyContent: 'center' }}>
         <AnimatePresence mode="wait">
 
           {/* ────── STAGE 0: input ────── */}
