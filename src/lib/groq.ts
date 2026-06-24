@@ -386,7 +386,7 @@ JSON mit exakt diesen 3 Feldern:
 {"contentType":"aufgabe","summary":"","keywords":["Begriff"]}
 contentType: "info" = nur Lernstoff, "aufgabe" = Aufgaben vorhanden, "beides" = beides
 summary: max 2 Sätze Zusammenfassung des Lernstoffs (leer wenn reine Aufgaben)
-keywords: 3-5 Fachbegriffe als einfache Strings ohne Sonderzeichen`,
+keywords: Genau 5 wichtige Fachbegriffe die ein Schüler zu diesem Thema kennen muss (einfache Strings, keine Sonderzeichen)`,
       },
     ],
   })

@@ -87,11 +87,11 @@ export async function analyzeFileToSmartNote(
       parts: [
         { inline_data: { mime_type: mimeType, data: base64 } },
         {
-          text: `Du bist ein Lernassistent für deutsche Abiturschüler. Analysiere das Dokument und erstelle eine strukturierte Smart Note. Fach-Kontext: ${subjectName}. Antworte NUR mit validem JSON:
+          text: `Du bist ein Lernassistent für deutsche Abiturschüler. Analysiere das Dokument und erstelle eine strukturierte Smart Note. Fach-Kontext: ${subjectName}. Antworte NUR mit validem JSON (keywords: genau 5 Fachbegriffe):
 {
   "title": "Kurzer Titel des Inhalts (max 60 Zeichen)",
   "summary": "3-5 Sätze Zusammenfassung des Lerninhalts auf Deutsch",
-  "keywords": ["Fachbegriff1", "Fachbegriff2", "Fachbegriff3"],
+  "keywords": ["Fachbegriff1", "Fachbegriff2", "Fachbegriff3", "Fachbegriff4", "Fachbegriff5"],
   "examTopics": ["Mögliches Klausurthema 1", "Mögliches Klausurthema 2"]
 }`,
         },
