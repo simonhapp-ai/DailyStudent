@@ -155,9 +155,17 @@ export async function analyzeTextBlock(
 ): Promise<TextBlockAnalysis> {
   const stufe = isOberstufe ? 'oberstufe' : 'mittelstufe'
   const kursTyp = isOberstufe ? (isLK ? 'Leistungskurs (LK)' : 'Grundkurs (GK)') : 'Regelunterricht'
+  // Full KC block for system prompt (overview)
   const kcContextBlock = kcData ? `\n\n${buildKcPromptContext(kcData, stufe)}` : ''
+
+  // Detailed KC block for user prompt — includes Unterthemen + Kernkompetenzen per topic
+  // so Groq has the full detail at the point it generates ergaenzungsbegriffe
   const kcThemenList = kcData && kcData.hauptthemen.length > 0
-    ? `\nVerfügbare KC-Hauptthemen (verwende exakt einen dieser Namen als kcHauptthema):\n${kcData.hauptthemen.map((h, i) => `${i + 1}. ${h.thema}`).join('\n')}`
+    ? `\nKerncurriculum ${kcData.bundesland} — ${kcData.fach} (wähle exakt einen Namen als kcHauptthema):\n${
+        kcData.hauptthemen.map((h, i) =>
+          `${i + 1}. ${h.thema}\n   Unterthemen: ${h.relevante_unterthemen.join(' | ')}\n   Kompetenzen: ${h.kernkompetenzen.join(' | ')}`
+        ).join('\n')
+      }`
     : ''
 
   const content = await groqFetch({
@@ -181,7 +189,7 @@ ${text.slice(0, 1500)}
 Erstelle eine vollständige Analyse als JSON:
 {
   "erkanntesTopic": "Fach — Themenbereich: konkretes Thema (z.B. 'Biologie — Genetik: DNA-Replikation')",
-  "kcHauptthema": "Exakter Name aus der KC-Themenliste oben (leerer String wenn kein KC verfügbar)",
+  "kcHauptthema": "Exakter Themenname aus der KC-Liste oben (leerer String wenn kein KC verfügbar)",
   "elaborations": [
     {
       "punkt": "Stichpunkt exakt wie in der Mitschrift",
@@ -197,8 +205,8 @@ Erstelle eine vollständige Analyse als JSON:
   ],
   "verbindungen": ["Direkt verwandtes Thema das auf diesem Stoff aufbaut oder damit zusammenhängt"],
   "klausurhinweis": "Welche Aufgabentypen und Operatoren kommen zu diesem Thema typischerweise in Klausuren vor",
-  "offeneKcPunkte": ["Unterthema aus dem erkannten KC-Hauptthema das in der Mitschrift noch fehlt"],
-  "ergaenzungsbegriffe": ["Wichtiger Fachbegriff zum Thema der in der Mitschrift nicht vorkommt aber bekannt sein sollte"]
+  "offeneKcPunkte": ["Unterthema aus dem KC-Eintrag des erkannten kcHauptthemas das in der Mitschrift noch fehlt"],
+  "ergaenzungsbegriffe": ["Konkreter Fachbegriff aus den Unterthemen/Kompetenzen des erkannten kcHauptthemas der in der Mitschrift fehlt"]
 }
 
 Regeln:
@@ -206,8 +214,8 @@ Regeln:
 - definitionen: Nur Begriffe die tatsächlich IN der Mitschrift vorkommen (3–6 Begriffe)
 - haeufigeFehler: 2–3 fachspezifische, konkrete Fehler — keine Allgemeinplätze
 - verbindungen: 2–4 konkrete Themen die direkt auf diesem Stoff aufbauen
-- offeneKcPunkte: Nur Unterthemen des erkannten kcHauptthemas, maximal 4
-- ergaenzungsbegriffe: 3–5 Begriffe die ein Lehrer in diesem Kontext erwarten würde
+- offeneKcPunkte: Nur Unterthemen aus dem KC-Eintrag des erkannten kcHauptthemas, maximal 4
+- ergaenzungsbegriffe: Genau 5 Fachbegriffe — leite sie direkt aus den Unterthemen und Kompetenzen des erkannten kcHauptthemas ab (KC-Liste oben). KEINE allgemeinen Begriffe wie "Definition", "Analyse" oder "Beispiel". Falls kein KC: 5 fachdidaktische Schlüsselbegriffe zum erkannten Thema.
 - klausurhinweis: Konkret mit Operatoren und Aufgabentyp, kein "könnte vorkommen"`,
       },
     ],

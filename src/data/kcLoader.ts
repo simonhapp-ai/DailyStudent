@@ -133,8 +133,8 @@ export function buildKcPromptContext(
     `Kerncurriculum ${kc.bundesland} — ${kc.fach} (${stufeName}):`,
   ]
   for (const t of kc.hauptthemen) {
-    const subs = t.relevante_unterthemen.slice(0, 4).join(', ')
-    const comps = t.kernkompetenzen.slice(0, 2).join('; ')
+    const subs = t.relevante_unterthemen.join(', ')
+    const comps = t.kernkompetenzen.join('; ')
     lines.push(`• ${t.thema}${subs ? ` (${subs})` : ''}${comps ? ` → ${comps}` : ''}`)
   }
   return lines.join('\n')

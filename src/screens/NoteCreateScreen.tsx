@@ -698,6 +698,24 @@ export function NoteCreateScreen() {
           style={{ minHeight: '120px', overflow: 'hidden' }}
         />
 
+        {/* Schlüsselbegriffe — erscheinen nach Analyse direkt unter dem Textfeld */}
+        {block.aiStatus === 'done' && block.textAiResult && block.textAiResult.ergaenzungsbegriffe.length > 0 && (
+          <div className="border-t border-border px-4 py-2">
+            <div className="flex gap-1.5 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+              {block.textAiResult.ergaenzungsbegriffe.slice(0, 5).map((kw, i) => (
+                <button
+                  key={i}
+                  onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${kw}` : kw })}
+                  className="shrink-0 px-2.5 py-1 rounded-pill text-[11px] font-medium border border-dashed active:scale-95 transition-all"
+                  style={{ borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+                >
+                  + {kw}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* KI row */}
         <div className="border-t border-border px-4 py-2 flex items-center justify-between">
           <span className="text-xs text-text-muted">
@@ -860,26 +878,6 @@ export function NoteCreateScreen() {
                     </button>
                   ))}
                 </div>
-              </div>
-            )}
-
-            {/* Schlüsselbegriffe Vorschläge (Ergänzungsbegriffe) */}
-            {block.textAiResult.ergaenzungsbegriffe.length > 0 && (
-              <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">🔑 Schlüsselbegriffe</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {block.textAiResult.ergaenzungsbegriffe.slice(0, 5).map((kw, i) => (
-                    <button
-                      key={i}
-                      onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${kw}` : kw })}
-                      className="px-2.5 py-1 rounded-pill text-[11px] font-medium border border-dashed active:scale-95 transition-all hover:opacity-80"
-                      style={{ borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
-                    >
-                      + {kw}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-[10px] text-text-muted mt-1.5">Tippen um zur Mitschrift hinzuzufügen</p>
               </div>
             )}
 
@@ -1124,32 +1122,6 @@ export function NoteCreateScreen() {
               </div>
             )}
 
-            {/* Schlüsselbegriffe Vorschläge */}
-            {block.aiResult.keywords.length > 0 && (
-              <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">🔑 Schlüsselbegriffe</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {block.aiResult.keywords.slice(0, 5).map((kw, i) => (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        const firstTextBlock = blocks.find((b): b is TextBlock => b.type === 'text')
-                        if (firstTextBlock) {
-                          updateBlock(firstTextBlock.id, {
-                            content: firstTextBlock.content ? `${firstTextBlock.content}\n${kw}` : kw,
-                          })
-                        }
-                      }}
-                      className="px-2.5 py-1 rounded-pill text-[11px] font-medium border border-dashed active:scale-95 transition-all hover:opacity-80"
-                      style={{ borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
-                    >
-                      + {kw}
-                    </button>
-                  ))}
-                </div>
-                <p className="text-[10px] text-text-muted mt-1.5">Tippen um zur Mitschrift hinzuzufügen</p>
-              </div>
-            )}
           </div>
         )}
 
