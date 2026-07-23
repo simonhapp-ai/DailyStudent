@@ -5,7 +5,9 @@
       "Bash(curl -s \"http://localhost:5174/src/screens/DashboardScreen.tsx\")",
       "Bash(git -C /Users/macbookpro14/DailyStudent diff .claude/settings.json)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git rm *)",
+      "Bash(rm -rf .claude/skills/ui-ux-pro-max/scripts/__pycache__)"
     ]
   }
 }
