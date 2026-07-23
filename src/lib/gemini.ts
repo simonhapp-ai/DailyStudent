@@ -1,6 +1,7 @@
 import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, TaskCorrection, LernplanDay, LernplanExam, LernplanGeneratorInput } from '../types'
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from './supabase'
+import type { AiBucket } from './aiRateLimit'
 
 async function getAuthHeader(): Promise<Record<string, string>> {
   const { data: { session } } = await supabase.auth.getSession()
@@ -20,10 +21,12 @@ const GEMINI_URLS: Record<string, string> = {
 async function geminiProxy(
   model: 'flash' | 'flash-lite',
   body: Record<string, unknown>,
+  bucket: AiBucket,
   signal?: AbortSignal,
 ): Promise<GeminiProxyResult> {
   if (import.meta.env.DEV) {
-    // Dev: call Gemini directly (key in .env, not public). Prod: Vercel Edge Function hides the key.
+    // Dev: call Gemini directly (key in .env, not public). Prod: Vercel Edge Function hides the
+    // key and enforces the per-bucket rate limit (see api/gemini.ts) — bucket is unused in dev.
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY as string
     const url = GEMINI_URLS[model] ?? GEMINI_URLS['flash']
     const res = await fetch(`${url}?key=${apiKey}`, {
@@ -41,7 +44,7 @@ async function geminiProxy(
       'Content-Type': 'application/json',
       ...await getAuthHeader(),
     },
-    body: JSON.stringify({ model, body }),
+    body: JSON.stringify({ model, body, bucket }),
     signal,
   })
   return await res.json() as GeminiProxyResult
@@ -104,7 +107,7 @@ export async function analyzeFileToSmartNote(
     },
   }
 
-  const makeAttempt = () => geminiProxy('flash-lite', geminiBody, signal)
+  const makeAttempt = () => geminiProxy('flash-lite', geminiBody, 'smart_notes', signal)
 
   let result = await makeAttempt()
 
@@ -156,12 +159,12 @@ export const GEMINI_BATCH_DELAY_MS = 4500
 
 // ── Probeklausur: Exam Generation & Correction ───────────────────────────────
 
-async function examFetch(systemPrompt: string, userPrompt: string, temperature = 0.6): Promise<unknown> {
+async function examFetch(systemPrompt: string, userPrompt: string, bucket: AiBucket, temperature = 0.6): Promise<unknown> {
   const result = await geminiProxy('flash', {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
     generationConfig: { temperature, maxOutputTokens: 8192, responseMimeType: 'application/json' },
-  })
+  }, bucket)
 
   if (result.geminiStatus !== 200) {
     const errData = result.geminiData as { error?: { message?: string } }
@@ -279,7 +282,8 @@ export async function generateMode1Exam(subject: string, subjectId: string, topi
   const raw = await examFetch(GENERATION_SYSTEM,
     `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
 
-JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":[]}],"totalBE":8}`)
+JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":[]}],"totalBE":8}`,
+    'probeklausur_other')
   return parseExam(raw, subject, subjectId, topic, 1)
 }
 
@@ -297,7 +301,7 @@ export async function generateMode2Exam(subject: string, subjectId: string, topi
     `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
 
 JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","content":"..."},{"id":"M2","title":"...","type":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
-    0.55)
+    'probeklausur_full', 0.55)
   return parseExam(raw, subject, subjectId, topic, 2)
 }
 
@@ -327,7 +331,8 @@ Aufg.3 AFB III 8–10 BE: Über Material hinaus (Hypothese, Bewertung, Stellungn
 Materialien: ${materialSpec}
 ${taskSpec}
 
-JSON: {"materials":[{"id":"M1","title":"...","type":"text","content":"..."}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`)
+JSON: {"materials":[{"id":"M1","title":"...","type":"text","content":"..."}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
+    'probeklausur_other')
   return parseExam(raw, subject, subjectId, topic, 3)
 }
 
@@ -340,7 +345,7 @@ Aufg.2 AFB II 8–12 BE: Transfer OHNE Material — Vergleich, Szenario, oder "a
 Aufg.3 AFB III 8–10 BE: Argumentative Beurteilung/Erörterung ohne Material.
 
 JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Erläutern","text":"...","be":10,"materialRefs":[]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":8,"materialRefs":[]}],"totalBE":24}`,
-    0.65)
+    'probeklausur_other', 0.65)
   return parseExam(raw, subject, subjectId, topic, 4)
 }
 
@@ -382,7 +387,7 @@ ${tasksBlock}
 
 JSON: {"taskCorrections":[{"taskId":"t1","errors":[],"gaps":[],"formulationHelp":[],"scoreNP":11,"justification":"..."}],"totalNP":11,"gradeLabel":"Gut","overallJustification":"..."}`
 
-  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 0.3)) as {
+  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3)) as {
     taskCorrections?: { taskId?: string; errors?: string[]; gaps?: string[]; formulationHelp?: string[]; scoreNP?: number; justification?: string }[]
     totalNP?: number
     gradeLabel?: string
@@ -458,7 +463,7 @@ export async function suggestImportDestination(
         ],
       }],
       generationConfig: { response_mime_type: 'application/json', temperature: 0.1, maxOutputTokens: 150 },
-    }, signal)
+    }, 'smart_notes', signal)
   } catch {
     return null
   }
@@ -599,9 +604,9 @@ Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${i
   }
 
   // On 503 (model overloaded), fall back to flash-lite immediately
-  let result = await geminiProxy('flash', lernplanBodyObj)
+  let result = await geminiProxy('flash', lernplanBodyObj, 'lernplan')
   if (result.geminiStatus === 503) {
-    result = await geminiProxy('flash-lite', lernplanBodyObj)
+    result = await geminiProxy('flash-lite', lernplanBodyObj, 'lernplan')
   }
 
   if (result.geminiStatus !== 200) {

@@ -1,6 +1,7 @@
 import type { GeneratedSmartNote, StundenplanSlot, TextBlockAnalysis } from '../types'
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from './supabase'
+import type { AiBucket } from './aiRateLimit'
 
 async function getAuthHeader(): Promise<Record<string, string>> {
   const { data: { session } } = await supabase.auth.getSession()
@@ -37,9 +38,10 @@ function parseRetryAfterMs(errorText: string): number {
   return match ? Math.ceil(parseFloat(match[1]) * 1000) + 500 : 5000
 }
 
-async function groqFetch(body: Record<string, unknown>): Promise<string> {
+async function groqFetch(body: Record<string, unknown>, bucket: AiBucket): Promise<string> {
   const attempt = async (): Promise<GroqResponse> => {
-    // Dev: call Groq directly (key in .env, not public). Prod: Vercel Edge Function hides the key.
+    // Dev: call Groq directly (key in .env, not public). Prod: Vercel Edge Function hides the
+    // key and enforces the per-bucket rate limit (see api/groq.ts) — bucket is unused in dev.
     const res = import.meta.env.DEV
       ? await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
@@ -55,7 +57,7 @@ async function groqFetch(body: Record<string, unknown>): Promise<string> {
             'Content-Type': 'application/json',
             ...await getAuthHeader(),
           },
-          body: JSON.stringify(body),
+          body: JSON.stringify({ bucket, payload: body }),
         })
     const text = await res.text()
     if (!res.ok) throw new Error(`Groq ${res.status}: ${text}`)
@@ -96,7 +98,7 @@ export async function extractTopicsFromImage(dataUrl: string): Promise<string[]>
         },
       ],
     }],
-  })
+  }, 'smart_notes')
   try {
     const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
     const arr = JSON.parse(cleaned)
@@ -123,7 +125,7 @@ export async function extractTextFromImage(dataUrl: string): Promise<string> {
         },
       ],
     }],
-  })
+  }, 'smart_notes')
 }
 
 interface SmartNoteJSON {
@@ -219,7 +221,7 @@ Regeln:
 - klausurhinweis: Konkret mit Operatoren und Aufgabentyp, kein "könnte vorkommen"`,
       },
     ],
-  })
+  }, 'smart_notes')
 
   const parsed = JSON.parse(content) as TextBlockAnalysisJSON
 
@@ -303,7 +305,7 @@ ${rawText.slice(0, 600)}
 JSON: {"subjectId": "id", "reason": "Ein-Satz-Begründung auf Deutsch"}`,
         },
       ],
-    })
+    }, 'smart_notes')
     const parsed = JSON.parse(content) as SubjectSuggestionJSON
     const match = subjects.find((s) => s.id === parsed.subjectId)
     if (!match) return null
@@ -334,7 +336,7 @@ export async function answerQuestion(
 Frage / Begriff: "${question}"`,
       },
     ],
-  })
+  }, 'keyword_qa')
 }
 
 export async function explainKeyword(
@@ -360,7 +362,7 @@ export async function explainKeyword(
 Erkläre den Begriff "${keyword}" in 2–3 prägnanten Sätzen für einen Gymnasiasten der Klasse 10–13. Nur die Erklärung, ohne Einleitung oder "Also:".`,
       },
     ],
-  })
+  }, 'keyword_qa')
 }
 
 interface ClassifyJSON {
@@ -397,7 +399,7 @@ summary: max 2 Sätze Zusammenfassung des Lernstoffs (leer wenn reine Aufgaben)
 keywords: Genau 5 wichtige Fachbegriffe die ein Schüler zu diesem Thema kennen muss (einfache Strings, keine Sonderzeichen)`,
       },
     ],
-  })
+  }, 'smart_notes')
   const parsed = JSON.parse(content) as ClassifyJSON
   return {
     contentType: parsed.contentType ?? 'info',
@@ -449,7 +451,7 @@ Regeln:
 - Sind keine Aufgaben vorhanden, schreibe nur: KEIN_AUFGABEN`,
       },
     ],
-  })
+  }, 'smart_notes')
 
   if (raw.trim().startsWith('KEIN_AUFGABEN') || !raw.includes('===AUFGABE_')) return []
 
@@ -521,7 +523,7 @@ Regeln:
 - solution.proof: Probe — Lösung in die Ausgangsformel einsetzen und Gleichheit zeigen (ein Satz, NUR bei mathematischen Aufgaben)`,
       },
     ],
-  })
+  }, 'smart_notes')
 
   const parsed = JSON.parse(content) as SmartNoteJSON
 
@@ -582,7 +584,7 @@ JSON Format:
 {"cards": [{"front": "Frage", "back": "Antwort", "keywords": ["Begriff1", "Begriff2"]}, ...]}`,
       },
     ],
-  })
+  }, 'flashcards')
 
   const parsed = JSON.parse(content) as FlashCardJSON
   return Array.isArray(parsed.cards) ? parsed.cards : []
@@ -717,7 +719,7 @@ Regeln:
         ],
       },
     ],
-  })
+  }, 'smart_notes')
 
   // Robustly extract JSON block in case model adds prose
   const jsonMatch = raw.match(/\{[\s\S]*\}/)
@@ -793,7 +795,7 @@ export async function evaluateBlurting(
         content: `${refSection}\n\nSchülertext:\n${userText.slice(0, 2000)}\n\nGib genau dieses JSON zurück:\n{"correct": ["Punkt den der Schüler richtig hatte"], "forgotten": ["Wichtiger Punkt der fehlt"], "corrections": ["Kleine Korrektur oder Ungenauigkeit"]}`,
       },
     ],
-  })
+  }, 'blurting')
 
   const parsed = JSON.parse(content) as BlurtingEvalJSON
   return {
@@ -877,7 +879,7 @@ Regeln für content:
 - examTopics: 3–5 prüfungsrelevante Punkte`,
       },
     ],
-  })
+  }, 'lernzettel')
 
   const parsed = JSON.parse(content) as LernzettelJSON
   return {

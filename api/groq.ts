@@ -1,9 +1,24 @@
 export const config = { runtime: 'edge' }
 
-async function verifySupabaseToken(token: string): Promise<boolean> {
+// Flat per-user, per-day ceiling for each AI feature bucket — same limit for every account,
+// no free/pro distinction (see supabase/migrations/012_ai_rate_limits.sql for the enforcement
+// mechanism: a repeat-offender who goes over any bucket's ceiling on 2 separate days gets
+// ai_blocked permanently). Keep in sync with the AiBucket union in src/lib/aiRateLimit.ts.
+const BUCKET_LIMITS: Record<string, number> = {
+  smart_notes: 150,
+  flashcards: 60,
+  blurting: 40,
+  keyword_qa: 200,
+  lernzettel: 20,
+  probeklausur_full: 10,
+  probeklausur_other: 15,
+  lernplan: 10,
+}
+
+async function getSupabaseUser(token: string): Promise<{ id: string } | null> {
   const supabaseUrl = process.env.VITE_SUPABASE_URL
   const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
-  if (!supabaseUrl || !supabaseAnonKey) return false
+  if (!supabaseUrl || !supabaseAnonKey) return null
   try {
     const res = await fetch(`${supabaseUrl}/auth/v1/user`, {
       headers: {
@@ -11,9 +26,34 @@ async function verifySupabaseToken(token: string): Promise<boolean> {
         apikey: supabaseAnonKey,
       },
     })
-    return res.ok
+    if (!res.ok) return null
+    const data = await res.json() as { id?: string }
+    return data.id ? { id: data.id } : null
   } catch {
-    return false
+    return null
+  }
+}
+
+async function checkRateLimit(token: string, userId: string, bucket: string): Promise<{ allowed: boolean; blocked: boolean }> {
+  const supabaseUrl = process.env.VITE_SUPABASE_URL
+  const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
+  const limit = BUCKET_LIMITS[bucket]
+  if (!supabaseUrl || !supabaseAnonKey || !limit) return { allowed: false, blocked: false }
+  try {
+    const res = await fetch(`${supabaseUrl}/rest/v1/rpc/check_ai_rate_limit`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        apikey: supabaseAnonKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_user_id: userId, p_bucket: bucket, p_limit: limit }),
+    })
+    if (!res.ok) return { allowed: false, blocked: false }
+    const rows = await res.json() as { allowed: boolean; blocked: boolean }[]
+    return rows[0] ?? { allowed: false, blocked: false }
+  } catch {
+    return { allowed: false, blocked: false }
   }
 }
 
@@ -30,7 +70,8 @@ export default async function handler(request: Request): Promise<Response> {
 
   const authHeader = request.headers.get('Authorization')
   const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
-  if (!token || !(await verifySupabaseToken(token))) {
+  const user = token ? await getSupabaseUser(token) : null
+  if (!token || !user) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },
@@ -46,14 +87,33 @@ export default async function handler(request: Request): Promise<Response> {
   }
 
   try {
-    const body = await request.json()
+    const { bucket, payload } = await request.json() as { bucket?: string; payload?: unknown }
+    if (!bucket || !BUCKET_LIMITS[bucket]) {
+      return new Response(JSON.stringify({ error: 'Invalid bucket' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    const { allowed, blocked } = await checkRateLimit(token, user.id, bucket)
+    if (!allowed) {
+      return new Response(JSON.stringify({
+        error: blocked
+          ? 'Konto wegen wiederholter Limit-Überschreitung gesperrt.'
+          : 'Tageslimit erreicht. Bitte versuche es morgen wieder.',
+      }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
     const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(payload),
     })
     const text = await groqRes.text()
     return new Response(text, {

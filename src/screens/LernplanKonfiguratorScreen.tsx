@@ -33,7 +33,7 @@ function formatDate(dateStr: string): string {
 }
 
 export function LernplanKonfiguratorScreen() {
-  const { profile, isPro, saveLernplan, getKc, generatedNotes, userNotes } = useUser()
+  const { profile, isPro, saveLernplan, getKc, generatedNotes, userNotes, lernplaene } = useUser()
   const navigate = useNavigate()
 
   const [step, setStep] = useState(1)
@@ -91,8 +91,17 @@ export function LernplanKonfiguratorScreen() {
     7: true,
   }
 
+  const today = new Date().toISOString().slice(0, 10)
+  const einzelCreatedToday = lernplaene.filter(
+    (p) => p.planType === 'einzel' && p.createdAt?.slice(0, 10) === today
+  ).length
+
   const handleNext = () => {
     if (step === 1 && (planType === 'vollstaendig' || planType === 'abitur') && !isPro) {
+      setShowProModal(true)
+      return
+    }
+    if (step === 1 && planType === 'einzel' && !isPro && einzelCreatedToday >= 3) {
       setShowProModal(true)
       return
     }
@@ -269,7 +278,7 @@ export function LernplanKonfiguratorScreen() {
       {/* Content */}
       <div className="flex-1 px-4 pb-4 overflow-y-auto">
         {step === 1 && (
-          <StepPlanType planType={planType} onSelect={setPlanType} isPro={isPro} onShowPro={() => setShowProModal(true)} />
+          <StepPlanType planType={planType} onSelect={setPlanType} isPro={isPro} onShowPro={() => setShowProModal(true)} einzelCreatedToday={einzelCreatedToday} />
         )}
         {step === 2 && (
           <StepKlausurtermine
@@ -380,13 +389,15 @@ export function LernplanKonfiguratorScreen() {
 
 /* ─── Step 1: Plan Type ────────────────────────────────────────── */
 
-function StepPlanType({ planType, onSelect, isPro, onShowPro }: { planType: LernplanType; onSelect: (t: LernplanType) => void; isPro: boolean; onShowPro: () => void }) {
+function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday }: { planType: LernplanType; onSelect: (t: LernplanType) => void; isPro: boolean; onShowPro: () => void; einzelCreatedToday: number }) {
   const options: { id: LernplanType; icon: string; title: string; desc: string; badge?: string }[] = [
     {
       id: 'einzel',
       icon: '🎯',
       title: 'Einzel-Lernplan',
-      desc: 'Fokussierter Plan für eine einzelne Klausur. Perfekt wenn du dich auf ein bestimmtes Fach konzentrieren willst.',
+      desc: !isPro
+        ? `Fokussierter Plan für eine einzelne Klausur. ${Math.max(0, 3 - einzelCreatedToday)}/3 heute übrig (Free).`
+        : 'Fokussierter Plan für eine einzelne Klausur. Perfekt wenn du dich auf ein bestimmtes Fach konzentrieren willst.',
     },
     {
       id: 'vollstaendig',
