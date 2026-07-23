@@ -7,7 +7,7 @@ import { loadKcForUser, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from '../lib/supabase'
 import {
   loadUserDataFromSupabase, loadUserMetaFromSupabase, migrateToSupabase,
-  syncProfile, syncGradeData, syncAppStats, grantCoinsRemote, buyStreakFreezeRemote,
+  syncProfile, syncGradeData, syncAppStats, grantCoinsRemote, buyStreakFreezeRemote, redeemDiscountRemote,
   syncFolder, syncFoldersBatch, deleteFoldersFromDB,
   syncNote, deleteNotesFromDB,
   syncSmartNote,
@@ -169,6 +169,7 @@ interface UserContextValue {
   addCoins: (action: CoinAction) => Promise<number>
   recordLogin: () => void
   buyStreakFreeze: () => Promise<boolean>
+  redeemDiscount: (tier: '15' | '30') => Promise<string | null>
   debugSetCoins: (amount: number) => void
   incrementScanCount: () => void
   coinToastVisible: boolean
@@ -1039,6 +1040,28 @@ export function UserProvider({ children }: { children: ReactNode }) {
     return true
   }
 
+  // Redeem a Coins-Rabatt tier (2500 coins -> 15% off, 5000 coins -> 30% off) for a
+  // one-time-use Stripe coupon ID. Atomic via server RPC (row-locked, same guarantee as
+  // addCoins/buyStreakFreeze) — no local-only offline fallback, since a coupon is only
+  // meaningful at Stripe checkout anyway and we don't want coins deducted locally with
+  // no way to actually redeem the discount.
+  const DISCOUNT_TIERS = {
+    '15': { cost: 2500, couponId: 'coins-discount-15' },
+    '30': { cost: 5000, couponId: 'coins-discount-30' },
+  } as const
+
+  const redeemDiscount = async (tier: '15' | '30'): Promise<string | null> => {
+    if (!authUser) return null
+    const { cost, couponId } = DISCOUNT_TIERS[tier]
+    const cooldownKey = `DISCOUNT_${tier}:USED`
+    const result = await redeemDiscountRemote(authUser.id, cost, cooldownKey)
+    if (!result) return null
+    const updated: AppStats = { ...(loadStorage().appStats ?? DEFAULT_APP_STATS), coins: result.coins, cooldowns: result.cooldowns }
+    setAppStats(updated)
+    saveStorage({ ...loadStorage(), appStats: updated })
+    return result.success ? couponId : null
+  }
+
   // Dev-only: directly set coin balance (used by ProfilScreen slider)
   const debugSetCoins = (amount: number) => {
     const current = loadStorage().appStats ?? DEFAULT_APP_STATS
@@ -1222,6 +1245,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         addCoins,
         recordLogin,
         buyStreakFreeze,
+        redeemDiscount,
         debugSetCoins,
         incrementScanCount,
         coinToastVisible,

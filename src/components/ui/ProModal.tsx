@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createCheckoutSession } from '../../lib/stripe'
 
-type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel' | 'probeklausur'
+type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel' | 'probeklausur' | 'rabatt'
 
 const featureContent: Record<ProFeature, { headline: string; bullets: string[] }> = {
   'ki-zusammenfassung': {
@@ -52,15 +52,25 @@ const featureContent: Record<ProFeature, { headline: string; bullets: string[] }
       'Inkl. vollständiger KI-Korrektur mit Fehlern & Lücken',
     ],
   },
+  'rabatt': {
+    headline: 'Dein Rabatt ist bereit!',
+    bullets: [
+      'Alle KI-Features. Kein Limit.',
+      'Rabatt wird automatisch im Checkout angewendet',
+      'Einmalig gültig auf Monat oder Jahr',
+    ],
+  },
 }
 
 interface ProModalProps {
   feature: ProFeature
   isOpen: boolean
   onClose: () => void
+  couponId?: string
+  discountPercent?: number
 }
 
-export function ProModal({ feature, isOpen, onClose }: ProModalProps) {
+export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }: ProModalProps) {
   const [plan, setPlan] = useState<'annual' | 'monthly'>('annual')
   const [loading, setLoading] = useState(false)
 
@@ -71,7 +81,7 @@ export function ProModal({ feature, isOpen, onClose }: ProModalProps) {
   const handleCheckout = async () => {
     try {
       setLoading(true)
-      const url = await createCheckoutSession(plan === 'annual' ? 'yearly' : 'monthly')
+      const url = await createCheckoutSession(plan === 'annual' ? 'yearly' : 'monthly', couponId)
       window.location.href = url
     } catch {
       setLoading(false)
@@ -95,6 +105,15 @@ export function ProModal({ feature, isOpen, onClose }: ProModalProps) {
 
         <h2 className="text-xl font-bold text-text-primary mb-1">{content.headline}</h2>
         <p className="text-text-secondary text-sm mb-5">Weniger als eine Nachhilfestunde im Monat.</p>
+
+        {couponId && discountPercent && (
+          <div className="rounded-card px-3 py-2 mb-4 border text-center"
+            style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.25)' }}>
+            <p className="text-[13px] font-semibold" style={{ color: '#34D399' }}>
+              🎉 {discountPercent}% Rabatt aktiv — wird beim Checkout angewendet
+            </p>
+          </div>
+        )}
 
         <ul className="space-y-3 mb-6">
           {content.bullets.map((b, i) => (

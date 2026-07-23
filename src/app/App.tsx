@@ -42,6 +42,11 @@ import { LearnModeScreen } from '../screens/LearnModeScreen'
 import { NoteCreateScreen } from '../screens/NoteCreateScreen'
 import { FolderScreen } from '../screens/FolderScreen'
 import { ProfilScreen } from '../screens/ProfilScreen'
+import { ProfilCoinsScreen } from '../screens/ProfilCoinsScreen'
+import { ProfilErscheinungsbildScreen } from '../screens/ProfilErscheinungsbildScreen'
+import { ProfilAccountScreen } from '../screens/ProfilAccountScreen'
+import { ProfilSupportScreen } from '../screens/ProfilSupportScreen'
+import { ProfilDevToolsScreen } from '../screens/ProfilDevToolsScreen'
 import { FlashCardGeneratorScreen } from '../screens/FlashCardGeneratorScreen'
 import { ProbeklausurMenuScreen } from '../screens/ProbeklausurMenuScreen'
 import { ProbeklausurMode1Screen } from '../screens/ProbeklausurMode1Screen'
@@ -170,6 +175,11 @@ function AppRoutes() {
       <Route path="/klausurmodus/lernplan/neu" element={<LernplanKonfiguratorScreen />} />
       <Route path="/klausurmodus/lernplan/:id" element={<LernplanDetailScreen />} />
       <Route path="/profil" element={<ProfilScreen />} />
+      <Route path="/profil/coins" element={<ProfilCoinsScreen />} />
+      <Route path="/profil/erscheinungsbild" element={<ProfilErscheinungsbildScreen />} />
+      <Route path="/profil/account" element={<ProfilAccountScreen />} />
+      <Route path="/profil/support" element={<ProfilSupportScreen />} />
+      <Route path="/profil/dev-tools" element={<ProfilDevToolsScreen />} />
       <Route path="/profil/faecher" element={<FaecherEditScreen />} />
       <Route path="/profil/bundesland" element={<BundeslandScreen />} />
       <Route path="/profil/benachrichtigungen" element={<BenachrichtigungenScreen />} />

@@ -5,12 +5,13 @@ export const PRICE_IDS = {
   yearly: 'price_1TgpJvPbROOB2TaOOWXjtNbS',
 } as const
 
-export async function createCheckoutSession(plan: 'monthly' | 'yearly'): Promise<string> {
+export async function createCheckoutSession(plan: 'monthly' | 'yearly', couponId?: string): Promise<string> {
   const { data, error } = await supabase.functions.invoke('create-checkout-session', {
     body: {
       priceId: PRICE_IDS[plan],
       successUrl: `${window.location.origin}/profil?payment=success`,
       cancelUrl: `${window.location.origin}/profil`,
+      ...(couponId ? { couponId } : {}),
     },
   })
 

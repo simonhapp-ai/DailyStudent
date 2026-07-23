@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    const { priceId, successUrl, cancelUrl } = await req.json()
+    const { priceId, successUrl, cancelUrl, couponId } = await req.json()
 
     const ALLOWED_PRICE_IDS = [
       'price_1TgpJMPbROOB2TaONDo2xdrg', // monthly €7,99
@@ -44,6 +44,17 @@ Deno.serve(async (req) => {
     ]
     if (!ALLOWED_PRICE_IDS.includes(priceId)) {
       return new Response(JSON.stringify({ error: 'Ungültige Preis-ID' }), {
+        status: 400,
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+      })
+    }
+
+    // Coupons must be created manually in the Stripe Dashboard (see roadmap spec) —
+    // whitelist here the same way price IDs are whitelisted, so an attacker can't pass
+    // an arbitrary coupon ID through this endpoint.
+    const ALLOWED_COUPON_IDS = ['coins-discount-15', 'coins-discount-30']
+    if (couponId !== undefined && !ALLOWED_COUPON_IDS.includes(couponId)) {
+      return new Response(JSON.stringify({ error: 'Ungültige Coupon-ID' }), {
         status: 400,
         headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
       })
@@ -58,6 +69,9 @@ Deno.serve(async (req) => {
     params.set('client_reference_id', user.id)
     params.set('customer_email', user.email ?? '')
     params.set('metadata[supabase_user_id]', user.id)
+    if (couponId) {
+      params.set('discounts[0][coupon]', couponId)
+    }
 
     const stripeRes = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',

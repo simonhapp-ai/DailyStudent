@@ -667,6 +667,23 @@ export async function buyStreakFreezeRemote(
   } catch (err) { console.warn('[Supabase] buyStreakFreezeRemote', err); return null }
 }
 
+// Atomic one-time coin-spend RPC for redeeming a Stripe discount coupon — same row-lock
+// guarantee as grantCoinsRemote/buyStreakFreezeRemote. Returns null if unreachable (offline);
+// callers should treat that as a hard failure rather than falling back to a local-only
+// optimistic spend, since the coupon can only actually be used at Stripe checkout anyway.
+export async function redeemDiscountRemote(
+  userId: string, cost: number, cooldownKey: string,
+): Promise<{ success: boolean; coins: number; cooldowns: string[] } | null> {
+  try {
+    const { data, error } = await supabase.rpc('redeem_discount', {
+      p_user_id: userId, p_cost: cost, p_cooldown_key: cooldownKey,
+    })
+    if (error || !data?.[0]) { console.warn('[Supabase] redeemDiscountRemote', error); return null }
+    const row = data[0]
+    return { success: row.success, coins: row.new_coins, cooldowns: row.new_cooldowns ?? [] }
+  } catch (err) { console.warn('[Supabase] redeemDiscountRemote', err); return null }
+}
+
 export async function syncFolder(userId: string, folder: UserFolder): Promise<void> {
   try {
     await supabase.from('user_folders').upsert({
