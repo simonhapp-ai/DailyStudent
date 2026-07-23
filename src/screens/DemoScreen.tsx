@@ -89,80 +89,6 @@ const FALLBACKS: Record<string, SmartNoteData> = {
   },
 }
 
-async function callGroqDemo(terms: string[]): Promise<SmartNoteData> {
-  const key = import.meta.env.VITE_GROQ_API_KEY as string
-  if (!key) throw new Error('no key')
-
-  const controller = new AbortController()
-  const timeout = setTimeout(() => controller.abort(), 15000)
-
-  try {
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      signal: controller.signal,
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        max_tokens: 900,
-        temperature: 0.4,
-        response_format: { type: 'json_object' },
-        messages: [
-          {
-            role: 'system',
-            content:
-              'Du bist ein Lernassistent für Gymnasiasten (Oberstufe, G9). Antworte immer auf Deutsch. Gib ausschließlich valides JSON ohne Markdown zurück. Schreibe fachlich präzise, inhaltlich tiefe Texte — keine Floskeln wie "sind zentrale Begriffe" oder "regelmäßig in Klausuren". Erkläre was Konzepte wirklich bedeuten.',
-          },
-          {
-            role: 'user',
-            content: `Erstelle eine vollständige Smart Note für folgende Lernbegriffe: ${terms.join(', ')}
-
-Die Zusammenfassung soll INHALTLICH erklären was diese Konzepte bedeuten — Definitionen, Mechanismen, Funktionsweisen, Zusammenhänge. 3 vollständige, lehrreiche Sätze. Kein Verweis auf Lehrpläne oder Bundesländer.
-
-Antworte NUR mit diesem JSON:
-{
-  "summary": "3 vollständige Sätze die fachlich erklären was die Begriffe bedeuten, wie sie funktionieren und welche Kernaussagen wichtig sind",
-  "keywords": ["Fachbegriff1", "Fachbegriff2", "Fachbegriff3", "Fachbegriff4", "Fachbegriff5"],
-  "examTopics": ["Konkretes Klausurthema als vollständiger Aufgabensatz", "Zweites prüfungsrelevantes Thema als vollständiger Satz"],
-  "cardFront": "Präzise Klausurfrage zu einem der Kernkonzepte als vollständiger Fragesatz",
-  "cardBack": "Genaue, inhaltlich vollständige Antwort in 1-2 Sätzen"
-}`,
-          },
-        ],
-      }),
-    })
-
-    clearTimeout(timeout)
-    if (!res.ok) throw new Error(`groq ${res.status}`)
-
-    const data = (await res.json()) as { choices: { message: { content: string } }[] }
-    const raw = data.choices[0].message.content
-    const parsed = JSON.parse(raw) as Partial<SmartNoteData>
-
-    const t0 = terms[0] ?? 'Begriff'
-    const t1 = terms[1] ?? terms[0] ?? 'Begriff'
-    return {
-      summary: typeof parsed.summary === 'string' && parsed.summary.length > 60
-        ? parsed.summary
-        : `${t0} ist ein grundlegendes Fachkonzept, das präzises Verständnis erfordert. Im Zusammenhang mit ${t1} zeigen sich wichtige inhaltliche Bezüge, die für Klausuren relevant sind. Eine sichere Kenntnis der Definitionen und Zusammenhänge ist entscheidend.`,
-      keywords: Array.isArray(parsed.keywords) && parsed.keywords.length >= 2
-        ? parsed.keywords.slice(0, 5)
-        : terms.slice(0, 5),
-      examTopics: Array.isArray(parsed.examTopics) && parsed.examTopics.length >= 1
-        ? parsed.examTopics.slice(0, 2)
-        : [`${t0} definieren und an einem Beispiel erläutern`, `Zusammenhänge zwischen ${terms.slice(0, 2).join(' und ')} erklären`],
-      cardFront: typeof parsed.cardFront === 'string' && parsed.cardFront.length > 10
-        ? parsed.cardFront
-        : `Was versteht man unter ${t0} und welche Bedeutung hat es im Kontext von ${terms.slice(1).join(', ')}?`,
-      cardBack: typeof parsed.cardBack === 'string' && parsed.cardBack.length > 10
-        ? parsed.cardBack
-        : `${t0} bezeichnet ein zentrales Fachkonzept, das eng mit ${terms.slice(1, 3).join(' und ')} verbunden ist und in verschiedenen Kontexten angewendet werden kann.`,
-    }
-  } catch (err) {
-    clearTimeout(timeout)
-    throw err
-  }
-}
-
 type Stage = 0 | 1 | 2 | 3 | 4 | 5
 
 export function DemoScreen() {
@@ -274,15 +200,13 @@ export function DemoScreen() {
     setActiveTerms(terms)
     const fallback = buildFallback(terms, fallbackKey)
 
-    callGroqDemo(terms)
-      .then((data) => {
-        setNoteData(data)
-        addTimer(setTimeout(() => setStage(2), 400))
-      })
-      .catch(() => {
-        setNoteData(fallback)
-        addTimer(setTimeout(() => setStage(2), 400))
-      })
+    // No live AI call here — this is a public, unauthenticated page, so there's no way
+    // to hide an API key or rate-limit a call from it. Pre-written/templated content only.
+    // The delay keeps the loading animation feeling like something is actually happening.
+    addTimer(setTimeout(() => {
+      setNoteData(fallback)
+      setStage(2)
+    }, 2200))
   }
 
   function handleSaveToFolder() {
