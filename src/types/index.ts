@@ -349,6 +349,7 @@ export interface Lernplan {
   summary: string
   examSchedule: LernplanExam[]
   isActive: boolean
+  completedDays?: string[]
   config: {
     dailyStudyHours: number
     targetGrade: string
