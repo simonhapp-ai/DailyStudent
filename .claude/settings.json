@@ -7,7 +7,16 @@
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
       "Bash(git rm *)",
-      "Bash(rm -rf .claude/skills/ui-ux-pro-max/scripts/__pycache__)"
+      "Bash(rm -rf .claude/skills/ui-ux-pro-max/scripts/__pycache__)",
+      "Bash(git push *)",
+      "Bash(npm view *)",
+      "Bash(npx --yes skills --help)",
+      "Bash(npx --yes skills add --help)",
+      "Bash(npx --yes skills add emilkowalski/skill --list)",
+      "Bash(npx --yes skills add emilkowalski/skill --all)",
+      "Bash(python3 scripts/search.py \"dark mode glassmorphism premium glow gradient dashboard\" --domain style -n 4)",
+      "Bash(python3 scripts/search.py \"shadow depth elevation dark card glow ambient\" --domain ux -n 6)",
+      "Bash(echo \"=== exit code: $? ===\")"
     ]
   }
 }

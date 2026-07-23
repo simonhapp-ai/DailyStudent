@@ -56,11 +56,17 @@ function getTimeAgo(isoStr: string): string {
 // Supports onClick as a real keyboard-accessible action (role=button + Enter/Space),
 // not just a mouse-only click target.
 
-function Card({ children, className = '', onClick, dark = false }: {
+const DARK_GLOW: Record<'purple' | 'mint', string> = {
+  purple: 'radial-gradient(130% 100% at 12% -10%, rgba(167,139,250,0.32) 0%, rgba(10,10,15,0) 48%), linear-gradient(155deg, #170f22 0%, #0a0a0f 62%)',
+  mint:   'radial-gradient(130% 100% at 12% -10%, rgba(52,211,153,0.24) 0%, rgba(10,10,15,0) 48%), linear-gradient(155deg, #0f1a17 0%, #0a0a0f 62%)',
+}
+
+function Card({ children, className = '', onClick, dark = false, glow = 'purple' }: {
   children: React.ReactNode
   className?: string
   onClick?: () => void
   dark?: boolean
+  glow?: 'purple' | 'mint'
 }) {
   const interactive = !!onClick
   return (
@@ -68,7 +74,10 @@ function Card({ children, className = '', onClick, dark = false }: {
       className={`rounded-[20px] p-5 transition-shadow ${
         dark ? 'text-white' : 'bg-surface border border-border/60 shadow-card-adaptive'
       } ${interactive ? 'cursor-pointer press' : ''} ${className}`}
-      style={dark ? { background: 'linear-gradient(155deg, #1a1225 0%, #0a0a0f 60%)' } : undefined}
+      style={dark ? {
+        background: DARK_GLOW[glow],
+        boxShadow: '0 24px 48px -16px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)',
+      } : undefined}
       onClick={onClick}
       role={interactive ? 'button' : undefined}
       tabIndex={interactive ? 0 : undefined}
@@ -213,7 +222,7 @@ function HeroLernplanCard({
             {subjectInfo?.icon ?? '📚'}
           </div>
         </div>
-        <p className="text-[26px] font-bold leading-tight">{mainSession?.subjectName ?? activePlan.title}</p>
+        <p className="text-[26px] font-bold leading-tight tracking-tight">{mainSession?.subjectName ?? activePlan.title}</p>
         <p className="text-[13px] text-white/60 mt-1.5 leading-snug">
           {mainSession?.topic || activePlan.summary || 'Weiter mit deinem Lernplan'}
           {nextDay && ` · ${Math.round(nextDay.totalMin / 60 * 10) / 10}h geplant`}
@@ -250,51 +259,54 @@ function KlausurCard({
   const weeks = exam ? Math.floor(exam.days / 7) : 0
   const restDays = exam ? exam.days % 7 : 0
 
+  // Card is always dark chrome regardless of app theme, so urgency colors are hardcoded
+  // (dark-tuned) rather than the theme-conditional CSS vars — they'd read muddy in light mode.
+  const urgencyColor = exam
+    ? exam.days <= 3 ? '#FF6B5F' : exam.days <= 7 ? '#FFB84D' : '#A78BFA'
+    : '#A78BFA'
+
   return (
-    <Card className="flex flex-col min-h-[280px]" onClick={exam ? onNavigate : undefined}>
+    <Card dark glow="mint" className="flex flex-col min-h-[280px]" onClick={exam ? onNavigate : undefined}>
       <div className="flex items-center justify-between mb-2">
-        <SectionLabel>Nächste Klausur</SectionLabel>
-        {exam && <ChevronRight />}
+        <SectionLabel dark>Nächste Klausur</SectionLabel>
+        {exam && <ChevronRight dark />}
       </div>
 
       {exam ? (
         <div className="flex-1 flex flex-col items-center justify-center text-center">
           <div
-            className="w-14 h-14 rounded-[18px] flex items-center justify-center text-[30px] mb-2"
-            style={{ background: `${exam.info?.color ?? '#7C3AED'}22` }}
+            className="w-14 h-14 rounded-[18px] flex items-center justify-center text-[28px] mb-2"
+            style={{ background: 'rgba(255,255,255,0.08)' }}
           >
             {exam.info?.icon ?? '📝'}
           </div>
-          <p className="text-[13px] font-semibold text-text-secondary mb-3">{exam.info?.name ?? exam.subjectId}</p>
+          <p className="text-[13px] font-semibold text-white/60 mb-3">{exam.info?.name ?? exam.subjectId}</p>
 
           <div className="flex items-stretch gap-2">
             {[{ v: weeks, l: 'Woche' + (weeks === 1 ? '' : 'n') }, { v: restDays, l: 'Tage' }].map((seg) => (
-              <div key={seg.l} className="bg-background rounded-[14px] px-4 py-2.5 min-w-[64px]">
-                <p
-                  className="text-[26px] font-black leading-none tabular-nums"
-                  style={{ color: exam.days <= 3 ? 'rgb(var(--color-danger))' : exam.days <= 7 ? 'rgb(var(--color-warning))' : 'rgb(var(--color-accent))' }}
-                >
+              <div key={seg.l} className="rounded-[14px] px-4 py-2.5 min-w-[64px]" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                <p className="text-[26px] font-black leading-none tabular-nums tracking-tight" style={{ color: urgencyColor }}>
                   {seg.v}
                 </p>
-                <p className="text-[10px] text-text-muted mt-0.5">{seg.l}</p>
+                <p className="text-[10px] text-white/45 mt-0.5">{seg.l}</p>
               </div>
             ))}
           </div>
 
-          <p className="text-[12px] text-text-muted mt-3">
+          <p className="text-[12px] text-white/45 mt-3">
             {new Date(exam.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </div>
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-[18px] icon-accent flex items-center justify-center mb-3">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-accent))" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <div className="w-14 h-14 rounded-[18px] flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.08)' }}>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="3" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
               <line x1="3" y1="10" x2="21" y2="10" /><line x1="12" y1="14" x2="12" y2="18" /><line x1="10" y1="16" x2="14" y2="16" />
             </svg>
           </div>
-          <p className="text-[14px] font-semibold text-text-primary">Kein Klausurtermin</p>
-          <p className="text-[12px] text-text-muted mt-1">Im Kalender eintragen</p>
+          <p className="text-[14px] font-semibold text-white">Kein Klausurtermin</p>
+          <p className="text-[12px] text-white/45 mt-1">Im Kalender eintragen</p>
         </div>
       )}
     </Card>
@@ -465,7 +477,7 @@ export function DashboardScreen() {
         <div className="flex items-start justify-between mb-6">
           <div>
             <p className="text-[13px] text-text-muted">{getGreeting()}, {profile?.name?.split(' ')[0] ?? 'Student'}</p>
-            <h1 className="text-[30px] font-bold text-text-primary mt-0.5">{headline}</h1>
+            <h1 className="text-[30px] font-bold text-text-primary mt-0.5 leading-[1.15] tracking-tight">{headline}</h1>
             <p className="text-[13px] text-text-muted mt-1">{formatDateFull(today)}</p>
           </div>
           {upcomingExamsCount > 0 && (
