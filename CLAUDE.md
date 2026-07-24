@@ -67,7 +67,9 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 16.06.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 24.07.2026)
+
+**App-Store-Kontext:** Ziel ist Einreichung im Apple App Store bis **02.08.2026** (danach ist Simon in Kanada, nicht erreichbar). Arbeit läuft in 2 Tracks: **Track A** (Capacitor-Wrapper, Apple IAP via RevenueCat, Sign in with Apple, Apple Developer Portal) — macht Simon selbst, Claude hat keinen Portal-Zugriff. **Track B** (App-Politur/Bugfixes im bestehenden Repo) — läuft in Claude-Code-Sessions, siehe To-Do unten. Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`.
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
@@ -145,6 +147,21 @@ Smart Notes
 - **Legacy-Migration** ✅ — `migrateLegacyNoteAttachments()` in `noteStorage.ts`, läuft automatisch nach jedem Supabase-Load in `UserContext.tsx`: Notizen mit altem Base64 in Postgres werden beim nächsten Laden lokalisiert (IndexedDB) und mit kleiner Ref zurückgesynct — selbstbegrenzend, läuft nur einmal pro Notiz
 - **AttachmentToast** ✅ — `src/components/ui/AttachmentToast.tsx`: erscheint bei jedem Speichern einer Smart Note mit Foto/Zeichnung ("Foto nur auf diesem Gerät — in der Notiz übertragbar"), zeitlich gestaffelt nach `CoinToast` (kein Overlap), in `NoteCreateScreen.tsx` getriggert (`doSave`, `acceptSuggestion`, `saveToOhneFach`)
 - **Referral-System (20.06.2026)** ✅ — `supabase/migrations/009_referral_system.sql` (ANGEWENDET), Edge Function `handle-referral` (deployed), `src/lib/referral.ts` (shared helper), Trigger bei Onboarding-Abschluss (nicht Signup), `localStorage` für Code-Persistenz über Email-Confirmation-Flow; `effectiveIsPro` inkl. `trial_ends_at`; UI in `ProfilScreen` + `ReferralPill`
+- **AI Rate-Limiting (23.07.2026)** ✅ — `supabase/migrations/012_ai_rate_limits.sql`: `ai_usage`/`ai_rate_limit_strikes` Tabellen + `profiles.ai_blocked` Spalte + `check_ai_rate_limit()` RPC (row-locked, gleiches Muster wie `grant_coins`). `/api/groq` + `/api/gemini` prüften vorher nur ob überhaupt ein gültiger Login vorliegt, nie ein Volumen-Limit — ein Free-Account (30 Sek. zum Anlegen) konnte beide Endpunkte unbegrenzt in einer Schleife aufrufen. Alle 21 Groq/Gemini-Funktionen sind jetzt einem von 8 Buckets zugeordnet (`smart_notes`, `flashcards`, `blurting`, `keyword_qa`, `lernzettel`, `probeklausur_full`, `probeklausur_other`, `lernplan`) mit fester, serverseitiger Tages-Decke pro Bucket — gleiche Zahl für alle Accounts, keine Pro/Free-Unterscheidung im Limiter selbst. Wer eine Decke an 2 verschiedenen Tagen überschreitet, wird per `ai_blocked` dauerhaft von allen KI-Calls gesperrt (ein Strike pro Tag/Bucket, nicht pro Retry). Separat: Lernplan Einzel für Free-User zusätzlich auf 3/Tag begrenzt (Produkt-Limit in `LernplanKonfiguratorScreen.tsx`, unabhängig vom Rate-Limiter).
+- **Coins-Rabatt via Stripe (23.07.2026)** ✅ FERTIG — siehe Spec weiter unten unter „Upcoming Features", jetzt als erledigt markiert. `supabase/migrations/011_coins_discount_redeem.sql`: `redeem_discount()` RPC (row-locked). `create-checkout-session` Edge Function akzeptiert einen serverseitig whitelisteten `couponId`-Param (`coins-discount-15` / `coins-discount-30`). `redeemDiscount(tier)` in `UserContext.tsx`, UI in neuem `ProfilCoinsScreen.tsx`. Der vormals tote „Rabatt-Code anzeigen"-Button hat jetzt echte Einlöse-Buttons pro Stufe mit „Eingelöst"-Status. **Simon muss noch:** die 2 Coupons im Stripe Dashboard anlegen (je `once`, kein Ablaufdatum) — Code ist bereit, referenziert die IDs aber sie existieren in Stripe noch nicht.
+- **ProfilScreen in Unterseiten aufgeteilt (23.07.2026)** ✅ — war 13 Abschnitte auf einer Seite (Pro-Upsell, Referral, Stats, Coins ×2, Theme, Dev-Tools, Account, Einstellungen, Rechtliches, Feedback). Jetzt schlanker Hub (Avatar, Pro-Upsell, Referral, Stats-Reihe, Coins-Preview-Row, gruppierte Nav-Rows) + 5 neue Unterseiten nach dem Muster der bereits bestehenden (Fächer/Bundesland/Rechtliches): `ProfilCoinsScreen` (`/profil/coins`), `ProfilErscheinungsbildScreen` (`/profil/erscheinungsbild`), `ProfilAccountScreen` (`/profil/account`), `ProfilSupportScreen` (`/profil/support`), `ProfilDevToolsScreen` (`/profil/dev-tools`, weiterhin auf Simons Email allowlisted). Onboarding-Reset lebt jetzt in den Dev-Tools — vorher: destruktiver Button ganz ohne Bestätigung, sichtbar für ALLE User in den normalen Einstellungen (nicht nur Simon).
+- **Übersicht (DashboardScreen) neu gestaltet (23.–24.07.2026)** ✅ — mehrfach iteriertes, Mockup-basiertes Redesign:
+  - **Erste-Schritte-Checkliste** — 5 Aufgaben (erste Notiz/Klausurtermin/Karteikarten/Lernplan/Probeklausur), dismissible (eigener `localStorage`-Key, nicht Teil von `lernapp_v1`), blendet sich bei 100% automatisch aus
+  - **Hero-Karte** — zeigt die nächste Session des aktiven Lernplans mit echtem Fortschritt. Neues Feld `Lernplan.completedDays?: string[]` — Klick auf „Fortsetzen" markiert die nächste Session als erledigt, bevor er in den Lernplan navigiert (kleiner echter Baustein des separat geplanten Lernplan-„erledigt"-Toggles)
+  - **„To-Do"-Karte** (vorher „Nächste Klausur") — eine optisch ungeteilte dunkle Karte, intern in 2 Tap-Zonen gesplittet: linke Hälfte Klausur-Countdown (führt ohne Termin in den Kalender statt Klausurenmodus), rechte Hälfte Anzahl offener Hausaufgaben (gleiche Aggregation wie `HausaufgabenheftScreen`; Tap → neue Smart Note mit vorausgewähltem Fach der am nächsten fälligen Hausaufgabe, via `/unterricht/:id/neue-notiz`)
+  - Beide oberen Karten sind jetzt dunkel mit weichem Ambient-Glow (violett fürs Hero, mint fürs To-Do — Purple=Unterrichtsmodus/Mint=Klausurenmodus-Konvention). Dringlichkeitsfarben im To-Do sind hardcoded dark-taugliche Werte statt der theme-abhängigen CSS-Variablen (die auf dunklem Kartenhintergrund im Light-Mode zu blass wirken würden — gilt generell für jede Karte, die IMMER dunkel ist unabhängig vom App-Theme)
+  - Neues kompaktes Streak-Widget neben dem Tagesplan
+  - „Letzte Notizen" haben einen gefächerten Stapel-Look (2 leicht rotierte, blassere Karten hinter der Front-Karte)
+  - Entfernt gegenüber der alten Version (bewusste Vereinfachung): eigenständige Streak-Karte, 5er-Stats-Reihe, 2 von 3 Schnellstart-Shortcuts (nur Schnellnotiz blieb)
+- **Streak-Erklärung** ✅ — neue `src/components/ui/StreakInfoSheet.tsx`: Bottom Sheet mit den echten Mechanik-Regeln (welche 5 Aktionen zählen, Freeze-Automatik bei genau 1 verpasstem Tag, Meilenstein-Boni bei 5/10/30/60 Tagen — nicht 7/30/100, das war eine falsche Annahme). Tap auf `StreakBadge` (🔥-Pill, global sichtbar) öffnet das Sheet statt direkt zu `/profil` zu navigieren.
+- **Google OAuth Account-Picker Fix** ✅ — `signInWithOAuth` in `AuthScreen.tsx` bekam `queryParams: { prompt: 'select_account' }`. Vorher zeigte Google auf Geräten mit nur einem eingeloggten Account beim Login-Versuch keinen Account-Chooser, sondern loggte automatisch den gecachten Account wieder ein — sah wie ein Auto-Login-Bug aus, war eigentlich ein fehlender OAuth-Parameter.
+- **DemoScreen Key-Exposure gefixt** ✅ — `DemoScreen.tsx` rief Groq vorher direkt vom Client mit `VITE_GROQ_API_KEY` auf, unconditional (öffentliche `/landing`-Demo, kein Login nötig) → Key war im Production-Bundle scrapebar (verifiziert: Build gemacht, Key im Bundle gefunden). Live-Call komplett entfernt, Demo nutzt jetzt ausschließlich die vorgeschriebenen Fallback-Inhalte, kein KI-Call mehr in der Demo. Der Rest der App (`groq.ts`/`gemini.ts`) war bereits sauber über `/api/groq`/`/api/gemini` proxied. **Wichtig, noch offen:** der alte Groq-Key sollte trotzdem im Groq-Dashboard rotiert werden — war vor diesem Fix schon live exponiert.
+- **UI/UX Pro Max + Emil Kowalski Skills installiert** ✅ — `.claude/skills/ui-ux-pro-max` (via `npx uipro-cli init --ai claude`, Design-System-Referenzdaten: Paletten, Typografie, UX-Guidelines) + `.claude/skills/{apple-design,emil-design-eng,animation-vocabulary,find-animation-opportunities,improve-animations,pick-ui-library,review-animations}` (via `npx skills add emilkowalski/skill --all`) — für Design-/Animations-Arbeit in zukünftigen Sessions verfügbar.
 
 ### Paywall-Strategie (Stand 10.06.2026):
 
@@ -166,31 +183,46 @@ Smart Notes
 **Paywall-Pattern:** Kein Blur. Free-User sehen eine klare Lock-Card mit konkreten Feature-Bullets. Klick öffnet `ProModal` als Bottom Sheet von unten mit Stripe-Checkout.  
 **ProModal:** `src/components/ui/ProModal.tsx` — `feature` Prop steuert Headline + Bullets. Stripe-Checkout direkt im Modal.
 
-### Known Issues (Stand: 15.06.2026):
+### Known Issues (Stand: 24.07.2026):
+
+**🔴 CRITICAL — Groq/Gemini APIs geben aktuell nur Fehler zurück, App ist für KI-Features nutzlos (gemeldet 24.07.2026):**
+Vermuteter Grund: Die AI-Rate-Limiting-RPC `check_ai_rate_limit()` (aus `supabase/migrations/012_ai_rate_limits.sql`) existiert wahrscheinlich noch nicht in der echten Supabase-DB — Migrationsdateien wenden sich nicht selbst an, Simon muss sie manuell im SQL Editor ausführen, das ist vermutlich noch nicht passiert (evtl. auch `011_coins_discount_redeem.sql` betroffen). `api/groq.ts`/`api/gemini.ts` rufen diese RPC jetzt vor JEDEM Request auf — wenn der Call fehlschlägt (z.B. weil die Funktion serverseitig nicht existiert), gibt `checkRateLimit()` aktuell `{ allowed: false, blocked: false }` zurück → die Edge Function lehnt den Request mit 403 ab. Das ist ein **fail-closed Design-Fehler**: jeder Fehler beim Rate-Limit-Check blockiert komplett alle KI-Calls, statt sie einfach unlimitiert durchzulassen.
+**Sofortmaßnahme nächste Session:**
+1. Prüfen ob `011_coins_discount_redeem.sql` + `012_ai_rate_limits.sql` tatsächlich in der echten Supabase-DB angewendet wurden (SQL Editor → History, oder direkt `SELECT * FROM pg_proc WHERE proname = 'check_ai_rate_limit'` probieren) — falls nicht: anwenden lassen (Simon, benannt als `011_coins_discount_redeem` / `012_ai_rate_limits`).
+2. **Unabhängig davon**: `checkRateLimit()` in `api/groq.ts` + `api/gemini.ts` von fail-closed auf fail-open umstellen — bei Fehler/Unreachable `{ allowed: true, blocked: false }` zurückgeben, nicht `false`. Ein kaputter Rate-Limiter darf niemals die ganze App lahmlegen; im schlimmsten Fall ist die Decke für einen Moment nicht durchgesetzt, das ist ein deutlich kleineres Problem als ein kompletter Totalausfall.
 
 **MINOR:**
-1. **Apple OAuth** — Button in AuthScreen vorhanden, aber NICHT GETESTET
+1. **Apple OAuth** — Button in AuthScreen vorhanden, aber NICHT GETESTET (wird im Zuge von Track A/App-Store-Vorbereitung fertiggestellt — braucht Capacitor-Deep-Link-Handling + Supabase Apple-Provider-Konfiguration)
 2. **Email Confirmation Flow** — kein UI-Hinweis nach Signup
 3. **Impressum Steuernummer** — Platzhalter, nach Eingang vom Finanzamt Harburg nachtragen
+4. **Coins Shop Redesign gefällt Simon noch nicht** — `ProfilCoinsScreen.tsx` wurde in 2 große Karten umgebaut (violett Checkliste / mint Shop, Framer-Motion-Entrance-Animation), aber Simon hat explizit gesagt das Design trifft es noch nicht. Konkretes Feedback steht noch aus — vor weiterer Iteration erst nachfragen was genau nicht passt, nicht einfach nochmal neu raten.
+5. **Kein natives Wrapper-Projekt für den App Store** — die App ist aktuell eine reine Vite/React Web-App ohne Capacitor/React-Native-Wrapper. Für die Einreichung im Apple App Store fehlt noch: Capacitor-Setup, Apple IAP via RevenueCat (Stripe-only verstößt gegen Guideline 3.1.1), Sign in with Apple fertigstellen. Das ist Track A — Simon macht das selbst (Apple Developer Account, Zertifikate, App Store Connect), volle Sequenzierung liegt in Claudes Memory (`project-app-store-launch-plan`).
 
-### To-Do — Priorisiert (Stand: 20.06.2026):
+### To-Do — Priorisiert (Stand: 24.07.2026):
 
-#### Nächste Session:
-1. **Onboarding Soft-Start** — Nutzer bekommt sofort App-Zugang (kein Gate), sieht aber auf jedem Screen eine Bubble/Banner: "Personalisierung in 1 Min abschließen → bessere KI-Ergebnisse". Ziel: sofortiger Wow-Effekt bevor Onboarding-Hürde kommt.
-2. **Email-Liste aktivieren** — ~100 warme Leads (TikTok/Landing Page) sind höchste Conversion-Priorität. Onboarding-Flow + erster Email-Kontakt klären.
-3. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
-4. **Foto-Scan: Auswahl/Crop-Tool** — beim Foto-Scan soll man per Drag einen Ausschnitt markieren können, statt immer das komplette Foto an die KI zu schicken (User will oft nur einen Teil der Seite analysiert haben, nicht alles)
-5. **Ausführlichere/bessere KI-Antworten** — Smart Note-Analyse (Groq) soll tiefer gehen; dabei auch „Stilpunkte"/Darstellungsleistung mitdenken, nicht nur Inhaltspunkte (relevant für Probeklausur-Korrektur + Lernzettel-Qualität)
-6. **Streak erklären + Animationen** — ProfilScreen Streak-Erklärungsbereich; Milestone-Animationen (7, 30, 100 Tage)
-7. **Coins-Rabatt via Stripe** — Flow noch zu klären (siehe Roadmap Spec unten)
-8. **Dashboard verbessern** (`DashboardScreen`) — übersichtlicheres Layout, bessere Stundenplananzeige
+#### Direkt als nächstes (Track B, noch offen aus der 23.–24.07. Session):
+0. **🔴 KRITISCH — Groq/Gemini APIs reparieren** (siehe Known Issues oben) — App ist aktuell für alle KI-Features unbenutzbar. Zuerst: Migrationen 011+012 wirklich in Supabase angewendet? Dann: `checkRateLimit()` in `api/groq.ts`/`api/gemini.ts` fail-open statt fail-closed machen. Das hier zuerst, vor allem anderen.
+1. **Lernzettel-Prompt: Groq → Gemini portieren, Komplexität erhöhen** — `generateLernzettel()` in `groq.ts` (aktuell Llama 3.3 70B, JSON-Mode, 2048 Tokens) auf Gemini umstellen. Pattern wie `examFetch` in `gemini.ts` (`candidates[].content.parts[].text`, nicht Groqs `choices[].message.content`). `maxOutputTokens` deutlich über 2048 anheben, System-Prompt in Richtung `GENERATION_SYSTEM`-Tiefe (Probeklausur-Vorbild) ausbauen. **Muss weiterhin exakt das Markdown-Subset ausgeben**, das `LernzettelScreen.tsx`s Renderer erwartet: `##`, `###`, `**bold**`, `> `, `"Merke: "`.
+2. **Abi-Notenrechner (`AbiRechnerScreen.tsx`) — erst Scoping-Gespräch mit Simon, dann Fix** — aktuelle Berechnung ist strukturell unvollständig, nicht nur eine UI-Frage: berechnet nur einen Block-I-artigen Halbjahresnoten-Schnitt (`totalPunkteAllHalbjahre()`). Es fehlt komplett: Abiturprüfung (Block II), „beste N von M Halbjahre"-Einbringungspflicht-Auswahl; Fächer werden nach Fach-Mittelwert statt pro einzelner Halbjahresleistung gewichtet. `pktToNoteAbi()`s `(17-p)/3`-Formel selbst ist korrekt (offizielle KMK-Formel) — der Fehler liegt upstream, in dem was `p` repräsentiert. **Vor dem Bauen mit Simon klären:** volle Korrektheit anstreben (Niedersachsen-spezifische Einbringungsregeln, nicht trivial) oder als klar gekennzeichnete Schätzung labeln?
+3. **Final QA-Pass auf alle Track-B-Änderungen dieser Session** — durchklicken: Google-Login (Account-Picker), Stripe-Checkout + Rabatt-Einlösung (sobald Simon die Coupons angelegt hat), alle 5 neuen Profil-Unterseiten, Übersicht (To-Do-Karte beide Hälften, Streak-Widget, Lernplan-Hero „Fortsetzen", Erste-Schritte-Checkliste, gefächerte Notizen-Karten), Streak-Erklärungs-Sheet.
+
+#### Danach:
+4. **Coins Shop Redesign — konkretes Feedback von Simon einholen** bevor weiter iteriert wird (siehe Known Issues).
+5. **Onboarding Soft-Start** — Nutzer bekommt sofort App-Zugang (kein Gate), sieht aber auf jedem Screen eine Bubble/Banner: "Personalisierung in 1 Min abschließen → bessere KI-Ergebnisse".
+6. **Email-Liste aktivieren** — ~100 warme Leads (TikTok/Landing Page) sind höchste Conversion-Priorität.
+7. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
+8. **Foto-Scan: Auswahl/Crop-Tool** — beim Foto-Scan soll man per Drag einen Ausschnitt markieren können, statt immer das komplette Foto an die KI zu schicken
+9. **Ausführlichere/bessere KI-Antworten** — Smart Note-Analyse (Groq) soll tiefer gehen; „Stilpunkte"/Darstellungsleistung mitdenken, nicht nur Inhaltspunkte
+
+#### App Store Launch (Ziel 02.08.2026):
+Track A (Capacitor, RevenueCat/Apple IAP, Sign in with Apple, Apple Developer Portal) macht Simon selbst — Status unbekannt, bei Simon erfragen. Volle Sequenzierung + Architekturentscheidungen in Claudes Memory unter `project-app-store-launch-plan`.
 
 #### UX / Features (mittelfristig):
-7. **KI-Erklärungs-Chat** — interaktiver Chat im SmartNotesScreen: "Erkläre mir das genauer", "Ich verstehe X nicht" → Groq antwortet kontextbezogen auf die Note. Schließt die Lücke zum Privatlehrer ("sofortiges Verständnis in 1 Gespräch").
-8. **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
-8. **Lernplan funktionieren lassen** — Flow komplett testen + Bugs fixen
-9. **Import-Flow** — vollständig testen + Bugs fixen
-10. **Email Confirmation Flow** — Hinweis nach Signup
+- **KI-Erklärungs-Chat** — interaktiver Chat im SmartNotesScreen: "Erkläre mir das genauer", "Ich verstehe X nicht" → Groq antwortet kontextbezogen auf die Note.
+- **Tutorial / Onboarding-Walkthrough** — max. 4–5 Schritte, überspringbar, nur beim ersten Login
+- **Lernplan-Detailansicht fertigstellen** — Tages-Kacheln mit echtem "erledigt"-Toggle (aktuell nur die Dashboard-Hero-Karte markiert grob den nächsten Tag; ein granulares Toggle direkt in `LernplanDetailScreen` fehlt noch)
+- **Import-Flow** — vollständig testen + Bugs fixen
+- **Email Confirmation Flow** — Hinweis nach Signup
 
 #### Nach Launch:
 1. **Steuernummer ins Impressum** — nach Eingang vom Finanzamt
@@ -203,8 +235,10 @@ Smart Notes
 
 ### Nächste Session (priorisiert)
 
-#### 0. Coins-Rabatt via Stripe — Discount direkt im Checkout
+#### 0. Coins-Rabatt via Stripe — Discount direkt im Checkout ✅ FERTIG (23.07.2026)
 **Ziel:** Wenn User 2.500 / 5.000 Coins erreicht, können sie ihren Rabatt direkt als Stripe-Checkout einlösen — kein Code-Kopieren, automatisch angewendet.
+
+Umgesetzt wie unten gespeckt, siehe Phase-3-Liste oben. Einziger offener Punkt: Simon muss die beiden Coupons im Stripe Dashboard noch anlegen.
 
 **Spec:**
 - **Stripe Dashboard (1× manuell, 5 Min):** Zwei Coupons anlegen:
@@ -282,25 +316,30 @@ Smart Notes
 
 ---
 
-## Supabase DB-Schema — 13 Tabellen (Stand 13.06.2026)
+## Supabase DB-Schema — 15 Tabellen (Stand 24.07.2026)
 
 | Tabelle | Inhalt |
 |---------|--------|
-| `profiles` | Name, Klasse, Schulform, Bundesland, Fächer, `custom_faecher` (JSONB), Klausurtermine, Stundenplan (JSONB), Abi-Gesamtnote, Theme, isPro, isDevMode |
+| `profiles` | Name, Klasse, Schulform, Bundesland, Fächer, `custom_faecher` (JSONB), Klausurtermine, Stundenplan (JSONB), Abi-Gesamtnote, Theme, isPro, isDevMode, `ai_blocked` (neu, Migration 012) |
 | `grade_data` | `abi_halbjahre` (JSONB) — **dedizierte, isolierte Notentabelle**, verhindert Überschreiben durch Profile-Sync |
-| `app_stats` | Streak, scanCount, examCount, lastStudyDate, studiedDays[], examScores[] |
+| `app_stats` | Streak, scanCount, examCount, lastStudyDate, studiedDays[], examScores[], coins, cooldowns[], streakFreezes, freezeUsedDates[] |
 | `user_folders` | Fach-Ordner-Baum mit Eltern-Kind-Beziehung |
-| `user_notes` | Alle Notizen (Text/Foto/PDF), attachments, homework_items, qa |
+| `user_notes` | Alle Notizen (Text/Foto/PDF), attachments (lokal-first Refs), homework_items, qa |
 | `generated_smart_notes` | KI-Analyse-Ergebnis pro Notiz (summary, keywords, examTopics, solution) |
 | `flashcards` | Alle Karteikarten mit front/back/subjectId |
 | `lernzettel` | Generierte Lernzettel mit Inhalt und Metadaten |
 | `saved_probeklausuren` | Abgeschlossene Klausurversuche mit KI-Korrektur |
-| `lernplaene` | Generierte Lernpläne (days JSONB, config JSONB) |
+| `lernplaene` | Generierte Lernpläne (days JSONB, config JSONB, `completedDays` neu) |
 | `personal_entries` | Kalendereinträge (lerneinheit/termin/erinnerung) |
 | `standalone_homework` | Hausaufgaben ohne Notiz-Kontext |
 | `subscriptions` | Stripe-Abonnements (nur server-seitig schreibbar via Webhook) |
+| `ai_usage` (neu, Migration 012) | Pro user_id/bucket/day ein Zähler — Grundlage der Rate-Limit-Decke |
+| `ai_rate_limit_strikes` (neu, Migration 012) | Ein Eintrag pro user_id/bucket/day an dem die Decke überschritten wurde — 2 Einträge insgesamt → `profiles.ai_blocked = true` |
 
-**RLS:** Jede Tabelle hat RLS — User kann nur eigene Rows lesen/schreiben (`auth.uid() = user_id`).
+**RLS:** Jede Tabelle hat RLS — User kann nur eigene Rows lesen/schreiben (`auth.uid() = user_id`). `ai_usage`/`ai_rate_limit_strikes` haben RLS aktiviert aber keine Policies — nur über die `SECURITY DEFINER`-RPC `check_ai_rate_limit()` erreichbar, kein direkter Client-Zugriff vorgesehen.
+
+**Migrationen 001–012**, alle in `supabase/migrations/`:
+001 initial schema · 002 grade_data · 003 custom_faecher · 004 coins_system · 005 atomic_coins (RPC) · 006 harden_coin_rpcs · 007 note_attachments_storage · 008 early_access · 009 referral_system · 010 personal_entries_extra_fields · 011 coins_discount_redeem (RPC) · 012 ai_rate_limits (RPC) — **011 und 012 vermutlich noch NICHT auf der echten DB angewendet, siehe kritisches Known Issue oben.**
 
 ---
 
@@ -336,6 +375,9 @@ KC-Daten liegen als JSON-Dateien in `public/kc/{Bundesland}/{fach}.json`.
 - **Supabase SQL Editor — Queries immer benennen:** Wenn Simon eine neue Migration manuell im Supabase SQL Editor ausführen muss, IMMER explizit dazuschreiben: „Speichere die Query als `<migrations-dateiname ohne .sql>`" (z.B. `007_note_attachments_storage`), statt sie als „Untitled query" im Verlauf stehen zu lassen — sonst sind alte Änderungen im SQL-Editor-Verlauf nicht mehr unterscheidbar.
 - **Custom Fächer:** `profile.customFaecher` Array in `UserProfile`. `resolveSubjectInfo(id, customFaecher)` in `subjectInfo.ts` liefert Fallback-Icon 📚 + Farbe für custom IDs. `syncProfile` schreibt `custom_faecher` nach Supabase, `mapProfile` liest es zurück.
 - **Note-Attachments sind lokal-first (IndexedDB), nicht Base64:** `UserNote.attachments`/`drawingAttachments` enthalten nach dem Speichern `idb:<uuid>` (lokal) oder `cloud:<uuid>:<pfad>` (explizit übertragen) statt Base64 — Auflösung immer über `getAttachment()`/`useResolvedAttachments()` aus `src/lib/noteStorage.ts`, nie `note.attachments` direkt als `<img src>` rendern. Lokalisierung passiert zentral in `UserContext.tsx` (`saveNote`/`updateUserNote`/etc.) — neue Save-Pfade für Notizen müssen über diese Funktionen laufen, sonst bleibt Base64 ungefiltert in Postgres. Kein Auto-Upload in die Cloud — nur über den expliziten „Übertragen"-Button.
+- **AI Rate-Limiting: Buckets sind tier-blind, feste serverseitige Ceilings** — `src/lib/aiRateLimit.ts` definiert das `AiBucket`-Union (`smart_notes`, `flashcards`, `blurting`, `keyword_qa`, `lernzettel`, `probeklausur_full`, `probeklausur_other`, `lernplan`). Jede der 21 Groq/Gemini-Funktionen taggt sich beim Aufruf mit ihrem Bucket; die tatsächliche Zahl (Ceiling) lebt NUR serverseitig in `api/groq.ts`/`api/gemini.ts` (hardcoded `BUCKET_LIMITS`), niemals clientseitig — sonst könnte ein manipulierter Client sein eigenes Limit vortäuschen. Bewusst KEIN Pro/Free-Unterscheidung im Limiter selbst (Simons Entscheidung) — das ist reiner Abuse-Schutz, keine Monetarisierung; Produkt-Limits (z.B. Lernzettel 1/Tag Free) bleiben separat client-seitig geprüft wie bisher. **Fail-open, nicht fail-closed** — falls sich das noch nicht in `checkRateLimit()` widerspiegelt, ist das ein offener Bug (siehe Known Issues).
+- **Karten die IMMER dunkel sind (unabhängig vom App-Theme) brauchen hardcodierte Farben, nicht die theme-CSS-Variablen** — z.B. die Übersicht-Hero-Karten (`DashboardScreen.tsx`, `Card` mit `dark` Prop). `rgb(var(--color-accent))` etc. sind theme-abhängig (unterschiedliche Werte in `:root` vs `.dark` in `index.css`) und wirken auf einer erzwungenermaßen dunklen Kartenfläche im Light-Mode zu blass. Für solche "immer dunkles Chrome"-Elemente feste, dark-taugliche Hex-Werte direkt im Code verwenden (Beispiel: `urgencyColor` in `ToDoCard`).
+- **`Lernplan.completedDays?: string[]`** — Liste von `LernplanDay.date`-Strings, die als erledigt markiert wurden. Bisher nur von der Dashboard-Hero-Karte geschrieben (markiert die nächste Session bei Klick auf „Fortsetzen"), noch kein granulares Toggle direkt in `LernplanDetailScreen` (das ist ein offener Folge-Punkt, siehe To-Do). Persistiert ganz normal über das bestehende `saveLernplan()`.
 
 ---
 
@@ -376,7 +418,7 @@ isDevMode:  true
 
 ---
 
-## Screens (34 total — alle geroutet, alle funktionsfähig)
+## Screens (39 total — alle geroutet, alle funktionsfähig)
 
 | Screen | Route | Funktion |
 |--------|-------|---------|
@@ -408,7 +450,12 @@ isDevMode:  true
 | LernplanKonfiguratorScreen | /klausurmodus/lernplan/neu | 6-Schritt-Generator |
 | LernplanDetailScreen | /klausurmodus/lernplan/:id | Tages-Ansicht + Kalender-Export |
 | InsightsScreen | /insights | Statistiken, Charts, Lerntipps |
-| ProfilScreen | /profil | User-Settings, Pro-Toggle |
+| ProfilScreen | /profil | Schlanker Hub: Avatar, Pro-Upsell, Referral, Stats, Coins-Preview, Nav-Rows |
+| ProfilCoinsScreen | /profil/coins | Coins-Checkliste + Shop (Rabatt-Einlösung) |
+| ProfilErscheinungsbildScreen | /profil/erscheinungsbild | Theme-Auswahl Hell/Dunkel/System |
+| ProfilAccountScreen | /profil/account | Email, Login-Methode, 2FA, Abmelden, Account löschen |
+| ProfilSupportScreen | /profil/support | App-Übersicht, Demo-Ansicht, Bug-Report |
+| ProfilDevToolsScreen | /profil/dev-tools | Pro-Toggle, Coins-Slider, Onboarding-Reset (allowlisted) |
 | FaecherEditScreen | /profil/faecher | Fächer hinzufügen/entfernen |
 | BundeslandScreen | /profil/bundesland | Bundesland + Schulform ändern |
 | BenachrichtigungenScreen | /profil/benachrichtigungen | Notification-Toggles (UI only) |
@@ -433,7 +480,8 @@ src/
 │   │   └── AIFeedbackCard.tsx    # KI-Korrektur-Display
 │   └── ui/                       # Button, Card, Badge, BottomNav, DesktopSidebar,
 │                                 # Header, ProModal, BottomSheet, LernvorschlagWidget,
-│                                 # SyncErrorBanner, KcFallbackBanner, MathRenderer, ...
+│                                 # SyncErrorBanner, KcFallbackBanner, MathRenderer,
+│                                 # StreakBadge, StreakInfoSheet, ...
 ├── context/
 │   └── UserContext.tsx            # Zentraler State + localStorage + Supabase Auth + Sync Queue
 ├── data/
@@ -443,27 +491,29 @@ src/
 ├── lib/
 │   ├── groq.ts                    # Alle Groq API Calls (OCR, SmartNote, Flashcards, Blurting, Lernzettel, ...)
 │   ├── gemini.ts                  # Gemini API Calls (Probeklausur, Lernplan, File-Import)
-│   ├── stripe.ts                  # createCheckoutSession() — ruft create-checkout-session Edge Fn auf
+│   ├── stripe.ts                  # createCheckoutSession(plan, couponId?) — ruft create-checkout-session Edge Fn auf
 │   ├── supabase.ts                # Supabase Client
 │   ├── supabaseSync.ts            # Sync-Layer: syncProfile, syncGradeData, syncNote, etc. + Queue
 │   ├── streak.ts                  # getActiveStreak(streak, lastStudyDate) — single source of truth
+│   ├── aiRateLimit.ts             # AiBucket-Union (8 Buckets) — client-seitige Typ-Sicherheit für Rate-Limiting
 │   └── pdf.ts                     # PDF → Bilder Konvertierung (pdfjs)
-├── screens/                       # Ein Screen pro Route (34 Screens — alle aktiv)
+├── screens/                       # Ein Screen pro Route (39 Screens — alle aktiv, inkl. 5 neue Profil*.tsx Unterseiten)
 └── types/
     └── index.ts                   # Alle TypeScript-Typen
 public/
 ├── kc/                            # KC-JSONs: 16 Bundesländer × ~12 Fächer = ~196 Dateien
 └── lernzettel-previews/           # 4 Original-Lernzettel-HTMLs für Pro Preview Karussell
 supabase/
-├── migrations/
-│   ├── 001_initial_schema.sql     # 13 Tabellen, RLS, Trigger — ANGEWENDET
-│   └── 002_grade_data.sql         # grade_data Tabelle — ANGEWENDET 09.06.2026
+├── migrations/                    # 001–012, siehe DB-Schema-Sektion oben für Details
 └── functions/
-    ├── groq-proxy/                # Groq API Proxy (deployed ✅)
-    ├── gemini-proxy/              # Gemini API Proxy (deployed ✅)
-    ├── create-checkout-session/   # Stripe Checkout (deployed ✅, Live-Mode)
+    ├── groq-proxy/                # (vermutlich toter Code — src/ ruft stattdessen /api/groq auf, prüfen ob löschbar)
+    ├── gemini-proxy/              # (vermutlich toter Code — src/ ruft stattdessen /api/gemini auf, prüfen ob löschbar)
+    ├── create-checkout-session/   # Stripe Checkout (deployed ✅, Live-Mode, akzeptiert jetzt couponId)
     ├── stripe-webhook/            # Stripe Webhook Handler (deployed ✅, Live-Mode)
     └── delete-account/            # Account-Löschung (deployed ✅ 10.06.2026)
+api/
+├── groq.ts                        # Vercel Edge Function — verifiziert Supabase-Token, prüft Rate-Limit, proxied zu Groq
+└── gemini.ts                      # Vercel Edge Function — gleiche Struktur, proxied zu Gemini
 ```
 
 **Gelöschte Screens (nicht mehr vorhanden):**
@@ -543,7 +593,33 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ---
 
-## Letzte Session (20.06.2026)
+## Letzte Session (23.–24.07.2026)
+
+**Große Track-B-Session vor dem App-Store-Launch (Ziel 02.08.2026) — viel gebaut, ein kritischer Bug am Ende entdeckt**
+
+Ausgangspunkt war ein Planungsgespräch über alle offenen To-Dos vor der App-Store-Einreichung; dabei kam heraus, dass die App noch gar kein natives Wrapper-Projekt hat (reine Web-App) — das wurde als eigener Track A (Simon selbst) abgetrennt, siehe Claude-Memory `project-app-store-launch-plan`. Diese Session war Track B (Politur/Bugfixes am bestehenden Repo). Gebaut, in dieser Reihenfolge:
+
+1. Google OAuth Account-Picker-Fix (`prompt: 'select_account'`)
+2. Coins-Rabatt via Stripe komplett fertiggestellt (Migration 011, RPC, UI) — Simon muss noch die 2 Coupons in Stripe anlegen
+3. DemoScreen Groq-Key-Exposure gefixt (Key war im Production-Bundle scrapebar, Live-Call entfernt)
+4. AI Rate-Limiting gebaut (Migration 012, 8 Buckets, `ai_blocked`-Sperre) + Lernplan-Einzel-Free-Limit auf 3/Tag
+5. Onboarding-Reset von den allgemeinen Einstellungen in die Dev-Tools verschoben (war destruktiv + für alle User sichtbar)
+6. Übersicht (Dashboard) mehrfach neu gestaltet nach Mockup-Vorgaben — Erste-Schritte-Checkliste, Hero-Karte mit echtem Lernplan-Fortschritt, „To-Do"-Karte (Klausur+Hausaufgaben gesplittet), gefächerte Notizen-Karten, dunkle Karten mit Ambient-Glow
+7. ProfilScreen von 13 Abschnitten auf einer Seite in einen schlanken Hub + 5 Unterseiten aufgeteilt
+8. Coins-Screen komplett neu (2 große Karten, violett/mint, Framer-Motion-Animation) — **Simon sagt: gefällt ihm noch nicht, konkretes Feedback steht aus**
+9. Streak-Erklärungs-Sheet gebaut (echte Mechanik-Regeln aus dem Code abgeleitet, nicht geraten)
+10. `ui-ux-pro-max` + Emil-Kowalski-Animations-Skills installiert (via `uipro-cli` bzw. `skills` CLI von Vercel Labs)
+
+**🔴 Am Ende der Session gemeldet, NICHT mehr gefixt:** Groq/Gemini-APIs geben nur noch Fehler zurück, komplett unbenutzbar. Sehr wahrscheinliche Ursache: Migrationen 011/012 wurden vermutlich noch nicht in der echten Supabase-DB angewendet (nur die SQL-Dateien existieren im Repo), und der neue Rate-Limiter in `api/groq.ts`/`api/gemini.ts` ist fail-closed statt fail-open gebaut — jeder Fehler beim Rate-Limit-Check (inkl. „RPC existiert noch nicht") blockiert dadurch ALLE KI-Calls statt nur die, die wirklich über dem Limit sind. **Das ist die #1-Priorität der nächsten Session** — siehe Known Issues + To-Do oben für die genaue Fix-Anleitung.
+
+**Nicht mehr geschafft in dieser Session (explizit für die nächste vorgemerkt):**
+- Lernzettel-Prompt Groq → Gemini Port
+- Abi-Notenrechner Scoping-Gespräch + Fix (Block II fehlt komplett)
+- Finaler QA-Pass über alle Änderungen dieser Session
+
+---
+
+## Session davor (20.06.2026)
 
 **Referral-System Bug-Fix — Trigger von Signup auf Onboarding-Abschluss verschoben**
 
@@ -554,29 +630,3 @@ Das Referral-System (Migration 009, Edge Function `handle-referral`, UI in Profi
 2. `App.tsx` — `sessionStorage` → `localStorage` für `referral_code` (überlebt Email-Confirmation-Flow)
 3. `AuthScreen.tsx` — Referral-Call bei Signup komplett entfernt
 4. `OnboardingScreen.tsx` — Referral-Call beim Abschluss des Onboardings: User ist jetzt authentifiziert ✅, Session aktiv ✅, Onboarding abgeschlossen ✅
-
----
-
-## Session davor (16.06.2026)
-
-**Smart Notes Storage-Architektur — local-first auf IndexedDB umgestellt, App-Store-Vorbereitung**
-
-Ausgangsproblem: Foto/Zeichnung-Attachments liefen als komplettes Base64 durch `localStorage` UND Supabase Postgres (`user_notes.attachments` TEXT[]). Bei vielen Usern + Free-Plan-Smart-Notes wäre das ein DB-Storage-Kostenproblem. Lösung: GoodNotes-Prinzip — Originalbilder bleiben lokal auf dem Gerät, nur die KI-Text-Analyse (`GeneratedSmartNote`, eh schon winzig) synct immer in die Cloud.
-
-**1. `src/lib/noteStorage.ts` (neu)** — IndexedDB-Wrapper, drei Ref-Formate in `attachments`/`drawingAttachments`: `data:...` (Legacy/Fallback), `idb:<uuid>` (lokal-only), `cloud:<uuid>:<pfad>` (hochgeladen, lokal gecacht). `localizeNoteAttachments()`, `getAttachment()`, `useResolvedAttachments()`-Hook, `deleteAttachmentsForNotes()`, `transferNoteAttachmentsToCloud()`, `migrateLegacyNoteAttachments()`.
-
-**2. Zentrale Abfangstelle in `UserContext.tsx`** — `saveNote`/`addUserNote`/`updateUserNote`/`saveToOhneFachFolder` lokalisieren Attachments automatisch beim Speichern; `deleteUserNote`/`deleteFolder`/`applyFaecherChanges` räumen IndexedDB + Storage Bucket auf. `NoteCreateScreen.tsx`/`SmartNotesScreen.tsx` selbst unverändert in der Foto-Capture-Logik (brauchen Base64 live für OCR-Vorschau) — Umwandlung passiert erst beim Hand-off an den Context.
-
-**3. Cross-Device-Transfer** — `supabase/migrations/007_note_attachments_storage.sql` (privater Bucket `note-attachments`, RLS pfadbasiert) — **ANGEWENDET 16.06.2026**. „Übertragen"-Button in `SmartNotesScreen.tsx`: lädt eine Notiz explizit hoch, kein Auto-Upload.
-
-**4. Legacy-Migration** — alte Notizen mit Base64 in Postgres werden beim nächsten Supabase-Load automatisch lokalisiert + zurückgesynct, schrumpft die DB-Zeile dauerhaft. Selbstbegrenzend (läuft nur einmal pro Notiz).
-
-**5. `AttachmentToast`** — kurzer Hinweis-Toast bei jedem Speichern einer Foto-Notiz ("Foto nur auf diesem Gerät"), gestaffelt nach dem `CoinToast` damit sie nicht überlappen.
-
-**6. StreakBadge-Fix** — Flamme überlappte mit Action-Buttons in `NoteCreateScreen` + allen Ordner-/Lesson-/SmartNotes-Ansichten unter `/unterricht/*`. Jetzt nur noch auf `/unterricht` (Home) sichtbar, überall darunter versteckt.
-
-**Getestet:** TypeScript-Build clean, IndexedDB-Roundtrip (localize → resolve → dedup → delete) + Legacy-Migration im echten Chromium-Browser gegen das echte Modul verifiziert. Cross-Device-Upload von Simon live in Supabase Storage bestätigt (Datei taucht im Bucket auf).
-
-**Architektur-Entscheidung:** Note-Attachments sind ab jetzt lokal-first — siehe neuer Punkt unter „Architektur-Entscheidungen" oben. Künftige Save-Pfade für Notizen müssen über die bestehenden `UserContext`-Funktionen laufen, sonst landet wieder ungefiltertes Base64 in Postgres.
-
-**Offene Folge-Idee (noch nicht gebaut):** Wenn ein `idb:`-Ref auf einem fremden Gerät nicht auflösbar ist (nicht übertragen), zeigt `<img>` aktuell ein kaputtes Bild-Icon statt eines Platzhalters — kleine Politur für später.
