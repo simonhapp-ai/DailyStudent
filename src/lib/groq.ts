@@ -8,8 +8,13 @@ async function getAuthHeader(): Promise<Record<string, string>> {
   return session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}
 }
 
-const VISION_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct'
-const TEXT_MODEL = 'llama-3.3-70b-versatile'
+// meta-llama/llama-4-scout-17b-16e-instruct was retired 2026-07-17; llama-3.3-70b-versatile is
+// deprecated, shutting down 2026-08-16. qwen/qwen3.6-27b is the only vision-capable model left
+// on Groq's free tier (Preview status on Groq's side, not a stability compromise chosen here).
+// openai/gpt-oss-120b is free-tier and one of the few Groq models with guaranteed strict JSON
+// mode, which matters since several callers below use response_format: { type: 'json_object' }.
+const VISION_MODEL = 'qwen/qwen3.6-27b'
+const TEXT_MODEL = 'openai/gpt-oss-120b'
 
 async function resizeImage(dataUrl: string, maxWidth = 1536): Promise<{ base64: string; mimeType: 'image/jpeg' }> {
   return new Promise((resolve, reject) => {
@@ -39,6 +44,16 @@ function parseRetryAfterMs(errorText: string): number {
 }
 
 async function groqFetch(body: Record<string, unknown>, bucket: AiBucket): Promise<string> {
+  // Both new models are reasoning models by default — unlike llama-3.3-70b, they spend hidden
+  // "thinking" tokens before producing real output, which silently truncated/emptied every call
+  // site's existing max_tokens budget (all tuned for a non-reasoning model) when tested at low
+  // effort. Each model uses a DIFFERENT enum for this (confirmed by hitting Groq's own 400
+  // errors): gpt-oss-120b takes low/medium/high (no "none"); qwen3.6-27b takes none/default and,
+  // critically, inlines its <think>...</think> block directly into `content` — not a separate
+  // field — unless effort is "none", which would corrupt every OCR/JSON caller downstream.
+  const reasoningEffort = body.model === VISION_MODEL ? 'none' : 'low'
+  const fullBody = { ...body, reasoning_effort: reasoningEffort }
+
   const attempt = async (): Promise<GroqResponse> => {
     // Dev: call Groq directly (key in .env, not public). Prod: Vercel Edge Function hides the
     // key and enforces the per-bucket rate limit (see api/groq.ts) — bucket is unused in dev.
@@ -49,7 +64,7 @@ async function groqFetch(body: Record<string, unknown>, bucket: AiBucket): Promi
             Authorization: `Bearer ${import.meta.env.VITE_GROQ_API_KEY as string}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(body),
+          body: JSON.stringify(fullBody),
         })
       : await fetch('/api/groq', {
           method: 'POST',
@@ -57,7 +72,7 @@ async function groqFetch(body: Record<string, unknown>, bucket: AiBucket): Promi
             'Content-Type': 'application/json',
             ...await getAuthHeader(),
           },
-          body: JSON.stringify({ bucket, payload: body }),
+          body: JSON.stringify({ bucket, payload: fullBody }),
         })
     const text = await res.text()
     if (!res.ok) throw new Error(`Groq ${res.status}: ${text}`)

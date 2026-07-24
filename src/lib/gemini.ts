@@ -13,10 +13,15 @@ interface GeminiProxyResult {
   geminiData: unknown
 }
 
+// gemini-2.5-flash/-flash-lite/-flash-image are deprecated, shutting down Oct 2026. Replacements
+// chosen per Simon's explicit "prefer stability" call: established current models, not the
+// literal newest point release. flash-image has no non-preview alternative — that's Google's
+// label on the model itself, not a stability trade-off made here. Keep in sync with the
+// identical map in api/gemini.ts (prod proxy path uses its own copy).
 const GEMINI_URLS: Record<string, string> = {
-  'flash': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
-  'flash-lite': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
-  'flash-image': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
+  'flash': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent',
+  'flash-lite': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent',
+  'flash-image': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent',
 }
 
 // Reads the response as text first rather than calling res.json() directly. A non-JSON body
@@ -187,7 +192,11 @@ async function examFetch(systemPrompt: string, userPrompt: string, bucket: AiBuc
   const result = await geminiProxy('flash', {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
-    generationConfig: { temperature, maxOutputTokens: 8192, responseMimeType: 'application/json' },
+    // gemini-3.5-flash thinks by default (confirmed: ~600 hidden "thought" tokens on a simple
+    // exam-generation test, counted against maxOutputTokens) — thinkingLevel 'low' keeps this
+    // fast and predictable, matching how these prompts were originally tuned for a non-reasoning
+    // model. gemini-3.1-flash-lite has no such overhead by default, so it's left alone below.
+    generationConfig: { temperature, maxOutputTokens: 8192, responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'low' } },
   }, bucket)
 
   if (result.geminiStatus !== 200) {
@@ -757,8 +766,18 @@ Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${i
     generationConfig: { temperature: 0.3, maxOutputTokens: 32768, responseMimeType: 'application/json' },
   }
 
+  // gemini-3.5-flash thinks by default (see examFetch comment) — for Lernplan specifically this
+  // is the exact call Simon reported as "extremely slow", so capping thinking here directly
+  // targets that complaint, not just migration hygiene. Only applied to the flash call, not the
+  // flash-lite 503-fallback — flash-lite showed no hidden-thinking overhead in testing, so its
+  // config is left exactly as before rather than adding an untested field to the reliability fallback.
+  const lernplanFlashBody = {
+    ...lernplanBodyObj,
+    generationConfig: { ...lernplanBodyObj.generationConfig, thinkingConfig: { thinkingLevel: 'low' } },
+  }
+
   // On 503 (model overloaded), fall back to flash-lite immediately
-  let result = await geminiProxy('flash', lernplanBodyObj, 'lernplan')
+  let result = await geminiProxy('flash', lernplanFlashBody, 'lernplan')
   if (result.geminiStatus === 503) {
     result = await geminiProxy('flash-lite', lernplanBodyObj, 'lernplan')
   }

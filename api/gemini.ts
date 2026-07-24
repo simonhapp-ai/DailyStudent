@@ -8,10 +8,12 @@
 // logs — reasoning from the client-side symptom alone can only get so far.
 export const config = { maxDuration: 60 }
 
+// Keep in sync with the identical map in src/lib/gemini.ts (dev-direct-call path) — see that
+// file for why these specific replacements were chosen (2.5 family deprecated, shuts down Oct 2026).
 const GEMINI_URLS: Record<string, string> = {
-  flash: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
-  'flash-lite': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
-  'flash-image': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
+  flash: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent',
+  'flash-lite': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent',
+  'flash-image': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent',
 }
 
 // Flat per-user, per-day ceiling for each AI feature bucket — same limit for every account,
@@ -81,7 +83,16 @@ async function checkRateLimit(token: string, userId: string, bucket: string): Pr
   }
 }
 
-export default async function handler(request: Request): Promise<Response> {
+// Named as a plain function, not the default export: Vercel's Node.js builder only grants a
+// real Fetch Request/Response to modules that export named HTTP-method functions or a `fetch`
+// property on the default export (see @vercel/node's isWebHandler check). A bare
+// `export default async function handler(request: Request)` matches neither, so Vercel silently
+// falls back to the legacy (req, res) Node calling convention instead — the first
+// `request.headers.get(...)` then throws, the invocation crashes before ever reaching Gemini,
+// and the client sees an instant non-JSON platform error page. This broke in commit 6ee3336
+// when `runtime: 'edge'` was removed (Edge Functions always get a real Request regardless of
+// export shape, so the bug was invisible until the runtime switched to Node.js).
+async function handler(request: Request): Promise<Response> {
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204 })
   }
@@ -152,3 +163,5 @@ export default async function handler(request: Request): Promise<Response> {
     })
   }
 }
+
+export default { fetch: handler }
