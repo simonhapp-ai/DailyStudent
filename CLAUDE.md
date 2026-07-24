@@ -31,8 +31,8 @@ Die App bietet keinen einzelnen Lernweg, sondern einen **vernetzten Mix aus Lern
 | Build Tool | Vite |
 | Routing | React Router |
 | Persistenz | localStorage (`lernapp_v1`) → Supabase DB (Phase 3 aktiv) |
-| KI Text + Vision | Groq API — Llama 3.3 70B (Text) + Llama 4 Scout Vision (Bilder/Scans) |
-| KI Probeklausuren + Lernplan | Google Gemini — `gemini-2.5-flash` |
+| KI Text + Vision | Groq API — `openai/gpt-oss-120b` (Text) + `qwen/qwen3.6-27b` (Vision/Bilder/Scans) — migriert 25.07.2026, siehe Session-Notiz |
+| KI Probeklausuren + Lernplan + Lernzettel | Google Gemini — `gemini-3.5-flash` / `gemini-3.1-flash-lite` / `gemini-3.1-flash-image-preview` — migriert 25.07.2026 |
 | Auth | Supabase Auth — Email/Passwort + Google OAuth ✅ vollständig in App.tsx geroutet |
 | DB | Supabase PostgreSQL — 13 Tabellen + RLS (`supabase/migrations/`) |
 | Payments | Stripe — Edge Function + Webhook ✅ Live-Mode aktiv |
@@ -198,6 +198,7 @@ Smart Notes
 4. **Coins Shop Redesign gefällt Simon noch nicht** — `ProfilCoinsScreen.tsx` wurde in 2 große Karten umgebaut (violett Checkliste / mint Shop, Framer-Motion-Entrance-Animation), aber Simon hat explizit gesagt das Design trifft es noch nicht. Konkretes Feedback steht noch aus — vor weiterer Iteration erst nachfragen was genau nicht passt, nicht einfach nochmal neu raten.
 5. **Kein natives Wrapper-Projekt für den App Store** — die App ist aktuell eine reine Vite/React Web-App ohne Capacitor/React-Native-Wrapper. Für die Einreichung im Apple App Store fehlt noch: Capacitor-Setup, Apple IAP via RevenueCat (Stripe-only verstößt gegen Guideline 3.1.1), Sign in with Apple fertigstellen. Das ist Track A — Simon macht das selbst (Apple Developer Account, Zertifikate, App Store Connect), volle Sequenzierung liegt in Claudes Memory (`project-app-store-launch-plan`).
 6. **Migration 013 noch nicht angewendet** — `013_lernzettel_modus_images.sql` liegt im Repo, aber Simon muss sie noch im Supabase SQL Editor ausführen (als `013_lernzettel_modus_images` speichern). Bis dahin schlägt `syncLernzettel()`s `upsert()` komplett fehl, weil die Spalten `modus`/`images` in der echten DB noch fehlen (Postgrest lehnt unbekannte Spalten ab) — landet dann in der bestehenden Sync-Retry-Queue statt verloren zu gehen, aber neue Lernzettel bleiben bis zur Migration nur lokal (kein Cross-Device). Lokal (localStorage/UI) funktioniert alles normal.
+7. **Lernzettel-Erklärbilder (Beta) aktuell komplett funktionsunfähig — Google-seitiges Freikontingent, nicht unser Bug** — direkt gegen Googles API getestet (curl, mit UND ohne Modell-Migration, altes `gemini-2.5-flash-image` UND neues `gemini-3.1-flash-image-preview` zeigen identisch `RESOURCE_EXHAUSTED`/`limit: 0` für `generate_content_free_tier_requests`). Das Freikontingent für Bildgenerierung scheint für dieses Google-Cloud-Projekt aktuell bei 0 zu liegen — passend zu der bereits dokumentierten Sorge, dass das Kontingent knapp werden könnte (siehe Lernzettel-Erklärbilder-Eintrag in Phase 3), nur früher/härter eingetreten als erwartet. Betrifft nur den optionalen Beta-Toggle (default AUS) — der Rest von Lernzettel/Probeklausur/Lernplan/Smart Notes läuft über Text-Modelle und ist nicht betroffen. **Simon muss:** im Google AI Studio / Google Cloud Billing prüfen, ob für dieses Projekt Billing aktiviert werden muss, um überhaupt wieder Bildgenerierung zu bekommen — reines Model-Downgrade würde das nicht lösen, da beide Modelle betroffen sind.
 
 ### To-Do — Priorisiert (Stand: 25.07.2026):
 
@@ -598,7 +599,28 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ---
 
-## Letzte Session (25.07.2026)
+## Letzte Session (25.07.2026, Fortsetzung) — kritischer Bugfix + AI-Modell-Migration
+
+**Auslöser:** Simon merkte an, dass die AI-Modelle vor ~einem Monat gewählt wurden und sich das Feld schnell ändert — Auftrag: recherchieren welche Groq/Gemini-Modelle aktuell die beste kostenlose Kombination aus Qualität und Geschwindigkeit sind, plus andere Open-Source-Anbieter, plus neue Fähigkeiten, plus tatsächlich migrieren, noch in dieser Session. Recherche (mehrere parallele Agents) ergab echte Dringlichkeit: Groqs Vision-Modell (`meta-llama/llama-4-scout-17b-16e-instruct`) war zu diesem Zeitpunkt bereits seit 17.07.2026 tot, das Text-Modell (`llama-3.3-70b-versatile`) läuft am 16.08.2026 aus — eine Woche vor Simons App-Store-Deadline. Die gesamte Gemini-2.5-Familie läuft im Oktober 2026 aus.
+
+**Während der Recherche meldete Simon einen zweiten, akuten Bug:** Lernzettel-Generierung lieferte **sofort** (nicht nach Timeout) den Fallback-Fehler. Zwei parallele Read-only-Untersuchungen (Git-Historie + Vercel-Plattform-Source-Recherche) fanden die Ursache eindeutig: Commit `6ee3336` (Vorsession) hatte `runtime: 'edge'` aus `api/gemini.ts` entfernt (um verlässlicheres `maxDuration` für große Lernplan/Lernzettel-Generierungen zu bekommen), aber den Handler als bare `export default async function handler(request: Request)` belassen. Vercels Node.js-Builder (`@vercel/node`) erkennt ein Modul nur dann als "Web Handler" (echtes Fetch `Request`/`Response`) wenn es benannte HTTP-Methoden-Exports (`GET`/`POST`) oder ein `fetch`-Property am Default-Export hat — ein bare-default-Function erfüllt keins von beidem, Vercel fällt auf die alte Node `(req, res)`-Konvention zurück, und die erste `request.headers.get(...)`-Zeile crasht sofort, noch bevor Gemini überhaupt kontaktiert wird. Das war unsichtbar solange `runtime: 'edge'` aktiv war (Edge Functions bekommen immer ein echtes Request-Objekt, unabhängig vom Export-Shape). **Fix:** Handler umbenannt zu einer normalen Funktion + `export default { fetch: handler }` — macht Vercels `isWebHandler`-Check wieder wahr, behält aber die Node-Runtime (und damit das eigentlich gewünschte längere `maxDuration`) bei. Committed + gepusht als `903d268`, noch vor der eigentlichen Modell-Migration, da es ein kompletter Produktions-Ausfall von Lernzettel UND Lernplan war.
+
+**Modell-Migration (gleicher Commit):**
+- Groq: `VISION_MODEL` → `qwen/qwen3.6-27b` (einziges verbliebenes Vision-Modell im Groq-Freikontingent, Preview-Status), `TEXT_MODEL` → `openai/gpt-oss-120b` (Freikontingent, garantierter strict-JSON-Modus)
+- Gemini: `flash` → `gemini-3.5-flash`, `flash-lite` → `gemini-3.1-flash-lite`, `flash-image` → `gemini-3.1-flash-image-preview` — bewusst die etablierten Modelle statt der jeweils allerneuesten Version gewählt (Simons expliziter Wunsch: "prefer stability"), `GEMINI_URLS`-Map in `src/lib/gemini.ts` UND `api/gemini.ts` synchron gehalten (bestehende Konvention)
+- Keine neuen API-Keys nötig — gleiche Provider (Groq, Google), gleiche 4 bestehenden Env-Vars, nur andere Modell-ID-Strings
+
+**Wichtiger Fund beim direkten Live-Testen gegen die echten APIs (curl, nicht nur `tsc`):** Beide neuen Modelle sind standardmäßig Reasoning-Modelle — anders als die bisherigen Modelle verbrauchen sie unsichtbare "Denk"-Tokens bevor der eigentliche Output kommt, was die bestehenden `max_tokens`-Budgets (für Nicht-Reasoning-Modelle kalibriert) bei kleinen Calls leer oder abgeschnitten zurückgab. `openai/gpt-oss-120b` nutzt `reasoning_effort: 'low'|'medium'|'high'`; `qwen/qwen3.6-27b` nutzt stattdessen `'none'|'default'` UND schreibt sein `<think>`-Reasoning ohne `'none'` direkt in den `content`-String statt in ein separates Feld — hätte OCR-Text und JSON-Parsing in allen Vision-Callern unbemerkt korrumpiert. Zentral in `groqFetch()` gefixt (`reasoning_effort` je nach Modell automatisch gesetzt). Gemini `gemini-3.5-flash` zeigte dasselbe Muster (`thoughtsTokenCount` bis zu ~600 bei einem einfachen Test) — `thinkingConfig: { thinkingLevel: 'low' }` in `examFetch()` und in Lernplans Haupt-Call ergänzt (nicht im flash-lite-503-Fallback, der zeigte kein solches Overhead). Das sollte nebenbei auch Simons Beschwerde über langsame Lernplan-Generierung direkt adressieren, nicht nur die Migration selbst.
+
+**Separater Fund, kein eigener Bug:** `gemini-3.1-flash-image-preview` (Lernzettel-Erklärbilder, Beta) lieferte beim Live-Test `RESOURCE_EXHAUSTED`/`limit: 0` — identisch reproduziert mit dem alten `gemini-2.5-flash-image`, also ein Google-seitiges Freikontingent-Problem, keine Regression durch die Migration. Betrifft nur den optionalen Beta-Toggle. Siehe Known Issues.
+
+**Recherchiert, aber bewusst NICHT in dieser Session umgesetzt** (Scope-Entscheidung: Notfall-Fix + Migration sollten klein und risikoarm bleiben, keine neuen Baustellen in derselben Session):
+- **Andere Provider:** Cerebras wäre ein guter kostenloser Ergänzungs-Kandidat (identische `gpt-oss-120b`-Gewichte, schneller, mehr Freikontingent, nicht-Preview Vision-Alternative `gemma-4-31b`); OpenRouter als Abstraktionsschicht für späteren Provider-Wechsel. Beides zurückgestellt, bis die aktuelle Migration ein paar Tage stabil gelaufen ist.
+- **Neue Fähigkeiten:** kombinierter Tool-Use + strukturierter JSON-Output in einem Gemini-Call (könnte Mathe-Antworten in Probeklausur/Blurting per Code-Execution tatsächlich nachrechnen statt nur "abschätzen"), einstellbarer Reasoning-Aufwand pro Use-Case (mehr für AFB-III-Korrektur/Lernplan, weniger für einfache Lookups), Multi-Bild-OCR für mehrseitige Arbeitsblätter in einem Call, Nano Banana Pro für saubere Beschriftungen in generierten Lernzettel-Bildern. Alles als Roadmap-Kandidaten vorgemerkt, nicht als Teil dieser Migration.
+
+---
+
+## Session davor (25.07.2026, erster Teil)
 
 **Fortsetzung der Track-B-Politur — Lernzettel-Überarbeitung als erstes von drei vorgemerkten Punkten**
 
