@@ -1,12 +1,14 @@
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { getActiveStreak } from '../../lib/streak'
+import { StreakInfoSheet } from './StreakInfoSheet'
 
 // inline=true: no fixed positioning — use inside a FixedBadges container
 export function StreakBadge({ inline = false }: { inline?: boolean }) {
-  const navigate = useNavigate()
   const location = useLocation()
   const { appStats } = useUser()
+  const [infoOpen, setInfoOpen] = useState(false)
 
   const segments = location.pathname.split('/').filter(Boolean)
   // Hide on /profil, /landing, /auth, and everywhere under /unterricht except the home screen
@@ -37,19 +39,22 @@ export function StreakBadge({ inline = false }: { inline?: boolean }) {
   }
 
   return (
-    <button
-      onClick={() => navigate('/profil')}
-      aria-label={`Streak: ${streak} Tage`}
-      className={`${inline ? '' : 'fixed z-40 '}flex items-center gap-1.5 select-none press-sm`}
-      style={pillStyle}
-    >
-      <span className="text-[14px] leading-none" aria-hidden>🔥</span>
-      <span
-        className="font-bold tabular-nums leading-none"
-        style={{ color: 'rgb(var(--color-text-primary))', fontSize: '13px' }}
+    <>
+      <button
+        onClick={() => setInfoOpen(true)}
+        aria-label={`Streak: ${streak} Tage — Erklärung anzeigen`}
+        className={`${inline ? '' : 'fixed z-40 '}flex items-center gap-1.5 select-none press-sm`}
+        style={pillStyle}
       >
-        {streak}
-      </span>
-    </button>
+        <span className="text-[14px] leading-none" aria-hidden>🔥</span>
+        <span
+          className="font-bold tabular-nums leading-none"
+          style={{ color: 'rgb(var(--color-text-primary))', fontSize: '13px' }}
+        >
+          {streak}
+        </span>
+      </button>
+      <StreakInfoSheet isOpen={infoOpen} onClose={() => setInfoOpen(false)} />
+    </>
   )
 }

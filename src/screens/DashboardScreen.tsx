@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
+import { getActiveStreak } from '../lib/streak'
+import { StreakInfoSheet } from '../components/ui/StreakInfoSheet'
 import type { StundenplanSlot, Lernplan } from '../types'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -247,14 +249,18 @@ function HeroLernplanCard({
   )
 }
 
-// ── Klausur countdown ─────────────────────────────────────────────────────────
+// ── To-Do: exam countdown + homework, split in one connected hero card ───────
 
-function KlausurCard({
+function ToDoCard({
   exam,
-  onNavigate,
+  homeworkCount,
+  onExamNavigate,
+  onHomeworkNavigate,
 }: {
   exam: { subjectId: string; date: string; days: number; info: { name: string; icon: string; color: string } | undefined } | null
-  onNavigate: () => void
+  homeworkCount: number
+  onExamNavigate: () => void
+  onHomeworkNavigate: () => void
 }) {
   const weeks = exam ? Math.floor(exam.days / 7) : 0
   const restDays = exam ? exam.days % 7 : 0
@@ -266,49 +272,66 @@ function KlausurCard({
     : '#A78BFA'
 
   return (
-    <Card dark glow="mint" className="flex flex-col min-h-[280px]" onClick={exam ? onNavigate : undefined}>
-      <div className="flex items-center justify-between mb-2">
-        <SectionLabel dark>Nächste Klausur</SectionLabel>
-        {exam && <ChevronRight dark />}
+    <Card dark glow="mint" className="min-h-[280px] !p-0 overflow-hidden">
+      <div className="px-5 pt-5">
+        <SectionLabel dark>To-Do</SectionLabel>
       </div>
-
-      {exam ? (
-        <div className="flex-1 flex flex-col items-center justify-center text-center">
-          <div
-            className="w-14 h-14 rounded-[18px] flex items-center justify-center text-[28px] mb-2"
-            style={{ background: 'rgba(255,255,255,0.08)' }}
-          >
-            {exam.info?.icon ?? '📝'}
-          </div>
-          <p className="text-[13px] font-semibold text-white/60 mb-3">{exam.info?.name ?? exam.subjectId}</p>
-
-          <div className="flex items-stretch gap-2">
-            {[{ v: weeks, l: 'Woche' + (weeks === 1 ? '' : 'n') }, { v: restDays, l: 'Tage' }].map((seg) => (
-              <div key={seg.l} className="rounded-[14px] px-4 py-2.5 min-w-[64px]" style={{ background: 'rgba(255,255,255,0.06)' }}>
-                <p className="text-[26px] font-black leading-none tabular-nums tracking-tight" style={{ color: urgencyColor }}>
-                  {seg.v}
-                </p>
-                <p className="text-[10px] text-white/45 mt-0.5">{seg.l}</p>
+      <div className="flex" style={{ minHeight: 236 }}>
+        {/* ── Exam half ── */}
+        <button
+          onClick={onExamNavigate}
+          className="flex-1 flex flex-col items-center justify-center text-center px-4 py-4 press-sm"
+        >
+          {exam ? (
+            <>
+              <div className="w-11 h-11 rounded-[14px] flex items-center justify-center text-[22px] mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                {exam.info?.icon ?? '📝'}
               </div>
-            ))}
-          </div>
+              <p className="text-[12px] font-semibold text-white/55 mb-2 truncate max-w-full px-1">{exam.info?.name ?? exam.subjectId}</p>
+              <p className="text-[32px] font-black leading-none tabular-nums tracking-tight" style={{ color: urgencyColor }}>
+                {exam.days === 0 ? 'Heute' : exam.days}
+              </p>
+              <p className="text-[11px] text-white/45 mt-1">
+                {exam.days === 0 ? '' : weeks > 0 ? `${weeks} Wo. ${restDays} Tg.` : 'Tage'}
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="w-11 h-11 rounded-[14px] flex items-center justify-center mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="3" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </div>
+              <p className="text-[14px] font-semibold text-white/85">Kein Termin</p>
+              <p className="text-[11px] text-white/45 mt-1">Klausur eintragen →</p>
+            </>
+          )}
+        </button>
 
-          <p className="text-[12px] text-white/45 mt-3">
-            {new Date(exam.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
-          </p>
-        </div>
-      ) : (
-        <div className="flex-1 flex flex-col items-center justify-center text-center">
-          <div className="w-14 h-14 rounded-[18px] flex items-center justify-center mb-3" style={{ background: 'rgba(255,255,255,0.08)' }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="3" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
-              <line x1="3" y1="10" x2="21" y2="10" /><line x1="12" y1="14" x2="12" y2="18" /><line x1="10" y1="16" x2="14" y2="16" />
-            </svg>
+        <div className="w-px my-6" style={{ background: 'rgba(255,255,255,0.1)' }} />
+
+        {/* ── Homework half ── */}
+        <button
+          onClick={onHomeworkNavigate}
+          className="flex-1 flex flex-col items-center justify-center text-center px-4 py-4 press-sm"
+        >
+          <div className="w-11 h-11 rounded-[14px] flex items-center justify-center text-[20px] mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
+            📓
           </div>
-          <p className="text-[14px] font-semibold text-white">Kein Klausurtermin</p>
-          <p className="text-[12px] text-white/45 mt-1">Im Kalender eintragen</p>
-        </div>
-      )}
+          {homeworkCount > 0 ? (
+            <>
+              <p className="text-[32px] font-black leading-none tabular-nums tracking-tight text-white">{homeworkCount}</p>
+              <p className="text-[11px] text-white/45 mt-1">Hausaufgabe{homeworkCount === 1 ? '' : 'n'} offen</p>
+            </>
+          ) : (
+            <>
+              <p className="text-[14px] font-semibold text-white/85">Alles erledigt 🎉</p>
+              <p className="text-[11px] text-white/45 mt-1">Neue Notiz erstellen →</p>
+            </>
+          )}
+        </button>
+      </div>
     </Card>
   )
 }
@@ -331,6 +354,18 @@ function SchnellnotizCard({ onClick }: { onClick: () => void }) {
         <p className="text-[16px] font-bold text-text-primary">Schnellnotiz</p>
         <p className="text-[12px] text-text-muted mt-0.5">Smart Note erstellen</p>
       </div>
+    </Card>
+  )
+}
+
+// ── Streak mini-widget ────────────────────────────────────────────────────────
+
+function StreakMiniCard({ streak, onClick }: { streak: number; onClick: () => void }) {
+  return (
+    <Card className="flex flex-col items-center justify-center text-center min-h-[120px] gap-0.5" onClick={onClick}>
+      <span className="text-[26px] leading-none">🔥</span>
+      <p className="text-[22px] font-black text-text-primary tabular-nums leading-none mt-1.5">{streak}</p>
+      <p className="text-[10px] text-text-muted mt-0.5">{streak === 1 ? 'Tag' : 'Tage'}</p>
     </Card>
   )
 }
@@ -402,11 +437,13 @@ export function DashboardScreen() {
   const navigate = useNavigate()
   const {
     profile, lernplaene, userNotes, generatedFlashCards, savedProbeklausuren, saveLernplan,
+    appStats, completedHomeworkIds, standaloneHomework,
   } = useUser()
 
   const [ersteSchritteDismissed, setErsteSchritteDismissed] = useState(
     () => localStorage.getItem(ERSTE_SCHRITTE_DISMISSED_KEY) === 'true'
   )
+  const [streakInfoOpen, setStreakInfoOpen] = useState(false)
 
   const today = new Date()
   const todayDayIdx = getTodayDayIndex()
@@ -435,6 +472,41 @@ export function DashboardScreen() {
   const recentNotes = useMemo(() => {
     return [...userNotes].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 3)
   }, [userNotes])
+
+  const activeStreak = getActiveStreak(appStats.streak ?? 0, appStats.lastStudyDate ?? null)
+
+  // Same aggregation as HausaufgabenheftScreen: note-embedded homeworkItems + standaloneHomework,
+  // minus whatever's already completed.
+  const pendingHomework = useMemo(() => {
+    const pending: { subjectId?: string; dueDate?: string }[] = []
+    for (const note of userNotes) {
+      for (let idx = 0; idx < (note.homeworkItems ?? []).length; idx++) {
+        const item = note.homeworkItems![idx]
+        const id = item.id ?? `${note.id}-hw-${idx}`
+        if (!completedHomeworkIds.includes(id)) {
+          pending.push({ subjectId: item.subjectId ?? note.subjectId, dueDate: item.dueDate })
+        }
+      }
+    }
+    for (const s of standaloneHomework) {
+      if (!completedHomeworkIds.includes(s.id)) {
+        pending.push({ subjectId: s.subjectId, dueDate: s.dueDate })
+      }
+    }
+    return pending
+  }, [userNotes, standaloneHomework, completedHomeworkIds])
+
+  // Soonest-due item decides which subject gets preselected when jumping to "create a note" —
+  // undated items sort last since there's no urgency signal to rank them by.
+  const nextHomeworkSubjectId = useMemo(() => {
+    const sorted = [...pendingHomework].sort((a, b) => {
+      if (!a.dueDate && !b.dueDate) return 0
+      if (!a.dueDate) return 1
+      if (!b.dueDate) return -1
+      return a.dueDate.localeCompare(b.dueDate)
+    })
+    return sorted[0]?.subjectId
+  }, [pendingHomework])
 
   const headline = useMemo(() => {
     if (nextExam && nextExam.days <= 7) return `Noch ${nextExam.days} Tag${nextExam.days === 1 ? '' : 'e'} bis ${nextExam.info?.name ?? 'deiner Klausur'}`
@@ -506,16 +578,24 @@ export function DashboardScreen() {
             />
           </div>
           <div className="lg:col-span-5">
-            <KlausurCard exam={nextExam} onNavigate={() => navigate('/klausurmodus')} />
+            <ToDoCard
+              exam={nextExam}
+              homeworkCount={pendingHomework.length}
+              onExamNavigate={() => navigate(nextExam ? '/klausurmodus' : '/kalender')}
+              onHomeworkNavigate={() => navigate(nextHomeworkSubjectId ? `/unterricht/${nextHomeworkSubjectId}/neue-notiz` : '/unterricht/neue-notiz')}
+            />
           </div>
         </div>
 
-        {/* ── Row 2: Schnellnotiz + Tagesplan ───────────────────────────── */}
+        {/* ── Row 2: Schnellnotiz + Streak + Tagesplan ──────────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-3">
             <SchnellnotizCard onClick={() => navigate('/unterricht')} />
           </div>
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-2">
+            <StreakMiniCard streak={activeStreak} onClick={() => setStreakInfoOpen(true)} />
+          </div>
+          <div className="lg:col-span-7">
             <TagesplanCard slots={todaySlots} />
           </div>
         </div>
@@ -529,25 +609,37 @@ export function DashboardScreen() {
                 Alle ansehen
               </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-3 gap-y-6 pt-1 pb-2 px-1">
               {recentNotes.map((note) => {
                 const info = note.subjectId ? SUBJECT_INFO[note.subjectId] : null
                 const notePath = note.subjectId ? `/unterricht/${note.subjectId}/${note.id}` : `/unterricht/ohne-fach/${note.id}`
                 return (
-                  <button
-                    key={note.id}
-                    onClick={() => navigate(notePath)}
-                    className="bg-surface rounded-[16px] border border-border/60 shadow-card-adaptive p-4 text-left hover:bg-surface-hover press-sm transition-colors"
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-[16px]">{info?.icon ?? '📝'}</span>
-                      <span className="text-[11px] font-semibold text-text-muted truncate flex-1">{info?.name ?? 'Notiz'}</span>
-                      <span className="text-[10px] text-text-muted shrink-0">{getTimeAgo(note.createdAt)}</span>
+                  <button key={note.id} onClick={() => navigate(notePath)} className="relative block text-left press-sm" style={{ minHeight: 128 }}>
+                    {/* Back layer 2 — furthest back, most rotated, softest */}
+                    <div
+                      className="absolute inset-0 bg-surface rounded-[22px] border border-border/40"
+                      style={{ transform: 'rotate(5deg) translate(3px, 3px)', boxShadow: '0 2px 6px rgba(0,0,0,0.04)', opacity: 0.55 }}
+                    />
+                    {/* Back layer 1 */}
+                    <div
+                      className="absolute inset-0 bg-surface rounded-[22px] border border-border/50"
+                      style={{ transform: 'rotate(2.5deg) translate(1.5px, 1.5px)', boxShadow: '0 3px 8px rgba(0,0,0,0.06)', opacity: 0.8 }}
+                    />
+                    {/* Front card — actual content */}
+                    <div className="relative bg-surface rounded-[22px] border border-border/60 shadow-card-adaptive p-4 h-full flex flex-col justify-between hover:bg-surface-hover transition-colors">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-[15px] shrink-0" style={{ background: 'rgb(var(--color-text-primary))' }}>
+                          <span style={{ filter: 'grayscale(1) brightness(3)' }}>{info?.icon ?? '📝'}</span>
+                        </div>
+                        <span className="text-[10px] font-semibold text-text-muted bg-background px-2.5 py-1 rounded-pill truncate">
+                          {(info?.name ?? 'Notiz').toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="mt-3">
+                        <p className="text-[14px] font-semibold text-text-primary leading-snug line-clamp-2">{note.title}</p>
+                        <p className="text-[12px] text-text-muted mt-1">{getTimeAgo(note.createdAt)}</p>
+                      </div>
                     </div>
-                    <p className="text-[14px] font-semibold text-text-primary leading-snug line-clamp-2">{note.title}</p>
-                    {note.content && (
-                      <p className="text-[12px] text-text-muted mt-1 line-clamp-1 leading-snug">{note.content.slice(0, 80)}</p>
-                    )}
                   </button>
                 )
               })}
@@ -555,6 +647,7 @@ export function DashboardScreen() {
           </div>
         )}
       </div>
+      <StreakInfoSheet isOpen={streakInfoOpen} onClose={() => setStreakInfoOpen(false)} />
     </div>
   )
 }
