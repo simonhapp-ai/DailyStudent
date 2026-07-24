@@ -39,11 +39,16 @@ async function getSupabaseUser(token: string): Promise<{ id: string } | null> {
   }
 }
 
+// Fail OPEN, not closed: if the rate-limit check itself is unreachable or errors (missing
+// migration, transient Supabase issue, network blip), let the request through unlimited
+// rather than block it. A rate limiter that's temporarily not enforcing a ceiling is a much
+// smaller problem than a broken rate limiter taking down every AI feature in the app — which
+// is exactly what happened on 2026-07-24 when migrations 011/012 hadn't been applied yet.
 async function checkRateLimit(token: string, userId: string, bucket: string): Promise<{ allowed: boolean; blocked: boolean }> {
   const supabaseUrl = process.env.VITE_SUPABASE_URL
   const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
   const limit = BUCKET_LIMITS[bucket]
-  if (!supabaseUrl || !supabaseAnonKey || !limit) return { allowed: false, blocked: false }
+  if (!supabaseUrl || !supabaseAnonKey || !limit) return { allowed: true, blocked: false }
   try {
     const res = await fetch(`${supabaseUrl}/rest/v1/rpc/check_ai_rate_limit`, {
       method: 'POST',
@@ -54,11 +59,11 @@ async function checkRateLimit(token: string, userId: string, bucket: string): Pr
       },
       body: JSON.stringify({ p_user_id: userId, p_bucket: bucket, p_limit: limit }),
     })
-    if (!res.ok) return { allowed: false, blocked: false }
+    if (!res.ok) return { allowed: true, blocked: false }
     const rows = await res.json() as { allowed: boolean; blocked: boolean }[]
-    return rows[0] ?? { allowed: false, blocked: false }
+    return rows[0] ?? { allowed: true, blocked: false }
   } catch {
-    return { allowed: false, blocked: false }
+    return { allowed: true, blocked: false }
   }
 }
 
