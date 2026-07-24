@@ -1,8 +1,14 @@
-export const config = { runtime: 'edge' }
+// maxDuration: Lernplan generation requests up to 32768 output tokens (by far the largest
+// call in the app) and can plausibly exceed a short default execution window, which would
+// surface to the client as a platform timeout page instead of JSON — see parseGeminiResponse()
+// in src/lib/gemini.ts for the client-side symptom this caused. Extending this is a best-effort
+// mitigation; check Vercel's function logs for the actual Lernplan request if this recurs.
+export const config = { runtime: 'edge', maxDuration: 60 }
 
 const GEMINI_URLS: Record<string, string> = {
   flash: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
   'flash-lite': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
+  'flash-image': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
 }
 
 // Flat per-user, per-day ceiling for each AI feature bucket — same limit for every account,
@@ -15,6 +21,11 @@ const BUCKET_LIMITS: Record<string, number> = {
   blurting: 40,
   keyword_qa: 200,
   lernzettel: 20,
+  // Per-user daily ceiling, same enforcement mechanism as every other bucket — kept low
+  // because gemini-2.5-flash-image also has to stay within Google's own free-tier quota,
+  // which is shared across ALL users on this API key/project (~500 images/day per Google
+  // AI Studio, not per user). This bucket does not track that shared quota itself.
+  lernzettel_visuals: 8,
   probeklausur_full: 10,
   probeklausur_other: 15,
   lernplan: 10,

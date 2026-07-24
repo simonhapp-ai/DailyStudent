@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { ProModal } from '../components/ui/ProModal'
+import { RichText } from '../components/ui/RichText'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { Lernzettel } from '../types'
@@ -49,54 +50,11 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
-// Minimal markdown renderer: handles ##/###, **bold**, > blockquote, plain lines
-function renderContent(content: string) {
-  const lines = content.split('\n')
-  const elements: React.ReactNode[] = []
-
-  lines.forEach((line, i) => {
-    if (line.startsWith('### ')) {
-      elements.push(
-        <p key={i} className="text-[14px] font-semibold text-text-primary mt-4 mb-1">
-          {line.slice(4)}
-        </p>
-      )
-    } else if (line.startsWith('## ')) {
-      elements.push(
-        <p key={i} className="text-[16px] font-bold text-text-primary mt-5 mb-1.5">
-          {line.slice(3)}
-        </p>
-      )
-    } else if (line.startsWith('> ')) {
-      elements.push(
-        <div key={i} className="border-l-[3px] border-[#5AC8FA] pl-3 py-0.5 my-2">
-          <p className="text-[13px] text-text-secondary italic">{line.slice(2)}</p>
-        </div>
-      )
-    } else if (line.startsWith('Merke: ')) {
-      elements.push(
-        <div key={i} className="border-l-[3px] border-[#5AC8FA] pl-3 py-0.5 my-2">
-          <p className="text-[13px] text-text-secondary italic">{line}</p>
-        </div>
-      )
-    } else if (line.trim() === '') {
-      elements.push(<div key={i} className="h-2" />)
-    } else {
-      // Handle **bold** inline
-      const parts = line.split(/(\*\*[^*]+\*\*)/)
-      elements.push(
-        <p key={i} className="text-[13px] text-text-secondary leading-relaxed">
-          {parts.map((part, j) =>
-            part.startsWith('**') && part.endsWith('**')
-              ? <strong key={j} className="text-text-primary font-semibold">{part.slice(2, -2)}</strong>
-              : part
-          )}
-        </p>
-      )
-    }
-  })
-
-  return elements
+const MODUS_LABELS: Record<Lernzettel['modus'], string> = {
+  faktisch: 'Faktisch',
+  bildlich: 'Bildlich',
+  grundlagen: 'Von Grund auf',
+  stichpunkte: 'Stichpunkte',
 }
 
 export function LernzettelScreen() {
@@ -140,6 +98,11 @@ export function LernzettelScreen() {
             >
               {info?.icon ?? '📄'} {info?.name ?? activeLz.subjectName}
             </span>
+            {MODUS_LABELS[activeLz.modus] && (
+              <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-surface border border-border text-text-secondary">
+                {MODUS_LABELS[activeLz.modus]}
+              </span>
+            )}
             <span className="text-[11px] text-text-muted">{formatDate(activeLz.generatedAt)}</span>
           </div>
 
@@ -163,7 +126,7 @@ export function LernzettelScreen() {
 
           {/* Content */}
           <div className="bg-surface border border-border/60 rounded-[20px] p-5 shadow-card-adaptive">
-            {renderContent(activeLz.content)}
+            <RichText text={activeLz.content} images={activeLz.images} />
           </div>
 
           {/* Schlüsselbegriffe */}
@@ -344,6 +307,7 @@ export function LernzettelScreen() {
                       {/* Subject + date row */}
                       <p className="text-[12px] text-text-muted mt-0.5">
                         {info?.icon ?? '📄'} {info?.name ?? lz.subjectName} · {formatDate(lz.generatedAt)}
+                        {MODUS_LABELS[lz.modus] && ` · ${MODUS_LABELS[lz.modus]}`}
                       </p>
                       {/* Topics row */}
                       {lz.selectedTopics.length > 0 && (
@@ -405,16 +369,23 @@ export function LernzettelScreen() {
           {PREVIEWS.map((p) => (
             <div
               key={p.id}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '7px', flexShrink: 0 }}
+              style={{ display: 'flex', flexDirection: 'column', gap: '5px', flexShrink: 0, width: '320px' }}
             >
-              {/* Card */}
+              {/* Thin header row — badges live here, not over the content */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 1px' }}>
+                <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', background: p.color, color: '#fff' }}>
+                  {p.subject}
+                </span>
+                <span className="badge-pro-gold" style={{ padding: '2px 7px', fontSize: '10px' }}>✦ PRO</span>
+              </div>
+
+              {/* Card — pure content, no overlay, so the Lernzettel itself dominates */}
               <div
                 onClick={() => setOpenPreview(p)}
                 style={{
-                  position: 'relative',
-                  width: '308px',
-                  height: '193px',
-                  borderRadius: '16px',
+                  width: '320px',
+                  height: '200px',
+                  borderRadius: '14px',
                   overflow: 'hidden',
                   boxShadow: '0 6px 28px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08)',
                   cursor: 'pointer',
@@ -427,35 +398,20 @@ export function LernzettelScreen() {
                   style={{
                     width: '960px',
                     height: '601px',
-                    transform: 'scale(0.321)',
+                    transform: 'scale(0.3333)',
                     transformOrigin: 'top left',
                     border: 'none',
                     pointerEvents: 'none',
                     display: 'block',
                   }}
                 />
-                {/* Bottom gradient fade */}
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 42%, rgba(0,0,0,0.52) 100%)' }} />
-                {/* Subject badge */}
-                <div style={{ position: 'absolute', top: '9px', left: '9px' }}>
-                  <span style={{ fontSize: '10px', fontWeight: 700, padding: '3px 9px', borderRadius: '999px', background: p.color, color: '#fff', boxShadow: '0 1px 6px rgba(0,0,0,0.3)' }}>
-                    {p.subject}
-                  </span>
-                </div>
-                {/* Pro badge top-right */}
-                <span
-                  className="badge-pro-gold"
-                  style={{ position: 'absolute', top: '9px', right: '9px', padding: '3px 8px', fontSize: '10px' }}
-                >
-                  ✦ PRO
-                </span>
-                {/* Title at bottom */}
-                <div style={{ position: 'absolute', bottom: '10px', left: '11px', right: '11px' }}>
-                  <p style={{ fontSize: '12px', fontWeight: 700, color: '#fff', textShadow: '0 1px 5px rgba(0,0,0,0.6)', lineHeight: 1.35 }}>{p.title}</p>
-                </div>
               </div>
-              {/* Caption */}
-              <p className="text-[11px] text-text-muted">Tippen zum Anzeigen</p>
+
+              {/* Thin footer row — title + caption in one line */}
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px', padding: '0 1px' }}>
+                <p className="text-[12px] font-bold text-text-primary truncate">{p.title}</p>
+                <span className="text-[10px] text-text-muted shrink-0">· Tippen zum Anzeigen</span>
+              </div>
             </div>
           ))}
         </div>

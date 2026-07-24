@@ -58,7 +58,7 @@ Smart Notes
     ├── Karteikarten      → generateFlashcards() via Groq → LearnModeScreen ✓
     ├── Blurting          → evaluateBlurting() via Groq → BlurtingScreen ✓
     ├── Probeklausur      → generateMode1-4Exam() via Gemini → ProbeklausurMode1-4Screen ✓
-    ├── Lernzettel        → generateLernzettel() via Groq → LernzettelScreen ✓
+    ├── Lernzettel        → generateLernzettel() via Gemini → LernzettelScreen ✓
     └── Lernplan          → generateLernplan() via Gemini → LernplanKonfiguratorScreen ✓
 ```
 
@@ -67,7 +67,7 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 24.07.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 25.07.2026)
 
 **App-Store-Kontext:** Ziel ist Einreichung im Apple App Store bis **02.08.2026** (danach ist Simon in Kanada, nicht erreichbar). Arbeit läuft in 2 Tracks: **Track A** (Capacitor-Wrapper, Apple IAP via RevenueCat, Sign in with Apple, Apple Developer Portal) — macht Simon selbst, Claude hat keinen Portal-Zugriff. **Track B** (App-Politur/Bugfixes im bestehenden Repo) — läuft in Claude-Code-Sessions, siehe To-Do unten. Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`.
 
@@ -79,7 +79,7 @@ Smart Notes
 - **Karteikarten:** `generateFlashcards()` via Groq aus Smart Note → `LearnModeScreen` mit Deck-Verwaltung
 - **Blurting:** `evaluateBlurting()` via Groq — echter KI-Vergleich mit Smart Note Inhalt
 - **Probeklausur 4 Modi:** `generateMode1-4Exam()` via Gemini `gemini-2.5-flash` — echt generiert, echt korrigiert
-- **Lernzettel:** `generateLernzettel()` via Groq — `LernzettelScreen` + `LernzettelGeneratorScreen` vollständig
+- **Lernzettel:** `generateLernzettel()` via Gemini, 4 Erklärungs-Modi (Faktisch/Bildlich/Von Grund auf/Stichpunkte), optionale KI-Erklärbilder — `LernzettelScreen` + `LernzettelGeneratorScreen` vollständig
 - **Lernplan:** `generateLernplan()` via Gemini — 6-Schritt-Konfigurator (`LernplanKonfiguratorScreen`), Detailansicht (`LernplanDetailScreen`), 3 Plantypen (Einzel/Vollständig/Abitur), LK-Gewichtung, Kalender-Export (smart scheduler), Print/PDF
 - **KC-Daten:** 196 JSON-Dateien in `public/kc/` für 16 Bundesländer, `kcLoader.ts` vollständig, Fallback auf Niedersachsen
 - **Stundenplan-Scanner:** `parseStundenplanFromImage()` via Groq Vision
@@ -162,6 +162,12 @@ Smart Notes
 - **Google OAuth Account-Picker Fix** ✅ — `signInWithOAuth` in `AuthScreen.tsx` bekam `queryParams: { prompt: 'select_account' }`. Vorher zeigte Google auf Geräten mit nur einem eingeloggten Account beim Login-Versuch keinen Account-Chooser, sondern loggte automatisch den gecachten Account wieder ein — sah wie ein Auto-Login-Bug aus, war eigentlich ein fehlender OAuth-Parameter.
 - **DemoScreen Key-Exposure gefixt** ✅ — `DemoScreen.tsx` rief Groq vorher direkt vom Client mit `VITE_GROQ_API_KEY` auf, unconditional (öffentliche `/landing`-Demo, kein Login nötig) → Key war im Production-Bundle scrapebar (verifiziert: Build gemacht, Key im Bundle gefunden). Live-Call komplett entfernt, Demo nutzt jetzt ausschließlich die vorgeschriebenen Fallback-Inhalte, kein KI-Call mehr in der Demo. Der Rest der App (`groq.ts`/`gemini.ts`) war bereits sauber über `/api/groq`/`/api/gemini` proxied. **Wichtig, noch offen:** der alte Groq-Key sollte trotzdem im Groq-Dashboard rotiert werden — war vor diesem Fix schon live exponiert.
 - **UI/UX Pro Max + Emil Kowalski Skills installiert** ✅ — `.claude/skills/ui-ux-pro-max` (via `npx uipro-cli init --ai claude`, Design-System-Referenzdaten: Paletten, Typografie, UX-Guidelines) + `.claude/skills/{apple-design,emil-design-eng,animation-vocabulary,find-animation-opportunities,improve-animations,pick-ui-library,review-animations}` (via `npx skills add emilkowalski/skill --all`) — für Design-/Animations-Arbeit in zukünftigen Sessions verfügbar.
+- **Lernzettel Groq→Gemini Port + 4 Erklärungs-Modi + KI-Erklärbilder + Markdown/Math-Rendering-Fix (25.07.2026)** ✅ — mehrteilige Überarbeitung:
+  - **Prompt-Port:** `generateLernzettel()` lebt jetzt in `gemini.ts` (`LERNZETTEL_SYSTEM` + `examFetch()`-Pattern, `maxOutputTokens: 8192` statt Groqs 2048, Ziel-Länge 1500–2500 Wörter statt 600–1000). Prompt fordert jetzt explizit echtes LaTeX (`$...$`/`$$...$$`) für Formeln — bewusst das Gegenteil von `GENERATION_SYSTEM`s Unicode-only-Regel für Probeklausuren, weil der Lernzettel-Renderer (anders als der Probeklausur-Renderer) jetzt KaTeX kann. Alte Groq-Funktion aus `groq.ts` entfernt.
+  - **4 Erklärungs-Modi** (`LernzettelModus` in `types/index.ts`): Faktisch (druckreif/präzise für Klausur-Formulierungen), Bildlich (Analogien/Alltagsvergleiche), Von Grund auf (baut bei den Voraussetzungen an, systematischer Aufbau), Stichpunkte (kompakt, kurz vor der Klausur). Jeder Modus hat einen eigenen ausformulierten Prompt-Baustein (`LERNZETTEL_MODUS_PROMPTS`), kein generisches Template. Neuer Auswahl-Schritt in `LernzettelGeneratorScreen.tsx` zwischen Fach- und Themen/Notizen-Auswahl, `modus` wird auf dem `Lernzettel`-Record persistiert und als Badge in `LernzettelScreen.tsx` angezeigt.
+  - **KI-Erklärbilder (Beta, opt-in, Gemini-Freikontingent):** `generateLernzettelVisual()` in `gemini.ts` ruft `gemini-2.5-flash-image` (`responseModalities: ['IMAGE']`) — separater Modell-Key `'flash-image'` in `GEMINI_URLS` (Client + `api/gemini.ts`), eigener `AiBucket`-Wert `lernzettel_visuals` (Server-Ceiling 8/Nutzer/Tag in `api/gemini.ts`, siehe Hinweis unten zu Googles eigenem Freikontingent-Limit). Die KI liefert max. 2 `{afterHeading, prompt, alt}`-Bildvorschläge im selben JSON wie der Lernzettel-Text; ein Toggle „Mit Erklärbildern (Beta)" (default AUS) in `LernzettelGeneratorScreen.tsx` steuert ob die Bilder tatsächlich generiert werden. **Speicherung lokal-first wie Note-Attachments:** `saveLocalAsset()` (neu in `noteStorage.ts`) legt die generierten PNGs in IndexedDB ab (`idb:<uuid>`-Refs), kein Supabase-Storage-Bucket nötig. `Lernzettel.images: {ref, afterHeading?, alt}[]` — neue Spalten `modus`/`images` in der `lernzettel`-Tabelle via `013_lernzettel_modus_images.sql` (**Simon muss diese Migration noch im Supabase SQL Editor ausführen, als `013_lernzettel_modus_images` speichern**). Fehlschlag bei der Bildgenerierung (z. B. Tageslimit erreicht) blockiert den Lernzettel nicht — Bild wird einfach weggelassen. **Nutzt aktuell nur Googles kostenloses Kontingent — vor Produktions-Launch/breiterem Marketing-Push auf einen bezahlten Gemini-Tier umstellen**, sonst kann das plattformweite Freikontingent (Google AI Studio, ca. 500 Bilder/Tag pro Projekt, nicht pro Nutzer) bei mehr gleichzeitigen Nutzern knapp werden.
+  - **Preview-Karussell-Redesign:** `LernzettelScreen.tsx`s „Pro Lernzettel"-Karussell hatte vorher Badges/Titel als Overlay direkt auf dem Vorschau-Iframe (optisch ~50/50 App-Chrome/Inhalt). Jetzt: Fach-/PRO-Badge in einer dünnen Kopfzeile über der Karte, Titel+Caption in einer dünnen Fußzeile darunter, Karte selbst ohne Overlay — Lernzettel-Inhalt dominiert sichtbar stärker.
+  - **Markdown/Math-Rendering-Fix (nicht nur Lernzettel, auch Smart Notes):** neue `src/components/ui/RichText.tsx` kombiniert Markdown-Lite-Parsing (`##`/`###`/`**bold**`/`> `/`Merke: `/`- `-Bullets, vorher nur in `LernzettelScreen`s lokaler `renderContent()`) mit KaTeX-Math-Rendering (vorher nur in `MathRenderer.tsx`, das aber keine Markdown-Struktur kennt) — beide teilen sich jetzt `renderMathSegments()` aus neuem `src/lib/mathSegments.tsx`. Ersetzt an allen Stellen, an denen mehrzeiliger KI-Content (nicht nur einzelne kurze Felder) angezeigt wird: `SmartNotesScreen.tsx` (Edit- UND View-Mode der KI-Zusammenfassung), `NoteCreateScreen.tsx` (Foto- und Schreibblock-Ergebnis), `LernzettelScreen.tsx` (ersetzt die alte lokale `renderContent()`). `RichText` übernimmt bei Lernzetteln zusätzlich die Bild-Platzierung (`images`-Prop, siehe oben).
 
 ### Paywall-Strategie (Stand 10.06.2026):
 
@@ -183,7 +189,7 @@ Smart Notes
 **Paywall-Pattern:** Kein Blur. Free-User sehen eine klare Lock-Card mit konkreten Feature-Bullets. Klick öffnet `ProModal` als Bottom Sheet von unten mit Stripe-Checkout.  
 **ProModal:** `src/components/ui/ProModal.tsx` — `feature` Prop steuert Headline + Bullets. Stripe-Checkout direkt im Modal.
 
-### Known Issues (Stand: 24.07.2026):
+### Known Issues (Stand: 25.07.2026):
 
 **MINOR:**
 1. **Apple OAuth** — Button in AuthScreen vorhanden, aber NICHT GETESTET (wird im Zuge von Track A/App-Store-Vorbereitung fertiggestellt — braucht Capacitor-Deep-Link-Handling + Supabase Apple-Provider-Konfiguration)
@@ -191,17 +197,19 @@ Smart Notes
 3. **Impressum Steuernummer** — Platzhalter, nach Eingang vom Finanzamt Harburg nachtragen
 4. **Coins Shop Redesign gefällt Simon noch nicht** — `ProfilCoinsScreen.tsx` wurde in 2 große Karten umgebaut (violett Checkliste / mint Shop, Framer-Motion-Entrance-Animation), aber Simon hat explizit gesagt das Design trifft es noch nicht. Konkretes Feedback steht noch aus — vor weiterer Iteration erst nachfragen was genau nicht passt, nicht einfach nochmal neu raten.
 5. **Kein natives Wrapper-Projekt für den App Store** — die App ist aktuell eine reine Vite/React Web-App ohne Capacitor/React-Native-Wrapper. Für die Einreichung im Apple App Store fehlt noch: Capacitor-Setup, Apple IAP via RevenueCat (Stripe-only verstößt gegen Guideline 3.1.1), Sign in with Apple fertigstellen. Das ist Track A — Simon macht das selbst (Apple Developer Account, Zertifikate, App Store Connect), volle Sequenzierung liegt in Claudes Memory (`project-app-store-launch-plan`).
+6. **Migration 013 noch nicht angewendet** — `013_lernzettel_modus_images.sql` liegt im Repo, aber Simon muss sie noch im Supabase SQL Editor ausführen (als `013_lernzettel_modus_images` speichern). Bis dahin schlägt `syncLernzettel()`s `upsert()` komplett fehl, weil die Spalten `modus`/`images` in der echten DB noch fehlen (Postgrest lehnt unbekannte Spalten ab) — landet dann in der bestehenden Sync-Retry-Queue statt verloren zu gehen, aber neue Lernzettel bleiben bis zur Migration nur lokal (kein Cross-Device). Lokal (localStorage/UI) funktioniert alles normal.
 
-### To-Do — Priorisiert (Stand: 24.07.2026):
+### To-Do — Priorisiert (Stand: 25.07.2026):
 
-#### Direkt als nächstes (Track B, noch offen aus der 23.–24.07. Session):
-1. **Lernzettel-Prompt: Groq → Gemini portieren, Komplexität erhöhen** — `generateLernzettel()` in `groq.ts` (aktuell Llama 3.3 70B, JSON-Mode, 2048 Tokens) auf Gemini umstellen. Pattern wie `examFetch` in `gemini.ts` (`candidates[].content.parts[].text`, nicht Groqs `choices[].message.content`). `maxOutputTokens` deutlich über 2048 anheben, System-Prompt in Richtung `GENERATION_SYSTEM`-Tiefe (Probeklausur-Vorbild) ausbauen. **Muss weiterhin exakt das Markdown-Subset ausgeben**, das `LernzettelScreen.tsx`s Renderer erwartet: `##`, `###`, `**bold**`, `> `, `"Merke: "`.
-2. **Abi-Notenrechner (`AbiRechnerScreen.tsx`) — erst Scoping-Gespräch mit Simon, dann Fix** — aktuelle Berechnung ist strukturell unvollständig, nicht nur eine UI-Frage: berechnet nur einen Block-I-artigen Halbjahresnoten-Schnitt (`totalPunkteAllHalbjahre()`). Es fehlt komplett: Abiturprüfung (Block II), „beste N von M Halbjahre"-Einbringungspflicht-Auswahl; Fächer werden nach Fach-Mittelwert statt pro einzelner Halbjahresleistung gewichtet. `pktToNoteAbi()`s `(17-p)/3`-Formel selbst ist korrekt (offizielle KMK-Formel) — der Fehler liegt upstream, in dem was `p` repräsentiert. **Vor dem Bauen mit Simon klären:** volle Korrektheit anstreben (Niedersachsen-spezifische Einbringungsregeln, nicht trivial) oder als klar gekennzeichnete Schätzung labeln?
-3. **Final QA-Pass auf alle Track-B-Änderungen dieser Session** — durchklicken: Google-Login (Account-Picker), Stripe-Checkout + Rabatt-Einlösung (sobald Simon die Coupons angelegt hat), alle 5 neuen Profil-Unterseiten, Übersicht (To-Do-Karte beide Hälften, Streak-Widget, Lernplan-Hero „Fortsetzen", Erste-Schritte-Checkliste, gefächerte Notizen-Karten), Streak-Erklärungs-Sheet.
+#### Direkt als nächstes (Track B, noch offen aus der 23.–24.07. + 25.07. Session):
+✅ ~~Lernzettel-Prompt: Groq → Gemini portieren~~ FERTIG 25.07.2026 — siehe Phase-3-Liste oben. **Simon muss noch:** Migration `013_lernzettel_modus_images.sql` im Supabase SQL Editor ausführen (als `013_lernzettel_modus_images` speichern).
+
+1. **Abi-Notenrechner (`AbiRechnerScreen.tsx`) — erst Scoping-Gespräch mit Simon, dann Fix** — aktuelle Berechnung ist strukturell unvollständig, nicht nur eine UI-Frage: berechnet nur einen Block-I-artigen Halbjahresnoten-Schnitt (`totalPunkteAllHalbjahre()`). Es fehlt komplett: Abiturprüfung (Block II), „beste N von M Halbjahre"-Einbringungspflicht-Auswahl; Fächer werden nach Fach-Mittelwert statt pro einzelner Halbjahresleistung gewichtet. `pktToNoteAbi()`s `(17-p)/3`-Formel selbst ist korrekt (offizielle KMK-Formel) — der Fehler liegt upstream, in dem was `p` repräsentiert. **Vor dem Bauen mit Simon klären:** volle Korrektheit anstreben (Niedersachsen-spezifische Einbringungsregeln, nicht trivial) oder als klar gekennzeichnete Schätzung labeln?
+2. **Final QA-Pass auf alle Track-B-Änderungen der 23.–25.07. Sessions** — durchklicken: Google-Login (Account-Picker), Stripe-Checkout + Rabatt-Einlösung (sobald Simon die Coupons angelegt hat), alle 5 neuen Profil-Unterseiten, Übersicht (To-Do-Karte beide Hälften, Streak-Widget, Lernplan-Hero „Fortsetzen", Erste-Schritte-Checkliste, gefächerte Notizen-Karten), Streak-Erklärungs-Sheet, **plus neu:** Lernzettel 4-Modi-Flow, Erklärbilder-Toggle, Preview-Karussell-Redesign, Markdown/Math-Rendering in Smart Notes + Lernzettel.
 
 #### Danach:
-4. **Coins Shop Redesign — konkretes Feedback von Simon einholen** bevor weiter iteriert wird (siehe Known Issues).
-5. **Onboarding Soft-Start** — Nutzer bekommt sofort App-Zugang (kein Gate), sieht aber auf jedem Screen eine Bubble/Banner: "Personalisierung in 1 Min abschließen → bessere KI-Ergebnisse".
+3. **Coins Shop Redesign — konkretes Feedback von Simon einholen** bevor weiter iteriert wird (siehe Known Issues).
+4. **Onboarding Soft-Start** — Nutzer bekommt sofort App-Zugang (kein Gate), sieht aber auf jedem Screen eine Bubble/Banner: "Personalisierung in 1 Min abschließen → bessere KI-Ergebnisse".
 6. **Email-Liste aktivieren** — ~100 warme Leads (TikTok/Landing Page) sind höchste Conversion-Priorität.
 7. **Bottom Nav Colour anpassen** — Farbanpassung der mobilen BottomNav
 8. **Foto-Scan: Auswahl/Crop-Tool** — beim Foto-Scan soll man per Drag einen Ausschnitt markieren können, statt immer das komplette Foto an die KI zu schicken
@@ -309,7 +317,7 @@ Umgesetzt wie unten gespeckt, siehe Phase-3-Liste oben. Einziger offener Punkt: 
 
 ---
 
-## Supabase DB-Schema — 15 Tabellen (Stand 24.07.2026)
+## Supabase DB-Schema — 15 Tabellen (Stand 25.07.2026)
 
 | Tabelle | Inhalt |
 |---------|--------|
@@ -320,7 +328,7 @@ Umgesetzt wie unten gespeckt, siehe Phase-3-Liste oben. Einziger offener Punkt: 
 | `user_notes` | Alle Notizen (Text/Foto/PDF), attachments (lokal-first Refs), homework_items, qa |
 | `generated_smart_notes` | KI-Analyse-Ergebnis pro Notiz (summary, keywords, examTopics, solution) |
 | `flashcards` | Alle Karteikarten mit front/back/subjectId |
-| `lernzettel` | Generierte Lernzettel mit Inhalt und Metadaten |
+| `lernzettel` | Generierte Lernzettel mit Inhalt und Metadaten, `modus` (neu, Migration 013), `images` JSONB — nur lokale IndexedDB-Refs, keine Bild-Bytes (neu, Migration 013) |
 | `saved_probeklausuren` | Abgeschlossene Klausurversuche mit KI-Korrektur |
 | `lernplaene` | Generierte Lernpläne (days JSONB, config JSONB, `completedDays` neu) |
 | `personal_entries` | Kalendereinträge (lerneinheit/termin/erinnerung) |
@@ -331,8 +339,8 @@ Umgesetzt wie unten gespeckt, siehe Phase-3-Liste oben. Einziger offener Punkt: 
 
 **RLS:** Jede Tabelle hat RLS — User kann nur eigene Rows lesen/schreiben (`auth.uid() = user_id`). `ai_usage`/`ai_rate_limit_strikes` haben RLS aktiviert aber keine Policies — nur über die `SECURITY DEFINER`-RPC `check_ai_rate_limit()` erreichbar, kein direkter Client-Zugriff vorgesehen.
 
-**Migrationen 001–012**, alle in `supabase/migrations/`, **alle angewendet** (011 + 012 nachträglich am 24.07.2026):
-001 initial schema · 002 grade_data · 003 custom_faecher · 004 coins_system · 005 atomic_coins (RPC) · 006 harden_coin_rpcs · 007 note_attachments_storage · 008 early_access · 009 referral_system · 010 personal_entries_extra_fields · 011 coins_discount_redeem (RPC) · 012 ai_rate_limits (RPC)
+**Migrationen 001–013**, alle in `supabase/migrations/`. 001–012 **alle angewendet** (011 + 012 nachträglich am 24.07.2026). **013 noch NICHT angewendet — Simon muss sie im Supabase SQL Editor ausführen** (als `013_lernzettel_modus_images` speichern), sonst schlägt das Schreiben von `modus`/`images` beim Lernzettel-Sync fehl:
+001 initial schema · 002 grade_data · 003 custom_faecher · 004 coins_system · 005 atomic_coins (RPC) · 006 harden_coin_rpcs · 007 note_attachments_storage · 008 early_access · 009 referral_system · 010 personal_entries_extra_fields · 011 coins_discount_redeem (RPC) · 012 ai_rate_limits (RPC) · 013 lernzettel_modus_images (noch offen)
 
 ---
 
@@ -368,9 +376,11 @@ KC-Daten liegen als JSON-Dateien in `public/kc/{Bundesland}/{fach}.json`.
 - **Supabase SQL Editor — Queries immer benennen:** Wenn Simon eine neue Migration manuell im Supabase SQL Editor ausführen muss, IMMER explizit dazuschreiben: „Speichere die Query als `<migrations-dateiname ohne .sql>`" (z.B. `007_note_attachments_storage`), statt sie als „Untitled query" im Verlauf stehen zu lassen — sonst sind alte Änderungen im SQL-Editor-Verlauf nicht mehr unterscheidbar.
 - **Custom Fächer:** `profile.customFaecher` Array in `UserProfile`. `resolveSubjectInfo(id, customFaecher)` in `subjectInfo.ts` liefert Fallback-Icon 📚 + Farbe für custom IDs. `syncProfile` schreibt `custom_faecher` nach Supabase, `mapProfile` liest es zurück.
 - **Note-Attachments sind lokal-first (IndexedDB), nicht Base64:** `UserNote.attachments`/`drawingAttachments` enthalten nach dem Speichern `idb:<uuid>` (lokal) oder `cloud:<uuid>:<pfad>` (explizit übertragen) statt Base64 — Auflösung immer über `getAttachment()`/`useResolvedAttachments()` aus `src/lib/noteStorage.ts`, nie `note.attachments` direkt als `<img src>` rendern. Lokalisierung passiert zentral in `UserContext.tsx` (`saveNote`/`updateUserNote`/etc.) — neue Save-Pfade für Notizen müssen über diese Funktionen laufen, sonst bleibt Base64 ungefiltert in Postgres. Kein Auto-Upload in die Cloud — nur über den expliziten „Übertragen"-Button.
-- **AI Rate-Limiting: Buckets sind tier-blind, feste serverseitige Ceilings** — `src/lib/aiRateLimit.ts` definiert das `AiBucket`-Union (`smart_notes`, `flashcards`, `blurting`, `keyword_qa`, `lernzettel`, `probeklausur_full`, `probeklausur_other`, `lernplan`). Jede der 21 Groq/Gemini-Funktionen taggt sich beim Aufruf mit ihrem Bucket; die tatsächliche Zahl (Ceiling) lebt NUR serverseitig in `api/groq.ts`/`api/gemini.ts` (hardcoded `BUCKET_LIMITS`), niemals clientseitig — sonst könnte ein manipulierter Client sein eigenes Limit vortäuschen. Bewusst KEIN Pro/Free-Unterscheidung im Limiter selbst (Simons Entscheidung) — das ist reiner Abuse-Schutz, keine Monetarisierung; Produkt-Limits (z.B. Lernzettel 1/Tag Free) bleiben separat client-seitig geprüft wie bisher. **Fail-open, nicht fail-closed** — `checkRateLimit()` in `api/groq.ts`/`api/gemini.ts` lässt bei jedem Fehler/Unreachable den Request durch (`{ allowed: true }`), statt ihn zu blockieren. War anfangs fail-closed gebaut und legte dadurch am 24.07.2026 kurzzeitig alle KI-Features lahm (fehlende Migrationen 011/012 + fail-closed = jeder RPC-Fehler blockierte 100% des Traffics) — seitdem gefixt.
+- **AI Rate-Limiting: Buckets sind tier-blind, feste serverseitige Ceilings** — `src/lib/aiRateLimit.ts` definiert das `AiBucket`-Union (`smart_notes`, `flashcards`, `blurting`, `keyword_qa`, `lernzettel`, `lernzettel_visuals` (neu, 25.07.2026), `probeklausur_full`, `probeklausur_other`, `lernplan`). Jede der Groq/Gemini-Funktionen taggt sich beim Aufruf mit ihrem Bucket; die tatsächliche Zahl (Ceiling) lebt NUR serverseitig in `api/groq.ts`/`api/gemini.ts` (hardcoded `BUCKET_LIMITS`), niemals clientseitig — sonst könnte ein manipulierter Client sein eigenes Limit vortäuschen. Bewusst KEIN Pro/Free-Unterscheidung im Limiter selbst (Simons Entscheidung) — das ist reiner Abuse-Schutz, keine Monetarisierung; Produkt-Limits (z.B. Lernzettel 1/Tag Free) bleiben separat client-seitig geprüft wie bisher. **Fail-open, nicht fail-closed** — `checkRateLimit()` in `api/groq.ts`/`api/gemini.ts` lässt bei jedem Fehler/Unreachable den Request durch (`{ allowed: true }`), statt ihn zu blockieren. War anfangs fail-closed gebaut und legte dadurch am 24.07.2026 kurzzeitig alle KI-Features lahm (fehlende Migrationen 011/012 + fail-closed = jeder RPC-Fehler blockierte 100% des Traffics) — seitdem gefixt.
 - **Karten die IMMER dunkel sind (unabhängig vom App-Theme) brauchen hardcodierte Farben, nicht die theme-CSS-Variablen** — z.B. die Übersicht-Hero-Karten (`DashboardScreen.tsx`, `Card` mit `dark` Prop). `rgb(var(--color-accent))` etc. sind theme-abhängig (unterschiedliche Werte in `:root` vs `.dark` in `index.css`) und wirken auf einer erzwungenermaßen dunklen Kartenfläche im Light-Mode zu blass. Für solche "immer dunkles Chrome"-Elemente feste, dark-taugliche Hex-Werte direkt im Code verwenden (Beispiel: `urgencyColor` in `ToDoCard`).
 - **`Lernplan.completedDays?: string[]`** — Liste von `LernplanDay.date`-Strings, die als erledigt markiert wurden. Bisher nur von der Dashboard-Hero-Karte geschrieben (markiert die nächste Session bei Klick auf „Fortsetzen"), noch kein granulares Toggle direkt in `LernplanDetailScreen` (das ist ein offener Folge-Punkt, siehe To-Do). Persistiert ganz normal über das bestehende `saveLernplan()`.
+- **Mehrzeiliger KI-Content (Markdown + Math) läuft immer über `RichText`, nie über rohe String-Interpolation oder `MathRenderer` allein:** `src/components/ui/RichText.tsx` ist der einzige Renderer für `##`/`###`/`**bold**`/`> `/`Merke: `/`- `-Markdown-Lite kombiniert mit KaTeX-Math (`$...$`/`$$...$$`). `MathRenderer.tsx` bleibt daneben bestehen, aber nur noch für einzelne kurze Felder ohne eigene Markdown-Struktur (z.B. `task.answer`, Karteikarten-Vorschau-Snippets mit `line-clamp` — dort würde `RichText`s Block-Layout das Clamping brechen). Beide teilen sich `renderMathSegments()` aus `src/lib/mathSegments.tsx` (bewusst kein Re-Export aus `MathRenderer.tsx` — sonst verletzt die Datei Fast-Refreshs "nur Komponenten exportieren"-Regel, siehe ESLint `react-refresh/only-export-components`). Neue Stellen, die KI-generierten Fließtext/Zusammenfassungen anzeigen, müssen `RichText` verwenden, sonst zeigt die UI wieder rohe `##`/`$`-Zeichen an (Bug vom 25.07.2026, siehe Phase-3-Liste).
+- **Lernzettel-Erklärbilder sind lokal-first (IndexedDB) wie Note-Attachments, kein eigenes Storage-Bucket:** `Lernzettel.images` enthält nur `{ref: 'idb:<uuid>', afterHeading?, alt}` — die eigentlichen PNG-Bytes verlassen nie den `saveLocalAsset()`/`getAttachment()`-Pfad aus `src/lib/noteStorage.ts`. Kein Cross-Device-Sync für diese Bilder (anders als Note-Attachments gibt es hier keinen "Übertragen"-Button) — bewusste Vereinfachung für die erste Version, da die Bilder jederzeit neu generierbar sind. `RichText` löst sie über `useResolvedAttachments()` auf und platziert sie nach der Überschrift, die `afterHeading` wortwörtlich matcht; kein Match → Bild wird ans Ende gehängt statt zu verschwinden.
 
 ---
 
@@ -473,7 +483,7 @@ src/
 │   │   └── AIFeedbackCard.tsx    # KI-Korrektur-Display
 │   └── ui/                       # Button, Card, Badge, BottomNav, DesktopSidebar,
 │                                 # Header, ProModal, BottomSheet, LernvorschlagWidget,
-│                                 # SyncErrorBanner, KcFallbackBanner, MathRenderer,
+│                                 # SyncErrorBanner, KcFallbackBanner, MathRenderer, RichText,
 │                                 # StreakBadge, StreakInfoSheet, ...
 ├── context/
 │   └── UserContext.tsx            # Zentraler State + localStorage + Supabase Auth + Sync Queue
@@ -482,13 +492,15 @@ src/
 │   ├── subjectInfo.ts             # SUBJECT_INFO + SUBJECT_GROUPS (Name, Icon, Farbe pro Fach)
 │   └── kcLoader.ts                # loadKcForSubject/User(), buildKcPromptContext()
 ├── lib/
-│   ├── groq.ts                    # Alle Groq API Calls (OCR, SmartNote, Flashcards, Blurting, Lernzettel, ...)
-│   ├── gemini.ts                  # Gemini API Calls (Probeklausur, Lernplan, File-Import)
+│   ├── groq.ts                    # Alle Groq API Calls (OCR, SmartNote, Flashcards, Blurting, ...) — Lernzettel jetzt in gemini.ts
+│   ├── gemini.ts                  # Gemini API Calls (Probeklausur, Lernplan, Lernzettel + Erklärbilder, File-Import)
+│   ├── mathSegments.tsx           # renderMathSegments() — KaTeX-Segment-Parser, geteilt von MathRenderer + RichText
 │   ├── stripe.ts                  # createCheckoutSession(plan, couponId?) — ruft create-checkout-session Edge Fn auf
 │   ├── supabase.ts                # Supabase Client
 │   ├── supabaseSync.ts            # Sync-Layer: syncProfile, syncGradeData, syncNote, etc. + Queue
 │   ├── streak.ts                  # getActiveStreak(streak, lastStudyDate) — single source of truth
-│   ├── aiRateLimit.ts             # AiBucket-Union (8 Buckets) — client-seitige Typ-Sicherheit für Rate-Limiting
+│   ├── noteStorage.ts             # IndexedDB lokal-first Storage: Note-Attachments + Lernzettel-Erklärbilder
+│   ├── aiRateLimit.ts             # AiBucket-Union (9 Buckets) — client-seitige Typ-Sicherheit für Rate-Limiting
 │   └── pdf.ts                     # PDF → Bilder Konvertierung (pdfjs)
 ├── screens/                       # Ein Screen pro Route (39 Screens — alle aktiv, inkl. 5 neue Profil*.tsx Unterseiten)
 └── types/
@@ -497,7 +509,7 @@ public/
 ├── kc/                            # KC-JSONs: 16 Bundesländer × ~12 Fächer = ~196 Dateien
 └── lernzettel-previews/           # 4 Original-Lernzettel-HTMLs für Pro Preview Karussell
 supabase/
-├── migrations/                    # 001–012, siehe DB-Schema-Sektion oben für Details
+├── migrations/                    # 001–013, siehe DB-Schema-Sektion oben für Details (013 noch offen)
 └── functions/
     ├── groq-proxy/                # (vermutlich toter Code — src/ ruft stattdessen /api/groq auf, prüfen ob löschbar)
     ├── gemini-proxy/              # (vermutlich toter Code — src/ ruft stattdessen /api/gemini auf, prüfen ob löschbar)
@@ -586,7 +598,21 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ---
 
-## Letzte Session (23.–24.07.2026)
+## Letzte Session (25.07.2026)
+
+**Fortsetzung der Track-B-Politur — Lernzettel-Überarbeitung als erstes von drei vorgemerkten Punkten**
+
+Direkte Fortsetzung der 23.–24.07.-Session (siehe unten). Drei Punkte vorgemerkt, nacheinander abgearbeitet, nach jedem Punkt Push + Simons Review bevor es weitergeht: (1) Lernzettel Groq→Gemini-Port, (2) Abi-Notenrechner-Scoping, (3) finaler QA-Pass.
+
+**Punkt 1 — Lernzettel — fertig, siehe Phase-3-Liste oben für Details.** Ausgangspunkt war ein Screenshot von Simon, der zeigte, dass KI-generierter Content (Smart-Note-Zusammenfassungen) als rohe `##`/`**`/`$...$`-Zeichen statt formatiertem Text/Formeln angezeigt wurde — das wurde als Root-Cause-Fix zuerst angegangen (neue `RichText`-Komponente), dann erst der eigentliche Prompt-Port. Zusätzlich zum ursprünglich in der Vorsession vorgemerkten Groq→Gemini-Port kamen auf Simons Wunsch dazu: 4 wählbare Erklärungs-Modi (Faktisch/Bildlich/Von Grund auf/Stichpunkte), optionale KI-generierte Erklärbilder über `gemini-2.5-flash-image` (Simon: "nur mit Gemini's Freikontingent, später auf bezahlt upgraden"), und ein Redesign des Preview-Karussells (weniger App-Chrome über dem eigentlichen Lernzettel-Inhalt). Neue Migration `013_lernzettel_modus_images.sql` — **noch nicht von Simon angewendet**, siehe Known Issues.
+
+**Noch offen in dieser Session:**
+- Abi-Notenrechner Scoping-Gespräch mit Simon + ggf. Fix
+- Finaler QA-Pass über alle Änderungen der 23.–25.07.-Sessions
+
+---
+
+## Session davor (23.–24.07.2026)
 
 **Große Track-B-Session vor dem App-Store-Launch (Ziel 02.08.2026) — viel gebaut, ein kritischer Bug am Ende entdeckt**
 

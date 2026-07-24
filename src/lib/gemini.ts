@@ -1,4 +1,4 @@
-import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, TaskCorrection, LernplanDay, LernplanExam, LernplanGeneratorInput } from '../types'
+import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, TaskCorrection, LernplanDay, LernplanExam, LernplanGeneratorInput, LernzettelModus } from '../types'
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from './supabase'
 import type { AiBucket } from './aiRateLimit'
@@ -16,10 +16,34 @@ interface GeminiProxyResult {
 const GEMINI_URLS: Record<string, string> = {
   'flash': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
   'flash-lite': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
+  'flash-image': 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent',
+}
+
+// Reads the response as text first rather than calling res.json() directly. A non-JSON body
+// (almost always a platform-level error page — e.g. a gateway timeout on a very large/slow
+// generation like Lernplan's 32k-token request — never something our own api/gemini.ts handler
+// produces, since every one of its code paths returns JSON) used to throw a raw, uncatchable
+// SyntaxError ("Unexpected token 'A', "An error o"... is not valid JSON") instead of a message
+// any caller could show the user. Every caller already branches on `geminiStatus !== 200` and
+// reads `geminiData.error.message`, so returning a synthetic result here needs no other changes.
+async function parseGeminiResponse(res: Response): Promise<GeminiProxyResult> {
+  const text = await res.text()
+  try {
+    return JSON.parse(text) as GeminiProxyResult
+  } catch {
+    return {
+      geminiStatus: res.status || 500,
+      geminiData: {
+        error: {
+          message: 'Der Server hat keine gültige Antwort geliefert. Das passiert manchmal bei sehr umfangreichen Anfragen (z.B. langen Lernplänen) — bitte erneut versuchen.',
+        },
+      },
+    }
+  }
 }
 
 async function geminiProxy(
-  model: 'flash' | 'flash-lite',
+  model: 'flash' | 'flash-lite' | 'flash-image',
   body: Record<string, unknown>,
   bucket: AiBucket,
   signal?: AbortSignal,
@@ -35,8 +59,8 @@ async function geminiProxy(
       body: JSON.stringify(body),
       signal,
     })
-    const geminiData = await res.json()
-    return { geminiStatus: res.status, geminiData }
+    const result = await parseGeminiResponse(res)
+    return { geminiStatus: res.status, geminiData: result.geminiData }
   }
   const res = await fetch('/api/gemini', {
     method: 'POST',
@@ -47,7 +71,7 @@ async function geminiProxy(
     body: JSON.stringify({ model, body, bucket }),
     signal,
   })
-  return await res.json() as GeminiProxyResult
+  return await parseGeminiResponse(res)
 }
 
 interface GeminiJSON {
@@ -411,6 +435,136 @@ JSON: {"taskCorrections":[{"taskId":"t1","errors":[],"gaps":[],"formulationHelp"
     gradeLabel: String(raw.gradeLabel || npToGradeLabel(totalNP)),
     overallJustification: String(raw.overallJustification ?? ''),
   }
+}
+
+// ── Lernzettel Generation ────────────────────────────────────────────────────
+
+export interface LernzettelInput {
+  subjectId: string
+  subjectName: string
+  modus: LernzettelModus
+  selectedTopics: string[]
+  smartNotes: GeneratedSmartNote[]
+  kcData?: KcSubjectData
+}
+
+export interface LernzettelImagePrompt {
+  afterHeading?: string
+  prompt: string
+  alt: string
+}
+
+export interface LernzettelOutput {
+  title: string
+  content: string
+  keywords: string[]
+  examTopics: string[]
+  images: LernzettelImagePrompt[]
+}
+
+const LERNZETTEL_SYSTEM = `Du bist ein erfahrener Fachlehrer, der für deutsche Gymnasiasten (Klasse 10–13, Oberstufe) Lernzettel erstellt — so gründlich und durchdacht, wie es ein guter Lehrer für die eigene Klasse tun würde. Antworte ausschließlich auf Deutsch.
+
+OUTPUT-FORMAT (STRIKT):
+- Antworte ausschließlich mit validem JSON, keine Markdown-Codeblöcke außen herum.
+- "content" ist ein Markdown-artiger String mit exakt diesem Subset (kein anderes Markdown verwenden):
+  - "## " für Hauptabschnitte, "### " für Unterabschnitte
+  - "**Begriff**: Erklärung" für Definitionen von Fachbegriffen (fett nur der Begriff, nicht der ganze Satz)
+  - Zeilen die mit "Merke: " beginnen für die wirklich zentralen Merksätze (sparsam, nur 2–4 pro Lernzettel)
+  - Zeilen die mit "- " beginnen für Aufzählungen (v. a. im Stichpunkte-Modus)
+  - Leerzeilen zwischen Absätzen für Lesbarkeit
+  - Mathematische/naturwissenschaftliche Formeln IMMER als echtes LaTeX zwischen $...$ (inline) oder $$...$$ (eigene Zeile bei längeren Herleitungen) — z. B. $f'(x) = \\lim_{h \\to 0} \\frac{f(x+h)-f(x)}{h}$. Kein Unicode-Ersatz (kein x², kein √) — der Renderer kann echtes LaTeX darstellen.
+- content endet immer mit einem Abschnitt "## Klausurrelevanz" mit den wichtigsten prüfungsrelevanten Punkten.
+
+TIEFE:
+- Kein oberflächlicher Überblick — jeder in den Smart Notes oder gewählten Themen vorkommende Fachbegriff wird tatsächlich erklärt, nicht nur genannt.
+- Ziel-Länge 1500–2500 Wörter (Ausnahme: Stichpunkte-Modus, siehe unten) — lieber gründlich als kurz.
+- Bei mathematischen/naturwissenschaftlichen Themen: Herleitungen zeigen, nicht nur Endformeln nennen, wo sinnvoll auch ein Rechenbeispiel einbauen.
+- Bei Textfächern/Gesellschaftswissenschaften: Zusammenhänge, Ursachen/Wirkungen, unterschiedliche Positionen wo fachlich relevant.
+
+BILDER (optional, sehr sparsam):
+- Nur wenn eine Visualisierung wirklich zusätzliches Verständnis bringt (z. B. ein Diagramm, ein Aufbau, ein Kreislauf, eine räumliche Struktur) — bei rein textlichen/abstrakten Themen "images": [] lassen.
+- Maximal 2 Einträge: [{"afterHeading":"Exakter Text einer ##/### Überschrift aus content","prompt":"präzise Bildbeschreibung für einen Bildgenerator, auf Deutsch oder Englisch — klar und sachlich wie ein Schulbuch-Diagramm, kein Foto-Realismus nötig","alt":"kurze Alt-Text-Beschreibung"}]
+- "afterHeading" muss wortwörtlich einer Überschrift aus content entsprechen, sonst kann das Bild nicht platziert werden.
+
+Antworte NUR mit validem JSON:
+{"title":"...","content":"...","keywords":["..."],"examTopics":["..."],"images":[]}`
+
+const LERNZETTEL_MODUS_PROMPTS: Record<LernzettelModus, string> = {
+  faktisch: `MODUS: Faktisch-präzise. Ziel: Der Schüler soll Textbausteine direkt in einer Klausur verwenden können. Jeder Fachbegriff wird vollständig und fachlich korrekt definiert, mit exakter Terminologie — auf dem Niveau, das ein Prüfer erwartet. Sprachlich anspruchsvoll und druckreif formuliert, keine umgangssprachlichen Vereinfachungen. Wo es mehrere gängige Definitionen gibt, die prüfungsrelevanteste wählen und kurz begründen.`,
+  bildlich: `MODUS: Bildlich-anschaulich. Ziel: Jemand, der das Thema noch nie gehört hat, versteht es wirklich. Nutze durchgehend Alltagsvergleiche, Analogien und bildhafte Sprache statt trockener Definitionen (z. B. "Stell dir vor…", "Das funktioniert ähnlich wie…"). Fachbegriffe werden eingeführt, aber sofort in einfache Worte übersetzt. Kurze, klare Sätze, wenig Schachtelsätze.`,
+  grundlagen: `MODUS: Von Grund auf. Ziel: Nichts wird vorausgesetzt. Beginne mit einem Abschnitt "## Das musst du vorher wissen", der die Voraussetzungen klärt, die man kennen muss, um das eigentliche Thema zu verstehen (auch wenn das nicht Teil der ursprünglichen Notizen war) — und baue danach systematisch Schritt für Schritt zum eigentlichen Thema auf. Jeder Schritt baut erkennbar auf dem vorigen auf.`,
+  stichpunkte: `MODUS: Stichpunkte. Ziel: Schnelles Wiederholen kurz vor der Klausur. Überwiegend "- "-Aufzählungen statt Fließtext, nur die wichtigsten Fakten, Definitionen und Zusammenhänge — keine ausschweifenden Erklärungen. Trotzdem inhaltlich vollständig für das Thema. Ziel-Länge hier kürzer: ca. 500–900 Wörter in kompakten Stichpunkten statt der sonst üblichen 1500–2500.`,
+}
+
+export async function generateLernzettel(input: LernzettelInput): Promise<LernzettelOutput> {
+  const { subjectId, subjectName, modus, selectedTopics, smartNotes, kcData } = input
+  const isMath = subjectId === 'mathematik'
+
+  const notesBlock = smartNotes.slice(0, 5).map((n, i) => {
+    const body = [
+      n.summary ? `Zusammenfassung: ${n.summary.slice(0, 600)}` : '',
+      n.keywords.length ? `Schlüsselbegriffe: ${n.keywords.join(', ')}` : '',
+      n.examTopics.length ? `Klausurthemen: ${n.examTopics.join(', ')}` : '',
+    ].filter(Boolean).join('\n')
+    return `--- Note ${i + 1} ---\n${body}`
+  }).join('\n\n')
+
+  const topicsLine = selectedTopics.length ? `Ausgewählte Themen: ${selectedTopics.join(', ')}\n` : ''
+  const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
+  const mathHint = isMath ? '\nFach ist Mathematik: Formeln durchgängig in LaTeX, Herleitungen nicht überspringen.' : ''
+
+  const userPrompt = `Fach: ${subjectName}
+${topicsLine}${LERNZETTEL_MODUS_PROMPTS[modus]}${mathHint}
+
+Smart Notes des Schülers:
+${notesBlock || '(keine — nur auf Basis von Fach/Thema/Kerncurriculum erstellen)'}
+${kcBlock}
+Erstelle den vollständigen Lernzettel als JSON gemäß der Vorgaben aus der System-Instruktion.`
+
+  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4)) as {
+    title?: string
+    content?: string
+    keywords?: string[]
+    examTopics?: string[]
+    images?: { afterHeading?: string; prompt?: string; alt?: string }[]
+  }
+
+  return {
+    title: raw.title?.trim() || `${subjectName} — Lernzettel`,
+    content: raw.content ?? '',
+    keywords: Array.isArray(raw.keywords) ? raw.keywords.map(String) : [],
+    examTopics: Array.isArray(raw.examTopics) ? raw.examTopics.map(String) : [],
+    images: Array.isArray(raw.images)
+      ? raw.images.filter((i): i is { afterHeading?: string; prompt: string; alt?: string } => !!i.prompt).slice(0, 2).map((i) => ({
+          afterHeading: i.afterHeading,
+          prompt: i.prompt,
+          alt: i.alt ?? '',
+        }))
+      : [],
+  }
+}
+
+/** Generates one explanatory visual via gemini-2.5-flash-image (Gemini's free-tier image model). Returns a data: URL. */
+export async function generateLernzettelVisual(prompt: string): Promise<string> {
+  const result = await geminiProxy('flash-image', {
+    contents: [{
+      role: 'user',
+      parts: [{ text: `Erstelle ein klares, sachliches Schulbuch-Diagramm/Bild für einen Lernzettel (kein Fotorealismus). ${prompt}` }],
+    }],
+    generationConfig: { responseModalities: ['IMAGE'] },
+  }, 'lernzettel_visuals')
+
+  if (result.geminiStatus !== 200) {
+    const errData = result.geminiData as { error?: { message?: string } }
+    throw new Error(errData?.error?.message ?? `Gemini Fehler ${result.geminiStatus}`)
+  }
+
+  const data = result.geminiData as {
+    candidates?: { content?: { parts?: { inlineData?: { data?: string; mimeType?: string } }[] } }[]
+  }
+  const part = data.candidates?.[0]?.content?.parts?.find((p) => p.inlineData?.data)
+  if (!part?.inlineData?.data) throw new Error('Gemini hat kein Bild zurückgegeben.')
+  return `data:${part.inlineData.mimeType ?? 'image/png'};base64,${part.inlineData.data}`
 }
 
 // ── Destination suggestion ───────────────────────────────────────────────────

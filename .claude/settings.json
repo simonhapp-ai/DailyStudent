@@ -16,7 +16,17 @@
       "Bash(npx --yes skills add emilkowalski/skill --all)",
       "Bash(python3 scripts/search.py \"dark mode glassmorphism premium glow gradient dashboard\" --domain style -n 4)",
       "Bash(python3 scripts/search.py \"shadow depth elevation dark card glow ambient\" --domain ux -n 6)",
-      "Bash(echo \"=== exit code: $? ===\")"
+      "Bash(echo \"=== exit code: $? ===\")",
+      "Bash(grep -n \"\\\\\\\\$\\\\|LaTeX\\\\|latex\\\\|frac\\\\|KaTeX\" /Users/macbookpro14/DailyStudent/src/lib/groq.ts)",
+      "Bash(grep -n \"Formel\\\\|mathematisch\\\\|math\\\\b\\\\|\\\\\\\\\\\\\\\\\\\\$\\\\|dollar\" /Users/macbookpro14/DailyStudent/src/lib/groq.ts)",
+      "Bash(grep -n \"Pro Lernzettel Preview\\\\|Horizontal carousel\\\\|Card$\\\\|Bottom gradient fade\\\\|Subject badge\\\\|Pro badge top-right\\\\|Title at bottom\\\\|Caption\\\\|CTA — nur\" /Users/macbookpro14/DailyStudent/src/screens/LernzettelScreen.tsx)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(git stash *)",
+      "Bash(echo \"TSC EXIT:$?\")",
+      "Bash(lsof -ti:5174 -sTCP:LISTEN)",
+      "Bash(xargs -r kill)",
+      "Bash(command -v chromium-cli)",
+      "Bash(find / -maxdepth 4 -iname \"*chromium-cli*\")"
     ]
   }
 }

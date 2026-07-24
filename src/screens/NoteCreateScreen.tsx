@@ -5,6 +5,7 @@ import { loadKcForSubject } from '../data/kcLoader'
 import type { HomeworkItem, TextBlockAnalysis } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
 import { MathRenderer } from '../components/ui/MathRenderer'
+import { RichText } from '../components/ui/RichText'
 import type { CanvasPageData } from '../components/ui/DrawingCanvas'
 import { useUser } from '../context/UserContext'
 import { subjects, halfYears } from '../data/mockData'
@@ -1118,7 +1119,7 @@ export function NoteCreateScreen() {
             {block.aiResult.summary && (
               <div>
                 <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Zusammenfassung</p>
-                <p className="text-text-secondary text-sm leading-relaxed"><MathRenderer text={block.aiResult.summary} /></p>
+                <div className="text-text-secondary text-sm leading-relaxed"><RichText text={block.aiResult.summary} /></div>
               </div>
             )}
 
@@ -1417,7 +1418,7 @@ export function NoteCreateScreen() {
                 {block.aiResult.summary && (
                   <div>
                     <p className="section-label mb-1.5">Zusammenfassung</p>
-                    <p className="text-[13px] text-text-secondary leading-relaxed">{block.aiResult.summary}</p>
+                    <div className="text-[13px] text-text-secondary leading-relaxed"><RichText text={block.aiResult.summary} /></div>
                   </div>
                 )}
                 {block.aiResult.keywords.length > 0 && (

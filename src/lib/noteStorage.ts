@@ -96,6 +96,13 @@ function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([bytes], { type: mime })
 }
 
+/** Stores a raw data: URL (e.g. a generated image) in IndexedDB and returns its idb:<uuid> ref. */
+export async function saveLocalAsset(dataUrl: string): Promise<string> {
+  const id = crypto.randomUUID()
+  await putRecord(id, dataUrl)
+  return `${IDB_PREFIX}${id}`
+}
+
 /** Resolves a ref (idb:, cloud:, or a legacy plain data: URL) to a displayable src. */
 export async function getAttachment(ref: string): Promise<string | undefined> {
   if (isLocalRef(ref)) {

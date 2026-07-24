@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
+import { RichText } from '../components/ui/RichText'
 import { useUser } from '../context/UserContext'
 import { explainKeyword, extractTextFromImage, generateFlashcards, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
@@ -357,7 +358,7 @@ export function SmartNotesScreen() {
                 <p className="text-xs text-success font-medium mb-2">✓ Neue Analyse bereit — wird beim Speichern übernommen</p>
               )}
               {displayNote.summary ? (
-                <p className="text-text-secondary text-sm leading-relaxed">{displayNote.summary}</p>
+                <div className="text-text-secondary text-sm leading-relaxed"><RichText text={displayNote.summary} /></div>
               ) : (
                 <p className="text-text-muted text-sm">Noch keine KI-Zusammenfassung vorhanden.</p>
               )}
@@ -572,7 +573,7 @@ export function SmartNotesScreen() {
           ) : undefined}
         >
           {note.summary ? (
-            <p className="text-text-secondary text-sm leading-relaxed"><MathRenderer text={note.summary} /></p>
+            <div className="text-text-secondary text-sm leading-relaxed"><RichText text={note.summary} /></div>
           ) : (
             <p className="text-text-muted text-sm">Noch nicht analysiert — tippe auf „Bearbeiten" um die KI-Analyse zu starten.</p>
           )}

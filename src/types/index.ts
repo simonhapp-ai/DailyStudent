@@ -275,16 +275,26 @@ export interface TextBlockAnalysis {
 
 /* ─── Lernzettel ────────────────────────────────────────────── */
 
+export type LernzettelModus = 'faktisch' | 'bildlich' | 'grundlagen' | 'stichpunkte'
+
+export interface LernzettelImage {
+  ref: string           // idb:<uuid> — lokal in IndexedDB, siehe src/lib/noteStorage.ts
+  afterHeading?: string // Text einer ##/### Überschrift in content, nach der das Bild eingefügt wird
+  alt: string
+}
+
 export interface Lernzettel {
   id: string               // 'lz-{subjectId}-{timestamp}'
   subjectId: string
   subjectName: string
   title: string
+  modus: LernzettelModus
   selectedTopics: string[] // KC hauptthemen.thema die der User wählte
   sourceNoteIds: string[]  // UserNote-IDs die als Input dienten
   content: string          // Markdown-artiger Lernzettel-Body (KI-generiert)
   keywords: string[]
   examTopics: string[]
+  images?: LernzettelImage[]
   generatedAt: string
   userNoteId: string       // ID der begleitenden UserNote im Lernzettel-Ordner
   folderId: string         // 'folder-lernzettel-{subjectId}'

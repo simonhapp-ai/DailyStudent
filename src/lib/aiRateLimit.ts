@@ -8,6 +8,7 @@ export type AiBucket =
   | 'blurting'
   | 'keyword_qa'
   | 'lernzettel'
+  | 'lernzettel_visuals'
   | 'probeklausur_full'
   | 'probeklausur_other'
   | 'lernplan'

@@ -1,14 +1,23 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
+import { MathRenderer } from '../components/ui/MathRenderer'
 import { useUser } from '../context/UserContext'
-import { generateLernzettel } from '../lib/groq'
+import { generateLernzettel, generateLernzettelVisual } from '../lib/gemini'
+import { saveLocalAsset } from '../lib/noteStorage'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
-import type { Lernzettel } from '../types'
+import type { Lernzettel, LernzettelImage, LernzettelModus } from '../types'
 
 const G_LERNZETTEL = 'linear-gradient(145deg, #5AC8FA, #007BB8)'
 
-type Step = 'fach' | 'select' | 'generating'
+type Step = 'fach' | 'modus' | 'select' | 'generating'
+
+const MODI: { id: LernzettelModus; title: string; desc: string; icon: string }[] = [
+  { id: 'faktisch', title: 'Faktisch', desc: 'Druckreif formuliert — jeder Fachbegriff präzise erklärt, ideal für Klausur-Formulierungen.', icon: '🎓' },
+  { id: 'bildlich', title: 'Bildlich', desc: 'Mit Alltagsvergleichen und Analogien erklärt, als würdest du das Thema zum ersten Mal hören.', icon: '🖼️' },
+  { id: 'grundlagen', title: 'Von Grund auf', desc: 'Beginnt bei den Voraussetzungen und baut systematisch zum eigentlichen Thema auf.', icon: '🧱' },
+  { id: 'stichpunkte', title: 'Stichpunkte', desc: 'Kompakte Bulletpoints für schnelles Wiederholen kurz vor der Klausur.', icon: '📋' },
+]
 
 export function LernzettelGeneratorScreen() {
   const navigate = useNavigate()
@@ -16,10 +25,12 @@ export function LernzettelGeneratorScreen() {
 
   const [step, setStep] = useState<Step>('fach')
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null)
+  const [selectedModus, setSelectedModus] = useState<LernzettelModus | null>(null)
   const [selectedTopics, setSelectedTopics] = useState<string[]>([])
   const [selectedNoteIds, setSelectedNoteIds] = useState<string[]>([])
   const [customTopicInput, setCustomTopicInput] = useState('')
   const [showNoNotesWarning, setShowNoNotesWarning] = useState(false)
+  const [withImages, setWithImages] = useState(false)
   const [error, setError] = useState('')
 
   const availableSubjectIds = profile?.faecher ?? []
@@ -46,14 +57,20 @@ export function LernzettelGeneratorScreen() {
 
   const handleSelectSubject = (id: string) => {
     setSelectedSubjectId(id)
+    setSelectedModus(null)
     setSelectedTopics([])
     setSelectedNoteIds([])
     setError('')
+    setStep('modus')
+  }
+
+  const handleSelectModus = (modus: LernzettelModus) => {
+    setSelectedModus(modus)
     setStep('select')
   }
 
   const handleGenerate = async () => {
-    if (!selectedSubjectId) return
+    if (!selectedSubjectId || !selectedModus) return
     const info = resolveSubjectInfo(selectedSubjectId, profile?.customFaecher)
     const subjectName = info?.name ?? selectedSubjectId
     const smartNotes = selectedNoteIds
@@ -65,11 +82,26 @@ export function LernzettelGeneratorScreen() {
 
     try {
       const output = await generateLernzettel({
+        subjectId: selectedSubjectId,
         subjectName,
+        modus: selectedModus,
         selectedTopics,
         smartNotes,
         kcData: kcData ?? undefined,
       })
+
+      const images: LernzettelImage[] = []
+      if (withImages && output.images.length > 0) {
+        for (const imgPrompt of output.images) {
+          try {
+            const dataUrl = await generateLernzettelVisual(imgPrompt.prompt)
+            const ref = await saveLocalAsset(dataUrl)
+            images.push({ ref, afterHeading: imgPrompt.afterHeading, alt: imgPrompt.alt })
+          } catch {
+            // Erklärbild fehlgeschlagen (z. B. Tageslimit) — Lernzettel bleibt trotzdem nutzbar
+          }
+        }
+      }
 
       const now = Date.now()
       const lz: Lernzettel = {
@@ -77,11 +109,13 @@ export function LernzettelGeneratorScreen() {
         subjectId: selectedSubjectId,
         subjectName,
         title: output.title,
+        modus: selectedModus,
         selectedTopics,
         sourceNoteIds: selectedNoteIds,
         content: output.content,
         keywords: output.keywords,
         examTopics: output.examTopics,
+        images,
         generatedAt: new Date().toISOString(),
         userNoteId: `lz-note-${selectedSubjectId}-${now}`,
         folderId: `folder-lernzettel-${selectedSubjectId}`,
@@ -104,6 +138,8 @@ export function LernzettelGeneratorScreen() {
         title="Lernzettel erstellen"
         onBack={
           step === 'select'
+            ? () => setStep('modus')
+            : step === 'modus'
             ? () => { setStep('fach'); setSelectedSubjectId(null) }
             : () => navigate(-1)
         }
@@ -114,9 +150,9 @@ export function LernzettelGeneratorScreen() {
         {/* Progress indicator */}
         {step !== 'generating' && (
           <div className="flex items-center gap-2">
-            {(['fach', 'select'] as const).map((s, i) => {
+            {(['fach', 'modus', 'select'] as const).map((s, i, arr) => {
               const active = step === s
-              const done = s === 'fach' && step === 'select'
+              const done = arr.indexOf(step) > i
               return (
                 <div key={s} className="flex items-center gap-2">
                   {i > 0 && <div className="h-px w-8 bg-border" />}
@@ -135,7 +171,7 @@ export function LernzettelGeneratorScreen() {
                       {done ? '✓' : i + 1}
                     </div>
                     <span className={`text-[12px] font-medium ${active ? 'text-text-primary' : 'text-text-muted'}`}>
-                      {s === 'fach' ? 'Fach' : 'Auswahl'}
+                      {s === 'fach' ? 'Fach' : s === 'modus' ? 'Modus' : 'Auswahl'}
                     </span>
                   </div>
                 </div>
@@ -185,6 +221,34 @@ export function LernzettelGeneratorScreen() {
                 <p className="text-[14px] text-text-muted">Keine Fächer in deinem Profil.</p>
               </div>
             )}
+          </div>
+        )}
+
+        {/* ── STEP: MODUS ───────────────────────────────────────── */}
+        {step === 'modus' && (
+          <div className="space-y-2.5">
+            <p className="section-label px-0.5 mb-1">Wie soll der Lernzettel erklären?</p>
+            {MODI.map((m) => (
+              <button
+                key={m.id}
+                onClick={() => handleSelectModus(m.id)}
+                className="w-full bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive p-4 text-left press flex items-center gap-3"
+              >
+                <div
+                  className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 text-xl"
+                  style={{ background: 'rgba(90,200,250,0.14)' }}
+                >
+                  <span>{m.icon}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[15px] font-bold text-text-primary">{m.title}</p>
+                  <p className="text-[12px] text-text-muted mt-0.5 leading-snug">{m.desc}</p>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted shrink-0" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </button>
+            ))}
           </div>
         )}
 
@@ -327,7 +391,7 @@ export function LernzettelGeneratorScreen() {
                               </span>
                             </div>
                             {gen?.summary && (
-                              <p className="text-[12px] text-text-muted leading-snug line-clamp-2">{gen.summary}</p>
+                              <p className="text-[12px] text-text-muted leading-snug line-clamp-2"><MathRenderer text={gen.summary} /></p>
                             )}
                             {gen?.keywords && gen.keywords.length > 0 && (
                               <p className="text-[11px] text-text-muted mt-1">
@@ -342,6 +406,28 @@ export function LernzettelGeneratorScreen() {
                 </div>
               )}
             </div>
+
+            {/* Erklärbilder toggle */}
+            <button
+              onClick={() => setWithImages((v) => !v)}
+              className="w-full bg-surface border border-border/60 rounded-[20px] p-4 text-left press flex items-center gap-3"
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-[14px] font-semibold text-text-primary">Mit Erklärbildern <span className="text-[11px] font-normal text-text-muted">(Beta)</span></p>
+                <p className="text-[12px] text-text-muted mt-0.5 leading-snug">
+                  KI generiert bis zu 2 passende Diagramme/Bilder — kann die Erstellung etwas verlangsamen.
+                </p>
+              </div>
+              <div
+                className="w-11 h-6 rounded-full flex items-center px-0.5 shrink-0 transition-colors"
+                style={{ background: withImages ? G_LERNZETTEL : 'rgb(var(--color-border))' }}
+              >
+                <div
+                  className="w-5 h-5 rounded-full bg-white shadow transition-transform"
+                  style={{ transform: withImages ? 'translateX(20px)' : 'translateX(0)' }}
+                />
+              </div>
+            </button>
 
             {/* Error banner */}
             {error && (
@@ -440,6 +526,7 @@ export function LernzettelGeneratorScreen() {
                 {selectedNoteIds.length > 0
                   ? 'KI analysiert deine Smart Notes …'
                   : 'KI nutzt Kerncurriculum-Daten als Basis …'}
+                {withImages && ' Erklärbilder folgen im Anschluss …'}
               </p>
             </div>
             <div className="flex gap-1.5">
