@@ -1,9 +1,12 @@
-// maxDuration: Lernplan generation requests up to 32768 output tokens (by far the largest
-// call in the app) and can plausibly exceed a short default execution window, which would
-// surface to the client as a platform timeout page instead of JSON — see parseGeminiResponse()
-// in src/lib/gemini.ts for the client-side symptom this caused. Extending this is a best-effort
-// mitigation; check Vercel's function logs for the actual Lernplan request if this recurs.
-export const config = { runtime: 'edge', maxDuration: 60 }
+// Deliberately NOT Edge runtime: Lernplan (32768 output tokens) and Lernzettel (8192, plus
+// optional image generation) generations can run long, and adding `maxDuration` to the Edge
+// config did not fix the resulting timeouts (2026-07-25) — Vercel's Edge runtime's execution
+// window is either not actually extended by that config or was already being exceeded well
+// under 60s. Node.js (Vercel) Functions have reliably documented, plan-tied maxDuration support
+// (Hobby up to 60s, Pro up to 300s), so this trades Edge's faster cold start for a timeout that
+// actually holds. If this still times out, the real number needs to come from Vercel's function
+// logs — reasoning from the client-side symptom alone can only get so far.
+export const config = { maxDuration: 60 }
 
 const GEMINI_URLS: Record<string, string> = {
   flash: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
