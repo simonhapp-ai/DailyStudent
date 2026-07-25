@@ -304,21 +304,22 @@ export function LernplanDetailScreen() {
             <div className="flex items-center gap-1">
               <button
                 onClick={handlePrint}
-                className="w-9 h-9 flex items-center justify-center rounded-btn text-text-secondary hover:bg-surface-hover transition-colors"
+                className="icon-expand-btn rounded-btn text-text-secondary hover:bg-surface-hover transition-colors"
                 title="Drucken / Als PDF speichern"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                   <polyline points="6 9 6 2 18 2 18 9" />
                   <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
                   <rect x="6" y="14" width="12" height="8" />
                 </svg>
+                <span className="icon-expand-label text-[12px] font-semibold">Drucken</span>
               </button>
               <button
                 onClick={addToCalendar}
-                className="w-9 h-9 flex items-center justify-center rounded-btn text-text-secondary hover:bg-surface-hover transition-colors"
+                className="icon-expand-btn rounded-btn text-text-secondary hover:bg-surface-hover transition-colors"
                 title="Zum Kalender hinzufügen"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                   <line x1="16" y1="2" x2="16" y2="6" />
                   <line x1="8" y1="2" x2="8" y2="6" />
@@ -326,6 +327,7 @@ export function LernplanDetailScreen() {
                   <line x1="12" y1="14" x2="12" y2="18" />
                   <line x1="10" y1="16" x2="14" y2="16" />
                 </svg>
+                <span className="icon-expand-label text-[12px] font-semibold">Zum Kalender</span>
               </button>
               <button
                 onClick={handleDelete}
@@ -449,8 +451,25 @@ export function LernplanDetailScreen() {
           })}
         </div>
 
-        {/* Delete button */}
+        {/* Add to calendar — full-width primary action, purple like the landing page CTAs */}
         <div className="no-print px-4 pt-6">
+          <button
+            onClick={addToCalendar}
+            className="w-full py-3.5 rounded-[20px] text-white text-[14px] font-bold press-sm flex items-center justify-center gap-2"
+            style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', boxShadow: '0 4px 16px rgba(124,58,237,0.35)' }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Zum Kalender hinzufügen
+          </button>
+        </div>
+
+        {/* Delete button */}
+        <div className="no-print px-4 pt-3">
           <button
             onClick={handleDelete}
             className="w-full py-3 rounded-[20px] border border-danger/30 text-danger text-[14px] font-medium hover:bg-danger/5 transition-colors"
