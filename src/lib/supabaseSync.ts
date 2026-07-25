@@ -5,7 +5,7 @@
 import { supabase } from './supabase'
 import type {
   UserFolder, UserNote, GeneratedSmartNote, FlashCard,
-  Lernzettel, SavedProbeklausur, Lernplan, AppStats, AbiHalbjahr,
+  Lernzettel, SavedProbeklausur, Lernplan, AppStats, AbiHalbjahr, AbiPruefung,
 } from '../types'
 import type { UserProfile, PersonalEntry, StandaloneHomeworkItem, AppTheme } from '../context/UserContext'
 
@@ -116,7 +116,10 @@ export async function retrySyncQueue(userId: string): Promise<{ success: number;
           })
           break
         case 'syncGradeData':
-          await supabase.from('grade_data').upsert({ user_id: userId, abi_halbjahre: p.abiHalbjahre, updated_at: new Date().toISOString() })
+          await supabase.from('grade_data').upsert({
+            user_id: userId, abi_halbjahre: p.abiHalbjahre, abi_pruefungen: p.abiPruefungen ?? [],
+            updated_at: new Date().toISOString(),
+          })
           break
         case 'syncNote':
           await supabase.from('user_notes').upsert({
@@ -219,7 +222,7 @@ export async function retrySyncQueue(userId: string): Promise<{ success: number;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Row = Record<string, any>
 
-function mapProfile(r: Row, abiHalbjahreOverride?: AbiHalbjahr[] | null): UserProfile {
+function mapProfile(r: Row, abiHalbjahreOverride?: AbiHalbjahr[] | null, abiPruefungenOverride?: AbiPruefung[] | null): UserProfile {
   return {
     name: r.name,
     klasse: r.klasse,
@@ -235,6 +238,7 @@ function mapProfile(r: Row, abiHalbjahreOverride?: AbiHalbjahr[] | null): UserPr
     klausurtermine: r.klausurtermine ?? [],
     stundenplan: r.stundenplan,
     abiHalbjahre: abiHalbjahreOverride !== undefined ? abiHalbjahreOverride : r.abi_halbjahre,
+    abiPruefungen: abiPruefungenOverride ?? undefined,
     abiGesamtpunkte: r.abi_gesamtpunkte,
     abiGesamtnote: r.abi_gesamtnote,
     isDevMode: r.is_dev_mode ?? false,
@@ -441,7 +445,7 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
       supabase.from('standalone_homework').select('*').eq('user_id', userId),
       supabase.from('completed_homework_ids').select('homework_id').eq('user_id', userId),
       supabase.from('subscriptions').select('status').eq('user_id', userId).maybeSingle(),
-      supabase.from('grade_data').select('abi_halbjahre').eq('user_id', userId).maybeSingle(),
+      supabase.from('grade_data').select('abi_halbjahre, abi_pruefungen').eq('user_id', userId).maybeSingle(),
       supabase.from('referrals').select('*', { count: 'exact', head: true }).eq('referrer_id', userId),
     ])
 
@@ -454,9 +458,10 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
 
     // grade_data table is authoritative — fall back to profiles.abi_halbjahre for old accounts
     const resolvedAbiHalbjahre = gradeRow?.abi_halbjahre ?? profileRow.abi_halbjahre ?? null
+    const resolvedAbiPruefungen = gradeRow?.abi_pruefungen ?? null
 
     return {
-      profile: mapProfile(profileRow, resolvedAbiHalbjahre),
+      profile: mapProfile(profileRow, resolvedAbiHalbjahre, resolvedAbiPruefungen),
       theme: (profileRow.theme as AppTheme) ?? 'dark',
       isPro,
       appStats: statsRow ? mapAppStats(statsRow) : DEFAULT_STATS,
@@ -509,7 +514,7 @@ export async function loadUserMetaFromSupabase(userId: string): Promise<Supabase
       supabase.from('profiles').select('*').eq('id', userId).single(),
       supabase.from('app_stats').select('*').eq('user_id', userId).single(),
       supabase.from('subscriptions').select('status').eq('user_id', userId).maybeSingle(),
-      supabase.from('grade_data').select('abi_halbjahre').eq('user_id', userId).maybeSingle(),
+      supabase.from('grade_data').select('abi_halbjahre, abi_pruefungen').eq('user_id', userId).maybeSingle(),
       supabase.from('referrals').select('*', { count: 'exact', head: true }).eq('referrer_id', userId),
     ])
 
@@ -519,6 +524,7 @@ export async function loadUserMetaFromSupabase(userId: string): Promise<Supabase
       (profileRow.is_pro ?? false) ||
       (subRow?.status === 'active' || subRow?.status === 'trialing')
     const resolvedAbiHalbjahre = gradeRow?.abi_halbjahre ?? profileRow.abi_halbjahre ?? null
+    const resolvedAbiPruefungen = gradeRow?.abi_pruefungen ?? null
     const DEFAULT_STATS: AppStats = {
       scanCount: 0, examCount: 0, streak: 0, lastStudyDate: null,
       studiedDays: [], examScores: [], coins: 0, cooldowns: [],
@@ -526,7 +532,7 @@ export async function loadUserMetaFromSupabase(userId: string): Promise<Supabase
     }
 
     return {
-      profile: mapProfile(profileRow, resolvedAbiHalbjahre),
+      profile: mapProfile(profileRow, resolvedAbiHalbjahre, resolvedAbiPruefungen),
       theme: (profileRow.theme as AppTheme) ?? 'dark',
       isPro,
       appStats: statsRow ? mapAppStats(statsRow) : DEFAULT_STATS,
@@ -607,17 +613,18 @@ export async function syncReferralCode(userId: string, code: string): Promise<vo
   } catch (err) { console.warn('[Supabase] syncReferralCode', err) }
 }
 
-export async function syncGradeData(userId: string, abiHalbjahre: AbiHalbjahr[]): Promise<void> {
+export async function syncGradeData(userId: string, abiHalbjahre: AbiHalbjahr[], abiPruefungen: AbiPruefung[] = []): Promise<void> {
   try {
     await supabase.from('grade_data').upsert({
       user_id: userId,
       abi_halbjahre: abiHalbjahre,
+      abi_pruefungen: abiPruefungen,
       updated_at: new Date().toISOString(),
     })
   } catch (err) {
     const errMsg = err instanceof Error ? err.message : String(err)
     console.warn('[Supabase] syncGradeData failed:', errMsg)
-    addToSyncQueue('syncGradeData', { userId, abiHalbjahre })
+    addToSyncQueue('syncGradeData', { userId, abiHalbjahre, abiPruefungen })
   }
 }
 

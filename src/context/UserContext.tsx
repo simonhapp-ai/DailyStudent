@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import { type ReactNode } from 'react'
 import type { User } from '@supabase/supabase-js'
-import type { FlashCard, GeneratedSmartNote, Lernzettel, Lernplan, SavedProbeklausur, InProgressProbeklausur, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AppStats, ExamScoreRecord } from '../types'
+import type { FlashCard, GeneratedSmartNote, Lernzettel, Lernplan, SavedProbeklausur, InProgressProbeklausur, UserFolder, UserNote, Stundenplan, AbiGradeEntry, AbiHalbjahr, AbiPruefung, AppStats, ExamScoreRecord } from '../types'
 import { subjects, topics, halfYears } from '../data/mockData'
 import { loadKcForUser, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from '../lib/supabase'
@@ -80,6 +80,7 @@ export interface UserProfile {
   isDevMode?: boolean
   abiNoten?: AbiGradeEntry[]      // legacy — kept for migration
   abiHalbjahre?: AbiHalbjahr[]
+  abiPruefungen?: AbiPruefung[]   // Block II — die 5 Abiturprüfungen
   schultyp?: 'g8' | 'g9'
   abiGesamtpunkte?: number | null  // computed Abi score — synced from AbiRechnerScreen for stats
   abiGesamtnote?: string            // computed Abi grade string — synced from AbiRechnerScreen for stats
@@ -714,8 +715,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) {
       void syncProfile(authUser.id, updated, theme, isPro)
       // Grade data gets its own dedicated sync to prevent profile-sync races overwriting it
-      if (data.abiHalbjahre !== undefined) {
-        void syncGradeData(authUser.id, data.abiHalbjahre ?? [])
+      if (data.abiHalbjahre !== undefined || data.abiPruefungen !== undefined) {
+        void syncGradeData(authUser.id, updated.abiHalbjahre ?? [], updated.abiPruefungen ?? [])
       }
     }
   }

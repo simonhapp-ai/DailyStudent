@@ -135,6 +135,13 @@ export interface AbiHalbjahr {
   entries: AbiGradeEntry[]
 }
 
+// Block II — die 5 Abiturprüfungen (getrennt von den Halbjahres-Kursnoten aus Block I)
+export interface AbiPruefung {
+  id: string              // 'pruefung-1' .. 'pruefung-5'
+  subjectId: string | null
+  punkte: number | null   // 0–15, wird ×4 gewichtet (max. 60 pro Prüfung, ×5 = max. 300)
+}
+
 /* ─── Probeklausur ───────────────────────────────────────────── */
 
 export interface ProbeklausurMaterial {

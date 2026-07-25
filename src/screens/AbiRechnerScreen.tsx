@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo } from '../data/subjectInfo'
-import type { AbiGradeEntry, AbiHalbjahr } from '../types'
+import type { AbiGradeEntry, AbiHalbjahr, AbiPruefung } from '../types'
 
 // ── Internal helpers ──────────────────────────────────────────────────────────
 
@@ -89,6 +89,32 @@ export function totalPunkteAllHalbjahre(halbjahre: AbiHalbjahr[]): number | null
 
 function zielnoteToPoints(z: string): number {
   return 17 - parseFloat(z.replace(',', '.')) * 3
+}
+
+// ── Block II — Abiturprüfungen (getrennt von Block I) ─────────────────────────
+// Standard-Abitur-Punkteschema: Block I max. 600 Punkte (Halbjahresnoten), Block II
+// max. 300 Punkte (5 Prüfungen à 0–15 NP ×4), Gesamt max. 900. Bewusst ohne
+// Bundesland-spezifische Einbringungsregeln (Simons Vorgabe) — die reine Blockrechnung.
+
+export function blockIPunkte(halbjahre: AbiHalbjahr[]): number | null {
+  const avg = totalPunkteAllHalbjahre(halbjahre)
+  return avg !== null ? Math.round(avg * 40) : null
+}
+
+export function blockIIPunkte(pruefungen: AbiPruefung[]): number {
+  return pruefungen.reduce((sum, p) => sum + (p.punkte ?? 0) * 4, 0)
+}
+
+export function hasAnyPruefung(pruefungen: AbiPruefung[]): boolean {
+  return pruefungen.some((p) => p.punkte !== null)
+}
+
+/** Kombinierte Abitur-Gesamtpunktzahl (max. 900) — null solange weder Block I noch mind. 1 Prüfung vorliegt. */
+export function gesamtpunkte900(halbjahre: AbiHalbjahr[], pruefungen: AbiPruefung[]): number | null {
+  if (!hasAnyPruefung(pruefungen)) return null
+  const bI = blockIPunkte(halbjahre)
+  if (bI === null) return null
+  return bI + blockIIPunkte(pruefungen)
 }
 
 // ── Color scale (slate→amber→green→emerald) ──────────────────────────────────
@@ -535,6 +561,99 @@ function SubjectCard({
   )
 }
 
+// ── Prüfung card (Block II — one of the 5 fixed exam slots) ───────────────────
+
+function PruefungCard({
+  index,
+  pruefung,
+  onChange,
+  availableSubjectIds,
+  customFaecher,
+}: {
+  index: number
+  pruefung: AbiPruefung
+  onChange: (p: AbiPruefung) => void
+  availableSubjectIds: string[]
+  customFaecher?: Array<{ id: string; name: string; icon?: string }>
+}) {
+  const [expanded, setExpanded] = useState(!pruefung.subjectId)
+  const subj = pruefung.subjectId ? resolveSubjectInfo(pruefung.subjectId, customFaecher) : null
+
+  return (
+    <div className="bg-surface border border-border/60 rounded-[18px] overflow-hidden">
+      <button
+        className="w-full flex items-center justify-between px-4 py-3 text-left press-sm"
+        onClick={() => setExpanded((e) => !e)}
+      >
+        <div className="flex items-center gap-2.5 flex-1 min-w-0">
+          <div
+            className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
+            style={{ background: subj ? `${subj.color}22` : 'rgba(var(--color-border),0.4)' }}
+          >
+            {subj?.icon ?? (index + 1)}
+          </div>
+          <div className="min-w-0">
+            <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider block">Prüfung {index + 1}</span>
+            <span className="font-semibold text-[14px] text-text-primary truncate block">
+              {subj?.name ?? 'Fach wählen'}
+            </span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          {pruefung.punkte !== null && (
+            <span className="text-[14px] font-black tabular-nums" style={{ color: getValueColor(pruefung.punkte) }}>
+              {pruefung.punkte}
+            </span>
+          )}
+          <svg
+            width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            className="text-text-muted shrink-0 transition-transform duration-200"
+            style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+      </button>
+
+      {expanded && (
+        <div className="px-4 pb-4 pt-1 border-t border-border/30 space-y-3">
+          <div>
+            <p className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
+            <div className="flex flex-wrap gap-1.5">
+              {availableSubjectIds.map((sid) => {
+                const info = resolveSubjectInfo(sid, customFaecher)
+                const active = pruefung.subjectId === sid
+                return (
+                  <button
+                    key={sid}
+                    onClick={() => onChange({ ...pruefung, subjectId: sid })}
+                    className="px-2.5 py-1 rounded-pill text-[11px] font-bold flex items-center gap-1 press-sm transition-all"
+                    style={
+                      active
+                        ? { background: 'linear-gradient(135deg, #34D399, #059669)', color: 'white', boxShadow: '0 2px 8px rgba(52,211,153,0.4)' }
+                        : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-secondary))' }
+                    }
+                  >
+                    <span>{info.icon}</span>{info.name}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {pruefung.subjectId && (
+            <div>
+              <p className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Notenpunkte (×4)</p>
+              <GradePicker value={pruefung.punkte} onChange={(v) => onChange({ ...pruefung, punkte: v })} />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Main screen ───────────────────────────────────────────────────────────────
 
 function ChevronLeft({ size = 16 }: { size?: number }) {
@@ -587,19 +706,35 @@ export function AbiRechnerScreen() {
   const [activeId, setActiveId] = useState<string>(halbjahre[0]?.id ?? '')
   const [syncStatus, setSyncStatus] = useState<'saving' | 'saved' | 'error' | null>(null)
 
+  const [pruefungen, setPruefungen] = useState<AbiPruefung[]>(() => {
+    const saved = profile?.abiPruefungen ?? []
+    return Array.from({ length: 5 }, (_, i) => saved[i] ?? { id: `pruefung-${i + 1}`, subjectId: null, punkte: null })
+  })
+
   const activeHj = halbjahre.find((hj) => hj.id === activeId) ?? halbjahre[0]
   const activeEntries = (activeHj?.entries ?? []).filter((e) => e.subjectId !== 'seminarfach')
   const seminarfachEntry = (activeHj?.entries ?? []).find((e) => e.subjectId === 'seminarfach')
 
-  const persist = (updated: AbiHalbjahr[]) => {
-    setHalbjahre(updated)
-    const gesamtPunkte = totalPunkteAllHalbjahre(updated)
+  // Shared persist for both Block I (Halbjahre) and Block II (Prüfungen) — abiGesamtnote
+  // reflects the best available truth: the combined 900-point total once at least one
+  // Prüfung has a value, otherwise the Block-I-only average as before. abiGesamtpunkte
+  // stays the Block-I 0–15 average unchanged (it feeds the existing progress bar/Zielnote
+  // comparison, which are both on that 0–15 scale).
+  const persist = (updatedHalbjahre: AbiHalbjahr[], updatedPruefungen: AbiPruefung[] = pruefungen) => {
+    setHalbjahre(updatedHalbjahre)
+    setPruefungen(updatedPruefungen)
+    const gesamtPunkte = totalPunkteAllHalbjahre(updatedHalbjahre)
+    const gesamt900 = gesamtpunkte900(updatedHalbjahre, updatedPruefungen)
+    const trueNote = gesamt900 !== null
+      ? pktToNoteAbi(gesamt900 / 60)
+      : (gesamtPunkte !== null ? pktToNoteAbi(gesamtPunkte) : undefined)
 
     setSyncStatus('saving')
     updateProfile({
-      abiHalbjahre: updated,
+      abiHalbjahre: updatedHalbjahre,
+      abiPruefungen: updatedPruefungen,
       abiGesamtpunkte: gesamtPunkte,
-      abiGesamtnote: gesamtPunkte !== null ? pktToNoteAbi(gesamtPunkte) : undefined,
+      abiGesamtnote: trueNote,
     })
 
     // Give visual feedback that save was attempted (will be cleared after 2s)
@@ -611,6 +746,10 @@ export function AbiRechnerScreen() {
         setSyncStatus(null)
       }
     }, 500)
+  }
+
+  const updatePruefung = (updated: AbiPruefung) => {
+    persist(halbjahre, pruefungen.map((p) => (p.id === updated.id ? updated : p)))
   }
 
   const updateEntry = (updatedEntry: AbiGradeEntry) => {
@@ -638,6 +777,11 @@ export function AbiRechnerScreen() {
   const zielpunkte = zielnote ? zielnoteToPoints(zielnote) : null
   const diffPunkte = totalPunkte !== null && zielpunkte !== null ? totalPunkte - zielpunkte : null
   const isOnTrack = diffPunkte !== null && diffPunkte >= 0
+
+  const blockI = blockIPunkte(halbjahre)
+  const blockII = blockIIPunkte(pruefungen)
+  const gesamt900 = gesamtpunkte900(halbjahre, pruefungen)
+  const gesamt900Note = gesamt900 !== null ? pktToNoteAbi(gesamt900 / 60) : null
 
   const activeOverall = overallPunkteAbi(activeEntries)
   const activeNote = activeOverall !== null ? pktToNoteAbi(activeOverall) : null
@@ -809,6 +953,43 @@ export function AbiRechnerScreen() {
           )}
         </div>
 
+        {/* Abitur-Gesamt (Block I + II) — nur sobald mind. 1 Prüfung eingetragen ist */}
+        {isOberstufe && gesamt900 !== null && (
+          <div className="bg-surface border border-border/60 rounded-[20px] p-5">
+            <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-3">
+              Abitur-Gesamt (Block I + II)
+            </p>
+            <div className="flex items-end gap-2 mb-4">
+              <span
+                className="font-black leading-none tabular-nums"
+                style={{ fontSize: 40, color: noteColorAbi(gesamt900Note!), letterSpacing: '-0.02em' }}
+              >
+                {gesamt900}
+              </span>
+              <div className="mb-0.5 leading-tight">
+                <p className="text-[12px] text-text-muted">von 900 Punkten</p>
+                <p className="text-[16px] font-bold" style={{ color: noteColorAbi(gesamt900Note!) }}>
+                  ≈ {gesamt900Note}
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-2.5">
+              <div className="flex-1 bg-background/50 rounded-[12px] p-2.5">
+                <p className="text-[9px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Block I</p>
+                <p className="text-[15px] font-bold text-text-primary tabular-nums">
+                  {blockI ?? 0} <span className="text-[11px] font-normal text-text-muted">/ 600</span>
+                </p>
+              </div>
+              <div className="flex-1 bg-background/50 rounded-[12px] p-2.5">
+                <p className="text-[9px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Block II</p>
+                <p className="text-[15px] font-bold text-text-primary tabular-nums">
+                  {blockII} <span className="text-[11px] font-normal text-text-muted">/ 300</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Halbjahr tab bar */}
         <div>
           <div className="pb-1 pt-0.5 -mx-4 px-4">
@@ -905,6 +1086,26 @@ export function AbiRechnerScreen() {
                 />
               </>
             )}
+          </div>
+        )}
+
+        {/* Abiturprüfungen (Block II) — nur für Oberstufe, unabhängig vom Halbjahr-Tab */}
+        {isOberstufe && (
+          <div className="space-y-3">
+            <div>
+              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Abiturprüfungen (Block II)</p>
+              <p className="text-[11px] text-text-muted mt-0.5">5 Prüfungen, je 0–15 Notenpunkte ×4 — max. 300 Punkte gesamt.</p>
+            </div>
+            {pruefungen.map((p, i) => (
+              <PruefungCard
+                key={p.id}
+                index={i}
+                pruefung={p}
+                onChange={updatePruefung}
+                availableSubjectIds={faecher}
+                customFaecher={profile?.customFaecher}
+              />
+            ))}
           </div>
         )}
 
