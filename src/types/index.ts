@@ -302,6 +302,7 @@ export interface Lernzettel {
   keywords: string[]
   examTopics: string[]
   images?: LernzettelImage[]
+  highlighted?: boolean
   generatedAt: string
   userNoteId: string       // ID der begleitenden UserNote im Lernzettel-Ordner
   folderId: string         // 'folder-lernzettel-{subjectId}'

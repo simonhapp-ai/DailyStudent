@@ -12,7 +12,7 @@ import {
   syncNote, deleteNotesFromDB,
   syncSmartNote,
   syncFlashCardsBatch,
-  syncLernzettel,
+  syncLernzettel, deleteLernzettelFromDB,
   syncProbeklausur, deleteProbeklausurFromDB,
   syncLernplaeneBatch, deleteLernplanFromDB,
   syncEntry, syncEntriesBatch, deleteEntryFromDB,
@@ -25,7 +25,7 @@ function generateReferralCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
   return Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
-import { localizeNoteAttachments, deleteAttachmentsForNotes, migrateLegacyNoteAttachments } from '../lib/noteStorage'
+import { localizeNoteAttachments, deleteAttachmentsForNotes, deleteAttachment, migrateLegacyNoteAttachments } from '../lib/noteStorage'
 
 export interface StandaloneHomeworkItem {
   id: string
@@ -186,6 +186,8 @@ interface UserContextValue {
   loadKcData: () => Promise<void>
   lernzettel: Lernzettel[]
   saveLernzettel: (lz: Lernzettel) => void
+  deleteLernzettel: (id: string) => void
+  toggleLernzettelHighlight: (id: string) => void
   savedProbeklausuren: SavedProbeklausur[]
   saveProbeklausur: (pk: SavedProbeklausur) => void
   deleteSavedProbeklausur: (id: string) => void
@@ -870,6 +872,33 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const deleteLernzettel = (id: string) => {
+    const deleted = lernzettel.find((lz) => lz.id === id)
+    const updated = lernzettel.filter((lz) => lz.id !== id)
+    setLernzettel(updated)
+    if (deleted) {
+      const updatedNotes = userNotes.filter((n) => n.id !== deleted.userNoteId)
+      setUserNotes(updatedNotes)
+      saveStorage({ ...loadStorage(), lernzettel: updated, userNotes: updatedNotes })
+      if (deleted.images?.length) void Promise.all(deleted.images.map((img) => deleteAttachment(img.ref)))
+      if (authUser) {
+        void deleteLernzettelFromDB(authUser.id, id)
+        void deleteNotesFromDB(authUser.id, [deleted.userNoteId])
+      }
+    } else {
+      saveStorage({ ...loadStorage(), lernzettel: updated })
+      if (authUser) void deleteLernzettelFromDB(authUser.id, id)
+    }
+  }
+
+  const toggleLernzettelHighlight = (id: string) => {
+    const updated = lernzettel.map((lz) => lz.id === id ? { ...lz, highlighted: !lz.highlighted } : lz)
+    setLernzettel(updated)
+    saveStorage({ ...loadStorage(), lernzettel: updated })
+    const changed = updated.find((lz) => lz.id === id)
+    if (authUser && changed) void syncLernzettel(authUser.id, changed)
+  }
+
   const saveProbeklausur = (pk: SavedProbeklausur) => {
     const updated = [...savedProbeklausuren, pk]
     setSavedProbeklausuren(updated)
@@ -1262,6 +1291,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         loadKcData,
         lernzettel,
         saveLernzettel,
+        deleteLernzettel,
+        toggleLernzettelHighlight,
         savedProbeklausuren,
         saveProbeklausur,
         deleteSavedProbeklausur,

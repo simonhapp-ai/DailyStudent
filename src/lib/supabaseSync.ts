@@ -153,8 +153,9 @@ export async function retrySyncQueue(userId: string): Promise<{ success: number;
         case 'syncLernzettel':
           await supabase.from('lernzettel').upsert({
             id: p.lz.id, user_id: userId, subject_id: p.lz.subjectId, subject_name: p.lz.subjectName,
-            title: p.lz.title, selected_topics: p.lz.selectedTopics, source_note_ids: p.lz.sourceNoteIds,
+            title: p.lz.title, modus: p.lz.modus, selected_topics: p.lz.selectedTopics, source_note_ids: p.lz.sourceNoteIds,
             content: p.lz.content, keywords: p.lz.keywords, exam_topics: p.lz.examTopics,
+            images: p.lz.images ?? null, highlighted: p.lz.highlighted ?? false,
             user_note_id: p.lz.userNoteId, folder_id: p.lz.folderId, generated_at: p.lz.generatedAt,
           })
           break
@@ -312,6 +313,7 @@ function mapLernzettel(r: Row): Lernzettel {
     keywords: r.keywords ?? [],
     examTopics: r.exam_topics ?? [],
     images: r.images ?? undefined,
+    highlighted: r.highlighted ?? false,
     generatedAt: r.generated_at,
     userNoteId: r.user_note_id,
     folderId: r.folder_id,
@@ -825,6 +827,7 @@ export async function syncLernzettel(userId: string, lz: Lernzettel): Promise<vo
       keywords: lz.keywords,
       exam_topics: lz.examTopics,
       images: lz.images ?? null,
+      highlighted: lz.highlighted ?? false,
       user_note_id: lz.userNoteId,
       folder_id: lz.folderId,
       generated_at: lz.generatedAt,
@@ -833,6 +836,12 @@ export async function syncLernzettel(userId: string, lz: Lernzettel): Promise<vo
     console.warn('[Supabase] syncLernzettel', err)
     addToSyncQueue('syncLernzettel', { lz })
   }
+}
+
+export async function deleteLernzettelFromDB(userId: string, id: string): Promise<void> {
+  try {
+    await supabase.from('lernzettel').delete().eq('id', id).eq('user_id', userId)
+  } catch (err) { console.warn('[Supabase] deleteLernzettel', err) }
 }
 
 export async function syncProbeklausur(userId: string, pk: SavedProbeklausur): Promise<void> {

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { Header } from '../components/ui/Header'
 import { ProModal } from '../components/ui/ProModal'
 import { RichText } from '../components/ui/RichText'
@@ -57,13 +58,157 @@ const MODUS_LABELS: Record<Lernzettel['modus'], string> = {
   stichpunkte: 'Stichpunkte',
 }
 
+// ── Swipeable list row (wie in Apple Notizen: nach links wischen → Markieren + Löschen) ──
+
+const SWIPE_ACTION_WIDTH = 76
+const SWIPE_REVEAL = SWIPE_ACTION_WIDTH * 2
+
+function StarIcon({ filled }: { filled?: boolean }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? 'white' : 'none'} stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+    </svg>
+  )
+}
+
+function TrashIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="3 6 5 6 21 6" />
+      <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+      <path d="M10 11v6M14 11v6" />
+      <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+    </svg>
+  )
+}
+
+function LernzettelRow({
+  lz, info, isOpen, onOpenChange, onSelect, onToggleHighlight, onDelete,
+}: {
+  lz: Lernzettel
+  info: { name: string; icon: string; color: string } | undefined
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  onSelect: () => void
+  onToggleHighlight: () => void
+  onDelete: () => void
+}) {
+  return (
+    <div className="relative rounded-[20px] overflow-hidden">
+      {/* Reveal actions — Markieren (gelb) + Löschen (rot), wie in Apple Notizen */}
+      <div className="absolute inset-y-0 right-0 flex">
+        <button
+          onClick={() => { onToggleHighlight(); onOpenChange(false) }}
+          className="flex flex-col items-center justify-center gap-1 press-sm"
+          style={{ width: SWIPE_ACTION_WIDTH, background: '#FFD60A' }}
+        >
+          <StarIcon filled={lz.highlighted} />
+          <span className="text-[10px] font-semibold text-white">{lz.highlighted ? 'Entfernen' : 'Markieren'}</span>
+        </button>
+        <button
+          onClick={onDelete}
+          className="flex flex-col items-center justify-center gap-1 press-sm"
+          style={{ width: SWIPE_ACTION_WIDTH, background: '#FF3B30' }}
+        >
+          <TrashIcon />
+          <span className="text-[10px] font-semibold text-white">Löschen</span>
+        </button>
+      </div>
+
+      {/* Front card — draggable, taps open the detail view unless the row is swiped open */}
+      <motion.div
+        drag="x"
+        dragConstraints={{ left: -SWIPE_REVEAL, right: 0 }}
+        dragElastic={{ left: 0.1, right: 0.35 }}
+        animate={{ x: isOpen ? -SWIPE_REVEAL : 0 }}
+        transition={{ type: 'spring', stiffness: 500, damping: 42 }}
+        onDragStart={() => onOpenChange(true)}
+        onDragEnd={(_, dragInfo) => {
+          const shouldStayOpen = dragInfo.offset.x < -SWIPE_REVEAL / 2 || dragInfo.velocity.x < -400
+          onOpenChange(shouldStayOpen)
+        }}
+        onTap={() => { if (isOpen) onOpenChange(false); else onSelect() }}
+        className="relative z-10 bg-surface border border-border/60 shadow-card-adaptive text-left overflow-hidden flex"
+        style={{ touchAction: 'pan-y' }}
+      >
+        {/* Left color accent bar */}
+        <div className="w-1 shrink-0" style={{ background: info?.color ?? '#5AC8FA' }} />
+
+        <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
+          {/* Gradient icon */}
+          <div
+            className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 glow-teal"
+            style={{ background: G_LERNZETTEL }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="M9 13h6M9 17h4" />
+            </svg>
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <p className="text-[15px] font-bold text-text-primary truncate">{lz.title}</p>
+              {lz.highlighted && (
+                <span className="shrink-0" style={{ color: '#FFD60A' }}>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                  </svg>
+                </span>
+              )}
+            </div>
+            {/* Subject + date row */}
+            <p className="text-[12px] text-text-muted mt-0.5">
+              {info?.icon ?? '📄'} {info?.name ?? lz.subjectName} · {formatDate(lz.generatedAt)}
+              {MODUS_LABELS[lz.modus] && ` · ${MODUS_LABELS[lz.modus]}`}
+            </p>
+            {/* Topics row */}
+            {lz.selectedTopics.length > 0 && (
+              <div className="flex gap-1 mt-1.5 flex-wrap">
+                {lz.selectedTopics.slice(0, 3).map((t) => (
+                  <span
+                    key={t}
+                    className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white whitespace-nowrap"
+                    style={{ background: G_LERNZETTEL }}
+                  >
+                    {t}
+                  </span>
+                ))}
+                {lz.selectedTopics.length > 3 && (
+                  <span className="text-[10px] text-text-muted">+{lz.selectedTopics.length - 3}</span>
+                )}
+              </div>
+            )}
+          </div>
+
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted shrink-0" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 export function LernzettelScreen() {
   const navigate = useNavigate()
-  const { lernzettel, isPro } = useUser()
+  const { lernzettel, isPro, deleteLernzettel, toggleLernzettelHighlight } = useUser()
   const [view, setView] = useState<View>('library')
   const [activeLz, setActiveLz] = useState<Lernzettel | null>(null)
   const [showPro, setShowPro] = useState(false)
   const [openPreview, setOpenPreview] = useState<typeof PREVIEWS[number] | null>(null)
+  const [openRowId, setOpenRowId] = useState<string | null>(null)
+
+  const setRowOpen = (id: string, open: boolean) => {
+    setOpenRowId((prev) => open ? id : (prev === id ? null : prev))
+  }
+
+  const handleDeleteLz = (id: string) => {
+    deleteLernzettel(id)
+    setOpenRowId(null)
+    if (activeLz?.id === id) { setView('library'); setActiveLz(null) }
+  }
 
   const today = new Date().toISOString().slice(0, 10)
   const createdToday = lernzettel.filter(lz => lz.generatedAt?.slice(0, 10) === today).length
@@ -228,13 +373,26 @@ export function LernzettelScreen() {
               <path d="M9 18l6-6-6-6" />
             </svg>
           </button>
+
+          {/* Löschen */}
+          <button
+            onClick={() => {
+              if (window.confirm('Diesen Lernzettel wirklich löschen?')) handleDeleteLz(activeLz.id)
+            }}
+            className="w-full py-3 rounded-[20px] border border-danger/30 text-danger text-[14px] font-medium hover:bg-danger/5 transition-colors"
+          >
+            Lernzettel löschen
+          </button>
         </div>
       </div>
     )
   }
 
   // ── LIBRARY VIEW ───────────────────────────────────────────
-  const sorted = [...lernzettel].sort((a, b) => b.generatedAt.localeCompare(a.generatedAt))
+  const sorted = [...lernzettel].sort((a, b) => {
+    if (!!a.highlighted !== !!b.highlighted) return a.highlighted ? -1 : 1
+    return b.generatedAt.localeCompare(a.generatedAt)
+  })
 
   return (
     <div className="flex flex-col min-h-screen bg-background pb-28">
@@ -278,63 +436,18 @@ export function LernzettelScreen() {
         {sorted.length > 0 && (
           <div className="space-y-2.5">
             <p className="section-label px-1 mt-2">Gespeicherte Lernzettel</p>
-            {sorted.map((lz) => {
-              const info = SUBJECT_INFO[lz.subjectId]
-              return (
-                <button
-                  key={lz.id}
-                  onClick={() => handleOpenDetail(lz)}
-                  className="w-full bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive text-left press overflow-hidden flex"
-                >
-                  {/* Left color accent bar */}
-                  <div className="w-1 shrink-0 rounded-l-[20px]" style={{ background: info?.color ?? '#5AC8FA' }} />
-
-                  <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
-                    {/* Gradient icon */}
-                    <div
-                      className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 glow-teal"
-                      style={{ background: G_LERNZETTEL }}
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                        <path d="M14 2v6h6" />
-                        <path d="M9 13h6M9 17h4" />
-                      </svg>
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[15px] font-bold text-text-primary truncate">{lz.title}</p>
-                      {/* Subject + date row */}
-                      <p className="text-[12px] text-text-muted mt-0.5">
-                        {info?.icon ?? '📄'} {info?.name ?? lz.subjectName} · {formatDate(lz.generatedAt)}
-                        {MODUS_LABELS[lz.modus] && ` · ${MODUS_LABELS[lz.modus]}`}
-                      </p>
-                      {/* Topics row */}
-                      {lz.selectedTopics.length > 0 && (
-                        <div className="flex gap-1 mt-1.5 flex-wrap">
-                          {lz.selectedTopics.slice(0, 3).map((t) => (
-                            <span
-                              key={t}
-                              className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white whitespace-nowrap"
-                              style={{ background: G_LERNZETTEL }}
-                            >
-                              {t}
-                            </span>
-                          ))}
-                          {lz.selectedTopics.length > 3 && (
-                            <span className="text-[10px] text-text-muted">+{lz.selectedTopics.length - 3}</span>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted shrink-0" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
-                  </div>
-                </button>
-              )
-            })}
+            {sorted.map((lz) => (
+              <LernzettelRow
+                key={lz.id}
+                lz={lz}
+                info={SUBJECT_INFO[lz.subjectId]}
+                isOpen={openRowId === lz.id}
+                onOpenChange={(open) => setRowOpen(lz.id, open)}
+                onSelect={() => handleOpenDetail(lz)}
+                onToggleHighlight={() => toggleLernzettelHighlight(lz.id)}
+                onDelete={() => handleDeleteLz(lz.id)}
+              />
+            ))}
           </div>
         )}
       </div>
