@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
+import { ModusRegler, type ModusOption } from '../components/ui/ModusRegler'
 import { useUser } from '../context/UserContext'
 import { generateLernzettel, generateLernzettelVisual } from '../lib/gemini'
 import { saveLocalAsset } from '../lib/noteStorage'
@@ -12,11 +13,43 @@ const G_LERNZETTEL = 'linear-gradient(145deg, #5AC8FA, #007BB8)'
 
 type Step = 'fach' | 'modus' | 'select' | 'generating'
 
-const MODI: { id: LernzettelModus; title: string; desc: string; icon: string }[] = [
-  { id: 'faktisch', title: 'Faktisch', desc: 'Druckreif formuliert — jeder Fachbegriff präzise erklärt, ideal für Klausur-Formulierungen.', icon: '🎓' },
-  { id: 'bildlich', title: 'Bildlich', desc: 'Mit Alltagsvergleichen und Analogien erklärt, als würdest du das Thema zum ersten Mal hören.', icon: '🖼️' },
-  { id: 'grundlagen', title: 'Von Grund auf', desc: 'Beginnt bei den Voraussetzungen und baut systematisch zum eigentlichen Thema auf.', icon: '🧱' },
-  { id: 'stichpunkte', title: 'Stichpunkte', desc: 'Kompakte Bulletpoints für schnelles Wiederholen kurz vor der Klausur.', icon: '📋' },
+const ICON_FAKTISCH = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+    <path d="M12 3L2 8l10 5 10-5-10-5z" />
+    <path d="M6 10.5V16c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-5.5" />
+    <path d="M22 8v6" />
+  </svg>
+)
+const ICON_BILDLICH = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+    <rect x="3" y="3" width="18" height="18" rx="3" />
+    <circle cx="8.5" cy="8.5" r="1.5" />
+    <path d="M21 15l-5-5L5 21" />
+  </svg>
+)
+const ICON_GRUNDLAGEN = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" />
+    <path d="M2 17l10 5 10-5" />
+    <path d="M2 12l10 5 10-5" />
+  </svg>
+)
+const ICON_STICHPUNKTE = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
+    <line x1="9" y1="6" x2="21" y2="6" />
+    <line x1="9" y1="12" x2="21" y2="12" />
+    <line x1="9" y1="18" x2="21" y2="18" />
+    <circle cx="4" cy="6" r="1.2" fill="currentColor" stroke="none" />
+    <circle cx="4" cy="12" r="1.2" fill="currentColor" stroke="none" />
+    <circle cx="4" cy="18" r="1.2" fill="currentColor" stroke="none" />
+  </svg>
+)
+
+const MODI: (ModusOption & { id: LernzettelModus })[] = [
+  { id: 'faktisch', title: 'Faktisch', desc: 'Druckreif formuliert — jeder Fachbegriff präzise erklärt, ideal für Klausur-Formulierungen.', icon: ICON_FAKTISCH },
+  { id: 'bildlich', title: 'Bildlich', desc: 'Mit Alltagsvergleichen und Analogien erklärt, als würdest du das Thema zum ersten Mal hören.', icon: ICON_BILDLICH },
+  { id: 'grundlagen', title: 'Von Grund auf', desc: 'Beginnt bei den Voraussetzungen und baut systematisch zum eigentlichen Thema auf.', icon: ICON_GRUNDLAGEN },
+  { id: 'stichpunkte', title: 'Stichpunkte', desc: 'Kompakte Bulletpoints für schnelles Wiederholen kurz vor der Klausur.', icon: ICON_STICHPUNKTE },
 ]
 
 export function LernzettelGeneratorScreen() {
@@ -57,15 +90,15 @@ export function LernzettelGeneratorScreen() {
 
   const handleSelectSubject = (id: string) => {
     setSelectedSubjectId(id)
-    setSelectedModus(null)
+    setSelectedModus(MODI[0].id)
     setSelectedTopics([])
     setSelectedNoteIds([])
     setError('')
     setStep('modus')
   }
 
-  const handleSelectModus = (modus: LernzettelModus) => {
-    setSelectedModus(modus)
+  const handleConfirmModus = () => {
+    if (!selectedModus) return
     setStep('select')
   }
 
@@ -226,29 +259,23 @@ export function LernzettelGeneratorScreen() {
 
         {/* ── STEP: MODUS ───────────────────────────────────────── */}
         {step === 'modus' && (
-          <div className="space-y-2.5">
+          <div className="space-y-4">
             <p className="section-label px-0.5 mb-1">Wie soll der Lernzettel erklären?</p>
-            {MODI.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => handleSelectModus(m.id)}
-                className="w-full bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive p-4 text-left press flex items-center gap-3"
-              >
-                <div
-                  className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 text-xl"
-                  style={{ background: 'rgba(90,200,250,0.14)' }}
-                >
-                  <span>{m.icon}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[15px] font-bold text-text-primary">{m.title}</p>
-                  <p className="text-[12px] text-text-muted mt-0.5 leading-snug">{m.desc}</p>
-                </div>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted shrink-0" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 18l6-6-6-6" />
-                </svg>
-              </button>
-            ))}
+            <ModusRegler
+              options={MODI}
+              activeId={selectedModus ?? MODI[0].id}
+              onChange={(id) => setSelectedModus(id as LernzettelModus)}
+            />
+            <button
+              onClick={handleConfirmModus}
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-[20px] text-white font-semibold text-[15px] press"
+              style={{ background: G_LERNZETTEL }}
+            >
+              Weiter
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
           </div>
         )}
 
