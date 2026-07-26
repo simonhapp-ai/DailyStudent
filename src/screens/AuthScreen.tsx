@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react'
+import { Capacitor } from '@capacitor/core'
+import { Browser } from '@capacitor/browser'
 import { supabase } from '../lib/supabase'
+
+const isNative = Capacitor.isNativePlatform()
 
 type Mode = 'login' | 'signup' | 'forgot' | 'reset'
 
@@ -61,15 +65,21 @@ export function AuthScreen() {
   const handleGoogle = async () => {
     setGoogleLoading(true)
     setError(null)
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: isNative ? 'dailystudent://auth/callback' : `${window.location.origin}/`,
+        skipBrowserRedirect: isNative,
         queryParams: { prompt: 'select_account' },
       },
     })
     if (error) {
       setError(translateError(error.message))
+      setGoogleLoading(false)
+      return
+    }
+    if (isNative && data?.url) {
+      await Browser.open({ url: data.url })
       setGoogleLoading(false)
     }
   }
@@ -77,12 +87,20 @@ export function AuthScreen() {
   const handleApple = async () => {
     setAppleLoading(true)
     setError(null)
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'apple',
-      options: { redirectTo: `${window.location.origin}/` },
+      options: {
+        redirectTo: isNative ? 'dailystudent://auth/callback' : `${window.location.origin}/`,
+        skipBrowserRedirect: isNative,
+      },
     })
     if (error) {
       setError(translateError(error.message))
+      setAppleLoading(false)
+      return
+    }
+    if (isNative && data?.url) {
+      await Browser.open({ url: data.url })
       setAppleLoading(false)
     }
   }
@@ -264,7 +282,6 @@ export function AuthScreen() {
             <span>Apple</span>
           </button>
         </div>
-        <p className="text-[11px] text-red-500 text-center -mt-2 mb-1">Apple Login wird bald hinzugefügt</p>
 
         {/* Divider */}
         <div className="flex items-center gap-3 mb-4">

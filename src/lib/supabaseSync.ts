@@ -409,6 +409,7 @@ export interface SupabaseUserData {
   referralCode: string | null
   referralCount: number
   trialEndsAt: string | null
+  subscriptionSource: 'stripe' | 'apple' | null
 }
 
 export async function loadUserDataFromSupabase(userId: string): Promise<SupabaseUserData | null> {
@@ -446,7 +447,7 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
       supabase.from('personal_entries').select('*').eq('user_id', userId),
       supabase.from('standalone_homework').select('*').eq('user_id', userId),
       supabase.from('completed_homework_ids').select('homework_id').eq('user_id', userId),
-      supabase.from('subscriptions').select('status').eq('user_id', userId).maybeSingle(),
+      supabase.from('subscriptions').select('status, source').eq('user_id', userId).maybeSingle(),
       supabase.from('grade_data').select('abi_halbjahre, abi_pruefungen').eq('user_id', userId).maybeSingle(),
       supabase.from('referrals').select('*', { count: 'exact', head: true }).eq('referrer_id', userId),
     ])
@@ -482,6 +483,7 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
       referralCode: profileRow.referral_code ?? null,
       referralCount: referralCount ?? 0,
       trialEndsAt: profileRow.trial_ends_at ?? null,
+      subscriptionSource: subRow?.source ?? null,
     }
   } catch (err) {
     console.warn('[Supabase] loadUserData failed', err)
@@ -502,6 +504,7 @@ export interface SupabaseUserMeta {
   referralCode: string | null
   referralCount: number
   trialEndsAt: string | null
+  subscriptionSource: 'stripe' | 'apple' | null
 }
 
 export async function loadUserMetaFromSupabase(userId: string): Promise<SupabaseUserMeta | null> {
@@ -515,7 +518,7 @@ export async function loadUserMetaFromSupabase(userId: string): Promise<Supabase
     ] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', userId).single(),
       supabase.from('app_stats').select('*').eq('user_id', userId).single(),
-      supabase.from('subscriptions').select('status').eq('user_id', userId).maybeSingle(),
+      supabase.from('subscriptions').select('status, source').eq('user_id', userId).maybeSingle(),
       supabase.from('grade_data').select('abi_halbjahre, abi_pruefungen').eq('user_id', userId).maybeSingle(),
       supabase.from('referrals').select('*', { count: 'exact', head: true }).eq('referrer_id', userId),
     ])
@@ -541,6 +544,7 @@ export async function loadUserMetaFromSupabase(userId: string): Promise<Supabase
       referralCode: profileRow.referral_code ?? null,
       referralCount: referralCount ?? 0,
       trialEndsAt: profileRow.trial_ends_at ?? null,
+      subscriptionSource: subRow?.source ?? null,
     }
   } catch (err) {
     console.warn('[Supabase] loadUserMeta failed', err)

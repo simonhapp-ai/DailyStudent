@@ -26,6 +26,7 @@ function generateReferralCode(): string {
   return Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
 import { localizeNoteAttachments, deleteAttachmentsForNotes, deleteAttachment, migrateLegacyNoteAttachments } from '../lib/noteStorage'
+import { initRevenueCat, logOutRevenueCat } from '../lib/revenuecat'
 
 export interface StandaloneHomeworkItem {
   id: string
@@ -206,6 +207,7 @@ interface UserContextValue {
   referralCode: string | null
   referralCount: number
   trialEndsAt: string | null
+  subscriptionSource: 'stripe' | 'apple' | null
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -344,6 +346,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [authUser, setAuthUser] = useState<User | null>(null)
   const [authLoading, setAuthLoading] = useState(true)
   const [supabaseDataLoading, setSupabaseDataLoading] = useState(false)
+  // Local-only, non-persisted signal from RevenueCat's on-device entitlement
+  // cache — gives instant Pro UI feedback after a native purchase without
+  // waiting on the revenuecat-webhook round-trip into `subscriptions`, and
+  // without touching `isPro`/`profile.isDevMode` (see setIsPro's comment).
+  const [nativeEntitlementActive, setNativeEntitlementActive] = useState(false)
   // Guard: only load Supabase data once per user session, not on every token refresh
   const loadedForUserId = useRef<string | null>(null)
 
@@ -355,6 +362,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
         const userId = session.user.id
+        void initRevenueCat(userId, setNativeEntitlementActive)
         // Skip if we already loaded data for this user (e.g. background token refresh)
         if (loadedForUserId.current === userId) return
         loadedForUserId.current = userId
@@ -416,6 +424,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 setReferralCode(meta.referralCode)
                 setReferralCount(meta.referralCount)
                 setTrialEndsAt(meta.trialEndsAt)
+                setSubscriptionSource(meta.subscriptionSource)
                 if (!meta.referralCode) {
                   const newCode = generateReferralCode()
                   setReferralCode(newCode)
@@ -463,6 +472,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 setReferralCode(supabaseData.referralCode)
                 setReferralCount(supabaseData.referralCount)
                 setTrialEndsAt(supabaseData.trialEndsAt)
+                setSubscriptionSource(supabaseData.subscriptionSource)
                 if (!supabaseData.referralCode) {
                   const newCode = generateReferralCode()
                   setReferralCode(newCode)
@@ -514,6 +524,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                   referralCode: null,
                   referralCount: 0,
                   trialEndsAt: null,
+                  subscriptionSource: null,
                 })
               }
             }
@@ -562,6 +573,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [referralCode, setReferralCode] = useState<string | null>(null)
   const [referralCount, setReferralCount] = useState(0)
   const [trialEndsAt, setTrialEndsAt] = useState<string | null>(null)
+  const [subscriptionSource, setSubscriptionSource] = useState<'stripe' | 'apple' | null>(null)
 
   const [coinToastVisible, setCoinToastVisible] = useState(false)
   const [coinToastAmount, setCoinToastAmount] = useState(0)
@@ -666,7 +678,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!authUser || !profile || supabaseDataLoading || monthlyFreezeGrantedRef.current) return
-    const isProNow = isPro || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
+    const isProNow = isPro || nativeEntitlementActive || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
     if (!isProNow) return
     const thisMonth = new Date().toISOString().slice(0, 7)
     const cooldownKey = `FREE_FREEZE:${thisMonth}`
@@ -682,7 +694,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     saveStorage({ ...loadStorage(), appStats: updated })
     if (authUser) void syncAppStats(authUser.id, updated)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authUser?.id, isPro, trialEndsAt, supabaseDataLoading, !!profile])
+  }, [authUser?.id, isPro, nativeEntitlementActive, trialEndsAt, supabaseDataLoading, !!profile])
 
   const getKc = useCallback(
     (subjectId: string): KcSubjectData | null => kcCache[subjectId] ?? null,
@@ -944,6 +956,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     await supabase.auth.signOut()
+    await logOutRevenueCat()
+    setNativeEntitlementActive(false)
     loadedForUserId.current = null
     localStorage.removeItem(STORAGE_KEY)
     setProfile(null)
@@ -1232,7 +1246,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     console.log(`[Sync] Manual retry: ${result.success} success, ${result.failed} failed`)
   }
 
-  const effectiveIsPro = isPro || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
+  const effectiveIsPro = isPro || nativeEntitlementActive || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
 
   return (
     <UserContext.Provider
@@ -1311,6 +1325,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         referralCode,
         referralCount,
         trialEndsAt,
+        subscriptionSource,
       }}
     >
       {children}

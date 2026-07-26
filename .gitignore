@@ -13,6 +13,14 @@ dist
 dist-ssr
 *.local
 
+# iOS / Capacitor build artifacts (ios/App itself is committed source)
+ios/App/Pods/
+ios/App/App/public/
+ios/App/build/
+ios/DerivedData/
+ios/App/App.xcodeproj/project.xcworkspace/xcuserdata/
+ios/App/App.xcodeproj/xcuserdata/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

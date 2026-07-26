@@ -1,5 +1,9 @@
 import { useState } from 'react'
+import { Capacitor } from '@capacitor/core'
 import { createCheckoutSession } from '../../lib/stripe'
+import { purchasePlan } from '../../lib/revenuecat'
+
+const isNative = Capacitor.isNativePlatform()
 
 type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel' | 'probeklausur' | 'rabatt'
 
@@ -73,18 +77,32 @@ interface ProModalProps {
 export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }: ProModalProps) {
   const [plan, setPlan] = useState<'annual' | 'monthly'>('annual')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   if (!isOpen) return null
 
   const content = featureContent[feature]
 
   const handleCheckout = async () => {
+    setError(null)
+    if (isNative) {
+      setLoading(true)
+      const result = await purchasePlan(plan === 'annual' ? 'yearly' : 'monthly')
+      setLoading(false)
+      if (result.success) {
+        onClose()
+      } else if (!result.cancelled) {
+        setError(result.error ?? 'Kauf fehlgeschlagen. Bitte versuche es erneut.')
+      }
+      return
+    }
     try {
       setLoading(true)
       const url = await createCheckoutSession(plan === 'annual' ? 'yearly' : 'monthly', couponId)
       window.location.href = url
     } catch {
       setLoading(false)
+      setError('Checkout konnte nicht gestartet werden. Bitte versuche es erneut.')
     }
   }
 
@@ -146,6 +164,10 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
             Monatlich · €7,99
           </button>
         </div>
+
+        {error && (
+          <p className="text-[13px] text-red-500 text-center mb-3">{error}</p>
+        )}
 
         <button
           onClick={handleCheckout}

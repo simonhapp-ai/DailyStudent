@@ -12,6 +12,8 @@ if (typeof crypto !== 'undefined' && typeof crypto.randomUUID !== 'function') {
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { Capacitor } from '@capacitor/core'
+import { SplashScreen } from '@capacitor/splash-screen'
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/500.css'
 import '@fontsource/inter/600.css'
@@ -25,3 +27,10 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
+
+// server.url is a remote origin — hide the native splash only once React
+// has actually mounted, otherwise there's a blank-white flash while the
+// page loads over the network.
+if (Capacitor.isNativePlatform()) {
+  void SplashScreen.hide()
+}

@@ -32,6 +32,7 @@ import { CoinIconGlobalDefs } from '../components/ui/CoinIcon'
 import { StreakBadge } from '../components/ui/StreakBadge'
 import { ReferralPill } from '../components/ui/ReferralPill'
 import { UserProvider, useUser } from '../context/UserContext'
+import { useDeepLinkAuth } from '../hooks/useDeepLinkAuth'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { KalenderScreen } from '../screens/KalenderScreen'
 import { UnterrichtScreen } from '../screens/UnterrichtScreen'
@@ -325,6 +326,7 @@ function Layout() {
 export function App() {
   const [consentGiven, setConsentGiven] = useState(() => hasConsent())
   const [analyticsOn, setAnalyticsOn] = useState(() => analyticsAllowed())
+  useDeepLinkAuth()
 
   return (
     <ErrorBoundary>

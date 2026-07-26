@@ -1,16 +1,43 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Capacitor } from '@capacitor/core'
+import { Browser } from '@capacitor/browser'
 import { useUser } from '../context/UserContext'
 import { supabase } from '../lib/supabase'
+import { createPortalSession } from '../lib/stripe'
+
+const isNative = Capacitor.isNativePlatform()
 
 export function ProfilAccountScreen() {
   const navigate = useNavigate()
-  const { authUser, signOut } = useUser()
+  const { authUser, signOut, isPro, subscriptionSource } = useUser()
 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteInput, setDeleteInput] = useState('')
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  const [portalLoading, setPortalLoading] = useState(false)
+  const [portalError, setPortalError] = useState<string | null>(null)
+
+  const handleManageSubscription = async () => {
+    if (subscriptionSource === 'apple') {
+      const url = 'itms-apps://apps.apple.com/account/subscriptions'
+      if (isNative) await Browser.open({ url })
+      else window.location.href = url
+      return
+    }
+    setPortalError(null)
+    setPortalLoading(true)
+    try {
+      const url = await createPortalSession()
+      if (isNative) await Browser.open({ url })
+      else window.location.href = url
+    } catch {
+      setPortalError('Konnte Abo-Verwaltung nicht öffnen. Bitte versuche es erneut.')
+    } finally {
+      setPortalLoading(false)
+    }
+  }
 
   const handleDeleteAccount = async () => {
     if (deleteInput.toLowerCase() !== 'löschen') return
@@ -67,6 +94,18 @@ export function ProfilAccountScreen() {
               </svg>
             </button>
           )}
+          {isPro && (
+            <button
+              onClick={() => void handleManageSubscription()}
+              disabled={portalLoading}
+              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50 disabled:opacity-50"
+            >
+              <span className="text-text-primary text-[15px]">{portalLoading ? 'Wird geöffnet…' : 'Abo verwalten'}</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
           <button
             onClick={() => void signOut()}
             className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
@@ -86,6 +125,9 @@ export function ProfilAccountScreen() {
             </svg>
           </button>
         </div>
+        {portalError && (
+          <p className="text-[13px] text-danger mt-2 px-1">{portalError}</p>
+        )}
       </div>
 
       {/* ── Account löschen Modal ──────────────────────────── */}

@@ -79,10 +79,11 @@ Deno.serve(async (req) => {
           user_id: userId,
           stripe_customer_id: stripeCustomerId,
           stripe_subscription_id: stripeSubId,
+          source: 'stripe',
           status: 'active',
           plan,
           current_period_end: periodEnd,
-        }, { onConflict: 'stripe_subscription_id' })
+        }, { onConflict: 'user_id' })
 
         await supabase.from('profiles').update({ is_pro: true }).eq('id', userId)
         break

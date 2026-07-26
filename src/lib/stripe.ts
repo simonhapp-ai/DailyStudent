@@ -20,6 +20,16 @@ export async function createCheckoutSession(plan: 'monthly' | 'yearly', couponId
   return data.url
 }
 
+export async function createPortalSession(): Promise<string> {
+  const { data, error } = await supabase.functions.invoke('create-portal-session', {
+    body: { returnUrl: `${window.location.origin}/profil/account` },
+  })
+
+  if (error) throw new Error(error.message)
+  if (!data?.url) throw new Error('Kein Portal-Link erhalten')
+  return data.url
+}
+
 export async function fetchIsProFromSupabase(): Promise<boolean> {
   const { data } = await supabase
     .from('profiles')
