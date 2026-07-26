@@ -17,8 +17,9 @@ Die App bietet keinen einzelnen Lernweg, sondern einen **vernetzten Mix aus Lern
 **Das Ergebnis** ist ein kohärentes System, in dem jeder Output (Karteikarten, Probeklausur, Lernzettel, Lernplan) auf denselben Inputs basiert: Smart Notes + KC-Daten + Nutzerprofil.
 
 **Zielgruppe:** Gymnasiasten Klasse 10–13, Mittelstufe und Oberstufe — Studentenanpassung in Planung  
-**Wachstumshebel:** TikTok-Marketing (funktioniert bereits) + Email-Liste mit ~100 warmen Leads vom Landing Page. Discord hat 4.200 User, aber ~3.500 waren Abi-Jahrgänge die jetzt den Server verlassen → nur noch ~1.500 echter Niche. Discord ist NICHT mehr primärer Kanal.  
-**Monetarisierung:** Freemium — Free Tier mit Lock-Paywall (kein Blur!), Pro für €7,99/Mo oder €59,99/Jahr
+**Wachstumshebel:** TikTok-Marketing (funktioniert bereits) + Email-Liste mit ~100 warmen Leads vom Landing Page. Discord hat 4.200 User, aber ~3.500 waren Abi-Jahrgänge die jetzt den Server verlassen → nur noch ~1.500 echter Niche. Discord ist NICHT mehr primärer Kanal. **App-Store-Warteliste: 150+ Personen bereits angemeldet und warten aktiv auf den Release** (Stand 27.07.2026) — echte Nutzer, nicht nur hypothetisch, zusätzliche Dringlichkeit hinter dem 02.08.-Ziel.  
+**Monetarisierung:** Freemium — Free Tier mit Lock-Paywall (kein Blur!), Pro für €7,99/Mo oder €59,99/Jahr. Auf iOS zusätzlich Apple IAP via RevenueCat (Pflicht für In-App-Käufe, siehe Track A) — Web-Checkout bleibt parallel über Stripe bestehen, beide Systeme koexistieren dauerhaft (nicht nur übergangsweise), da Apple IAP nur auf iOS funktioniert und Stripe die einzige Option für Web/andere Plattformen bleibt.  
+**Langfristige Strategie-Verschiebung (Stand 27.07.2026):** Simon plant, die Web-App als eigenständiges Produkt aufzugeben — `dailystudent.de` wird langfristig NUR noch Marketing-Landingpage mit Download-Link zur App-Store-App, keine parallel gepflegte Web-Produktversion mehr. Begründung: In der Schülerzielgruppe wird eine Web-App kaum aktiv genutzt; zukünftige Feature-Updates sollen exklusiv in die native App-Store-App fließen. Details, Zeitrahmen (kein festes Datum) und technische Einordnung siehe neue Sektion „Zukunftsvision — Natives SwiftUI-Rewrite" weiter unten.
 
 ---
 
@@ -33,9 +34,10 @@ Die App bietet keinen einzelnen Lernweg, sondern einen **vernetzten Mix aus Lern
 | Persistenz | localStorage (`lernapp_v1`) → Supabase DB (Phase 3 aktiv) |
 | KI Text + Vision | Groq API — `openai/gpt-oss-120b` (Text) + `qwen/qwen3.6-27b` (Vision/Bilder/Scans) — migriert 25.07.2026, siehe Session-Notiz |
 | KI Probeklausuren + Lernplan + Lernzettel | Google Gemini — `gemini-3.5-flash` / `gemini-3.1-flash-lite` / `gemini-3.1-flash-image-preview` — migriert 25.07.2026 |
-| Auth | Supabase Auth — Email/Passwort + Google OAuth ✅ vollständig in App.tsx geroutet |
-| DB | Supabase PostgreSQL — 13 Tabellen + RLS (`supabase/migrations/`) |
-| Payments | Stripe — Edge Function + Webhook ✅ Live-Mode aktiv |
+| Auth | Supabase Auth — Email/Passwort + Google/Apple OAuth (PKCE), nativ via Capacitor Deep-Link (`useDeepLinkAuth.ts`) + web via Redirect ✅ |
+| DB | Supabase PostgreSQL — 16 Tabellen + RLS (`supabase/migrations/`) |
+| Payments | Stripe (Web) ✅ Live-Mode + Apple IAP via RevenueCat (iOS, Track A) — koexistieren dauerhaft |
+| Native Wrapper | Capacitor (`ios/`) — `server.url` zeigt auf `https://www.dailystudent.de`, kein separater Build |
 | Dev Server | localhost:5174 |
 | Repo | https://github.com/simonhapp-ai/DailyStudent.git |
 | Projektordner | C:\Users\simon\OneDrive\Desktop\Claude App |
@@ -67,9 +69,9 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99% (Stand: 25.07.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99%, Track A größtenteils gebaut (Stand: 27.07.2026)
 
-**App-Store-Kontext:** Ziel ist Einreichung im Apple App Store bis **02.08.2026** (danach ist Simon in Kanada, nicht erreichbar). Arbeit läuft in 2 Tracks: **Track A** (Capacitor-Wrapper, Apple IAP via RevenueCat, Sign in with Apple, Apple Developer Portal) — macht Simon selbst, Claude hat keinen Portal-Zugriff. **Track B** (App-Politur/Bugfixes im bestehenden Repo) — läuft in Claude-Code-Sessions, siehe To-Do unten. Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`.
+**App-Store-Kontext:** Ziel ist Einreichung im Apple App Store bis **02.08.2026** (danach ist Simon in Kanada, nicht erreichbar). Track B (App-Politur) ist fertig. **Track A (Capacitor-Wrapper + Apple IAP via RevenueCat + Sign in with Apple) wurde in der 26.–27.07.2026-Session zu großen Teilen gebaut** — siehe „Letzte Session" weiter unten für den vollständigen technischen Stand und offene Punkte. Simons parallele manuelle Apple-Portal-Schritte (Developer-Programm-Enrollment, App ID, Services ID, Sign-in-with-Apple-Key, App Store Connect API Key, RevenueCat-Account, Banking/Tax) sind ebenfalls größtenteils erledigt. Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`. **Wichtig, nicht verwechseln:** Das ist der kurzfristige Wrapper-Ansatz für die 02.08.-Deadline — komplett getrennt von Simons langfristiger Vision eines echten nativen SwiftUI-Rewrites OHNE Deadline, siehe neue Sektion „Zukunftsvision" weiter unten.
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
@@ -194,11 +196,11 @@ Smart Notes
 ### Known Issues (Stand: 25.07.2026):
 
 **MINOR:**
-1. **Apple OAuth** — Button in AuthScreen vorhanden, aber NICHT GETESTET (wird im Zuge von Track A/App-Store-Vorbereitung fertiggestellt — braucht Capacitor-Deep-Link-Handling + Supabase Apple-Provider-Konfiguration)
+1. **Apple OAuth** — Native PKCE-Deep-Link-Flow gebaut, Supabase-Apple-Provider konfiguriert (Services ID, Team ID, Key ID, generierter Client-Secret-JWT — läuft am **2027-01-22 ab**, siehe Claude-Memory `apple-signin-jwt-expiry` für Regenerierung), "coming soon"-Disclaimer aus `AuthScreen.tsx` entfernt. **Natives Google-Login wurde 27.07.2026 erfolgreich getestet** (nach Fix eines Domain-Redirect-Bugs, siehe „Letzte Session"). **Natives Apple-Login selbst noch NICHT verifiziert getestet** — sollte in der nächsten Session als Erstes nachgeholt werden.
 2. **Email Confirmation Flow** — kein UI-Hinweis nach Signup
 3. **Impressum Steuernummer** — Platzhalter, nach Eingang vom Finanzamt Harburg nachtragen
 4. **Coins Shop Redesign gefällt Simon noch nicht** — `ProfilCoinsScreen.tsx` wurde in 2 große Karten umgebaut (violett Checkliste / mint Shop, Framer-Motion-Entrance-Animation), aber Simon hat explizit gesagt das Design trifft es noch nicht. Konkretes Feedback steht noch aus — vor weiterer Iteration erst nachfragen was genau nicht passt, nicht einfach nochmal neu raten.
-5. **Kein natives Wrapper-Projekt für den App Store** — die App ist aktuell eine reine Vite/React Web-App ohne Capacitor/React-Native-Wrapper. Für die Einreichung im Apple App Store fehlt noch: Capacitor-Setup, Apple IAP via RevenueCat (Stripe-only verstößt gegen Guideline 3.1.1), Sign in with Apple fertigstellen. Das ist Track A — Simon macht das selbst (Apple Developer Account, Zertifikate, App Store Connect), volle Sequenzierung liegt in Claudes Memory (`project-app-store-launch-plan`).
+5. **Natives Wrapper-Projekt** — ✅ GELÖST (26.–27.07.2026). `ios/` Capacitor-Projekt existiert, ist committed, `capacitor.config.ts` zeigt auf `https://www.dailystudent.de` (kanonische Domain, `dailystudent.de` ohne www 308-redirected dorthin). Noch offen bis zur Einreichung: RevenueCat Offerings/Products anlegen (abhängig von App Store Connect IAP-Produkten), Xcode-Signing für TestFlight, Sandbox-Testkauf, finaler QA-Pass auf echtem TestFlight-Build. Siehe „Letzte Session" für Details.
 6. **Lernzettel-Erklärbilder (Beta) aktuell komplett funktionsunfähig — Google-seitiges Freikontingent, nicht unser Bug, NICHT per Code fixbar** — direkt gegen Googles API getestet (curl, mit UND ohne Modell-Migration, altes `gemini-2.5-flash-image` UND neues `gemini-3.1-flash-image-preview` zeigen identisch `RESOURCE_EXHAUSTED`/`limit: 0` für `generate_content_free_tier_requests`). Das Freikontingent für Bildgenerierung scheint für dieses Google-Cloud-Projekt aktuell bei 0 zu liegen. Betrifft nur den optionalen Beta-Toggle (default AUS) — der Rest von Lernzettel/Probeklausur/Lernplan/Smart Notes läuft über Text-Modelle und ist nicht betroffen. **Von Simon zweifach live bestätigt** (25.07.2026, erneut 25.07.2026 in einer späteren Session): Toggle „Mit Erklärbildern (Beta)" eingeschaltet, es wird trotzdem kein Bild generiert/angezeigt — deckt sich exakt mit dem curl-Befund, kein neues Symptom. Die Lernzettel-**Textgenerierung** selbst (alle 4 Modi) funktioniert gut („fast gut") — nur dieser Beta-Bildteil ist betroffen, und die App-seitige Anzeige-/Preview-Logik dafür (`RichText`s Bild-Platzierung, IndexedDB-Auflösung) ist bereits korrekt gebaut und einsatzbereit, sobald Google wieder Kontingent frei gibt. **Simon muss:** im Google AI Studio / Google Cloud Billing prüfen, ob für dieses Projekt Billing aktiviert werden muss — reines Model-Downgrade würde das nicht lösen, da beide Modelle betroffen sind. Dies ist der letzte offene Blocker vor dem Start der Apple-App-Store-Migration (Track A).
 
 ### To-Do — Priorisiert (Stand: 25.07.2026):
@@ -212,13 +214,22 @@ Smart Notes
 
 1. **Final QA-Pass auf alle Track-B-Änderungen der 23.–25.07. Sessions** — durchklicken: Google-Login (Account-Picker), Stripe-Checkout + Rabatt-Einlösung (sobald Simon die Coupons angelegt hat), alle 5 neuen Profil-Unterseiten, Übersicht (To-Do-Karte beide Hälften, Streak-Widget, Lernplan-Hero „Fortsetzen", Erste-Schritte-Checkliste, gefächerte Notizen-Karten), Streak-Erklärungs-Sheet, **plus neu:** Lernzettel 4-Modi-Flow + ModusRegler, Erklärbilder-Toggle, Preview-Karussell-Redesign, Markdown/Math-Rendering in Smart Notes + Lernzettel, Abi-Notenrechner Block II, Lernplan-Kalenderexport-Buttons. **Das ist der einzige noch offene Track-B-Punkt** — danach ist Track B (App-Politur) inhaltlich fertig und Track A (Apple-App-Store-Migration) kann beginnen, siehe „Nächste Session — Handoff" gleich unten.
 
-#### Nächste Session — Handoff (Stand 25.07.2026, Ende der Session):
-Simon steigt mit einem neuen Chat wieder ein. Kompakter Übergabe-Stand:
-- **Alle 14 Migrationen sind angewendet** — kein DB-Setup-Schritt mehr offen.
-- **Einziger noch offener Track-B-Punkt:** Final QA-Pass (Punkt 1 oben) — sonst ist Track B fertig.
-- **Einziger bekannte funktionale Lücke, nicht per Code lösbar:** Lernzettel-Erklärbilder (Google-Freikontingent = 0, Known Issues #6) — Simon muss Google Cloud Billing für das Projekt prüfen. App-seitig ist alles fertig gebaut und wartet nur auf Googles Kontingent.
-- **Danach:** Track A (Apple App Store Migration — Capacitor, RevenueCat/Apple IAP, Sign in with Apple) kann beginnen. Volle Sequenzierung + Architekturentscheidungen liegen in Claudes Memory unter `project-app-store-launch-plan` — dort zuerst nachlesen, Status mit Simon abgleichen (macht er selbst, kein Claude-Portal-Zugriff).
-- Kleinere Backlog-Punkte (Coins-Shop-Redesign-Feedback, Onboarding Soft-Start, etc.) stehen unten unter „Danach" — nicht blockierend, nach Bedarf einschieben.
+#### Nächste Session — Handoff (Stand 27.07.2026, Ende der Track-A-Bau-Session):
+Simon steigt mit einem neuen Chat wieder ein. Kompakter Übergabe-Stand — **zuerst „Letzte Session (26.–27.07.2026)" weiter unten vollständig lesen**, dort steht der volle technische Kontext dieser Liste:
+
+**Track A — konkret noch offen, in ungefährer Reihenfolge:**
+1. **Natives Apple-Login end-to-end testen** — Google-Login wurde 27.07.2026 erfolgreich verifiziert (nach dem Domain-Redirect-Fix), Apple-Login (gleicher Code-Pfad, sollte funktionieren) wurde aber noch nie tatsächlich durchgeklickt.
+2. **Temporäre Debug-`console.log`-Zeilen entfernen** aus `src/screens/AuthScreen.tsx` (`handleGoogle`) und `src/hooks/useDeepLinkAuth.ts` — dienten der OAuth-Fehlersuche in dieser Session, Cleanup aussteht, dann committen+pushen.
+3. **`DemoScreen.tsx`: „Eigene Notiz erstellen"-Button entfernen** (Button + `handleCustomTagAdd` + zugehöriger State `customOpen`/`customTags`/`customInput`) — Simon hat sich 27.07.2026 explizit dafür entschieden, obwohl geklärt wurde dass der Button keinen echten KI-Call macht (rein templated, siehe `buildFallback()`). **Noch NICHT umgesetzt.**
+4. **Migration `016_revenuecat_subscriptions.sql`** — unklar ob Simon sie bereits im Supabase SQL Editor ausgeführt hat, unbedingt nachfragen/bestätigen lassen bevor RevenueCat-Testkäufe gemacht werden (fügt `source`/`rc_app_user_id` + `UNIQUE(user_id)` zu `subscriptions` hinzu).
+5. **`VITE_REVENUECAT_API_KEY_IOS` in Vercel Environment Variables setzen** — aktuell nur in der lokalen `.env`, die Produktions-Site (die der native Wrapper lädt) hat den Key noch nicht, braucht zusätzlich einen Redeploy.
+6. **RevenueCat Offerings/Packages/Products anlegen** — abhängig von IAP-Produkten in App Store Connect (monatlich/jährlich, €7,99/€59,99), die wiederum Banking/Tax-Freigabe brauchten (Simon sagt Stand 27.07. „ist glaube ich durch", nicht 100% verifiziert — nachfragen).
+7. **Xcode-Signing für TestFlight finalisieren**, TestFlight-Build hochladen, Sandbox-Testkauf durchführen (braucht Sandbox-Apple-ID aus App Store Connect).
+8. **Finaler QA-Pass** auf dem echten TestFlight-Build vor Einreichung.
+
+**Wichtig, nicht mit Track A verwechseln:** Simon hat 27.07.2026 außerdem eine grundsätzliche Zukunftsfrage aufgeworfen (natives SwiftUI-Rewrite statt Wrapper) — Ergebnis: aktueller Wrapper bleibt für die 02.08.-Deadline, ein echter Rewrite ist ein separates Projekt OHNE Datum für danach. Siehe neue Sektion „Zukunftsvision — Natives SwiftUI-Rewrite" weiter unten, bevor in einer zukünftigen Session natives UI-Arbeit begonnen wird — erst mit Simon klären ob das jetzt ansteht.
+
+**Track B ist weiterhin komplett fertig** (Stand 25.07.2026, siehe unten) — kein offener Punkt dort.
 
 #### Danach:
 3. **Coins Shop Redesign — konkretes Feedback von Simon einholen** bevor weiter iteriert wird (siehe Known Issues).
@@ -330,7 +341,7 @@ Umgesetzt wie unten gespeckt, siehe Phase-3-Liste oben. Einziger offener Punkt: 
 
 ---
 
-## Supabase DB-Schema — 15 Tabellen (Stand 25.07.2026)
+## Supabase DB-Schema — 16 Tabellen (Stand 27.07.2026)
 
 | Tabelle | Inhalt |
 |---------|--------|
@@ -346,14 +357,14 @@ Umgesetzt wie unten gespeckt, siehe Phase-3-Liste oben. Einziger offener Punkt: 
 | `lernplaene` | Generierte Lernpläne (days JSONB, config JSONB, `completedDays` neu) |
 | `personal_entries` | Kalendereinträge (lerneinheit/termin/erinnerung) |
 | `standalone_homework` | Hausaufgaben ohne Notiz-Kontext |
-| `subscriptions` | Stripe-Abonnements (nur server-seitig schreibbar via Webhook) |
+| `subscriptions` | Abonnements, Stripe UND Apple/RevenueCat (`source` Spalte, neu Migration 016) — `UNIQUE(user_id)`, nur server-seitig schreibbar via Webhook |
 | `ai_usage` (neu, Migration 012) | Pro user_id/bucket/day ein Zähler — Grundlage der Rate-Limit-Decke |
 | `ai_rate_limit_strikes` (neu, Migration 012) | Ein Eintrag pro user_id/bucket/day an dem die Decke überschritten wurde — 2 Einträge insgesamt → `profiles.ai_blocked = true` |
 
 **RLS:** Jede Tabelle hat RLS — User kann nur eigene Rows lesen/schreiben (`auth.uid() = user_id`). `ai_usage`/`ai_rate_limit_strikes` haben RLS aktiviert aber keine Policies — nur über die `SECURITY DEFINER`-RPC `check_ai_rate_limit()` erreichbar, kein direkter Client-Zugriff vorgesehen.
 
-**Migrationen 001–014**, alle in `supabase/migrations/`, **alle angewendet** (011 + 012 nachträglich am 24.07.2026, 013 + 014 nachträglich am 25.07.2026):
-001 initial schema · 002 grade_data · 003 custom_faecher · 004 coins_system · 005 atomic_coins (RPC) · 006 harden_coin_rpcs · 007 note_attachments_storage · 008 early_access · 009 referral_system · 010 personal_entries_extra_fields · 011 coins_discount_redeem (RPC) · 012 ai_rate_limits (RPC) · 013 lernzettel_modus_images · 014 abi_pruefungen
+**Migrationen 001–015 angewendet**, **016 Status UNBESTÄTIGT — bei Simon nachfragen** (siehe Handoff-To-Do oben), alle in `supabase/migrations/`:
+001 initial schema · 002 grade_data · 003 custom_faecher · 004 coins_system · 005 atomic_coins (RPC) · 006 harden_coin_rpcs · 007 note_attachments_storage · 008 early_access · 009 referral_system · 010 personal_entries_extra_fields · 011 coins_discount_redeem (RPC) · 012 ai_rate_limits (RPC) · 013 lernzettel_modus_images · 014 abi_pruefungen · 015 lernzettel_highlighted · **016 revenuecat_subscriptions (neu 26.–27.07.2026, `source`/`rc_app_user_id`/`UNIQUE(user_id)` auf `subscriptions`, siehe Track-A-Session oben)**
 
 ---
 
@@ -393,6 +404,10 @@ KC-Daten liegen als JSON-Dateien in `public/kc/{Bundesland}/{fach}.json`.
 - **Karten die IMMER dunkel sind (unabhängig vom App-Theme) brauchen hardcodierte Farben, nicht die theme-CSS-Variablen** — z.B. die Übersicht-Hero-Karten (`DashboardScreen.tsx`, `Card` mit `dark` Prop). `rgb(var(--color-accent))` etc. sind theme-abhängig (unterschiedliche Werte in `:root` vs `.dark` in `index.css`) und wirken auf einer erzwungenermaßen dunklen Kartenfläche im Light-Mode zu blass. Für solche "immer dunkles Chrome"-Elemente feste, dark-taugliche Hex-Werte direkt im Code verwenden (Beispiel: `urgencyColor` in `ToDoCard`).
 - **`Lernplan.completedDays?: string[]`** — Liste von `LernplanDay.date`-Strings, die als erledigt markiert wurden. Bisher nur von der Dashboard-Hero-Karte geschrieben (markiert die nächste Session bei Klick auf „Fortsetzen"), noch kein granulares Toggle direkt in `LernplanDetailScreen` (das ist ein offener Folge-Punkt, siehe To-Do). Persistiert ganz normal über das bestehende `saveLernplan()`.
 - **Mehrzeiliger KI-Content (Markdown + Math) läuft immer über `RichText`, nie über rohe String-Interpolation oder `MathRenderer` allein:** `src/components/ui/RichText.tsx` ist der einzige Renderer für `##`/`###`/`**bold**`/`> `/`Merke: `/`- `-Markdown-Lite kombiniert mit KaTeX-Math (`$...$`/`$$...$$`). `MathRenderer.tsx` bleibt daneben bestehen, aber nur noch für einzelne kurze Felder ohne eigene Markdown-Struktur (z.B. `task.answer`, Karteikarten-Vorschau-Snippets mit `line-clamp` — dort würde `RichText`s Block-Layout das Clamping brechen). Beide teilen sich `renderMathSegments()` aus `src/lib/mathSegments.tsx` (bewusst kein Re-Export aus `MathRenderer.tsx` — sonst verletzt die Datei Fast-Refreshs "nur Komponenten exportieren"-Regel, siehe ESLint `react-refresh/only-export-components`). Neue Stellen, die KI-generierten Fließtext/Zusammenfassungen anzeigen, müssen `RichText` verwenden, sonst zeigt die UI wieder rohe `##`/`$`-Zeichen an (Bug vom 25.07.2026, siehe Phase-3-Liste).
+- **Capacitor `server.url` zeigt IMMER auf Produktion, nie lokal hand-editieren:** `capacitor.config.ts`s `server.url` ist `https://www.dailystudent.de` (kanonische Domain — Apex `dailystudent.de` 308-redirected dorthin, deshalb direkt die www-Version verwenden). Lokales Testen läuft ausschließlich über `npm run cap:dev` (Live-Reload gegen den Vite-Dev-Server), damit nie versehentlich eine Dev-URL in einen archivierten Build gelangt. **Wichtig:** native Features sind erst nach einem echten `git push` + Vercel-Deploy testbar, da der Wrapper immer den zuletzt deployten Produktions-Code lädt, nicht den lokalen Stand.
+- **`subscriptions` hat `UNIQUE(user_id)`, seit Migration 016:** eine Zeile pro Nutzer, egal ob Stripe oder Apple/RevenueCat gerade aktiv ist (`source`-Spalte unterscheidet). Sowohl `stripe-webhook` als auch `revenuecat-webhook` upserten auf `onConflict: 'user_id'`. Grund: `supabaseSync.ts` liest mit `.maybeSingle()`, das bei mehreren Zeilen pro Nutzer crashen würde.
+- **RevenueCat-Pro-Status läuft NIE über `setIsPro()`:** `UserContext.tsx` hat einen separaten, nicht-persistierten `nativeEntitlementActive`-State für sofortiges UI-Feedback nach einem nativen Kauf (via RevenueCats `CustomerInfoUpdateListener`). `setIsPro()` ist absichtlich nur für den Dev-Mode-Pro-Toggle reserviert — es setzt `profile.isDevMode = true`, was bei einem echten Abo-Kauf falsch wäre.
+- **Sensible Signing-Keys (`.p8`-Dateien, private Keys) nie in den Chat einfügen lassen:** bei Bedarf (z.B. JWT-Generierung für Supabases Apple-Provider) nur den Dateipfad erfragen, lokal per Bash/Node verarbeiten, nur das Ergebnis zurückgeben.
 - **Lernzettel-Erklärbilder sind lokal-first (IndexedDB) wie Note-Attachments, kein eigenes Storage-Bucket:** `Lernzettel.images` enthält nur `{ref: 'idb:<uuid>', afterHeading?, alt}` — die eigentlichen PNG-Bytes verlassen nie den `saveLocalAsset()`/`getAttachment()`-Pfad aus `src/lib/noteStorage.ts`. Kein Cross-Device-Sync für diese Bilder (anders als Note-Attachments gibt es hier keinen "Übertragen"-Button) — bewusste Vereinfachung für die erste Version, da die Bilder jederzeit neu generierbar sind. `RichText` löst sie über `useResolvedAttachments()` auf und platziert sie nach der Überschrift, die `afterHeading` wortwörtlich matcht; kein Match → Bild wird ans Ende gehängt statt zu verschwinden.
 
 ---
@@ -407,6 +422,7 @@ VITE_SUPABASE_ANON_KEY=eyJ...       # Supabase Anon Key
 VITE_EMAILJS_SERVICE_ID=...         # EmailJS — auch in Vercel setzen!
 VITE_EMAILJS_TEMPLATE_ID=...        # EmailJS — auch in Vercel setzen!
 VITE_EMAILJS_PUBLIC_KEY=...         # EmailJS — auch in Vercel setzen!
+VITE_REVENUECAT_API_KEY_IOS=appl_... # RevenueCat Public SDK Key (Track A) — NUR lokal in .env gesetzt, Vercel-Eintrag noch unbestätigt, siehe To-Do
 ```
 
 `.env` liegt im Root-Verzeichnis. Nie in Git committen (ist in `.gitignore`).  
@@ -438,7 +454,7 @@ isDevMode:  true
 
 | Screen | Route | Funktion |
 |--------|-------|---------|
-| AuthScreen | /auth | Login/Signup Email + Google OAuth |
+| AuthScreen | /auth | Login/Signup Email + Google/Apple OAuth (PKCE, nativ + web) |
 | OnboardingScreen | (gate) | 9-Schritt-Onboarding mit Stundenplan-Scan |
 | DashboardScreen | /dashboard | Desktop-Landing, heute-Übersicht |
 | UnterrichtScreen | /unterricht | Fach-Tree, Ordner, Foto-Import |
@@ -484,9 +500,16 @@ isDevMode:  true
 ## Wichtige Dateien / Struktur
 
 ```
+capacitor.config.ts                # Capacitor-Config — server.url zeigt IMMER auf Produktion, nie lokal hand-editieren
+assets/                             # icon.png/splash.png — Input für `npx @capacitor/assets generate`
+scripts/
+└── generate-app-icons.mjs          # Sharp-Skript: public/icon.svg → alle Icon-/Splash-PNGs
+ios/                                 # Capacitor-iOS-Projekt (Track A) — Info.plist, Assets.xcassets, etc.
 src/
 ├── app/
-│   └── App.tsx                   # Router, ErrorBoundary, ThemeApplier, Layout, Auth-Gate
+│   └── App.tsx                   # Router, ErrorBoundary, ThemeApplier, Layout, Auth-Gate, useDeepLinkAuth()
+├── hooks/
+│   └── useDeepLinkAuth.ts         # Fängt appUrlOpen ab, exchangeCodeForSession() für nativen OAuth-Rückweg
 ├── components/
 │   ├── lesson/
 │   │   └── FotoScannerWidget.tsx  # Kamera-Zugriff + Foto-Capture
@@ -499,7 +522,7 @@ src/
 │                                 # SyncErrorBanner, KcFallbackBanner, MathRenderer, RichText,
 │                                 # ModusRegler, StreakBadge, StreakInfoSheet, ...
 ├── context/
-│   └── UserContext.tsx            # Zentraler State + localStorage + Supabase Auth + Sync Queue
+│   └── UserContext.tsx            # Zentraler State + localStorage + Supabase Auth + Sync Queue + RevenueCat-Init
 ├── data/
 │   ├── mockData.ts                # halfYears[], topics[], subjects[] (Legacy-Stubs, kein Mock mehr)
 │   ├── subjectInfo.ts             # SUBJECT_INFO + SUBJECT_GROUPS (Name, Icon, Farbe pro Fach)
@@ -508,8 +531,10 @@ src/
 │   ├── groq.ts                    # Alle Groq API Calls (OCR, SmartNote, Flashcards, Blurting, ...) — Lernzettel jetzt in gemini.ts
 │   ├── gemini.ts                  # Gemini API Calls (Probeklausur, Lernplan, Lernzettel + Erklärbilder, File-Import)
 │   ├── mathSegments.tsx           # renderMathSegments() — KaTeX-Segment-Parser, geteilt von MathRenderer + RichText
-│   ├── stripe.ts                  # createCheckoutSession(plan, couponId?) — ruft create-checkout-session Edge Fn auf
-│   ├── supabase.ts                # Supabase Client
+│   ├── stripe.ts                  # createCheckoutSession(plan, couponId?), createPortalSession() (neu, Track A)
+│   ├── revenuecat.ts              # initRevenueCat, purchasePlan, logOutRevenueCat (neu, Track A)
+│   ├── supabase.ts                # Supabase Client — flowType 'pkce', native Storage-Adapter
+│   ├── capacitorStorage.ts        # Preferences-basierter Storage-Adapter für Supabase-Session (nativ only, neu Track A)
 │   ├── supabaseSync.ts            # Sync-Layer: syncProfile, syncGradeData, syncNote, etc. + Queue
 │   ├── streak.ts                  # getActiveStreak(streak, lastStudyDate) — single source of truth
 │   ├── noteStorage.ts             # IndexedDB lokal-first Storage: Note-Attachments + Lernzettel-Erklärbilder
@@ -522,12 +547,14 @@ public/
 ├── kc/                            # KC-JSONs: 16 Bundesländer × ~12 Fächer = ~196 Dateien
 └── lernzettel-previews/           # 4 Original-Lernzettel-HTMLs für Pro Preview Karussell
 supabase/
-├── migrations/                    # 001–014, alle angewendet, siehe DB-Schema-Sektion oben für Details
+├── migrations/                    # 001–016, siehe DB-Schema-Sektion oben für Details (016 Status unbestätigt)
 └── functions/
     ├── groq-proxy/                # (vermutlich toter Code — src/ ruft stattdessen /api/groq auf, prüfen ob löschbar)
     ├── gemini-proxy/              # (vermutlich toter Code — src/ ruft stattdessen /api/gemini auf, prüfen ob löschbar)
     ├── create-checkout-session/   # Stripe Checkout (deployed ✅, Live-Mode, akzeptiert jetzt couponId)
-    ├── stripe-webhook/            # Stripe Webhook Handler (deployed ✅, Live-Mode)
+    ├── create-portal-session/     # Stripe Billing Portal (neu, Track A)
+    ├── stripe-webhook/            # Stripe Webhook Handler (deployed ✅, Live-Mode, upsert jetzt auf user_id)
+    ├── revenuecat-webhook/        # RevenueCat/Apple-IAP-Webhook (neu, Track A)
     └── delete-account/            # Account-Löschung (deployed ✅ 10.06.2026)
 api/
 ├── groq.ts                        # Vercel Edge Function — verifiziert Supabase-Token, prüft Rate-Limit, proxied zu Groq
@@ -607,12 +634,78 @@ DailyStudent soll sich anfühlen wie eine native Apple-App.
 
 ---
 
+## Zukunftsvision — Natives SwiftUI-Rewrite (langfristig, KEIN Datum)
+
+**Status: reine Zukunftsvision, nicht angefangen, nicht terminiert.** Nicht mit Track A (dem aktuellen Capacitor-Wrapper für die 02.08.2026-Deadline) verwechseln — das sind zwei komplett getrennte Vorhaben. Entstanden aus einem ausführlichen Gespräch mit Simon am 27.07.2026 (siehe „Letzte Session" oben für den vollen Gesprächsverlauf).
+
+### Warum Simon das will
+Simon plant, die Web-App als eigenständiges Produkt langfristig aufzugeben. `dailystudent.de` soll nur noch Marketing-Landingpage mit App-Store-Download-Link sein (der aktuelle „Get Started"-Button-Zweck bleibt, wird aber die einzige verbleibende Web-Funktion). Begründung: In der Schülerzielgruppe wird eine Web-App kaum aktiv genutzt; alle zukünftigen Feature-Updates sollen exklusiv in die native App-Store-App fließen, nicht mehr parallel in eine Web-Version.
+
+**Wichtige Korrektur aus dem Gespräch, die für jede zukünftige Diskussion gilt:** Der Auslöser für diese Überlegung war ein Missverständnis — der aktuelle Capacitor-Wrapper ist KEIN „Zum-Homescreen-hinzufügen"-PWA-Bookmark, sondern ein echtes App-Store-Bundle. Das eigentliche, validere Argument für einen nativen Rewrite ist NICHT „der Wrapper braucht ein Tutorial", sondern schlicht: echtes natives UI/Feel + langfristig nur noch eine Plattform pflegen wollen, statt Web + App parallel.
+
+### Was tatsächlich für einen Rewrite spricht (geprüft, nicht übertrieben)
+- **Supabase-Backend muss nicht neu gebaut werden.** Offizielles `supabase-swift`-SDK deckt Postgres-Zugriff, RLS, Edge Functions und Auth (inkl. Apple/Google-OAuth mit PKCE) vollständig ab — dieselbe Datenbank, dieselben Migrationen, dieselben Edge Functions bedienen dann Web (falls noch relevant) und die native App gleichzeitig.
+- **Die bestehende Web-App ist die vollständige Spezifikation.** Jede Screen-Logik, jedes Prompt-Design, jedes Datenmodell ist bereits bekannt und funktionierend — das eliminiert fast das gesamte „was soll das eigentlich tun"-Risiko eines Greenfield-Projekts.
+
+### Was ehrlich dagegen spricht, VOR dem 02.08.-Deadline zu rewriten
+- **Umfang:** ~39 Screens, mehrere davon mehrstufige komplexe Flows (6-Schritt-Lernplan-Konfigurator mit Kalender-Konfliktlösung, 4 Probeklausur-Modi mit KI-Generierung+Korrektur, 9-Schritt-Onboarding, Abi-Rechner Block I+II).
+- **Mehrere Bausteine haben kein triviales natives 1:1-Äquivalent** — jeweils eigene Neuentwicklung nötig, kein Copy-Paste-Job: KaTeX-Mathe-Rendering (kein natives Swift-Äquivalent, eigene Lib oder eingebettete WebView nur fürs Rendering nötig), Insights-Charts (→ Swift Charts), Zeichnen/Handschrift aus dem Schreibscreen (`perfect-freehand` → PencilKit/Core Graphics), PDF-Export (`jsPDF` → PDFKit), das komplette lokal-first IndexedDB-Attachment-System (→ Core Data/SQLite/FileManager, andere Architektur).
+- **Realistischer Zeitaufwand: Wochen bis Monate fokussierte Arbeit**, kein Wochenend-Grind — unabhängig davon, ob Claude Code direkten Xcode-Zugriff hat (beschleunigt das Tippen von Code, ändert aber nichts am fundamentalen Umfang, ~39 Screens Business-Logik ein zweites Mal zu bauen).
+- **Zwei Codebasen für immer:** Jedes zukünftige Feature/jeder Bugfix müsste doppelt gebaut werden (React/TS + Swift) — genau die Last, die der Wrapper-Ansatz ursprünglich vermeiden sollte, gegeben Simons fehlendem Coding-Background und der Abhängigkeit von KI-gestützter Einzelperson-Entwicklung.
+
+### Apple On-Device-KI ("Apple Intelligence" / Foundation Models Framework)
+Real existierendes, von Apple für Drittanbieter geöffnetes Framework für ein On-Device-LLM (kostenlos, offline, privacy-preserving). **Kein Ersatz für die aktuelle Groq/Gemini-Pipeline** — spürbar schwächeres Modell, für leichte Aufgaben gedacht (nicht für z.B. vollständige AFB-III-Klausurkorrektur oder tiefe Lernzettel-Erklärungen), nur auf neueren Geräten mit Apple-Intelligence-Support verfügbar (nicht alle Nutzer-Geräte). Würde bei Einsatz zusätzlichen Scope bedeuten, keine Abkürzung. Interessant als spätere Ergänzung für leichte Offline-Features, nicht als Rewrite-Vereinfacher.
+
+### Aktueller Stand der Entscheidung
+Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline einreichen, nativer Rewrite ist ein separates, echtes Projekt für DANACH, im nachhaltigen Tempo ohne Zeitdruck. Denkbar als erster Schritt, falls es losgeht: ein zeitlich klar begrenzter Proof-of-Concept-Spike (Supabase-Swift-Auth + 1–2 einfache Screens porten), um echte Geschwindigkeit/Qualität selbst zu sehen, bevor volles Commitment — **noch nicht entschieden ob/wann dieser Spike stattfindet.**
+
+**Für eine zukünftige Session:** Nicht von selbst anfangen natives UI zu bauen, nur weil dieser Abschnitt existiert — erst mit Simon klären ob der Rewrite jetzt ansteht oder weiterhin zurückgestellt ist. Verwandte, bereits vorher geführte Diskussion zum selben Ergebnis (Wrapper behalten statt nativem Liquid-Glass-UI): Claude-Memory `track-a-liquid-glass-scope`.
+
+---
+
 ## Developer-Kontext
 
 - **Entwickler:** Simon (kein Coding-Background, arbeitet mit Claude Code in VS Code) + Jan (Simons Helfer)
 - **Workflow:** Claude Code baut, Simon reviewed im Browser (localhost:5174), dann git commit + push
 - **Git:** `git add . && git commit -m "..." && git push`
 - **Wichtig:** Immer erklären was gebaut wurde und warum — keine stillen Änderungen
+- **Simon testet manuelle Portal-Schritte (Apple Developer, App Store Connect, RevenueCat, Supabase Dashboard) selbst hands-on und meldet exakte UI-Texte/Fehlermeldungen/Screenshots zurück** (z.B. wörtliche Fehlermeldungen aus RevenueCats Key-Upload, Screenshots von Supabase-Redirect-URL-Listen). Bei Unsicherheit über exakte Dashboard-Feldnamen/Menüstruktur (ändert sich häufig) IMMER transparent sagen wenn unsicher, dann anhand seines Feedbacks präzise korrigieren — funktioniert gut, mehrfach in der 26.–27.07.2026-Session so gelöst (z.B. Supabase Apple-Provider-Felder, App Store Connect „In-App Purchase"-vs-„App Store Connect API"-Keys).
+- **Simon hinterfragt technische Behauptungen aktiv und erwartet ehrliche, unaufgeregte Korrektur ohne Beschönigung** — explizit gewünscht: „no hallucinations". Schätzt direkte, faktenbasierte Einordnung von Aufwand/Risiko/Kosten (z.B. Apple-IAP-Kommission, realistischer Zeitaufwand für einen nativen Rewrite) höher ein als vorauseilende Zustimmung zu seinen eigenen Ideen — siehe 26.–27.07.2026-Diskussion über Wrapper- vs. natives-Rewrite-Strategie in „Zukunftsvision" weiter unten.
+- **Sensible Daten (private Keys, `.p8`-Dateien) nie in den Chat einfügen lassen** — wenn ein Signing-Key/Secret gebraucht wird (z.B. Apple Sign-in-Key, App Store Connect API Key), Simon bitten den Dateipfad zu nennen (z.B. Desktop), lokal per Bash/Node einlesen und verarbeiten (z.B. JWT signieren), nur das Ergebnis zurückgeben — nie den Rohinhalt im Gespräch anzeigen oder anzeigen lassen.
+- **Über 150 Personen bereits auf der Warteliste für den App-Store-Release** (Stand 27.07.2026) — echter Nutzerdruck hinter der Deadline, nicht nur Simons persönliches Ziel.
+
+---
+
+## Letzte Session (26.–27.07.2026) — Track A: Nativer iOS-Wrapper gebaut + große Strategie-Diskussion
+
+**Ausgangspunkt:** Track B war laut Handoff der Vorsession fertig. Simon fragte, was für Track A nötig ist und bat darum, zuerst zu erklären was er selbst tun muss, dann direkt zu bauen. Plan (Explore + Plan-Mode, dann von Simon freigegeben) liegt unter `/Users/macbookpro14/.claude/plans/read-claude-md-track-b-valiant-petal.md`. Wichtige Vorab-Klärung: **Simon entschied sich explizit für den Capacitor-Wrapper-Ansatz (`server.url` zeigt auf die Live-Produktion) statt einer separaten Kopie** — genau die Architektur, die schon am 13.07.2026 in Claudes Memory (`project-app-store-launch-plan`) festgelegt worden war.
+
+### Gebaut (Phasen 1–3, 5–6 aus dem Plan):
+- **Phase 1 — Icons/Splash:** `scripts/generate-app-icons.mjs` (Sharp-basiert, generiert `assets/icon.png`/`assets/splash.png` sowie die vorher fehlenden `public/icon-192.png`/`icon-512.png`/`apple-touch-icon.png` aus `public/icon.svg`). Platzhalter, von Simon jederzeit vor der echten Einreichung austauschbar.
+- **Phase 2 — Capacitor-Core:** `ios/` Projekt via `cap add ios` (nutzt Swift Package Manager, kein CocoaPods nötig — neuer als erwartet). `capacitor.config.ts`: `appId: com.dailystudent.app`, `server.url` auf Produktion, `SplashScreen.launchAutoHide: false` + expliziter `SplashScreen.hide()`-Call in `main.tsx` nach React-Mount (vermeidet weißen Flash beim Laden der Remote-URL). `Info.plist`: Kamera/Fotos-Permission-Strings + `CFBundleURLTypes` für das `dailystudent://`-Custom-Scheme. npm-Scripts: `cap:sync`, `cap:open`, `cap:dev` (Live-Reload gegen lokalen Vite-Server, NIE `capacitor.config.ts` für lokales Testen anfassen).
+- **Phase 3 — OAuth/PKCE-Rework:** `src/lib/supabase.ts` von `flowType: 'implicit'` auf `'pkce'`, `detectSessionInUrl: !isNative`, neuer `src/lib/capacitorStorage.ts` (Preferences-basierter Storage-Adapter nur nativ). Neuer `src/hooks/useDeepLinkAuth.ts` — fängt `appUrlOpen` ab, tauscht den `code`-Query-Param via `exchangeCodeForSession()` gegen eine Session, schließt den Browser. `AuthScreen.tsx`: `handleGoogle`/`handleApple` bekamen einen nativen Zweig (`skipBrowserRedirect` + `Browser.open()` von `@capacitor/browser`).
+- **Phase 5 — RevenueCat:** Migration `016_revenuecat_subscriptions.sql` (neue Spalten `source`/`rc_app_user_id` + `UNIQUE(user_id)` auf `subscriptions` — Korrektheits-Fix nebenbei: `supabaseSync.ts` liest die Tabelle mit `.maybeSingle()`, das ohne `UNIQUE(user_id)` bei Duplikaten crashen würde). Neue Edge Function `supabase/functions/revenuecat-webhook/index.ts` (spiegelt `stripe-webhook`s Muster). Neuer `src/lib/revenuecat.ts` (`initRevenueCat`, `purchasePlan`, `logOutRevenueCat`, plus ein lokaler `nativeEntitlementActive`-State in `UserContext.tsx` für sofortiges UI-Feedback nach einem nativen Kauf, unabhängig vom Webhook-Rückweg — bewusst NICHT über `setIsPro()` gelöst, das würde fälschlich `profile.isDevMode = true` setzen). `ProModal.tsx` hat jetzt einen nativen Kauf-Zweig.
+- **Phase 6 — Abo-Verwaltung:** Neue Edge Function `create-portal-session` (Stripe Billing Portal), neue „Abo verwalten"-Zeile in `ProfilAccountScreen.tsx` — verzweigt auf `subscriptions.source` (Apple → Deep-Link zu `itms-apps://apps.apple.com/account/subscriptions`, sonst → Stripe-Portal).
+- Alles mit `tsc`/lint/Build verifiziert, committed in zwei Commits: `62144e2` (Haupt-Bau) und `f15963d` (Domain-Fix + Debug-Logs, siehe unten).
+
+### Simons parallele manuelle Schritte (weitgehend erledigt):
+Apple-Developer-Programm-Enrollment ✅, Xcode 26.6 installiert ✅, App-Store-Connect-Banking/Tax „glaube ich durch" (nicht 100% verifiziert), App ID `com.dailystudent.app` + Services ID + Sign-in-with-Apple-Key erstellt, App-Store-Connect-API-Key ("Subscription Key", **wichtig: eigener Key-Typ, nicht derselbe wie der allgemeine "App Store Connect API"-Key** — RevenueCat brauchte spezifisch einen `SubscriptionKey_*.p8` aus dem separaten „In-App Purchase"-Tab) an RevenueCat angebunden, RevenueCat-App + Public-API-Key (`appl_...`) erstellt und in `.env` eingetragen (**Vercel-Env-Var noch nicht bestätigt gesetzt, siehe To-Do**).
+
+**Supabase-Apple-Provider-Detail, falls das nochmal auftaucht:** Supabases "Secret Key"-Feld für den Apple-Provider will keinen rohen `.p8`-Inhalt, sondern einen daraus signierten JWT (`ES256`, `iss`=Team-ID, `sub`=Services-ID, `kid`=Key-ID, `aud`=`https://appleid.apple.com`). Claude hat diesen JWT lokal per kleinem Node-Skript generiert (nur der `.p8`-Dateipfad wurde genannt, nie der Rohinhalt im Chat) — läuft am **2027-01-22 ab** (Apples Maximum von 6 Monaten), siehe Claude-Memory `apple-signin-jwt-expiry` zur Regenerierung.
+
+### Debugging-Saga (wichtig für zukünftiges Verständnis der Architektur):
+1. Erster Xcode-Build zeigte einen Provisioning-Fehler ("no devices") — **Fehlalarm**, betraf nur Device-Builds, nicht Simulator-Builds, löste sich durch Wechsel des Build-Ziels auf Simulator.
+2. App blieb nach dem Start dauerhaft auf dem großen Icon (Splash) hängen. **Root Cause, wichtige Architektur-Erkenntnis:** Da `server.url` auf die Live-Produktion zeigt, läuft der native Wrapper IMMER den zuletzt deployten Code — und zu diesem Zeitpunkt war noch NICHTS von Track A committed/gepusht/deployed. Der Splash-Hide-Call existierte nur lokal, nicht auf Vercel. Gelöst durch `git commit` + `push` (Commit `62144e2`) — **jede zukünftige Session muss verstehen: native Feature-Tests sind erst nach einem echten Deploy aussagekräftig, nicht direkt nach lokalen Code-Änderungen.**
+3. Nach dem Deploy: natives Google-Login öffnete zwar den In-App-Browser, landete danach aber auf der normalen Website statt zurück in die App, und die App selbst blieb weiterhin auf dem Icon hängen. Direkte Verifikation per `curl` bestätigte: neuer Code war live (bestätigt `dailystudent://auth/callback`-String im ausgelieferten JS-Bundle), Supabases Redirect-URL-Allowlist hatte den Custom-Scheme-Eintrag bereits korrekt (Screenshot von Simon bestätigt). **Tatsächliche Ursache:** `curl -sIL https://dailystudent.de/` zeigte einen 308-Redirect auf `https://www.dailystudent.de/` — `capacitor.config.ts`s `server.url` zeigte auf die Apex-Domain ohne `www`. Gefixt: `server.url` direkt auf `https://www.dailystudent.de` gesetzt (Commit `f15963d`, gleichzeitig temporäre `console.log`-Diagnose-Zeilen in `AuthScreen.tsx`/`useDeepLinkAuth.ts` ergänzt, **noch nicht wieder entfernt, siehe To-Do**). Nach diesem Fix von Simon als „denke gefixt" bestätigt.
+
+### Große Strategie-Diskussion (27.07.2026) — Wrapper vs. natives Rewrite:
+Simon stellte zwei Dinge in Frage: (1) ob `DemoScreen.tsx`s „Eigene Notiz erstellen"-Button vor dem Login echte KI aufruft (**Klärung: nein** — reiner Template-Fallback, `buildFallback()`, kein Netzwerk-Call, siehe Code-Kommentar in `DemoScreen.tsx:203-205` aus einer Vorsession; Simon entschied sich trotzdem den Button zu entfernen, **noch nicht umgesetzt**); (2) grundsätzlicher, ob ein gewrappter Web-App überhaupt für den App Store taugt, angesichts eines beobachteten Missverständnisses ("die App ist doch nur meine Website mit Icon, das braucht doch eh ein 'zum Homescreen hinzufügen', das kennt keiner").
+
+**Wichtige Korrektur, die geklärt wurde:** Der Capacitor-Wrapper ist KEIN PWA-„Zum-Homescreen-hinzufügen"-Bookmark — es ist ein echtes, über Xcode/App-Store-Connect eingereichtes App-Bundle, landet nach Installation aus dem App Store wie jede andere App auf dem Homescreen, kein Tutorial nötig. Das kurze Aufblitzen eines System-Browsers beim Login ist normal und bei JEDER App (auch komplett nativen) so, da Apple aus Sicherheitsgründen einen echten System-Browser-Kontext für OAuth verlangt — ein nativer Rewrite würde diesen Moment NICHT eliminieren.
+
+Zu Guideline 4.2 (Minimum Functionality, der eigentliche App-Store-Ablehnungsgrund für "nur eine Website"): wird durch fehlende native Funktionalität ausgelöst, nicht durch die Verwendung eines WebViews an sich (Capacitor ist Ionics offiziell App-Store-sanktioniertes Framework). DailyStudent nutzt bereits echte native Fähigkeiten (Kamera, natives Sign-In, native IAP, native Preferences/IndexedDB-Storage) — das mindert das Risiko, garantiert aber nichts.
+
+Simon schlug vor, stattdessen (notfalls über Nacht) alles komplett nativ in SwiftUI neu zu bauen, mit der Begründung Supabase könne das Backend ja unverändert bedienen und die bestehende App sei bereits die volle Spezifikation. **Ehrliche Einschätzung dazu (siehe volle Details in der neuen Sektion „Zukunftsvision" weiter unten):** Supabase-Wiederverwendbarkeit stimmt (offizielles `supabase-swift`-SDK), die bestehende App als Spezifikation ist ein echter Vorteil — aber ein vollständiger Rewrite auf denselben Funktionsumfang ist realistisch Wochen bis Monate Arbeit, nicht ein Grind-Wochenende, unabhängig von Xcode-Tooling-Zugriff. Ergebnis: **Simon entschied sich, den aktuellen Wrapper für die 02.08.-Deadline einzureichen; ein echter nativer Rewrite wird ein separates Projekt OHNE Deadline für danach.**
 
 ---
 
