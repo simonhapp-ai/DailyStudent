@@ -13,12 +13,16 @@ export function useDeepLinkAuth() {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return
 
+    console.log('[OAuth] deep link listener registered')
     const listener = App.addListener('appUrlOpen', async ({ url }) => {
+      console.log('[OAuth] appUrlOpen fired:', url)
       if (!url.startsWith('dailystudent://auth/callback')) return
 
       const code = new URL(url).searchParams.get('code')
+      console.log('[OAuth] extracted code:', code ? 'present' : 'MISSING')
       if (code) {
-        await supabase.auth.exchangeCodeForSession(code)
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+        console.log('[OAuth] exchangeCodeForSession error:', error?.message ?? 'none')
       }
       await Browser.close()
     })

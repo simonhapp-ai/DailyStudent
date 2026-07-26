@@ -8,7 +8,9 @@ const config: CapacitorConfig = {
   appName: 'DailyStudent',
   webDir: 'dist',
   server: {
-    url: 'https://dailystudent.de',
+    // Apex dailystudent.de 308-redirects here — pointing directly at the
+    // canonical host avoids an extra network hop on every app launch.
+    url: 'https://www.dailystudent.de',
     cleartext: false,
   },
   ios: {
