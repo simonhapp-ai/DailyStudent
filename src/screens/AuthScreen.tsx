@@ -65,7 +65,6 @@ export function AuthScreen() {
   const handleGoogle = async () => {
     setGoogleLoading(true)
     setError(null)
-    console.log('[OAuth] isNative:', isNative)
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -74,7 +73,6 @@ export function AuthScreen() {
         queryParams: { prompt: 'select_account' },
       },
     })
-    console.log('[OAuth] data.url:', data?.url, 'error:', error?.message)
     if (error) {
       setError(translateError(error.message))
       setGoogleLoading(false)

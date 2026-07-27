@@ -99,13 +99,6 @@ export function DemoScreen() {
   const [stage, setStage] = useState<Stage>(0)
   const [colorMode, setColorMode] = useState<'purple' | 'mint'>('purple')
 
-  // Stage 0 — input
-  const [customOpen, setCustomOpen] = useState(false)
-  const [customTags, setCustomTags] = useState<string[]>([])
-  const [customInput, setCustomInput] = useState('')
-  const customInputRef = useRef<HTMLInputElement>(null)
-  const SUGGESTIONS = ['Photosynthese', 'Demokratie', 'Pythagoras']
-
   // Stage 1 — loading
   const [loadingLabelIdx, setLoadingLabelIdx] = useState(0)
   const [activeTerms, setActiveTerms] = useState<string[]>([])
@@ -219,14 +212,6 @@ export function DemoScreen() {
     )
   }
 
-  function handleCustomTagAdd(e?: React.KeyboardEvent) {
-    if (e && e.key !== 'Enter' && e.key !== ',') return
-    const val = customInput.trim().replace(/,$/, '')
-    if (!val || customTags.includes(val)) { setCustomInput(''); return }
-    setCustomTags((p) => [...p, val])
-    setCustomInput('')
-  }
-
   const mint = '#34D399'
   const purple = '#7C3AED'
 
@@ -313,127 +298,6 @@ export function DemoScreen() {
                 ))}
               </div>
 
-              {/* Custom input button / expanded */}
-              <AnimatePresence mode="wait">
-                {!customOpen ? (
-                  <motion.button
-                    key="custom-collapsed"
-                    className="w-full rounded-2xl py-4 text-[14px] font-semibold flex items-center justify-center gap-2"
-                    style={{
-                      background: 'rgba(124,58,237,0.12)',
-                      border: `1.5px dashed rgba(124,58,237,0.4)`,
-                      color: 'rgba(167,139,250,0.9)',
-                    }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.25 }}
-                    onClick={() => {
-                      setCustomOpen(true)
-                      setTimeout(() => customInputRef.current?.focus(), 100)
-                    }}
-                  >
-                    <span className="text-[16px]">✏️</span>
-                    Eigene Notiz erstellen
-                  </motion.button>
-                ) : (
-                  <motion.div
-                    key="custom-expanded"
-                    className="w-full rounded-2xl p-4"
-                    style={{ background: 'rgba(124,58,237,0.1)', border: `1.5px solid rgba(124,58,237,0.35)` }}
-                    initial={{ opacity: 0, scale: 0.95, y: 8 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3, ease: E }}
-                  >
-                    <p className="text-[11px] font-semibold mb-2.5" style={{ color: 'rgba(167,139,250,0.8)' }}>
-                      DEINE BEGRIFFE
-                    </p>
-
-                    {/* Selected tags */}
-                    <div className="flex flex-wrap gap-2 mb-2 min-h-[28px]">
-                      <AnimatePresence mode="popLayout">
-                        {customTags.map((t) => (
-                          <motion.span
-                            key={t}
-                            layout
-                            initial={{ opacity: 0, scale: 0.7 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.6 }}
-                            transition={{ duration: 0.22, ease: E }}
-                            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[12px] font-medium"
-                            style={{ background: 'rgba(124,58,237,0.3)', color: '#C4B5FD', border: '1px solid rgba(124,58,237,0.4)' }}
-                          >
-                            {t}
-                            <button
-                              onClick={() => setCustomTags((p) => p.filter((x) => x !== t))}
-                              className="opacity-60 hover:opacity-100 transition-opacity leading-none"
-                            >
-                              ×
-                            </button>
-                          </motion.span>
-                        ))}
-                      </AnimatePresence>
-                      <input
-                        ref={customInputRef}
-                        value={customInput}
-                        onChange={(e) => setCustomInput(e.target.value)}
-                        onKeyDown={handleCustomTagAdd}
-                        onBlur={() => { if (customInput.trim()) handleCustomTagAdd() }}
-                        placeholder={customTags.length === 0 ? 'Begriff eingeben + Enter …' : 'Weiterer Begriff …'}
-                        className="bg-transparent text-[12px] text-white placeholder-white/30 outline-none min-w-[130px] flex-1 py-1"
-                      />
-                    </div>
-
-                    {/* Suggestion chips */}
-                    <div className="flex flex-wrap gap-1.5 mb-3">
-                      <span className="text-[10px] self-center" style={{ color: 'rgba(255,255,255,0.25)' }}>Ideen:</span>
-                      <AnimatePresence mode="popLayout">
-                        {SUGGESTIONS.filter((s) => !customTags.includes(s)).map((s) => (
-                          <motion.button
-                            key={s}
-                            layout
-                            initial={{ opacity: 0, scale: 0.7 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.5 }}
-                            transition={{ duration: 0.2, ease: E }}
-                            className="px-2 py-0.5 rounded-full text-[11px]"
-                            style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.45)', border: '1px solid rgba(255,255,255,0.12)' }}
-                            whileHover={{ scale: 1.06, background: 'rgba(124,58,237,0.2)', color: '#C4B5FD' }}
-                            whileTap={{ scale: 0.92 }}
-                            onClick={() => setCustomTags((p) => [...p, s])}
-                          >
-                            + {s}
-                          </motion.button>
-                        ))}
-                      </AnimatePresence>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px]" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                        {customTags.length >= 3
-                          ? `${customTags.length} Begriffe — bereit!`
-                          : `${customTags.length}/3 Begriffe mindestens`}
-                      </span>
-                      <motion.button
-                        className="px-4 py-2 rounded-xl text-[13px] font-semibold"
-                        style={{
-                          background: customTags.length >= 3 ? purple : 'rgba(255,255,255,0.08)',
-                          color: customTags.length >= 3 ? '#fff' : 'rgba(255,255,255,0.3)',
-                          transition: 'background 0.3s',
-                        }}
-                        disabled={customTags.length < 3}
-                        whileHover={customTags.length >= 3 ? { scale: 1.04 } : {}}
-                        whileTap={customTags.length >= 3 ? { scale: 0.96 } : {}}
-                        onClick={() => handleAnalyze(customTags, 'custom')}
-                      >
-                        Analysieren →
-                      </motion.button>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </motion.div>
           )}
 
