@@ -24,6 +24,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>DailyStudent benötigt Zugriff auf die Kamera, um Fotos von Unterrichtsmaterial und dem Stundenplan aufzunehmen.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

@@ -2,7 +2,9 @@ import { useUser } from '../context/UserContext'
 import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Capacitor } from '@capacitor/core'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
+import { purchasePlan } from '../lib/revenuecat'
 import { getActiveStreak } from '../lib/streak'
 
 const AVATAR_BG_OPTIONS = [
@@ -86,6 +88,19 @@ export function ProfilScreen() {
   }, [])
 
   const handleUpgrade = async (plan: 'monthly' | 'yearly') => {
+    if (Capacitor.isNativePlatform()) {
+      setCheckoutLoading(plan)
+      const result = await purchasePlan(plan)
+      setCheckoutLoading(null)
+      if (result.success) {
+        setPaymentToast('success')
+        setTimeout(() => setPaymentToast(null), 6000)
+      } else if (!result.cancelled) {
+        setPaymentToast('error')
+        setTimeout(() => setPaymentToast(null), 4000)
+      }
+      return
+    }
     try {
       setCheckoutLoading(plan)
       const url = await createCheckoutSession(plan)

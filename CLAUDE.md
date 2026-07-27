@@ -236,6 +236,11 @@ Simon steigt mit einem neuen Chat wieder ein. Kompakter Übergabe-Stand — **zu
 
 **Track B ist weiterhin komplett fertig** (Stand 25.07.2026, siehe unten) — kein offener Punkt dort.
 
+#### Zusätzlich notiert während TestFlight-Testing auf echtem Gerät (27.07.2026) — nicht blockierend für die Einreichung, aber bald angehen:
+
+1. **iOS-Overscroll/Rubber-Band-Bounce zeigt harte schwarze Fläche statt Farbverlauf** — wenn man auf dem Handy weit über den Seitenanfang/-rand hinaus swipet (native Rubber-Band-Bounce-Geste, per Screen auch sonst erreichbar), zeigt der native WebView-Hintergrund aktuell eine unbearbeitete schwarze Fläche statt eines bewussten Übergangs — wirkt wie ein Bug oder unbeabsichtigt sichtbarer Bereich ("wie beobachtet"), nicht wie gestaltete UI. Ziel: etwas Spacing/Abstand einbauen und die Fläche mit einem sauberen Farb-Fade statt Flach-Schwarz gestalten, damit der Bounce-Bereich absichtlich wirkt.
+2. **Landing Page als nativer App-Startbildschirm fühlt sich nicht wie Teil der App an** — beim ersten Öffnen der nativen App landen unauthenticated User auf `/landing` (bestehendes, bewusstes Verhalten, siehe Architektur-Entscheidungen oben) — das ist grundsätzlich okay, aber da die Landing Page 1:1 die normale Website ist, wirkt der erste Eindruck eher wie „im Browser" statt wie eine native App. Simon: fühlt sich nicht nach „Teil der App UND Teil der Website" an, sondern nur nach Website. Nebenpunkt (nicht der Hauptstörpunkt laut Simon, aber unpassend für einen App-Ersteindruck): Cookie-Consent-Banner erscheint sofort beim Öffnen. Konkrete erste Maßnahme, sobald das angegangen wird: Early-Access-Button aus der Top-Nav der Landing Page entfernen und durch den „Jetzt starten"-Button ersetzen — Ziel-Endzustand der Top-Nav: nur noch 2 Optionen, „Wie es funktioniert" und „Kostenlos starten".
+
 #### Danach:
 3. **Coins Shop Redesign — konkretes Feedback von Simon einholen** bevor weiter iteriert wird (siehe Known Issues).
 4. **Onboarding Soft-Start** — Nutzer bekommt sofort App-Zugang (kein Gate), sieht aber auf jedem Screen eine Bubble/Banner: "Personalisierung in 1 Min abschließen → bessere KI-Ergebnisse".
