@@ -218,14 +218,19 @@ Smart Notes
 Simon steigt mit einem neuen Chat wieder ein. Kompakter Übergabe-Stand — **zuerst „Letzte Session (26.–27.07.2026)" weiter unten vollständig lesen**, dort steht der volle technische Kontext dieser Liste:
 
 **Track A — konkret noch offen, in ungefährer Reihenfolge:**
+
+✅ ~~Temporäre Debug-`console.log`-Zeilen entfernen~~ FERTIG 27.07.2026 (Commit `89edf1f`) — aus `AuthScreen.tsx` (`handleGoogle`) und `useDeepLinkAuth.ts` entfernt, committed + gepusht.
+
+✅ ~~`DemoScreen.tsx`: „Eigene Notiz erstellen"-Button entfernen~~ FERTIG 27.07.2026 (Commit `89edf1f`) — Button + `handleCustomTagAdd` + zugehöriger State (`customOpen`/`customTags`/`customInput`/`customInputRef`/`SUGGESTIONS`) entfernt, `tsc`+Build verifiziert.
+
+✅ ~~Migration `016_revenuecat_subscriptions.sql` bestätigen~~ BESTÄTIGT 27.07.2026 — Simon hat sie im Supabase SQL Editor ausgeführt. `subscriptions` hat jetzt `source`/`rc_app_user_id`/`UNIQUE(user_id)`.
+
 1. **Natives Apple-Login end-to-end testen** — Google-Login wurde 27.07.2026 erfolgreich verifiziert (nach dem Domain-Redirect-Fix), Apple-Login (gleicher Code-Pfad, sollte funktionieren) wurde aber noch nie tatsächlich durchgeklickt.
-2. **Temporäre Debug-`console.log`-Zeilen entfernen** aus `src/screens/AuthScreen.tsx` (`handleGoogle`) und `src/hooks/useDeepLinkAuth.ts` — dienten der OAuth-Fehlersuche in dieser Session, Cleanup aussteht, dann committen+pushen.
-3. **`DemoScreen.tsx`: „Eigene Notiz erstellen"-Button entfernen** (Button + `handleCustomTagAdd` + zugehöriger State `customOpen`/`customTags`/`customInput`) — Simon hat sich 27.07.2026 explizit dafür entschieden, obwohl geklärt wurde dass der Button keinen echten KI-Call macht (rein templated, siehe `buildFallback()`). **Noch NICHT umgesetzt.**
-4. **Migration `016_revenuecat_subscriptions.sql`** — unklar ob Simon sie bereits im Supabase SQL Editor ausgeführt hat, unbedingt nachfragen/bestätigen lassen bevor RevenueCat-Testkäufe gemacht werden (fügt `source`/`rc_app_user_id` + `UNIQUE(user_id)` zu `subscriptions` hinzu).
-5. **`VITE_REVENUECAT_API_KEY_IOS` in Vercel Environment Variables setzen** — aktuell nur in der lokalen `.env`, die Produktions-Site (die der native Wrapper lädt) hat den Key noch nicht, braucht zusätzlich einen Redeploy.
-6. **RevenueCat Offerings/Packages/Products anlegen** — abhängig von IAP-Produkten in App Store Connect (monatlich/jährlich, €7,99/€59,99), die wiederum Banking/Tax-Freigabe brauchten (Simon sagt Stand 27.07. „ist glaube ich durch", nicht 100% verifiziert — nachfragen).
-7. **Xcode-Signing für TestFlight finalisieren**, TestFlight-Build hochladen, Sandbox-Testkauf durchführen (braucht Sandbox-Apple-ID aus App Store Connect).
-8. **Finaler QA-Pass** auf dem echten TestFlight-Build vor Einreichung.
+2. **IAP-Produkte in App Store Connect anlegen** — Banking/Tax ist laut Simon (27.07.2026) fertig, die beiden Produkte (monatlich €7,99 / jährlich €59,99) existieren aber noch nicht. Voraussetzung für Schritt 3.
+3. **`VITE_REVENUECAT_API_KEY_IOS` in Vercel Environment Variables setzen** — aktuell nur in der lokalen `.env`, die Produktions-Site (die der native Wrapper lädt) hat den Key noch nicht, braucht zusätzlich einen Redeploy.
+4. **RevenueCat Offerings/Packages/Products anlegen** — verknüpft die App-Store-Connect-Produkte aus Schritt 2 mit RevenueCat.
+5. **Xcode-Signing für TestFlight finalisieren**, TestFlight-Build hochladen, Sandbox-Testkauf durchführen (braucht Sandbox-Apple-ID aus App Store Connect).
+6. **Finaler QA-Pass** auf dem echten TestFlight-Build vor Einreichung.
 
 **Wichtig, nicht mit Track A verwechseln:** Simon hat 27.07.2026 außerdem eine grundsätzliche Zukunftsfrage aufgeworfen (natives SwiftUI-Rewrite statt Wrapper) — Ergebnis: aktueller Wrapper bleibt für die 02.08.-Deadline, ein echter Rewrite ist ein separates Projekt OHNE Datum für danach. Siehe neue Sektion „Zukunftsvision — Natives SwiftUI-Rewrite" weiter unten, bevor in einer zukünftigen Session natives UI-Arbeit begonnen wird — erst mit Simon klären ob das jetzt ansteht.
 
@@ -363,7 +368,7 @@ Umgesetzt wie unten gespeckt, siehe Phase-3-Liste oben. Einziger offener Punkt: 
 
 **RLS:** Jede Tabelle hat RLS — User kann nur eigene Rows lesen/schreiben (`auth.uid() = user_id`). `ai_usage`/`ai_rate_limit_strikes` haben RLS aktiviert aber keine Policies — nur über die `SECURITY DEFINER`-RPC `check_ai_rate_limit()` erreichbar, kein direkter Client-Zugriff vorgesehen.
 
-**Migrationen 001–015 angewendet**, **016 Status UNBESTÄTIGT — bei Simon nachfragen** (siehe Handoff-To-Do oben), alle in `supabase/migrations/`:
+**Migrationen 001–016 angewendet** (016 von Simon am 27.07.2026 bestätigt), alle in `supabase/migrations/`:
 001 initial schema · 002 grade_data · 003 custom_faecher · 004 coins_system · 005 atomic_coins (RPC) · 006 harden_coin_rpcs · 007 note_attachments_storage · 008 early_access · 009 referral_system · 010 personal_entries_extra_fields · 011 coins_discount_redeem (RPC) · 012 ai_rate_limits (RPC) · 013 lernzettel_modus_images · 014 abi_pruefungen · 015 lernzettel_highlighted · **016 revenuecat_subscriptions (neu 26.–27.07.2026, `source`/`rc_app_user_id`/`UNIQUE(user_id)` auf `subscriptions`, siehe Track-A-Session oben)**
 
 ---
@@ -547,7 +552,7 @@ public/
 ├── kc/                            # KC-JSONs: 16 Bundesländer × ~12 Fächer = ~196 Dateien
 └── lernzettel-previews/           # 4 Original-Lernzettel-HTMLs für Pro Preview Karussell
 supabase/
-├── migrations/                    # 001–016, siehe DB-Schema-Sektion oben für Details (016 Status unbestätigt)
+├── migrations/                    # 001–016, alle angewendet, siehe DB-Schema-Sektion oben für Details
 └── functions/
     ├── groq-proxy/                # (vermutlich toter Code — src/ ruft stattdessen /api/groq auf, prüfen ob löschbar)
     ├── gemini-proxy/              # (vermutlich toter Code — src/ ruft stattdessen /api/gemini auf, prüfen ob löschbar)
@@ -716,7 +721,7 @@ Apple-Developer-Programm-Enrollment ✅, Xcode 26.6 installiert ✅, App-Store-C
 3. Nach dem Deploy: natives Google-Login öffnete zwar den In-App-Browser, landete danach aber auf der normalen Website statt zurück in die App, und die App selbst blieb weiterhin auf dem Icon hängen. Direkte Verifikation per `curl` bestätigte: neuer Code war live (bestätigt `dailystudent://auth/callback`-String im ausgelieferten JS-Bundle), Supabases Redirect-URL-Allowlist hatte den Custom-Scheme-Eintrag bereits korrekt (Screenshot von Simon bestätigt). **Tatsächliche Ursache:** `curl -sIL https://dailystudent.de/` zeigte einen 308-Redirect auf `https://www.dailystudent.de/` — `capacitor.config.ts`s `server.url` zeigte auf die Apex-Domain ohne `www`. Gefixt: `server.url` direkt auf `https://www.dailystudent.de` gesetzt (Commit `f15963d`, gleichzeitig temporäre `console.log`-Diagnose-Zeilen in `AuthScreen.tsx`/`useDeepLinkAuth.ts` ergänzt, **noch nicht wieder entfernt, siehe To-Do**). Nach diesem Fix von Simon als „denke gefixt" bestätigt.
 
 ### Große Strategie-Diskussion (27.07.2026) — Wrapper vs. natives Rewrite:
-Simon stellte zwei Dinge in Frage: (1) ob `DemoScreen.tsx`s „Eigene Notiz erstellen"-Button vor dem Login echte KI aufruft (**Klärung: nein** — reiner Template-Fallback, `buildFallback()`, kein Netzwerk-Call, siehe Code-Kommentar in `DemoScreen.tsx:203-205` aus einer Vorsession; Simon entschied sich trotzdem den Button zu entfernen, **noch nicht umgesetzt**); (2) grundsätzlicher, ob ein gewrappter Web-App überhaupt für den App Store taugt, angesichts eines beobachteten Missverständnisses ("die App ist doch nur meine Website mit Icon, das braucht doch eh ein 'zum Homescreen hinzufügen', das kennt keiner").
+Simon stellte zwei Dinge in Frage: (1) ob `DemoScreen.tsx`s „Eigene Notiz erstellen"-Button vor dem Login echte KI aufruft (**Klärung: nein** — reiner Template-Fallback, `buildFallback()`, kein Netzwerk-Call, siehe Code-Kommentar in `DemoScreen.tsx:203-205` aus einer Vorsession; Simon entschied sich trotzdem den Button zu entfernen, ✅ umgesetzt 27.07.2026 in einer Folgesession); (2) grundsätzlicher, ob ein gewrappter Web-App überhaupt für den App Store taugt, angesichts eines beobachteten Missverständnisses ("die App ist doch nur meine Website mit Icon, das braucht doch eh ein 'zum Homescreen hinzufügen', das kennt keiner").
 
 **Wichtige Korrektur, die geklärt wurde:** Der Capacitor-Wrapper ist KEIN PWA-„Zum-Homescreen-hinzufügen"-Bookmark — es ist ein echtes, über Xcode/App-Store-Connect eingereichtes App-Bundle, landet nach Installation aus dem App Store wie jede andere App auf dem Homescreen, kein Tutorial nötig. Das kurze Aufblitzen eines System-Browsers beim Login ist normal und bei JEDER App (auch komplett nativen) so, da Apple aus Sicherheitsgründen einen echten System-Browser-Kontext für OAuth verlangt — ein nativer Rewrite würde diesen Moment NICHT eliminieren.
 
