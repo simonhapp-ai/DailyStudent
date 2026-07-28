@@ -340,7 +340,7 @@ function FlashcardMockup() {
 
 // ── Navbar ──────────────────────────────────────────────────────────────────
 
-function Navbar({ onCta, onEarlyAccess, ctaLabel = 'App öffnen' }: { onCta: () => void; onEarlyAccess: () => void; ctaLabel?: string }) {
+function Navbar({ onCta, ctaLabel = 'Kostenlos starten' }: { onCta: () => void; ctaLabel?: string }) {
   return (
     <div className="fixed top-4 sm:top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
       <motion.div
@@ -364,33 +364,18 @@ function Navbar({ onCta, onEarlyAccess, ctaLabel = 'App öffnen' }: { onCta: () 
           <span className="font-bold text-[15px] text-[#160E28] tracking-tight">DailyStudent</span>
         </div>
         <div className="hidden md:flex items-center gap-6">
-          {[['#system', 'Das System'], ['#features', 'Features'], ['#preise', 'Preise']].map(([href, label]) => (
-            <a key={href} href={href} className="text-[13px] font-medium text-[#483C5F] hover:text-[#160E28] transition-colors duration-150">{label}</a>
-          ))}
+          <a href="#system" className="text-[13px] font-medium text-[#483C5F] hover:text-[#160E28] transition-colors duration-150">Wie es funktioniert</a>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onEarlyAccess}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0 relative overflow-hidden"
-            style={{ background: 'linear-gradient(135deg, #34D399, #059669)', animation: 'ea-glow 2.4s ease-in-out infinite' }}
-          >
-            <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.28) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
-            <span className="relative flex items-center gap-1.5">
-              <span className="hidden sm:inline">Early Access</span>
-              <span className="sm:hidden">Early Access</span>
-            </span>
-          </button>
-          <button
-            onClick={onCta}
-            className="hidden md:flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}
-          >
-            {ctaLabel}
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
+        <button
+          onClick={onCta}
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[12px] font-semibold text-white press-sm shrink-0"
+          style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}
+        >
+          {ctaLabel}
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </button>
       </motion.div>
     </div>
   )
@@ -1172,7 +1157,7 @@ export function LandingScreen() {
 
   return (
     <div className="min-h-dvh" style={{ background: '#FAFAFD', fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif' }}>
-      <Navbar onCta={goToApp} onEarlyAccess={goToEarlyAccess} ctaLabel={authUser ? 'App öffnen' : 'Demo starten'} />
+      <Navbar onCta={goToApp} ctaLabel={authUser ? 'App öffnen' : 'Kostenlos starten'} />
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="relative min-h-dvh flex items-center overflow-hidden pt-24">
