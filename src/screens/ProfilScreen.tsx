@@ -480,6 +480,11 @@ export function ProfilScreen() {
           </div>
         )}
 
+        {/* ── Footer — quiet beta marker, not a badge/callout ─────── */}
+        <p className="text-center text-[11px] text-text-muted/50 tracking-wide pt-1">
+          DailyStudent <span className="text-text-muted/30">·</span> Beta
+        </p>
+
       </div>
 
       {/* Toast */}
