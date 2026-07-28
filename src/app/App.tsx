@@ -1,4 +1,4 @@
-import { Component, useEffect, useState } from 'react'
+import { Component, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
@@ -197,6 +197,7 @@ function AppRoutes() {
 function Layout() {
   const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
+  const desktopMainRef = useRef<HTMLElement>(null)
 
   // Capture ?ref= before redirect strips the query param (e.g. /?ref=CODE → /landing)
   useEffect(() => {
@@ -204,6 +205,14 @@ function Layout() {
     if (ref) localStorage.setItem('referral_code', ref)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Every route change starts scrolled to the top — otherwise a screen you
+  // scrolled down on before navigating away reopens still scrolled down,
+  // which reads as a website reloading state rather than a real app screen.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+    desktopMainRef.current?.scrollTo(0, 0)
+  }, [location.pathname])
   const [betaUnlocked, setBetaUnlocked] = useState(() => localStorage.getItem(BETA_KEY) === '1')
   // True if localStorage has a previous session — lets us skip the spinner for returning users
   const [hasLocalSession] = useState(() => {
@@ -299,7 +308,7 @@ function Layout() {
       <div className="flex h-screen bg-background overflow-hidden">
         <DesktopSidebar />
         <DesktopSidebarWide />
-        <main className="flex-1 overflow-y-auto relative">
+        <main ref={desktopMainRef} className="flex-1 overflow-y-auto relative">
           <AppRoutes />
           <SyncErrorBanner />
         </main>

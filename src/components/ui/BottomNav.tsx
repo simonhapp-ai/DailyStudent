@@ -86,7 +86,16 @@ export function BottomNav() {
           return (
             <button
               key={item.path}
-              onClick={() => navigate(item.path)}
+              onClick={() => {
+                if (active) {
+                  // Same tab tapped again — route won't change, so the
+                  // app-wide route-change scroll reset never fires. Recenter
+                  // explicitly, like tapping an already-active iOS tab bar item.
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                } else {
+                  navigate(item.path)
+                }
+              }}
               className="flex-1 relative flex flex-col items-center justify-center gap-[3px] rounded-full py-[9px] px-2"
             >
               {/* Sliding active bubble */}

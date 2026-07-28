@@ -217,12 +217,13 @@ export function BlurtingScreen() {
             else if (phase === 'notepick') setPhase('select')
             else setPhase('select')
           }}
-          className="w-9 h-9 flex items-center justify-center rounded-full bg-surface border border-border press-sm shrink-0"
+          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="text-text-primary">
+            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18l-6-6 6-6" />
           </svg>
+          Zurück
         </button>
         <p className="flex-1 text-center text-[16px] font-bold text-text-primary mx-3 truncate">
           {phase === 'select' ? 'Blurting' : phase === 'notepick' ? (notePickSubject?.name ?? 'Notiz wählen') : (selected?.title ?? 'Blurting')}

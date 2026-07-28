@@ -800,9 +800,10 @@ export function AbiRechnerScreen() {
       >
         <button
           onClick={() => navigate(-1)}
-          className="w-9 h-9 rounded-full bg-surface-hover flex items-center justify-center text-text-muted press-sm shrink-0"
+          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <ChevronLeft />
+          Zurück
         </button>
         <div className="flex-1">
           <h1 className="text-[20px] font-bold text-text-primary">Noten Rechner</h1>

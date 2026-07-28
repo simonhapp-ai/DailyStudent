@@ -1301,9 +1301,10 @@ function StundenplanFullView({
       >
         <button
           onClick={onClose}
-          className="w-9 h-9 rounded-full bg-surface-hover flex items-center justify-center text-text-muted press-sm shrink-0"
+          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <ChevronLeft />
+          Zurück
         </button>
         <h1 className="text-[20px] font-bold text-text-primary flex-1">Stundenplan</h1>
         <button
@@ -1755,8 +1756,8 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
 
           {mode === 'scan' && (
             <div className="p-4 space-y-3">
-              <button onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }} className="flex items-center gap-1.5 text-text-muted text-sm hover:text-text-secondary transition-colors">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>Zurück
+              <button onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
+                <ChevronLeft />Zurück
               </button>
               {scanPhase === 'idle' && (
                 <button onClick={() => fileRef.current?.click()} className="w-full border-2 border-dashed border-border rounded-[16px] p-6 flex flex-col items-center gap-2 hover:border-accent/50 hover:bg-accent/5 transition-all">
@@ -1789,8 +1790,8 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
           {mode === 'manual' && (
             <div className="p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <button onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }} className="flex items-center gap-1.5 text-text-muted text-sm hover:text-text-secondary transition-colors">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" /></svg>Zurück
+                <button onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
+                  <ChevronLeft />Zurück
                 </button>
                 {totalSlots > 0 && !addingSlot && (
                   <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-white text-[12px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 3px 10px rgba(var(--color-accent),0.35)' }}>

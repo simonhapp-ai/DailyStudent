@@ -167,11 +167,12 @@ export function OnboardingScreen() {
       {step > 1 && (
         <button
           onClick={back}
-          className="absolute top-12 left-4 w-9 h-9 flex items-center justify-center rounded-btn text-text-secondary hover:bg-surface-hover transition-colors z-10"
+          className="absolute top-12 left-4 flex items-center gap-1 text-accent text-[14px] font-medium press-sm z-10"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
+          Zurück
         </button>
       )}
 
@@ -1274,10 +1275,10 @@ function StepStundenplan({
         <div className="flex-1">
           <button
             onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
-            className="flex items-center gap-1.5 text-text-muted text-sm mb-6 hover:text-text-secondary transition-colors"
+            className="flex items-center gap-1.5 text-accent text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             Zurück
           </button>
@@ -1418,10 +1419,10 @@ function StepStundenplan({
       <div className="flex-1">
         <button
           onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }}
-          className="flex items-center gap-1.5 text-text-muted text-sm mb-6 hover:text-text-secondary transition-colors"
+          className="flex items-center gap-1.5 text-accent text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Zurück
         </button>

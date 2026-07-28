@@ -573,11 +573,12 @@ export function UnterrichtScreen() {
               <div className="flex items-center gap-3 mb-4">
                 <button
                   onClick={() => setImportPhase('manual-subjects')}
-                  className="w-8 h-8 rounded-btn flex items-center justify-center hover:bg-surface-hover transition-colors shrink-0 press-sm"
+                  className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
+                  Zurück
                 </button>
                 <SubjectIcon subjectId={manualSubject.id} size="sm" />
                 <p className="text-text-primary font-bold text-[16px]">{manualSubject.name}</p>

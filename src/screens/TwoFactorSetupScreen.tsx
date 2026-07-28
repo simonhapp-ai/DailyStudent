@@ -113,11 +113,12 @@ export function TwoFactorSetupScreen() {
       <div className="px-4 flex items-center gap-3" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="w-9 h-9 flex items-center justify-center rounded-full bg-surface border border-border/60 shrink-0 press-sm"
+          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-text-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18l-6-6 6-6" />
           </svg>
+          Zurück
         </button>
         <h1 className="text-[22px] font-bold text-text-primary">Zwei-Faktor-Auth</h1>
       </div>

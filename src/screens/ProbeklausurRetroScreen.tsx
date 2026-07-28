@@ -134,11 +134,12 @@ export function ProbeklausurRetroScreen() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => { setView('library'); setActive(null) }}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-background press-sm"
+              className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                 <path d="M15 18l-6-6 6-6" />
               </svg>
+              Zurück
             </button>
             <div className="flex-1 min-w-0">
               <p className="text-text-primary font-bold text-[17px] truncate">{active.topic}</p>
@@ -243,11 +244,12 @@ export function ProbeklausurRetroScreen() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-background press-sm"
+            className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <path d="M15 18l-6-6 6-6" />
             </svg>
+            Zurück
           </button>
           <div>
             <p className="text-text-primary font-bold text-[17px]">Klausur-Verlauf</p>
