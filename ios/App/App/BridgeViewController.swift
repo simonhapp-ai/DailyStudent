@@ -1,15 +1,33 @@
 import UIKit
 import Capacitor
+import WebKit
 
 /// Makes the native WebView shell feel like a real iOS app instead of a
 /// wrapped website: guarantees the elastic rubber-band bounce (Capacitor's
-/// default didn't reliably show it), and replaces the flat black/white
-/// reveal during that bounce with a themed gradient — brand purple right at
-/// the true screen edge, fading into the background color toward the
-/// content — at both the top and bottom edge.
+/// default didn't reliably show it), replaces the flat black/white reveal
+/// during that bounce with a themed gradient — brand purple right at the
+/// true screen edge, fading into the exact page background color toward
+/// the content — at both the top and bottom edge, and exposes two small
+/// JS-callable bridges (kept separate from Capacitor's own message
+/// handlers) so the web app can push its real state into native code:
+///
+/// - "themeBridge": the web app's OWN light/dark theme (Hell/Dunkel/System
+///   in ProfilErscheinungsbildScreen) is independent of the device's OS-level
+///   appearance setting — a user can pin the app to light mode while their
+///   phone is in system dark mode. Reading UITraitCollection alone would get
+///   this wrong, so the web app posts its actually-resolved `.dark` class
+///   state here instead, and that becomes the source of truth once received.
+/// - "recenterBridge": `window.scrollTo()` only moves the web page's logical
+///   scroll position — it cannot reliably cancel an in-flight native
+///   rubber-band bounce, which is a separate UIScrollView animation. The nav
+///   bar calls this on every tap to force the scroll view back to (0,0),
+///   like pressing a physical "recenter" button.
 class BridgeViewController: CAPBridgeViewController {
 
     private let edgeGradientLayer = CAGradientLayer()
+    // Source of truth once the web app's first themeBridge message arrives;
+    // nil (falls back to the OS trait collection) only until then.
+    private var isDarkOverride: Bool?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +51,14 @@ class BridgeViewController: CAPBridgeViewController {
         edgeGradientLayer.locations = [0, 0.15, 0.85, 1]
         view.layer.insertSublayer(edgeGradientLayer, at: 0)
         updateGradientColors()
+
+        webView?.configuration.userContentController.add(self, name: "themeBridge")
+        webView?.configuration.userContentController.add(self, name: "recenterBridge")
+    }
+
+    deinit {
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: "themeBridge")
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: "recenterBridge")
     }
 
     override func viewDidLayoutSubviews() {
@@ -42,17 +68,37 @@ class BridgeViewController: CAPBridgeViewController {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+        // Once the web app has told us its real theme, the OS-level trait
+        // collection is no longer relevant — the in-app setting wins.
+        if isDarkOverride == nil, traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             updateGradientColors()
         }
     }
 
     private func updateGradientColors() {
-        let isDark = traitCollection.userInterfaceStyle == .dark
+        let isDark = isDarkOverride ?? (traitCollection.userInterfaceStyle == .dark)
+        // Exact match to src/index.css `--color-bg` (light: rgb(244,244,244),
+        // dark: rgb(0,0,0)) so the gradient blends into the real page
+        // background with no visible seam — not an approximate brand black.
         let edgeColor = isDark
-            ? UIColor(red: 0x0a / 255, green: 0x0a / 255, blue: 0x0f / 255, alpha: 1)
-            : UIColor.white
+            ? UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+            : UIColor(red: 0xF4 / 255, green: 0xF4 / 255, blue: 0xF4 / 255, alpha: 1)
         let purple = UIColor(red: 0x7C / 255, green: 0x3A / 255, blue: 0xED / 255, alpha: 1)
         edgeGradientLayer.colors = [purple.cgColor, edgeColor.cgColor, edgeColor.cgColor, purple.cgColor]
+    }
+}
+
+extension BridgeViewController: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        switch message.name {
+        case "themeBridge":
+            guard let isDark = message.body as? Bool else { return }
+            isDarkOverride = isDark
+            updateGradientColors()
+        case "recenterBridge":
+            webView?.scrollView.setContentOffset(.zero, animated: true)
+        default:
+            break
+        }
     }
 }

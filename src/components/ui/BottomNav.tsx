@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { recenterScreen } from '../../lib/nativeBridge'
 
 const navItems = [
   {
@@ -87,14 +88,12 @@ export function BottomNav() {
             <button
               key={item.path}
               onClick={() => {
-                if (active) {
-                  // Same tab tapped again — route won't change, so the
-                  // app-wide route-change scroll reset never fires. Recenter
-                  // explicitly, like tapping an already-active iOS tab bar item.
-                  window.scrollTo({ top: 0, behavior: 'smooth' })
-                } else {
-                  navigate(item.path)
-                }
+                // Always recenter — covers both re-tapping the already-active
+                // tab (route won't change, so the app-wide route-change
+                // effect never fires) and switching tabs (native rubber-band
+                // bounce can be mid-flight independent of route/scroll state).
+                recenterScreen()
+                if (!active) navigate(item.path)
               }}
               className="flex-1 relative flex flex-col items-center justify-center gap-[3px] rounded-full py-[9px] px-2"
             >

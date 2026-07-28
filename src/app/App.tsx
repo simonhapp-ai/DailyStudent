@@ -81,6 +81,7 @@ import { DrawingCanvasScreen } from '../screens/DrawingCanvasScreen'
 import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
 import { TwoFactorSetupScreen } from '../screens/TwoFactorSetupScreen'
 import { supabase } from '../lib/supabase'
+import { notifyNativeTheme, recenterScreen } from '../lib/nativeBridge'
 import { Analytics } from '@vercel/analytics/react'
 import { CookieBanner } from '../components/ui/CookieBanner'
 import { analyticsAllowed, hasConsent } from '../lib/consent'
@@ -89,14 +90,15 @@ function ThemeApplier() {
   const { theme } = useUser()
 
   useEffect(() => {
-    const root = document.documentElement
-    if (theme === 'dark') {
-      root.classList.add('dark')
-    } else if (theme === 'light') {
-      root.classList.remove('dark')
-    } else {
-      root.classList.toggle('dark', window.matchMedia('(prefers-color-scheme: dark)').matches)
-    }
+    const isDark = theme === 'dark'
+      ? true
+      : theme === 'light'
+        ? false
+        : window.matchMedia('(prefers-color-scheme: dark)').matches
+    document.documentElement.classList.toggle('dark', isDark)
+    // Native (iOS wrapper) can't see this in-app theme choice on its own —
+    // it only knows the device's OS-level appearance, which can differ.
+    notifyNativeTheme(isDark)
   }, [theme])
 
   useEffect(() => {
@@ -104,6 +106,7 @@ function ThemeApplier() {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     const handler = (e: MediaQueryListEvent) => {
       document.documentElement.classList.toggle('dark', e.matches)
+      notifyNativeTheme(e.matches)
     }
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
@@ -210,7 +213,7 @@ function Layout() {
   // scrolled down on before navigating away reopens still scrolled down,
   // which reads as a website reloading state rather than a real app screen.
   useEffect(() => {
-    window.scrollTo(0, 0)
+    recenterScreen()
     desktopMainRef.current?.scrollTo(0, 0)
   }, [location.pathname])
   const [betaUnlocked, setBetaUnlocked] = useState(() => localStorage.getItem(BETA_KEY) === '1')
