@@ -55,6 +55,7 @@ export function ProfilScreen() {
   const { profile, theme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt } = useUser()
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
+  const [paymentErrorMessage, setPaymentErrorMessage] = useState<string | null>(null)
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false)
   const [copyToast, setCopyToast] = useState(false)
 
@@ -96,6 +97,7 @@ export function ProfilScreen() {
         setPaymentToast('success')
         setTimeout(() => setPaymentToast(null), 6000)
       } else if (!result.cancelled) {
+        setPaymentErrorMessage(result.error ?? null)
         setPaymentToast('error')
         setTimeout(() => setPaymentToast(null), 4000)
       }
@@ -107,6 +109,7 @@ export function ProfilScreen() {
       window.location.href = url
     } catch {
       setCheckoutLoading(null)
+      setPaymentErrorMessage(null)
       setPaymentToast('error')
       setTimeout(() => setPaymentToast(null), 4000)
     }
@@ -486,8 +489,10 @@ export function ProfilScreen() {
         </div>
       )}
       {paymentToast === 'error' && (
-        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-pill bg-destructive/10 border border-destructive/30 shadow-float animate-fade-in">
-          <p className="text-destructive text-[13px] font-semibold whitespace-nowrap">Fehler beim Checkout. Bitte erneut versuchen.</p>
+        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 max-w-[85%] px-4 py-2.5 rounded-card bg-destructive/10 border border-destructive/30 shadow-float animate-fade-in">
+          <p className="text-destructive text-[13px] font-semibold text-center">
+            {paymentErrorMessage ?? 'Fehler beim Checkout. Bitte erneut versuchen.'}
+          </p>
         </div>
       )}
     </div>
