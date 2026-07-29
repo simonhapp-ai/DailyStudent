@@ -96,7 +96,27 @@ extension BridgeViewController: WKScriptMessageHandler {
             isDarkOverride = isDark
             updateGradientColors()
         case "recenterBridge":
-            webView?.scrollView.setContentOffset(.zero, animated: true)
+            guard let scrollView = webView?.scrollView else { return }
+            // A single animated setContentOffset can lose to an already-
+            // in-flight native rubber-band recoil — most reliably true for
+            // the top-overscroll direction (negative contentOffset), which
+            // can get stuck open with nothing forcing it closed, especially
+            // on screens where alwaysBounceVertical is forcing a bounce on
+            // content that doesn't actually overflow the viewport. Cancel
+            // whatever spring/decelerate animation is currently running
+            // first, then drive a fresh explicit animation to (0,0) that
+            // isn't fighting anything.
+            scrollView.setContentOffset(scrollView.contentOffset, animated: false)
+            UIView.animate(
+                withDuration: 0.35,
+                delay: 0,
+                usingSpringWithDamping: 0.85,
+                initialSpringVelocity: 0,
+                options: [.allowUserInteraction, .beginFromCurrentState],
+                animations: {
+                    scrollView.contentOffset = .zero
+                }
+            )
         default:
             break
         }
