@@ -235,11 +235,12 @@ export function ProfilScreen() {
         </div>
 
         {/* ── Pro upgrade (nur sichtbar wenn nicht Pro) ──────────── */}
-        {/* Beta launch (migration 017_beta_mode_config.sql): the original
-            pricing card below is untouched, just not rendered while Pro
-            purchases are paused — swapped for a non-transactional beta
-            banner instead. Reverts automatically once the flag flips back. */}
-        {!isPro && (appConfig.proPurchasesEnabled ? (
+        {/* Beta launch (migration 017_beta_mode_config.sql): while purchases are
+            paused, this card + the Referral Widget move to the very bottom of
+            the page instead (see that section, right above the footer) — Simon's
+            explicit placement call, 31.07.2026. This normal-state version is
+            unchanged and simply doesn't render during beta; no code removed. */}
+        {!isPro && appConfig.proPurchasesEnabled && (
           <div
             className="rounded-card p-5 border border-accent/20"
             style={{ background: 'linear-gradient(140deg, rgba(0,122,255,0.08) 0%, rgba(0,122,255,0.02) 100%)' }}
@@ -284,97 +285,60 @@ export function ProfilScreen() {
               {checkoutLoading === 'monthly' ? 'Wird geladen…' : 'Oder monatlich: €7,99/Monat'}
             </button>
           </div>
-        ) : (
-          <div className="rounded-card p-5 border border-border/60 bg-surface">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold" style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
-                Beta
-              </span>
-              <p className="text-text-primary font-bold text-[16px]">Pro startet nach der Beta</p>
-            </div>
-            <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
-              Wir pausieren Pro-Käufe während des Beta-Launches. Deine Notizen, Karteikarten & Fortschritte bleiben gespeichert.
-            </p>
-            <button
-              onClick={() => setShowProComingSoon(true)}
-              className="w-full py-3 rounded-card bg-background border border-border/60 text-text-primary text-[14px] font-semibold press transition-all"
-            >
-              Für Rabatt vormerken
-            </button>
-          </div>
-        ))}
+        )}
 
         {/* ── Referral Widget ────────────────────────────────────── */}
-        {!isPro && !trialActive && (
+        {/* Beta launch: same relocation as the card above — beta framing of this
+            widget now lives at the bottom of the page, this normal-state version
+            just doesn't render while paused. */}
+        {!isPro && !trialActive && appConfig.proPurchasesEnabled && (
           <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
             <div className="p-5">
-              {appConfig.proPurchasesEnabled ? (
-                <>
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-2.5">
-                      <div
-                        className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
-                        style={{ background: 'linear-gradient(145deg, #FFD700, #FF8C00)' }}
-                      >
-                        🎁
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
-                          <span className="badge-pro-gold px-2.5 py-0.5">Nur kurze Zeit</span>
-                        </div>
-                        <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Progress bar */}
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-text-muted text-[12px]">Fortschritt</span>
-                      <span className="text-text-primary font-bold text-[13px] tabular-nums">{referralCount}/5</span>
-                    </div>
-                    <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(128,128,128,0.15)' }}>
-                      <div
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{
-                          width: `${Math.min(100, (referralCount / 5) * 100)}%`,
-                          background: 'linear-gradient(90deg, #C8860A, #F5C842, #FFD700)',
-                        }}
-                      />
-                    </div>
-                    <div className="flex justify-between mt-1.5">
-                      {[1, 2, 3, 4, 5].map((n) => (
-                        <span
-                          key={n}
-                          className="text-[10px] font-medium"
-                          style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
-                        >
-                          {n === 5 ? '🎉' : `${n}`}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </>
-              ) : (
-                // Beta launch (migration 017_beta_mode_config.sql): the "14 Tage Pro
-                // gratis" pitch above is hollow right now since Pro can't actually be
-                // reached — swapped for a plain invite framing. Original block kept
-                // intact above, not deleted, resumes automatically once purchases
-                // are re-enabled. Share mechanism below (QR/link/copy) stays as-is.
-                <div className="flex items-start gap-2.5 mb-4">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2.5">
                   <div
                     className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
-                    style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+                    style={{ background: 'linear-gradient(145deg, #FFD700, #FF8C00)' }}
                   >
-                    🔗
+                    🎁
                   </div>
                   <div>
-                    <p className="text-text-primary font-bold text-[15px]">Freunde einladen</p>
-                    <p className="text-text-muted text-[12px] mt-0.5">Teile deinen Link — dein Pro-Bonus wartet auf dich, sobald Pro startet</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
+                      <span className="badge-pro-gold px-2.5 py-0.5">Nur kurze Zeit</span>
+                    </div>
+                    <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
                   </div>
                 </div>
-              )}
+              </div>
+
+              {/* Progress bar */}
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-text-muted text-[12px]">Fortschritt</span>
+                  <span className="text-text-primary font-bold text-[13px] tabular-nums">{referralCount}/5</span>
+                </div>
+                <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(128,128,128,0.15)' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(100, (referralCount / 5) * 100)}%`,
+                      background: 'linear-gradient(90deg, #C8860A, #F5C842, #FFD700)',
+                    }}
+                  />
+                </div>
+                <div className="flex justify-between mt-1.5">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <span
+                      key={n}
+                      className="text-[10px] font-medium"
+                      style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
+                    >
+                      {n === 5 ? '🎉' : `${n}`}
+                    </span>
+                  ))}
+                </div>
+              </div>
 
               {/* QR + share */}
               {referralCode && (
@@ -533,12 +497,110 @@ export function ProfilScreen() {
           </div>
         )}
 
+        {/* ── Beta: Pro-Banner + Freunde einladen, ganz unten ─────── */}
+        {/* Simon (31.07.2026): während der Beta sollen diese zwei Karten nicht
+            oben im Profil stehen, sondern ganz unten, Pro-Banner direkt über dem
+            Einladen-Button. Reine Positionierung — die Normal-Zustand-Versionen
+            oben ("Pro upgrade"/"Referral Widget"-Sektionen) übernehmen automatisch
+            wieder ihren angestammten Platz, sobald appConfig.proPurchasesEnabled
+            wieder true ist. */}
+        {!isPro && !appConfig.proPurchasesEnabled && (
+          <>
+            <div className="rounded-card p-5 border border-border/60 bg-surface">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold" style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
+                  Beta
+                </span>
+                <p className="text-text-primary font-bold text-[16px]">Pro startet nach der Beta</p>
+              </div>
+              <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+                Wir pausieren Pro-Käufe während des Beta-Launches. Deine Notizen, Karteikarten & Fortschritte bleiben gespeichert.
+              </p>
+              <button
+                onClick={() => setShowProComingSoon(true)}
+                className="relative w-full py-3 rounded-card text-white text-[14px] font-semibold press transition-all overflow-hidden"
+                style={{ background: 'linear-gradient(135deg, #34D399, #059669)', animation: 'ea-glow 2.4s ease-in-out infinite' }}
+              >
+                <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
+                <span className="relative">Für Rabatt vormerken</span>
+              </button>
+            </div>
+
+            {!trialActive && (
+              <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+                <div className="p-5">
+                  <div className="flex items-start gap-2.5 mb-4">
+                    <div
+                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
+                      style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+                    >
+                      🔗
+                    </div>
+                    <div>
+                      <p className="text-text-primary font-bold text-[15px]">Freunde einladen</p>
+                      <p className="text-text-muted text-[12px] mt-0.5">Teile deinen Link — dein Pro-Bonus wartet auf dich, sobald Pro startet</p>
+                    </div>
+                  </div>
+
+                  {referralCode && (
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="shrink-0 rounded-[10px] overflow-hidden"
+                        style={{ width: 64, height: 64, background: '#fff' }}
+                      >
+                        <img
+                          src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(referralLink ?? '')}&size=128x128&margin=4`}
+                          alt="QR Code"
+                          width={64}
+                          height={64}
+                          className="w-full h-full"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
+                        <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
+                        {copyToast ? (
+                          <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
+                            style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>
+                            ✓ Kopiert!
+                          </div>
+                        ) : (
+                          <button
+                            onClick={handleCopyReferral}
+                            className="btn-copy-shimmer w-full py-2 rounded-btn text-[13px] font-semibold press-sm"
+                          >
+                            Link kopieren
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
         {/* ── Footer — quiet beta marker, not a badge/callout ─────── */}
         <p className="text-center text-[11px] text-text-muted/50 tracking-wide pt-1">
           DailyStudent <span className="text-text-muted/30">·</span> Beta
         </p>
 
       </div>
+
+      {/* Same shiny-mint keyframes as the Landing Page's Early Access button —
+          duplicated locally rather than shared, matching the existing pattern
+          (LandingScreen.tsx/DemoScreen.tsx/ProModal.tsx each keep their own copy). */}
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes ea-glow {
+          0%, 100% { box-shadow: 0 2px 10px rgba(52,211,153,0.35), 0 0 0 0 rgba(52,211,153,0); }
+          50% { box-shadow: 0 4px 20px rgba(52,211,153,0.6), 0 0 18px 2px rgba(52,211,153,0.2); }
+        }
+      `}</style>
 
       {/* Toast */}
       {paymentToast === 'success' && (
