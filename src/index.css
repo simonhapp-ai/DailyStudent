@@ -339,6 +339,38 @@ textarea::placeholder {
   animation: grade-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
+/* ── Blurting: ruled-paper write area ──────────────────────── */
+
+.blurting-ruled {
+  line-height: 1.9rem;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(1.9rem - 1px),
+    rgb(var(--color-border) / 0.55) calc(1.9rem - 1px),
+    rgb(var(--color-border) / 0.55) 1.9rem
+  );
+  background-position: 0 1.75rem;
+}
+
+/* ── Blurting: mic "listening" pulse ───────────────────────── */
+
+@keyframes mic-pulse-ring {
+  0%   { transform: scale(1);    opacity: 0.55; }
+  100% { transform: scale(1.7);  opacity: 0; }
+}
+
+.mic-pulse-ring {
+  animation: mic-pulse-ring 1.4s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mic-pulse-ring {
+    animation: none;
+    opacity: 0.35;
+  }
+}
+
 /* ── Nav button — neutral hover, Emil Kowalski ──────────────── */
 
 .nav-btn {
