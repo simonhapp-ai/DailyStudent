@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import { ModusRegler, type ModusOption } from '../components/ui/ModusRegler'
+import { ProModal } from '../components/ui/ProModal'
 import { useUser } from '../context/UserContext'
 import { generateLernzettel, generateLernzettelVisual } from '../lib/gemini'
 import { saveLocalAsset } from '../lib/noteStorage'
@@ -54,9 +55,10 @@ const MODI: (ModusOption & { id: LernzettelModus })[] = [
 
 export function LernzettelGeneratorScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast } = useUser()
+  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast, lernzettel, appConfig } = useUser()
 
   const [step, setStep] = useState<Step>('fach')
+  const [showProModal, setShowProModal] = useState(false)
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null)
   const [selectedModus, setSelectedModus] = useState<LernzettelModus | null>(null)
   const [selectedTopics, setSelectedTopics] = useState<string[]>([])
@@ -102,8 +104,20 @@ export function LernzettelGeneratorScreen() {
     setStep('select')
   }
 
+  const today = new Date().toISOString().slice(0, 10)
+  const todayLernzettelCount = lernzettel.filter((lz) => lz.generatedAt?.slice(0, 10) === today).length
+
   const handleGenerate = async () => {
     if (!selectedSubjectId || !selectedModus) return
+    // Beta launch (migration 017_beta_mode_config.sql): Pro purchases are
+    // paused, so a 1/day cap now applies to everyone, including dev-mode or
+    // referral-trial "Pro" accounts — otherwise those would keep burning full
+    // Lernzettel generations during the token-cost-sensitive beta window.
+    // No effect once purchases resume (this whole check is skipped then).
+    if (!appConfig.proPurchasesEnabled && todayLernzettelCount >= 1) {
+      setShowProModal(true)
+      return
+    }
     const info = resolveSubjectInfo(selectedSubjectId, profile?.customFaecher)
     const subjectName = info?.name ?? selectedSubjectId
     const smartNotes = selectedNoteIds
@@ -568,6 +582,8 @@ export function LernzettelGeneratorScreen() {
           </div>
         )}
       </div>
+
+      <ProModal feature="lernzettel" isOpen={showProModal} onClose={() => setShowProModal(false)} />
     </div>
   )
 }

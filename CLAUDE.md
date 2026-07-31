@@ -69,9 +69,11 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99%, Track A eingereicht (Stand: 27.07.2026, spät)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99%, App von Apple genehmigt, **Beta-Modus aktiv** (Stand: 31.07.2026)
 
-**App-Store-Kontext:** **Die App wurde am 27.07.2026 tatsächlich zur Prüfung bei Apple eingereicht** ("Zur Prüfung übermitteln" geklickt, Status danach: wartet auf Apples Review) — vor dem ursprünglichen Ziel-Datum 02.08.2026 (danach ist Simon in Kanada, nicht erreichbar). Track B (App-Politur) ist fertig. **Track A (Capacitor-Wrapper + Apple IAP via RevenueCat + Sign in with Apple) ist vollständig gebaut UND die App ist eingereicht** — siehe „Letzte Session" weiter unten für den vollständigen technischen Stand, alle unterwegs gefixten Bugs, und die noch offenen Punkte (v.a. der End-to-End-Sandbox-Kauftest, der in dieser Session nicht mehr verifiziert wurde). Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`. **Wichtig, nicht verwechseln:** Das ist der kurzfristige Wrapper-Ansatz — komplett getrennt von Simons langfristiger Vision eines echten nativen SwiftUI-Rewrites OHNE Deadline, siehe neue Sektion „Zukunftsvision" weiter unten.
+**App-Store-Kontext:** Die App wurde von Apple genehmigt — Status in App Store Connect ist **„Pending Developer Release"** (fertig geprüft, aber noch nicht öffentlich; Simon entscheidet selbst wann er auf „Release" klickt). Eingereicht wurde am 27.07.2026, vor dem ursprünglichen Ziel-Datum 02.08.2026 (danach ist Simon in Kanada, nur mit Handy erreichbar, kein Laptop). Track B (App-Politur) ist fertig, Track A (Capacitor-Wrapper + Apple IAP via RevenueCat + Sign in with Apple) ist vollständig gebaut und der eingereichte Build genehmigt. Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`. **Wichtig, nicht verwechseln:** Das ist der kurzfristige Wrapper-Ansatz — komplett getrennt von Simons langfristiger Vision eines echten nativen SwiftUI-Rewrites OHNE Deadline, siehe neue Sektion „Zukunftsvision" weiter unten.
+
+**🔶 Beta-Modus ist seit 31.07.2026 aktiv** (Simons Urlaub, App real herunterladbar, 150+ Warteliste) — Pro-Käufe sind komplett pausiert und drei Probeklausur-Modi sind auf Eis, ferngesteuert über die `app_config`-Tabelle in Supabase, ohne Code-Deploy umschaltbar. **Vollständige Datei-für-Datei-Referenz, was genau pausiert ist und wie es zurückgesetzt wird: Abschnitt „🔶 Beta-Modus — vollständige Referenz" direkt unter der Paywall-Tabelle weiter unten.** Lies das zuerst, bevor du an Probeklausur/Lernplan/Lernzettel/Pro-Kauf-Code arbeitest — die Paywall-Tabelle unten beschreibt den NORMALZUSTAND, der Beta-Abschnitt beschreibt was gerade tatsächlich läuft.
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
@@ -194,6 +196,57 @@ Smart Notes
 
 **Paywall-Pattern:** Kein Blur. Free-User sehen eine klare Lock-Card mit konkreten Feature-Bullets. Klick öffnet `ProModal` als Bottom Sheet von unten mit Stripe-Checkout.  
 **ProModal:** `src/components/ui/ProModal.tsx` — `feature` Prop steuert Headline + Bullets. Stripe-Checkout direkt im Modal.
+
+### 🔶 Beta-Modus — vollständige Referenz (aktiv seit 31.07.2026, siehe Sessions „31.07.2026" weiter unten für die volle Entstehungsgeschichte)
+
+**Warum:** Simon ist im Urlaub, nur Handy erreichbar, kein Laptop. Zwei Sorgen: (1) kein Support möglich, falls ein zahlender Nutzer ein Problem hat; (2) KI-Token-Kosten bei mehreren gleichzeitigen Nutzern (App ist jetzt real herunterladbar, 150+ Warteliste). Nichts wurde entfernt — jede Änderung ist ein bedingtes Überspringen des alten Codes, gesteuert über ein einziges Set von Flags. Alter Code + alte UI bleiben vollständig erhalten und laufen automatisch wieder normal, sobald die Flags zurückgesetzt werden.
+
+**Steuerzentrale: Supabase-Tabelle `app_config`** (Migration `017_beta_mode_config.sql`, ✅ angewendet), 1 Zeile (`id=1`), öffentlich lesbar, nur über Supabase Table Editor beschreibbar (funktioniert vom Handy-Browser, kein Deploy nötig). Client lädt sie einmalig beim App-Start in `UserContext.tsx` → `appConfig` (Context-Wert, fail-open auf „alles normal", falls Fetch fehlschlägt oder die Zeile fehlt).
+
+**Aktueller Werte-Stand (Beta AN):**
+
+| Spalte | Beta-Wert | Normal-Wert (Default der Spalte) |
+|---|---|---|
+| `pro_purchases_enabled` | `false` | `true` |
+| `probeklausur_afb_trainer_free` | `true` | `false` |
+| `probeklausur_mode2_enabled` | `false` | `true` |
+| `probeklausur_mode3_enabled` | `false` | `true` |
+| `probeklausur_mode4_enabled` | `false` | `true` |
+
+**So zurücksetzen (kein Deploy, kein Code):** Handy-Browser → `supabase.com` einloggen → Projekt öffnen → „Table Editor" → Tabelle `app_config` → die eine Zeile antippen → alle 5 Werte auf die „Normal-Wert"-Spalte oben umstellen → speichern. Wirkt sofort beim nächsten App-Start eines Nutzers.
+
+**Datei-für-Datei, was während Beta pausiert/geöffnet ist:**
+
+| Datei | Funktion/Stelle | Was passiert während Beta |
+|---|---|---|
+| `src/context/UserContext.tsx` | `AppConfig`-Interface, `appConfig`-State + Fetch-Effect | Lädt `app_config` einmalig, stellt es app-weit über `useUser().appConfig` bereit |
+| `src/components/ui/ProModal.tsx` | `handleCheckout()` / gesamte Modal-Ansicht | Zeigt statt Preis-Toggle/Stripe-Checkout eine „Pro startet nach der Beta"-Ansicht + „Für Rabatt vormerken"-Button (schreibt `profiles.pro_waitlist_interested=true`). **Zentraler Hebel — alle 9 ProModal-Trigger im Code laufen hierüber.** |
+| `src/screens/ProfilScreen.tsx` | `handleUpgrade()` | Früher Return zur ProModal-Beta-Ansicht statt Stripe/RevenueCat-Aufruf |
+| `src/screens/ProfilScreen.tsx` | Pro-Upgrade-Banner (oben im Profil) | Zeigt Beta-Karte („Pro startet nach der Beta" + Vormerken-Button) statt Preis-Karte |
+| `src/screens/ProbeklausurMenuScreen.tsx` | `handleModeClick()` | Mode 1 navigiert frei (kein Pro-Check); Mode 2/3/4 öffnen ProModal statt zu navigieren |
+| `src/screens/ProbeklausurMenuScreen.tsx` | Karten-Badges | Mode 1: „Kostenlos in der Beta" · Mode 2–4: „🕒 Bald wieder da" (statt „✦ Pro") |
+| `src/screens/ProbeklausurMode1Screen.tsx` | `correctionUnlocked` | `isPro \|\| probeklausurAfbTrainerFree` — KI-Korrektur für alle offen |
+| `src/screens/ProbeklausurMode2Screen.tsx` | früher Return vor Haupt-`return` | Zeigt `<BetaPausedScreen title="Vollständige Klausur">` — Screen komplett unerreichbar, auch per Direkt-URL/Resume |
+| `src/screens/ProbeklausurMode3Screen.tsx` | früher Return vor Haupt-`return` | `<BetaPausedScreen title="Materialklausur">` |
+| `src/screens/ProbeklausurMode4Screen.tsx` | früher Return vor Haupt-`return` | `<BetaPausedScreen title="Ohne Material">` |
+| `src/components/ui/BetaPausedScreen.tsx` | (neue Datei) | Full-Screen-Fallback-Komponente, von den 3 Screens oben genutzt |
+| `api/gemini.ts` | `isProbeklausurMode2Paused()` | Serverseitiger Block für Bucket `probeklausur_full` (= Mode 2 Generierung) — einziger Modus mit eigenem Bucket, daher sauber blockbar. **Mode 1/3/4 teilen sich `probeklausur_other` — dort nur clientseitige Absicherung, bewusste Lücke, siehe Session-Log 31.07.2026.** |
+| `src/screens/LernzettelScreen.tsx` | „Pro Lernzettel"-Vorschau-Badges + CTA | „✦ PRO" → „Vorschau", „Pro freischalten"-Button → „Für Update vormerken" (neutrale Farbe statt Gold) |
+| `src/screens/LernzettelGeneratorScreen.tsx` | `handleGenerate()`, neuer `todayLernzettelCount`-Check | **Neu gebaut** (existierte vorher gar nicht im Code): 1/Tag-Deckel für alle, wenn `!appConfig.proPurchasesEnabled` |
+| `src/screens/LernplanKonfiguratorScreen.tsx` | `handleNext()`, `proActive` | Vollständig/Abitur-Gate prüft zusätzlich `appConfig.proPurchasesEnabled` — blockt auch Trial-/Dev-Mode-Pro |
+| `src/screens/LernplanKonfiguratorScreen.tsx` | `StepPlanType`, Badge | „✦ Pro" → „🕒 Bald verfügbar" auf Vollständig-/Abitur-Karten |
+| `src/screens/LernplanDetailScreen.tsx` | `SessionCard`-Aufruf, `isPro`-Prop | `isPro={isPro && appConfig.proPurchasesEnabled}` — Pro-Aktivitäts-Tag/Lock konsistent |
+| `src/screens/ProfilCoinsScreen.tsx` | `handleRedeemDiscount()` | Verweigert früh, wenn Käufe pausiert — **schützt Coins vor sinnlosem Ausgeben** (echter Bug sonst) |
+| `src/screens/ProfilCoinsScreen.tsx` | Rabatt-Widget (15%/30%) | Preistext → „Wartet auf dich — Pro startet nach der Beta", Button → „Coins sind sicher"-Hinweis |
+| `supabase/migrations/017_beta_mode_config.sql` | — | Legt `app_config` + `profiles.pro_waitlist_interested` an. ✅ Angewendet. |
+
+**Bewusst NICHT verändert / weiterhin voll aktiv:**
+- Smart Notes (inkl. Foto-Scan), Karteikarten, Blurting, Keyword-Erklärung — komplett unberührt
+- Lernplan Einzel — bleibt frei nutzbar (bestehender 3/Tag-Free-Deckel unverändert)
+- Statistiken/Insights, Streak/Coins-System, Streak-Freeze-Kauf (Coins, kein echtes Geld) — unberührt
+- Referral-Widget (UI) — bleibt sichtbar, zeigt keinen Preis; der tatsächliche Trial-Bypass für Lernplan/Lernzettel ist aber oben geschlossen
+- `DesktopSidebar.tsx`/`ProfilScreen.tsx` kleine „✦ Pro"-Badges neben dem eigenen Namen — reine Status-Anzeige für Nutzer, die bereits Pro haben, kein Kauf-Pitch
+- `LandingScreen.tsx` (öffentliche Marketing-Seite `/landing`) — ihr Pricing-Button führt nur zu `/dashboard`/`/unterricht`, kein echter Checkout
 
 ### Known Issues (Stand: 25.07.2026):
 
@@ -697,6 +750,59 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 - **Simon hinterfragt technische Behauptungen aktiv und erwartet ehrliche, unaufgeregte Korrektur ohne Beschönigung** — explizit gewünscht: „no hallucinations". Schätzt direkte, faktenbasierte Einordnung von Aufwand/Risiko/Kosten (z.B. Apple-IAP-Kommission, realistischer Zeitaufwand für einen nativen Rewrite) höher ein als vorauseilende Zustimmung zu seinen eigenen Ideen — siehe 26.–27.07.2026-Diskussion über Wrapper- vs. natives-Rewrite-Strategie in „Zukunftsvision" weiter unten.
 - **Sensible Daten (private Keys, `.p8`-Dateien) nie in den Chat einfügen lassen** — wenn ein Signing-Key/Secret gebraucht wird (z.B. Apple Sign-in-Key, App Store Connect API Key), Simon bitten den Dateipfad zu nennen (z.B. Desktop), lokal per Bash/Node einlesen und verarbeiten (z.B. JWT signieren), nur das Ergebnis zurückgeben — nie den Rohinhalt im Gespräch anzeigen oder anzeigen lassen.
 - **Über 150 Personen bereits auf der Warteliste für den App-Store-Release** (Stand 27.07.2026) — echter Nutzerdruck hinter der Deadline, nicht nur Simons persönliches Ziel.
+
+---
+
+## Letzte Session (31.07.2026) — App von Apple genehmigt (Pending Developer Release) + Beta-Modus-System gebaut (Pro-Käufe pausiert, Probeklausur-Modi umgeschichtet)
+
+**Ausgangspunkt:** Die App wurde von Apple genehmigt — Status in App Store Connect ist **„Pending Developer Release"** (noch nicht öffentlich, Simon entscheidet den genauen Freigabe-Zeitpunkt selbst). Gleichzeitig: Simon geht in den Urlaub, dabei nur Handy, kein Laptop/Mac erreichbar. Zwei konkrete Sorgen, die er explizit genannt hat: (1) er will während dieser Zeit keine echten Pro-Abo-Zahlungen annehmen — will nicht verantwortlich sein, wenn ein zahlender Nutzer ein Problem hat und er nicht erreichbar ist, um es zu fixen; (2) Sorge vor KI-Token-Kosten/Rate-Limit-Problemen bei mehreren gleichzeitigen Nutzern (App ist jetzt real herunterladbar, 150+ Warteliste). Auftrag: bestimmte Features **pausieren, nicht entfernen** — die App soll trotzdem "cool"/nutzbar wirken, keine der bestehenden Strukturen (RevenueCat/Stripe-Architektur etc.) soll abgebaut werden.
+
+### Gebautes System: `app_config` — ferngesteuerte Beta-Flags
+**Migration `017_beta_mode_config.sql`** (⚠️ **noch NICHT von Simon in Supabase angewendet** — siehe „Nächste Session" unten) legt eine Singleton-Tabelle `app_config` (1 Zeile, `id=1`) an, öffentlich lesbar (RLS `SELECT USING (true)`, kein Client-Schreibzugriff) — bewusst so gebaut, dass Simon die Flags **direkt im Supabase-Dashboard über den mobilen Browser** umschalten kann, ganz ohne Code-Deploy oder App-Store-Resubmission. Spalten (Column-Defaults = normales/Post-Beta-Verhalten, die tatsächlich eingefügte Zeile trägt direkt die Beta-Werte):
+- `pro_purchases_enabled` (Beta: `false`) — pausiert Stripe-Checkout UND Apple-IAP-Kauf-Trigger
+- `probeklausur_afb_trainer_free` (Beta: `true`) — Mode 1 (AFB-Aufgabentrainer) komplett kostenlos, inkl. KI-Korrektur — Simon wollte dieses Feature explizit weiterhin zeigen können
+- `probeklausur_mode2_enabled` / `_mode3_enabled` / `_mode4_enabled` (Beta: alle `false`) — die drei token-teuersten Probeklausur-Modi pausiert
+
+Zusätzlich `profiles.pro_waitlist_interested` (boolean) für einen "Für Rabatt vormerken"-Button.
+
+**Client-seitig:** `UserContext.tsx` lädt `app_config` einmalig beim App-Start (unabhängig vom Login-Status) in einen neuen `appConfig`-Context-Wert; **fail-open** wie das bestehende Rate-Limit-System — schlägt der Fetch fehl oder existiert die Zeile noch nicht, verhält sich die App exakt wie vorher (alles an, `DEFAULT_APP_CONFIG`).
+- **`ProModal.tsx`** ist der zentrale Hebel: JEDER der 9 Trigger-Punkte im Code läuft durch diese eine Komponente — wenn `pro_purchases_enabled=false`, zeigt sie statt Preis-Toggle/Checkout eine eigene Ansicht („Pro startet nach der Beta" + Daten-bleiben-sicher-Zusicherung + „Für Rabatt vormerken"-Button, schreibt `pro_waitlist_interested=true`). Kein Feature entfernt — der komplette Checkout-Code bleibt unverändert darunter, nur übersprungen.
+- **`ProfilScreen.tsx`**: `handleUpgrade()` hatte einen eigenen, direkten Stripe/RevenueCat-Call (bypass von ProModal, siehe 27.07.-Session-Historie) — bekam einen frühen Return zur selben ProModal-Ansicht, der bestehende native/Stripe-Code darunter ist unverändert und läuft automatisch wieder, sobald das Flag zurückgesetzt wird.
+- **`ProbeklausurMenuScreen.tsx`**: `handleModeClick()` navigiert Mode 1 jetzt direkt (ohne Pro-Check) wenn `probeklausurAfbTrainerFree`; Mode 2/3/4 öffnen bei deaktiviertem Flag dasselbe ProModal statt zu navigieren. Karten zeigen „Kostenlos in der Beta" (Mode 1) bzw. „🕒 Bald wieder da" (Mode 2–4) statt „✦ Pro".
+- **`ProbeklausurMode1Screen.tsx`**: KI-Korrektur-Gate erweitert zu `isPro || probeklausurAfbTrainerFree`.
+- **Neu: `src/components/ui/BetaPausedScreen.tsx`** — Full-Screen-Fallback in `ProbeklausurMode2/3/4Screen.tsx` (früher Return direkt nach den Hooks, vor dem Haupt-`return`). Wichtig: das ist NICHT redundant zum Menü-Gate — fängt auch direkten URL-Zugriff und den „Fortfahren"-Button auf eine VOR der Pause begonnene Klausur ab (der navigiert im Menü-Screen direkt, ohne durch `handleModeClick` zu laufen).
+- **Server-seitig, `api/gemini.ts`**: Mode 2 (`generateMode2Exam`) hat als einziger der vier Modi einen eigenen dedizierten Rate-Limit-Bucket (`probeklausur_full`) — dafür ein sauberer serverseitiger Block (`isProbeklausurMode2Paused()`, fail-open wie `checkRateLimit`). **Bewusste Lücke, transparent:** Mode 1/3/4 teilen sich den Bucket `probeklausur_other` (auch `correctExam()` aller 4 Modi läuft darüber) — da Mode 1 während der Beta offen bleiben soll, lässt sich serverseitig nicht sauber nur Mode 3/4 blocken ohne neue Plumbing (ein `subFeature`-Feld durchreichen). Bewusst nicht gebaut (Zeitdruck, Simon reist ab) — die Absicherung für Mode 3/4 ist rein clientseitig (Screen zeigt gar keine Generieren-Möglichkeit); ein serverseitiger Bypass bliebe theoretisch möglich, ist aber durch die bestehende Tages-Obergrenze (15/Tag, Migration 012) sowie die Auth-Pflicht ohnehin gedeckelt.
+
+**Verifiziert:** `tsc --noEmit` clean, `npm run lint` identisch 93 Probleme vorher/nachher (0 neu eingeführt, per `git stash`-Vergleich), `npm run build` erfolgreich.
+
+### Nachtrag, gleicher Tag (31.07.2026) — Migration angewendet + alle verbliebenen "Buy"-Banner entfernt + Trial-Bypass-Lücke geschlossen
+
+Simon hat Migration `017_beta_mode_config` bereits in Supabase ausgeführt. Danach Feedback: die App soll sich **überhaupt nicht** wie "BUY BUY BUY" anfühlen — nicht nur der Checkout-Klick soll umgeleitet werden, die Kauf-Banner/Badges selbst sollen aus der Ansicht verschwinden (Code bleibt erhalten, nur nicht gerendert). Vollständiger Audit über den ganzen Code (`grep` nach "Pro freischalten", "€7,99", "badge-pro-gold" etc.) fand mehrere Stellen, die die erste Runde nicht abgedeckt hatte:
+
+- **`ProfilScreen.tsx`** — die große Pricing-Karte oben im Profil ("Pro freischalten €7,99/Mo" + 2 Kauf-Buttons) wird jetzt durch eine schlichte Beta-Karte ersetzt ("Pro startet nach der Beta" + "Für Rabatt vormerken"-Button, öffnet dieselbe ProModal-Ansicht). Alter Code unverändert daneben erhalten, nur bedingt gerendert.
+- **`LernzettelScreen.tsx`** — die "Pro Lernzettel"-Vorschau-Karussell-Badges ("✦ PRO") zeigen jetzt "Vorschau", der "Pro freischalten"-Button wurde zu einem neutralen "Für Update vormerken"-Button (kein goldener Kauf-Gradient mehr).
+- **`LernplanKonfiguratorScreen.tsx`** — "✦ Pro"-Badges auf Vollständig-/Abitur-Plantyp-Karten zeigen jetzt "🕒 Bald verfügbar".
+- **`LernplanDetailScreen.tsx`** — kleines "✦ Pro"-Tag auf Session-Zeilen mit Pro-Aktivität: behandelt pausierte Käufe jetzt konsistent wie "kein Pro".
+- **`ProfilCoinsScreen.tsx`** — Rabatt-Widget (15%/30%, zeigte "€6,80 statt €7,99/Mo" + "Einlösen"-Button) zeigt jetzt "Wartet auf dich — Pro startet nach der Beta" statt Preisen. **Dabei einen echten Bug fürs Beta-Fenster gefixt:** `redeemDiscount()` zieht Coins sofort ab, bevor der (jetzt pausierte) Checkout überhaupt geöffnet wird — ohne Gegenmaßnahme hätte ein Nutzer beim Klick seine gesparten Coins für einen Rabatt verloren, den er in der Beta gar nicht einlösen kann. `handleRedeemDiscount()` verweigert jetzt frühzeitig, wenn `pro_purchases_enabled=false`, Button zeigt eine "Coins sind sicher"-Meldung statt eines aktiven Kauf-CTAs.
+- **`ProbeklausurMenuScreen.tsx`** — bereits in Runde 1 sauber (Badges hängen schon am Beta-Flag), keine Änderung nötig.
+- **Bewusst NICHT verändert:** die kleinen "✦ Pro"-Badges in `DesktopSidebar.tsx`/`ProfilScreen.tsx` neben dem eigenen Namen — die zeigen nur an, dass der eingeloggte Nutzer selbst Pro *hat*, sind kein Kauf-Pitch. Die Referral-Widget-Karte ("14 Tage Pro gratis" für 5 Einladungen) bleibt ebenfalls sichtbar — zeigt keinen Preis, ist ein Gratis-Mechanismus, kein "Buy"-Banner. Die Landing Page (`/landing`, öffentliche Marketing-Seite) wurde ebenfalls nicht angefasst — ihr Pricing-Button führt nur zu `/dashboard`/`/unterricht` (Login/App-Einstieg), löst keinen echten Checkout aus.
+
+**Wichtige, tiefere Lücke gefunden und geschlossen:** Das Referral-Programm gewährt bei 5 erfolgreichen Einladungen einen 14-Tage-Pro-Trial rein über ein DB-Feld (`trial_ends_at`), läuft NICHT über Stripe/RevenueCat — wäre also von `pro_purchases_enabled` komplett unberührt gewesen. Ein Trial-Nutzer (oder Simons eigener Dev-Mode-Pro-Toggle) hätte damit während der Beta trotzdem uneingeschränkt Lernplan Vollständig/Abitur generieren und unbegrenzt Lernzettel erstellen können — genau die teuren KI-Calls, die die Pause eigentlich vermeiden soll. Gefixt: `LernplanKonfiguratorScreen.tsx`s Vollständig/Abitur-Gate prüft jetzt zusätzlich `appConfig.proPurchasesEnabled` (nicht nur `isPro`) — nur während der Beta, kein Effekt sobald Käufe wieder aktiv sind.
+
+**Zusätzlicher Fund, kein reiner Beta-Fix, sondern ein bestehender Gap:** Recherche ergab, dass Lernzettel entgegen der CLAUDE.md-Paywall-Tabelle ("1/Tag Free") **im Code nie eine Tages-Obergrenze hatte** — `LernzettelGeneratorScreen.tsx` enthielt keinerlei `isPro`-Check, jeder Account konnte bereits beliebig viele Lernzettel generieren (nur die generische 20/Tag-Abuse-Bucket-Grenze griff, für alle Tiers gleich). Da Simon explizit von "Lernzettel ein pro Tag (Beta)" ausging, wurde das jetzt tatsächlich gebaut — aber bewusst nur **für das Beta-Fenster** (`if (!appConfig.proPurchasesEnabled && todayLernzettelCount >= 1)`), nicht als permanente neue Paywall-Regel, da das eine separate Produktentscheidung wäre, die hier nicht getroffen wurde.
+
+**Erneut verifiziert nach dieser Runde:** `tsc --noEmit` clean, `npm run lint` weiterhin exakt 93 Probleme (0 neu), `npm run build` erfolgreich.
+
+### So setzt Simon die Beta-Flags später zurück (einfach erklärt, vom Handy):
+1. Im Handy-Browser zu `supabase.com` → einloggen → das DailyStudent-Projekt öffnen.
+2. Links im Menü auf **„Table Editor"** tippen.
+3. In der Tabellen-Liste **„app_config"** auswählen — da ist genau eine Zeile.
+4. Die Zeile antippen (öffnet die Bearbeitung), dort 5 Ja/Nein-Felder umschalten: `pro_purchases_enabled` → an, `probeklausur_afb_trainer_free` → aus, `probeklausur_mode2_enabled` / `_mode3_enabled` / `_mode4_enabled` → alle an.
+5. Speichern. Fertig — kein Deploy, kein Code, wirkt sofort beim nächsten App-Start eines Nutzers.
+
+### Nächste Session — konkret offen:
+1. **Simon sollte einmal kurz durchklicken** (`/profil`, `/klausurmodus/probeklausur`, `/klausurmodus/lernzettel`, `/profil/coins`) — dieselbe Verifikation, die in dieser Session mangels Browser-Tooling nicht automatisiert möglich war.
+2. **Kein App-Store-Resubmit nötig für irgendetwas in dieser gesamten Session (beide Runden)** — alles ist reiner Web-/Supabase-Code, deployed automatisch über Vercel, sofort live auch im bereits genehmigten Wrapper (`server.url` zeigt auf Produktion). Einzige offene native Änderung bleibt der Bounce-Gradient-Fix aus der 29.07.-Session (siehe unten) — der braucht weiterhin einen frischen Xcode-Archive+Upload, unabhängig hiervon; Simon hat den TestFlight/Xcode-Upload für den bereits genehmigten Build schon erledigt, das ist ein komplett separater, späterer Schritt.
 
 ---
 

@@ -55,6 +55,29 @@ export interface KlausurTermin {
   topic?: string
 }
 
+// Beta-launch feature flags, read from the `app_config` table (see migration
+// 017_beta_mode_config.sql) — lets Simon pause Pro purchases and specific
+// token-heavy Probeklausur modes from the Supabase dashboard alone (works from
+// a phone browser), no code deploy or App Store resubmission needed.
+export interface AppConfig {
+  proPurchasesEnabled: boolean
+  probeklausurAfbTrainerFree: boolean
+  probeklausurMode2Enabled: boolean
+  probeklausurMode3Enabled: boolean
+  probeklausurMode4Enabled: boolean
+}
+
+// Fail-open: if the fetch fails or the row doesn't exist yet, the app behaves
+// exactly like it did before beta mode existed (same convention as the AI
+// rate-limiter's fail-open default in api/groq.ts/api/gemini.ts).
+const DEFAULT_APP_CONFIG: AppConfig = {
+  proPurchasesEnabled: true,
+  probeklausurAfbTrainerFree: false,
+  probeklausurMode2Enabled: true,
+  probeklausurMode3Enabled: true,
+  probeklausurMode4Enabled: true,
+}
+
 export const COIN_VALUES = {
   LOGIN: 5,
   SMART_NOTE: 5,
@@ -208,6 +231,7 @@ interface UserContextValue {
   referralCount: number
   trialEndsAt: string | null
   subscriptionSource: 'stripe' | 'apple' | null
+  appConfig: AppConfig
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -353,6 +377,30 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [nativeEntitlementActive, setNativeEntitlementActive] = useState(false)
   // Guard: only load Supabase data once per user session, not on every token refresh
   const loadedForUserId = useRef<string | null>(null)
+
+  const [appConfig, setAppConfig] = useState<AppConfig>(DEFAULT_APP_CONFIG)
+
+  // Fetched once on app load, independent of auth — the flags it controls
+  // (Pro checkout, specific Probeklausur modes) need to render correctly
+  // before/regardless of login state. See DEFAULT_APP_CONFIG for the
+  // fail-open fallback if this fetch fails or the row doesn't exist.
+  useEffect(() => {
+    void (async () => {
+      try {
+        const { data } = await supabase.from('app_config').select('*').eq('id', 1).maybeSingle()
+        if (!data) return
+        setAppConfig({
+          proPurchasesEnabled: data.pro_purchases_enabled,
+          probeklausurAfbTrainerFree: data.probeklausur_afb_trainer_free,
+          probeklausurMode2Enabled: data.probeklausur_mode2_enabled,
+          probeklausurMode3Enabled: data.probeklausur_mode3_enabled,
+          probeklausurMode4Enabled: data.probeklausur_mode4_enabled,
+        })
+      } catch {
+        // Fail open — keep DEFAULT_APP_CONFIG
+      }
+    })()
+  }, [])
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -1326,6 +1374,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         referralCount,
         trialEndsAt,
         subscriptionSource,
+        appConfig,
       }}
     >
       {children}

@@ -33,7 +33,7 @@ const DAILY_TASKS = [
 
 export function ProfilCoinsScreen() {
   const navigate = useNavigate()
-  const { appStats, buyStreakFreeze, redeemDiscount, showCoinToast } = useUser()
+  const { appStats, buyStreakFreeze, redeemDiscount, showCoinToast, appConfig } = useUser()
   const isDesktop = useIsDesktop()
   const shouldReduceMotion = useReducedMotion()
 
@@ -59,6 +59,11 @@ export function ProfilCoinsScreen() {
   }
 
   const handleRedeemDiscount = (tier: '15' | '30') => {
+    // Beta launch (migration 017_beta_mode_config.sql): redeemDiscount() spends
+    // coins immediately server-side, but with purchases paused there's no
+    // checkout to apply the coupon to — refuse up front so nobody burns coins
+    // for a discount they can't actually use right now.
+    if (!appConfig.proPurchasesEnabled) return
     void redeemDiscount(tier).then((couponId) => {
       if (couponId) {
         setDiscountModal({ couponId, percent: tier === '15' ? 15 : 30 })
@@ -237,7 +242,9 @@ export function ProfilCoinsScreen() {
               <div className="flex items-center justify-between mb-2">
                 <div>
                   <p className="text-text-primary font-bold text-[14px]">15% Rabatt</p>
-                  <p className="text-text-muted text-[11px] mt-0.5">€6,80 statt €7,99/Mo</p>
+                  <p className="text-text-muted text-[11px] mt-0.5">
+                    {appConfig.proPurchasesEnabled ? '€6,80 statt €7,99/Mo' : 'Wartet auf dich — Pro startet nach der Beta'}
+                  </p>
                 </div>
                 {used15
                   ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill shrink-0"
@@ -253,13 +260,19 @@ export function ProfilCoinsScreen() {
                   style={{ width: `${progress15}%`, background: 'linear-gradient(90deg, #34D399, #059669)' }}/>
               </div>
               {has15 && !used15 && (
-                <button
-                  onClick={() => handleRedeemDiscount('15')}
-                  className="w-full mt-3 py-3 rounded-[14px] text-white text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
-                  style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}
-                >
-                  15% Rabatt einlösen →
-                </button>
+                appConfig.proPurchasesEnabled ? (
+                  <button
+                    onClick={() => handleRedeemDiscount('15')}
+                    className="w-full mt-3 py-3 rounded-[14px] text-white text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
+                    style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}
+                  >
+                    15% Rabatt einlösen →
+                  </button>
+                ) : (
+                  <p className="w-full mt-3 py-3 rounded-[14px] text-center text-[12px] font-semibold text-text-muted bg-background">
+                    Deine Coins sind sicher — einlösbar sobald Pro startet
+                  </p>
+                )
               )}
             </div>
 
@@ -268,7 +281,9 @@ export function ProfilCoinsScreen() {
               <div className="flex items-center justify-between mb-2">
                 <div>
                   <p className="text-text-primary font-bold text-[14px]">30% Rabatt</p>
-                  <p className="text-text-muted text-[11px] mt-0.5">€5,59 statt €7,99/Mo</p>
+                  <p className="text-text-muted text-[11px] mt-0.5">
+                    {appConfig.proPurchasesEnabled ? '€5,59 statt €7,99/Mo' : 'Wartet auf dich — Pro startet nach der Beta'}
+                  </p>
                 </div>
                 {used30
                   ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill shrink-0"
@@ -284,13 +299,19 @@ export function ProfilCoinsScreen() {
                   style={{ width: `${progress30}%`, background: 'linear-gradient(90deg, #34D399, #059669)' }}/>
               </div>
               {has30 && !used30 && (
-                <button
-                  onClick={() => handleRedeemDiscount('30')}
-                  className="w-full mt-3 py-3 rounded-[14px] text-white text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
-                  style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}
-                >
-                  30% Rabatt einlösen →
-                </button>
+                appConfig.proPurchasesEnabled ? (
+                  <button
+                    onClick={() => handleRedeemDiscount('30')}
+                    className="w-full mt-3 py-3 rounded-[14px] text-white text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
+                    style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}
+                  >
+                    30% Rabatt einlösen →
+                  </button>
+                ) : (
+                  <p className="w-full mt-3 py-3 rounded-[14px] text-center text-[12px] font-semibold text-text-muted bg-background">
+                    Deine Coins sind sicher — einlösbar sobald Pro startet
+                  </p>
+                )
               )}
             </div>
 

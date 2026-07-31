@@ -139,7 +139,10 @@ export function ProbeklausurMode1Screen() {
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.prefill ?? null
   const resume = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, appConfig } = useUser()
+  // Beta launch: AFB-Aufgabentrainer opened for free, incl. correction — see
+  // migration 017_beta_mode_config.sql + ProbeklausurMenuScreen.
+  const correctionUnlocked = isPro || appConfig.probeklausurAfbTrainerFree
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
@@ -394,7 +397,7 @@ export function ProbeklausurMode1Screen() {
               <p className="text-white/80 text-[13px] mt-1">von 15 Notenpunkten · {correction.gradeLabel}</p>
             </div>
 
-            {isPro ? (
+            {correctionUnlocked ? (
               <>
                 {correction.overallJustification && (
                   <div className="bg-surface rounded-[14px] border border-border/60 p-4 mb-4">

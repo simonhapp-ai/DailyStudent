@@ -193,7 +193,7 @@ function LernzettelRow({
 
 export function LernzettelScreen() {
   const navigate = useNavigate()
-  const { lernzettel, isPro, deleteLernzettel, toggleLernzettelHighlight } = useUser()
+  const { lernzettel, isPro, deleteLernzettel, toggleLernzettelHighlight, appConfig } = useUser()
   const [view, setView] = useState<View>('library')
   const [activeLz, setActiveLz] = useState<Lernzettel | null>(null)
   const [showPro, setShowPro] = useState(false)
@@ -456,7 +456,11 @@ export function LernzettelScreen() {
       <div className="mt-6">
         {/* Section header */}
         <div className="flex items-center gap-2 px-4 mb-2">
-          <span className="badge-pro-gold px-2.5 py-1">✦ PRO</span>
+          {appConfig.proPurchasesEnabled ? (
+            <span className="badge-pro-gold px-2.5 py-1">✦ PRO</span>
+          ) : (
+            <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold bg-background text-text-muted">Vorschau</span>
+          )}
           <p className="text-[15px] font-bold text-text-primary">Pro Lernzettel</p>
           <span className="ml-auto text-[11px] text-text-muted font-normal">
             Nächstes Update
@@ -489,7 +493,11 @@ export function LernzettelScreen() {
                 <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', background: p.color, color: '#fff' }}>
                   {p.subject}
                 </span>
-                <span className="badge-pro-gold" style={{ padding: '2px 7px', fontSize: '10px' }}>✦ PRO</span>
+                {appConfig.proPurchasesEnabled ? (
+                  <span className="badge-pro-gold" style={{ padding: '2px 7px', fontSize: '10px' }}>✦ PRO</span>
+                ) : (
+                  <span style={{ padding: '2px 7px', fontSize: '10px', fontWeight: 700, borderRadius: '999px', background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>Vorschau</span>
+                )}
               </div>
 
               {/* Card — pure content, no overlay, so the Lernzettel itself dominates */}
@@ -532,17 +540,26 @@ export function LernzettelScreen() {
         {/* CTA — nur für Free-User */}
         {!isPro && (
           <div className="px-4 mt-3 mb-6">
-            <button
-              onClick={() => setShowPro(true)}
-              className="w-full py-3.5 rounded-[18px] font-bold text-[14px] press"
-              style={{
-                background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
-                color: '#3B1F00',
-                boxShadow: '0 4px 18px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.3)',
-              }}
-            >
-              Pro freischalten
-            </button>
+            {appConfig.proPurchasesEnabled ? (
+              <button
+                onClick={() => setShowPro(true)}
+                className="w-full py-3.5 rounded-[18px] font-bold text-[14px] press"
+                style={{
+                  background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
+                  color: '#3B1F00',
+                  boxShadow: '0 4px 18px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.3)',
+                }}
+              >
+                Pro freischalten
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowPro(true)}
+                className="w-full py-3.5 rounded-[18px] font-bold text-[14px] press bg-surface border border-border/60 text-text-secondary"
+              >
+                Für Update vormerken
+              </button>
+            )}
           </div>
         )}
       </div>

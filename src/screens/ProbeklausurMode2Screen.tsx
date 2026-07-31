@@ -6,6 +6,7 @@ import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode2Exam, correctExam } from '../lib/gemini'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { ProModal } from '../components/ui/ProModal'
+import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
 
 interface ProbeklausurPrefill {
@@ -165,7 +166,7 @@ export function ProbeklausurMode2Screen() {
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.prefill ?? null
   const resume = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, savedProbeklausuren, isPro } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, savedProbeklausuren, isPro, appConfig } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
@@ -260,6 +261,12 @@ export function ProbeklausurMode2Screen() {
     })
     setShowExitWarning(false)
     navigate(-1)
+  }
+
+  // Beta launch (migration 017_beta_mode_config.sql) — catches direct URL access
+  // and the menu's "Fortfahren" resume button too, not just its click-gate.
+  if (!appConfig.probeklausurMode2Enabled) {
+    return <BetaPausedScreen title="Vollständige Klausur" />
   }
 
   return (

@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { purchasePlan } from '../lib/revenuecat'
+import { ProModal } from '../components/ui/ProModal'
 import { getActiveStreak } from '../lib/streak'
 
 const AVATAR_BG_OPTIONS = [
@@ -52,10 +53,11 @@ function NavRow({ label, sublabel, onClick, danger = false }: {
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt } = useUser()
+  const { profile, theme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt, appConfig } = useUser()
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string | null>(null)
+  const [showProComingSoon, setShowProComingSoon] = useState(false)
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false)
   const [copyToast, setCopyToast] = useState(false)
 
@@ -89,6 +91,13 @@ export function ProfilScreen() {
   }, [])
 
   const handleUpgrade = async (plan: 'monthly' | 'yearly') => {
+    // Beta launch: Pro purchases paused (migration 017_beta_mode_config.sql).
+    // Existing native/Stripe logic below is untouched and resumes automatically
+    // once app_config.pro_purchases_enabled flips back — this only short-circuits.
+    if (!appConfig.proPurchasesEnabled) {
+      setShowProComingSoon(true)
+      return
+    }
     if (Capacitor.isNativePlatform()) {
       setCheckoutLoading(plan)
       const result = await purchasePlan(plan)
@@ -226,7 +235,11 @@ export function ProfilScreen() {
         </div>
 
         {/* ── Pro upgrade (nur sichtbar wenn nicht Pro) ──────────── */}
-        {!isPro && (
+        {/* Beta launch (migration 017_beta_mode_config.sql): the original
+            pricing card below is untouched, just not rendered while Pro
+            purchases are paused — swapped for a non-transactional beta
+            banner instead. Reverts automatically once the flag flips back. */}
+        {!isPro && (appConfig.proPurchasesEnabled ? (
           <div
             className="rounded-card p-5 border border-accent/20"
             style={{ background: 'linear-gradient(140deg, rgba(0,122,255,0.08) 0%, rgba(0,122,255,0.02) 100%)' }}
@@ -271,7 +284,25 @@ export function ProfilScreen() {
               {checkoutLoading === 'monthly' ? 'Wird geladen…' : 'Oder monatlich: €7,99/Monat'}
             </button>
           </div>
-        )}
+        ) : (
+          <div className="rounded-card p-5 border border-border/60 bg-surface">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold" style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
+                Beta
+              </span>
+              <p className="text-text-primary font-bold text-[16px]">Pro startet nach der Beta</p>
+            </div>
+            <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
+              Wir pausieren Pro-Käufe während des Beta-Launches. Deine Notizen, Karteikarten & Fortschritte bleiben gespeichert.
+            </p>
+            <button
+              onClick={() => setShowProComingSoon(true)}
+              className="w-full py-3 rounded-card bg-background border border-border/60 text-text-primary text-[14px] font-semibold press transition-all"
+            >
+              Für Rabatt vormerken
+            </button>
+          </div>
+        ))}
 
         {/* ── Referral Widget ────────────────────────────────────── */}
         {!isPro && !trialActive && (
@@ -500,6 +531,8 @@ export function ProfilScreen() {
           </p>
         </div>
       )}
+
+      <ProModal feature="allgemein" isOpen={showProComingSoon} onClose={() => setShowProComingSoon(false)} />
     </div>
   )
 }

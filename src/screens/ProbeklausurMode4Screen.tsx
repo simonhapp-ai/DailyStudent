@@ -6,6 +6,7 @@ import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode4Exam, correctExam } from '../lib/gemini'
 import { BottomSheet } from '../components/ui/BottomSheet'
+import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
 
 const AFB_COLORS: Record<string, string> = {
@@ -111,7 +112,7 @@ export function ProbeklausurMode4Screen() {
   const navigate = useNavigate()
   const location = useLocation()
   const resume = (location.state as { resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, appConfig } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
@@ -175,6 +176,12 @@ export function ProbeklausurMode4Screen() {
       setError(e instanceof Error ? e.message : 'Unbekannter Fehler')
       setPhase('exam')
     }
+  }
+
+  // Beta launch (migration 017_beta_mode_config.sql) — catches direct URL access
+  // and the menu's "Fortfahren" resume button too, not just its click-gate.
+  if (!appConfig.probeklausurMode4Enabled) {
+    return <BetaPausedScreen title="Ohne Material" />
   }
 
   return (

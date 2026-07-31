@@ -106,10 +106,27 @@ export function ProbeklausurMenuScreen() {
   const navigate = useNavigate()
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
-  const { inProgressProbeklausuren, deleteInProgressProbeklausur, savedProbeklausuren, deleteSavedProbeklausur, isPro } = useUser()
+  const { inProgressProbeklausuren, deleteInProgressProbeklausur, savedProbeklausuren, deleteSavedProbeklausur, isPro, appConfig } = useUser()
   const [showProModal, setShowProModal] = useState(false)
 
+  // Beta launch (migration 017_beta_mode_config.sql): AFB-Aufgabentrainer (mode 1)
+  // opened for free regardless of isPro — Simon wants to showcase it. The other
+  // three modes are paused (most token-expensive generations) — same ProModal
+  // as the normal Pro-lock, since it already shows the beta "coming soon"
+  // content whenever Pro purchases are paused. Reverts to the original
+  // !isPro-gated behavior automatically once the flags flip back.
+  const modeEnabled: Record<number, boolean> = {
+    2: appConfig.probeklausurMode2Enabled,
+    3: appConfig.probeklausurMode3Enabled,
+    4: appConfig.probeklausurMode4Enabled,
+  }
+
   const handleModeClick = (mode: typeof MODES_FULL[0] | typeof MODES_HALF[0]) => {
+    if (mode.id === 1 && appConfig.probeklausurAfbTrainerFree) {
+      navigate(mode.route, { state: prefill ? { prefill } : undefined })
+      return
+    }
+    if (mode.id !== 1 && modeEnabled[mode.id] === false) { setShowProModal(true); return }
     if (!isPro && mode.id !== 2) { setShowProModal(true); return }
     navigate(mode.route, { state: prefill ? { prefill } : undefined })
   }
@@ -201,7 +218,15 @@ export function ProbeklausurMenuScreen() {
                   {badge}
                 </span>
               ))}
-              {mode.proBadge && !isPro && (
+              {mode.id === 1 && appConfig.probeklausurAfbTrainerFree ? (
+                <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold" style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
+                  Kostenlos in der Beta
+                </span>
+              ) : mode.id !== 1 && modeEnabled[mode.id] === false ? (
+                <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold bg-background text-text-muted">
+                  🕒 Bald wieder da
+                </span>
+              ) : mode.proBadge && !isPro && (
                 <span className="badge-pro-gold px-2 py-0.5">✦ Pro</span>
               )}
             </div>
@@ -230,7 +255,11 @@ export function ProbeklausurMenuScreen() {
                     {badge}
                   </span>
                 ))}
-                {mode.proBadge && !isPro && (
+                {modeEnabled[mode.id] === false ? (
+                  <span className="px-1.5 py-0.5 rounded-pill text-[10px] font-bold bg-background text-text-muted">
+                    🕒 Bald wieder da
+                  </span>
+                ) : mode.proBadge && !isPro && (
                   <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
                 )}
               </div>
