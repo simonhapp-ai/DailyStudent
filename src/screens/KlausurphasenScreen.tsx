@@ -95,13 +95,15 @@ const G = {
   // Pro-Feature — Premium Gold
   lernplan:     'linear-gradient(145deg, #FFD060, #C07700)',
 
-  // Auswendig lernen — Dark Purple + Dark Pink (selbe Familie)
-  karteikarten: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+  // Auswendig lernen — Karteikarten in Landing-Page-Mint (Simons Wunsch,
+  // 31.07.2026), Blurting bleibt Pink
+  karteikarten: 'linear-gradient(145deg, #34D399, #059669)',
   blurting:     'linear-gradient(145deg, #DB2777, #9D174D)',
 
-  // Tiefer lernen — Teal + Meerblau (selbe Familie, Probeklausur dunkler)
+  // Tiefer lernen — Lernzettel bleibt Blau, Probeklausur jetzt Purple
+  // (Simons Wunsch, 31.07.2026)
   lernzettel:   'linear-gradient(145deg, #5AC8FA, #007BB8)',
-  probeklausur: 'linear-gradient(145deg, #0891B2, #065666)',
+  probeklausur: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
 
   // Statistik
   streak:       'linear-gradient(145deg, #FF9F0A, #E07008)',
@@ -257,7 +259,7 @@ export function KlausurphasenScreen() {
               className="flex-1 aspect-square lg:aspect-auto lg:h-44 bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-4 flex flex-col justify-between text-left press"
             >
               <div className="flex items-start justify-between w-full">
-                <GradientIcon gradient={G.karteikarten} glow="glow-purple">
+                <GradientIcon gradient={G.karteikarten} glow="glow-mint">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.5" />
                     <rect x="4" y="9" width="13" height="12" rx="2.5" />
@@ -272,7 +274,7 @@ export function KlausurphasenScreen() {
               </div>
               <div>
                 <p className="text-text-primary font-bold text-[15px] leading-tight">Karteikarten</p>
-                <p className="text-[12px] font-medium mt-0.5" style={{ color: '#7C3AED' }}>
+                <p className="text-[12px] font-medium mt-0.5" style={{ color: '#059669' }}>
                   {totalCards > 0 ? `${totalCards} Karten · lernen` : '+ Karten erstellen'}
                 </p>
               </div>
@@ -318,7 +320,7 @@ export function KlausurphasenScreen() {
                 lg:flex-1 lg:h-44 lg:flex-col lg:items-start lg:justify-between lg:p-4 lg:gap-0"
             >
               <div className="flex items-start justify-between w-auto lg:w-full">
-                <GradientIcon gradient={G.probeklausur} glow="glow-cyan">
+                <GradientIcon gradient={G.probeklausur} glow="glow-purple">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white"
                     strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="12" cy="12" r="10" />

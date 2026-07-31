@@ -282,6 +282,7 @@ textarea::placeholder {
   /* ── Colored glow shadows for gradient icon containers ──────── */
   /* Usage: add as className alongside inline background style     */
   .glow-purple { box-shadow: 0 4px 16px rgba(124, 58,237,0.38), 0 1px 4px rgba(124, 58,237,0.18); }
+  .glow-mint   { box-shadow: 0 4px 16px rgba( 52,211,153,0.38), 0 1px 4px rgba( 52,211,153,0.18); }
   .glow-pink   { box-shadow: 0 4px 16px rgba(219, 39,119,0.38), 0 1px 4px rgba(219, 39,119,0.18); }
   .glow-teal   { box-shadow: 0 4px 16px rgba( 90,200,250,0.38), 0 1px 4px rgba( 90,200,250,0.18); }
   .glow-cyan   { box-shadow: 0 4px 16px rgba(  8,145,178,0.38), 0 1px 4px rgba(  8,145,178,0.18); }

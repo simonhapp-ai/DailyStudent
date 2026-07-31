@@ -15,7 +15,7 @@ const MODES_FULL = [
   {
     id: 2,
     route: '/klausurmodus/probeklausur/vollstaendige-klausur',
-    gradient: 'linear-gradient(145deg, #0891B2, #065666)',
+    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
     title: 'Vollständige Klausur',
     subtitle: 'Realistische Klausur-Simulation',
     description: 'Eine komplette 90-Minuten-Klausur mit AFB I–III, 2–3 Materialien und echter Zeitgrenzen — genau wie im echten Abitur.',
@@ -30,7 +30,7 @@ const MODES_FULL = [
   {
     id: 1,
     route: '/klausurmodus/probeklausur/afb-trainer',
-    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+    gradient: 'linear-gradient(145deg, #34D399, #059669)',
     title: 'AFB-Aufgabentrainer',
     subtitle: 'Einzelne Aufgabe gezielt üben',
     description: 'Du wählst das AFB-Level (I, II oder III) und bekommst genau eine präzise Abituraufgabe auf diesem Niveau — mit passenden Materialien wenn nötig.',
@@ -48,7 +48,7 @@ const MODES_HALF = [
   {
     id: 3,
     route: '/klausurmodus/probeklausur/materialklausur',
-    gradient: 'linear-gradient(145deg, #059669, #064E3B)',
+    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
     title: 'Materialklausur',
     subtitle: 'Alle drei AFB zu einem Material',
     badges: ['1–3 Materialien', 'AFB I + II + III'],
@@ -62,7 +62,7 @@ const MODES_HALF = [
   {
     id: 4,
     route: '/klausurmodus/probeklausur/ohne-material',
-    gradient: 'linear-gradient(145deg, #DB2777, #9D174D)',
+    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
     title: 'Ohne Material',
     subtitle: 'Alles aus dem Kopf',
     badges: ['Kein Material', 'AFB I + II + III'],

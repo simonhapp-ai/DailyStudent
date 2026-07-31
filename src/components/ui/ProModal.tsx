@@ -155,9 +155,11 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
             <button
               onClick={handleWaitlist}
               disabled={waitlistLoading}
-              className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3"
+              className="relative w-full py-3.5 rounded-card text-white text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3 overflow-hidden"
+              style={{ background: 'linear-gradient(135deg, #34D399, #059669)', animation: 'ea-glow 2.4s ease-in-out infinite' }}
             >
-              {waitlistLoading ? 'Wird gespeichert…' : 'Für Rabatt vormerken'}
+              <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
+              <span className="relative">{waitlistLoading ? 'Wird gespeichert…' : 'Für Rabatt vormerken'}</span>
             </button>
           )}
 
@@ -168,6 +170,20 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
             Schließen
           </button>
         </div>
+
+        {/* Same shiny-mint treatment as the Landing Page's Early Access button —
+            keyframes duplicated locally rather than shared, matching the existing
+            pattern in LandingScreen.tsx/DemoScreen.tsx (each defines its own copy). */}
+        <style>{`
+          @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+          }
+          @keyframes ea-glow {
+            0%, 100% { box-shadow: 0 2px 10px rgba(52,211,153,0.35), 0 0 0 0 rgba(52,211,153,0); }
+            50% { box-shadow: 0 4px 20px rgba(52,211,153,0.6), 0 0 18px 2px rgba(52,211,153,0.2); }
+          }
+        `}</style>
       </div>
     )
   }

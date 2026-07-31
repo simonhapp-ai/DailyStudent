@@ -308,51 +308,73 @@ export function ProfilScreen() {
         {!isPro && !trialActive && (
           <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
             <div className="p-5">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center gap-2.5">
+              {appConfig.proPurchasesEnabled ? (
+                <>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
+                        style={{ background: 'linear-gradient(145deg, #FFD700, #FF8C00)' }}
+                      >
+                        🎁
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
+                          <span className="badge-pro-gold px-2.5 py-0.5">Nur kurze Zeit</span>
+                        </div>
+                        <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Progress bar */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-text-muted text-[12px]">Fortschritt</span>
+                      <span className="text-text-primary font-bold text-[13px] tabular-nums">{referralCount}/5</span>
+                    </div>
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(128,128,128,0.15)' }}>
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${Math.min(100, (referralCount / 5) * 100)}%`,
+                          background: 'linear-gradient(90deg, #C8860A, #F5C842, #FFD700)',
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between mt-1.5">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <span
+                          key={n}
+                          className="text-[10px] font-medium"
+                          style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
+                        >
+                          {n === 5 ? '🎉' : `${n}`}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                // Beta launch (migration 017_beta_mode_config.sql): the "14 Tage Pro
+                // gratis" pitch above is hollow right now since Pro can't actually be
+                // reached — swapped for a plain invite framing. Original block kept
+                // intact above, not deleted, resumes automatically once purchases
+                // are re-enabled. Share mechanism below (QR/link/copy) stays as-is.
+                <div className="flex items-start gap-2.5 mb-4">
                   <div
                     className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
-                    style={{ background: 'linear-gradient(145deg, #FFD700, #FF8C00)' }}
+                    style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
                   >
-                    🎁
+                    🔗
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
-                      <span className="badge-pro-gold px-2.5 py-0.5">Nur kurze Zeit</span>
-                    </div>
-                    <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
+                    <p className="text-text-primary font-bold text-[15px]">Freunde einladen</p>
+                    <p className="text-text-muted text-[12px] mt-0.5">Teile deinen Link — dein Pro-Bonus wartet auf dich, sobald Pro startet</p>
                   </div>
                 </div>
-              </div>
-
-              {/* Progress bar */}
-              <div className="mb-4">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-text-muted text-[12px]">Fortschritt</span>
-                  <span className="text-text-primary font-bold text-[13px] tabular-nums">{referralCount}/5</span>
-                </div>
-                <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(128,128,128,0.15)' }}>
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{
-                      width: `${Math.min(100, (referralCount / 5) * 100)}%`,
-                      background: 'linear-gradient(90deg, #C8860A, #F5C842, #FFD700)',
-                    }}
-                  />
-                </div>
-                <div className="flex justify-between mt-1.5">
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <span
-                      key={n}
-                      className="text-[10px] font-medium"
-                      style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
-                    >
-                      {n === 5 ? '🎉' : `${n}`}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              )}
 
               {/* QR + share */}
               {referralCode && (
