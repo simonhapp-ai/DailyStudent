@@ -319,7 +319,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
           Die KI, die deinen echten Unterricht kennt — personalisiert auf deinen Lehrplan.
         </p>
 
-        <div className="space-y-4 mb-12">
+        <div className="space-y-4 mb-6">
           {[
             { icon: '📸', text: 'Tafelbilder scannen → fertige Lernnotiz in Sekunden' },
             { icon: '📝', text: 'Probeklausuren genau wie im Unterricht (AFB I–III)' },
@@ -330,6 +330,15 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
               <p className="text-text-secondary text-sm leading-relaxed">{item.text}</p>
             </div>
           ))}
+        </div>
+
+        <div className="rounded-2xl px-4 py-3.5 mb-8" style={{ background: 'rgba(255,159,10,0.08)', border: '1px solid rgba(255,159,10,0.2)' }}>
+          <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: '#FF9F0A' }}>
+            Beta-Hinweis
+          </p>
+          <p className="text-text-secondary text-[13px] leading-relaxed">
+            Die App funktioniert vor allem für Oberstufenschüler richtig gut. Für Studierende und die Mittelstufe ist sie nutzbar, aber noch nicht perfekt — sobald die Beta endet, wird sie für alle besser.
+          </p>
         </div>
       </div>
 

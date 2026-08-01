@@ -7,13 +7,41 @@ import type { UserFolder, UserNote } from '../types'
 import { subjects, halfYears } from '../data/mockData'
 import type { HalfYear } from '../types'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { countNotesInFolderTree } from '../lib/folders'
 
 export function UnterrichtScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, userFolders, addFolder, saveNote, saveToOhneFachFolder } = useUser()
+  const { profile, userNotes, userFolders, addFolder, renameFolder, deleteFolder, saveNote, saveToOhneFachFolder } = useUser()
   const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set())
   const [addFolderFor, setAddFolderFor] = useState<string | null>(null)
   const [newFolderName, setNewFolderName] = useState('')
+
+  // ── Folder long-press actions (rename / delete) ──────────────────────────
+  const [folderActionsFor, setFolderActionsFor] = useState<UserFolder | null>(null)
+  const [renameTarget, setRenameTarget] = useState<UserFolder | null>(null)
+  const [renameValue, setRenameValue] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState<UserFolder | null>(null)
+
+  const openRename = (folder: UserFolder) => {
+    setFolderActionsFor(null)
+    setRenameValue(folder.name)
+    setRenameTarget(folder)
+  }
+  const confirmRename = () => {
+    if (!renameTarget || !renameValue.trim()) return
+    renameFolder(renameTarget.id, renameValue)
+    setRenameTarget(null)
+  }
+  const openDeleteConfirm = (folder: UserFolder) => {
+    setFolderActionsFor(null)
+    setDeleteTarget(folder)
+  }
+  const confirmDeleteFolder = () => {
+    if (!deleteTarget) return
+    deleteFolder(deleteTarget.id)
+    setDeleteTarget(null)
+  }
+  const deleteTargetNoteCount = deleteTarget ? countNotesInFolderTree(deleteTarget.id, userFolders, userNotes) : 0
 
   // ── File import (with KI suggestion + folder navigation) ────────────────
   type ImportPhase =
@@ -399,6 +427,7 @@ export function UnterrichtScreen() {
                           name={folder.name}
                           noteCount={userNotes.filter((n) => n.folderId === folder.id).length}
                           onClick={() => navigate(`/unterricht/${subject.id}/ordner/${folder.id}`)}
+                          onLongPress={() => setFolderActionsFor(folder)}
                         />
                       ))}
                       <AddFolderGridItem onClick={() => openAddFolder(subject.id)} />
@@ -704,18 +733,141 @@ export function UnterrichtScreen() {
         )}
 
       </BottomSheet>
+
+      {/* ── Folder actions (long-press) ─────────────────────────── */}
+      <BottomSheet isOpen={!!folderActionsFor} onClose={() => setFolderActionsFor(null)}>
+        <div className="px-5 pb-2">
+          <h2 className="text-[20px] font-bold text-text-primary mb-4 truncate">{folderActionsFor?.name}</h2>
+          <div className="space-y-2">
+            <button
+              onClick={() => folderActionsFor && openRename(folderActionsFor)}
+              className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
+            >
+              <div className="w-9 h-9 rounded-btn bg-accent/10 flex items-center justify-center shrink-0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
+                  <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg>
+              </div>
+              <span className="text-text-primary font-medium text-[15px]">Umbenennen</span>
+            </button>
+            <button
+              onClick={() => folderActionsFor && openDeleteConfirm(folderActionsFor)}
+              className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
+            >
+              <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(var(--color-danger),0.1)' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgb(var(--color-danger))' }}>
+                  <polyline points="3 6 5 6 21 6" />
+                  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
+                  <line x1="10" y1="11" x2="10" y2="17" />
+                  <line x1="14" y1="11" x2="14" y2="17" />
+                </svg>
+              </div>
+              <span className="font-medium text-[15px]" style={{ color: 'rgb(var(--color-danger))' }}>Löschen</span>
+            </button>
+          </div>
+        </div>
+      </BottomSheet>
+
+      {/* ── Rename folder ────────────────────────────────────────── */}
+      <BottomSheet isOpen={!!renameTarget} onClose={() => setRenameTarget(null)}>
+        <div className="px-5 pb-2">
+          <h2 className="text-[20px] font-bold text-text-primary mb-4">Ordner umbenennen</h2>
+          <input
+            type="text"
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && confirmRename()}
+            autoFocus
+            className="w-full bg-background border border-border rounded-card px-4 py-3 text-text-primary placeholder-text-muted mb-4 focus:outline-none focus:border-accent transition-colors"
+          />
+          <button
+            onClick={confirmRename}
+            disabled={!renameValue.trim()}
+            className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
+              renameValue.trim() ? 'grad-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+            }`}
+          >
+            Speichern
+          </button>
+        </div>
+      </BottomSheet>
+
+      {/* ── Delete folder confirm ───────────────────────────────── */}
+      <BottomSheet isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)}>
+        <div className="px-5 pb-2">
+          <h2 className="text-[20px] font-bold text-text-primary mb-2">Ordner löschen</h2>
+          <p className="text-text-secondary text-[14px] mb-6">
+            {deleteTargetNoteCount > 0
+              ? `${deleteTargetNoteCount} ${deleteTargetNoteCount === 1 ? 'Notiz wird' : 'Notizen werden'} dauerhaft gelöscht — auch der Inhalt aller Unterordner.`
+              : 'Der Ordner wird dauerhaft gelöscht.'}
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setDeleteTarget(null)}
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-surface-hover text-text-secondary hover:bg-border transition-colors press"
+            >
+              Abbrechen
+            </button>
+            <button
+              onClick={confirmDeleteFolder}
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-danger/10 text-danger border border-danger/20 hover:bg-danger/15 transition-colors press"
+            >
+              Löschen
+            </button>
+          </div>
+        </div>
+      </BottomSheet>
     </div>
   )
 }
 
 function FolderGridItem({
-  name, noteCount, onClick,
+  name, noteCount, onClick, onLongPress,
 }: {
-  name: string; noteCount: number; onClick: () => void
+  name: string; noteCount: number; onClick: () => void; onLongPress?: () => void
 }) {
+  // Long-press (550ms hold, matching DrawingCanvas's paste-menu convention)
+  // opens the rename/delete action sheet; moving more than 8px cancels it —
+  // same as a scroll/drag gesture, not a hold.
+  const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pressStart = useRef<{ x: number; y: number } | null>(null)
+  const firedLongPress = useRef(false)
+
+  const clearPressTimer = () => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current)
+      pressTimer.current = null
+    }
+  }
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!onLongPress) return
+    firedLongPress.current = false
+    pressStart.current = { x: e.clientX, y: e.clientY }
+    pressTimer.current = setTimeout(() => {
+      firedLongPress.current = true
+      onLongPress()
+    }, 550)
+  }
+  const handlePointerMove = (e: React.PointerEvent<HTMLButtonElement>) => {
+    if (!pressStart.current) return
+    if (Math.hypot(e.clientX - pressStart.current.x, e.clientY - pressStart.current.y) > 8) {
+      clearPressTimer()
+    }
+  }
+
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        if (firedLongPress.current) { firedLongPress.current = false; return }
+        onClick()
+      }}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={clearPressTimer}
+      onPointerLeave={clearPressTimer}
+      onPointerCancel={clearPressTimer}
+      onContextMenu={(e) => { if (onLongPress) e.preventDefault() }}
       className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-2xl active:bg-surface-hover press-sm transition-colors"
     >
       <svg width="62" height="52" viewBox="0 0 62 52" fill="none">

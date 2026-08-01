@@ -27,6 +27,7 @@ function generateReferralCode(): string {
 }
 import { localizeNoteAttachments, deleteAttachmentsForNotes, deleteAttachment, migrateLegacyNoteAttachments } from '../lib/noteStorage'
 import { initRevenueCat, logOutRevenueCat } from '../lib/revenuecat'
+import { collectFolderAndDescendants } from '../lib/folders'
 
 export interface StandaloneHomeworkItem {
   id: string
@@ -178,6 +179,7 @@ interface UserContextValue {
   updateUserNote: (note: UserNote) => void
   deleteUserNote: (noteId: string) => void
   addFolder: (folder: UserFolder) => void
+  renameFolder: (folderId: string, newName: string) => void
   deleteFolder: (folderId: string) => void
   saveToOhneFachFolder: (note: UserNote, generated?: GeneratedSmartNote) => void
   saveFlashCards: (newCards: FlashCard[]) => void
@@ -1232,18 +1234,31 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) void syncHomeworkBatch(authUser.id, [newItem])
   }
 
+  const renameFolder = (folderId: string, newName: string) => {
+    const trimmed = newName.trim()
+    if (!trimmed) return
+    const updated = userFolders.map((f) => (f.id === folderId ? { ...f, name: trimmed } : f))
+    setUserFolders(updated)
+    persist(profile, personalEntries, generatedNotes, userNotes, updated)
+    const renamed = updated.find((f) => f.id === folderId)
+    if (authUser && renamed) void syncFolder(authUser.id, renamed)
+  }
+
   const deleteFolder = (folderId: string) => {
-    const childIds = userFolders.filter((f) => f.parentFolderId === folderId).map((f) => f.id)
-    const deletedNotes = userNotes.filter((n) => n.folderId === folderId)
+    // Cascades through every descendant folder, not just direct children — a
+    // folder can have subfolders of subfolders (see FolderScreen's "Neuer
+    // Unterordner"), and all of them plus their notes need to go.
+    const idsToDelete = new Set(collectFolderAndDescendants(folderId, userFolders))
+    const deletedNotes = userNotes.filter((n) => n.folderId && idsToDelete.has(n.folderId))
     const deletedNoteIds = deletedNotes.map((n) => n.id)
-    const updatedFolders = userFolders.filter((f) => f.id !== folderId && f.parentFolderId !== folderId)
-    const updatedNotes = userNotes.filter((n) => n.folderId !== folderId)
+    const updatedFolders = userFolders.filter((f) => !idsToDelete.has(f.id))
+    const updatedNotes = userNotes.filter((n) => !(n.folderId && idsToDelete.has(n.folderId)))
     setUserFolders(updatedFolders)
     setUserNotes(updatedNotes)
     persist(profile, personalEntries, generatedNotes, updatedNotes, updatedFolders)
     if (deletedNotes.length) void deleteAttachmentsForNotes(deletedNotes)
     if (authUser) {
-      void deleteFoldersFromDB(authUser.id, [folderId, ...childIds])
+      void deleteFoldersFromDB(authUser.id, Array.from(idsToDelete))
       if (deletedNoteIds.length) void deleteNotesFromDB(authUser.id, deletedNoteIds)
     }
   }
@@ -1321,6 +1336,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         updateUserNote,
         deleteUserNote,
         addFolder,
+        renameFolder,
         deleteFolder,
         applyFaecherChanges,
         saveToOhneFachFolder,
