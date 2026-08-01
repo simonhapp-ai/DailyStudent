@@ -93,6 +93,16 @@ body {
   min-height: 100svh;
 }
 
+/* Locks scroll boundaries app-wide instead of letting them rubber-band —
+   covers every CSS-level `overflow-y-auto`/`overflow-auto` panel (e.g. the
+   iPad/desktop `<main>` content pane next to the sidebar in App.tsx), which
+   is a separate scroll region from the WKWebView's own page-level scroll and
+   isn't reachable from BridgeViewController.swift (see that file's
+   `scrollView.bounces = false`, which locks the page-level scroll instead). */
+* {
+  overscroll-behavior: none;
+}
+
 /* ── Interaction utilities ──────────────────────────────────── */
 
 .press {

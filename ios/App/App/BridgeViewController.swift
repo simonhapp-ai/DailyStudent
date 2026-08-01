@@ -3,12 +3,15 @@ import Capacitor
 import WebKit
 
 /// Makes the native WebView shell feel like a real iOS app instead of a
-/// wrapped website: guarantees the elastic rubber-band bounce (Capacitor's
-/// default didn't reliably show it) and replaces the flat black/white reveal
-/// during that bounce with the exact page background color (no brand tint —
-/// just plain white/black per theme, matching the page underneath), and
-/// exposes two small JS-callable bridges (kept separate from Capacitor's own
-/// message handlers) so the web app can push its real state into native code:
+/// wrapped website: locks the outer scroll view so it hard-stops at the
+/// content edges instead of rubber-banding (Simon: the bounce motion looked
+/// bad in normal use, removed app-wide — see also `overscroll-behavior: none`
+/// in src/index.css, which locks the same way for every CSS-level
+/// `overflow-y-auto` panel, e.g. the iPad/desktop main content pane next to
+/// the sidebar, which is a separate scroll region from this one and isn't
+/// reachable from native code), and exposes two small JS-callable bridges
+/// (kept separate from Capacitor's own message handlers) so the web app can
+/// push its real state into native code:
 ///
 /// - "themeBridge": the web app's OWN light/dark theme (Hell/Dunkel/System
 ///   in ProfilErscheinungsbildScreen) is independent of the device's OS-level
@@ -17,10 +20,11 @@ import WebKit
 ///   this wrong, so the web app posts its actually-resolved `.dark` class
 ///   state here instead, and that becomes the source of truth once received.
 /// - "recenterBridge": `window.scrollTo()` only moves the web page's logical
-///   scroll position — it cannot reliably cancel an in-flight native
-///   rubber-band bounce, which is a separate UIScrollView animation. The nav
-///   bar calls this on every tap to force the scroll view back to (0,0),
-///   like pressing a physical "recenter" button.
+///   scroll position — it doesn't reliably reset an already in-flight native
+///   UIScrollView animation (deceleration, or a spring settling back from a
+///   momentary drag past the now-locked edge). The nav bar calls this on
+///   every tap to force the scroll view back to (0,0), like pressing a
+///   physical "recenter" button.
 class BridgeViewController: CAPBridgeViewController {
 
     // Source of truth once the web app's first themeBridge message arrives;
@@ -30,13 +34,14 @@ class BridgeViewController: CAPBridgeViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        webView?.scrollView.bounces = true
-        webView?.scrollView.alwaysBounceVertical = true
+        webView?.scrollView.bounces = false
+        webView?.scrollView.alwaysBounceVertical = false
 
-        // Transparent WebView + a plain background color behind it — the
-        // page's own CSS background still paints opaquely over normal
-        // content, so this is only ever visible in the overscroll area
-        // beyond the page bounds.
+        // Transparent WebView + a plain background color behind it. With
+        // bounce disabled this should never actually become visible during
+        // normal scrolling, but it's a cheap guard against the native view
+        // flashing the wrong-theme color for a frame during launch/rotation
+        // before the page's own CSS background has painted.
         webView?.isOpaque = false
         webView?.backgroundColor = .clear
         webView?.scrollView.backgroundColor = .clear
@@ -80,15 +85,10 @@ extension BridgeViewController: WKScriptMessageHandler {
             updateBackgroundColor()
         case "recenterBridge":
             guard let scrollView = webView?.scrollView else { return }
-            // A single animated setContentOffset can lose to an already-
-            // in-flight native rubber-band recoil — most reliably true for
-            // the top-overscroll direction (negative contentOffset), which
-            // can get stuck open with nothing forcing it closed, especially
-            // on screens where alwaysBounceVertical is forcing a bounce on
-            // content that doesn't actually overflow the viewport. Cancel
-            // whatever spring/decelerate animation is currently running
-            // first, then drive a fresh explicit animation to (0,0) that
-            // isn't fighting anything.
+            // A single animated setContentOffset can lose to an already
+            // in-flight deceleration animation. Cancel whatever's currently
+            // running first, then drive a fresh explicit animation to (0,0)
+            // that isn't fighting anything.
             scrollView.setContentOffset(scrollView.contentOffset, animated: false)
             UIView.animate(
                 withDuration: 0.35,
