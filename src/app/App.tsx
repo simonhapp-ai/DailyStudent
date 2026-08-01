@@ -72,10 +72,10 @@ import { LernplanKonfiguratorScreen } from '../screens/LernplanKonfiguratorScree
 import { LernplanDetailScreen } from '../screens/LernplanDetailScreen'
 import { LernplanListScreen } from '../screens/LernplanListScreen'
 import { AuthScreen } from '../screens/AuthScreen'
-import { BetaGateScreen, BETA_KEY } from '../screens/BetaGateScreen'
 import { DashboardScreen } from '../screens/DashboardScreen'
 import { LandingScreen } from '../screens/LandingScreen'
 import { DemoScreen } from '../screens/DemoScreen'
+import { DemoConsentScreen } from '../screens/DemoConsentScreen'
 import { EarlyAccessScreen } from '../screens/EarlyAccessScreen'
 import { DrawingCanvasScreen } from '../screens/DrawingCanvasScreen'
 import { TwoFactorVerifyScreen } from '../screens/TwoFactorVerifyScreen'
@@ -84,7 +84,8 @@ import { supabase } from '../lib/supabase'
 import { notifyNativeTheme, recenterScreen } from '../lib/nativeBridge'
 import { Analytics } from '@vercel/analytics/react'
 import { CookieBanner } from '../components/ui/CookieBanner'
-import { analyticsAllowed, hasConsent } from '../lib/consent'
+import { analyticsAllowed, hasConsent, saveConsent } from '../lib/consent'
+import { Capacitor } from '@capacitor/core'
 
 function ThemeApplier() {
   const { theme } = useUser()
@@ -120,6 +121,33 @@ function ThemeApplier() {
 // iPads (all versions), Android tablets, and desktops do NOT match → desktop.
 // Also works in Chrome DevTools device simulation (DevTools changes the UA).
 const IS_DESKTOP = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
+const IS_NATIVE = Capacitor.isNativePlatform()
+
+// Web-only signal for the landing page: has this browser touched the app
+// before (previous account data, prior cookie consent, or already seen the
+// demo)? If so, dailystudent.de should skip straight to login instead of
+// showing the marketing page again — landing is only for true first visits.
+function hasPriorVisit(): boolean {
+  try {
+    if (localStorage.getItem('lernapp_v1')) return true
+    if (localStorage.getItem('ds_consent_v1')) return true
+    if (localStorage.getItem('demoShown') === 'true') return true
+  } catch { /* localStorage unavailable — treat as first visit */ }
+  return false
+}
+
+// Suppresses the floating CookieBanner exactly where Layout would already be
+// showing the full-screen DemoConsentScreen instead — otherwise both consent
+// UIs would stack on top of each other.
+function CookieBannerGate({ onConsent }: { onConsent: (analytics: boolean) => void }) {
+  const { authUser, authLoading } = useUser()
+  const location = useLocation()
+  const demoConsentActive =
+    location.pathname === '/demo' ||
+    (location.pathname === '/' && IS_NATIVE && !authLoading && !authUser)
+  if (demoConsentActive) return null
+  return <CookieBanner onConsent={onConsent} />
+}
 
 function FixedBadges() {
   return (
@@ -197,7 +225,7 @@ function AppRoutes() {
   )
 }
 
-function Layout() {
+function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onConsentGiven: (analytics: boolean) => void }) {
   const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
   const desktopMainRef = useRef<HTMLElement>(null)
@@ -216,7 +244,6 @@ function Layout() {
     recenterScreen()
     desktopMainRef.current?.scrollTo(0, 0)
   }, [location.pathname])
-  const [betaUnlocked, setBetaUnlocked] = useState(() => localStorage.getItem(BETA_KEY) === '1')
   // True if localStorage has a previous session — lets us skip the spinner for returning users
   const [hasLocalSession] = useState(() => {
     try {
@@ -262,15 +289,33 @@ function Layout() {
   // Public routes — always accessible without auth
   if (location.pathname === '/landing') return <LandingScreen />
   if (location.pathname === '/early-access') return <EarlyAccessScreen />
-  if (location.pathname === '/demo') return <DemoScreen />
+  if (location.pathname === '/demo') {
+    // Gate the demo behind the Datenschutz/Cookie screen once — same
+    // consent flag the rest of the app uses (CookieBanner, native flow below).
+    if (!consentGiven) return <DemoConsentScreen onAccept={onConsentGiven} />
+    return <DemoScreen />
+  }
   if (location.pathname === '/impressum') return <ImpressumScreen />
   if (location.pathname === '/datenschutz') return <DatenschutzScreen />
   if (location.pathname === '/agb') return <AGBScreen />
 
   // Only redirect to auth once Supabase has confirmed there's no valid session
   if (!authLoading && !authUser) {
-    if (location.pathname === '/') return <Navigate to="/landing" replace />
-    if (!betaUnlocked) return <BetaGateScreen onUnlock={() => setBetaUnlocked(true)} />
+    if (location.pathname === '/') {
+      // Native app cold start: consent → demo → login, once per device —
+      // no marketing landing page, straight into the product. The URL bar
+      // isn't visible in the native WebView, so rendering directly here
+      // instead of navigating is fine (same pattern /landing etc. already use).
+      if (IS_NATIVE) {
+        if (!consentGiven) return <DemoConsentScreen onAccept={onConsentGiven} />
+        if (localStorage.getItem('demoShown') !== 'true') return <DemoScreen />
+        return <AuthScreen />
+      }
+      // Web: landing page only for genuine first-time visitors — anyone
+      // whose browser already has app data, consent, or has seen the demo
+      // goes straight to login instead of the marketing pitch again.
+      return <Navigate to={hasPriorVisit() ? '/auth' : '/landing'} replace />
+    }
     return <AuthScreen />
   }
 
@@ -340,21 +385,23 @@ export function App() {
   const [analyticsOn, setAnalyticsOn] = useState(() => analyticsAllowed())
   useDeepLinkAuth()
 
+  // Shared by the floating CookieBanner (non-blocking, shown on any screen)
+  // and DemoConsentScreen (blocking, shown once before the demo) — whichever
+  // fires first satisfies consent for the rest of the session.
+  const handleConsent = (analytics: boolean) => {
+    saveConsent(analytics)
+    setConsentGiven(true)
+    setAnalyticsOn(analytics)
+  }
+
   return (
     <ErrorBoundary>
       <CoinIconGlobalDefs />
       <UserProvider>
         <ThemeApplier />
         <BrowserRouter>
-          <Layout />
-          {!consentGiven && (
-            <CookieBanner
-              onConsent={(analytics) => {
-                setConsentGiven(true)
-                setAnalyticsOn(analytics)
-              }}
-            />
-          )}
+          <Layout consentGiven={consentGiven} onConsentGiven={handleConsent} />
+          {!consentGiven && <CookieBannerGate onConsent={handleConsent} />}
         </BrowserRouter>
         {analyticsOn && <Analytics />}
       </UserProvider>

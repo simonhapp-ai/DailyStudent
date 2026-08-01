@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Button } from '../components/ui/Button'
 import { useUser } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
 import { callHandleReferral } from '../lib/referral'
-import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS } from '../lib/gemini'
-import type { UserNote, StundenplanSlot } from '../types'
+import type { StundenplanSlot } from '../types'
 import { SUBJECT_INFO, SUBJECT_GROUPS, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 import { parseStundenplanFromImage } from '../lib/groq'
@@ -31,13 +31,28 @@ const BUNDESLAENDER = [
 
 const SCHULFORMEN_SCHUELER = ['Gymnasium', 'Gesamtschule', 'FOS']
 
-type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+const E = [0.23, 1, 0.32, 1] as const
+
+// Forward = incoming step slides in from the right, outgoing exits left.
+// Back = reversed. Keeps the wizard's direction spatially consistent.
+// Reduced motion keeps the opacity fade but drops the horizontal movement.
+function getStepVariants(reduceMotion: boolean) {
+  return {
+    enter: (dir: 1 | -1) => ({ opacity: 0, x: reduceMotion ? 0 : dir * 24 }),
+    center: { opacity: 1, x: 0 },
+    exit: (dir: 1 | -1) => ({ opacity: 0, x: reduceMotion ? 0 : dir * -24 }),
+  }
+}
+
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 export function OnboardingScreen() {
   const { completeOnboarding } = useUser()
   const navigate = useNavigate()
   const [step, setStep] = useState<Step>(1)
+  const [direction, setDirection] = useState<1 | -1>(1)
   const [finishing, setFinishing] = useState(false)
+  const reduceMotion = useReducedMotion()
 
   const [name, setName] = useState('')
   const [klasse, setKlasse] = useState('')
@@ -55,7 +70,7 @@ export function OnboardingScreen() {
   const [klausurDate, setKlausurDate] = useState('')
   const [klausurTopic, setKlausurTopic] = useState('')
 
-  const progress = (step / 9) * 100
+  const progress = (step / 8) * 100
   const isStudent = userType === 'student'
 
   const isOberstufe = !isStudent && schultyp !== '' && (
@@ -73,15 +88,20 @@ export function OnboardingScreen() {
     6: true,
     7: true,
     8: true,
-    9: true,
   }
 
   const next = () => {
-    if (step < 9) setStep((s) => (s + 1) as Step)
+    if (step < 8) {
+      setDirection(1)
+      setStep((s) => (s + 1) as Step)
+    }
   }
 
   const back = () => {
-    if (step > 1) setStep((s) => (s - 1) as Step)
+    if (step > 1) {
+      setDirection(-1)
+      setStep((s) => (s - 1) as Step)
+    }
   }
 
   const toggleFach = (id: string) => {
@@ -177,63 +197,72 @@ export function OnboardingScreen() {
       )}
 
       {/* Step content */}
-      <div className="flex-1 px-6 pt-20 pb-10">
-        {step === 1 && <StepWelcome onNext={next} />}
-        {step === 2 && (
-          <StepPersonal
-            name={name} setName={setName}
-            klasse={klasse} setKlasse={setKlasse}
-            schulform={schulform} setSchulform={setSchulform}
-            schultyp={schultyp} setSchultyp={(v) => setSchultyp(v)}
-            userType={userType} setUserType={setUserType}
-          />
-        )}
-        {step === 3 && (
-          <StepZielnote zielnote={zielnote} setZielnote={setZielnote} isStudent={isStudent} />
-        )}
-        {step === 4 && (
-          <StepBundesland selected={bundeslandId} onSelect={setBundeslandId} isStudent={isStudent} />
-        )}
-        {step === 5 && (
-          <StepFaecher
-            selected={faecher} onToggle={toggleFach}
-            lkFaecher={lkFaecher} onToggleLK={toggleLK}
-            isOberstufe={isOberstufe}
-            customFaecher={customFaecher} setCustomFaecher={setCustomFaecher}
-            isStudent={isStudent}
-          />
-        )}
-        {step === 6 && (
-          <StepFolderSort sortMode={folderSortMode} setSortMode={setFolderSortMode} klasse={klasse} schultyp={schultyp} isStudent={isStudent} />
-        )}
-        {step === 7 && (
-          <StepStundenplan
-            faecher={faecher}
-            customFaecher={customFaecher}
-            slots={stundenplanSlots}
-            setSlots={setStundenplanSlots}
-            onNext={next}
-            onUpdateFaecher={(ids) => setFaecher((prev) => [...prev, ...ids.filter((id) => !prev.includes(id))])}
-          />
-        )}
-        {step === 8 && (
-          <StepDateiImport onNext={next} faecher={faecher} customFaecher={customFaecher} />
-        )}
-        {step === 9 && (
-          <StepKlausur
-            faecher={faecher}
-            customFaecher={customFaecher}
-            subject={klausurSubject} setSubject={setKlausurSubject}
-            date={klausurDate} setDate={setKlausurDate}
-            topic={klausurTopic} setTopic={setKlausurTopic}
-          />
-        )}
+      <div className="flex-1 px-6 pt-20 pb-10 overflow-hidden">
+        <AnimatePresence mode="wait" custom={direction} initial={false}>
+          <motion.div
+            key={step}
+            custom={direction}
+            variants={getStepVariants(!!reduceMotion)}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.2, ease: E }}
+          >
+            {step === 1 && <StepWelcome onNext={next} />}
+            {step === 2 && (
+              <StepPersonal
+                name={name} setName={setName}
+                klasse={klasse} setKlasse={setKlasse}
+                schulform={schulform} setSchulform={setSchulform}
+                schultyp={schultyp} setSchultyp={(v) => setSchultyp(v)}
+                userType={userType} setUserType={setUserType}
+              />
+            )}
+            {step === 3 && (
+              <StepZielnote zielnote={zielnote} setZielnote={setZielnote} isStudent={isStudent} />
+            )}
+            {step === 4 && (
+              <StepBundesland selected={bundeslandId} onSelect={setBundeslandId} isStudent={isStudent} />
+            )}
+            {step === 5 && (
+              <StepFaecher
+                selected={faecher} onToggle={toggleFach}
+                lkFaecher={lkFaecher} onToggleLK={toggleLK}
+                isOberstufe={isOberstufe}
+                customFaecher={customFaecher} setCustomFaecher={setCustomFaecher}
+                isStudent={isStudent}
+              />
+            )}
+            {step === 6 && (
+              <StepFolderSort sortMode={folderSortMode} setSortMode={setFolderSortMode} klasse={klasse} schultyp={schultyp} isStudent={isStudent} />
+            )}
+            {step === 7 && (
+              <StepStundenplan
+                faecher={faecher}
+                customFaecher={customFaecher}
+                slots={stundenplanSlots}
+                setSlots={setStundenplanSlots}
+                onNext={next}
+                onUpdateFaecher={(ids) => setFaecher((prev) => [...prev, ...ids.filter((id) => !prev.includes(id))])}
+              />
+            )}
+            {step === 8 && (
+              <StepKlausur
+                faecher={faecher}
+                customFaecher={customFaecher}
+                subject={klausurSubject} setSubject={setKlausurSubject}
+                date={klausurDate} setDate={setKlausurDate}
+                topic={klausurTopic} setTopic={setKlausurTopic}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Footer CTA — steps 7 (Stundenplan) and 8 (DateiImport) manage their own footer */}
-      {step > 1 && step !== 7 && step !== 8 && (
+      {/* Footer CTA — step 7 (Stundenplan) manages its own footer */}
+      {step > 1 && step !== 7 && (
         <div className="px-6 pb-10 pt-4">
-          {step < 9 ? (
+          {step < 8 ? (
             <Button variant="primary" fullWidth onClick={next} disabled={!canNext[step]}>
               Weiter
             </Button>
@@ -1603,301 +1632,7 @@ function StepStundenplan({
   )
 }
 
-/* ─── Step 8: Datei-Import ────────────────────────────────── */
-
-type ImportPhase = 'idle' | 'suggesting' | 'suggested' | 'manual' | 'processing' | 'done'
-
-function StepDateiImport({ onNext, faecher, customFaecher }: { onNext: () => void; faecher: string[]; customFaecher: CustomFach[] }) {
-  const { saveNote, saveToOhneFachFolder, addFolder, userFolders } = useUser()
-  const fileRef = useRef<HTMLInputElement>(null)
-  const cancelRef = useRef(false)
-  const suggestionAbortRef = useRef<AbortController | null>(null)
-
-  const [phase, setPhase] = useState<ImportPhase>('idle')
-  const [files, setFiles] = useState<File[]>([])
-  const [suggestion, setSuggestion] = useState<{ subjectId: string; subjectName: string; reason: string } | null>(null)
-  const [currentFile, setCurrentFile] = useState(0)
-  const [succeeded, setSucceeded] = useState(0)
-  const [failed, setFailed] = useState(0)
-
-  const profileSubjects = faecher.map((id) => ({ id, ...resolveSubjectInfo(id, customFaecher) }))
-
-  const handleSelect = (fileList: FileList | null) => {
-    if (!fileList || fileList.length === 0) return
-    const selected = Array.from(fileList).slice(0, 5)
-    setFiles(selected)
-
-    if (selected.length === 1 && profileSubjects.length > 0) {
-      setPhase('suggesting')
-      const controller = new AbortController()
-      suggestionAbortRef.current = controller
-      void suggestImportDestination(selected[0], profileSubjects, [], controller.signal)
-        .then((result) => {
-          if (controller.signal.aborted) return
-          setSuggestion(result ? { subjectId: result.subjectId, subjectName: result.subjectName, reason: result.reason } : null)
-          setPhase('suggested')
-        })
-        .catch(() => {
-          if (!controller.signal.aborted) setPhase('manual')
-        })
-    } else {
-      setPhase('manual')
-    }
-  }
-
-  const goManual = () => {
-    if (phase === 'suggesting') suggestionAbortRef.current?.abort()
-    setPhase('manual')
-  }
-
-  const startProcessing = async (subjectId: string) => {
-    setPhase('processing')
-    setCurrentFile(0)
-    setSucceeded(0)
-    setFailed(0)
-    cancelRef.current = false
-
-    let targetFolderId: string | undefined
-    if (subjectId) {
-      const importFolderId = `folder-import-${subjectId}`
-      if (!userFolders.some((f) => f.id === importFolderId)) {
-        addFolder({
-          id: importFolderId,
-          subjectId,
-          name: 'Importiert',
-          createdAt: new Date().toISOString(),
-          isAutoGenerated: false,
-        })
-      }
-      targetFolderId = importFolderId
-    }
-
-    const subjectName = profileSubjects.find((s) => s.id === subjectId)?.name ?? 'Allgemein'
-    let succ = 0
-    let fail = 0
-    for (let i = 0; i < files.length; i++) {
-      if (cancelRef.current) break
-      setCurrentFile(i)
-      try {
-        const noteId = `import-onboarding-${Date.now()}-${i}`
-        const { generated, noteTitle } = await analyzeFileToSmartNote(files[i], noteId, subjectName)
-        const note: UserNote = {
-          id: noteId,
-          subjectId: subjectId || undefined,
-          folderId: targetFolderId ?? 'folder-no-subject',
-          title: noteTitle,
-          content: generated.summary,
-          createdAt: new Date().toISOString(),
-        }
-        if (subjectId) saveNote(note, generated)
-        else saveToOhneFachFolder(note, generated)
-        succ++
-        setSucceeded(succ)
-      } catch {
-        fail++
-        setFailed(fail)
-      }
-      if (i < files.length - 1 && !cancelRef.current) {
-        await new Promise<void>((r) => setTimeout(r, GEMINI_BATCH_DELAY_MS))
-      }
-    }
-    setPhase('done')
-  }
-
-  return (
-    <div className="flex flex-col min-h-[calc(100vh-80px)]">
-      <div className="flex-1">
-        <h2 className="text-2xl font-bold text-text-primary mb-1">Starte mit deinen Unterlagen</h2>
-        <p className="text-text-muted text-sm mb-8">
-          Importiere Mitschriften, PDFs oder KC-Dokumente — die KI ordnet sie direkt dem richtigen Fach zu.
-        </p>
-
-        {/* IDLE — upload zone */}
-        {phase === 'idle' && (
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="w-full border-2 border-dashed border-border rounded-[20px] p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
-          >
-            <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-accent">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
-              </svg>
-            </div>
-            <div className="text-center">
-              <p className="text-text-primary font-semibold text-base">Dateien hochladen</p>
-              <p className="text-text-muted text-sm mt-1">PDF, JPG, PNG · bis zu 5 Dateien</p>
-            </div>
-          </button>
-        )}
-
-        {/* SUGGESTING — KI spinner */}
-        {phase === 'suggesting' && (
-          <div className="space-y-3">
-            <div className="bg-surface border border-border rounded-[20px] px-4 py-4 flex items-center gap-3">
-              <div className="w-8 h-8 border-[3px] border-accent/25 border-t-accent rounded-full animate-spin shrink-0" />
-              <div>
-                <p className="text-text-primary text-[14px] font-medium">KI ermittelt Fach…</p>
-                <p className="text-text-muted text-[12px] mt-0.5 truncate max-w-[220px]">{files[0]?.name}</p>
-              </div>
-            </div>
-            <button
-              onClick={goManual}
-              className="w-full py-3 rounded-card border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors"
-            >
-              Manuell wählen
-            </button>
-          </div>
-        )}
-
-        {/* SUGGESTED — KI recommendation */}
-        {phase === 'suggested' && (
-          <div className="space-y-3">
-            {suggestion ? (
-              <>
-                <div className="bg-accent/5 border border-accent/20 rounded-[20px] px-4 py-4">
-                  <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-3">KI-Vorschlag</p>
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-btn flex items-center justify-center text-xl shrink-0"
-                      style={{ backgroundColor: `${profileSubjects.find(s => s.id === suggestion.subjectId)?.color ?? '#7C3AED'}22` }}
-                    >
-                      {profileSubjects.find(s => s.id === suggestion.subjectId)?.icon ?? '📚'}
-                    </div>
-                    <div>
-                      <p className="text-text-primary font-bold text-[15px]">{suggestion.subjectName}</p>
-                      {suggestion.reason && (
-                        <p className="text-text-muted text-[12px] mt-0.5 italic leading-relaxed">{suggestion.reason}</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => void startProcessing(suggestion.subjectId)}
-                  className="w-full py-3.5 rounded-[20px] grad-accent text-white text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
-                >
-                  Vorschlag annehmen
-                </button>
-              </>
-            ) : (
-              <p className="text-text-muted text-sm mb-2">Kein Fach erkannt — bitte manuell wählen.</p>
-            )}
-            <button
-              onClick={goManual}
-              className="w-full py-3 rounded-card border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors"
-            >
-              Manuell wählen
-            </button>
-          </div>
-        )}
-
-        {/* MANUAL — subject picker */}
-        {phase === 'manual' && (
-          <div className="space-y-2">
-            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">In welches Fach?</p>
-            {profileSubjects.map((s) => (
-              <button
-                key={s.id}
-                onClick={() => void startProcessing(s.id)}
-                className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all"
-              >
-                <div
-                  className="w-9 h-9 rounded-btn flex items-center justify-center text-xl shrink-0"
-                  style={{ backgroundColor: `${s.color}22` }}
-                >
-                  {s.icon}
-                </div>
-                <span className="text-text-primary font-medium text-[15px]">{s.name}</span>
-              </button>
-            ))}
-            <button
-              onClick={() => void startProcessing('')}
-              className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left hover:bg-surface-hover transition-colors"
-            >
-              <div className="w-9 h-9 rounded-btn bg-surface-hover flex items-center justify-center shrink-0 text-lg">📁</div>
-              <span className="text-text-secondary font-medium text-[15px]">Schnellnotizen</span>
-            </button>
-          </div>
-        )}
-
-        {/* PROCESSING */}
-        {phase === 'processing' && (
-          <div className="bg-surface border border-border rounded-[20px] p-5">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-5 h-5 border-2 border-accent/30 border-t-accent rounded-full animate-spin shrink-0" />
-              <p className="text-text-primary font-semibold text-sm">
-                KI analysiert {files.length === 1 ? 'Datei' : 'Dateien'}…
-              </p>
-            </div>
-            <p className="text-text-muted text-sm truncate mb-1">{files[currentFile]?.name}</p>
-            <p className="text-text-muted text-sm">{succeeded + failed} von {files.length} verarbeitet</p>
-            <div className="mt-3 h-1.5 bg-border/40 rounded-pill overflow-hidden">
-              <div
-                className="h-full grad-accent rounded-pill transition-all duration-500"
-                style={{ width: `${files.length > 0 ? ((succeeded + failed) / files.length) * 100 : 0}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* DONE */}
-        {phase === 'done' && (
-          <div className="rounded-[20px] p-5" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.2)' }}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(var(--color-success),0.15)' }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success">
-                  <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-text-primary font-bold text-[16px]">
-                  {succeeded} Smart {succeeded === 1 ? 'Note' : 'Notes'} erstellt ✓
-                </p>
-                {failed > 0 && <p className="text-text-muted text-[13px] mt-0.5">{failed} fehlgeschlagen</p>}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Step's own footer */}
-      <div className="space-y-3 pt-6">
-        {phase === 'done' && (
-          <Button variant="primary" fullWidth size="lg" onClick={onNext}>
-            Weiter
-          </Button>
-        )}
-        {phase === 'idle' && (
-          <>
-            <Button variant="primary" fullWidth size="lg" onClick={() => fileRef.current?.click()}>
-              Dateien auswählen
-            </Button>
-            <button onClick={onNext} className="w-full py-3 text-sm text-text-muted hover:text-text-secondary transition-colors">
-              Jetzt überspringen
-            </button>
-          </>
-        )}
-        {(phase === 'suggesting' || phase === 'suggested' || phase === 'manual') && (
-          <button onClick={onNext} className="w-full py-3 text-sm text-text-muted hover:text-text-secondary transition-colors">
-            Jetzt überspringen
-          </button>
-        )}
-      </div>
-
-      <input
-        ref={fileRef}
-        type="file"
-        multiple
-        accept=".pdf,.jpg,.jpeg,.png,.webp,image/*,application/pdf"
-        className="hidden"
-        onChange={(e) => handleSelect(e.target.files)}
-      />
-    </div>
-  )
-}
-
-/* ─── Step 9: Erste Klausur ───────────────────────────────── */
+/* ─── Step 8: Erste Klausur ───────────────────────────────── */
 
 function StepKlausur({
   faecher,
