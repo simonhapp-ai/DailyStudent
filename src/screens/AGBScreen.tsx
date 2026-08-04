@@ -13,7 +13,7 @@ export function AGBScreen() {
         {/* Meta */}
         <div className="bg-surface border border-border/60 rounded-[20px] p-4 shadow-card-adaptive">
           <p className="text-[11px] text-text-muted uppercase font-semibold tracking-wide mb-1">Letzte Aktualisierung</p>
-          <p className="text-text-primary font-semibold">14. Juni 2026</p>
+          <p className="text-text-primary font-semibold">4. August 2026</p>
         </div>
 
         {/* Agreement */}
@@ -59,21 +59,46 @@ export function AGBScreen() {
 
         {/* 5 */}
         <Section title="5. PURCHASES AND PAYMENT">
-          <p>We accept the following forms of payment: Visa, Mastercard, and other payment methods offered through Stripe.</p>
-          <p className="mt-2">You agree to provide current, complete, and accurate purchase and account information for all purchases made via the Services. You further agree to promptly update account and payment information, including email address, payment method, and payment card expiration date, so that we can complete your transactions and contact you as needed. Sales tax will be added to the price of purchases as deemed required by us. We may change prices at any time.</p>
-          <p className="mt-2">You agree to pay all charges at the prices then in effect for your purchases, and you authorise us to charge your chosen payment provider for any such amounts upon placing your order. We reserve the right to correct any errors or mistakes in pricing, even if we have already requested or received payment.</p>
+          <p>Depending on how you access the Services, we accept the following forms of payment: (1) on the web, Visa, Mastercard, and other payment methods offered through Stripe; (2) on iOS, Apple's In-App Purchase system, billed to the payment method on file with your Apple ID.</p>
+          <p className="mt-2">You agree to provide current, complete, and accurate purchase and account information for all purchases made via the Services. You further agree to promptly update account and payment information, including email address, payment method, and payment card expiration date, so that we can complete your transactions and contact you as needed. Sales tax/VAT will be added to the price of purchases as deemed required by us. We may change prices at any time, subject to the price-change notice requirements described below.</p>
+          <p className="mt-2">You agree to pay all charges at the prices then in effect for your purchases, and you authorise us (or, for purchases made via the App, Apple, acting as our payment processor) to charge your chosen payment provider for any such amounts upon placing your order. We reserve the right to correct any errors or mistakes in pricing, even if we have already requested or received payment.</p>
         </Section>
 
         {/* 6 */}
         <Section title="6. SUBSCRIPTIONS">
-          <SubHeading>Billing and Renewal</SubHeading>
-          <p>Your subscription will continue and automatically renew unless cancelled. You consent to our charging your payment method on a recurring basis without requiring your prior approval for each recurring charge, until such time as you cancel the applicable order. The length of your billing cycle is monthly or annually, depending on the subscription plan you choose.</p>
-          <SubHeading>Free Trial</SubHeading>
-          <p>We may offer a free trial to new users of the Services. The length of the free trial period will be as specified during sign-up. We have the right to limit your ability to take advantage of multiple free trials.</p>
+          <SubHeading>Subscription Plans</SubHeading>
+          <p>We offer a paid subscription tier, "DailyStudent Pro", in the following durations and prices (in EUR, incl. applicable VAT):</p>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li><strong>DailyStudent Pro — Monthly:</strong> €7.99, billed every month.</li>
+            <li><strong>DailyStudent Pro — Yearly:</strong> €59.99, billed every 12 months.</li>
+          </ul>
+          <p className="mt-2">Current prices are also always shown in the app before purchase. We may introduce additional plans or change these prices from time to time; any price change will be communicated to you in advance and, where required by App Store or applicable law, will require your affirmative consent before it takes effect on your next renewal.</p>
+
+          <SubHeading>Billing and Renewal — Purchases via the App (Apple In-App Purchase)</SubHeading>
+          <p>If you purchase DailyStudent Pro through the iOS app, your subscription is processed entirely by Apple as an auto-renewing subscription:</p>
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li>Payment will be charged to your Apple ID account at confirmation of purchase.</li>
+            <li>Your subscription automatically renews for the same duration and at the then-current price unless auto-renew is turned off at least 24 hours before the end of the current billing period.</li>
+            <li>Your account will be charged for renewal within 24 hours prior to the end of the current period, and the cost of the renewal will be identified.</li>
+            <li>Subscriptions and any unused portion of a free trial or introductory offer period, if offered, are forfeited when you purchase a subscription upgrade during the active subscription period, where applicable.</li>
+          </ul>
+
+          <SubHeading>Billing and Renewal — Purchases via the Website (Stripe)</SubHeading>
+          <p>If you purchase DailyStudent Pro via dailystudent.de, your subscription is billed through Stripe and will continue and automatically renew for the same duration at the then-current price unless cancelled before the renewal date. You consent to our charging your payment method on a recurring basis without requiring your prior approval for each recurring charge, until such time as you cancel.</p>
+
+          <SubHeading>Free Trials &amp; Promotional Access</SubHeading>
+          <p>From time to time we may grant temporary access to Pro features free of charge through promotional programs — for example, our referral program, which grants a limited period of Pro access to users who successfully refer a specified number of new users. Such promotional access is separate from, and not a condition of, any paid subscription purchase; it does not require a payment method and automatically ends at the end of the stated period unless you separately purchase a paid subscription. Details and duration of any active promotion are shown in the app. We have the right to limit or discontinue promotional access at our discretion.</p>
+
           <SubHeading>Cancellation</SubHeading>
-          <p>All purchases are non-refundable. You can cancel your subscription at any time by logging into your account. Your cancellation will take effect at the end of the current paid term. If you have any questions or are unsatisfied with our Services, please email us at simonhapp161@gmail.com.</p>
+          <p><strong>Subscriptions purchased via the App (Apple ID):</strong> Billing for these subscriptions is handled exclusively by Apple, not by DailyStudent. We do not have access to your Apple billing details and cannot cancel or refund an App Store subscription on your behalf. To cancel, open the Settings app on your device, tap your name, tap "Abonnements" ("Subscriptions"), select DailyStudent, and tap "Abonnement kündigen" ("Cancel Subscription") — or manage it from the App Store app under your account. You can also reach this from within DailyStudent via Profil → Account → „Abo verwalten". Cancellation takes effect at the end of the current billing period; you retain access to Pro features until then.</p>
+          <p className="mt-2"><strong>Subscriptions purchased via the Website (Stripe):</strong> You can cancel at any time from Profil → Account → „Abo verwalten" in the app, or by contacting us at simonhapp161@gmail.com. Cancellation takes effect at the end of the current paid term.</p>
+
+          <SubHeading>Refunds</SubHeading>
+          <p><strong>Purchases via the App:</strong> All purchases made through Apple's In-App Purchase system are billed and refunded exclusively by Apple, in accordance with Apple's own refund policies. To request a refund, go to reportaproblem.apple.com, use the "Abonnements" section of your Apple ID account, or contact Apple Support directly. We cannot process, guarantee, or override refunds for App Store purchases.</p>
+          <p className="mt-2"><strong>Purchases via the Website:</strong> Purchases made directly through dailystudent.de are non-refundable, except where required otherwise by applicable mandatory consumer protection law (e.g. statutory withdrawal rights). If you have any questions or are unsatisfied with our Services, please email us at simonhapp161@gmail.com.</p>
+
           <SubHeading>Fee Changes</SubHeading>
-          <p>We may, from time to time, make changes to the subscription fee and will communicate any price changes to you in accordance with applicable law.</p>
+          <p>We may, from time to time, make changes to the subscription fee and will communicate any price changes to you in accordance with applicable law and, for App Store subscriptions, Apple's requirements for notifying subscribers of price changes.</p>
         </Section>
 
         {/* 7 */}
