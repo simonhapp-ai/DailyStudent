@@ -122,7 +122,7 @@ Smart Notes
 - **Rechtliches — vollständig** ✅:
   - `ImpressumScreen` (`/profil/impressum`) — echte Daten, Steuernummer noch ausstehend
   - `DatenschutzScreen` (`/profil/datenschutz`) — 10 Abschnitte, DSGVO-konform, Account-Lösch-Button
-  - `AGBScreen` (`/profil/agb`) — 29 Sektionen (inkl. 22a KI-Haftungsausschluss), Termly-generiert; Streitschlichtungshinweis (OS-Plattform) entfernt (Abmahngefahr)
+  - `AGBScreen` (`/profil/agb`, zusätzlich öffentlich unter `/agb` — kein Login nötig, direkt von Apple prüfbar) — 29 Sektionen (inkl. 22a KI-Haftungsausschluss), Termly-generiert; Streitschlichtungshinweis (OS-Plattform) entfernt (Abmahngefahr). Section 5+6 (Purchases/Subscriptions) am 04.08.2026 um Apple-IAP-Abo-Klauseln erweitert, siehe Session-Log.
   - Account-Löschung: DSGVO Art. 17 via `delete-account` Edge Function ✅ deployed
 - **LandingScreen** ✅ (`/landing`) — öffentliche Marketing-Seite, Framer Motion, Floating Bubble Navbar, Hero, Features, Pricing, Footer; conditional root: Unauthenticated → `/landing`, authenticated → App
 - **Bug-Report Widget** ✅ — Accordion-Card in ProfilScreen (kein Floating Button mehr), EmailJS
@@ -553,7 +553,7 @@ isDevMode:  true
 | BenachrichtigungenScreen | /profil/benachrichtigungen | Notification-Toggles (UI only) |
 | DatenschutzScreen | /profil/datenschutz | Vollständige DSGVO-Datenschutzerklärung + Account-Löschung |
 | ImpressumScreen | /profil/impressum | Impressum gem. §5 TMG |
-| AGBScreen | /profil/agb | Nutzungsbedingungen — 28 Sektionen (Termly, EN) |
+| AGBScreen | /profil/agb (+ öffentlich /agb) | Nutzungsbedingungen — 29 Sektionen (Termly, EN), inkl. Apple-IAP-Abo-Klauseln |
 
 ---
 
@@ -750,6 +750,30 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 - **Simon hinterfragt technische Behauptungen aktiv und erwartet ehrliche, unaufgeregte Korrektur ohne Beschönigung** — explizit gewünscht: „no hallucinations". Schätzt direkte, faktenbasierte Einordnung von Aufwand/Risiko/Kosten (z.B. Apple-IAP-Kommission, realistischer Zeitaufwand für einen nativen Rewrite) höher ein als vorauseilende Zustimmung zu seinen eigenen Ideen — siehe 26.–27.07.2026-Diskussion über Wrapper- vs. natives-Rewrite-Strategie in „Zukunftsvision" weiter unten.
 - **Sensible Daten (private Keys, `.p8`-Dateien) nie in den Chat einfügen lassen** — wenn ein Signing-Key/Secret gebraucht wird (z.B. Apple Sign-in-Key, App Store Connect API Key), Simon bitten den Dateipfad zu nennen (z.B. Desktop), lokal per Bash/Node einlesen und verarbeiten (z.B. JWT signieren), nur das Ergebnis zurückgeben — nie den Rohinhalt im Gespräch anzeigen oder anzeigen lassen.
 - **Über 150 Personen bereits auf der Warteliste für den App-Store-Release** (Stand 27.07.2026) — echter Nutzerdruck hinter der Deadline, nicht nur Simons persönliches Ziel.
+
+---
+
+## Letzte Session (04.08.2026) — AGB-Abo-Compliance-Fix (Apple-Ablehnung wegen fehlendem EULA/Terms-Link)
+
+**Auslöser:** Ein Re-Submit (nach Track A/RevenueCat-Aktivierung) wurde von Apple abgelehnt: fehlender EULA/Terms-Link in den App-Store-Connect-Metadaten, plus die AGB seien nur AI-generischer Text ohne Abo-spezifische Klauseln. Auftrag kam mit einer Reihe von Annahmen (AGB nur als Accept-Screen im Onboarding, nicht eigenständig erreichbar; neue Route unter `/profiles/agb` nötig) — beide Annahmen stellten sich beim Nachsehen im Code als veraltet/falsch heraus, siehe unten.
+
+**Recherche-Ergebnis, korrigiert die Auftragsannahme:**
+- Es gab und gibt **keinen** AGB-Accept-Screen im Onboarding — per `git log` verifiziert, so etwas hat nie existiert (nur ein Closed-Beta-Passwort-Gate wurde am 01.08. entfernt, unabhängig davon). Consent läuft weiter nur über eine einzeilige Erwähnung in `AuthScreen.tsx` beim Signup.
+- `AGBScreen.tsx` war **bereits** eine eigenständige, standalone ladbare Seite — sowohl unter `/profil/agb` als auch öffentlich (kein Login nötig) unter `/agb`, exakt nach demselben Muster wie `/impressum`/`/datenschutz` (`App.tsx`, Pre-Auth-Check-Zweig). Live via `curl -I https://www.dailystudent.de/agb` mit `200 OK` verifiziert.
+- `ProfilScreen.tsx`s „Rechtliches"-Sektion verlinkte auch schon auf `/profil/agb`.
+- → Es gab nichts zu extrahieren (keine Textduplikation vorhanden) und keine neue Route nötig. **Empfehlung an Simon: `https://www.dailystudent.de/agb` in App Store Connects License-Agreement-Feld eintragen — nicht `/profiles/agb`**, das würde von der etablierten Konvention (`/profil/...`, Deutsch, Singular) abweichen und existiert nirgends im Code.
+
+**Tatsächlich gefixt:** Der echte Gap war, dass Section 5 ("Purchases and Payment") und Section 6 ("Subscriptions") in `AGBScreen.tsx` nur Stripe/Web-Zahlung kannten, keine Erwähnung von Apple In-App-Purchase. Beide Sections erweitert um:
+- Konkrete Preistabelle (Monatlich €7,99 / Jährlich €59,99 — Werte aus `ProfilScreen.tsx`/`LandingScreen.tsx`/`ProModal.tsx` übernommen, dort weiterhin hardcodiert an mehreren Stellen, keine gemeinsame Konstante)
+- Auto-Renewal-Klausel mit Apples Pflicht-Wortlaut (24h-vor-Periodenende-Kündigungsfenster)
+- Kündigungsanleitung für Apple-ID-Abos (Einstellungen → Name → Abonnements, bzw. In-App unter Profil → Account → „Abo verwalten")
+- Free-Trial-Klausel umformuliert auf das tatsächliche Mechanismus (Referral-Programm gewährt befristeten Pro-Zugang) statt einen nicht existierenden StoreKit-Trial zu behaupten
+- Getrennte Refund-Policy: Apple-Käufe → ausschließlich über Apple (reportaproblem.apple.com); Stripe-Käufe → bestehende Non-Refundable-Klausel unverändert
+- „Letzte Aktualisierung" auf 4. August 2026 gesetzt
+
+Einziger geänderter Code: `src/screens/AGBScreen.tsx` (Onboarding/Consent-Logik bewusst nicht angefasst). Verifiziert: `tsc --noEmit` clean, `npm run build` erfolgreich, `npm run lint` unverändert (92 vorbestehende Probleme, keins in `AGBScreen.tsx`). Committed + gepusht (`83e1d7f`).
+
+**Weiterhin offen, nur von Simon zu erledigen:** die URL `https://www.dailystudent.de/agb` in App Store Connects „License Agreement"/App-Beschreibungs-Feld eintragen — das ist der eigentliche Metadaten-Fix, den Apple verlangt, kein Code-Task.
 
 ---
 
