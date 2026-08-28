@@ -740,6 +740,24 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 
 ---
 
+## Pro Launch 2 — Claude-Premium-Produkte (geplant, noch nicht gebaut — Stand 28.08.2026)
+
+**Kontext:** Pro-Launch 1 (aktuelle Phase, siehe `PRO_LAUNCH_MASTER_PROMPT.md` im Repo-Root für den vollen Block-1–6-Plan) läuft komplett ohne Claude-Tokens — die gesamte KI-Pipeline bleibt auf Gemini/Groq. Launch 2 ist ein separates, klar abgegrenztes Folgeprojekt, **noch nicht gestartet**.
+
+- **3 Premium-Produkte, exklusiv über Claude:** Lernzettel, Probeklausur-Material (inkl. Korrektur), Lernplan. Alles andere (Smart Notes, Karteikarten, Blurting, Keyword-Erklärung, AFB-Trainer) bleibt dauerhaft auf Gemini/Groq — qualitativ ausreichend, kein Grund zu wechseln.
+- **Modell: Sonnet 5** (`claude-sonnet-5`) für alle 3 Produkte — Opus 5 wäre bei Jahresabos margenmäßig negativ (siehe Kostenmodell unten), Sonnet 5 lässt bei einem Monatsabo ca. €3,75 Marge/Monat.
+- **Trigger: Umbau erst bei ~5 zahlenden Abonnenten starten** — dann tragen die Abo-Einnahmen die Claude-API-Kosten während der ~1–2 Monate Vorstreckungslücke (Apple zahlt erst ~33 Tage nach Monatsende aus, Claude bucht sofort).
+- **Per-Bucket-Tagesdeckel für Pro-Nutzer** (neue Buckets im bestehenden `ai_rate_limit`-System, Muster wie Migration 012, tier-blind, Ceiling nur serverseitig): Lernzettel 5/Tag, Probeklausur-Material 3/Tag, Lernplan 2/Tag.
+- **Architektur beim Umbau:** neuer `api/claude.ts`-Proxy analog `api/gemini.ts` (Supabase-Token verifizieren → Rate-Limit prüfen → zu `api.anthropic.com` proxen); `src/lib/claude.ts` für die 3 Funktionen; bestehende Prompts aus `gemini.ts` sind reine Strings ohne UI-Kopplung, portieren sich praktisch 1:1; `ANTHROPIC_API_KEY` als neue Vercel-Env-Var, separat vom Claude-Code-Abo.
+- **Budget-Leitplanke:** max. ~€20/Monat aus eigener Tasche, ab ~8–10 zahlenden Nutzern selbsttragend.
+- **Token-Logging bereits live** (`console.log('[gemini tokens]', ...)` in `examFetch()`/`generateLernplan()`, `src/lib/gemini.ts`, seit 28.08.2026) — sammelt reale Ø-Token-Zahlen für Lernzettel/Probeklausur-Material/Lernplan. Nach einigen Tagen/Wochen Live-Daten: echte Werte gegen die Schätzung unten halten, bevor der Umbau beginnt.
+
+**Kostenmodell (Schätzung, wird durch die echten Logging-Daten ersetzt sobald genug vorliegen):** Annahme 15% Apple-Kommission (Small Business Program), ~19% MwSt, USD≈EUR als Puffer. Sonnet 5: $2/$10 pro 1M Input-/Output-Tokens. Geschätzte Kosten pro Generierung: Lernzettel ~€0,05, Probeklausur-Material (erstellen+korrigieren) ~€0,11, Lernplan ~€0,07 — macht bei realistischer Klausurzeit-Nutzung (~15 Lernzettel/~8 Probeklausuren/~4 Lernpläne pro Monat) ca. **€1,85/aktiven Pro-Nutzer/Monat**. Netto-Einnahme pro Monatsabo nach Kommission+MwSt ca. €5,60 → Marge ca. €3,75/Monatsabo.
+
+**Nicht von selbst starten** — erst wenn die ~5-Zahler-Marke erreicht ist UND Simon grünes Licht gibt.
+
+---
+
 ## Developer-Kontext
 
 - **Entwickler:** Simon (kein Coding-Background, arbeitet mit Claude Code in VS Code) + Jan (Simons Helfer)
@@ -750,6 +768,40 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 - **Simon hinterfragt technische Behauptungen aktiv und erwartet ehrliche, unaufgeregte Korrektur ohne Beschönigung** — explizit gewünscht: „no hallucinations". Schätzt direkte, faktenbasierte Einordnung von Aufwand/Risiko/Kosten (z.B. Apple-IAP-Kommission, realistischer Zeitaufwand für einen nativen Rewrite) höher ein als vorauseilende Zustimmung zu seinen eigenen Ideen — siehe 26.–27.07.2026-Diskussion über Wrapper- vs. natives-Rewrite-Strategie in „Zukunftsvision" weiter unten.
 - **Sensible Daten (private Keys, `.p8`-Dateien) nie in den Chat einfügen lassen** — wenn ein Signing-Key/Secret gebraucht wird (z.B. Apple Sign-in-Key, App Store Connect API Key), Simon bitten den Dateipfad zu nennen (z.B. Desktop), lokal per Bash/Node einlesen und verarbeiten (z.B. JWT signieren), nur das Ergebnis zurückgeben — nie den Rohinhalt im Gespräch anzeigen oder anzeigen lassen.
 - **Über 150 Personen bereits auf der Warteliste für den App-Store-Release** (Stand 27.07.2026) — echter Nutzerdruck hinter der Deadline, nicht nur Simons persönliches Ziel.
+
+---
+
+## Letzte Session (28.08.2026) — Pro-Launch Blöcke 1–6 (Code-Teil) + Stundenplan-Freistunden-Feature
+
+**Auftrag:** Ganzheitliche Roadmap-Session anhand `PRO_LAUNCH_MASTER_PROMPT.md` (im Repo-Root, volle Block-1–6-Checkliste mit offenen Fragen/Simon-Aufgaben — bei Widerspruch zu diesem CLAUDE.md-Abschnitt gilt die Master-Prompt-Datei für die aktuelle Phase) plus ein neues, direkt angefordertes UI-Feature: KI-Erkennung von Freistunden im Stundenplan + einheitlicher Pillen-Look. Alles auf Branch `polish/navigation-stability`, in 5 verifizierten Commits (`tsc`/`build`/`lint` nach jedem Cluster, Lint-Zahl konstant bei 92).
+
+**Vorab per Rückfrage geklärt** (Simons Antworten): Test-Allowlist = `simon.happ@gmx.de`; Routen-Übergang = dezenter Fade; Trial-Copy = „1 Woche kostenlos, danach €7,99/Monat"; AFB-Trainer nach Launch wieder Pro-only (zurück zur bestehenden Paywall-Tabelle); Stundenplan-Pillen-Redesign = voll vereinheitlichen an allen 4 Anzeige-Stellen.
+
+**Block 1 (AGB + ProModal-Compliance)** — `src/screens/AGBScreen.tsx`: neuer Absatz „Free Trial — DailyStudent Pro Monthly (App Store)" mit Apples Pflicht-Wortlaut (Dauer, Auto-Konversion, 24h-Kündigungsfenster, ein Trial pro Apple-ID), getrennt vom bestehenden Referral-Promo-Absatz. `src/components/ui/ProModal.tsx`: Trial-Copy am Monatstoggle + CTA-Button (nur wenn `checkMonthlyTrialEligibility()` `true` liefert), neue Zeile mit Abo-Laufzeit-Hinweis + Links zu `/agb`/`/datenschutz` direkt am Kauf-Button (Apple Guideline 3.1.2).
+
+**Block 2 (Test-Allowlist)** — `src/context/UserContext.tsx`: `PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de']`, als `effectiveAppConfig` direkt an der Provider-Value-Stelle berechnet (nicht im Fetch-Effect) — bypassed nur `proPurchasesEnabled`, alle `probeklausur_mode2/3/4_enabled`-Flags bleiben für alle Nutzer inkl. Allowlist unberührt. Da alle Konsumstellen (`ProModal`, `ProfilScreen.handleUpgrade`, `LernplanKonfiguratorScreen`, `ProfilCoinsScreen`, `LernplanDetailScreen`, `LernzettelScreen`, `LernzettelGeneratorScreen`) `appConfig` aus `useUser()` lesen, deckt der eine Bypass-Punkt automatisch alle ab.
+
+**Block 3 (Gratis-Testphase)** — `src/lib/revenuecat.ts`: neue `checkMonthlyTrialEligibility()` liest `PurchasesPackage.product.introPrice` (RevenueCat/StoreKit) + `Purchases.checkTrialOrIntroductoryPriceEligibility()`, `UNKNOWN`-Status wird als „nicht berechtigt" behandelt (RevenueCats eigene Empfehlung — lieber Normalpreis zeigen als fälschlich einen Trial versprechen). `revenuecat-webhook/index.ts` wurde nur verifiziert, nicht geändert — `period_type: 'TRIAL'` → Status `'trialing'` war bereits korrekt implementiert.
+
+**Block 4 (Navigation/Layout)** — größter Teilblock:
+- `src/app/App.tsx`: neuer `RouteFade`-Wrapper (framer-motion, 180ms Opacity-Fade, `useReducedMotion()`-Respekt, kein Bounce) um `<AppRoutes />` in Desktop- und Mobile-Layout.
+- App-weite `min-h-screen`/`h-screen`/`100vh` → `min-h-dvh`/`h-dvh`/`100dvh`-Umstellung (45 Dateien) — `100vh` berücksichtigt die dynamische iOS-WebView-Toolbar nicht, war die wahrscheinlichste Ursache für Screen-Sprünge.
+- Explore-Agent-Audit über alle 39 Screens + Overlays ergab 23 Findings, Ergebnis + was bewusst nicht angefasst wurde in **`NAV_LAYOUT_AUDIT.md`** (Repo-Root) — 13 High/Medium-Findings direkt gefixt: fehlende `safe-area-inset-top`/`-bottom` an 7 bzw. 6 Stellen (u.a. `LernplanDetailScreen`, `OnboardingScreen`, alle 4 `ProbeklausurModeXScreen` + `ProbeklausurRetroScreen`, `LandingScreen`-Navbar, `ProModal`, `NoteCreateScreen`), 2 CLS-Datenrennen (`DashboardScreen`s ErsteSchritteCard + `LernplanDetailScreen`s „nicht gefunden"-Zustand, beide jetzt hinter `supabaseDataLoading` gegated), 1 Zurück-Button-Farbinkonsistenz (`LernplanDetailScreen`). Bewusst nicht angefasst: ~20 Screens mit einer leicht anderen (aber funktional korrekten) Safe-Area-Werte-Konvention, sowie die Landing-Page-Familie (`EarlyAccessScreen`/`DemoScreen`) mit ihrer eigenständigen grauen statt lila Farbsprache — Details siehe `NAV_LAYOUT_AUDIT.md`.
+
+**Block 5 (Pro-Unlock)** — `src/lib/revenuecat.ts` + `src/screens/ProfilAccountScreen.tsx`: neuer „Käufe wiederherstellen"-Button (nativ-only, ruft `Purchases.restorePurchases()`) — fehlte komplett im Repo, ist aber Apple-Pflicht (Guideline 3.1.1) für Abo-Apps. Verifiziert (keine Code-Änderung nötig): beide Kauf-Einstiegspunkte routen weiterhin korrekt zu RevenueCat auf iOS (Fix `7769f19` von Track A steht noch), `api/gemini.ts`s `isProbeklausurMode2Paused()` liest weiterhin dasselbe `app_config`-Flag.
+
+**Block 6 (Claude-Kostenmodell-Vorbereitung)** — `src/lib/gemini.ts`: leichtgewichtiges `console.log('[gemini tokens]', bucket, usageMetadata)` in `examFetch()` (deckt Lernzettel + alle 4 Probeklausur-Modi + Korrektur ab) und separat in `generateLernplan()`. Neue CLAUDE.md-Sektion „Pro Launch 2 — Claude-Premium-Produkte" (oberhalb, vor „Developer-Kontext") dokumentiert Modellwahl (Sonnet 5), Trigger (~5 Zahler), Kostenmodell-Schätzung und Architektur für den späteren Umbau — **noch nicht gebaut, nur vorbereitet**.
+
+**Zusätzlich, direkt angefordert — Stundenplan-Feature:** `parseStundenplanFromImage()` (`src/lib/groq.ts`) instruierte die KI bisher explizit, Freistunden zu verwerfen (`"Freistunden, Pausen, leere Zellen NICHT aufnehmen"`) — jetzt erkennt sie echte Lücken zwischen zwei Unterrichtsstunden am selben Tag über einen `FREISTUNDE`-Sentinel im JSON (kurze Pausen zwischen direkt aufeinanderfolgenden Stunden bleiben weiterhin ignoriert, ebenso „Schulschluss" = einfach kein weiterer Slot). Neues Feld `StundenplanSlot.isFreistunde?: boolean` (`src/types/index.ts`). Neue **`StundenplanPill`**-Komponente (`src/components/ui/StundenplanPill.tsx`, 4 Varianten: `row`/`stack`/`compact`/`timeline`) vereinheitlicht den Pillen-Look an allen 4 Anzeige-Stellen (Dashboard-Tagesplan, Kalender-Zeitachse, Kalender-Wochenübersicht-Overlay, Kalender-Wochen-Mini-Vorschau) auf Farbverlauf + linken Akzentstreifen (vorher 4 unterschiedliche Chip-Stile) — Freistunden bekommen bewusst keinen Fach-Akzent (gestrichelt, gedimmt, ☕-Icon). Die beiden Bearbeitungslisten (Onboarding-Scan-Review, Kalender-Stundenplan-Editor) wurden nicht auf die neue Pillen-Komponente umgestellt (andere UI-Anforderung: Lösch-Button pro Zeile), zeigen Freistunden-Einträge aber jetzt mit sinnvollem Label/Icon statt leerem Fachnamen.
+
+**Nebenbei erledigt (Auto-Mode-Zwischenfrage):** Nutzer fragte nach Claude Codes „Remote Control"-Feature — reine Client-seitige Aktion (`claude --remote-control` im Terminal), kein Code-Bezug zu diesem Repo, wurde direkt beantwortet und ist mittlerweile aktiv.
+
+**Was noch offen ist (nicht per Code lösbar, siehe `PRO_LAUNCH_MASTER_PROMPT.md` für den vollen Kontext):**
+1. **Block 1 — Simon:** License-Agreement-URL (`https://www.dailystudent.de/agb`) in App Store Connect eintragen, Apple Small Business Program-Status prüfen/einschreiben.
+2. **Block 3 — Simon:** Introductory Offer (1 Woche, Free, alle Territorien, nur Monatsprodukt) in App Store Connect einrichten; RevenueCat zieht es danach automatisch.
+3. **Block 4 — Simon:** Preview-Build am echten Gerät durchklicken — Code-Audit deckt nicht alles ab (z. B. echtes Tastatur-/Bounce-Timing).
+4. **Block 5 — Simon:** voller Sandbox-Testdurchlauf (Trial-Kauf, Jahres-Kauf, Restore, Kündigen, natives Apple-Login) mit dem Allowlist-Account, dann erst der `app_config`-Flag-Flip.
+5. **Block 6 — Simon:** nach ~1 Woche Live-Logging die echten Ø-Token-Zahlen mit der Schätzung abgleichen; Umbau erst bei ~5 zahlenden Abonnenten UND Simons OK anstoßen.
 
 ---
 
