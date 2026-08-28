@@ -85,7 +85,7 @@ function uid() {
 export function LernplanDetailScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { lernplaene, deleteLernplan, addEntries, personalEntries, profile, isPro, appConfig } = useUser()
+  const { lernplaene, deleteLernplan, addEntries, personalEntries, profile, isPro, appConfig, supabaseDataLoading } = useUser()
 
   const plan = lernplaene.find((p) => p.id === id)
 
@@ -102,11 +102,31 @@ export function LernplanDetailScreen() {
   }
 
   if (!plan) {
+    // Distinguish "still loading" from "actually not found" — lernplaene comes
+    // from Supabase and can still be mid-sync on mount (e.g. deep link/refresh
+    // right after login), which used to briefly show "nicht gefunden" before
+    // flashing into the real detail view once data arrived (CLS finding,
+    // Block 4 nav audit). A plain spinner avoids that structural DOM swap.
+    if (supabaseDataLoading) {
+      return (
+        <div className="min-h-dvh bg-background flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
+        </div>
+      )
+    }
     return (
       <div className="flex flex-col items-center justify-center min-h-dvh bg-background gap-4 px-8">
         <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center text-3xl">📅</div>
         <p className="text-text-primary font-semibold text-lg text-center">Lernplan nicht gefunden</p>
-        <button onClick={() => navigate(-1)} className="text-accent text-sm font-medium">Zurück</button>
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Zurück
+        </button>
       </div>
     )
   }
@@ -287,14 +307,18 @@ export function LernplanDetailScreen() {
 
       <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto pb-24">
         {/* Header */}
-        <div className="no-print sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border/40 px-4 py-3">
+        <div
+          className="no-print sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border/40 px-4 pb-3"
+          style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}
+        >
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
-              className="w-9 h-9 flex items-center justify-center rounded-btn text-text-secondary hover:bg-surface-hover transition-colors shrink-0"
+              className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 px-2 py-1.5 rounded-btn"
+              style={{ color: 'rgb(var(--color-accent))' }}
             >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M19 12H5M12 5l-7 7 7 7" strokeLinecap="round" strokeLinejoin="round" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
             <div className="flex-1 min-w-0">

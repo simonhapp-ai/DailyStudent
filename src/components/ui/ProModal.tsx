@@ -132,7 +132,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
     return (
       <div className="fixed inset-0 z-50 flex flex-col justify-end">
         <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-        <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 pb-10 z-10">
+        <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 z-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}>
           <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
 
           <div className="w-12 h-12 rounded-btn icon-accent flex items-center justify-center mb-4">

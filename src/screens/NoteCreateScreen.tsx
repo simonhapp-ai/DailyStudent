@@ -1740,7 +1740,7 @@ export function NoteCreateScreen() {
       </div>
 
       {/* TOOLBAR */}
-      <div className="shrink-0 border-t border-border px-3 py-3 bg-surface">
+      <div className="shrink-0 border-t border-border px-3 pt-3 bg-surface" style={{ paddingBottom: 'max(12px, env(safe-area-inset-bottom, 0px))' }}>
         {showAskBar ? (
           <div className="flex items-center gap-2">
             <button
@@ -2020,7 +2020,7 @@ export function NoteCreateScreen() {
       {showSmartNotePrompt && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-black/50" onClick={() => { if (!smartNoteLoading) { setShowSmartNotePrompt(false); pendingSave && doSave(pendingSave.subjectId, pendingSave.folderId); setPendingSave(null) } }} />
-          <div className="relative w-full max-w-lg bg-surface rounded-t-2xl px-5 pt-5 pb-8 shadow-2xl">
+          <div className="relative w-full max-w-lg bg-surface rounded-t-2xl px-5 pt-5 shadow-2xl" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom, 0px))' }}>
             <div className="w-10 h-1 rounded-full bg-border mx-auto mb-4" />
             <div className="flex items-start gap-3 mb-4">
               <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg,#7C3AED,#5B21B6)' }}>

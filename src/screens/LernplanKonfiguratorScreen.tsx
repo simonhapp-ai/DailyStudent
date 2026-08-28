@@ -266,7 +266,7 @@ export function LernplanKonfiguratorScreen() {
       </div>
 
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-8 pb-4">
+      <div className="flex items-center gap-3 px-4 pb-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={step === 1 ? () => navigate(-1) : handleBack}
           className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"

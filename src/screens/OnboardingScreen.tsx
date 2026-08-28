@@ -187,7 +187,8 @@ export function OnboardingScreen() {
       {step > 1 && (
         <button
           onClick={back}
-          className="absolute top-12 left-4 flex items-center gap-1 text-accent text-[14px] font-medium press-sm z-10"
+          className="absolute left-4 flex items-center gap-1 text-accent text-[14px] font-medium press-sm z-10"
+          style={{ top: 'max(48px, calc(env(safe-area-inset-top, 0px) + 12px))' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />

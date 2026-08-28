@@ -51,8 +51,8 @@ export function EarlyAccessScreen() {
       {/* Back button */}
       <button
         onClick={() => navigate('/landing')}
-        className="absolute top-6 left-6 flex items-center gap-1.5 text-[13px] font-medium transition-colors duration-150"
-        style={{ color: '#988CAF' }}
+        className="absolute left-6 flex items-center gap-1.5 text-[13px] font-medium transition-colors duration-150"
+        style={{ color: '#988CAF', top: 'max(24px, calc(env(safe-area-inset-top, 0px) + 12px))' }}
         onMouseEnter={e => (e.currentTarget.style.color = '#160E28')}
         onMouseLeave={e => (e.currentTarget.style.color = '#988CAF')}
       >

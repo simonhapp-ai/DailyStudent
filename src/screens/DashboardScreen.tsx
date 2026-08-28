@@ -411,7 +411,7 @@ export function DashboardScreen() {
   const navigate = useNavigate()
   const {
     profile, lernplaene, userNotes, generatedFlashCards, savedProbeklausuren, saveLernplan,
-    appStats, completedHomeworkIds, standaloneHomework,
+    appStats, completedHomeworkIds, standaloneHomework, supabaseDataLoading,
   } = useUser()
 
   const [ersteSchritteDismissed, setErsteSchritteDismissed] = useState(
@@ -496,7 +496,10 @@ export function DashboardScreen() {
     { key: 'plan', label: 'Lernplan erstellen', done: lernplaene.length > 0, onNavigate: () => navigate('/klausurmodus/lernplan/neu') },
     { key: 'exam-sim', label: 'Probeklausur machen', done: savedProbeklausuren.length > 0, onNavigate: () => navigate('/klausurmodus/probeklausur') },
   ]
-  const showErsteSchritte = !ersteSchritteDismissed && ersteSchritteTasks.some(t => !t.done)
+  // supabaseDataLoading-Gate verhindert den CLS-Sprung aus dem Nav-Audit
+  // (Block 4): ohne ihn konnte die Karte kurz mit noch-leeren lokalen Daten
+  // aufblitzen und dann verschwinden, sobald der echte Supabase-Stand landet.
+  const showErsteSchritte = !supabaseDataLoading && !ersteSchritteDismissed && ersteSchritteTasks.some(t => !t.done)
 
   const handleDismissErsteSchritte = () => {
     localStorage.setItem(ERSTE_SCHRITTE_DISMISSED_KEY, 'true')

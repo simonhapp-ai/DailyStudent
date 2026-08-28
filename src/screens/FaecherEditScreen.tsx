@@ -109,7 +109,7 @@ export function FaecherEditScreen() {
     <div className="min-h-dvh bg-background flex flex-col">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-md border-b border-border/50">
-        <div className="flex items-center justify-between px-4 pt-14 pb-3">
+        <div className="flex items-center justify-between px-4 pb-3" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-1.5 text-accent font-medium text-[15px] press-sm"

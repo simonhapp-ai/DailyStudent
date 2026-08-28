@@ -130,7 +130,7 @@ export function ProbeklausurRetroScreen() {
     return (
       <div className="flex flex-col min-h-dvh bg-background pb-28">
         {/* Header */}
-        <div className="px-4 pt-12 pb-4 border-b border-border/60 bg-surface/80">
+        <div className="px-4 pb-4 border-b border-border/60 bg-surface/80" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
           <div className="flex items-center gap-3">
             <button
               onClick={() => { setView('library'); setActive(null) }}
@@ -240,7 +240,7 @@ export function ProbeklausurRetroScreen() {
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-28">
       {/* Header */}
-      <div className="px-4 pt-12 pb-4 border-b border-border/60 bg-surface/80">
+      <div className="px-4 pb-4 border-b border-border/60 bg-surface/80" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
