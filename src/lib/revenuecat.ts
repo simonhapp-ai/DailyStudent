@@ -56,6 +56,21 @@ export async function checkMonthlyTrialEligibility(): Promise<boolean> {
   }
 }
 
+// Apple Guideline 3.1.1: subscription apps must offer a way to restore
+// previous purchases (new device, reinstall, second Apple ID device on the
+// same account) — this was missing entirely before Block 5 of the Pro-Launch
+// checklist. Mirrors purchasePlan()'s result shape so ProfilAccountScreen
+// can reuse the same error-display pattern.
+export async function restorePurchases(): Promise<{ success: boolean; hasEntitlement: boolean; error?: string }> {
+  try {
+    const { customerInfo } = await Purchases.restorePurchases()
+    return { success: true, hasEntitlement: Object.keys(customerInfo.entitlements.active).length > 0 }
+  } catch (err) {
+    const rcErr = err as { message?: string }
+    return { success: false, hasEntitlement: false, error: rcErr.message ?? 'Wiederherstellen fehlgeschlagen.' }
+  }
+}
+
 export async function purchasePlan(plan: 'monthly' | 'yearly'): Promise<{ success: boolean; cancelled?: boolean; error?: string }> {
   try {
     const offerings = await Purchases.getOfferings()
