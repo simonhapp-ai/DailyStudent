@@ -1508,16 +1508,19 @@ function StepStundenplan({
         <div className="space-y-2 mb-3">
           {daySlots.map((slot) => {
             const subj = SUBJECT_INFO[slot.subjectId]
+            const icon = slot.isFreistunde ? '☕' : (subj?.icon ?? '📚')
+            const name = slot.isFreistunde ? 'Freistunde' : (subj?.name ?? slot.subjectId)
+            const iconBg = slot.isFreistunde ? 'rgba(148,163,184,0.18)' : `${subj?.color ?? '#7C3AED'}22`
             return (
               <div key={slot.id} className="bg-surface border border-border/60 rounded-card p-3.5 flex items-center gap-3 animate-fade-in">
                 <div
                   className="w-9 h-9 rounded-btn flex items-center justify-center text-lg shrink-0"
-                  style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
+                  style={{ backgroundColor: iconBg }}
                 >
-                  {subj?.icon ?? '📚'}
+                  {icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-text-primary font-semibold text-[14px]">{subj?.name ?? slot.subjectId}</p>
+                  <p className="text-text-primary font-semibold text-[14px]">{name}</p>
                   <p className="text-text-muted text-[12px]">
                     {slot.startTime} – {slot.endTime}
                     {slot.room ? ` · ${slot.room}` : ''}
