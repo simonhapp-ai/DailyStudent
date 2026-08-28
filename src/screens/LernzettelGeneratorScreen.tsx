@@ -180,7 +180,7 @@ export function LernzettelGeneratorScreen() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-24">
+    <div className="flex flex-col min-h-dvh bg-background pb-24">
       <Header
         title="Lernzettel erstellen"
         onBack={

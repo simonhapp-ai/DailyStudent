@@ -131,7 +131,7 @@ export function LernplanListScreen() {
   const handleCreate = () => navigate('/klausurmodus/lernplan/neu')
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
       <Header
         title="Meine Lernpläne"
         subtitle="KI-generierte Lernpläne"

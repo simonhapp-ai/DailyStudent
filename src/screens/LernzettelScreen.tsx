@@ -227,7 +227,7 @@ export function LernzettelScreen() {
   if (view === 'detail' && activeLz) {
     const info = SUBJECT_INFO[activeLz.subjectId]
     return (
-      <div className="flex flex-col min-h-screen bg-background pb-28">
+      <div className="flex flex-col min-h-dvh bg-background pb-28">
         <Header
           title={activeLz.title}
           subtitle={info?.name ?? activeLz.subjectName}
@@ -395,7 +395,7 @@ export function LernzettelScreen() {
   })
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
       <Header title="Lernzettel" subtitle="Deine Zusammenfassungen" onBack={() => navigate(-1)} />
       <div className="px-4 pb-2" />
 

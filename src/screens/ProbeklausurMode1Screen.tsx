@@ -218,7 +218,7 @@ export function ProbeklausurMode1Screen() {
   const ACCENT = 'linear-gradient(145deg, #7C3AED, #4C1D95)'
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-dvh bg-background">
       {/* Header */}
       <div className="px-4 pt-12 pb-4 border-b border-border/60 bg-surface/80">
         <div className="flex items-center gap-3">

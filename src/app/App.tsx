@@ -1,6 +1,7 @@
 import { Component, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { motion, useReducedMotion } from 'framer-motion'
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
   state = { error: null }
@@ -225,6 +226,24 @@ function AppRoutes() {
   )
 }
 
+// Block 4 (Navigation/Layout-Politur): dezenter Fade zwischen Routen statt
+// hartem Schnitt — kein Bounce, respektiert prefers-reduced-motion.
+// Kein AnimatePresence/Exit-Animation bewusst: ein reiner Enter-Fade,
+// gekeyed auf den Pfad, reicht für "fühlt sich nicht wie ein Website-Reload
+// an" und hält das Timing simpel (kein doppeltes Rendering alter+neuer
+// Screen während der Übergangsdauer). Deckt sich gut mit dem bestehenden
+// Scroll-Reset-Effect (App.tsx, useEffect auf location.pathname): der neue
+// Screen ist schon oben gescrollt, bevor er sichtbar einblendet.
+function RouteFade({ children, routeKey }: { children: ReactNode; routeKey: string }) {
+  const reducedMotion = useReducedMotion()
+  if (reducedMotion) return <>{children}</>
+  return (
+    <motion.div key={routeKey} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.18, ease: 'easeOut' }}>
+      {children}
+    </motion.div>
+  )
+}
+
 function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onConsentGiven: (analytics: boolean) => void }) {
   const { isOnboarded, authUser, authLoading, supabaseDataLoading } = useUser()
   const location = useLocation()
@@ -280,7 +299,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   // Only block with spinner if there's no local data to show while Supabase initializes
   if (authLoading && !hasLocalSession) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-dvh bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
       </div>
     )
@@ -327,7 +346,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   // to avoid flickering the OnboardingScreen for users who are already onboarded.
   if (supabaseDataLoading && !isOnboarded) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-dvh bg-background flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
       </div>
     )
@@ -353,11 +372,13 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   // so orientation changes between portrait/landscape are handled correctly.
   if (IS_DESKTOP) {
     return (
-      <div className="flex h-screen bg-background overflow-hidden">
+      <div className="flex h-dvh bg-background overflow-hidden">
         <DesktopSidebar />
         <DesktopSidebarWide />
         <main ref={desktopMainRef} className="flex-1 overflow-y-auto relative">
-          <AppRoutes />
+          <RouteFade routeKey={location.pathname}>
+            <AppRoutes />
+          </RouteFade>
           <SyncErrorBanner />
         </main>
         <FixedBadges />
@@ -369,8 +390,10 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
 
   // ── Mobile layout (screen.width < 768px) ───────────────────────────────────
   return (
-    <div className="max-w-lg mx-auto relative min-h-screen">
-      <AppRoutes />
+    <div className="max-w-lg mx-auto relative min-h-dvh">
+      <RouteFade routeKey={location.pathname}>
+        <AppRoutes />
+      </RouteFade>
       {!hideNav && <BottomNav />}
       <SyncErrorBanner />
       <StreakBadge />

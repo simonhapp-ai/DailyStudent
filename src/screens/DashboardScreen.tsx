@@ -542,7 +542,7 @@ export function DashboardScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20" style={{ paddingTop: 'max(40px, calc(env(safe-area-inset-top, 0px) + 20px))' }}>
+    <div className="min-h-dvh bg-background pb-20" style={{ paddingTop: 'max(40px, calc(env(safe-area-inset-top, 0px) + 20px))' }}>
       <div className="px-6 md:px-8">
 
         {/* ── Greeting ─────────────────────────────────────────────────── */}

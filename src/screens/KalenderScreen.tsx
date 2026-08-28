@@ -220,7 +220,7 @@ export function KalenderScreen() {
 
   // ── Render ──────────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28 lg:h-screen lg:overflow-hidden lg:pb-0">
+    <div className="flex flex-col min-h-dvh bg-background pb-28 lg:h-screen lg:overflow-hidden lg:pb-0">
 
       {/* ── Header ──────────────────────────────────────────── */}
       <div className="px-4 lg:px-6 shrink-0" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
@@ -484,7 +484,7 @@ export function KalenderScreen() {
               top: 'max(60px, calc(env(safe-area-inset-top, 0px) + 52px))',
               left: 16,
               right: 16,
-              maxHeight: 'calc(100vh - 180px)',
+              maxHeight: 'calc(100dvh - 180px)',
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
               transformOrigin: 'bottom right',

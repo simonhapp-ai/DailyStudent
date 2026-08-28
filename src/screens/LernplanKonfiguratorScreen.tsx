@@ -259,7 +259,7 @@ export function LernplanKonfiguratorScreen() {
   )
 
   return (
-    <div className="flex flex-col min-h-screen bg-background max-w-lg mx-auto">
+    <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto">
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
         <div className="h-full grad-accent transition-all duration-300" style={{ width: `${progress}%` }} />

@@ -304,7 +304,7 @@ export function BlurtingScreen() {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-dvh bg-background">
 
       {/* ── Phase: Setup (Fach + Smart Note in einem Screen) ─────────────── */}
       {phase === 'setup' && (

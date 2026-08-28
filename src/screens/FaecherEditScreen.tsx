@@ -106,7 +106,7 @@ export function FaecherEditScreen() {
   const totalSelected = selectedFaecher.length
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-dvh bg-background flex flex-col">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background/90 backdrop-blur-md border-b border-border/50">
         <div className="flex items-center justify-between px-4 pt-14 pb-3">

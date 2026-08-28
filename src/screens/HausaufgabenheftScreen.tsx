@@ -100,7 +100,7 @@ export function HausaufgabenheftScreen() {
   const daysUntil = (d: string) => Math.round((new Date(d + 'T00:00:00').getTime() - new Date(today + 'T00:00:00').getTime()) / 86400000)
 
   return (
-    <div className="flex flex-col bg-background min-h-screen pb-24">
+    <div className="flex flex-col bg-background min-h-dvh pb-24">
       {/* Header */}
       <div
         className="flex items-center gap-3 px-4 border-b border-border/40 shrink-0"

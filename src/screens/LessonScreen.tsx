@@ -26,7 +26,7 @@ export function LessonScreen() {
   const customColorIdx = profile?.customFaecher?.findIndex((cf) => cf.id === id) ?? -1
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
       <Header
         title={subjectDisplay.name}
         subtitle={`${totalCount} ${totalCount === 1 ? 'Notiz' : 'Notizen'}`}

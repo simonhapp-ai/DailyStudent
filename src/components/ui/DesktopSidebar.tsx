@@ -66,7 +66,7 @@ export function DesktopSidebar() {
 
   return (
     <aside
-      className="flex flex-col h-screen shrink-0 border-r border-border/40 lg:hidden"
+      className="flex flex-col h-dvh shrink-0 border-r border-border/40 lg:hidden"
       style={{
         width: '72px',
         backdropFilter: 'saturate(180%) blur(24px)',
@@ -157,7 +157,7 @@ export function DesktopSidebarWide() {
 
   return (
     <aside
-      className="hidden lg:flex flex-col h-screen shrink-0 border-r border-border/40"
+      className="hidden lg:flex flex-col h-dvh shrink-0 border-r border-border/40"
       style={{
         width: '220px',
         backdropFilter: 'saturate(180%) blur(24px)',

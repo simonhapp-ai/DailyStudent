@@ -155,7 +155,7 @@ export function OnboardingScreen() {
 
   if (finishing) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-background gap-4">
+      <div className="flex flex-col items-center justify-center min-h-dvh bg-background gap-4">
         <div className="w-12 h-12 rounded-btn bg-accent-soft flex items-center justify-center">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
@@ -172,7 +172,7 @@ export function OnboardingScreen() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background max-w-lg mx-auto">
+    <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto">
       {/* Progress bar */}
       {step > 1 && (
         <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
@@ -306,7 +306,7 @@ export function OnboardingScreen() {
 
 function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
-    <div className="flex flex-col justify-between min-h-[calc(100vh-80px)]">
+    <div className="flex flex-col justify-between min-h-[calc(100dvh-80px)]">
       <div className="flex-1 flex flex-col justify-center">
         <div className="w-16 h-16 rounded-2xl bg-accent-soft flex items-center justify-center text-3xl mb-8">
           🎓
@@ -1259,7 +1259,7 @@ function StepStundenplan({
   // ── CHOOSE MODE ─────────────────────────────────────────────
   if (mode === 'choose') {
     return (
-      <div className="flex flex-col min-h-[calc(100vh-80px)]">
+      <div className="flex flex-col min-h-[calc(100dvh-80px)]">
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-text-primary mb-1">Dein Stundenplan</h2>
           <p className="text-text-muted text-sm mb-8">
@@ -1309,7 +1309,7 @@ function StepStundenplan({
   // ── SCAN MODE ───────────────────────────────────────────────
   if (mode === 'scan') {
     return (
-      <div className="flex flex-col min-h-[calc(100vh-80px)]">
+      <div className="flex flex-col min-h-[calc(100dvh-80px)]">
         <div className="flex-1">
           <button
             onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
@@ -1453,7 +1453,7 @@ function StepStundenplan({
 
   // ── MANUAL MODE ─────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-[calc(100vh-80px)]">
+    <div className="flex flex-col min-h-[calc(100dvh-80px)]">
       <div className="flex-1">
         <button
           onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }}

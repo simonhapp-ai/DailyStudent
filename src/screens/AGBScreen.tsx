@@ -5,7 +5,7 @@ export function AGBScreen() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
       <Header title="Nutzungsbedingungen" subtitle="Terms and Conditions" onBack={() => navigate(-1)} />
 
       <div className="px-4 mt-4 space-y-6 text-[13px] text-text-secondary leading-relaxed">

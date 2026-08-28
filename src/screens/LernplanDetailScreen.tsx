@@ -103,7 +103,7 @@ export function LernplanDetailScreen() {
 
   if (!plan) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-background gap-4 px-8">
+      <div className="flex flex-col items-center justify-center min-h-dvh bg-background gap-4 px-8">
         <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center text-3xl">📅</div>
         <p className="text-text-primary font-semibold text-lg text-center">Lernplan nicht gefunden</p>
         <button onClick={() => navigate(-1)} className="text-accent text-sm font-medium">Zurück</button>
@@ -285,7 +285,7 @@ export function LernplanDetailScreen() {
         .print-only { display: none; }
       `}</style>
 
-      <div className="flex flex-col min-h-screen bg-background max-w-lg mx-auto pb-24">
+      <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto pb-24">
         {/* Header */}
         <div className="no-print sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b border-border/40 px-4 py-3">
           <div className="flex items-center gap-3">
