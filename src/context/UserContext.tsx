@@ -79,6 +79,15 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   probeklausurMode4Enabled: true,
 }
 
+// Test-Allowlist — nach Pro-Launch drin lassen; erlaubt späteres Testen bei
+// aktiver Beta, für Nicht-Allowlist-User folgenlos. Bypassed nur
+// proPurchasesEnabled (damit Simon den echten Kauf-Flow gegen die
+// genehmigten Apple-Produkte testen kann, ohne den globalen
+// app_config-Schalter für alle 130+ Beta-Nutzer umzulegen) — die
+// probeklausur_mode2/3/4-Pausierung bleibt für alle, inkl. Allowlist,
+// unberührt, da das eine Feature-Pause ist, kein Kauf-Gate.
+const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de']
+
 export const COIN_VALUES = {
   LOGIN: 5,
   SMART_NOTE: 5,
@@ -1311,6 +1320,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const effectiveIsPro = isPro || nativeEntitlementActive || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
 
+  const effectiveAppConfig: AppConfig = PRO_TEST_ALLOWLIST.includes(authUser?.email ?? '')
+    ? { ...appConfig, proPurchasesEnabled: true }
+    : appConfig
+
   return (
     <UserContext.Provider
       value={{
@@ -1390,7 +1403,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         referralCount,
         trialEndsAt,
         subscriptionSource,
-        appConfig,
+        appConfig: effectiveAppConfig,
       }}
     >
       {children}

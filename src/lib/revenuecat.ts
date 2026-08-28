@@ -1,4 +1,4 @@
-import { Purchases, PACKAGE_TYPE } from '@revenuecat/purchases-capacitor'
+import { Purchases, PACKAGE_TYPE, INTRO_ELIGIBILITY_STATUS } from '@revenuecat/purchases-capacitor'
 import { Capacitor } from '@capacitor/core'
 
 // Set once Simon creates the RevenueCat project (Track A, Phase 5 handoff).
@@ -29,6 +29,31 @@ export async function logOutRevenueCat() {
   if (!Capacitor.isNativePlatform() || !configured) return
   await Purchases.logOut()
   configured = false
+}
+
+// Block 3 (Gratis-Testphase): the monthly package's introductory offer in App
+// Store Connect is the 1-week free trial (RevenueCat surfaces it as
+// product.introPrice with price 0). Eligibility itself is a separate,
+// per-Apple-ID check — Apple only grants one free trial per subscription
+// group, so a returning trial user must see plain pricing, not the trial
+// copy. UNKNOWN status (RevenueCat couldn't determine eligibility) is
+// treated as ineligible per RevenueCat's own guidance: better to show
+// regular pricing than promise a trial that won't actually apply.
+export async function checkMonthlyTrialEligibility(): Promise<boolean> {
+  if (!Capacitor.isNativePlatform() || !configured) return false
+  try {
+    const offerings = await Purchases.getOfferings()
+    const monthlyPkg = offerings.current?.availablePackages.find((p) => p.packageType === PACKAGE_TYPE.MONTHLY)
+    const intro = monthlyPkg?.product.introPrice
+    if (!intro || intro.price > 0) return false
+
+    const elig = await Purchases.checkTrialOrIntroductoryPriceEligibility({
+      productIdentifiers: [monthlyPkg!.product.identifier],
+    })
+    return elig[monthlyPkg!.product.identifier]?.status === INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE
+  } catch {
+    return false
+  }
 }
 
 export async function purchasePlan(plan: 'monthly' | 'yearly'): Promise<{ success: boolean; cancelled?: boolean; error?: string }> {

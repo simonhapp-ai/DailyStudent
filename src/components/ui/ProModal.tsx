@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
 import { createCheckoutSession } from '../../lib/stripe'
-import { purchasePlan } from '../../lib/revenuecat'
+import { purchasePlan, checkMonthlyTrialEligibility } from '../../lib/revenuecat'
 import { supabase } from '../../lib/supabase'
 import { useUser } from '../../context/UserContext'
 
@@ -92,10 +93,26 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
   const [error, setError] = useState<string | null>(null)
   const [waitlistLoading, setWaitlistLoading] = useState(false)
   const [waitlistDone, setWaitlistDone] = useState(false)
+  const [trialEligible, setTrialEligible] = useState(false)
+
+  // Only relevant on iOS (App Store intro offer) — the Stripe/web checkout
+  // has no trial. Checked on every open since eligibility can change if the
+  // user already burned their trial on another device in the meantime.
+  useEffect(() => {
+    if (!isOpen || !isNative) return
+    let cancelled = false
+    void checkMonthlyTrialEligibility().then((eligible) => {
+      if (!cancelled) setTrialEligible(eligible)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 
   const content = featureContent[feature]
+  const showTrialCopy = isNative && trialEligible && plan === 'monthly'
 
   const handleWaitlist = async () => {
     if (!authUser) return
@@ -267,8 +284,18 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
             }`}
           >
             Monatlich · €7,99
+            {plan === 'monthly' && showTrialCopy && <span className="ml-1.5 text-xs opacity-75">1 Woche gratis</span>}
           </button>
         </div>
+
+        {/* Apple Guideline 3.1.2: subscription length, price, and a link to
+            the terms must be visible directly at the purchase point, not
+            just buried in the AGB screen. */}
+        {showTrialCopy && (
+          <p className="text-center text-[12px] mb-3" style={{ color: '#34D399' }}>
+            1 Woche kostenlos, danach €7,99/Monat — jederzeit kündbar
+          </p>
+        )}
 
         {error && (
           <p className="text-[13px] text-red-500 text-center mb-3">{error}</p>
@@ -279,7 +306,11 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
           disabled={loading}
           className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3"
         >
-          {loading ? 'Wird geladen…' : `Pro freischalten · ${plan === 'annual' ? '€59,99/Jahr' : '€7,99/Monat'}`}
+          {loading
+            ? 'Wird geladen…'
+            : showTrialCopy
+              ? '1 Woche kostenlos testen'
+              : `Pro freischalten · ${plan === 'annual' ? '€59,99/Jahr' : '€7,99/Monat'}`}
         </button>
 
         <button
@@ -291,6 +322,14 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
 
         <p className="text-center text-xs text-text-muted mt-3">
           Abi-Schnitt unserer Pro-Nutzer: Ø 1.7
+        </p>
+
+        <p className="text-center text-[11px] text-text-muted mt-3 leading-relaxed">
+          {plan === 'annual' ? 'Jährliches Abo, automatische Verlängerung.' : 'Monatliches Abo, automatische Verlängerung.'}{' '}
+          Mit dem Kauf akzeptierst du unsere{' '}
+          <Link to="/agb" onClick={onClose} className="underline">Nutzungsbedingungen</Link>
+          {' '}und{' '}
+          <Link to="/datenschutz" onClick={onClose} className="underline">Datenschutzerklärung</Link>.
         </p>
       </div>
     </div>
