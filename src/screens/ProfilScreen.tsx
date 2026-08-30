@@ -270,6 +270,12 @@ export function ProfilScreen() {
                 </li>
               ))}
             </ul>
+            {/* Platform-aware teaser — the authoritative check (RevenueCat
+                trial eligibility on iOS) happens once ProModal opens; this is
+                just marketing copy pointing at whichever offer applies. */}
+            <p className="text-[12px] font-semibold mb-3" style={{ color: '#34D399' }}>
+              {Capacitor.isNativePlatform() ? '🎉 1 Woche kostenlos beim Monatsabo' : '🎉 20% Rabatt auf deinen ersten Kauf'}
+            </p>
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}

@@ -21,6 +21,20 @@ function useIsDesktop(): boolean {
   return isDesktop
 }
 
+// Coins→Pro-Rabatt-Einlösung pausiert (28.08.2026, vor Pro-Launch): auf
+// nativem iOS bricht das Feature, weil ProModal Stripe-Coupons nur im Web-
+// Checkout anwenden kann — RevenueCat/Apple-IAP-Käufe (purchasePlan())
+// kennen kein couponId-Konzept. Ein Coins-Ausgabe-Erlebnis, das den Rabatt
+// dann auf iOS einfach verschluckt, ist schlimmer als das Feature zu
+// pausieren. Der korrekte iOS-Weg (Apple Promotional Offers, signierte
+// StoreKit-Angebote pro Produkt in App Store Connect) ist deutlich mehr
+// Aufwand als hier kurzfristig sinnvoll. Streak-Freeze-Kauf + Coins-Sammeln
+// bleiben komplett unberührt — nur die Rabatt-Einlösung ist ausgeblendet,
+// nichts gelöscht (gleiches "skip, nicht entfernen"-Prinzip wie die
+// app_config-Beta-Flags, hier aber als reiner Code-Toggle, da es keine
+// Beta-Zeitfrage ist, sondern eine echte Produktentscheidung).
+const COINS_DISCOUNT_ENABLED = false
+
 const DAILY_TASKS = [
   { key: 'LOGIN',            label: 'Einloggen',              reward: 5,  icon: '🔑' },
   { key: 'SMART_NOTE',       label: 'Smart Note erstellen',   reward: 5,  icon: '📷' },
@@ -235,6 +249,8 @@ export function ProfilCoinsScreen() {
               </p>
             )}
 
+            {COINS_DISCOUNT_ENABLED && (
+              <>
             <div className="h-px my-6" style={{ background: 'rgba(52,211,153,0.18)' }}/>
 
             {/* 15% Rabatt */}
@@ -323,17 +339,21 @@ export function ProfilCoinsScreen() {
                 </p>
               </div>
             )}
+              </>
+            )}
           </motion.div>
         </div>
       </div>
 
-      <ProModal
-        feature="rabatt"
-        isOpen={!!discountModal}
-        onClose={() => setDiscountModal(null)}
-        couponId={discountModal?.couponId}
-        discountPercent={discountModal?.percent}
-      />
+      {COINS_DISCOUNT_ENABLED && (
+        <ProModal
+          feature="rabatt"
+          isOpen={!!discountModal}
+          onClose={() => setDiscountModal(null)}
+          couponId={discountModal?.couponId}
+          discountPercent={discountModal?.percent}
+        />
+      )}
     </div>
   )
 }

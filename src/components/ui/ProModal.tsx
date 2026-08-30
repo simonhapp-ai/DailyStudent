@@ -8,6 +8,15 @@ import { useUser } from '../../context/UserContext'
 
 const isNative = Capacitor.isNativePlatform()
 
+// Web-only "first purchase" welcome offer — the native-app equivalent is the
+// App Store intro trial (showTrialCopy below), which Apple doesn't allow
+// stacking with a percentage coupon anyway. Self-limiting via Stripe's
+// `duration: once` on the coupon itself, no purchase-history check needed.
+// Requires a coupon named exactly this in the Stripe Dashboard (20% off,
+// duration: once) — see CLAUDE.md/PRO_LAUNCH_MASTER_PROMPT.md.
+const WELCOME_COUPON_ID = 'welcome-20'
+const WELCOME_DISCOUNT_PERCENT = 20
+
 type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel' | 'probeklausur' | 'rabatt' | 'allgemein'
 
 const featureContent: Record<ProFeature, { headline: string; bullets: string[] }> = {
@@ -113,6 +122,10 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
 
   const content = featureContent[feature]
   const showTrialCopy = isNative && trialEligible && plan === 'monthly'
+  // Explicit couponId prop (e.g. a future reactivated redemption flow) always
+  // wins; otherwise every web checkout gets the universal welcome discount.
+  const effectiveCouponId = couponId ?? (!isNative ? WELCOME_COUPON_ID : undefined)
+  const effectiveDiscountPercent = discountPercent ?? (!isNative ? WELCOME_DISCOUNT_PERCENT : undefined)
 
   const handleWaitlist = async () => {
     if (!authUser) return
@@ -220,7 +233,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
     }
     try {
       setLoading(true)
-      const url = await createCheckoutSession(plan === 'annual' ? 'yearly' : 'monthly', couponId)
+      const url = await createCheckoutSession(plan === 'annual' ? 'yearly' : 'monthly', effectiveCouponId)
       window.location.href = url
     } catch {
       setLoading(false)
@@ -234,7 +247,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
 
       {/* Sheet */}
-      <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 pb-10 z-10">
+      <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 z-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}>
         <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
 
         <div className="w-12 h-12 rounded-btn icon-accent flex items-center justify-center mb-4">
@@ -246,11 +259,11 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
         <h2 className="text-xl font-bold text-text-primary mb-1">{content.headline}</h2>
         <p className="text-text-secondary text-sm mb-5">Weniger als eine Nachhilfestunde im Monat.</p>
 
-        {couponId && discountPercent && (
+        {effectiveCouponId && effectiveDiscountPercent && (
           <div className="rounded-card px-3 py-2 mb-4 border text-center"
             style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.25)' }}>
             <p className="text-[13px] font-semibold" style={{ color: '#34D399' }}>
-              🎉 {discountPercent}% Rabatt aktiv — wird beim Checkout angewendet
+              🎉 {effectiveDiscountPercent}% Rabatt auf deinen ersten Kauf — wird beim Checkout angewendet
             </p>
           </div>
         )}
