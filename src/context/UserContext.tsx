@@ -1320,7 +1320,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const effectiveIsPro = isPro || nativeEntitlementActive || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
 
-  const effectiveAppConfig: AppConfig = PRO_TEST_ALLOWLIST.includes(authUser?.email ?? '')
+  // .toLowerCase().trim() — a case/whitespace mismatch against the auth
+  // provider's stored email would otherwise silently fail this check with no
+  // visible error, just the beta view rendering as if the allowlist did
+  // nothing at all.
+  const effectiveAppConfig: AppConfig = PRO_TEST_ALLOWLIST.includes((authUser?.email ?? '').toLowerCase().trim())
     ? { ...appConfig, proPurchasesEnabled: true }
     : appConfig
 
