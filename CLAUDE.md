@@ -797,11 +797,29 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 **Nebenbei erledigt (Auto-Mode-Zwischenfrage):** Nutzer fragte nach Claude Codes „Remote Control"-Feature — reine Client-seitige Aktion (`claude --remote-control` im Terminal), kein Code-Bezug zu diesem Repo, wurde direkt beantwortet und ist mittlerweile aktiv.
 
 **Was noch offen ist (nicht per Code lösbar, siehe `PRO_LAUNCH_MASTER_PROMPT.md` für den vollen Kontext):**
-1. **Block 1 — Simon:** License-Agreement-URL (`https://www.dailystudent.de/agb`) in App Store Connect eintragen, Apple Small Business Program-Status prüfen/einschreiben.
-2. **Block 3 — Simon:** Introductory Offer (1 Woche, Free, alle Territorien, nur Monatsprodukt) in App Store Connect einrichten; RevenueCat zieht es danach automatisch.
-3. **Block 4 — Simon:** Preview-Build am echten Gerät durchklicken — Code-Audit deckt nicht alles ab (z. B. echtes Tastatur-/Bounce-Timing).
-4. **Block 5 — Simon:** voller Sandbox-Testdurchlauf (Trial-Kauf, Jahres-Kauf, Restore, Kündigen, natives Apple-Login) mit dem Allowlist-Account, dann erst der `app_config`-Flag-Flip.
-5. **Block 6 — Simon:** nach ~1 Woche Live-Logging die echten Ø-Token-Zahlen mit der Schätzung abgleichen; Umbau erst bei ~5 zahlenden Abonnenten UND Simons OK anstoßen.
+1. ~~Block 1 — License-Agreement-URL...~~ **korrigiert, siehe Nachtrag 30.08.2026 unten** — es gibt kein URL-Feld dort, siehe dort für den richtigen Weg.
+2. ~~Block 1 — Small Business Program~~ ✅ Simon hat bestätigt: eingeschrieben.
+3. ~~Block 3 — Introductory Offer~~ ✅ Simon hat bestätigt: 1 Woche, Monatsprodukt, eingerichtet und eingereicht.
+4. **Block 4 — Simon:** Preview-Build am echten Gerät durchklicken — Code-Audit deckt nicht alles ab (z. B. echtes Tastatur-/Bounce-Timing). Blockiert auf den Merge von `polish/navigation-stability` → `main`.
+5. **Block 5 — Simon:** voller Sandbox-Testdurchlauf (Trial-Kauf, Jahres-Kauf, Restore, Kündigen, natives Apple-Login) mit dem Allowlist-Account, dann erst der `app_config`-Flag-Flip.
+6. **Block 6 — Simon:** nach ~1 Woche Live-Logging die echten Ø-Token-Zahlen mit der Schätzung abgleichen; Umbau erst bei ~5 zahlenden Abonnenten UND Simons OK anstoßen.
+
+### Nachtrag (30.08.2026) — App-Store-Connect-Korrekturen + Coins-Rabatt pausiert + Welcome-Coupon statt Waitlist
+
+**Zwei Instruktionen aus dem 28.08.-Eintrag waren falsch** (auf veralteter/generischer Doku-Annahme basierend, nicht auf der echten aktuellen ASC-UI) — Simon hat live gegengeprüft, per WebFetch auf Apples eigene Doku korrigiert:
+- **License Agreement hat kein URL-Feld** — nur Freitext (Apple's Standard-EULA oder ein selbst geschriebener Custom-EULA-Text pro Land, den Simon schon vorher gepflegt hatte). Apples eigener empfohlener Weg für einen Nutzungsbedingungen-Link ist das **App-Description-Feld** ("Terms of Service [Link] and Privacy Policy [Link]" ans Ende der Beschreibung anhängen) — **und das ist nur auf einer noch nicht eingereichten/editierbaren Version möglich**, nicht auf der bereits live/genehmigten Version (Simons eigene Beobachtung, korrekt). Simon plant einen neuen Build/eine neue Version ohnehin (auch für Screenshots/Marketing-Bilder, siehe unten) und trägt AGB+Datenschutz-Link dort in die Description ein.
+- **Small Business Program lebt nicht in App Store Connect**, sondern als eigene Einschreibe-Seite auf `developer.apple.com/app-store/small-business-program/` — Simon hat es inzwischen erfolgreich eingeschrieben.
+
+**App-Store-seitig sonst erledigt:** Introductory Offer (1 Woche, Monatsprodukt) eingerichtet und eingereicht. Simon merkte zusätzlich an, dass seine App-Store-Vorschaubilder aktuell als "Preview" statt "Screenshots" kategorisiert sind (nur sichtbar wenn man die App-Detailseite antippt, keine Marketing-Banner in der Suche/Kategorie-Ansicht) — plant das im nächsten Build/der nächsten Version selbst zu korrigieren, kein Code-Bezug.
+
+**Drei offene Punkte aus früheren Sessions besprochen, zwei davon gebaut** (siehe Commit `1e4db86`):
+- **Coins→Pro-Rabatt-Einlösung (`ProfilCoinsScreen.tsx`) bricht auf nativem iOS** — ProModal kann einen Stripe-Coupon nicht auf einen RevenueCat/Apple-IAP-Kauf anwenden (`purchasePlan()` kennt kein `couponId`-Konzept); Apples korrektes Äquivalent wären signierte "Promotional Offers" pro Produkt, deutlich mehr Aufwand. Gemeinsame Entscheidung mit Simon: **pausiert statt gebaut** — `COINS_DISCOUNT_ENABLED = false`-Toggle in `ProfilCoinsScreen.tsx`, Streak-Freeze-Kauf + Coins-Sammeln bleiben unverändert aktiv, nichts gelöscht. Da noch niemand real eingelöst hat (Pro-Käufe waren die ganze Zeit pausiert), kostenloser Zeitpunkt für die Pause. Simons eigene Idee für einen späteren Ersatz — Coins/Gamification auf Level-Titel statt Rabatt umstellen ("Pro Learner" → "King Learner" o.ä.) — als zukünftige, von Simon zu spezifizierende Design-Initiative vorgemerkt, nicht Teil dieser Session.
+- **Waitlist-Button ("Für Rabatt vormerken") umgangen statt ausgebaut** — statt Anmeldezeitpunkt zu tracken (was eine Migration gebraucht hätte), gibt es jetzt einen **universellen Web-Willkommensrabatt**: `ProModal.tsx` wendet bei jedem Web/Stripe-Checkout automatisch einen `welcome-20`-Coupon an (20%, einmalig), sofern kein anderer Coupon übergeben wird — braucht keine Supabase-Tabelle, keinen nativen Build. **Simon muss noch:** den Coupon `welcome-20` im Stripe Dashboard anlegen (20% off, duration: `once`) — analog zu den nie angelegten `coins-discount-15/-30`-Coupons, die durch die obige Pausierung jetzt hinfällig sind. Nativ bleibt der 1-Wochen-Trial das Äquivalent (Apple erlaubt kein Stapeln von Trial + Rabatt auf einem Produkt).
+- **Early-Access-E-Mails (~100 Leads, `early_access_emails`-Tabelle)** — kein Code-Bezug, reiner Marketing-Task: Simon exportiert die Tabelle als CSV direkt im Supabase Table Editor (Export-Button) und importiert sie in ein Bulk-Mail-Tool (Brevo/Mailchimp, beide kostenlos für diese Größenordnung) statt Gmail-BCC — wichtig für GDPR-konforme Abmelde-Links bei ~100 EU-Empfängern.
+
+**Trial-/Rabatt-Sichtbarkeit außerhalb ProModal ergänzt:** `ProfilScreen.tsx`s Pro-Upsell-Banner zeigt jetzt einen plattform-abhängigen Hinweis ("1 Woche kostenlos beim Monatsabo" nativ / "20% Rabatt auf deinen ersten Kauf" web) — bewusst NICHT in die kleinen "✦ Pro"-Badges (Probeklausur-/Lernplan-Karten) gequetscht, dafür ist dort schlicht kein Platz ohne echtes Redesign.
+
+**Weiterhin offen:** Merge von `polish/navigation-stability` → `main` (noch nicht erfolgt, Simon wollte erst alles in einem Rutsch fertig haben und dann gesammelt reviewen).
 
 ---
 
