@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { purchasePlan } from '../lib/revenuecat'
-import { ProModal } from '../components/ui/ProModal'
+import { ProModal, WELCOME_COUPON_ID } from '../components/ui/ProModal'
 import { getActiveStreak } from '../lib/streak'
 
 const AVATAR_BG_OPTIONS = [
@@ -114,7 +114,12 @@ export function ProfilScreen() {
     }
     try {
       setCheckoutLoading(plan)
-      const url = await createCheckoutSession(plan)
+      // Same universal web welcome discount ProModal applies — this button
+      // bypasses ProModal entirely, so it needs its own copy of the same
+      // default (bug found 30.08.2026: this path shipped with no couponId at
+      // all, so the discount banner text was showing but never actually
+      // reaching Stripe from here).
+      const url = await createCheckoutSession(plan, WELCOME_COUPON_ID)
       window.location.href = url
     } catch {
       setCheckoutLoading(null)

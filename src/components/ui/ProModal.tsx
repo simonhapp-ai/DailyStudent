@@ -14,8 +14,8 @@ const isNative = Capacitor.isNativePlatform()
 // `duration: once` on the coupon itself, no purchase-history check needed.
 // Requires a coupon named exactly this in the Stripe Dashboard (20% off,
 // duration: once) — see CLAUDE.md/PRO_LAUNCH_MASTER_PROMPT.md.
-const WELCOME_COUPON_ID = 'DS20'
-const WELCOME_DISCOUNT_PERCENT = 20
+export const WELCOME_COUPON_ID = 'DS20'
+export const WELCOME_DISCOUNT_PERCENT = 20
 
 type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel' | 'probeklausur' | 'rabatt' | 'allgemein'
 
