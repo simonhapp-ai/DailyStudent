@@ -263,7 +263,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
           <div className="rounded-card px-3 py-2 mb-4 border text-center"
             style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.25)' }}>
             <p className="text-[13px] font-semibold" style={{ color: '#34D399' }}>
-              🎉 {effectiveDiscountPercent}% Rabatt auf deinen ersten Kauf — wird beim Checkout angewendet
+              Release Rabatt 🎉Jetzt {effectiveDiscountPercent}% sichern!
             </p>
           </div>
         )}
