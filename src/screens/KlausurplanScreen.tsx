@@ -58,7 +58,7 @@ export function KlausurplanScreen() {
   const subjectTopics = subjectId ? topics.filter((t) => t.subjectId === subjectId).map((t) => t.name) : []
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
       {/* Header */}
       <div
         className="flex items-center gap-3 px-4 border-b border-border/40 shrink-0"

@@ -4,6 +4,7 @@ import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import { getActiveStreak } from '../lib/streak'
 import { StreakInfoSheet } from '../components/ui/StreakInfoSheet'
+import { StundenplanPill } from '../components/ui/StundenplanPill'
 import type { StundenplanSlot, Lernplan } from '../types'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -393,37 +394,10 @@ function TagesplanCard({ slots }: { slots: StundenplanSlot[] }) {
       ) : (
         <div className="flex flex-wrap gap-2">
           {slots.map((slot) => {
-            const info = SUBJECT_INFO[slot.subjectId]
             const isCurrent = now >= slot.startTime && now < slot.endTime
             const isPast = now >= slot.endTime
             const isNext = !isCurrent && !isPast && slot.id === nextLessonId
-
-            return (
-              <div
-                key={slot.id}
-                className="flex items-center gap-2 rounded-[12px] px-3 py-2"
-                style={{
-                  background: isCurrent ? 'rgba(52,199,89,0.10)' : isNext ? 'rgba(var(--color-accent), 0.07)' : 'rgb(var(--color-background))',
-                  opacity: isPast ? 0.5 : 1,
-                }}
-              >
-                <span
-                  className={`text-[11px] font-mono font-semibold ${isPast ? 'line-through' : ''}`}
-                  style={{ color: isCurrent ? '#30D158' : 'rgb(var(--color-text-muted))' }}
-                >
-                  {slot.startTime}
-                </span>
-                <span className="text-[15px]">{info?.icon ?? '📚'}</span>
-                <span className={`text-[13px] font-medium text-text-primary ${isPast ? 'line-through text-text-muted' : ''}`}>
-                  {info?.name ?? slot.subjectId}
-                </span>
-                {isCurrent && (
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(52,199,89,0.18)', color: '#30D158' }}>
-                    Jetzt
-                  </span>
-                )}
-              </div>
-            )
+            return <StundenplanPill key={slot.id} slot={slot} variant="row" isCurrent={isCurrent} isPast={isPast} isNext={isNext} />
           })}
         </div>
       )}
@@ -437,7 +411,7 @@ export function DashboardScreen() {
   const navigate = useNavigate()
   const {
     profile, lernplaene, userNotes, generatedFlashCards, savedProbeklausuren, saveLernplan,
-    appStats, completedHomeworkIds, standaloneHomework,
+    appStats, completedHomeworkIds, standaloneHomework, supabaseDataLoading,
   } = useUser()
 
   const [ersteSchritteDismissed, setErsteSchritteDismissed] = useState(
@@ -522,7 +496,10 @@ export function DashboardScreen() {
     { key: 'plan', label: 'Lernplan erstellen', done: lernplaene.length > 0, onNavigate: () => navigate('/klausurmodus/lernplan/neu') },
     { key: 'exam-sim', label: 'Probeklausur machen', done: savedProbeklausuren.length > 0, onNavigate: () => navigate('/klausurmodus/probeklausur') },
   ]
-  const showErsteSchritte = !ersteSchritteDismissed && ersteSchritteTasks.some(t => !t.done)
+  // supabaseDataLoading-Gate verhindert den CLS-Sprung aus dem Nav-Audit
+  // (Block 4): ohne ihn konnte die Karte kurz mit noch-leeren lokalen Daten
+  // aufblitzen und dann verschwinden, sobald der echte Supabase-Stand landet.
+  const showErsteSchritte = !supabaseDataLoading && !ersteSchritteDismissed && ersteSchritteTasks.some(t => !t.done)
 
   const handleDismissErsteSchritte = () => {
     localStorage.setItem(ERSTE_SCHRITTE_DISMISSED_KEY, 'true')
@@ -542,7 +519,7 @@ export function DashboardScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20" style={{ paddingTop: 'max(40px, calc(env(safe-area-inset-top, 0px) + 20px))' }}>
+    <div className="min-h-dvh bg-background pb-20" style={{ paddingTop: 'max(40px, calc(env(safe-area-inset-top, 0px) + 20px))' }}>
       <div className="px-6 md:px-8">
 
         {/* ── Greeting ─────────────────────────────────────────────────── */}

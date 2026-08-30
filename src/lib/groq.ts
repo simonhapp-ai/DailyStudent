@@ -664,6 +664,12 @@ interface StundenplanRawJSON {
   slots: Array<{ day: number; startTime: string; endTime?: string; subject: string }>
 }
 
+// Sentinel the model uses to mark an internal gap (Freistunde) between two
+// real lessons on the same day — deliberately not a real subject id, so it
+// must be special-cased before matchSubjectId() or it would just silently
+// fail to resolve and get dropped like any other unrecognised subject.
+const FREISTUNDE_SENTINEL = 'FREISTUNDE'
+
 function calcEndTime(startTime: string): string {
   const [h, m] = startTime.split(':').map(Number)
   const endMin = h * 60 + m + 45
@@ -721,7 +727,8 @@ Bekannte Schulfächer: ${subjectList}
 Antworte NUR mit diesem JSON (kein anderer Text):
 {
   "slots": [
-    { "day": 0, "startTime": "08:00", "endTime": "08:45", "subject": "Mathematik" }
+    { "day": 0, "startTime": "08:00", "endTime": "08:45", "subject": "Mathematik" },
+    { "day": 0, "startTime": "09:30", "endTime": "10:15", "subject": "FREISTUNDE" }
   ]
 }
 
@@ -729,7 +736,9 @@ Regeln:
 - day: 0=Montag, 1=Dienstag, 2=Mittwoch, 3=Donnerstag, 4=Freitag
 - startTime / endTime im Format "HH:MM" — fehlt Endzeit: startTime + 45 Min schätzen
 - subject: Fachname genau wie abgedruckt (Abkürzungen übernehmen, z.B. "Ma", "Bio")
-- Freistunden, Pausen, leere Zellen NICHT aufnehmen`,
+- Freistunde erkennen: Liegt zwischen zwei Unterrichtsstunden am selben Tag eine Lücke (leere Zelle/Freistunde/Pause länger als eine normale Pause), UND folgt danach am selben Tag noch mindestens eine weitere reguläre Stunde, füge dafür einen eigenen Slot mit "subject": "FREISTUNDE" ein (mit der echten Start-/Endzeit der Lücke)
+- KEINE Freistunde einfügen, wenn danach keine weitere Stunde mehr folgt — das ist einfach Schulschluss, kein Slot nötig
+- normale kurze Pausen zwischen direkt aufeinanderfolgenden Stunden (5–15 Min) NICHT als Freistunde aufnehmen, nur echte Springstunden/Lücken`,
           },
         ],
       },
@@ -756,10 +765,12 @@ Regeln:
         ? slot.endTime.padStart(5, '0')
         : calcEndTime(startTime)
 
-    const subjectId = matchSubjectId(slot.subject ?? '', combinedSubjects)
-    if (!subjectId) continue
+    const isFreistunde = (slot.subject ?? '').trim().toUpperCase() === FREISTUNDE_SENTINEL
+    const matchedId = isFreistunde ? null : matchSubjectId(slot.subject ?? '', combinedSubjects)
+    if (!isFreistunde && !matchedId) continue
+    const subjectId = matchedId ?? ''
 
-    const key = `${slot.day}-${startTime}-${subjectId}`
+    const key = `${slot.day}-${startTime}-${isFreistunde ? 'freistunde' : subjectId}`
     if (seen.has(key)) continue
     seen.add(key)
 
@@ -769,11 +780,12 @@ Regeln:
       startTime,
       endTime,
       subjectId,
+      ...(isFreistunde ? { isFreistunde: true } : {}),
     })
   }
 
   if (result.length === 0) throw new Error('Keine bekannten Fächer im Stundenplan erkannt')
-  const additionalSubjectIds = [...new Set(result.map((s) => s.subjectId).filter((id) => !faecherIds.has(id)))]
+  const additionalSubjectIds = [...new Set(result.filter((s) => !s.isFreistunde).map((s) => s.subjectId).filter((id) => !faecherIds.has(id)))]
   return { slots: result, additionalSubjectIds }
 }
 

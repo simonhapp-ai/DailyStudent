@@ -259,14 +259,14 @@ export function LernplanKonfiguratorScreen() {
   )
 
   return (
-    <div className="flex flex-col min-h-screen bg-background max-w-lg mx-auto">
+    <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto">
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
         <div className="h-full grad-accent transition-all duration-300" style={{ width: `${progress}%` }} />
       </div>
 
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 pt-8 pb-4">
+      <div className="flex items-center gap-3 px-4 pb-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={step === 1 ? () => navigate(-1) : handleBack}
           className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"

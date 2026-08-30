@@ -12,7 +12,7 @@ interface BetaPausedScreenProps {
 export function BetaPausedScreen({ title }: BetaPausedScreenProps) {
   const navigate = useNavigate()
   return (
-    <div className="flex flex-col min-h-screen bg-background items-center justify-center px-8 text-center">
+    <div className="flex flex-col min-h-dvh bg-background items-center justify-center px-8 text-center">
       <div
         className="w-16 h-16 rounded-[20px] flex items-center justify-center mb-5"
         style={{ background: 'linear-gradient(145deg, #7C3AED, #4C1D95)' }}

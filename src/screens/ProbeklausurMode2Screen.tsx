@@ -270,9 +270,9 @@ export function ProbeklausurMode2Screen() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col min-h-dvh bg-background">
       {/* Header */}
-      <div className="px-4 pt-12 pb-4 border-b border-border/60 bg-surface/80">
+      <div className="px-4 pb-4 border-b border-border/60 bg-surface/80" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <div className="flex items-center gap-3">
           <button
             onClick={() => {

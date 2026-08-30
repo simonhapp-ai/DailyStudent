@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { purchasePlan } from '../lib/revenuecat'
-import { ProModal } from '../components/ui/ProModal'
+import { ProModal, WELCOME_COUPON_ID } from '../components/ui/ProModal'
 import { getActiveStreak } from '../lib/streak'
 
 const AVATAR_BG_OPTIONS = [
@@ -114,7 +114,12 @@ export function ProfilScreen() {
     }
     try {
       setCheckoutLoading(plan)
-      const url = await createCheckoutSession(plan)
+      // Same universal web welcome discount ProModal applies — this button
+      // bypasses ProModal entirely, so it needs its own copy of the same
+      // default (bug found 30.08.2026: this path shipped with no couponId at
+      // all, so the discount banner text was showing but never actually
+      // reaching Stripe from here).
+      const url = await createCheckoutSession(plan, WELCOME_COUPON_ID)
       window.location.href = url
     } catch {
       setCheckoutLoading(null)
@@ -140,7 +145,7 @@ export function ProfilScreen() {
   const isDevAllowlisted = PRO_TOGGLE_ALLOWLIST.includes(authUser?.email ?? '')
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
 
       {/* ── Header ─────────────────────────────────────────────── */}
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
@@ -270,6 +275,12 @@ export function ProfilScreen() {
                 </li>
               ))}
             </ul>
+            {/* Platform-aware teaser — the authoritative check (RevenueCat
+                trial eligibility on iOS) happens once ProModal opens; this is
+                just marketing copy pointing at whichever offer applies. */}
+            <p className="text-[12px] font-semibold mb-3" style={{ color: '#34D399' }}>
+              {Capacitor.isNativePlatform() ? '🎉 1 Woche kostenlos beim Monatsabo' : '🎉 20% Rabatt auf deinen ersten Kauf'}
+            </p>
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}

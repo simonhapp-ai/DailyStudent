@@ -1,11 +1,21 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
 import { createCheckoutSession } from '../../lib/stripe'
-import { purchasePlan } from '../../lib/revenuecat'
+import { purchasePlan, checkMonthlyTrialEligibility } from '../../lib/revenuecat'
 import { supabase } from '../../lib/supabase'
 import { useUser } from '../../context/UserContext'
 
 const isNative = Capacitor.isNativePlatform()
+
+// Web-only "first purchase" welcome offer — the native-app equivalent is the
+// App Store intro trial (showTrialCopy below), which Apple doesn't allow
+// stacking with a percentage coupon anyway. Self-limiting via Stripe's
+// `duration: once` on the coupon itself, no purchase-history check needed.
+// Requires a coupon named exactly this in the Stripe Dashboard (20% off,
+// duration: once) — see CLAUDE.md/PRO_LAUNCH_MASTER_PROMPT.md.
+export const WELCOME_COUPON_ID = 'DS20'
+export const WELCOME_DISCOUNT_PERCENT = 20
 
 type ProFeature = 'ki-zusammenfassung' | 'ki-korrektur' | 'lernplan' | 'karteikarten' | 'lernzettel' | 'probeklausur' | 'rabatt' | 'allgemein'
 
@@ -92,10 +102,30 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
   const [error, setError] = useState<string | null>(null)
   const [waitlistLoading, setWaitlistLoading] = useState(false)
   const [waitlistDone, setWaitlistDone] = useState(false)
+  const [trialEligible, setTrialEligible] = useState(false)
+
+  // Only relevant on iOS (App Store intro offer) — the Stripe/web checkout
+  // has no trial. Checked on every open since eligibility can change if the
+  // user already burned their trial on another device in the meantime.
+  useEffect(() => {
+    if (!isOpen || !isNative) return
+    let cancelled = false
+    void checkMonthlyTrialEligibility().then((eligible) => {
+      if (!cancelled) setTrialEligible(eligible)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 
   const content = featureContent[feature]
+  const showTrialCopy = isNative && trialEligible && plan === 'monthly'
+  // Explicit couponId prop (e.g. a future reactivated redemption flow) always
+  // wins; otherwise every web checkout gets the universal welcome discount.
+  const effectiveCouponId = couponId ?? (!isNative ? WELCOME_COUPON_ID : undefined)
+  const effectiveDiscountPercent = discountPercent ?? (!isNative ? WELCOME_DISCOUNT_PERCENT : undefined)
 
   const handleWaitlist = async () => {
     if (!authUser) return
@@ -115,7 +145,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
     return (
       <div className="fixed inset-0 z-50 flex flex-col justify-end">
         <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-        <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 pb-10 z-10">
+        <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 z-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}>
           <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
 
           <div className="w-12 h-12 rounded-btn icon-accent flex items-center justify-center mb-4">
@@ -203,7 +233,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
     }
     try {
       setLoading(true)
-      const url = await createCheckoutSession(plan === 'annual' ? 'yearly' : 'monthly', couponId)
+      const url = await createCheckoutSession(plan === 'annual' ? 'yearly' : 'monthly', effectiveCouponId)
       window.location.href = url
     } catch {
       setLoading(false)
@@ -217,7 +247,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
 
       {/* Sheet */}
-      <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 pb-10 z-10">
+      <div className="relative max-w-lg mx-auto w-full bg-surface border-t border-border rounded-t-2xl px-5 pt-5 z-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom, 0px))' }}>
         <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
 
         <div className="w-12 h-12 rounded-btn icon-accent flex items-center justify-center mb-4">
@@ -229,11 +259,11 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
         <h2 className="text-xl font-bold text-text-primary mb-1">{content.headline}</h2>
         <p className="text-text-secondary text-sm mb-5">Weniger als eine Nachhilfestunde im Monat.</p>
 
-        {couponId && discountPercent && (
+        {effectiveCouponId && effectiveDiscountPercent && (
           <div className="rounded-card px-3 py-2 mb-4 border text-center"
             style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.25)' }}>
             <p className="text-[13px] font-semibold" style={{ color: '#34D399' }}>
-              🎉 {discountPercent}% Rabatt aktiv — wird beim Checkout angewendet
+              Release Rabatt 🎉Jetzt {effectiveDiscountPercent}% sichern!
             </p>
           </div>
         )}
@@ -267,8 +297,18 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
             }`}
           >
             Monatlich · €7,99
+            {plan === 'monthly' && showTrialCopy && <span className="ml-1.5 text-xs opacity-75">1 Woche gratis</span>}
           </button>
         </div>
+
+        {/* Apple Guideline 3.1.2: subscription length, price, and a link to
+            the terms must be visible directly at the purchase point, not
+            just buried in the AGB screen. */}
+        {showTrialCopy && (
+          <p className="text-center text-[12px] mb-3" style={{ color: '#34D399' }}>
+            1 Woche kostenlos, danach €7,99/Monat — jederzeit kündbar
+          </p>
+        )}
 
         {error && (
           <p className="text-[13px] text-red-500 text-center mb-3">{error}</p>
@@ -279,7 +319,11 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
           disabled={loading}
           className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3"
         >
-          {loading ? 'Wird geladen…' : `Pro freischalten · ${plan === 'annual' ? '€59,99/Jahr' : '€7,99/Monat'}`}
+          {loading
+            ? 'Wird geladen…'
+            : showTrialCopy
+              ? '1 Woche kostenlos testen'
+              : `Pro freischalten · ${plan === 'annual' ? '€59,99/Jahr' : '€7,99/Monat'}`}
         </button>
 
         <button
@@ -291,6 +335,14 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
 
         <p className="text-center text-xs text-text-muted mt-3">
           Abi-Schnitt unserer Pro-Nutzer: Ø 1.7
+        </p>
+
+        <p className="text-center text-[11px] text-text-muted mt-3 leading-relaxed">
+          {plan === 'annual' ? 'Jährliches Abo, automatische Verlängerung.' : 'Monatliches Abo, automatische Verlängerung.'}{' '}
+          Mit dem Kauf akzeptierst du unsere{' '}
+          <Link to="/agb" onClick={onClose} className="underline">Nutzungsbedingungen</Link>
+          {' '}und{' '}
+          <Link to="/datenschutz" onClick={onClose} className="underline">Datenschutzerklärung</Link>.
         </p>
       </div>
     </div>

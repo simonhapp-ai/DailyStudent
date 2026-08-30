@@ -342,7 +342,7 @@ function FlashcardMockup() {
 
 function Navbar({ onCta, ctaLabel = 'Kostenlos starten' }: { onCta: () => void; ctaLabel?: string }) {
   return (
-    <div className="fixed top-4 sm:top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+    <div className="fixed top-[max(16px,calc(env(safe-area-inset-top,0px)+8px))] sm:top-[max(20px,calc(env(safe-area-inset-top,0px)+8px))] inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
       <motion.div
         initial={{ opacity: 0, y: -16, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}

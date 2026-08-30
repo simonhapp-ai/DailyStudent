@@ -231,7 +231,7 @@ export function SmartNotesScreen() {
       : { summary: note.summary, keywords: note.keywords, examTopics: note.examTopics }
 
     return (
-      <div className="flex flex-col min-h-screen bg-background pb-24">
+      <div className="flex flex-col min-h-dvh bg-background pb-24">
         {/* Edit header */}
         <div className="flex items-center justify-between px-4 pt-12 pb-4 border-b border-border">
           <button
@@ -376,7 +376,7 @@ export function SmartNotesScreen() {
 
   // ── View mode ────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-24">
+    <div className="flex flex-col min-h-dvh bg-background pb-24">
       <Header
         title="Smart Notes"
         subtitle={lessonTitle}

@@ -8,6 +8,7 @@ import type { StandaloneHomeworkItem } from '../context/UserContext'
 import { totalPunkteAllHalbjahre, pktToNoteAbi, noteColorAbi } from './AbiRechnerScreen'
 import { parseStundenplanFromImage } from '../lib/groq'
 import { LernvorschlagWidget } from '../components/ui/LernvorschlagWidget'
+import { StundenplanPill } from '../components/ui/StundenplanPill'
 
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -220,7 +221,7 @@ export function KalenderScreen() {
 
   // ── Render ──────────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28 lg:h-screen lg:overflow-hidden lg:pb-0">
+    <div className="flex flex-col min-h-dvh bg-background pb-28 lg:h-screen lg:overflow-hidden lg:pb-0">
 
       {/* ── Header ──────────────────────────────────────────── */}
       <div className="px-4 lg:px-6 shrink-0" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
@@ -484,7 +485,7 @@ export function KalenderScreen() {
               top: 'max(60px, calc(env(safe-area-inset-top, 0px) + 52px))',
               left: 16,
               right: 16,
-              maxHeight: 'calc(100vh - 180px)',
+              maxHeight: 'calc(100dvh - 180px)',
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
               transformOrigin: 'bottom right',
@@ -994,17 +995,18 @@ function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurt
 
                 {/* Stundenplan blocks */}
                 {showStundenplan && spSlots.map((slot) => {
-                  const subj = SUBJECT_INFO[slot.subjectId]
                   const topPx = toPx(slot.startTime)
                   const startMin = slot.startTime.split(':').map(Number).reduce((h, m) => h * 60 + m)
                   const endMin   = slot.endTime.split(':').map(Number).reduce((h, m) => h * 60 + m)
                   const heightPx = Math.max(durToPx(endMin - startMin), 22)
-                  const color = subj?.color ?? '#6366F1'
                   return (
-                    <div key={slot.id} className="absolute left-0.5 right-0.5 rounded-[7px] flex flex-col justify-center px-2 overflow-hidden" style={{ top: topPx, height: heightPx, background: `linear-gradient(135deg, ${color}28, ${color}15)`, borderLeft: `2.5px solid ${color}90` }} onClick={(e) => e.stopPropagation()}>
-                      <span className="text-[9px] font-bold leading-tight truncate" style={{ color }}>{subj?.icon ?? ''} {subj?.name ?? slot.subjectId}</span>
-                      {slot.room && <span className="text-[7px] truncate" style={{ color, opacity: 0.7 }}>{slot.room}</span>}
-                    </div>
+                    <StundenplanPill
+                      key={slot.id}
+                      slot={slot}
+                      variant="timeline"
+                      style={{ top: topPx, height: heightPx }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
                   )
                 })}
 
@@ -1350,29 +1352,7 @@ function StundenplanFullView({
                   <span className="text-[9px] text-text-muted/50">–</span>
                 </div>
               ) : (
-                byDay[dayIdx].map((slot) => {
-                  const subj = SUBJECT_INFO[slot.subjectId]
-                  const color = subj?.color ?? '#6366F1'
-                  return (
-                    <div
-                      key={slot.id}
-                      className="rounded-[10px] px-2 py-2.5 flex flex-col items-center gap-0.5 overflow-hidden"
-                      style={{
-                        background: `linear-gradient(135deg, ${color}25, ${color}12)`,
-                        border: `1.5px solid ${color}50`,
-                      }}
-                    >
-                      <span className="text-base leading-none">{subj?.icon ?? '📚'}</span>
-                      <span className="text-[9px] font-bold text-center leading-tight truncate w-full text-center" style={{ color }}>
-                        {subj?.name ?? slot.subjectId}
-                      </span>
-                      <span className="text-[7px] text-text-muted/70 tabular-nums">{slot.startTime}</span>
-                      {slot.room && (
-                        <span className="text-[7px] text-text-muted/50 truncate w-full text-center">{slot.room}</span>
-                      )}
-                    </div>
-                  )
-                })
+                byDay[dayIdx].map((slot) => <StundenplanPill key={slot.id} slot={slot} variant="stack" />)
               )}
             </div>
           ))}
@@ -1563,20 +1543,7 @@ function StundenplanWeekWidget({ stundenplan, onOpen }: { stundenplan: Stundenpl
             {daySlots[i].length === 0 ? (
               <span className="text-[10px] text-text-muted text-center">–</span>
             ) : (
-              daySlots[i].map((slot) => {
-                const subj = SUBJECT_INFO[slot.subjectId]
-                const color = subj?.color ?? '#5AC8FA'
-                return (
-                  <div
-                    key={slot.id}
-                    className="flex items-center gap-1 px-1.5 py-1 rounded-[7px] text-[9px] font-bold leading-none"
-                    style={{ background: `${color}20`, border: `1px solid ${color}35` }}
-                  >
-                    <span className="shrink-0" style={{ fontSize: 9 }}>{subj?.icon ?? '📚'}</span>
-                    <span className="truncate" style={{ color }}>{(subj?.name ?? slot.subjectId).split(' ')[0]}</span>
-                  </div>
-                )
-              })
+              daySlots[i].map((slot) => <StundenplanPill key={slot.id} slot={slot} variant="compact" />)
             )}
           </div>
         ))}
@@ -1829,11 +1796,14 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
                 <div className="space-y-1.5">
                   {daySlots.map((slot) => {
                     const subj = SUBJECT_INFO[slot.subjectId]
+                    const icon = slot.isFreistunde ? '☕' : (subj?.icon ?? '📚')
+                    const name = slot.isFreistunde ? 'Freistunde' : (subj?.name ?? slot.subjectId)
+                    const iconBg = slot.isFreistunde ? 'rgba(148,163,184,0.18)' : `${subj?.color ?? '#7C3AED'}22`
                     return (
                       <div key={slot.id} className="bg-background border border-border/60 rounded-[12px] p-3 flex items-center gap-2.5 animate-fade-in">
-                        <div className="w-8 h-8 rounded-btn flex items-center justify-center text-base shrink-0" style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}>{subj?.icon ?? '📚'}</div>
+                        <div className="w-8 h-8 rounded-btn flex items-center justify-center text-base shrink-0" style={{ backgroundColor: iconBg }}>{icon}</div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-text-primary font-semibold text-[13px]">{subj?.name ?? slot.subjectId}</p>
+                          <p className="text-text-primary font-semibold text-[13px]">{name}</p>
                           <p className="text-text-muted text-[11px]">{slot.startTime} – {slot.endTime}{slot.room ? ` · ${slot.room}` : ''}</p>
                         </div>
                         <button onClick={() => removeSlot(slot.id)} className="w-6 h-6 flex items-center justify-center text-text-muted hover:text-danger transition-colors shrink-0">

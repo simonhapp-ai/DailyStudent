@@ -109,6 +109,11 @@ export interface StundenplanSlot {
   endTime: string   // "08:45"
   subjectId: string
   room?: string
+  // Freistunde/Lücke zwischen zwei Unterrichtsstunden am selben Tag — kein
+  // echtes Fach, subjectId ist dann '' und wird ignoriert. Unterscheidet
+  // sich von "kein Slot vorhanden", das weiterhin einfach "Schulschluss"
+  // bzw. "ganzer Tag frei" bedeutet.
+  isFreistunde?: boolean
 }
 
 export interface Stundenplan {

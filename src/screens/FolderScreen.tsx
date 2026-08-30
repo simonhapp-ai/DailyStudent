@@ -119,7 +119,7 @@ export function FolderScreen() {
     : buildFolderPathParts(folder, userFolders, isNoSubject ? 'Schnellnotizen' : subjectName)
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-32">
+    <div className="flex flex-col min-h-dvh bg-background pb-32">
       <Header
         title={folderName}
         subtitle={isNoSubject ? 'Schnelle Notizen ohne Fach' : subjectName}

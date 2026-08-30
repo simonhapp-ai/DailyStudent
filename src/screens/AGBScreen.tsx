@@ -5,7 +5,7 @@ export function AGBScreen() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-28">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
       <Header title="Nutzungsbedingungen" subtitle="Terms and Conditions" onBack={() => navigate(-1)} />
 
       <div className="px-4 mt-4 space-y-6 text-[13px] text-text-secondary leading-relaxed">
@@ -13,7 +13,7 @@ export function AGBScreen() {
         {/* Meta */}
         <div className="bg-surface border border-border/60 rounded-[20px] p-4 shadow-card-adaptive">
           <p className="text-[11px] text-text-muted uppercase font-semibold tracking-wide mb-1">Letzte Aktualisierung</p>
-          <p className="text-text-primary font-semibold">4. August 2026</p>
+          <p className="text-text-primary font-semibold">28. August 2026</p>
         </div>
 
         {/* Agreement */}
@@ -86,8 +86,11 @@ export function AGBScreen() {
           <SubHeading>Billing and Renewal — Purchases via the Website (Stripe)</SubHeading>
           <p>If you purchase DailyStudent Pro via dailystudent.de, your subscription is billed through Stripe and will continue and automatically renew for the same duration at the then-current price unless cancelled before the renewal date. You consent to our charging your payment method on a recurring basis without requiring your prior approval for each recurring charge, until such time as you cancel.</p>
 
-          <SubHeading>Free Trials &amp; Promotional Access</SubHeading>
-          <p>From time to time we may grant temporary access to Pro features free of charge through promotional programs — for example, our referral program, which grants a limited period of Pro access to users who successfully refer a specified number of new users. Such promotional access is separate from, and not a condition of, any paid subscription purchase; it does not require a payment method and automatically ends at the end of the stated period unless you separately purchase a paid subscription. Details and duration of any active promotion are shown in the app. We have the right to limit or discontinue promotional access at our discretion.</p>
+          <SubHeading>Free Trial — DailyStudent Pro Monthly (App Store)</SubHeading>
+          <p>New subscribers may be eligible for a 1-week (7-day) free trial when purchasing <strong>DailyStudent Pro — Monthly</strong> through the iOS app. No payment is charged during the trial period. Unless you cancel at least 24 hours before the trial ends, your subscription automatically converts into a paid DailyStudent Pro — Monthly subscription at €7.99, and your Apple ID payment method will be charged for the first billing period at that time. You can cancel at any point during the trial at no cost via Settings → [your name] → „Abonnements" on your device, or in-app via Profil → Account → „Abo verwalten" — see Cancellation below for full instructions. Each Apple ID is eligible for one free trial per subscription group, subject to Apple's standard introductory-offer eligibility rules. No free trial is offered on the Yearly plan.</p>
+
+          <SubHeading>Other Promotional Access</SubHeading>
+          <p>From time to time we may also grant temporary access to Pro features free of charge through separate promotional programs — for example, our referral program, which grants a limited period of Pro access to users who successfully refer a specified number of new users. Such promotional access is distinct from the free trial described above: it does not require a payment method and automatically ends at the end of the stated period unless you separately purchase a paid subscription. Details and duration of any active promotion are shown in the app. We have the right to limit or discontinue promotional access at our discretion.</p>
 
           <SubHeading>Cancellation</SubHeading>
           <p><strong>Subscriptions purchased via the App (Apple ID):</strong> Billing for these subscriptions is handled exclusively by Apple, not by DailyStudent. We do not have access to your Apple billing details and cannot cancel or refund an App Store subscription on your behalf. To cancel, open the Settings app on your device, tap your name, tap "Abonnements" ("Subscriptions"), select DailyStudent, and tap "Abonnement kündigen" ("Cancel Subscription") — or manage it from the App Store app under your account. You can also reach this from within DailyStudent via Profil → Account → „Abo verwalten". Cancellation takes effect at the end of the current billing period; you retain access to Pro features until then.</p>

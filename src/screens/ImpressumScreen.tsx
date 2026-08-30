@@ -47,7 +47,7 @@ export function ImpressumScreen() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-10">
+    <div className="flex flex-col min-h-dvh bg-background pb-10">
 
       {/* ── Header ──────────────────────────────────────────── */}
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>

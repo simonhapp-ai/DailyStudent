@@ -79,6 +79,20 @@ const DEFAULT_APP_CONFIG: AppConfig = {
   probeklausurMode4Enabled: true,
 }
 
+// Test-Allowlist — nach Pro-Launch drin lassen; erlaubt späteres Testen bei
+// aktiver Beta, für Nicht-Allowlist-User folgenlos. Bypassed nur
+// proPurchasesEnabled (damit Simon den echten Kauf-Flow gegen die
+// genehmigten Apple-Produkte testen kann, ohne den globalen
+// app_config-Schalter für alle 130+ Beta-Nutzer umzulegen) — die
+// probeklausur_mode2/3/4-Pausierung bleibt für alle, inkl. Allowlist,
+// unberührt, da das eine Feature-Pause ist, kein Kauf-Gate.
+// Both of Simon's addresses: simon.happ@gmx.de is what the app's own Profil→Account
+// screen shows, but Google Sign-In was originally set up against a Gmail alias
+// (simonhapp161@gmail.com, created because Google login required a @gmail.com
+// address at the time) — auth events can carry either depending on the exact
+// OAuth flow, so both need to be covered for the bypass to be reliable.
+const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
+
 export const COIN_VALUES = {
   LOGIN: 5,
   SMART_NOTE: 5,
@@ -1311,6 +1325,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const effectiveIsPro = isPro || nativeEntitlementActive || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
 
+  // .toLowerCase().trim() — a case/whitespace mismatch against the auth
+  // provider's stored email would otherwise silently fail this check with no
+  // visible error, just the beta view rendering as if the allowlist did
+  // nothing at all.
+  const effectiveAppConfig: AppConfig = PRO_TEST_ALLOWLIST.includes((authUser?.email ?? '').toLowerCase().trim())
+    ? { ...appConfig, proPurchasesEnabled: true }
+    : appConfig
+
   return (
     <UserContext.Provider
       value={{
@@ -1390,7 +1412,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         referralCount,
         trialEndsAt,
         subscriptionSource,
-        appConfig,
+        appConfig: effectiveAppConfig,
       }}
     >
       {children}

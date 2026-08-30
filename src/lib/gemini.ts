@@ -31,6 +31,19 @@ const GEMINI_URLS: Record<string, string> = {
 // SyntaxError ("Unexpected token 'A', "An error o"... is not valid JSON") instead of a message
 // any caller could show the user. Every caller already branches on `geminiStatus !== 200` and
 // reads `geminiData.error.message`, so returning a synthetic result here needs no other changes.
+// Block 6 (Claude-Launch-Vorbereitung): leichtgewichtiges Token-Logging für
+// die 3 Gemini-Calls, die perspektivisch auf Claude/Sonnet-5 umziehen sollen
+// (Lernzettel, Probeklausur-Material inkl. Korrektur, Lernplan). Reine
+// Zählung für reale Ø-Kosten-Daten, kein UI, fail-silent, blockiert nichts —
+// Gemini liefert usageMetadata als Geschwister von candidates in jeder
+// generateContent-Antwort.
+function logGeminiUsage(bucket: string, geminiData: unknown) {
+  const data = geminiData as {
+    usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number; thoughtsTokenCount?: number; totalTokenCount?: number }
+  }
+  if (data.usageMetadata) console.log('[gemini tokens]', bucket, data.usageMetadata)
+}
+
 async function parseGeminiResponse(res: Response): Promise<GeminiProxyResult> {
   const text = await res.text()
   try {
@@ -204,6 +217,7 @@ async function examFetch(systemPrompt: string, userPrompt: string, bucket: AiBuc
     throw new Error(errData?.error?.message ?? `Gemini Fehler ${result.geminiStatus}`)
   }
 
+  logGeminiUsage(bucket, result.geminiData)
   const data = result.geminiData as { candidates?: { content?: { parts?: { text?: string }[] } }[] }
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
   const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
@@ -787,6 +801,7 @@ Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${i
     throw new Error(errData?.error?.message ?? `Gemini Fehler ${result.geminiStatus}`)
   }
 
+  logGeminiUsage('lernplan', result.geminiData)
   const data = result.geminiData as { candidates?: { content?: { parts?: { text?: string }[] } }[] }
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
   const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()

@@ -2294,7 +2294,7 @@ export function DrawingCanvas({
           })()}
 
           {/* Page strip — outside transform wrapper so it stays fixed at bottom */}
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center pointer-events-none" style={{ zIndex: 10 }}>
+          <div className="absolute left-0 right-0 flex justify-center pointer-events-none" style={{ zIndex: 10, bottom: 'max(12px, calc(env(safe-area-inset-bottom, 0px) + 4px))' }}>
             <div className="flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1.5 pointer-events-auto">
               {Array.from({ length: pageCount }).map((_, i) => (
                 <button

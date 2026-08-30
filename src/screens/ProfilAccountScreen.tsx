@@ -5,6 +5,7 @@ import { Browser } from '@capacitor/browser'
 import { useUser } from '../context/UserContext'
 import { supabase } from '../lib/supabase'
 import { createPortalSession } from '../lib/stripe'
+import { restorePurchases } from '../lib/revenuecat'
 
 const isNative = Capacitor.isNativePlatform()
 
@@ -18,6 +19,22 @@ export function ProfilAccountScreen() {
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [portalLoading, setPortalLoading] = useState(false)
   const [portalError, setPortalError] = useState<string | null>(null)
+  const [restoreLoading, setRestoreLoading] = useState(false)
+  const [restoreMessage, setRestoreMessage] = useState<{ text: string; isError: boolean } | null>(null)
+
+  const handleRestorePurchases = async () => {
+    setRestoreMessage(null)
+    setRestoreLoading(true)
+    const result = await restorePurchases()
+    setRestoreLoading(false)
+    if (!result.success) {
+      setRestoreMessage({ text: result.error ?? 'Wiederherstellen fehlgeschlagen. Bitte versuche es erneut.', isError: true })
+    } else if (result.hasEntitlement) {
+      setRestoreMessage({ text: 'Käufe wiederhergestellt — dein Pro-Zugang ist aktiv.', isError: false })
+    } else {
+      setRestoreMessage({ text: 'Keine früheren Käufe für diese Apple-ID gefunden.', isError: false })
+    }
+  }
 
   const handleManageSubscription = async () => {
     if (subscriptionSource === 'apple') {
@@ -57,7 +74,7 @@ export function ProfilAccountScreen() {
   if (!authUser) return null
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-10">
+    <div className="flex flex-col min-h-dvh bg-background pb-10">
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
@@ -106,6 +123,18 @@ export function ProfilAccountScreen() {
               </svg>
             </button>
           )}
+          {isNative && (
+            <button
+              onClick={() => void handleRestorePurchases()}
+              disabled={restoreLoading}
+              className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50 disabled:opacity-50"
+            >
+              <span className="text-text-primary text-[15px]">{restoreLoading ? 'Wird wiederhergestellt…' : 'Käufe wiederherstellen'}</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
+                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
           <button
             onClick={() => void signOut()}
             className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
@@ -127,6 +156,9 @@ export function ProfilAccountScreen() {
         </div>
         {portalError && (
           <p className="text-[13px] text-danger mt-2 px-1">{portalError}</p>
+        )}
+        {restoreMessage && (
+          <p className={`text-[13px] mt-2 px-1 ${restoreMessage.isError ? 'text-danger' : 'text-text-secondary'}`}>{restoreMessage.text}</p>
         )}
       </div>
 
