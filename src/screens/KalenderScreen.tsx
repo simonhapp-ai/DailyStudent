@@ -1652,7 +1652,7 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
   const [slots, setSlots] = useState<StundenplanSlot[]>(initialSlots ?? [])
   const [activeDay, setActiveDay] = useState(0)
   const [addingSlot, setAddingSlot] = useState(false)
-  const [newSlot, setNewSlot] = useState({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '' })
+  const [newSlot, setNewSlot] = useState({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '', isFreistunde: false })
   const fileRef = useRef<HTMLInputElement>(null)
   const [scanFile, setScanFile] = useState<File | null>(null)
   const [scanPhase, setScanPhase] = useState<'idle' | 'analyzing' | 'error'>('idle')
@@ -1671,10 +1671,18 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
   }
 
   const commitSlot = () => {
-    if (!newSlot.subjectId) return
-    setSlots((prev) => [...prev, { id: `slot-${Date.now()}`, day: activeDay, startTime: newSlot.startTime, endTime: newSlot.endTime, subjectId: newSlot.subjectId, room: newSlot.room || undefined }])
+    if (!newSlot.subjectId && !newSlot.isFreistunde) return
+    setSlots((prev) => [...prev, {
+      id: `slot-${Date.now()}`,
+      day: activeDay,
+      startTime: newSlot.startTime,
+      endTime: newSlot.endTime,
+      subjectId: newSlot.isFreistunde ? '' : newSlot.subjectId,
+      room: newSlot.isFreistunde ? undefined : (newSlot.room || undefined),
+      ...(newSlot.isFreistunde ? { isFreistunde: true } : {}),
+    }])
     setAddingSlot(false)
-    setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '' })
+    setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '', isFreistunde: false })
   }
 
   const removeSlot = (id: string) => setSlots((prev) => prev.filter((s) => s.id !== id))
@@ -1723,7 +1731,7 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
 
           {mode === 'scan' && (
             <div className="p-4 space-y-3">
-              <button onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
+              <button onClick={() => { setMode(totalSlots > 0 ? 'manual' : 'choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
                 <ChevronLeft />Zurück
               </button>
               {scanPhase === 'idle' && (
@@ -1757,9 +1765,20 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
           {mode === 'manual' && (
             <div className="p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <button onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
-                  <ChevronLeft />Zurück
-                </button>
+                <div className="flex items-center gap-3">
+                  <button onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
+                    <ChevronLeft />Zurück
+                  </button>
+                  {!addingSlot && (
+                    <button
+                      onClick={() => { setMode('scan'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
+                      className="flex items-center gap-1 text-text-muted text-[12px] font-medium hover:text-accent transition-colors"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M21 12a9 9 0 11-2.64-6.36M21 4v6h-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                      Neu scannen
+                    </button>
+                  )}
+                </div>
                 {totalSlots > 0 && !addingSlot && (
                   <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-white text-[12px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 3px 10px rgba(var(--color-accent),0.35)' }}>
                     Speichern · {totalSlots} Std
@@ -1835,16 +1854,22 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
                   <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Fach</p>
                   <div className="grid grid-cols-3 gap-1.5">
                     {profileSubjects.map((s) => (
-                      <button key={s.id} onClick={() => setNewSlot((n) => ({ ...n, subjectId: s.id }))} className={`flex items-center gap-1.5 p-2 rounded-[10px] border text-left transition-all duration-150 ${newSlot.subjectId === s.id ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'}`}>
+                      <button key={s.id} onClick={() => setNewSlot((n) => ({ ...n, subjectId: s.id, isFreistunde: false }))} className={`flex items-center gap-1.5 p-2 rounded-[10px] border text-left transition-all duration-150 ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'}`}>
                         <span className="text-sm shrink-0">{s.icon}</span>
-                        <span className={`text-[10px] font-medium leading-tight truncate ${newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>{s.name}</span>
+                        <span className={`text-[10px] font-medium leading-tight truncate ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>{s.name}</span>
                       </button>
                     ))}
+                    <button onClick={() => setNewSlot((n) => ({ ...n, subjectId: '', isFreistunde: true }))} className={`flex items-center gap-1.5 p-2 rounded-[10px] border border-dashed text-left transition-all duration-150 ${newSlot.isFreistunde ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'}`}>
+                      <span className="text-sm shrink-0">☕</span>
+                      <span className={`text-[10px] font-medium leading-tight truncate ${newSlot.isFreistunde ? 'text-text-primary' : 'text-text-secondary'}`}>Freistunde</span>
+                    </button>
                   </div>
-                  <input type="text" value={newSlot.room} onChange={(e) => setNewSlot((n) => ({ ...n, room: e.target.value }))} placeholder="Raum (optional)" className="w-full bg-surface border border-border rounded-[10px] px-2.5 py-2 text-text-primary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors" />
+                  {!newSlot.isFreistunde && (
+                    <input type="text" value={newSlot.room} onChange={(e) => setNewSlot((n) => ({ ...n, room: e.target.value }))} placeholder="Raum (optional)" className="w-full bg-surface border border-border rounded-[10px] px-2.5 py-2 text-text-primary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors" />
+                  )}
                   <div className="flex gap-2">
-                    <button onClick={() => { setAddingSlot(false); setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '' }) }} className="flex-1 py-2 rounded-[10px] border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors">Abbrechen</button>
-                    <button onClick={commitSlot} disabled={!newSlot.subjectId} className="flex-1 py-2 rounded-[10px] text-white text-sm font-bold disabled:opacity-40 active:scale-95 transition-all" style={{ background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}>Hinzufügen</button>
+                    <button onClick={() => { setAddingSlot(false); setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '', isFreistunde: false }) }} className="flex-1 py-2 rounded-[10px] border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors">Abbrechen</button>
+                    <button onClick={commitSlot} disabled={!newSlot.subjectId && !newSlot.isFreistunde} className="flex-1 py-2 rounded-[10px] text-white text-sm font-bold disabled:opacity-40 active:scale-95 transition-all" style={{ background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}>Hinzufügen</button>
                   </div>
                 </div>
               )}

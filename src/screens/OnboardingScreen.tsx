@@ -1197,7 +1197,7 @@ function StepStundenplan({
   const [mode, setMode] = useState<StundenplanMode>('choose')
   const [activeDay, setActiveDay] = useState(0)
   const [addingSlot, setAddingSlot] = useState(false)
-  const [newSlot, setNewSlot] = useState({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '' })
+  const [newSlot, setNewSlot] = useState({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '', isFreistunde: false })
   const fileRef = useRef<HTMLInputElement>(null)
   const [scanFile, setScanFile] = useState<File | null>(null)
   const [scanPhase, setScanPhase] = useState<ScanPhase>('idle')
@@ -1220,18 +1220,19 @@ function StepStundenplan({
   }
 
   const commitSlot = () => {
-    if (!newSlot.subjectId) return
+    if (!newSlot.subjectId && !newSlot.isFreistunde) return
     const slot: StundenplanSlot = {
       id: `slot-${Date.now()}`,
       day: activeDay,
       startTime: newSlot.startTime,
       endTime: newSlot.endTime,
-      subjectId: newSlot.subjectId,
-      room: newSlot.room || undefined,
+      subjectId: newSlot.isFreistunde ? '' : newSlot.subjectId,
+      room: newSlot.isFreistunde ? undefined : (newSlot.room || undefined),
+      ...(newSlot.isFreistunde ? { isFreistunde: true } : {}),
     }
     setSlots([...slots, slot])
     setAddingSlot(false)
-    setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '' })
+    setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '', isFreistunde: false })
   }
 
   const removeSlot = (id: string) => setSlots(slots.filter((s) => s.id !== id))
@@ -1581,36 +1582,51 @@ function StepStundenplan({
               {profileSubjects.map((s) => (
                 <button
                   key={s.id}
-                  onClick={() => setNewSlot((n) => ({ ...n, subjectId: s.id }))}
+                  onClick={() => setNewSlot((n) => ({ ...n, subjectId: s.id, isFreistunde: false }))}
                   className={`flex items-center gap-2 p-2.5 rounded-card border text-left transition-all duration-150 ${
-                    newSlot.subjectId === s.id
+                    !newSlot.isFreistunde && newSlot.subjectId === s.id
                       ? 'border-accent bg-accent-soft'
                       : 'border-border bg-background hover:bg-surface-hover'
                   }`}
                 >
                   <span className="text-base shrink-0">{s.icon}</span>
-                  <span className={`text-[11px] font-medium leading-tight truncate ${newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  <span className={`text-[11px] font-medium leading-tight truncate ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {s.name}
                   </span>
                 </button>
               ))}
+              <button
+                onClick={() => setNewSlot((n) => ({ ...n, subjectId: '', isFreistunde: true }))}
+                className={`flex items-center gap-2 p-2.5 rounded-card border border-dashed text-left transition-all duration-150 ${
+                  newSlot.isFreistunde
+                    ? 'border-accent bg-accent-soft'
+                    : 'border-border bg-background hover:bg-surface-hover'
+                }`}
+              >
+                <span className="text-base shrink-0">☕</span>
+                <span className={`text-[11px] font-medium leading-tight truncate ${newSlot.isFreistunde ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  Freistunde
+                </span>
+              </button>
             </div>
 
             {/* Room optional */}
-            <input
-              type="text"
-              value={newSlot.room}
-              onChange={(e) => setNewSlot((n) => ({ ...n, room: e.target.value }))}
-              placeholder="Raum (optional, z.B. A204)"
-              className="w-full bg-background border border-border rounded-card px-3 py-2.5 text-text-primary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
-            />
+            {!newSlot.isFreistunde && (
+              <input
+                type="text"
+                value={newSlot.room}
+                onChange={(e) => setNewSlot((n) => ({ ...n, room: e.target.value }))}
+                placeholder="Raum (optional, z.B. A204)"
+                className="w-full bg-background border border-border rounded-card px-3 py-2.5 text-text-primary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+              />
+            )}
 
             {/* Actions */}
             <div className="flex gap-2 pt-1">
               <button
                 onClick={() => {
                   setAddingSlot(false)
-                  setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '' })
+                  setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '', isFreistunde: false })
                 }}
                 className="flex-1 py-2.5 rounded-card border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors"
               >
@@ -1618,7 +1634,7 @@ function StepStundenplan({
               </button>
               <button
                 onClick={commitSlot}
-                disabled={!newSlot.subjectId}
+                disabled={!newSlot.subjectId && !newSlot.isFreistunde}
                 className="flex-1 py-2.5 rounded-card grad-accent text-white text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
               >
                 Hinzufügen
