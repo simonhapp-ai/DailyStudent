@@ -800,7 +800,7 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 1. ~~Block 1 — License-Agreement-URL...~~ **korrigiert, siehe Nachtrag 30.08.2026 unten** — es gibt kein URL-Feld dort, siehe dort für den richtigen Weg.
 2. ~~Block 1 — Small Business Program~~ ✅ Simon hat bestätigt: eingeschrieben.
 3. ~~Block 3 — Introductory Offer~~ ✅ Simon hat bestätigt: 1 Woche, Monatsprodukt, eingerichtet und eingereicht.
-4. **Block 4 — Simon:** Preview-Build am echten Gerät durchklicken — Code-Audit deckt nicht alles ab (z. B. echtes Tastatur-/Bounce-Timing). Blockiert auf den Merge von `polish/navigation-stability` → `main`.
+4. **Block 4 — Simon:** Preview-Build am echten Gerät durchklicken — Code-Audit deckt nicht alles ab (z. B. echtes Tastatur-/Bounce-Timing). Kein neuer Xcode-Build nötig dafür — die bereits installierte/genehmigte App lädt den gemergten Web-Code automatisch (`server.url` zeigt immer auf Produktion).
 5. **Block 5 — Simon:** voller Sandbox-Testdurchlauf (Trial-Kauf, Jahres-Kauf, Restore, Kündigen, natives Apple-Login) mit dem Allowlist-Account, dann erst der `app_config`-Flag-Flip.
 6. **Block 6 — Simon:** nach ~1 Woche Live-Logging die echten Ø-Token-Zahlen mit der Schätzung abgleichen; Umbau erst bei ~5 zahlenden Abonnenten UND Simons OK anstoßen.
 
@@ -819,7 +819,19 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 
 **Trial-/Rabatt-Sichtbarkeit außerhalb ProModal ergänzt:** `ProfilScreen.tsx`s Pro-Upsell-Banner zeigt jetzt einen plattform-abhängigen Hinweis ("1 Woche kostenlos beim Monatsabo" nativ / "20% Rabatt auf deinen ersten Kauf" web) — bewusst NICHT in die kleinen "✦ Pro"-Badges (Probeklausur-/Lernplan-Karten) gequetscht, dafür ist dort schlicht kein Platz ohne echtes Redesign.
 
-**Weiterhin offen:** Merge von `polish/navigation-stability` → `main` (noch nicht erfolgt, Simon wollte erst alles in einem Rutsch fertig haben und dann gesammelt reviewen).
+### Nachtrag 2 (30.08.2026) — Stripe live geschaltet, DS20 verifiziert, echter Bug gefunden+gefixt, localhost-Testing repariert
+
+**Stripe ist jetzt im Live-Mode** (Simons Account war die ganze Zeit bereits business-verifiziert, konnte jederzeit umschalten — die AGB-Zeile "Stripe (Web) ✅ Live-Mode" stimmt jetzt wieder mit der Realität überein). Coupon `DS20` (20%, duration once) wurde sowohl in Sandbox als auch in Live angelegt.
+
+**Echter Bug gefunden beim End-to-End-Test:** `ProfilScreen.tsx`s eigener "Pro freischalten"-Button (`handleUpgrade()`) ist ein komplett separater Code-Pfad von `ProModal.tsx` und rief `createCheckoutSession()` **ganz ohne `couponId`** auf — seit dem ursprünglichen Bau dieses Buttons, nicht durch etwas aus dieser Session verursacht. Der Rabatt-Banner-Text stand trotzdem da (reine UI-Bedingung), aber der Coupon erreichte Stripe nie — bestätigt über Stripes eigenes Request-Log (leeres `discounts[]`). Gefixt: `WELCOME_COUPON_ID` aus `ProModal.tsx` exportiert statt lokal dupliziert (genau diese Art Drift war die Ursache), `ProfilScreen.tsx` importiert und übergibt es jetzt.
+
+**localhost-Testing war komplett blockiert, jetzt gefixt:** Supabase Auths "Redirect URLs" enthielt nur `https://www.dailystudent.de` — jeder Google-OAuth-Login-Versuch auf `localhost:5174` landete deshalb nach dem Google-Redirect auf der Produktions-Domain statt zurück auf localhost (eigener, isolierter Origin, daher keine gemeinsame Session — wirkte wie zufällig verschwindende Logins). Gefixt durch Simon: `http://localhost:5174/**` zusätzlich zur bestehenden Produktions-URL in die Redirect-URLs-Liste eingetragen (additiv, kein Umschalten nötig, Produktion unverändert). **Wichtig für zukünftige Sessions:** localhost-Testing von irgendeinem Login-Flow war seit jeher kaputt, nicht erst seit dieser Session — falls in Zukunft wieder "Login funktioniert auf localhost nicht" auftaucht, zuerst hier nachsehen ob die Redirect-URL noch drin ist.
+
+**Test-Allowlist erweitert:** `PRO_TEST_ALLOWLIST` enthält jetzt sowohl `simon.happ@gmx.de` (im Profil angezeigte Adresse) als auch `simonhapp161@gmail.com` (der Gmail-Alias, mit dem Google Sign-In ursprünglich eingerichtet wurde, da Google damals eine @gmail.com-Adresse verlangte) — je nach OAuth-Event/Token-Refresh kann `authUser.email` die eine oder die andere tragen.
+
+**Bewusst nicht gebaut:** Ein "Wartungsmodus"/Maintenance-Wall-Screen, den Simon als Alternative zur Redirect-URL-Fix vorschlug (Idee: alle Nutzer inkl. bereits eingeloggte blockieren, nur er selbst kommt durch, um "sicher gegen Produktion" zu testen). Eingeordnet als unnötig für das eigentliche Problem — die additive Redirect-URL-Ergänzung löst das lokale Testing vollständig und isoliert von echten Nutzern, ohne neues Feature. Die Idee selbst bleibt als möglisches zukünftiges Tool notiert (z.B. für den tatsächlichen Go-Live-Moment oder eine riskante künftige Migration), aber nicht Teil dieser Session.
+
+**Web-Kauf-Flow (Stripe, Browser/localhost) ist jetzt Ende-zu-Ende verifiziert inkl. Rabatt.** Native Verifikation (Block 4 Geräte-Walkthrough, Block 5 Sandbox-Kauf/Apple-Login/Restore am echten iPhone) steht weiterhin aus — siehe „Was noch offen ist" oben, jetzt aktuell zu halten. Branch `polish/navigation-stability` wurde nach `main` gemerged und gepusht — siehe Git-Log für den exakten Commit-Stand.
 
 ---
 
