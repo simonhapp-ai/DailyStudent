@@ -86,7 +86,12 @@ const DEFAULT_APP_CONFIG: AppConfig = {
 // app_config-Schalter für alle 130+ Beta-Nutzer umzulegen) — die
 // probeklausur_mode2/3/4-Pausierung bleibt für alle, inkl. Allowlist,
 // unberührt, da das eine Feature-Pause ist, kein Kauf-Gate.
-const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de']
+// Both of Simon's addresses: simon.happ@gmx.de is what the app's own Profil→Account
+// screen shows, but Google Sign-In was originally set up against a Gmail alias
+// (simonhapp161@gmail.com, created because Google login required a @gmail.com
+// address at the time) — auth events can carry either depending on the exact
+// OAuth flow, so both need to be covered for the bypass to be reliable.
+const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
 
 export const COIN_VALUES = {
   LOGIN: 5,
