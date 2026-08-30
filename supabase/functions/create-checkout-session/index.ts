@@ -51,8 +51,12 @@ Deno.serve(async (req) => {
 
     // Coupons must be created manually in the Stripe Dashboard (see roadmap spec) —
     // whitelist here the same way price IDs are whitelisted, so an attacker can't pass
-    // an arbitrary coupon ID through this endpoint.
-    const ALLOWED_COUPON_IDS = ['coins-discount-15', 'coins-discount-30']
+    // an arbitrary coupon ID through this endpoint. coins-discount-15/-30 are dormant
+    // (ProfilCoinsScreen's redemption UI is paused, COINS_DISCOUNT_ENABLED=false) but
+    // left here rather than removed — nothing about the coupons themselves changed.
+    // DS20 is the universal web "first purchase" welcome coupon ProModal now applies
+    // by default on every web checkout (see WELCOME_COUPON_ID in ProModal.tsx).
+    const ALLOWED_COUPON_IDS = ['coins-discount-15', 'coins-discount-30', 'DS20']
     if (couponId !== undefined && !ALLOWED_COUPON_IDS.includes(couponId)) {
       return new Response(JSON.stringify({ error: 'Ungültige Coupon-ID' }), {
         status: 400,
