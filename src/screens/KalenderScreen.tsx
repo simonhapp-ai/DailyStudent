@@ -1313,8 +1313,8 @@ function StundenplanFullView({
           onClick={onEdit}
           className="flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] press-sm"
           style={{
-            background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
-            boxShadow: '0 3px 10px rgba(var(--color-accent),0.3)',
+            background: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+            boxShadow: '0 3px 10px rgba(124,58,237,0.35)',
           }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -1765,20 +1765,9 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
           {mode === 'manual' && (
             <div className="p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <button onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
-                    <ChevronLeft />Zurück
-                  </button>
-                  {!addingSlot && (
-                    <button
-                      onClick={() => { setMode('scan'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
-                      className="flex items-center gap-1 text-text-muted text-[12px] font-medium hover:text-accent transition-colors"
-                    >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M21 12a9 9 0 11-2.64-6.36M21 4v6h-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                      Neu scannen
-                    </button>
-                  )}
-                </div>
+                <button onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
+                  <ChevronLeft />Zurück
+                </button>
                 {totalSlots > 0 && !addingSlot && (
                   <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-white text-[12px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 3px 10px rgba(var(--color-accent),0.35)' }}>
                     Speichern · {totalSlots} Std
@@ -1877,6 +1866,17 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
               {totalSlots > 0 && !addingSlot && (
                 <button onClick={handleSave} className="w-full py-3 rounded-[14px] text-white text-[14px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 4px 16px rgba(var(--color-accent),0.4)' }}>
                   Stundenplan speichern · {totalSlots} Stunde{totalSlots === 1 ? '' : 'n'}
+                </button>
+              )}
+
+              {!addingSlot && (
+                <button
+                  onClick={() => { setMode('scan'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
+                  className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-pill text-[13px] font-bold press-sm"
+                  style={{ background: 'rgba(var(--color-accent), 0.1)', color: 'rgb(var(--color-accent))' }}
+                >
+                  <span className="text-sm shrink-0">📷</span>
+                  Mit KI Scannen
                 </button>
               )}
             </div>
