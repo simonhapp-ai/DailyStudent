@@ -36,18 +36,19 @@
   --fill-yellow:  255 204   0;  --fill-yellow-on: 0   0   0;
 
   /* ── Fachgruppen (Version C) ────────────────────────────────────────────── */
-  --subj-spr:      30 110 244;  --subj-spr-on:  255 255 255;  /* Sprachen · Blau        */
-  --subj-nat:       0 137  50;  --subj-nat-on:  255 255 255;  /* Naturwiss. · Forest    */
-  --subj-ges:     255 204   0;  --subj-ges-on:    0   0   0;  /* Gesellschaft · Gelb    */
-  --subj-kre:     231  18  77;  --subj-kre-on:  255 255 255;  /* Kreativ & Sport · Pink */
-  --subj-cst:       0   0   0;  --subj-cst-on:  255 255 255;  /* Eigenes Fach           */
+  --subj-spr:      92 184 255;  --subj-spr-on:    0   0   0;  /* Sprachen · Blau pastell   */
+  --subj-nat:      52 199  89;  --subj-nat-on:    0   0   0;  /* Naturwiss. · Grün         */
+  --subj-ges:     255 160  86;  --subj-ges-on:    0   0   0;  /* Gesellschaft · Orange     */
+  --subj-kre:     255 138 196;  --subj-kre-on:    0   0   0;  /* Kreativ & Sport · Pink    */
+  --subj-cst:       0   0   0;  --subj-cst-on:  255 255 255;  /* Eigenes Fach              */
 
   /* Weiche Aufhellung oben links, minimale Tiefe unten rechts — führt keine
      neue Farbe ein, liegt nur auf dem Fachzeichen. */
   --subj-fade: linear-gradient(155deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,0) 56%, rgba(0,0,0,.11) 100%);
 
-  /* Kalendereintrag braucht einen eigenen Grauton, nicht die Kartenfläche */
-  --ev-bg:        199 199 204;  --ev-on:          0   0   0;
+  /* Kalendereintrag — der Ton trennt nur vom Untergrund. Den Kontrast leistet
+     ohnehin die Schrift, deshalb hell statt kräftig. */
+  --ev-bg:        229 229 234;  --ev-on:          0   0   0;
 
   /* Bühne — hell die dunkelste Fläche des Screens */
   --stage-bg: linear-gradient(146deg, #160E28 0%, #2A1B5C 100%);
@@ -105,13 +106,15 @@
   --fill-blue:      0 145 255;  --fill-blue-on:   0   0   0;
   --fill-yellow:  255 214   0;  --fill-yellow-on: 0   0   0;
 
-  --subj-spr:       0 145 255;  --subj-spr-on:    0   0   0;
-  --subj-nat:      48 209  88;  --subj-nat-on:    0   0   0;
-  --subj-ges:     255 214   0;  --subj-ges-on:    0   0   0;
-  --subj-kre:     255  55  95;  --subj-kre-on:    0   0   0;
+  /* Pastelltöne tragen in beiden Erscheinungen — sie sind hell genug für Schwarz
+     auf der Fläche und kräftig genug, um sich vom schwarzen Grund abzuheben. */
+  --subj-spr:      92 184 255;  --subj-spr-on:    0   0   0;
+  --subj-nat:      52 199  89;  --subj-nat-on:    0   0   0;
+  --subj-ges:     255 160  86;  --subj-ges-on:    0   0   0;
+  --subj-kre:     255 138 196;  --subj-kre-on:    0   0   0;
   --subj-cst:     255 255 255;  --subj-cst-on:    0   0   0;
 
-  --ev-bg:        174 174 178;  --ev-on:          0   0   0;
+  --ev-bg:         58  58  60;  --ev-on:        255 255 255;
 
   /* Bühne — dunkel die hellste Fläche des Screens (Rolle dreht sich um) */
   --stage-bg: linear-gradient(146deg, #241C3C 0%, #3E2C74 100%);

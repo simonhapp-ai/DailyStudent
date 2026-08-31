@@ -1,5 +1,6 @@
 import { useUser } from '../../context/UserContext'
 import { getActiveStreak } from '../../lib/streak'
+import { Icon } from './Icon'
 
 const MILESTONES = [
   { days: 5, reward: 25 },
@@ -22,7 +23,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
         <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
 
         <div className="flex items-center gap-3 mb-1">
-          <span className="text-[32px] leading-none">🔥</span>
+          <Icon name="flame" size={32} filled className="text-fill-orange" />
           <div>
             <p className="text-[22px] font-black text-text-primary tabular-nums leading-none">{streak} {streak === 1 ? 'Tag' : 'Tage'}</p>
             <p className="text-text-muted text-[12px] mt-1">Aktuelle Lernstreak</p>
@@ -43,7 +44,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
 
         <div className="rounded-[14px] bg-background px-4 py-3 mb-5 flex items-center justify-between">
           <span className="text-text-secondary text-[13px]">Deine Streak Freezes</span>
-          <span className="text-text-primary font-bold text-[15px] tabular-nums">🧊 {freezes}</span>
+          <span className="text-text-primary font-bold text-[15px] tabular-nums flex items-center gap-1.5"><Icon name="snowflake" size={15} />{freezes}</span>
         </div>
 
         <p className="text-text-primary text-[14px] font-semibold mb-2.5">Meilenstein-Boni</p>

@@ -8,6 +8,7 @@ import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import { Dialog } from '../components/ui/Dialog'
 import type { Lernzettel } from '../types'
+import { Icon } from '../components/ui/Icon'
 
 const G_LERNZETTEL = 'linear-gradient(145deg, #0E7CDD, #052848)'
 
@@ -459,7 +460,7 @@ export function LernzettelScreen() {
         {/* Section header */}
         <div className="flex items-center gap-2 px-4 mb-2">
           {appConfig.proPurchasesEnabled ? (
-            <span className="badge-pro-gold px-2.5 py-1">✦ PRO</span>
+            <span className="badge-pro-gold px-2.5 py-1 gap-1"><Icon name="sparkle" size={10} filled />PRO</span>
           ) : (
             <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold bg-background text-text-muted">Vorschau</span>
           )}
@@ -496,7 +497,7 @@ export function LernzettelScreen() {
                   {p.subject}
                 </span>
                 {appConfig.proPurchasesEnabled ? (
-                  <span className="badge-pro-gold" style={{ padding: '2px 7px', fontSize: '10px' }}>✦ PRO</span>
+                  <span className="badge-pro-gold gap-1" style={{ padding: '2px 7px', fontSize: '10px' }}><Icon name="sparkle" size={9} filled />PRO</span>
                 ) : (
                   <span style={{ padding: '2px 7px', fontSize: '10px', fontWeight: 700, borderRadius: '999px', background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>Vorschau</span>
                 )}

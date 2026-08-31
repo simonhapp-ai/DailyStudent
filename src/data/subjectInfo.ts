@@ -13,10 +13,10 @@ export type SubjectGroupKey = 'spr' | 'nat' | 'ges' | 'kre' | 'cst'
 // benutzen (--subj-spr … --subj-cst); diese Hexe sind für Kanten und Alpha-Tönungen
 // gedacht, die in beiden Erscheinungen funktionieren.
 export const SUBJECT_GROUP_COLOR: Record<SubjectGroupKey, string> = {
-  spr: '#1E6EF4', // Sprachen · Apple Blau
-  nat: '#008932', // Naturwissenschaft · Apple Forest Green
-  ges: '#FFCC00', // Gesellschaft · Apple Gelb
-  kre: '#E7124D', // Kreativ & Sport · Apple Pink
+  spr: '#5CB8FF', // Sprachen · Apple Blau, Pastellstufe
+  nat: '#34C759', // Naturwissenschaft · Apple Grün
+  ges: '#FFA056', // Gesellschaft · Apple Orange, Pastellstufe
+  kre: '#FF8AC4', // Kreativ & Sport · Apple Pink, Pastellstufe
   cst: '#000000', // Eigenes Fach
 }
 
@@ -40,8 +40,10 @@ export function getSubjectGroup(id: string): SubjectGroupKey {
 
 // Schrift auf einer gefüllten Fachfarbe. Version-C-Füllregel: Fläche voll, Text weiß
 // oder schwarz nach Kontrast — nie die Farbe selbst als Schrift auf getönter Fläche.
+// Pastellflächen tragen durchgehend schwarze Schrift — alle vier liegen damit
+// zwischen 9,5 : 1 und 10,6 : 1 und funktionieren in beiden Erscheinungen gleich.
 const GROUP_ON: Record<SubjectGroupKey, string> = {
-  spr: '#FFFFFF', nat: '#FFFFFF', ges: '#000000', kre: '#FFFFFF', cst: '#FFFFFF',
+  spr: '#000000', nat: '#000000', ges: '#000000', kre: '#000000', cst: '#FFFFFF',
 }
 
 export function getSubjectOnColor(id: string): string {

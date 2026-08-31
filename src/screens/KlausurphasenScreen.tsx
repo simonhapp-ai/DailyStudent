@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { Icon } from '../components/ui/Icon'
 import { endnoteForEntry } from './AbiRechnerScreen'
 import { LernvorschlagWidget } from '../components/ui/LernvorschlagWidget'
 import { getActiveStreak } from '../lib/streak'
@@ -59,7 +60,7 @@ function MiniBarChart({ halbjahre, faecher }: { halbjahre: AbiHalbjahr[]; faeche
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full py-2 gap-1">
-        <span className="text-[22px]">📊</span>
+        <Icon name="chart" size={22} className="text-text-muted" />
         <p className="text-text-muted text-[10px] text-center leading-tight">Noch keine<br/>Noten</p>
       </div>
     )
@@ -82,7 +83,7 @@ function MiniBarChart({ halbjahre, faecher }: { halbjahre: AbiHalbjahr[]; faeche
                 <div className="rounded-t-[3px] w-full" style={{ height: barH, background: c, minWidth: 6 }} />
               </div>
               <div className="w-full h-px bg-border/50 mb-0.5" />
-              <span className="text-[12px] leading-none">{s.info.icon}</span>
+              <SubjectIcon subjectId={s.id} size="sm" className="!w-5 !h-5" />
             </div>
           )
         })}
@@ -416,18 +417,18 @@ export function KlausurphasenScreen() {
               {/* Right: 8 stats (2 col × 4 row) */}
               <div className="grid grid-cols-2 gap-1 content-start">
                 {([
-                  { icon: '🔥', value: activeStreak,                   label: 'Streak'   },
-                  { icon: '📝', value: userNotes.length,               label: 'Notizen'  },
-                  { icon: '📸', value: totalPhotos,                    label: 'Fotos'    },
-                  { icon: '📋', value: savedProbeklausuren.length,     label: 'PK'       },
-                  { icon: '📄', value: lernzettel.length,              label: 'LZ'       },
-                  { icon: '🎴', value: generatedFlashCards.length,     label: 'Karten'   },
-                  { icon: '🪙', value: appStats.coins ?? 0,            label: 'Coins'    },
-                  { icon: '📅', value: personalEntries.length,         label: 'Kalender' },
+                  { icon: 'flame'     as const, value: activeStreak,               label: 'Streak'   },
+                  { icon: 'note'      as const, value: userNotes.length,           label: 'Notizen'  },
+                  { icon: 'camera'    as const, value: totalPhotos,                label: 'Fotos'    },
+                  { icon: 'clipboard' as const, value: savedProbeklausuren.length, label: 'PK'       },
+                  { icon: 'document'  as const, value: lernzettel.length,          label: 'LZ'       },
+                  { icon: 'cards'     as const, value: generatedFlashCards.length, label: 'Karten'   },
+                  { icon: 'coins'     as const, value: appStats.coins ?? 0,        label: 'Coins'    },
+                  { icon: 'calendar'  as const, value: personalEntries.length,     label: 'Kalender' },
                 ] as const).map(s => (
                   <div key={s.label} className="bg-background rounded-[8px] px-2 py-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[13px] leading-none">{s.icon}</span>
+                      <Icon name={s.icon} size={13} className="text-text-muted" />
                       <p className="text-text-primary font-bold text-[13px] leading-none">{s.value}</p>
                     </div>
                     <p className="text-text-muted text-[9px] mt-1 leading-none">{s.label}</p>

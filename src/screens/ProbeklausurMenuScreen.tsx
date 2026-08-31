@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { ProModal } from '../components/ui/ProModal'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { Icon } from '../components/ui/Icon'
 
 interface ProbeklausurPrefill {
   subjectId: string
@@ -15,7 +16,7 @@ const MODES_FULL = [
   {
     id: 2,
     route: '/klausurmodus/probeklausur/vollstaendige-klausur',
-    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+    gradient: 'linear-gradient(145deg, #7C3AED, #5B21B6)',
     title: 'Vollständige Klausur',
     subtitle: 'Realistische Klausur-Simulation',
     description: 'Eine komplette 90-Minuten-Klausur mit AFB I–III, 2–3 Materialien und echter Zeitgrenzen — genau wie im echten Abitur.',
@@ -48,7 +49,7 @@ const MODES_HALF = [
   {
     id: 3,
     route: '/klausurmodus/probeklausur/materialklausur',
-    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+    gradient: 'linear-gradient(145deg, #7C3AED, #5B21B6)',
     title: 'Materialklausur',
     subtitle: 'Alle drei AFB zu einem Material',
     badges: ['1–3 Materialien', 'AFB I + II + III'],
@@ -62,7 +63,7 @@ const MODES_HALF = [
   {
     id: 4,
     route: '/klausurmodus/probeklausur/ohne-material',
-    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+    gradient: 'linear-gradient(145deg, #7C3AED, #5B21B6)',
     title: 'Ohne Material',
     subtitle: 'Alles aus dem Kopf',
     badges: ['Kein Material', 'AFB I + II + III'],
@@ -167,12 +168,12 @@ export function ProbeklausurMenuScreen() {
 
         {/* Lernzettel context banner */}
         {prefill && (
-          <div className="bg-[#5AC8FA]/10 border border-[#5AC8FA]/30 rounded-[16px] p-3.5 flex items-start gap-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
+          <div className="bg-[#0E7CDD]/10 border border-[#0E7CDD]/30 rounded-[16px] p-3.5 flex items-start gap-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0E7CDD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
               <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6M9 13h6M9 17h4" />
             </svg>
             <div className="min-w-0">
-              <p className="text-[12px] font-semibold text-[#5AC8FA]">Basierend auf Lernzettel</p>
+              <p className="text-[12px] font-semibold text-[#0E7CDD]">Basierend auf Lernzettel</p>
               <p className="text-[12px] text-text-secondary mt-0.5">
                 <span className="font-medium">{prefill.subjectName}</span>
                 {prefill.topics.length > 0 && ` · ${prefill.topics.slice(0, 2).join(', ')}${prefill.topics.length > 2 ? ' …' : ''}`}
@@ -224,10 +225,10 @@ export function ProbeklausurMenuScreen() {
                 </span>
               ) : mode.id !== 1 && modeEnabled[mode.id] === false ? (
                 <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold bg-background text-text-muted">
-                  🕒 Bald wieder da
+                  Bald wieder da
                 </span>
               ) : mode.proBadge && !isPro && (
-                <span className="badge-pro-gold px-2 py-0.5">✦ Pro</span>
+                <span className="badge-pro-gold px-2 py-0.5 gap-1"><Icon name="sparkle" size={10} filled />Pro</span>
               )}
             </div>
           </button>
@@ -257,10 +258,10 @@ export function ProbeklausurMenuScreen() {
                 ))}
                 {modeEnabled[mode.id] === false ? (
                   <span className="px-1.5 py-0.5 rounded-pill text-[10px] font-bold bg-background text-text-muted">
-                    🕒 Bald wieder da
+                    Bald wieder da
                   </span>
                 ) : mode.proBadge && !isPro && (
-                  <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
+                  <span className="badge-pro-gold px-1.5 py-0.5 gap-1"><Icon name="sparkle" size={9} filled />Pro</span>
                 )}
               </div>
             </button>
@@ -285,7 +286,6 @@ export function ProbeklausurMenuScreen() {
             <p className="section-label px-1 mb-2.5">Angefangene Klausuren</p>
             <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden">
               {inProgressProbeklausuren.map((pk, i) => {
-                const info = SUBJECT_INFO[pk.subjectId]
                 const answerCount = Object.values(pk.userAnswers).filter(Boolean).length
                 const totalTasks = pk.exam.tasks.length
                 return (
@@ -293,12 +293,7 @@ export function ProbeklausurMenuScreen() {
                     key={pk.id}
                     className={`flex items-center gap-3 px-4 py-3.5 ${i < inProgressProbeklausuren.length - 1 ? 'border-b border-border/40' : ''}`}
                   >
-                    <div
-                      className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 text-[19px]"
-                      style={{ background: (info?.color ?? '#7C3AED') + '20' }}
-                    >
-                      {info?.icon ?? '📋'}
-                    </div>
+                    <SubjectIcon subjectId={pk.subjectId} size="md" />
                     <div className="flex-1 min-w-0">
                       <p className="text-text-primary font-semibold text-[14px] truncate">{pk.subjectName}</p>
                       <p className="text-text-muted text-[11px] mt-0.5">
@@ -338,18 +333,12 @@ export function ProbeklausurMenuScreen() {
               {[...savedProbeklausuren]
                 .sort((a, b) => b.completedAt.localeCompare(a.completedAt))
                 .map((pk, i, arr) => {
-                  const info = SUBJECT_INFO[pk.subjectId]
                   return (
                     <div
                       key={pk.id}
                       className={`flex items-center gap-3 px-4 py-3.5 ${i < arr.length - 1 ? 'border-b border-border/40' : ''}`}
                     >
-                      <div
-                        className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 text-[19px]"
-                        style={{ background: (info?.color ?? '#7C3AED') + '20' }}
-                      >
-                        {info?.icon ?? '📋'}
-                      </div>
+                      <SubjectIcon subjectId={pk.subjectId} size="md" />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
                           <p className="text-text-primary font-semibold text-[13px] truncate">{pk.topic}</p>
