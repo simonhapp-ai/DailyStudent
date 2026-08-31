@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import { ModusRegler, type ModusOption } from '../components/ui/ModusRegler'
 import { ProModal } from '../components/ui/ProModal'
@@ -10,7 +11,7 @@ import { saveLocalAsset } from '../lib/noteStorage'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import type { Lernzettel, LernzettelImage, LernzettelModus } from '../types'
 
-const G_LERNZETTEL = 'linear-gradient(145deg, #5AC8FA, #007BB8)'
+const G_LERNZETTEL = 'linear-gradient(145deg, #0E7CDD, #052848)'
 
 type Step = 'fach' | 'modus' | 'select' | 'generating'
 
@@ -242,12 +243,7 @@ export function LernzettelGeneratorScreen() {
                   onClick={() => handleSelectSubject(subjectId)}
                   className="w-full bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive p-4 text-left press flex items-center gap-3"
                 >
-                  <div
-                    className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 text-xl"
-                    style={{ background: info?.color ? `${info.color}22` : '#ffffff11' }}
-                  >
-                    <span>{info?.icon ?? '📄'}</span>
-                  </div>
+                  <SubjectIcon subjectId={subjectId} size="md" />
                   <div className="flex-1 min-w-0">
                     <p className="text-[15px] font-bold text-text-primary">{info?.name ?? subjectId}</p>
                     <p className="text-[12px] text-text-muted mt-0.5">
@@ -343,7 +339,7 @@ export function LernzettelGeneratorScreen() {
                         }
                       }}
                       placeholder={getTopicPlaceholder(selectedSubjectId)}
-                      className="flex-1 bg-surface border border-border rounded-[14px] px-3.5 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-[#5AC8FA] transition-colors"
+                      className="flex-1 bg-surface border border-border rounded-[14px] px-3.5 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-[#0E7CDD] transition-colors"
                     />
                     <button
                       onClick={() => {
@@ -405,7 +401,7 @@ export function LernzettelGeneratorScreen() {
                         className="w-full text-left press rounded-[16px] border transition-all overflow-hidden"
                         style={
                           selected
-                            ? { borderColor: '#5AC8FA', background: 'rgba(90,200,250,0.08)' }
+                            ? { borderColor: '#0E7CDD', background: 'rgba(9,76,134,0.08)' }
                             : { borderColor: 'rgba(var(--color-border), 0.6)', background: 'rgb(var(--color-surface))' }
                         }
                       >
@@ -576,7 +572,7 @@ export function LernzettelGeneratorScreen() {
                 <div
                   key={i}
                   className="w-2 h-2 rounded-full animate-bounce"
-                  style={{ background: '#5AC8FA', animationDelay: `${i * 0.15}s` }}
+                  style={{ background: '#0E7CDD', animationDelay: `${i * 0.15}s` }}
                 />
               ))}
             </div>

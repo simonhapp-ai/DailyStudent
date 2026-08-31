@@ -22,7 +22,7 @@ export function WorkingState({
   return (
     <div className={`bg-surface rounded-card p-5 flex flex-col items-center text-center gap-3 ${className}`}>
       <span className="text-[16px] font-semibold text-text-primary">{title}</span>
-      <div className="w-full h-2 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] overflow-hidden">
+      <div className="w-full h-2 rounded-pill bg-fill-3 overflow-hidden">
         <div className="h-full w-1/3 rounded-pill bg-accent animate-[working_1.4s_ease-in-out_infinite] motion-reduce:animate-none motion-reduce:w-1/2" />
       </div>
       {note && <span className="text-[13px] text-text-secondary">{note}</span>}

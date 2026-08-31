@@ -77,7 +77,7 @@ export function LessonScreen() {
               <ListRow
                 key={note.id}
                 leading={
-                  <span className="w-11 h-11 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex flex-col items-center justify-center shrink-0 leading-none">
+                  <span className="w-11 h-11 rounded-icon bg-fill-1 flex flex-col items-center justify-center shrink-0 leading-none">
                     <span className="text-[15px] font-bold text-text-primary tabular-nums">
                       {new Date(note.createdAt).getDate()}
                     </span>

@@ -56,7 +56,7 @@ export function PlanenBar({ className = '' }: { className?: string }) {
         <button
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="h-9 px-2 rounded-pill text-[12.5px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm flex items-center justify-center gap-1"
+          className="h-9 px-2 rounded-pill text-[12.5px] font-semibold text-text-primary bg-fill-2 press-sm flex items-center justify-center gap-1"
         >
           Mehr
           <motion.svg

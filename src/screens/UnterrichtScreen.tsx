@@ -462,7 +462,7 @@ export function UnterrichtScreen() {
               <ListGroup>
                 <ListRow
                   leading={
-                    <span className="w-11 h-11 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-secondary shrink-0">
+                    <span className="w-11 h-11 rounded-icon bg-fill-1 flex items-center justify-center text-text-secondary shrink-0">
                       <Icon name="folder" size={20} />
                     </span>
                   }
@@ -543,8 +543,12 @@ export function UnterrichtScreen() {
                   </svg>
                 </button>
 
+                {/* Aufgeklapptes Ordner-Raster — liegt IN der Listenfläche und
+                    trägt deshalb die leichteste Füllstufe. Apples Hintergrund-
+                    Hierarchie: Primär die Gesamtansicht, Sekundär die Gruppierung
+                    darin, Tertiär die Gruppierung innerhalb der Gruppierung. */}
                 {isExpanded && (
-                  <div className="border-t border-border/40 px-4 pt-4 pb-4">
+                  <div className="border-t border-border/40 px-4 pt-4 pb-4 bg-fill-4">
                     <div className="grid grid-cols-3 gap-x-3 gap-y-2">
                       {subjectFolders.map((folder) => (
                         <FolderGridItem

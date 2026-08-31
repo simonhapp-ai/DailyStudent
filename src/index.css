@@ -49,6 +49,27 @@
      neue Farbe ein, liegt nur auf dem Fachzeichen. */
   --subj-fade: linear-gradient(155deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,0) 56%, rgba(0,0,0,.11) 100%);
 
+  /* ── Füllstufen (Apple-Hierarchie) ───────────────────────────────────────
+     Vier Stufen desselben neutralen Tons. Die Stufe kodiert die GRÖSSE der
+     Fläche, nicht den Geschmack: Kleine Formen brauchen mehr Deckkraft, um
+     überhaupt zu lesen, große weniger, sonst erdrücken sie den Inhalt.
+
+       primary     kleine Formen — Symbolfelder, Datumsfelder, Schalterspuren
+       secondary   mittlere Formen — sekundäre Knöpfe, Segmentleisten, Pillen
+       tertiary    große Formen — Eingabefelder, Hinweiskarten, Fortschrittsspuren
+       quaternary  ganzflächige Tönungen
+
+     Apple benennt die Stufen semantisch nach Zweck, nicht nach Farbwert; das
+     Schema ist plattformunabhängig übertragbar (siehe APPLE_HIG_DESIGN_SYSTEM.md,
+     Abschnitt Color). */
+  --fill-primary:    rgba(120, 120, 128, 0.20);
+  --fill-secondary:  rgba(120, 120, 128, 0.16);
+  --fill-tertiary:   rgba(120, 120, 128, 0.12);
+  --fill-quaternary: rgba(120, 120, 128, 0.08);
+
+  /* Erhöhte Fläche — was auf einer Karte liegt, nicht die Karte selbst */
+  --color-elevated: 255 255 255;
+
   /* Kalendereintrag — der Ton trennt nur vom Untergrund. Den Kontrast leistet
      ohnehin die Schrift, deshalb hell statt kräftig. */
   --ev-bg:        229 229 234;  --ev-on:          0   0   0;
@@ -118,6 +139,15 @@
   /* Eigenes Fach kehrt sich um: weiße Fläche im Dunkeln, damit sie überhaupt
      sichtbar ist — das Symbol darauf ist die eine Ausnahme und wird schwarz. */
   --subj-cst:     255 255 255;  --subj-cst-on:    0   0   0;
+
+  /* Dunkel liegen dieselben Stufen höher — auf Schwarz braucht derselbe
+     Eindruck mehr Deckkraft als auf Weiß. */
+  --fill-primary:    rgba(120, 120, 128, 0.36);
+  --fill-secondary:  rgba(120, 120, 128, 0.32);
+  --fill-tertiary:   rgba(120, 120, 128, 0.24);
+  --fill-quaternary: rgba(120, 120, 128, 0.18);
+
+  --color-elevated: 44 44 46;
 
   --ev-bg:         58  58  60;  --ev-on:        255 255 255;
 

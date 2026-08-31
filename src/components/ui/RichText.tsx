@@ -74,14 +74,14 @@ export function RichText({ text, images }: { text: string; images?: LernzettelIm
     }
     if (line.startsWith('> ')) {
       return (
-        <div key={i} className="border-l-[3px] border-[#5AC8FA] pl-3 py-0.5 my-2">
+        <div key={i} className="border-l-[3px] border-[#52AEFF] pl-3 py-0.5 my-2">
           <p className="text-[13px] text-text-secondary italic">{renderInline(line.slice(2), `q-${i}-`)}</p>
         </div>
       )
     }
     if (line.startsWith('Merke: ')) {
       return (
-        <div key={i} className="border-l-[3px] border-[#5AC8FA] pl-3 py-0.5 my-2">
+        <div key={i} className="border-l-[3px] border-[#52AEFF] pl-3 py-0.5 my-2">
           <p className="text-[13px] text-text-secondary italic">{renderInline(line, `m-${i}-`)}</p>
         </div>
       )

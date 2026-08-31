@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import type { SavedProbeklausur } from '../types'
 
 const MODE_LABELS: Record<number, string> = {
@@ -14,7 +15,7 @@ const MODE_LABELS: Record<number, string> = {
 
 const AFB_COLORS: Record<string, string> = {
   I:   'bg-blue-500/15 text-blue-400',
-  II:  'bg-amber-500/15 text-amber-400',
+  II:  'bg-warning/15 text-warning',
   III: 'bg-purple-500/15 text-purple-400',
 }
 
@@ -82,7 +83,7 @@ function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] 
           {/* Gaps */}
           {task.gaps.length > 0 && (
             <div>
-              <p className="text-[10px] font-bold text-amber-400 uppercase tracking-wide mb-1">Lücken</p>
+              <p className="text-[10px] font-bold text-warning uppercase tracking-wide mb-1">Lücken</p>
               {task.gaps.map((g, i) => (
                 <p key={i} className="text-[12px] text-text-secondary mb-0.5">· {g}</p>
               ))}
@@ -293,12 +294,7 @@ export function ProbeklausurRetroScreen() {
 
               <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
                 {/* Subject icon */}
-                <div
-                  className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 text-xl"
-                  style={{ background: info?.color ? `${info.color}22` : '#ffffff11' }}
-                >
-                  <span>{info?.icon ?? '📄'}</span>
-                </div>
+                <SubjectIcon subjectId={pk.subjectId} size="md" />
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">

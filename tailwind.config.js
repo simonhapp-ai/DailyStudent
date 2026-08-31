@@ -51,6 +51,12 @@ export default {
         'fill-blue-on': 'rgb(var(--fill-blue-on) / <alpha-value>)',
         'fill-yellow': 'rgb(var(--fill-yellow) / <alpha-value>)',
         'fill-yellow-on': 'rgb(var(--fill-yellow-on) / <alpha-value>)',
+        // Füllstufen — Stufe nach Flächengröße, siehe index.css
+        'fill-1': 'var(--fill-primary)',
+        'fill-2': 'var(--fill-secondary)',
+        'fill-3': 'var(--fill-tertiary)',
+        'fill-4': 'var(--fill-quaternary)',
+        elevated: 'rgb(var(--color-elevated) / <alpha-value>)',
         // Kalendereintrag
         'ev-bg': 'rgb(var(--ev-bg) / <alpha-value>)',
         'ev-on': 'rgb(var(--ev-on) / <alpha-value>)',

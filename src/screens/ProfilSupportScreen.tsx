@@ -27,7 +27,7 @@ export function ProfilSupportScreen() {
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0"
-                style={{ background: 'linear-gradient(135deg, #5AC8FA, #0891B2)' }}>
+                style={{ background: 'linear-gradient(135deg, #52AEFF, #0057A3)' }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" />
                 </svg>

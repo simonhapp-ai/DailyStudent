@@ -89,7 +89,7 @@ function useSidebar() {
 // bliebe. Sie beschreibt eine Gewohnheit, kein Feature.
 function TipCard({ tip }: { tip: Tip }) {
   return (
-    <div className="mt-5 mx-1 rounded-[16px] bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] p-3.5 flex gap-2.5">
+    <div className="mt-5 mx-1 rounded-[16px] bg-fill-3 p-3.5 flex gap-2.5">
       <span className="text-text-secondary shrink-0 mt-0.5">
         <Icon name="speech" size={16} />
       </span>
@@ -105,7 +105,7 @@ function TipCard({ tip }: { tip: Tip }) {
 
 function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => void }) {
   return (
-    <div className="flex gap-1 p-1 rounded-[14px] bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+    <div className="flex gap-1 p-1 rounded-[14px] bg-fill-2">
       {(['unterricht', 'klausur'] as AppMode[]).map((m) => {
         const active = mode === m
         return (
@@ -325,7 +325,7 @@ function SideRow({ entry, active, onClick }: { entry: NavEntry; active: boolean;
         fontWeight: active ? 600 : 500,
       }}
     >
-      <span className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+      <span className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0 bg-fill-1">
         <Icon name={entry.icon} size={17} />
       </span>
       <span className="text-[14px] truncate flex-1">{entry.label}</span>

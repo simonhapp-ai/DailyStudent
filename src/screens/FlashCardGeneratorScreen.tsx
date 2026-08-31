@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useUser } from '../context/UserContext'
 import { generateFlashcards } from '../lib/groq'
 import { resolveSubjectInfo } from '../data/subjectInfo'
@@ -214,12 +215,7 @@ export function FlashCardGeneratorScreen() {
                     onClick={() => handleSelectSubject(subject.id)}
                     className="w-full bg-surface border border-border rounded-card px-4 py-4 flex items-center gap-4 text-left press hover:border-accent/40 transition-colors"
                   >
-                    <div
-                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-lg shrink-0"
-                      style={{ backgroundColor: `${subject.color}22` }}
-                    >
-                      {subject.icon}
-                    </div>
+                    <SubjectIcon subjectId={subject.id} size="md" />
                     <div className="flex-1 min-w-0">
                       <p className="text-text-primary font-semibold text-[15px]">{subject.name}</p>
                       <p className="text-text-muted text-xs mt-0.5">

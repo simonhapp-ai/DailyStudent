@@ -88,7 +88,7 @@ export function ProfilDevToolsScreen() {
                 <button
                   key={v}
                   onClick={() => debugSetCoins(v)}
-                  className="text-[10px] text-text-muted hover:text-amber-500 transition-colors press-sm"
+                  className="text-[10px] text-text-muted hover:text-warning transition-colors press-sm"
                 >
                   {v}
                 </button>

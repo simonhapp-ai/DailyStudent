@@ -11,7 +11,7 @@ import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbek
 
 const AFB_COLORS: Record<string, string> = {
   I:   'bg-blue-500/15 text-blue-400',
-  II:  'bg-amber-500/15 text-amber-400',
+  II:  'bg-warning/15 text-warning',
   III: 'bg-purple-500/15 text-purple-400',
 }
 const ACCENT = 'linear-gradient(145deg, #059669, #064E3B)'

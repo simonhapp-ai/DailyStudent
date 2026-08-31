@@ -1591,7 +1591,7 @@ export function DrawingCanvas({
                 style={{ opacity: 0.38 }}
               >
                 <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(90,200,250,0.15)' }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" strokeWidth="2.2">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#52AEFF" strokeWidth="2.2">
                     <path d="M1 4v6h6" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M3.51 15a9 9 0 1 0 .49-4.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -1919,7 +1919,7 @@ export function DrawingCanvas({
           ref={geomBtnRef}
           onClick={() => { if (tool === 'geometry') setActiveToolPopup(v => v === 'geometry' ? null : 'geometry'); else { setTool('geometry'); setActiveToolPopup(null) } }}
           className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
-          style={tool === 'geometry' ? { background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' } : { color: 'rgb(var(--color-text-muted))' }}
+          style={tool === 'geometry' ? { background: 'rgba(82,174,255,0.15)', color: '#52AEFF' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Geometrie-Stift"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">

@@ -5,6 +5,7 @@ import { loadKcForSubject } from '../data/kcLoader'
 import type { HomeworkItem, TextBlockAnalysis } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
 import { MathRenderer } from '../components/ui/MathRenderer'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { RichText } from '../components/ui/RichText'
 import type { CanvasPageData } from '../components/ui/DrawingCanvas'
 import { useUser } from '../context/UserContext'
@@ -1231,7 +1232,7 @@ export function NoteCreateScreen() {
                   style={{
                     width: 20, height: 20,
                     background: 'rgba(0,0,0,0.45)',
-                    backdropFilter: 'blur(4px)',
+                    backdropFilter: 'blur(var(--material-blur-ultrathin))',
                     zIndex: 2,
                   }}
                 >
@@ -1608,9 +1609,7 @@ export function NoteCreateScreen() {
         </button>
         <div className="flex items-center gap-2">
           {subject && (
-            <div className="w-6 h-6 rounded flex items-center justify-center text-sm" style={{ backgroundColor: `${subject.color}22` }}>
-              {subject.icon}
-            </div>
+            <SubjectIcon subjectId={subject.id} size="sm" />
           )}
           <span className="text-text-primary font-semibold text-sm">Neue Notiz</span>
         </div>
@@ -1944,7 +1943,7 @@ export function NoteCreateScreen() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h2 className="text-base font-bold text-text-primary">Wo speichern?</h2>
-                    <p className="text-text-muted text-xs mt-0.5">{subject ? `${subject.icon} ${subject.name}` : 'Kein Fach'}</p>
+                    <p className="text-text-muted text-xs mt-0.5">{subject ? subject.name : 'Kein Fach'}</p>
                   </div>
                   <button onClick={() => navigate(-1)} className="p-1.5 rounded-btn hover:bg-danger/5 transition-colors -mt-0.5 -mr-1">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
