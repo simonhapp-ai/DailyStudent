@@ -1066,9 +1066,17 @@ export function DrawingCanvas({
       }
       // Tapped empty space — deselect
       selectedGeomIdRef.current = null; setSelectedGeomId(null)
-      // Finger on empty: can't draw, done
-      if (e.pointerType !== 'pen') return
-      // Pen on empty: fall through to draw
+      // Zeichnen auf leerer Fläche. Bisher durfte das AUSSCHLIESSLICH ein Stift,
+      // wodurch das Werkzeug auf dem Telefon und am Schreibtisch wirkungslos war:
+      // Finger und Maus kamen nie bis zum Zeichnen. Jetzt gilt dieselbe Regel wie
+      // bei allen anderen Werkzeugen — der Finger zeichnet, solange auf diesem
+      // Gerät noch kein Stift benutzt wurde; danach bleibt er fürs Auswählen und
+      // Schieben reserviert.
+      if (e.pointerType !== 'pen') {
+        if (penOnlyModeRef.current) return
+        if (hasSeenPenRef.current) return
+      }
+      // sonst weiter zum Zeichnen
     }
 
     // Standard pen-only / touch blocking (for non-geometry tools)
