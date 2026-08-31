@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useUser, type PersonalEntry } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { ProModal } from '../components/ui/ProModal'
+import { Dialog } from '../components/ui/Dialog'
 import type { LernplanSession, LernplanActivity, LernDayType, LernMethode, StundenplanSlot } from '../types'
 
 const METHOD_ICONS: Record<LernMethode, string> = {
@@ -91,6 +93,7 @@ export function LernplanDetailScreen() {
 
   const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set())
   const [showProModal, setShowProModal] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   const toggleSession = (key: string) => {
     setExpandedSessions((prev) => {
@@ -285,7 +288,6 @@ export function LernplanDetailScreen() {
   }
 
   const handleDelete = () => {
-    if (!window.confirm('Lernplan wirklich löschen?')) return
     deleteLernplan(plan.id)
     navigate(-1)
   }
@@ -354,7 +356,7 @@ export function LernplanDetailScreen() {
                 <span className="icon-expand-label text-[12px] font-semibold">Zum Kalender</span>
               </button>
               <button
-                onClick={handleDelete}
+                onClick={() => setConfirmDelete(true)}
                 className="w-9 h-9 flex items-center justify-center rounded-btn transition-colors"
                 style={{ color: 'rgb(var(--color-danger))' }}
                 title="Lernplan löschen"
@@ -498,13 +500,24 @@ export function LernplanDetailScreen() {
         {/* Delete button */}
         <div className="no-print px-4 pt-3">
           <button
-            onClick={handleDelete}
+            onClick={() => setConfirmDelete(true)}
             className="w-full py-3 rounded-[20px] border border-danger/30 text-danger text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
             Lernplan löschen
           </button>
         </div>
       </div>
+
+      <Dialog
+        open={confirmDelete}
+        title="Lernplan löschen?"
+        message={`Der Lernplan wird mit allen ${plan.days.length} Lerntagen dauerhaft entfernt.`}
+        confirmLabel="Löschen"
+        cancelLabel="Behalten"
+        destructive
+        onConfirm={() => { setConfirmDelete(false); handleDelete() }}
+        onCancel={() => setConfirmDelete(false)}
+      />
 
       <ProModal isOpen={showProModal} onClose={() => setShowProModal(false)} feature="lernplan" />
     </>
@@ -528,7 +541,6 @@ function SessionCard({
   onShowPro: () => void
   onNavigate: (route: string) => void
 }) {
-  const subj = SUBJECT_INFO[session.subjectId]
   const priorityColor = session.priority === 'hoch' ? '#FF453A' : session.priority === 'mittel' ? '#FF9F0A' : '#30D158'
   const hasActivities = (session.activities?.length ?? 0) > 0
   const hasProActivity = session.activities?.some((a) => a.isPro) ?? false
@@ -540,12 +552,7 @@ function SessionCard({
         onClick={onToggle}
         className="w-full flex items-center gap-3 p-3 text-left active:bg-surface-hover/30 transition-colors"
       >
-        <div
-          className="w-9 h-9 rounded-[10px] flex items-center justify-center text-base shrink-0"
-          style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
-        >
-          {subj?.icon ?? '📚'}
-        </div>
+        <SubjectIcon subjectId={session.subjectId} size="sm" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <p className="text-text-primary font-semibold text-[13px]">{session.subjectName}</p>
@@ -627,7 +634,7 @@ function ActivityRow({
 
   return (
     <div className={`flex items-center gap-2.5 p-2.5 rounded-[10px] ${
-      isLocked ? 'bg-amber-500/6 border border-amber-500/15' : 'bg-surface/60 border border-border/30'
+      isLocked ? 'bg-warning/6 border border-warning/15' : 'bg-surface/60 border border-border/30'
     }`}>
       {/* Duration chip */}
       <span className="text-[11px] font-bold text-text-muted bg-background/80 px-2 py-0.5 rounded-[6px] shrink-0 w-14 text-center">
@@ -651,7 +658,7 @@ function ActivityRow({
           onClick={handleAction}
           className={`flex items-center gap-1 px-2 py-1.5 rounded-[8px] text-[11px] font-semibold shrink-0 transition-all active:scale-[0.95] ${
             isLocked
-              ? 'bg-amber-500/15 text-amber-500'
+              ? 'bg-warning/15 text-warning'
               : 'bg-accent/12 text-accent'
           }`}
         >

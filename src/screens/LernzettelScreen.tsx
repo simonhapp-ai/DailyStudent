@@ -6,9 +6,10 @@ import { ProModal } from '../components/ui/ProModal'
 import { RichText } from '../components/ui/RichText'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
+import { Dialog } from '../components/ui/Dialog'
 import type { Lernzettel } from '../types'
 
-const G_LERNZETTEL = 'linear-gradient(145deg, #5AC8FA, #007BB8)'
+const G_LERNZETTEL = 'linear-gradient(145deg, #0E7CDD, #052848)'
 
 type View = 'library' | 'detail'
 
@@ -132,7 +133,7 @@ function LernzettelRow({
         style={{ touchAction: 'pan-y' }}
       >
         {/* Left color accent bar */}
-        <div className="w-1 shrink-0" style={{ background: info?.color ?? '#5AC8FA' }} />
+        <div className="w-1 shrink-0" style={{ background: info?.color ?? '#094C86' }} />
 
         <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
           {/* Gradient icon */}
@@ -160,7 +161,7 @@ function LernzettelRow({
             </div>
             {/* Subject + date row */}
             <p className="text-[12px] text-text-muted mt-0.5">
-              {info?.icon ?? '📄'} {info?.name ?? lz.subjectName} · {formatDate(lz.generatedAt)}
+              {info?.name ?? lz.subjectName} · {formatDate(lz.generatedAt)}
               {MODUS_LABELS[lz.modus] && ` · ${MODUS_LABELS[lz.modus]}`}
             </p>
             {/* Topics row */}
@@ -199,6 +200,7 @@ export function LernzettelScreen() {
   const [showPro, setShowPro] = useState(false)
   const [openPreview, setOpenPreview] = useState<typeof PREVIEWS[number] | null>(null)
   const [openRowId, setOpenRowId] = useState<string | null>(null)
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
 
   const setRowOpen = (id: string, open: boolean) => {
     setOpenRowId((prev) => open ? id : (prev === id ? null : prev))
@@ -241,7 +243,7 @@ export function LernzettelScreen() {
               className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-white"
               style={{ background: info?.color ?? '#7C3AED' }}
             >
-              {info?.icon ?? '📄'} {info?.name ?? activeLz.subjectName}
+              {info?.name ?? activeLz.subjectName}
             </span>
             {MODUS_LABELS[activeLz.modus] && (
               <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-surface border border-border text-text-secondary">
@@ -377,7 +379,7 @@ export function LernzettelScreen() {
           {/* Löschen */}
           <button
             onClick={() => {
-              if (window.confirm('Diesen Lernzettel wirklich löschen?')) handleDeleteLz(activeLz.id)
+              setConfirmDeleteId(activeLz.id)
             }}
             className="w-full py-3 rounded-[20px] border border-danger/30 text-danger text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
@@ -568,7 +570,7 @@ export function LernzettelScreen() {
       {openPreview && (
         <div
           className="fixed inset-0 z-[60] flex flex-col items-center justify-end sm:justify-center"
-          style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(10px)' }}
+          style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(var(--material-blur-ultrathin))' }}
           onClick={() => setOpenPreview(null)}
         >
           <div
@@ -614,6 +616,17 @@ export function LernzettelScreen() {
           </div>
         </div>
       )}
+
+      <Dialog
+        open={confirmDeleteId !== null}
+        title="Lernzettel löschen?"
+        message="Der Lernzettel wird dauerhaft entfernt. Das lässt sich nicht rückgängig machen."
+        confirmLabel="Löschen"
+        cancelLabel="Behalten"
+        destructive
+        onConfirm={() => { if (confirmDeleteId) handleDeleteLz(confirmDeleteId); setConfirmDeleteId(null) }}
+        onCancel={() => setConfirmDeleteId(null)}
+      />
 
       <ProModal feature="lernzettel" isOpen={showPro} onClose={() => setShowPro(false)} />
     </div>

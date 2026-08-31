@@ -4,6 +4,7 @@ import { useUser } from '../context/UserContext'
 import { evaluateBlurting } from '../lib/groq'
 import { subjects, topics } from '../data/mockData'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { Dialog } from '../components/ui/Dialog'
 import type { GeneratedSmartNote } from '../types'
 import type { UserNote } from '../types'
 
@@ -117,6 +118,7 @@ export function BlurtingScreen() {
   const [selected, setSelected] = useState<SelectedTopic | null>(null)
   const [text, setText] = useState('')
   const [result, setResult] = useState<BlurtingResult | null>(null)
+  const [confirmDiscard, setConfirmDiscard] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // ── Voice dictation ──────────────────────────────────────────────────────
@@ -279,7 +281,7 @@ export function BlurtingScreen() {
   }
 
   function handleCancelWrite() {
-    if (text.trim() && !window.confirm('Deinen bisherigen Text verwerfen?')) return
+    if (text.trim()) { setConfirmDiscard(true); return }
     setPhase('setup')
   }
 
@@ -620,6 +622,17 @@ export function BlurtingScreen() {
           </div>
         </>
       )}
+
+      <Dialog
+        open={confirmDiscard}
+        title="Text verwerfen?"
+        message="Was du bisher geschrieben hast, geht dabei verloren."
+        confirmLabel="Verwerfen"
+        cancelLabel="Weiterschreiben"
+        destructive
+        onConfirm={() => { setConfirmDiscard(false); setText(''); setPhase('setup') }}
+        onCancel={() => setConfirmDiscard(false)}
+      />
     </div>
   )
 }

@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SUBJECT_INFO, getSubjectOnColor } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { endnoteForEntry } from './AbiRechnerScreen'
 import { getActiveStreak } from '../lib/streak'
 import type { AbiHalbjahr } from '../types'
@@ -150,7 +151,7 @@ function GradeChart({ lines, zielnoteNP }: { lines: ChartLine[]; zielnoteNP: num
             className="px-2.5 py-1 rounded-pill text-[11px] font-medium transition-colors press-sm"
             style={
               selectedId === l.subjectId
-                ? { background: l.color + '28', color: l.color, border: `1px solid ${l.color}55` }
+                ? { background: l.color, color: getSubjectOnColor(l.subjectId) }
                 : { background: 'var(--color-background)', color: 'var(--color-text-muted)' }
             }
           >
@@ -812,11 +813,11 @@ export function InsightsScreen() {
                 <div key={s.subjectId} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-[22px]">{s.info.icon}</span>
+                      <SubjectIcon subjectId={s.subjectId} size="sm" />
                       {s.isLK && (
                         <span
                           className="px-1.5 py-0.5 rounded text-[9px] font-bold"
-                          style={{ background: s.info.color + '25', color: s.info.color }}
+                          style={{ background: s.info.color, color: getSubjectOnColor(s.subjectId) }}
                         >
                           LK
                         </span>
@@ -866,12 +867,7 @@ export function InsightsScreen() {
                     key={`${exam.subjectId}-${exam.date}`}
                     className="bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-3.5 flex items-center gap-4"
                   >
-                    <div
-                      className="w-11 h-11 rounded-[12px] flex items-center justify-center shrink-0 text-[20px]"
-                      style={{ background: exam.info.color + '20' }}
-                    >
-                      {exam.info.icon}
-                    </div>
+                    <SubjectIcon subjectId={exam.subjectId} size="lg" className="!w-11 !h-11" />
                     <div className="flex-1 min-w-0">
                       <p className="text-text-primary font-semibold text-[15px] truncate">{exam.info.name}</p>
                       <p className="text-text-muted text-[12px] mt-0.5">{fmtDate(exam.date)}</p>
@@ -955,13 +951,13 @@ export function InsightsScreen() {
                 ))}
               </div>
               {weakAfb.length > 0 && (
-                <div className="bg-amber-500/10 border border-amber-500/30 rounded-[16px] p-4 flex items-start gap-3">
+                <div className="bg-warning/10 border border-warning/30 rounded-[16px] p-4 flex items-start gap-3">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
                     <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                     <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
                   </svg>
                   <p className="text-[13px] text-text-secondary leading-snug">
-                    <span className="font-semibold text-amber-400">Optimierungspotenzial:</span> AFB {weakAfb.join(' + ')} liegt unter 13 NP — {weakAfb.includes('III') ? 'Analyse- und Bewertungsaufgaben trainieren für volle Punktzahl' : weakAfb.includes('II') ? 'Transferaufgaben üben — hier entscheiden sich die Top-Punkte' : 'Basisaufgaben sichern, damit keine Pflichtpunkte verloren gehen'}.
+                    <span className="font-semibold text-warning">Optimierungspotenzial:</span> AFB {weakAfb.join(' + ')} liegt unter 13 NP — {weakAfb.includes('III') ? 'Analyse- und Bewertungsaufgaben trainieren für volle Punktzahl' : weakAfb.includes('II') ? 'Transferaufgaben üben — hier entscheiden sich die Top-Punkte' : 'Basisaufgaben sichern, damit keine Pflichtpunkte verloren gehen'}.
                   </p>
                 </div>
               )}

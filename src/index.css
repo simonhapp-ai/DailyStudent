@@ -5,26 +5,52 @@
 /* ── iOS Design Tokens ───────────────────────────────────────── */
 
 :root {
-  --color-bg:             244 244 244;   /* pure neutral light grey — no colour cast */
+  --color-bg:             242 242 247;   /* #F2F2F7 — Apple systemGroupedBackground */
   --color-surface:        255 255 255;
-  --color-surface-hover:  239 239 244;
-  --color-border:         209 209 214;
+  --color-surface-hover:  242 242 247;   /* #F2F2F7 — Apple Gray 6 */
+  --color-border:         199 199 204;   /* #C7C7CC — Apple Gray 3 */
   --color-accent:         124  58 237;   /* #7C3AED — violet-600 */
   --color-accent-soft:    rgba(124, 58, 237, 0.10);
-  --color-success:        52  199  89;
-  --color-warning:        255 149   0;
-  --color-danger:         255  59  48;
-  --color-text-primary:   22   14  40;   /* deep purple-tinted black */
-  --color-text-secondary: 72   60  95;
-  --color-text-muted:     152 140 175;
+  --color-success:        52  199  89;   /* #34C759 — Apple Green, Default (light) — exact match, unchanged */
+  --color-warning:        255 141  40;   /* #FF8D28 — Apple Orange, Default (light) */
+  --color-danger:         255  56  60;   /* #FF383C — Apple Red, Default (light) */
+  --color-teal:             0 195 208;   /* #00C3D0 — Apple Teal, Default (light) — general-purpose, not a feature identity color */
+  --color-blue:             0 136 255;   /* #0088FF — Apple Blue, Default (light) — general-purpose, not a feature identity color */
+  --color-navy:             9  76 134;   /* #094C86 — 5th identity color (31.08.2026), derived from Apple's Blue hue, pulled darker/richer to sit alongside Purple/Mint/Gold. Used for Lernzettel. */
+  --color-text-primary:    0   0   0;   /* #000000 — Apple label */
+  --color-text-secondary:  99  99 102;   /* #636366 — Apple Gray 2 (dark set), lesbar auf Weiß */
+  --color-text-muted:     142 142 147;   /* #8E8E93 — Apple systemGray */
 
-  /* Subject icon radial gradients — light mode: pastel purple sphere */
-  --si-a-from: 245 243 255;   /* violet-50  */
-  --si-a-to:   196 181 253;   /* violet-300 */
-  --si-b-from: 250 245 255;   /* purple-50  */
-  --si-b-to:   216 180 254;   /* purple-300 */
-  --si-c-from: 237 233 254;   /* violet-100 */
-  --si-c-to:   167 139 250;   /* violet-400 */
+  /* ── Notenskala — genau 5 Stufen, keine Zwischentöne (Version C) ────────── */
+  --grade-1:      255  21  45;  --grade-1-on:   255 255 255;  /* 0–3  NP  Rot    */
+  --grade-2:      255 141  40;  --grade-2-on:     0   0   0;  /* 4–6  NP  Orange */
+  --grade-3:      255 204   0;  --grade-3-on:     0   0   0;  /* 7–9  NP  Gelb   */
+  --grade-4:       52 199  89;  --grade-4-on:     0   0   0;  /* 10–12 NP Hellgrün */
+  --grade-5:        0 137  50;  --grade-5-on:   255 255 255;  /* 13–15 NP saftiges Grün */
+
+  /* ── Gefüllte Marken — helle kontraststarke Variante + weiße Schrift ────── */
+  --fill-red:     255  21  45;  --fill-red-on:  255 255 255;
+  --fill-orange:  255 141  40;  --fill-orange-on: 0   0   0;
+  --fill-green:     0 137  50;  --fill-green-on:255 255 255;
+  --fill-blue:     30 110 244;  --fill-blue-on: 255 255 255;
+  --fill-yellow:  255 204   0;  --fill-yellow-on: 0   0   0;
+
+  /* ── Fachgruppen (Version C) ────────────────────────────────────────────── */
+  --subj-spr:      30 110 244;  --subj-spr-on:  255 255 255;  /* Sprachen · Blau        */
+  --subj-nat:       0 137  50;  --subj-nat-on:  255 255 255;  /* Naturwiss. · Forest    */
+  --subj-ges:     255 204   0;  --subj-ges-on:    0   0   0;  /* Gesellschaft · Gelb    */
+  --subj-kre:     231  18  77;  --subj-kre-on:  255 255 255;  /* Kreativ & Sport · Pink */
+  --subj-cst:       0   0   0;  --subj-cst-on:  255 255 255;  /* Eigenes Fach           */
+
+  /* Weiche Aufhellung oben links, minimale Tiefe unten rechts — führt keine
+     neue Farbe ein, liegt nur auf dem Fachzeichen. */
+  --subj-fade: linear-gradient(155deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,0) 56%, rgba(0,0,0,.11) 100%);
+
+  /* Kalendereintrag braucht einen eigenen Grauton, nicht die Kartenfläche */
+  --ev-bg:        199 199 204;  --ev-on:          0   0   0;
+
+  /* Bühne — hell die dunkelste Fläche des Screens */
+  --stage-bg: linear-gradient(146deg, #160E28 0%, #2A1B5C 100%);
 
   /* Liquid Glass nav pill — light mode */
   --nav-pill-bg:     rgba(255, 255, 255, 0.58);
@@ -35,22 +61,57 @@
     0 8px 40px rgba(0, 0, 0, 0.13),
     0 2px 6px rgba(0, 0, 0, 0.07);
 
+  /* Standard Materials (Apple HIG) — 4 blur tiers, consolidated from 8 ad-hoc
+     values across the app (31.08.2026). No light/dark split needed, it's a
+     radius not a color. Liquid Glass itself stays out of scope (native-only,
+     system-adaptive — Simon decided not to chase an approximation of it). */
+  --material-blur-ultrathin: 8px;
+  --material-blur-thin:      14px;
+  --material-blur-regular:   24px;
+  --material-blur-thick:     40px;
+
   color-scheme: light;
 }
 
 .dark {
   --color-bg:              0   0   0;    /* true black */
-  --color-surface:        18  18  20;    /* iOS dark gray */
-  --color-surface-hover:  30  30  33;
-  --color-border:         50  50  55;
+  --color-surface:        28  28  30;    /* #1C1C1E — Apple secondarySystemBackground */
+  --color-surface-hover:  44  44  46;    /* #2C2C2E — erhöhte Fläche */
+  --color-border:         58  58  60;    /* #3A3A3C — Apple Gray 4 (dark) */
   --color-accent:        167 139 250;   /* #A78BFA — violet-400 */
   --color-accent-soft:   rgba(167, 139, 250, 0.15);
-  --color-success:        48 209  88;
-  --color-warning:       255 159  10;
-  --color-danger:        255  69  58;
+  --color-success:        48 209  88;   /* #30D158 — Apple Green, Default (dark) — exact match, unchanged */
+  --color-warning:       255 146  48;   /* #FF9230 — Apple Orange, Default (dark) */
+  --color-danger:        255  66  69;   /* #FF4245 — Apple Red, Default (dark) */
+  --color-teal:            0 210 224;   /* #00D2E0 — Apple Teal, Default (dark) */
+  --color-blue:            0 145 255;   /* #0091FF — Apple Blue, Default (dark) */
   --color-text-primary:  255 255 255;
-  --color-text-secondary:205 205 210;
-  --color-text-muted:    140 140 150;
+  --color-text-secondary:174 174 178;    /* #AEAEB2 — Apple Gray 2 */
+  --color-text-muted:    142 142 147;    /* #8E8E93 — Apple systemGray */
+
+  /* Dunkel: Standard-Dunkelvariante als Fläche + schwarze Schrift */
+  --grade-1:      255  66  69;  --grade-1-on:     0   0   0;
+  --grade-2:      255 146  48;  --grade-2-on:     0   0   0;
+  --grade-3:      255 214   0;  --grade-3-on:     0   0   0;
+  --grade-4:       74 217 104;  --grade-4-on:     0   0   0;
+  --grade-5:       48 209  88;  --grade-5-on:     0   0   0;
+
+  --fill-red:     255  66  69;  --fill-red-on:    0   0   0;
+  --fill-orange:  255 146  48;  --fill-orange-on: 0   0   0;
+  --fill-green:    48 209  88;  --fill-green-on:  0   0   0;
+  --fill-blue:      0 145 255;  --fill-blue-on:   0   0   0;
+  --fill-yellow:  255 214   0;  --fill-yellow-on: 0   0   0;
+
+  --subj-spr:       0 145 255;  --subj-spr-on:    0   0   0;
+  --subj-nat:      48 209  88;  --subj-nat-on:    0   0   0;
+  --subj-ges:     255 214   0;  --subj-ges-on:    0   0   0;
+  --subj-kre:     255  55  95;  --subj-kre-on:    0   0   0;
+  --subj-cst:     255 255 255;  --subj-cst-on:    0   0   0;
+
+  --ev-bg:        174 174 178;  --ev-on:          0   0   0;
+
+  /* Bühne — dunkel die hellste Fläche des Screens (Rolle dreht sich um) */
+  --stage-bg: linear-gradient(146deg, #241C3C 0%, #3E2C74 100%);
 
   /* Liquid Glass nav pill — dark mode */
   --nav-pill-bg:     rgba(36, 36, 42, 0.72);
@@ -60,14 +121,6 @@
     0 0 0 0.75px rgba(255, 255, 255, 0.11),
     0 8px 40px rgba(0, 0, 0, 0.48),
     0 2px 8px rgba(0, 0, 0, 0.28);
-
-  /* Subject icon radial gradients — dark mode: deep purple sphere */
-  --si-a-from:  91  33 182;   /* violet-800 */
-  --si-a-to:    46  16 101;   /* violet-950 */
-  --si-b-from:  88  28 135;   /* purple-900 */
-  --si-b-to:    59   7 100;   /* purple-950 */
-  --si-c-from:  76  29 149;   /* violet-900 */
-  --si-c-to:    30  27  75;   /* indigo-950 */
 
   color-scheme: dark;
 }
@@ -256,12 +309,14 @@ textarea::placeholder {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 3px 12px rgba(109,40,217,0.45), 0 1px 4px rgba(109,40,217,0.25);
   }
   .grad-success {
-    background: linear-gradient(145deg, #4ADE80 0%, #22C55E 55%, #15803D 100%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 3px 12px rgba(21,128,61,0.42), 0 1px 4px rgba(21,128,61,0.22);
+    /* Apple Green (#34C759) as base, lighter/darker derived via HSL lightness — matches --color-success */
+    background: linear-gradient(145deg, #72DA8D 0%, #34C759 55%, #217E38 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 3px 12px rgba(33,126,56,0.42), 0 1px 4px rgba(33,126,56,0.22);
   }
   .grad-danger {
-    background: linear-gradient(145deg, #F87171 0%, #EF4444 55%, #B91C1C 100%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 3px 12px rgba(185,28,28,0.4), 0 1px 4px rgba(185,28,28,0.2);
+    /* Apple Red (#FF383C) as base, lighter/darker derived via HSL lightness — matches --color-danger */
+    background: linear-gradient(145deg, #FF8A8C 0%, #FF383C 55%, #DB0004 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 3px 12px rgba(219,0,4,0.4), 0 1px 4px rgba(219,0,4,0.2);
   }
   .grad-warning {
     background: linear-gradient(145deg, #FCD34D 0%, #F59E0B 55%, #B45309 100%);
@@ -467,4 +522,10 @@ textarea::placeholder {
   );
   background-size: 200% 100%;
   animation: gold-shimmer 4s infinite ease-in-out;
+}
+
+/* ── Zustandsblock „arbeitet" — Balken läuft, wo später das Ergebnis steht ──── */
+@keyframes working {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
 }
