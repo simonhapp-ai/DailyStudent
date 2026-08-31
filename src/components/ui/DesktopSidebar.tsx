@@ -1,9 +1,11 @@
+import { useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { Icon, type IconName } from './Icon'
 import { SubjectIcon } from './SubjectIcon'
 import { resolveSubjectInfo } from '../../data/subjectInfo'
 import { modeForPath, MODE_HOME, type AppMode } from '../../lib/appMode'
+import { UNTERRICHT_TIPS, KLAUSUR_TIPS, tipOfTheDay, type Tip } from '../../data/tips'
 
 // Seitenleiste für iPad und Desktop (Version C).
 //
@@ -52,7 +54,7 @@ const PLANEN_NAV: NavEntry[] = [
 function useSidebar() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { profile } = useUser()
+  const { profile, userNotes } = useUser()
   const mode = modeForPath(location.pathname)
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + '/')
@@ -63,7 +65,42 @@ function useSidebar() {
       .slice(0, 2)
       .map((w) => w[0]?.toUpperCase() ?? '')
       .join('') || '·'
-  return { location, navigate, profile, mode, isActive, initials }
+  // Die drei zuletzt benutzten Fächer — abgeleitet aus dem jüngsten Notizdatum
+  // je Fach. Wer noch keine Notizen hat, sieht die ersten drei aus dem Profil,
+  // damit die Leiste nicht leer bleibt.
+  const zuletztBenutzt = useMemo(() => {
+    const faecher = profile?.faecher ?? []
+    const letzteNutzung = new Map<string, string>()
+    for (const n of userNotes) {
+      if (!n.subjectId) continue
+      const bisher = letzteNutzung.get(n.subjectId)
+      if (!bisher || n.createdAt > bisher) letzteNutzung.set(n.subjectId, n.createdAt)
+    }
+    const benutzt = faecher
+      .filter((id) => letzteNutzung.has(id))
+      .sort((a, b) => (letzteNutzung.get(b) ?? '').localeCompare(letzteNutzung.get(a) ?? ''))
+    return (benutzt.length > 0 ? benutzt : faecher).slice(0, 3)
+  }, [profile?.faecher, userNotes])
+
+  return { location, navigate, profile, mode, isActive, initials, zuletztBenutzt }
+}
+
+// Hinweiskarte — im Querformat ist unter der Navigation Platz, der sonst leer
+// bliebe. Sie beschreibt eine Gewohnheit, kein Feature.
+function TipCard({ tip }: { tip: Tip }) {
+  return (
+    <div className="mt-5 mx-1 rounded-[16px] bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] p-3.5 flex gap-2.5">
+      <span className="text-text-secondary shrink-0 mt-0.5">
+        <Icon name="speech" size={16} />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-[12px] font-semibold uppercase tracking-[0.06em] text-text-secondary">
+          {tip.title}
+        </span>
+        <span className="block text-[12.5px] leading-snug text-text-primary mt-1">{tip.body}</span>
+      </span>
+    </div>
+  )
 }
 
 function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => void }) {
@@ -174,8 +211,7 @@ export function DesktopSidebar() {
 
 // ── Breite Variante (Desktop, iPad Querformat) ──────────────────────────────
 export function DesktopSidebarWide() {
-  const { navigate, profile, mode, isActive, initials } = useSidebar()
-  const faecher = profile?.faecher ?? []
+  const { navigate, profile, mode, isActive, initials, zuletztBenutzt } = useSidebar()
 
   return (
     <aside
@@ -220,27 +256,31 @@ export function DesktopSidebarWide() {
       <nav className="flex-1 overflow-y-auto px-3 pb-6">
         {mode === 'unterricht' ? (
           <>
-            <SectionLabel>Fächer</SectionLabel>
-            <div className="flex flex-col gap-0.5">
-              {faecher.map((id) => {
-                const info = resolveSubjectInfo(id, profile?.customFaecher)
-                const active = isActive(`/unterricht/${id}`)
-                return (
-                  <button
-                    key={id}
-                    onClick={() => navigate(`/unterricht/${id}`)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-[12px] press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
-                    style={{ color: 'rgb(var(--color-text-primary))' }}
-                  >
-                    <SubjectIcon subjectId={id} size="sm" />
-                    <span className="text-[14px] font-medium truncate">{info.name}</span>
-                  </button>
-                )
-              })}
-              {faecher.length === 0 && (
-                <p className="px-3 py-2 text-[13px] text-text-secondary">Noch keine Fächer</p>
-              )}
-            </div>
+            {/* Nur die drei zuletzt benutzten Fächer. Die vollständige Liste
+                steht direkt daneben im Inhalt — sie hier zu wiederholen macht
+                die Leiste bei acht Fächern voll, ohne etwas hinzuzufügen. */}
+            {zuletztBenutzt.length > 0 && (
+              <>
+                <SectionLabel>Zuletzt</SectionLabel>
+                <div className="flex flex-col gap-0.5">
+                  {zuletztBenutzt.map((id) => {
+                    const info = resolveSubjectInfo(id, profile?.customFaecher)
+                    const active = isActive(`/unterricht/${id}`)
+                    return (
+                      <button
+                        key={id}
+                        onClick={() => navigate(`/unterricht/${id}`)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-[12px] press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
+                        style={{ color: 'rgb(var(--color-text-primary))' }}
+                      >
+                        <SubjectIcon subjectId={id} size="sm" />
+                        <span className="text-[14px] font-medium truncate">{info.name}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </>
+            )}
 
             <SectionLabel>Erfassen</SectionLabel>
             <div className="flex flex-col gap-0.5">
@@ -248,6 +288,8 @@ export function DesktopSidebarWide() {
                 <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
               ))}
             </div>
+
+            <TipCard tip={tipOfTheDay(UNTERRICHT_TIPS)} />
           </>
         ) : (
           <>
@@ -264,6 +306,8 @@ export function DesktopSidebarWide() {
                 <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
               ))}
             </div>
+
+            <TipCard tip={tipOfTheDay(KLAUSUR_TIPS)} />
           </>
         )}
       </nav>

@@ -38,6 +38,20 @@ export function getSubjectGroup(id: string): SubjectGroupKey {
   return SUBJECT_COLOR_GROUP[id] ?? 'cst'
 }
 
+// Reihenfolge der Fachgruppen in Listen. Fächer derselben Farbe stehen dadurch
+// beieinander, statt sich über die Liste zu verteilen — eine Liste aus vier
+// zusammenhängenden Farbblöcken liest sich ruhiger als eine gesprenkelte.
+const GROUP_ORDER: SubjectGroupKey[] = ['spr', 'nat', 'ges', 'kre', 'cst']
+
+export function sortSubjectsByGroup(ids: string[]): string[] {
+  return [...ids].sort((a, b) => {
+    const ga = GROUP_ORDER.indexOf(getSubjectGroup(a))
+    const gb = GROUP_ORDER.indexOf(getSubjectGroup(b))
+    if (ga !== gb) return ga - gb
+    return (SUBJECT_INFO[a]?.name ?? a).localeCompare(SUBJECT_INFO[b]?.name ?? b, 'de')
+  })
+}
+
 // Schrift auf einer gefüllten Fachfarbe. Version-C-Füllregel: Fläche voll, Text weiß
 // oder schwarz nach Kontrast — nie die Farbe selbst als Schrift auf getönter Fläche.
 // TEXT auf einer Fachfarbe — nicht zu verwechseln mit dem SYMBOL auf dem

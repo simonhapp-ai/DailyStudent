@@ -12,7 +12,7 @@ import { Stage } from '../components/ui/Stage'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
 import { currentSlot, nextSlot, todaysSlots } from '../lib/appMode'
-import { resolveSubjectInfo } from '../data/subjectInfo'
+import { resolveSubjectInfo, sortSubjectsByGroup } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
 
 export function UnterrichtScreen() {
@@ -284,7 +284,10 @@ export function UnterrichtScreen() {
     }
   }
 
-  const profileSubjects: { id: string; name: string }[] = (profile?.faecher ?? [])
+  // Nach Fachgruppe sortiert: Fächer derselben Farbe stehen beieinander, statt
+  // sich über die Liste zu verteilen. Vier zusammenhängende Farbblöcke lesen
+  // sich ruhiger als eine gesprenkelte Liste.
+  const profileSubjects: { id: string; name: string }[] = sortSubjectsByGroup(profile?.faecher ?? [])
     .map((id) => {
       const std = subjects.find((s) => s.id === id)
       if (std) return { id: std.id, name: std.name }
