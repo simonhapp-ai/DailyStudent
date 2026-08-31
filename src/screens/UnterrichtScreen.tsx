@@ -23,6 +23,7 @@ export function UnterrichtScreen() {
   // Laufende und nächste Stunde aus dem Stundenplan — Grundlage der Bühne.
   const laufendeStunde = currentSlot(profile?.stundenplan?.slots)
   const naechsteStunde = nextSlot(profile?.stundenplan?.slots)
+  const heuteSlots = todaysSlots(profile?.stundenplan?.slots)
 
   // Offene Hausaufgaben — gleiche Aggregation wie im Hausaufgabenheft: Aufgaben
   // aus Notizen plus eigenständig erfasste, abzüglich der erledigten.
@@ -395,7 +396,7 @@ export function UnterrichtScreen() {
                       + (laufendeStunde.room ? ` · ${laufendeStunde.room}` : ''))
                 : naechsteStunde
                   ? `Nächste Stunde um ${naechsteStunde.startTime}`
-                  : todaysSlots(profile?.stundenplan?.slots).length > 0
+                  : heuteSlots.length > 0
                     ? 'Schulschluss für heute'
                     : 'Heute schulfrei'
             }
@@ -453,53 +454,12 @@ export function UnterrichtScreen() {
             onChange={handleImportFilePick}
           />
 
-          {/* ── Schnellnotizen ───────────────────────────────────── */}
-          {(() => {
-            const ohneFolder = userFolders.find((f) => f.id === 'folder-no-subject')
-            if (!ohneFolder) return null
-            const ohneCount = userNotes.filter((n) => n.folderId === 'folder-no-subject').length
-            return (
-              <ListGroup>
-                <ListRow
-                  leading={
-                    <QuickNotesIcon size="md" />
-                  }
-                  title="Schnellnotizen"
-                  subtitle={ohneCount === 0 ? 'Keine Notizen' : `${ohneCount} ${ohneCount === 1 ? 'Notiz' : 'Notizen'}`}
-                  chevron
-                  onClick={() => navigate('/unterricht/ohne-fach/ordner/folder-no-subject')}
-                />
-              </ListGroup>
-            )
-          })()}
+          {/* Zwei Spalten, sobald Platz da ist: links der Bestand, rechts der
+              Tag. Im Hochformat bleibt die Reihenfolge wie bisher — erst was
+              heute ansteht, dann die Fächer. */}
+          <div className="grid gap-3 xl:grid-cols-2 xl:items-start xl:gap-5">
 
-          {/* ── Hausaufgaben ───────────────────────────────────────
-              Erfasst werden sie hier, geplant unter Planen — ein Bestand,
-              zwei Wege. Die Anzahl steht dort, wo man sie in der Schule
-              braucht; offene Aufgaben tragen Rot wie jede Gefahrenmeldung. */}
-          <button
-            onClick={() => navigate('/hausaufgaben')}
-            className="w-full bg-surface rounded-card p-4 flex items-center gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
-          >
-            <span className="flex-1 min-w-0">
-              <span className="flex items-center gap-2">
-                <span className="text-[16px] font-semibold text-text-primary">Hausaufgaben</span>
-                {offeneHausaufgaben > 0 && (
-                  <span className="text-[13px] font-semibold px-2.5 py-0.5 rounded-pill bg-fill-red text-fill-red-on">
-                    {offeneHausaufgaben} offen
-                  </span>
-                )}
-              </span>
-              <span className="block text-[13px] text-text-secondary mt-0.5 truncate">
-                {naechsteHausaufgabe ?? 'Alles erledigt'}
-              </span>
-            </span>
-            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
-              strokeLinecap="round" strokeLinejoin="round" className="text-text-muted shrink-0" aria-hidden>
-              <path d="M1 1l6 6-6 6" />
-            </svg>
-          </button>
-
+            <div className="order-2 xl:order-1 space-y-3">
           {/* ── Fächer ─────────────────────────────────────────────
               Eine zusammenhängende Liste statt eines Stapels einzelner Karten:
               ruhiger, und pro Zeile bleibt mehr Platz für den Inhalt. Das
@@ -561,6 +521,79 @@ export function UnterrichtScreen() {
             )
           })}
           </ListGroup>
+            </div>
+
+            <div className="order-1 xl:order-2 space-y-3">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 hidden xl:block">
+            Heute offen
+          </p>
+          {/* ── Schnellnotizen ───────────────────────────────────── */}
+          {(() => {
+            const ohneFolder = userFolders.find((f) => f.id === 'folder-no-subject')
+            if (!ohneFolder) return null
+            const ohneCount = userNotes.filter((n) => n.folderId === 'folder-no-subject').length
+            return (
+              <ListGroup>
+                <ListRow
+                  leading={
+                    <QuickNotesIcon size="md" />
+                  }
+                  title="Schnellnotizen"
+                  subtitle={ohneCount === 0 ? 'Keine Notizen' : `${ohneCount} ${ohneCount === 1 ? 'Notiz' : 'Notizen'}`}
+                  chevron
+                  onClick={() => navigate('/unterricht/ohne-fach/ordner/folder-no-subject')}
+                />
+              </ListGroup>
+            )
+          })()}
+
+          {/* ── Hausaufgaben ───────────────────────────────────────
+              Erfasst werden sie hier, geplant unter Planen — ein Bestand,
+              zwei Wege. Die Anzahl steht dort, wo man sie in der Schule
+              braucht; offene Aufgaben tragen Rot wie jede Gefahrenmeldung. */}
+          <button
+            onClick={() => navigate('/hausaufgaben')}
+            className="w-full bg-surface rounded-card p-4 flex items-center gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
+          >
+            <span className="flex-1 min-w-0">
+              <span className="flex items-center gap-2">
+                <span className="text-[16px] font-semibold text-text-primary">Hausaufgaben</span>
+                {offeneHausaufgaben > 0 && (
+                  <span className="text-[13px] font-semibold px-2.5 py-0.5 rounded-pill bg-fill-red text-fill-red-on">
+                    {offeneHausaufgaben} offen
+                  </span>
+                )}
+              </span>
+              <span className="block text-[13px] text-text-secondary mt-0.5 truncate">
+                {naechsteHausaufgabe ?? 'Alles erledigt'}
+              </span>
+            </span>
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round" className="text-text-muted shrink-0" aria-hidden>
+              <path d="M1 1l6 6-6 6" />
+            </svg>
+          </button>
+
+          {/* Der Tag als eine Zeile. Im Hochformat steht er unter den Aufgaben,
+              im Querformat füllt er die rechte Spalte, die sonst leer bliebe. */}
+          {heuteSlots.length > 0 && (
+            <div className="bg-surface rounded-card p-4">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary">
+                Stundenplan heute
+              </p>
+              <p className="text-[16px] font-semibold text-text-primary mt-1.5 leading-snug">
+                {heuteSlots
+                  .map((sl) => sl.isFreistunde ? 'frei' : resolveSubjectInfo(sl.subjectId, profile?.customFaecher).name)
+                  .join(' · ')}
+              </p>
+              <p className="text-[13px] text-text-secondary mt-0.5">
+                Schulschluss {heuteSlots[heuteSlots.length - 1].endTime}
+              </p>
+            </div>
+          )}
+            </div>
+
+          </div>
         </div>
       )}
 
