@@ -179,7 +179,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
               className="w-full py-3.5 rounded-card text-center text-[15px] font-semibold mb-3"
               style={{ background: 'rgba(52,211,153,0.12)', color: '#34D399' }}
             >
-              Danke! Du bekommst als Erstes Bescheid 🎉
+              Danke, du bekommst als Erstes Bescheid
             </div>
           ) : (
             <button
@@ -263,7 +263,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
           <div className="rounded-card px-3 py-2 mb-4 border text-center"
             style={{ background: 'rgba(52,211,153,0.08)', borderColor: 'rgba(52,211,153,0.25)' }}>
             <p className="text-[13px] font-semibold" style={{ color: '#34D399' }}>
-              Release Rabatt 🎉Jetzt {effectiveDiscountPercent}% sichern!
+              Release Rabatt · Jetzt {effectiveDiscountPercent}% sichern!
             </p>
           </div>
         )}

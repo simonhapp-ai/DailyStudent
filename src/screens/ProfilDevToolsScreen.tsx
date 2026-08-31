@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
@@ -43,7 +44,7 @@ export function ProfilDevToolsScreen() {
           <div className="flex items-center justify-between px-4 py-3.5">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 text-[16px]">
-                {isPro ? '⭐' : '🔒'}
+                <Icon name={isPro ? 'star' : 'lock'} size={18} />
               </div>
               <div>
                 <p className="text-text-primary text-[15px] font-medium">Pro-Status</p>
@@ -115,7 +116,7 @@ export function ProfilDevToolsScreen() {
       {proToast && (
         <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-pill bg-surface border border-border shadow-float animate-fade-in">
           <p className="text-text-primary text-[13px] font-semibold whitespace-nowrap">
-            {isPro ? '⭐ Pro aktiviert' : '🔒 Pro deaktiviert'}
+            {isPro ? 'Pro aktiviert' : 'Pro deaktiviert'}
           </p>
         </div>
       )}

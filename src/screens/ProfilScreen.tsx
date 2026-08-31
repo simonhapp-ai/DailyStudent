@@ -1,4 +1,5 @@
 import { useUser } from '../context/UserContext'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -131,11 +132,11 @@ export function ProfilScreen() {
 
   const activeStreak = getActiveStreak(appStats.streak, appStats.lastStudyDate)
 
-  const stats = [
-    { label: 'Streak',    value: activeStreak.toString(), unit: 'Tage', icon: '🔥' },
-    { label: 'Notizen',   value: userNotes.length.toString(),            icon: '📝' },
-    { label: 'Klausuren', value: appStats.examCount.toString(),          icon: '📋' },
-    { label: 'Ø Note',    value: profile?.abiGesamtnote ?? '—',          icon: '⭐' },
+  const stats: { label: string; value: string; unit?: string; icon: IconName }[] = [
+    { label: 'Streak',    value: activeStreak.toString(), unit: 'Tage', icon: 'flame' as IconName },
+    { label: 'Notizen',   value: userNotes.length.toString(),            icon: 'note' as IconName },
+    { label: 'Klausuren', value: appStats.examCount.toString(),          icon: 'clipboard' as IconName },
+    { label: 'Ø Note',    value: profile?.abiGesamtnote ?? '—',          icon: 'star' },
   ]
 
   const subtitle = profile
@@ -279,7 +280,7 @@ export function ProfilScreen() {
                 trial eligibility on iOS) happens once ProModal opens; this is
                 just marketing copy pointing at whichever offer applies. */}
             <p className="text-[12px] font-semibold mb-3" style={{ color: '#34D399' }}>
-              {Capacitor.isNativePlatform() ? '🎉 1 Woche kostenlos beim Monatsabo' : '🎉 20% Rabatt auf deinen ersten Kauf'}
+              {Capacitor.isNativePlatform() ? '1 Woche kostenlos beim Monatsabo' : '20% Rabatt auf deinen ersten Kauf'}
             </p>
             <button
               onClick={() => handleUpgrade('yearly')}
@@ -311,7 +312,7 @@ export function ProfilScreen() {
                     className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
                     style={{ background: '#FFD700' }}
                   >
-                    🎁
+                    <Icon name="gift" size={22} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
@@ -345,7 +346,7 @@ export function ProfilScreen() {
                       className="text-[10px] font-medium"
                       style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
                     >
-                      {n === 5 ? '🎉' : `${n}`}
+                      {n === 5 ? <Icon name="gift" size={13} /> : `${n}`}
                     </span>
                   ))}
                 </div>
@@ -372,7 +373,7 @@ export function ProfilScreen() {
                     {copyToast ? (
                       <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
                         style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>
-                        ✓ Kopiert!
+                        Kopiert
                       </div>
                     ) : (
                       <button
@@ -399,7 +400,7 @@ export function ProfilScreen() {
               className="w-11 h-11 rounded-[12px] flex items-center justify-center text-[22px] shrink-0"
               style={{ background: '#34D399' }}
             >
-              🎉
+              <Icon name="gift" size={26} />
             </div>
             <div>
               <p className="text-text-primary font-bold text-[15px]">14 Tage Pro aktiv!</p>
@@ -415,7 +416,7 @@ export function ProfilScreen() {
           <div className="flex items-stretch divide-x divide-border/40">
             {stats.map((stat) => (
               <div key={stat.label} className="flex-1 flex flex-col items-center justify-center py-4 px-2 gap-0.5">
-                <span className="text-[17px] leading-none">{stat.icon}</span>
+                <span className="text-text-secondary"><Icon name={stat.icon} size={16} /></span>
                 <p className="text-text-primary font-bold text-[19px] leading-none tabular-nums mt-1.5">
                   {stat.value}
                   {stat.unit && <span className="text-[11px] font-normal text-text-muted ml-0.5">{stat.unit}</span>}
@@ -545,7 +546,7 @@ export function ProfilScreen() {
                       className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
                       style={{ background: '#34D399' }}
                     >
-                      🔗
+                      <Icon name="gift" size={19} />
                     </div>
                     <div>
                       <p className="text-text-primary font-bold text-[15px]">Freunde einladen</p>
@@ -573,7 +574,7 @@ export function ProfilScreen() {
                         {copyToast ? (
                           <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
                             style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>
-                            ✓ Kopiert!
+                            Kopiert
                           </div>
                         ) : (
                           <button

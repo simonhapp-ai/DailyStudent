@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 
@@ -10,24 +11,24 @@ const DEFAULT_PREFS = {
   streakReminder: false,
 }
 
-const ITEMS: { key: NotifKey; icon: string; title: string; desc: string; color: string }[] = [
+const ITEMS: { key: NotifKey; icon: IconName; title: string; desc: string; color: string }[] = [
   {
     key: 'klausurReminder',
-    icon: '📝',
+    icon: 'note' as IconName,
     title: 'Klausur-Erinnerung',
     desc: '3 Tage vor jeder eingetragenen Klausur',
     color: '#FF3B30',
   },
   {
     key: 'lernplanReminder',
-    icon: '📅',
+    icon: 'calendar' as IconName,
     title: 'Lernplan-Erinnerungen',
     desc: 'Täglich zur besten Lernzeit erinnern',
     color: '#7C3AED',
   },
   {
     key: 'streakReminder',
-    icon: '🔥',
+    icon: 'flame' as IconName,
     title: 'Streak-Erinnerung',
     desc: 'Wenn du heute noch nicht gelernt hast',
     color: '#FF9500',
@@ -106,7 +107,7 @@ export function BenachrichtigungenScreen() {
                   className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
                   style={{ background: item.color + '18' }}
                 >
-                  {item.icon}
+                  <Icon name={item.icon} size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-text-primary font-medium text-[15px]">{item.title}</p>

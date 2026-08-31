@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import { Icon } from './Icon'
 import { useUser } from '../../context/UserContext'
 
 export function ReferralPill() {
@@ -32,7 +33,7 @@ export function ReferralPill() {
         WebkitBackdropFilter: 'blur(14px)',
       }}
     >
-      <span className="text-[14px] leading-none" aria-hidden>🎁</span>
+      <span className="shrink-0" aria-hidden><Icon name="gift" size={14} /></span>
       <span
         className="font-bold tabular-nums leading-none"
         style={{ color: '#FFFFFF', fontSize: '13px' }}

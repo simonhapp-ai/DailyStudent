@@ -24,9 +24,42 @@ export type IconName =
   | 'camera' | 'cards' | 'speech' | 'bulb' | 'snowflake' | 'chart' | 'clipboard'
   | 'cap' | 'lock' | 'bug' | 'cookie' | 'plus' | 'trash' | 'pin' | 'folder'
   | 'document' | 'image' | 'pencil' | 'play' | 'settings' | 'moon'
-  | 'repeat'
+  | 'repeat' | 'gift' | 'key' | 'search' | 'palette'
 
 const paths: Record<IconName, ReactElement> = {
+  // SF Symbols: gift
+  gift: (
+    <>
+      <path d="M20 12v8.5a1 1 0 01-1 1H5a1 1 0 01-1-1V12" />
+      <path d="M2.5 7.5h19V12h-19z" />
+      <path d="M12 7.5v14" />
+      <path d="M12 7.5S10.8 3 8.4 3a2.4 2.4 0 000 4.5H12zM12 7.5s1.2-4.5 3.6-4.5a2.4 2.4 0 010 4.5H12z" />
+    </>
+  ),
+  // SF Symbols: key
+  key: (
+    <>
+      <circle cx="8" cy="8" r="4.5" />
+      <path d="M11.4 11.4L21 21" />
+      <path d="M17.5 17.5l2-2M14.5 14.5l2-2" />
+    </>
+  ),
+  // SF Symbols: magnifyingglass
+  search: (
+    <>
+      <circle cx="10.5" cy="10.5" r="6.5" />
+      <path d="M15.5 15.5L21 21" />
+    </>
+  ),
+  // SF Symbols: paintpalette
+  palette: (
+    <>
+      <path d="M12 3a9 9 0 000 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.1 0-.9.8-1.7 1.7-1.7H16a5 5 0 005-5c0-4-4-7.3-9-7.3z" />
+      <circle cx="7.5" cy="11.5" r="1.1" />
+      <circle cx="11" cy="7.5" r="1.1" />
+      <circle cx="15.5" cy="8.5" r="1.1" />
+    </>
+  ),
   // SF Symbols: arrow.triangle.2.circlepath
   repeat: (
     <>

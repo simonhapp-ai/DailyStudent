@@ -120,7 +120,7 @@ export function BugReportWidget() {
           {/* Status messages */}
           {status === 'sent' && (
             <p className="text-[13px] font-semibold text-center" style={{ color: '#30D158' }}>
-              Danke! Report wurde gesendet ✓
+              Danke, dein Bericht ist angekommen
             </p>
           )}
           {status === 'error' && (

@@ -174,7 +174,7 @@ export function BundeslandScreen() {
             boxShadow: changed && !saved ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',
           }}
         >
-          {saved ? '✓ Gespeichert' : error ? '✕ Fehler' : 'Speichern'}
+          {saved ? 'Gespeichert' : error ? 'Fehler' : 'Speichern'}
         </button>
 
         {error && (

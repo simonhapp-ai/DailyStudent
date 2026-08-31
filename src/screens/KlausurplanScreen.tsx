@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
@@ -267,7 +268,7 @@ export function KlausurplanScreen() {
               className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center text-3xl"
               style={{ background: 'rgba(255,59,48,0.08)' }}
             >
-              📝
+              <Icon name="note" size={26} />
             </div>
             <p className="text-text-muted text-[14px]">Noch keine Klausuren eingetragen</p>
             <p className="text-text-muted text-[12px] mt-1">Trag deine erste Klausur oben ein</p>

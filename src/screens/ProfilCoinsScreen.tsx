@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useUser } from '../context/UserContext'
@@ -36,13 +37,13 @@ function useIsDesktop(): boolean {
 const COINS_DISCOUNT_ENABLED = false
 
 const DAILY_TASKS = [
-  { key: 'LOGIN',            label: 'Einloggen',              reward: 5,  icon: '🔑' },
-  { key: 'SMART_NOTE',       label: 'Smart Note erstellen',   reward: 5,  icon: '📷' },
-  { key: 'FLASHCARD_LEARNED',label: 'Karteikarten lernen',    reward: 10, icon: '🃏' },
-  { key: 'BLURTING',         label: 'Blurting abschließen',   reward: 10, icon: '🧠' },
-  { key: 'LERNZETTEL',       label: 'Lernzettel erstellen',   reward: 20, icon: '📄' },
-  { key: 'LERNPLAN_DAY',     label: 'Lernplan-Tag erledigen', reward: 15, icon: '📅' },
-  { key: 'PROBEKLAUSUR',     label: 'Probeklausur machen',    reward: 50, icon: '📋' },
+  { key: 'LOGIN',            label: 'Einloggen',              reward: 5,  icon: 'key' as IconName },
+  { key: 'SMART_NOTE',       label: 'Smart Note erstellen',   reward: 5,  icon: 'camera' as IconName },
+  { key: 'FLASHCARD_LEARNED',label: 'Karteikarten lernen',    reward: 10, icon: 'cards' as IconName },
+  { key: 'BLURTING',         label: 'Blurting abschließen',   reward: 10, icon: 'bulb' as IconName },
+  { key: 'LERNZETTEL',       label: 'Lernzettel erstellen',   reward: 20, icon: 'document' as IconName },
+  { key: 'LERNPLAN_DAY',     label: 'Lernplan-Tag erledigen', reward: 15, icon: 'calendar' as IconName },
+  { key: 'PROBEKLAUSUR',     label: 'Probeklausur machen',    reward: 50, icon: 'clipboard' as IconName },
 ] as const
 
 export function ProfilCoinsScreen() {
@@ -174,7 +175,7 @@ export function ProfilCoinsScreen() {
                       )}
                     </div>
                     <span className={`text-[13px] flex-1 leading-snug ${done ? 'line-through text-text-muted' : 'text-text-secondary'}`}>
-                      {task.icon} {task.label}
+                      <span className="inline-flex items-center gap-2"><Icon name={task.icon} size={15} />{task.label}</span>
                     </span>
                     {!done && (
                       <span className="text-[12px] font-bold tabular-nums shrink-0" style={{ color: '#7C3AED' }}>
@@ -202,7 +203,7 @@ export function ProfilCoinsScreen() {
             <div className="flex items-center gap-4">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <p className="text-text-primary font-bold text-[15px]">Streak Freeze 🧊</p>
+                  <p className="text-text-primary font-bold text-[15px]">Streak Freeze</p>
                   {freezeCount > 0 && (
                     <span className="text-[11px] font-bold px-2 py-0.5 rounded-pill"
                       style={{ background: 'rgba(52,211,153,0.15)', color: '#059669' }}>
@@ -232,7 +233,7 @@ export function ProfilCoinsScreen() {
             {freezeToast === 'success' && (
               <div className="rounded-[12px] px-3.5 py-2.5 mt-4 border text-center"
                 style={{ background: 'rgba(52,211,153,0.1)', borderColor: 'rgba(52,211,153,0.3)' }}>
-                <p className="text-[12px] font-semibold" style={{ color: '#059669' }}>🧊 Streak Freeze gekauft!</p>
+                <p className="text-[12px] font-semibold text-text-primary">Streak Freeze gekauft</p>
               </div>
             )}
             {freezeToast === 'error' && (
@@ -264,10 +265,10 @@ export function ProfilCoinsScreen() {
                 </div>
                 {used15
                   ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill shrink-0"
-                      style={{ background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>✓ Eingelöst</span>
+                      style={{ background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>Eingelöst</span>
                   : has15
                   ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill shrink-0"
-                      style={{ background: 'rgba(52,211,153,0.15)', color: '#059669' }}>✓ Verfügbar</span>
+                      style={{ background: '#34D399', color: '#062017' }}>Verfügbar</span>
                   : <span className="text-text-muted text-[11px] shrink-0">Noch {Math.max(0, RABATT_15 - coins)}</span>
                 }
               </div>
@@ -303,10 +304,10 @@ export function ProfilCoinsScreen() {
                 </div>
                 {used30
                   ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill shrink-0"
-                      style={{ background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>✓ Eingelöst</span>
+                      style={{ background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>Eingelöst</span>
                   : has30
                   ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill shrink-0"
-                      style={{ background: 'rgba(52,211,153,0.15)', color: '#059669' }}>✓ Verfügbar</span>
+                      style={{ background: '#34D399', color: '#062017' }}>Verfügbar</span>
                   : <span className="text-text-muted text-[11px] shrink-0">Noch {Math.max(0, RABATT_30 - coins)}</span>
                 }
               </div>
