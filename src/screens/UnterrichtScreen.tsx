@@ -11,18 +11,44 @@ import { Icon } from '../components/ui/Icon'
 import { Stage } from '../components/ui/Stage'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
-import { currentSlot, nextSlot } from '../lib/appMode'
+import { currentSlot, nextSlot, todaysSlots } from '../lib/appMode'
 import { resolveSubjectInfo } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
 
 export function UnterrichtScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, userFolders, addFolder, renameFolder, deleteFolder, saveNote, saveToOhneFachFolder } = useUser()
+  const { profile, userNotes, userFolders, addFolder, renameFolder, deleteFolder, saveNote, saveToOhneFachFolder, completedHomeworkIds, standaloneHomework } = useUser()
   const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set())
 
   // Laufende und nächste Stunde aus dem Stundenplan — Grundlage der Bühne.
   const laufendeStunde = currentSlot(profile?.stundenplan?.slots)
   const naechsteStunde = nextSlot(profile?.stundenplan?.slots)
+
+  // Offene Hausaufgaben — gleiche Aggregation wie im Hausaufgabenheft: Aufgaben
+  // aus Notizen plus eigenständig erfasste, abzüglich der erledigten.
+  const offeneAufgaben = [
+    ...userNotes.flatMap((n) =>
+      (n.homeworkItems ?? []).map((item, idx) => ({
+        id: item.id ?? `${n.id}-hw-${idx}`,
+        subjectId: item.subjectId ?? n.subjectId,
+        dueDate: item.dueDate,
+      })),
+    ),
+    ...standaloneHomework.map((h) => ({ id: h.id, subjectId: h.subjectId, dueDate: h.dueDate })),
+  ].filter((h) => !completedHomeworkIds.includes(h.id))
+
+  const offeneHausaufgaben = offeneAufgaben.length
+  const naechsteHausaufgabe = (() => {
+    const mitDatum = offeneAufgaben.filter((h) => h.dueDate).sort((a, b) => a.dueDate!.localeCompare(b.dueDate!))
+    const naechste = mitDatum[0]
+    if (!naechste) return offeneHausaufgaben > 0 ? 'Ohne Abgabedatum' : null
+    const fach = naechste.subjectId ? resolveSubjectInfo(naechste.subjectId, profile?.customFaecher).name : 'Aufgabe'
+    const d = new Date(naechste.dueDate + 'T00:00:00')
+    const heute = new Date(); heute.setHours(0, 0, 0, 0)
+    const tage = Math.round((d.getTime() - heute.getTime()) / 86400000)
+    const wann = tage < 0 ? 'überfällig' : tage === 0 ? 'heute' : tage === 1 ? 'bis morgen' : `in ${tage} Tagen`
+    return `Nächste: ${fach} ${wann}`
+  })()
   const [addFolderFor, setAddFolderFor] = useState<string | null>(null)
   const [newFolderName, setNewFolderName] = useState('')
 
@@ -352,70 +378,69 @@ export function UnterrichtScreen() {
               Nach Regel 1 erscheint sie nur, wenn es gerade etwas Zeitkritisches
               gibt. Läuft kein Unterricht, entfällt sie ersatzlos — derselbe
               Screen, zwei Zustände, kein zweites Layout. */}
-          {laufendeStunde && (
-            <Stage
-              eyebrow={`Jetzt · ${laufendeStunde.startTime} – ${laufendeStunde.endTime}`}
-              title={
-                laufendeStunde.isFreistunde
-                  ? 'Freistunde'
-                  : resolveSubjectInfo(laufendeStunde.subjectId, profile?.customFaecher).name
-                    + (laufendeStunde.room ? ` · ${laufendeStunde.room}` : '')
-              }
-              note={
-                naechsteStunde
-                  ? `Danach ${naechsteStunde.isFreistunde ? 'frei' : resolveSubjectInfo(naechsteStunde.subjectId, profile?.customFaecher).name} um ${naechsteStunde.startTime}`
-                  : 'Danach Schulschluss'
-              }
-              action={
+          <Stage
+            eyebrow={
+              laufendeStunde
+                ? `Jetzt · ${laufendeStunde.startTime} – ${laufendeStunde.endTime}`
+                : new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })
+            }
+            title={
+              laufendeStunde
+                ? (laufendeStunde.isFreistunde
+                    ? 'Freistunde'
+                    : resolveSubjectInfo(laufendeStunde.subjectId, profile?.customFaecher).name
+                      + (laufendeStunde.room ? ` · ${laufendeStunde.room}` : ''))
+                : naechsteStunde
+                  ? `Nächste Stunde um ${naechsteStunde.startTime}`
+                  : todaysSlots(profile?.stundenplan?.slots).length > 0
+                    ? 'Schulschluss für heute'
+                    : 'Heute schulfrei'
+            }
+            note={
+              laufendeStunde
+                ? (naechsteStunde
+                    ? `Danach ${naechsteStunde.isFreistunde ? 'frei' : resolveSubjectInfo(naechsteStunde.subjectId, profile?.customFaecher).name} um ${naechsteStunde.startTime}`
+                    : 'Danach Schulschluss')
+                : undefined
+            }
+            action={
+              /* Die Bühne ist in der Mitte geteilt und trägt immer zwei Wege in
+                 eine Notiz. Was sich mit dem Stundenplan ändert, ist die linke
+                 Pille: Läuft Unterricht, heißt sie nach dem Fach und legt es
+                 direkt vor — sonst ist es die neutrale Schnellnotiz. Der Import
+                 bleibt in beiden Fällen an derselben Stelle. */
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() =>
                     navigate(
-                      laufendeStunde.isFreistunde || !laufendeStunde.subjectId
-                        ? '/unterricht/neue-notiz'
-                        : `/unterricht/${laufendeStunde.subjectId}/neue-notiz`,
+                      laufendeStunde && !laufendeStunde.isFreistunde && laufendeStunde.subjectId
+                        ? `/unterricht/${laufendeStunde.subjectId}/neue-notiz`
+                        : '/unterricht/neue-notiz',
                     )
                   }
-                  className="w-full h-12 rounded-pill bg-white text-[#160E28] text-[16px] font-semibold press"
+                  className="h-12 rounded-pill bg-white text-[#160E28] text-[15px] font-semibold press flex items-center justify-center gap-2 px-3"
                 >
-                  Notiz aufnehmen
+                  <Icon name="note" size={17} />
+                  <span className="truncate">
+                    {laufendeStunde && !laufendeStunde.isFreistunde && laufendeStunde.subjectId
+                      ? resolveSubjectInfo(laufendeStunde.subjectId, profile?.customFaecher).name
+                      : 'Schnellnotiz'}
+                  </span>
                 </button>
-              }
-            />
-          )}
+                <button
+                  onClick={() => importRef.current?.click()}
+                  className="h-12 rounded-pill bg-white/15 text-white text-[15px] font-semibold press flex items-center justify-center gap-2 border border-white/25 px-3"
+                >
+                  <Icon name="image" size={17} />
+                  <span className="truncate">Importieren</span>
+                </button>
+              </div>
+            }
+          />
 
-          {/* ── Schnellaktionen ──────────────────────────────────────
-              Flache Flächen statt Verlaufs-Kacheln mit farbigem Glow: Nach
-              Regel 3 ist Farbe Fläche, und Verläufe auf Bedienelementen sind
-              raus. Beide Funktionen bleiben unverändert erhalten. */}
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => navigate('/unterricht/neue-notiz')}
-              className="bg-surface rounded-card p-4 flex flex-col gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
-            >
-              <span className="w-10 h-10 rounded-icon bg-accent flex items-center justify-center text-white dark:text-[#160E28]">
-                <Icon name="note" size={19} />
-              </span>
-              <span>
-                <span className="block text-text-primary font-semibold text-[15px]">Neue Notiz</span>
-                <span className="block text-text-secondary text-[13px] mt-0.5">Schnell erfassen</span>
-              </span>
-            </button>
-
-            <button
-              onClick={() => importRef.current?.click()}
-              className="bg-surface rounded-card p-4 flex flex-col gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
-            >
-              <span className="w-10 h-10 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-primary">
-                <Icon name="image" size={19} />
-              </span>
-              <span>
-                <span className="block text-text-primary font-semibold text-[15px]">Importieren</span>
-                <span className="block text-text-secondary text-[13px] mt-0.5">PDF oder Foto</span>
-              </span>
-            </button>
-          </div>
-
-          {/* Hidden file input — multiple, no count cap */}
+          {/* Hidden file input — multiple, no count cap.
+              Die beiden Schnellaktionen sind in die Bühne gewandert; die
+              separaten Kacheln darunter waren danach eine Dopplung. */}
           <input
             ref={importRef}
             type="file"
@@ -446,6 +471,33 @@ export function UnterrichtScreen() {
               </ListGroup>
             )
           })()}
+
+          {/* ── Hausaufgaben ───────────────────────────────────────
+              Erfasst werden sie hier, geplant unter Planen — ein Bestand,
+              zwei Wege. Die Anzahl steht dort, wo man sie in der Schule
+              braucht; offene Aufgaben tragen Rot wie jede Gefahrenmeldung. */}
+          <button
+            onClick={() => navigate('/hausaufgaben')}
+            className="w-full bg-surface rounded-card p-4 flex items-center gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
+          >
+            <span className="flex-1 min-w-0">
+              <span className="flex items-center gap-2">
+                <span className="text-[16px] font-semibold text-text-primary">Hausaufgaben</span>
+                {offeneHausaufgaben > 0 && (
+                  <span className="text-[13px] font-semibold px-2.5 py-0.5 rounded-pill bg-fill-red text-fill-red-on">
+                    {offeneHausaufgaben} offen
+                  </span>
+                )}
+              </span>
+              <span className="block text-[13px] text-text-secondary mt-0.5 truncate">
+                {naechsteHausaufgabe ?? 'Alles erledigt'}
+              </span>
+            </span>
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round" className="text-text-muted shrink-0" aria-hidden>
+              <path d="M1 1l6 6-6 6" />
+            </svg>
+          </button>
 
           {/* ── Fächer ─────────────────────────────────────────────
               Eine zusammenhängende Liste statt eines Stapels einzelner Karten:
