@@ -245,7 +245,7 @@ export function SmartNotesScreen() {
           <span className="text-text-primary font-semibold text-sm">Bearbeiten</span>
           <button
             onClick={saveEdit}
-            className="text-accent text-sm font-semibold hover:opacity-80 transition-opacity px-1 py-1"
+            className="text-text-primary text-sm font-semibold hover:opacity-80 transition-opacity px-1 py-1"
           >
             Speichern
           </button>
@@ -356,10 +356,10 @@ export function SmartNotesScreen() {
             </div>
             <div className="px-4 py-3">
               {analysisStatus === 'error' && (
-                <p className="text-sm mb-3 text-danger">{analysisError}</p>
+                <p className="text-sm mb-3 text-text-primary">{analysisError}</p>
               )}
               {analysisStatus === 'done' && editGeneratedNote && (
-                <p className="text-xs text-success font-medium mb-2">✓ Neue Analyse bereit — wird beim Speichern übernommen</p>
+                <p className="text-xs text-text-primary font-medium mb-2">✓ Neue Analyse bereit — wird beim Speichern übernommen</p>
               )}
               {displayNote.summary ? (
                 <div className="text-text-secondary text-sm leading-relaxed"><RichText text={displayNote.summary} /></div>
@@ -390,7 +390,7 @@ export function SmartNotesScreen() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="w-8 h-8 flex items-center justify-center rounded-btn bg-surface border border-border text-text-muted hover:text-danger hover:bg-danger/5 hover:border-danger/30 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-btn bg-surface border border-border text-text-muted hover:text-text-primary hover:bg-danger/5 hover:border-danger/30 transition-colors"
                 title="Notiz löschen"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -470,7 +470,7 @@ export function SmartNotesScreen() {
         {authUser && (photos.length > 0 || drawings.length > 0) && hasLocalOnlyAttachments(userNote) && (
           <div className="flex items-center gap-3 px-4 py-3 bg-surface rounded-card shadow-card-adaptive border border-border/60">
             <div className="w-9 h-9 rounded-btn bg-accent/10 flex items-center justify-center shrink-0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
                 <polyline points="17 8 12 3 7 8" strokeLinecap="round" strokeLinejoin="round" />
                 <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
@@ -562,7 +562,7 @@ export function SmartNotesScreen() {
                     )}
                     {hw.aiHelp && (
                       <div className="mt-1.5 px-3 py-2 rounded-btn" style={{ backgroundColor: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.15)' }}>
-                        <p className="text-xs font-semibold text-accent mb-0.5">KI-Hilfe</p>
+                        <p className="text-xs font-semibold text-text-primary mb-0.5">KI-Hilfe</p>
                         <p className="text-xs text-text-secondary leading-relaxed">{hw.aiHelp}</p>
                       </div>
                     )}
@@ -578,7 +578,7 @@ export function SmartNotesScreen() {
           title="KI-Zusammenfassung"
           icon="sparkle"
           badge={generatedNote ? (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-success/10 text-success font-medium">KI</span>
+            <span className="text-xs px-1.5 py-0.5 rounded bg-fill-green text-fill-green-on font-medium">KI</span>
           ) : undefined}
         >
           {note.summary ? (

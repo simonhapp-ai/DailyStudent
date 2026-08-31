@@ -256,3 +256,36 @@ export function SubjectIcon({ subjectId, size = 'md', className = '' }: SubjectI
     </div>
   )
 }
+
+// Schnellnotizen-Zeichen — dieselbe quadratische Form wie ein Fachzeichen,
+// aber bewusst KEINE der vier Fachgruppen-Farben. Schnellnotizen sind kein
+// Fach, sondern der Eingang des Unterrichtsmodus für alles, was noch keinem
+// Fach zugeordnet ist. Deshalb trägt die Fläche die Modusfarbe.
+//
+// Der Ton ist in beiden Erscheinungen derselbe (#7C3AED, nicht die
+// aufgehellte Dunkelvariante), genau wie bei den Fachzeichen: Ein Zeichen,
+// das seine Farbe je nach Erscheinung wechselt, verliert seinen Wiedererkennungswert.
+// Weiß darauf liegt bei rund 5:1 und bleibt in beiden Fällen lesbar.
+export function QuickNotesIcon({ size = 'md', className = '' }: { size?: Size; className?: string }) {
+  const cfg = sizeConfig[size]
+  return (
+    <span
+      className={`${cfg.cls} inline-flex items-center justify-center shrink-0 ${className}`}
+      style={{
+        borderRadius: cfg.radius,
+        backgroundColor: '#7C3AED',
+        backgroundImage: 'var(--subj-fade)',
+      }}
+      aria-hidden
+    >
+      <svg
+        width={cfg.px} height={cfg.px} viewBox="0 0 24 24" fill="none"
+        stroke="#FFFFFF" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round"
+      >
+        <path d="M6 3.5h8.5L19 8v12.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-16a1 1 0 011-1z" />
+        <path d="M14 3.5V8h4.5" />
+        <path d="M8.5 13h7M8.5 16.5h4.5" />
+      </svg>
+    </span>
+  )
+}

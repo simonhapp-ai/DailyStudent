@@ -6,7 +6,7 @@ import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS
 import type { UserFolder, UserNote } from '../types'
 import { subjects, halfYears } from '../data/mockData'
 import type { HalfYear } from '../types'
-import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { SubjectIcon, QuickNotesIcon } from '../components/ui/SubjectIcon'
 import { Icon } from '../components/ui/Icon'
 import { Stage } from '../components/ui/Stage'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
@@ -462,9 +462,7 @@ export function UnterrichtScreen() {
               <ListGroup>
                 <ListRow
                   leading={
-                    <span className="w-11 h-11 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-secondary shrink-0">
-                      <Icon name="folder" size={20} />
-                    </span>
+                    <QuickNotesIcon size="md" />
                   }
                   title="Schnellnotizen"
                   subtitle={ohneCount === 0 ? 'Keine Notizen' : `${ohneCount} ${ohneCount === 1 ? 'Notiz' : 'Notizen'}`}
@@ -572,7 +570,7 @@ export function UnterrichtScreen() {
           <h2 className="text-[20px] font-bold text-text-primary mb-2">Neuen Ordner erstellen</h2>
           {addFolderFor && (
             <div className="flex items-center gap-1.5 flex-wrap mb-4">
-              <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-accent/10 text-accent">
+              <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-accent text-white dark:text-[#160E28]">
                 {subjects.find((s) => s.id === addFolderFor)?.name
                   ?? profile?.customFaecher?.find((cf) => cf.id === addFolderFor)?.name
                   ?? addFolderFor}
@@ -708,7 +706,7 @@ export function UnterrichtScreen() {
                 onClick={() => void startProcessing('', 'Allgemein', 'folder-no-subject')}
                 className="w-full flex items-center gap-3 bg-background border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-surface-hover flex items-center justify-center shrink-0 text-[16px]">📁</div>
+                <QuickNotesIcon size="sm" />
                 <span className="text-text-primary font-medium text-[15px]">Schnellnotizen</span>
               </button>
             </div>
@@ -728,7 +726,7 @@ export function UnterrichtScreen() {
               <div className="flex items-center gap-3 mb-4">
                 <button
                   onClick={() => setImportPhase('manual-subjects')}
-                  className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+                  className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -745,11 +743,11 @@ export function UnterrichtScreen() {
                   onClick={() => void startProcessing(manualSubject.id, manualSubject.name, undefined)}
                   className="w-full flex items-center gap-3 bg-accent/5 border border-accent/20 rounded-card px-4 py-3.5 text-left press hover:bg-accent/8 transition-colors"
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent shrink-0">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary shrink-0">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M14 2v6h6" strokeLinecap="round" />
                   </svg>
-                  <span className="text-accent font-medium text-[14px]">Direkt in {manualSubject.name}</span>
+                  <span className="text-text-primary font-medium text-[14px]">Direkt in {manualSubject.name}</span>
                 </button>
 
                 {/* Folders by half year */}
@@ -757,7 +755,7 @@ export function UnterrichtScreen() {
                   <div key={hy.id}>
                     <div className="flex items-center gap-2 px-2 py-1.5">
                       <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{hy.name}</span>
-                      {hy.isCurrent && <span className="text-[10px] px-1.5 py-0.5 rounded-pill icon-accent text-accent font-semibold">Aktuell</span>}
+                      {hy.isCurrent && <span className="text-[10px] px-1.5 py-0.5 rounded-pill bg-accent text-white dark:text-[#160E28] font-semibold">Aktuell</span>}
                     </div>
                     {folders.map((folder) => (
                       <button
@@ -765,7 +763,7 @@ export function UnterrichtScreen() {
                         onClick={() => void startProcessing(manualSubject.id, manualSubject.name, folder.id)}
                         className="w-full flex items-center gap-3 bg-background border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors mb-1.5"
                       >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-accent shrink-0">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-primary shrink-0">
                           <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         <span className="text-text-primary font-medium text-[14px]">{folder.name}</span>
@@ -779,7 +777,7 @@ export function UnterrichtScreen() {
                     onClick={() => void startProcessing(manualSubject.id, manualSubject.name, folder.id)}
                     className="w-full flex items-center gap-3 bg-background border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-accent shrink-0">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-primary shrink-0">
                       <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className="text-text-primary font-medium text-[14px]">{folder.name}</span>
@@ -810,7 +808,7 @@ export function UnterrichtScreen() {
             </div>
             <div className="flex gap-3 mb-5">
               <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.2)' }}>
-                <p className="text-success font-bold text-[18px]">{importSucceeded}</p>
+                <p className="text-text-primary font-bold text-[18px]">{importSucceeded}</p>
                 <p className="text-text-muted text-[11px]">Erstellt</p>
               </div>
               <div className="flex-1 bg-background border border-border rounded-card px-3 py-2 text-center">
@@ -821,7 +819,7 @@ export function UnterrichtScreen() {
               </div>
               {importFailed > 0 && (
                 <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
-                  <p className="text-danger font-bold text-[18px]">{importFailed}</p>
+                  <p className="text-text-primary font-bold text-[18px]">{importFailed}</p>
                   <p className="text-text-muted text-[11px]">Fehler</p>
                 </div>
               )}
@@ -841,7 +839,7 @@ export function UnterrichtScreen() {
                 className="w-14 h-14 rounded-full flex items-center justify-center mb-3"
                 style={{ background: importSucceeded > 0 ? 'rgba(var(--color-success),0.12)' : 'rgba(var(--color-border),0.3)' }}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className={importSucceeded > 0 ? 'text-success' : 'text-text-muted'}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className={importSucceeded > 0 ? 'text-text-primary' : 'text-text-muted'}>
                   <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
@@ -870,7 +868,7 @@ export function UnterrichtScreen() {
               className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
             >
               <div className="w-9 h-9 rounded-btn bg-accent/10 flex items-center justify-center shrink-0">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-primary">
                   <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
               </div>
@@ -936,7 +934,7 @@ export function UnterrichtScreen() {
             </button>
             <button
               onClick={confirmDeleteFolder}
-              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-danger/10 text-danger border border-danger/20 hover:bg-danger/15 transition-colors press"
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-fill-red text-fill-red-on hover:opacity-90 transition-colors press"
             >
               Löschen
             </button>
@@ -1021,7 +1019,7 @@ function AddFolderGridItem({ onClick }: { onClick: () => void }) {
       className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-2xl active:bg-surface-hover press-sm transition-colors"
     >
       <div className="relative" style={{ width: 62, height: 52 }}>
-        <svg width="62" height="52" viewBox="0 0 62 52" fill="none" className="absolute inset-0 text-accent">
+        <svg width="62" height="52" viewBox="0 0 62 52" fill="none" className="absolute inset-0 text-text-primary">
           {/* ghost tab */}
           <path d="M0 17 L0 9.5 Q0 6.5 3 6.5 L21 6.5 Q23.5 6.5 25 9.5 L28 16 Z"
             fill="currentColor" fillOpacity="0.1"/>
@@ -1034,12 +1032,12 @@ function AddFolderGridItem({ onClick }: { onClick: () => void }) {
         {/* + icon centered in body area */}
         <div className="absolute inset-0 flex items-center justify-center" style={{ paddingTop: 12 }}>
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2.4" className="text-accent">
+            strokeWidth="2.4" className="text-text-primary">
             <path d="M12 5v14M5 12h14" strokeLinecap="round"/>
           </svg>
         </div>
       </div>
-      <p className="text-[11px] font-semibold text-accent text-center">Neuer Ordner</p>
+      <p className="text-[11px] font-semibold text-text-primary text-center">Neuer Ordner</p>
       <p className="text-[10px] text-transparent select-none">·</p>
     </button>
   )

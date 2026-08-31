@@ -5,12 +5,15 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 export function Badge({ color = 'accent', className = '', children, ...props }: BadgeProps) {
+  // Gefüllte Fläche, Schrift in der zugehörigen Gegenfarbe (Regel 3):
+  // matte Tönung PLUS gleichfarbige Schrift ergibt eine Marke, die weder
+  // richtig leuchtet noch richtig lesbar ist.
   const colors = {
-    accent:  'icon-accent text-accent',
-    success: 'icon-success text-success',
-    warning: 'icon-warning text-warning',
-    danger:  'icon-danger text-danger',
-    muted:   'bg-surface-hover text-text-muted',
+    accent:  'bg-accent text-white dark:text-[#160E28]',
+    success: 'bg-fill-green text-fill-green-on',
+    warning: 'bg-fill-orange text-fill-orange-on',
+    danger:  'bg-fill-red text-fill-red-on',
+    muted:   'bg-surface-hover text-text-primary',
   }
 
   return (

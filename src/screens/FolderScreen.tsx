@@ -33,7 +33,7 @@ function FolderBreadcrumb({ parts, className = 'mb-4' }: { parts: string[]; clas
         <div key={i} className="flex items-center gap-1.5">
           <span className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold ${
             i === parts.length - 1
-              ? 'bg-accent/10 text-accent'
+              ? 'bg-accent text-white dark:text-[#160E28]'
               : 'bg-surface-hover border border-border/60 text-text-muted'
           }`}>
             {part}
@@ -270,7 +270,7 @@ export function FolderScreen() {
                 : 'opacity-0 translate-y-4 scale-90 pointer-events-none'
               }`}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary shrink-0">
               <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M12 11v6M9 14h6" strokeLinecap="round" />
             </svg>
@@ -354,7 +354,7 @@ export function FolderScreen() {
             </button>
             <button
               onClick={confirmDelete}
-              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-danger/10 text-danger border border-danger/20 hover:bg-danger/15 transition-colors press"
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-fill-red text-fill-red-on hover:opacity-90 transition-colors press"
             >
               Löschen
             </button>

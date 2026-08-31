@@ -35,7 +35,7 @@ export function StundenplanScreen() {
             {hasSlots && (
               <button
                 onClick={() => setEditing(false)}
-                className="text-[15px] font-semibold text-accent press-sm"
+                className="text-[15px] font-semibold text-text-primary press-sm"
               >
                 ‹ Fertig
               </button>
