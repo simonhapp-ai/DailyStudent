@@ -36,10 +36,13 @@
   --fill-yellow:  255 204   0;  --fill-yellow-on: 0   0   0;
 
   /* ── Fachgruppen (Version C) ────────────────────────────────────────────── */
-  --subj-spr:      92 184 255;  --subj-spr-on:    0   0   0;  /* Sprachen · Blau pastell   */
-  --subj-nat:      52 199  89;  --subj-nat-on:    0   0   0;  /* Naturwiss. · Grün         */
-  --subj-ges:     255 160  86;  --subj-ges-on:    0   0   0;  /* Gesellschaft · Orange     */
-  --subj-kre:     255 138 196;  --subj-kre-on:    0   0   0;  /* Kreativ & Sport · Pink    */
+  /* --subj-*-on ist die Farbe des SYMBOLS auf dem Fachzeichen — immer Weiß, in
+     beiden Erscheinungen. Für TEXT auf einer Fachfarbe gilt das nicht, der wird
+     nach Kontrast gewählt (getSubjectOnColor in subjectInfo.ts). */
+  --subj-spr:      92 184 255;  --subj-spr-on:  255 255 255;  /* Sprachen · Blau pastell   */
+  --subj-nat:      52 199  89;  --subj-nat-on:  255 255 255;  /* Naturwiss. · Grün         */
+  --subj-ges:     255 160  86;  --subj-ges-on:  255 255 255;  /* Gesellschaft · Orange     */
+  --subj-kre:     255 138 196;  --subj-kre-on:  255 255 255;  /* Kreativ & Sport · Pink    */
   --subj-cst:       0   0   0;  --subj-cst-on:  255 255 255;  /* Eigenes Fach              */
 
   /* Weiche Aufhellung oben links, minimale Tiefe unten rechts — führt keine
@@ -108,10 +111,12 @@
 
   /* Pastelltöne tragen in beiden Erscheinungen — sie sind hell genug für Schwarz
      auf der Fläche und kräftig genug, um sich vom schwarzen Grund abzuheben. */
-  --subj-spr:      92 184 255;  --subj-spr-on:    0   0   0;
-  --subj-nat:      52 199  89;  --subj-nat-on:    0   0   0;
-  --subj-ges:     255 160  86;  --subj-ges-on:    0   0   0;
-  --subj-kre:     255 138 196;  --subj-kre-on:    0   0   0;
+  --subj-spr:      92 184 255;  --subj-spr-on:  255 255 255;
+  --subj-nat:      52 199  89;  --subj-nat-on:  255 255 255;
+  --subj-ges:     255 160  86;  --subj-ges-on:  255 255 255;
+  --subj-kre:     255 138 196;  --subj-kre-on:  255 255 255;
+  /* Eigenes Fach kehrt sich um: weiße Fläche im Dunkeln, damit sie überhaupt
+     sichtbar ist — das Symbol darauf ist die eine Ausnahme und wird schwarz. */
   --subj-cst:     255 255 255;  --subj-cst-on:    0   0   0;
 
   --ev-bg:         58  58  60;  --ev-on:        255 255 255;

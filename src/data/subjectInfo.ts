@@ -40,8 +40,10 @@ export function getSubjectGroup(id: string): SubjectGroupKey {
 
 // Schrift auf einer gefüllten Fachfarbe. Version-C-Füllregel: Fläche voll, Text weiß
 // oder schwarz nach Kontrast — nie die Farbe selbst als Schrift auf getönter Fläche.
-// Pastellflächen tragen durchgehend schwarze Schrift — alle vier liegen damit
-// zwischen 9,5 : 1 und 10,6 : 1 und funktionieren in beiden Erscheinungen gleich.
+// TEXT auf einer Fachfarbe — nicht zu verwechseln mit dem SYMBOL auf dem
+// Fachzeichen, das immer weiß ist (--subj-*-on in index.css).
+// Pastellflächen tragen durchgehend schwarze Schrift; alle vier liegen damit
+// zwischen 9,46 : 1 und 10,41 : 1 und funktionieren in beiden Erscheinungen gleich.
 const GROUP_ON: Record<SubjectGroupKey, string> = {
   spr: '#000000', nat: '#000000', ges: '#000000', kre: '#000000', cst: '#FFFFFF',
 }
