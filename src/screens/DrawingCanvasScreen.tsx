@@ -199,8 +199,8 @@ export function DrawingCanvasScreen() {
               className="flex items-center gap-2 px-3 py-2 rounded-2xl"
               style={{
                 background: 'rgba(30,30,40,0.88)',
-                backdropFilter: 'blur(var(--material-blur-thin))',
-                WebkitBackdropFilter: 'blur(var(--material-blur-thin))',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
                 boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
                 maxWidth: 260,
               }}
@@ -242,8 +242,8 @@ export function DrawingCanvasScreen() {
       <nav
         className="shrink-0 md:hidden"
         style={{
-          backdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
-          WebkitBackdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
+          backdropFilter: 'saturate(180%) blur(28px)',
+          WebkitBackdropFilter: 'saturate(180%) blur(28px)',
           backgroundColor: 'rgba(var(--color-surface), 0.95)',
           borderTop: '0.5px solid rgba(var(--color-border), 0.4)',
           paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom, 0px))',

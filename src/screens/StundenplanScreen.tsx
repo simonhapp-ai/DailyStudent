@@ -59,7 +59,7 @@ export function StundenplanScreen() {
             </p>
             <button
               onClick={() => setEditing(true)}
-              className="w-full h-12 rounded-pill text-[16px] font-semibold text-text-primary bg-fill-2 press"
+              className="w-full h-12 rounded-pill text-[16px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press"
             >
               Bearbeiten oder neu scannen
             </button>

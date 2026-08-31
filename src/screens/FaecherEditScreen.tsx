@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO, SUBJECT_GROUPS } from '../data/subjectInfo'
 import { BottomSheet } from '../components/ui/BottomSheet'
-import { SubjectIcon } from '../components/ui/SubjectIcon'
 
 type CustomFach = { id: string; name: string; icon?: string }
 
@@ -288,7 +287,12 @@ export function FaecherEditScreen() {
                           : 'border-border bg-surface hover:bg-surface-hover'
                       }`}
                     >
-                      <SubjectIcon subjectId={id} size="sm" />
+                      <div
+                        className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
+                        style={{ backgroundColor: `${subject.color}22` }}
+                      >
+                        {subject.icon}
+                      </div>
                       <p className={`text-xs font-semibold leading-tight ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
                         {subject.name}
                       </p>
@@ -327,8 +331,13 @@ export function FaecherEditScreen() {
       <BottomSheet isOpen={confirmDelete !== null} onClose={() => setConfirmDelete(null)}>
         <div className="px-5 pb-2 pt-1">
           <div className="flex items-center gap-3 mb-4">
-            {confirmSubject && confirmDelete && (
-              <SubjectIcon subjectId={confirmDelete} size="md" />
+            {confirmSubject && (
+              <div
+                className="w-10 h-10 rounded-btn flex items-center justify-center text-xl shrink-0"
+                style={{ backgroundColor: `${confirmSubject.color}22` }}
+              >
+                {confirmSubject.icon}
+              </div>
             )}
             <div>
               <p className="text-text-primary font-bold text-[16px]">{confirmSubject?.name} entfernen?</p>

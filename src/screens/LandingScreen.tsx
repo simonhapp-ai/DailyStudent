@@ -183,7 +183,7 @@ function KalenderMockup() {
   const events = [
     { color: '#FF453A', label: 'Mathe-Klausur', date: 'Mo, 9. Jun', dot: true },
     { color: '#7C3AED', label: 'Englisch-Test', date: 'Mi, 11. Jun', dot: false },
-    { color: '#52AEFF', label: 'Physik Stunde', date: 'Do, 12. Jun', dot: false },
+    { color: '#5AC8FA', label: 'Physik Stunde', date: 'Do, 12. Jun', dot: false },
   ]
   const calDays = ['Mo', 'Di', 'Mi', 'Do', 'Fr']
   const nums = [3, 4, 5, 6, 7, 10, 11, 12, 13, 14]
@@ -351,8 +351,8 @@ function Navbar({ onCta, ctaLabel = 'Kostenlos starten' }: { onCta: () => void; 
         style={{
           maxWidth: '800px',
           background: 'rgba(250,250,253,0.92)',
-          backdropFilter: 'blur(var(--material-blur-regular))',
-          WebkitBackdropFilter: 'blur(var(--material-blur-regular))',
+          backdropFilter: 'blur(24px)',
+          WebkitBackdropFilter: 'blur(24px)',
           border: '1px solid rgba(209,209,214,0.5)',
           boxShadow: '0 4px 28px rgba(22,14,40,0.09), 0 1px 4px rgba(22,14,40,0.05)',
         }}
@@ -414,8 +414,8 @@ const PHASE_NODES: PhaseNode[] = [
     phase: 'Kalender',
     title: 'Personalisierung',
     desc: 'Klausurtermine und Stundenplan fließen zusammen. Die App plant automatisch um deinen Alltag herum.',
-    color: '#8E8E93',
-    grad: 'linear-gradient(135deg, #AEAEB4, #636366)',
+    color: '#5AC8FA',
+    grad: 'linear-gradient(135deg, #5AC8FA, #2563EB)',
     icon: (
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -739,7 +739,7 @@ function TriangleArrows() {
         <defs>
           <linearGradient id="tg-l" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#AEAEB4" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#5AC8FA" stopOpacity="0.75" />
           </linearGradient>
           <linearGradient id="tg-r" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#7C3AED" stopOpacity="0.35" />
@@ -761,7 +761,7 @@ function TriangleArrows() {
         {/* Dot at left end */}
         <motion.circle
           cx={136} cy={60} r={3.5}
-          fill="#AEAEB4"
+          fill="#5AC8FA"
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 0.85 } : { opacity: 0 }}
           transition={{ duration: 0.25, delay: 0.75 }}
@@ -770,7 +770,7 @@ function TriangleArrows() {
         <motion.circle
           cx={136} cy={60} r={3.5}
           fill="none"
-          stroke="#AEAEB4"
+          stroke="#5AC8FA"
           strokeWidth={1.5}
           style={{ transformOrigin: '136px 60px' }}
           initial={{ scale: 1, opacity: 0 }}
@@ -1451,7 +1451,7 @@ export function LandingScreen() {
       <div style={{ background: 'white' }}>
         <FeatureSection
           badge="Kalender"
-          badgeColor="#8E8E93"
+          badgeColor="#5AC8FA"
           title="Alle Termine. Kein Chaos."
           description="Klausurdaten, Hausaufgaben und Lerneinheiten an einem Ort. Der Kalender ist das Herzstück der Personalisierung — je mehr er kennt, desto besser plant dein System."
           bullets={[

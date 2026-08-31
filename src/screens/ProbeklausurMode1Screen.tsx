@@ -19,7 +19,7 @@ interface ProbeklausurPrefill {
 
 const AFB_COLORS: Record<string, string> = {
   I:   'bg-blue-500/15 text-blue-400',
-  II:  'bg-warning/15 text-warning',
+  II:  'bg-amber-500/15 text-amber-400',
   III: 'bg-purple-500/15 text-purple-400',
 }
 
@@ -215,7 +215,7 @@ export function ProbeklausurMode1Screen() {
     }
   }
 
-  const ACCENT = 'linear-gradient(145deg, #7C3AED, #5B21B6)'
+  const ACCENT = 'linear-gradient(145deg, #7C3AED, #4C1D95)'
 
   return (
     <div className="flex flex-col min-h-dvh bg-background">

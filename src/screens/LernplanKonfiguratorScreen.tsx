@@ -5,7 +5,6 @@ import { generateLernplan } from '../lib/gemini'
 import { extractTopicsFromImage } from '../lib/groq'
 import { buildKcPromptContext } from '../data/kcLoader'
 import { SUBJECT_INFO, getTopicPlaceholder, getTopicsPlaceholder } from '../data/subjectInfo'
-import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { ProModal } from '../components/ui/ProModal'
 import type { LernplanType, LernplanBlockedTime, Lernplan, LernplanGeneratorInput, LernMethode } from '../types'
 
@@ -468,7 +467,7 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
         })}
       </div>
       {planType === 'einzel' && (
-        <div className="mt-4 flex items-start gap-3 p-3.5 rounded-[16px] border border-warning/20" style={{ background: 'rgba(var(--color-warning), 0.07)' }}>
+        <div className="mt-4 flex items-start gap-3 p-3.5 rounded-[16px] border border-amber-500/20" style={{ background: 'rgba(245,158,11,0.07)' }}>
           <span className="shrink-0 mt-0.5">💡</span>
           <p className="text-[12px] text-text-secondary leading-relaxed">
             <strong className="text-text-primary">Hinweis:</strong> Bist du mitten in einer Klausurenphase mit mehreren Klausuren, empfehlen wir den{' '}
@@ -604,14 +603,19 @@ function StepKlausurtermine({
                 onKeyDown={(e) => e.key === 'Enter' && onToggle(key)}
                 className="w-full flex items-center gap-3 p-4 cursor-pointer active:scale-[0.98] transition-all select-none"
               >
-                <SubjectIcon subjectId={k.subjectId} size="md" />
+                <div
+                  className="w-11 h-11 rounded-[14px] flex items-center justify-center text-xl shrink-0"
+                  style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
+                >
+                  {subj?.icon ?? '📚'}
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-[15px] text-text-primary">{subj?.name ?? k.subjectId}</p>
                   <p className="text-text-muted text-[12px] mt-0.5">{formatDate(k.date)}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className={`text-[11px] font-bold px-2 py-0.5 rounded-pill ${
-                    days <= 3 ? 'bg-danger/15 text-danger' : days <= 7 ? 'bg-warning/15 text-warning' : 'bg-border text-text-muted'
+                    days <= 3 ? 'bg-danger/15 text-danger' : days <= 7 ? 'bg-orange-500/15 text-orange-400' : 'bg-border text-text-muted'
                   }`}>
                     {days === 0 ? 'Heute' : days === 1 ? 'Morgen' : `${days}d`}
                   </span>
@@ -1014,7 +1018,7 @@ function StepLernkapazitaet({
                       : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                   }`}
                 >
-                  <SubjectIcon subjectId={id} size="sm" />
+                  <span>{subj?.icon ?? '📚'}</span>
                   {subj?.name ?? id}
                   {isLK && <span className="text-[10px] font-black">LK</span>}
                 </button>
@@ -1116,7 +1120,7 @@ function StepSchwerpunkte({
           return (
             <div key={id} className="bg-surface border border-border/60 rounded-[20px] p-4">
               <div className="flex items-center gap-2 mb-3">
-                <SubjectIcon subjectId={id} size="sm" />
+                <span className="text-xl">{subj?.icon ?? '📚'}</span>
                 <p className="text-text-primary font-bold text-[15px]">{subj?.name ?? id}</p>
               </div>
               <textarea

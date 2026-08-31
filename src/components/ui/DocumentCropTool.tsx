@@ -134,8 +134,8 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
           paddingTop: 'max(14px, env(safe-area-inset-top, 14px))',
           paddingBottom: 12,
           background: 'rgba(10,10,10,0.85)',
-          backdropFilter: 'blur(var(--material-blur-regular))',
-          WebkitBackdropFilter: 'blur(var(--material-blur-regular))',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
           borderBottom: '0.5px solid rgba(255,255,255,0.08)',
         }}
       >
@@ -288,8 +288,8 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
         className="shrink-0"
         style={{
           background: 'rgba(18,18,22,0.96)',
-          backdropFilter: 'blur(var(--material-blur-regular))',
-          WebkitBackdropFilter: 'blur(var(--material-blur-regular))',
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
           borderRadius: '20px 20px 0 0',
           borderTop: '0.5px solid rgba(255,255,255,0.1)',
           paddingTop: 16,

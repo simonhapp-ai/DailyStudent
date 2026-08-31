@@ -62,7 +62,7 @@ export function Dialog({
           </button>
           <button
             onClick={onCancel}
-            className="h-12 rounded-pill text-[16px] font-semibold text-text-primary bg-fill-2 press"
+            className="h-12 rounded-pill text-[16px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press"
           >
             {cancelLabel}
           </button>

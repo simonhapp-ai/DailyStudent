@@ -115,7 +115,7 @@ export function KlausurphasenScreen() {
         </div>
         <button
           onClick={() => navigate('/kalender')}
-          className="shrink-0 px-4 h-11 rounded-pill text-[15px] font-semibold text-text-primary bg-fill-2 press mt-1"
+          className="shrink-0 px-4 h-11 rounded-pill text-[15px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press mt-1"
         >
           Planen
         </button>
@@ -203,7 +203,7 @@ export function KlausurphasenScreen() {
                   <path d="M1 1l6 6-6 6" />
                 </svg>
               </span>
-              <span className="w-10 h-10 rounded-icon bg-fill-1 flex items-center justify-center text-text-primary">
+              <span className="w-10 h-10 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-primary">
                 <Icon name={m.icon} size={19} />
               </span>
               <span>

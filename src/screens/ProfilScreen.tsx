@@ -11,7 +11,7 @@ import { getActiveStreak } from '../lib/streak'
 const AVATAR_BG_OPTIONS = [
   { id: 'purple', gradient: 'linear-gradient(145deg, #A78BFA, #7C3AED)' },
   { id: 'blue',   gradient: 'linear-gradient(145deg, #60A5FA, #2563EB)' },
-  { id: 'teal',   gradient: 'linear-gradient(145deg, #23F1FF, #006D74)' },
+  { id: 'teal',   gradient: 'linear-gradient(145deg, #5AC8FA, #0891B2)' },
   { id: 'green',  gradient: 'linear-gradient(145deg, #34D399, #059669)' },
   { id: 'orange', gradient: 'linear-gradient(145deg, #FBBF24, #D97706)' },
   { id: 'pink',   gradient: 'linear-gradient(145deg, #F472B6, #DB2777)' },
@@ -29,6 +29,7 @@ const PRO_TOGGLE_ALLOWLIST = [
   // 'weitere@email.de',
 ]
 
+const THEME_LABELS = { light: 'Hell', dark: 'Dunkel', system: 'System' } as const
 
 function NavRow({ label, sublabel, onClick, danger = false }: {
   label: string; sublabel?: string; onClick: () => void; danger?: boolean
@@ -52,7 +53,7 @@ function NavRow({ label, sublabel, onClick, danger = false }: {
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt, appConfig } = useUser()
+  const { profile, theme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt, appConfig } = useUser()
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string | null>(null)
@@ -429,7 +430,7 @@ export function ProfilScreen() {
           >
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-[6px] flex items-center justify-center shrink-0"
-                style={{ background: 'linear-gradient(145deg, #6366F1, #5B21B6)' }}>
+                style={{ background: 'linear-gradient(145deg, #6366F1, #4C1D95)' }}>
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>
@@ -461,14 +462,13 @@ export function ProfilScreen() {
         </button>
 
         {/* ── Allgemein ──────────────────────────────────────────── */}
-        {authUser && (
-          <div>
-            <h2 className="section-label mb-2">Allgemein</h2>
-            <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden divide-y divide-border/50">
-              <NavRow label="Account" onClick={() => navigate('/profil/account')} />
-            </div>
+        <div>
+          <h2 className="section-label mb-2">Allgemein</h2>
+          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden divide-y divide-border/50">
+            <NavRow label="Erscheinungsbild" sublabel={THEME_LABELS[theme]} onClick={() => navigate('/profil/erscheinungsbild')} />
+            {authUser && <NavRow label="Account" onClick={() => navigate('/profil/account')} />}
           </div>
-        )}
+        </div>
 
         {/* ── Einstellungen ──────────────────────────────────────── */}
         <div>

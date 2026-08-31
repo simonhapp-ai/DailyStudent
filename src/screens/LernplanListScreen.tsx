@@ -2,7 +2,6 @@ import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
-import { SubjectIcon } from '../components/ui/SubjectIcon'
 import type { Lernplan, LernplanType } from '../types'
 
 const G_LERNPLAN = 'linear-gradient(145deg, #FFD060, #C07700)'
@@ -79,7 +78,7 @@ function LernplanCard({ plan, onPress }: { plan: Lernplan; onPress: () => void }
               {PLAN_TYPE_LABELS[plan.planType]}
             </span>
             {subjects.slice(0, 4).map((sId) => (
-              <SubjectIcon key={sId} subjectId={sId} size="sm" />
+              <span key={sId} className="text-[12px] shrink-0">{SUBJECT_INFO[sId]?.icon ?? '📚'}</span>
             ))}
             <span className="text-[11px] text-text-muted">{formatDate(plan.createdAt)}</span>
           </div>

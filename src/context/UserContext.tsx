@@ -179,7 +179,6 @@ interface UserContextValue {
   userFolders: UserFolder[]
   generatedFlashCards: FlashCard[]
   theme: AppTheme
-  setTheme: (t: AppTheme) => void
   isPro: boolean
   setIsPro: (v: boolean) => void
   completeOnboarding: (profile: UserProfile, prebuiltFolders?: UserFolder[]) => void
@@ -678,12 +677,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     t?: AppTheme,
     pro?: boolean,
   ) => saveStorage({ ...loadStorage(), profile: p ?? undefined, personalEntries: e, generatedNotes: n, userNotes: un, userFolders: uf, theme: t ?? theme, isPro: pro ?? isPro })
-
-  const setTheme = (t: AppTheme) => {
-    setThemeState(t)
-    persist(profile, personalEntries, generatedNotes, userNotes, userFolders, t)
-    if (authUser && profile) void syncProfile(authUser.id, profile, t, isPro)
-  }
 
   const setIsPro = (v: boolean) => {
     setIsProState(v)
@@ -1344,7 +1337,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         userFolders,
         generatedFlashCards,
         theme,
-        setTheme,
         isPro: effectiveIsPro,
         setIsPro,
         completeOnboarding,

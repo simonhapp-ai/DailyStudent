@@ -28,8 +28,8 @@ export function ReferralPill() {
         borderRadius: '20px',
         background: 'rgba(10,10,10,0.88)',
         border: '1px solid rgba(255,255,255,0.10)',
-        backdropFilter: 'blur(var(--material-blur-thin))',
-        WebkitBackdropFilter: 'blur(var(--material-blur-thin))',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
       }}
     >
       <span className="text-[14px] leading-none" aria-hidden>🎁</span>

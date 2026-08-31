@@ -7,7 +7,6 @@ import { type UserProfile } from '../context/UserContext'
 import { callHandleReferral } from '../lib/referral'
 import type { StundenplanSlot } from '../types'
 import { SUBJECT_INFO, SUBJECT_GROUPS, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
-import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { topics } from '../data/mockData'
 import { parseStundenplanFromImage } from '../lib/groq'
 
@@ -1028,7 +1027,12 @@ function StepFaecher({
                         active ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'
                       }`}
                     >
-                      <SubjectIcon subjectId={id} size="sm" />
+                      <div
+                        className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
+                        style={{ backgroundColor: `${subject.color}22` }}
+                      >
+                        {subject.icon}
+                      </div>
                       <p className={`text-xs font-semibold leading-tight flex-1 min-w-0 ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
                         {subject.name}
                       </p>
@@ -1385,10 +1389,11 @@ function StepStundenplan({
                     return (
                       <div
                         key={id}
-                        className="flex items-center gap-1.5 pl-1.5 pr-3 py-1.5 rounded-pill bg-surface border border-border"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill"
+                        style={{ background: `${subj?.color ?? '#7C3AED'}22`, border: `1px solid ${subj?.color ?? '#7C3AED'}40` }}
                       >
-                        <SubjectIcon subjectId={id} size="sm" />
-                        <span className="text-[13px] font-semibold text-text-primary">
+                        <span className="text-sm">{subj?.icon ?? '📚'}</span>
+                        <span className="text-[13px] font-semibold" style={{ color: subj?.color ?? '#7C3AED' }}>
                           {subj?.name ?? id}
                         </span>
                       </div>
@@ -1505,18 +1510,17 @@ function StepStundenplan({
         <div className="space-y-2 mb-3">
           {daySlots.map((slot) => {
             const subj = SUBJECT_INFO[slot.subjectId]
+            const icon = slot.isFreistunde ? '☕' : (subj?.icon ?? '📚')
             const name = slot.isFreistunde ? 'Freistunde' : (subj?.name ?? slot.subjectId)
+            const iconBg = slot.isFreistunde ? 'rgba(148,163,184,0.18)' : `${subj?.color ?? '#7C3AED'}22`
             return (
               <div key={slot.id} className="bg-surface border border-border/60 rounded-card p-3.5 flex items-center gap-3 animate-fade-in">
-                {slot.isFreistunde ? (
-                  <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0 bg-surface-hover">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-text-muted))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M18 8h1a4 4 0 010 8h-1" /><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" /><line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" />
-                    </svg>
-                  </div>
-                ) : (
-                  <SubjectIcon subjectId={slot.subjectId} size="sm" />
-                )}
+                <div
+                  className="w-9 h-9 rounded-btn flex items-center justify-center text-lg shrink-0"
+                  style={{ backgroundColor: iconBg }}
+                >
+                  {icon}
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-text-primary font-semibold text-[14px]">{name}</p>
                   <p className="text-text-muted text-[12px]">
