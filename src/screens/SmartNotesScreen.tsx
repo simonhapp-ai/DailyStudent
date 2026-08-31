@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import { RichText } from '../components/ui/RichText'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { useUser } from '../context/UserContext'
 import { explainKeyword, extractTextFromImage, generateFlashcards, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
@@ -11,9 +12,9 @@ import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { FlashCard, GeneratedSmartNote, UserNote } from '../types'
 
 function CollapsibleSection({
-  title, children, badge, defaultOpen = true,
+  title, icon, children, badge, defaultOpen = true,
 }: {
-  title: string; children: React.ReactNode; badge?: React.ReactNode; defaultOpen?: boolean
+  title: string; icon?: IconName; children: React.ReactNode; badge?: React.ReactNode; defaultOpen?: boolean
 }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
@@ -23,6 +24,7 @@ function CollapsibleSection({
         className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface-hover transition-colors press-sm"
       >
         <div className="flex items-center gap-2">
+          {icon && <span className="text-text-secondary shrink-0"><Icon name={icon} size={16} /></span>}
           <span className="text-text-primary font-semibold text-sm">{title}</span>
           {badge}
         </div>
@@ -325,13 +327,15 @@ export function SmartNotesScreen() {
           {/* KI-Analyse section */}
           <div className="bg-surface border border-border rounded-card overflow-hidden">
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-              <span className="text-text-primary font-semibold text-sm">📝 KI-Analyse</span>
+              <span className="flex items-center gap-2 text-text-primary font-semibold text-sm">
+                <Icon name="sparkle" size={16} />KI-Analyse
+              </span>
               <button
                 onClick={() => void reanalyze()}
                 disabled={!canReanalyze}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all ${
                   canReanalyze
-                    ? 'grad-accent text-white hover:opacity-90'
+                    ? 'bg-accent text-white dark:text-[#160E28] hover:opacity-90'
                     : 'bg-surface-hover text-text-muted cursor-not-allowed'
                 }`}
               >
@@ -352,7 +356,7 @@ export function SmartNotesScreen() {
             </div>
             <div className="px-4 py-3">
               {analysisStatus === 'error' && (
-                <p className="text-sm mb-3" style={{ color: '#F87171' }}>{analysisError}</p>
+                <p className="text-sm mb-3 text-danger">{analysisError}</p>
               )}
               {analysisStatus === 'done' && editGeneratedNote && (
                 <p className="text-xs text-success font-medium mb-2">✓ Neue Analyse bereit — wird beim Speichern übernommen</p>
@@ -440,7 +444,8 @@ export function SmartNotesScreen() {
         {/* Schreibnotizen (canvas drawing thumbnails) */}
         {drawings.length > 0 && (
           <CollapsibleSection
-            title="✏️ Schreibnotizen"
+            title="Schreibnotizen"
+            icon="pencil"
             badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{drawings.length}</span>}
           >
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
@@ -483,8 +488,8 @@ export function SmartNotesScreen() {
               onClick={() => void transferToCloud()}
               disabled={transferStatus === 'uploading' || transferStatus === 'done'}
               className={`shrink-0 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
-                transferStatus === 'done' ? 'bg-success/10 text-success border border-success/20'
-                : 'grad-accent text-white hover:opacity-90'
+                transferStatus === 'done' ? 'bg-fill-green text-fill-green-on'
+                : 'bg-accent text-white dark:text-[#160E28] hover:opacity-90'
               }`}
             >
               {transferStatus === 'uploading' ? 'Läuft…' : transferStatus === 'done' ? 'Übertragen ✓' : 'Übertragen'}
@@ -494,11 +499,13 @@ export function SmartNotesScreen() {
 
         {/* PDFs */}
         {(userNote?.pdfAttachments?.length ?? 0) > 0 && (
-          <CollapsibleSection title="📄 PDF-Quelle">
+          <CollapsibleSection title="PDF-Quelle" icon="document">
             <div className="space-y-2">
               {userNote!.pdfAttachments!.map((pdf, i) => (
                 <div key={i} className="flex items-center gap-3 px-3 py-2.5 bg-background border border-border rounded-card">
-                  <div className="w-8 h-8 rounded-btn bg-accent/10 flex items-center justify-center shrink-0 text-base">📄</div>
+                  <div className="w-8 h-8 rounded-btn bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center shrink-0 text-text-primary">
+                    <Icon name="document" size={16} />
+                  </div>
                   <p className="text-sm text-text-secondary truncate flex-1">{pdf.name}</p>
                 </div>
               ))}
@@ -509,7 +516,7 @@ export function SmartNotesScreen() {
 
         {/* Mitschrift */}
         {userNote?.content ? (
-          <CollapsibleSection title="✏️ Meine Mitschrift">
+          <CollapsibleSection title="Meine Mitschrift" icon="pencil">
             <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-wrap">{userNote.content}</p>
           </CollapsibleSection>
         ) : userNote && (
@@ -524,7 +531,8 @@ export function SmartNotesScreen() {
         {/* Hausaufgaben */}
         {userNote?.homeworkItems && userNote.homeworkItems.length > 0 && (
           <CollapsibleSection
-            title="📚 Hausaufgaben"
+            title="Hausaufgaben"
+            icon="book"
             badge={
               <span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">
                 {userNote.homeworkItems.length}
@@ -567,7 +575,8 @@ export function SmartNotesScreen() {
 
         {/* KI-Zusammenfassung */}
         <CollapsibleSection
-          title="📝 KI-Zusammenfassung"
+          title="KI-Zusammenfassung"
+          icon="sparkle"
           badge={generatedNote ? (
             <span className="text-xs px-1.5 py-0.5 rounded bg-success/10 text-success font-medium">KI</span>
           ) : undefined}
@@ -581,12 +590,12 @@ export function SmartNotesScreen() {
 
         {/* Lösung(en) */}
         {(note.tasks && note.tasks.length > 0) ? (
-          <CollapsibleSection title={`📐 ${note.tasks.length > 1 ? `${note.tasks.length} Aufgaben` : 'Lösung'}`}>
+          <CollapsibleSection title={note.tasks.length > 1 ? `${note.tasks.length} Aufgaben` : 'Lösung'} icon="clipboard">
             <div className="space-y-4">
               {note.tasks.map((task, ti) => (
                 <div key={ti} className={ti > 0 ? 'pt-4 border-t border-border' : ''}>
                   {note.tasks!.length > 1 && (
-                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: subject?.color ?? '#007AFF' }}>Aufgabe {ti + 1}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5 text-text-secondary">Aufgabe {ti + 1}</p>
                   )}
                   {task.question && (
                     <p className="text-xs text-text-muted italic mb-2"><MathRenderer text={task.question} /></p>
@@ -594,18 +603,15 @@ export function SmartNotesScreen() {
                   <ol className="space-y-2 mb-2">
                     {task.steps.map((step, i) => (
                       <li key={i} className="flex gap-2 items-start text-sm text-text-secondary">
-                        <span
-                          className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
-                          style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
-                        >
+                        <span className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 tabular-nums bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
                           {i + 1}
                         </span>
                         <span className="leading-relaxed"><MathRenderer text={step} /></span>
                       </li>
                     ))}
                   </ol>
-                  <div className="px-3 py-2 rounded-btn mb-2" style={{ backgroundColor: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
-                    <p className="text-xs font-bold text-success mb-0.5">Ergebnis</p>
+                  <div className="px-3 py-2 rounded-btn mb-2 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+                    <p className="text-xs font-bold text-text-secondary mb-0.5">Ergebnis</p>
                     <p className="text-sm text-text-primary font-medium"><MathRenderer text={task.answer} /></p>
                   </div>
                   {task.proof && (
@@ -619,22 +625,19 @@ export function SmartNotesScreen() {
             </div>
           </CollapsibleSection>
         ) : note.solution ? (
-          <CollapsibleSection title="📐 Lösung">
+          <CollapsibleSection title="Lösung" icon="clipboard">
             <ol className="space-y-2 mb-3">
               {note.solution.steps.map((step, i) => (
                 <li key={i} className="flex gap-2 items-start text-sm text-text-secondary">
-                  <span
-                    className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
-                  >
+                  <span className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 tabular-nums bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
                     {i + 1}
                   </span>
                   <span className="leading-relaxed"><MathRenderer text={step} /></span>
                 </li>
               ))}
             </ol>
-            <div className="px-3 py-2 rounded-btn mb-2" style={{ backgroundColor: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
-              <p className="text-xs font-bold text-success mb-0.5">Ergebnis</p>
+            <div className="px-3 py-2 rounded-btn mb-2 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+              <p className="text-xs font-bold text-text-secondary mb-0.5">Ergebnis</p>
               <p className="text-sm text-text-primary font-medium"><MathRenderer text={note.solution.answer} /></p>
             </div>
             {note.solution.proof && (
@@ -647,7 +650,7 @@ export function SmartNotesScreen() {
         ) : null}
 
         {/* Schlüsselbegriffe */}
-        <CollapsibleSection title="🔑 Schlüsselbegriffe">
+        <CollapsibleSection title="Schlüsselbegriffe" icon="bulb">
           {note.keywords.length > 0 ? (
             <div>
               <div className="flex flex-wrap gap-2">
@@ -660,7 +663,7 @@ export function SmartNotesScreen() {
                       onClick={() => void handleKeywordClick(kw)}
                       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-xs font-medium border transition-all active:scale-95 ${
                         isSelected
-                          ? 'grad-accent text-white border-transparent'
+                          ? 'bg-accent text-white dark:text-[#160E28] border-transparent'
                           : 'bg-surface-hover border-border text-text-secondary hover:border-accent/50 hover:text-text-primary'
                       }`}
                     >
@@ -673,8 +676,8 @@ export function SmartNotesScreen() {
                 })}
               </div>
               {selectedKeyword && (
-                <div className="mt-3 px-3 py-2.5 bg-accent/5 border border-accent/15 rounded-card">
-                  <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-1.5">{selectedKeyword}</p>
+                <div className="mt-3 px-3 py-2.5 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] rounded-card">
+                  <p className="text-[10px] font-bold text-text-primary uppercase tracking-wider mb-1.5">{selectedKeyword}</p>
                   {loadingKeyword === selectedKeyword ? (
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 border-2 border-accent border-t-transparent rounded-full animate-spin shrink-0" />
@@ -694,7 +697,7 @@ export function SmartNotesScreen() {
 
         {/* Fragen aus dem Unterricht */}
         {userNote?.qa && userNote.qa.length > 0 && (
-          <CollapsibleSection title="⚡ Fragen aus dem Unterricht">
+          <CollapsibleSection title="Fragen aus dem Unterricht" icon="speech">
             <div className="space-y-3">
               {userNote.qa.map((item, i) => (
                 <div key={i} className={i < userNote.qa!.length - 1 ? 'pb-3 border-b border-border' : ''}>
@@ -707,15 +710,12 @@ export function SmartNotesScreen() {
         )}
 
         {/* Klausurthemen */}
-        <CollapsibleSection title="🎯 Mögliche Klausurthemen">
+        <CollapsibleSection title="Mögliche Klausurthemen" icon="target">
           {note.examTopics.length > 0 ? (
             <ul className="space-y-2">
               {note.examTopics.map((topic, i) => (
                 <li key={i} className="flex gap-3 items-start">
-                  <span
-                    className="w-5 h-5 rounded-pill text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
-                  >
+                  <span className="w-5 h-5 rounded-pill text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 tabular-nums bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
                     {i + 1}
                   </span>
                   <span className="text-text-secondary text-sm">{topic}</span>
@@ -733,8 +733,8 @@ export function SmartNotesScreen() {
             {fcStatus === 'done' ? (
               <div className="bg-surface border border-success/30 rounded-card px-4 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: '#34D399' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
                   </div>
@@ -745,10 +745,10 @@ export function SmartNotesScreen() {
                 </div>
                 <button
                   onClick={() => navigate('/klausurmodus/lernen')}
-                  className="px-3.5 py-2 rounded-pill text-white text-sm font-semibold press-sm"
-                  style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+                  className="px-3.5 py-2 rounded-pill text-sm font-semibold press-sm"
+                  style={{ background: '#34D399', color: '#062017' }}
                 >
-                  Jetzt lernen →
+                  Jetzt lernen
                 </button>
               </div>
             ) : (
@@ -757,13 +757,13 @@ export function SmartNotesScreen() {
                 disabled={fcStatus === 'generating'}
                 className="w-full bg-surface border border-border rounded-card px-4 py-4 flex items-center gap-4 press disabled:opacity-60"
               >
-                <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}>
+                <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: '#34D399' }}>
                   {fcStatus === 'generating' ? (
-                    <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                    <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2.5">
                       <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
                     </svg>
                   ) : (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.5" />
                       <rect x="4" y="9" width="13" height="12" rx="2.5" />
                       <line x1="7" y1="14" x2="14" y2="14" />
