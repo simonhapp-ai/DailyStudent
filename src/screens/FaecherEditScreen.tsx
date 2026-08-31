@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useUser } from '../context/UserContext'
@@ -99,7 +100,7 @@ export function FaecherEditScreen() {
   }
 
   const confirmSubject = confirmDelete
-    ? (SUBJECT_INFO[confirmDelete] ?? { name: confirmDelete, icon: '📚', color: '#7C3AED' })
+    ? (SUBJECT_INFO[confirmDelete] ?? { name: confirmDelete, color: '#7C3AED' })
     : null
 
   const hasCustom = localCustomFaecher.length > 0
@@ -331,14 +332,7 @@ export function FaecherEditScreen() {
       <BottomSheet isOpen={confirmDelete !== null} onClose={() => setConfirmDelete(null)}>
         <div className="px-5 pb-2 pt-1">
           <div className="flex items-center gap-3 mb-4">
-            {confirmSubject && (
-              <div
-                className="w-10 h-10 rounded-btn flex items-center justify-center text-xl shrink-0"
-                style={{ backgroundColor: `${confirmSubject.color}22` }}
-              >
-                {confirmSubject.icon}
-              </div>
-            )}
+            {confirmDelete && <SubjectIcon subjectId={confirmDelete} size="md" />}
             <div>
               <p className="text-text-primary font-bold text-[16px]">{confirmSubject?.name} entfernen?</p>
               <p className="text-text-muted text-[13px] mt-0.5">Diese Aktion kann nicht rückgängig gemacht werden.</p>
