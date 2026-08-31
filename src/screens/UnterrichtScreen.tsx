@@ -7,12 +7,22 @@ import type { UserFolder, UserNote } from '../types'
 import { subjects, halfYears } from '../data/mockData'
 import type { HalfYear } from '../types'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { Icon } from '../components/ui/Icon'
+import { Stage } from '../components/ui/Stage'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { EmptyState } from '../components/ui/EmptyState'
+import { currentSlot, nextSlot } from '../lib/appMode'
+import { resolveSubjectInfo } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
 
 export function UnterrichtScreen() {
   const navigate = useNavigate()
   const { profile, userNotes, userFolders, addFolder, renameFolder, deleteFolder, saveNote, saveToOhneFachFolder } = useUser()
   const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set())
+
+  // Laufende und nächste Stunde aus dem Stundenplan — Grundlage der Bühne.
+  const laufendeStunde = currentSlot(profile?.stundenplan?.slots)
+  const naechsteStunde = nextSlot(profile?.stundenplan?.slots)
   const [addFolderFor, setAddFolderFor] = useState<string | null>(null)
   const [newFolderName, setNewFolderName] = useState('')
 
@@ -321,54 +331,87 @@ export function UnterrichtScreen() {
       </div>
 
       {profileSubjects.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center px-8 text-center py-16">
-          <div className="text-5xl mb-5">📚</div>
-          <p className="text-text-primary font-semibold text-[17px] mb-2">Keine Fächer</p>
-          <p className="text-text-muted text-[14px]">Gehe zu Profil → Onboarding zurücksetzen.</p>
+        <div className="flex-1 flex flex-col justify-center px-5 py-16">
+          <EmptyState
+            title="Noch keine Fächer"
+            note="Ohne Fächer kann die App weder Notizen zuordnen noch Lehrplanthemen vorschlagen."
+            action={
+              <button
+                onClick={() => navigate('/profil/faecher')}
+                className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[16px] font-semibold press"
+              >
+                Fächer auswählen
+              </button>
+            }
+          />
         </div>
       ) : (
         <div className="px-4 mt-5 space-y-3">
 
-          {/* ── Schnellaktionen ──────────────────────────────────── */}
-          <div className="flex gap-3">
-            {/* Neue Notiz */}
+          {/* ── Bühne: die laufende Stunde ─────────────────────────
+              Nach Regel 1 erscheint sie nur, wenn es gerade etwas Zeitkritisches
+              gibt. Läuft kein Unterricht, entfällt sie ersatzlos — derselbe
+              Screen, zwei Zustände, kein zweites Layout. */}
+          {laufendeStunde && (
+            <Stage
+              eyebrow={`Jetzt · ${laufendeStunde.startTime} – ${laufendeStunde.endTime}`}
+              title={
+                laufendeStunde.isFreistunde
+                  ? 'Freistunde'
+                  : resolveSubjectInfo(laufendeStunde.subjectId, profile?.customFaecher).name
+                    + (laufendeStunde.room ? ` · ${laufendeStunde.room}` : '')
+              }
+              note={
+                naechsteStunde
+                  ? `Danach ${naechsteStunde.isFreistunde ? 'frei' : resolveSubjectInfo(naechsteStunde.subjectId, profile?.customFaecher).name} um ${naechsteStunde.startTime}`
+                  : 'Danach Schulschluss'
+              }
+              action={
+                <button
+                  onClick={() =>
+                    navigate(
+                      laufendeStunde.isFreistunde || !laufendeStunde.subjectId
+                        ? '/unterricht/neue-notiz'
+                        : `/unterricht/${laufendeStunde.subjectId}/neue-notiz`,
+                    )
+                  }
+                  className="w-full h-12 rounded-pill bg-white text-[#160E28] text-[16px] font-semibold press"
+                >
+                  Notiz aufnehmen
+                </button>
+              }
+            />
+          )}
+
+          {/* ── Schnellaktionen ──────────────────────────────────────
+              Flache Flächen statt Verlaufs-Kacheln mit farbigem Glow: Nach
+              Regel 3 ist Farbe Fläche, und Verläufe auf Bedienelementen sind
+              raus. Beide Funktionen bleiben unverändert erhalten. */}
+          <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => navigate('/unterricht/neue-notiz')}
-              className="flex-1 bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 flex flex-col gap-3 hover-lift text-left"
+              className="bg-surface rounded-card p-4 flex flex-col gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
             >
-              <div
-                className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 glow-gold"
-                style={{ background: 'linear-gradient(145deg, #F8CE45, #C9891A)' }}
-              >
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8">
-                  <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-text-primary font-semibold text-[14px]">Neue Notiz</p>
-                <p className="text-text-muted text-[11px] mt-0.5">Schnell erfassen</p>
-              </div>
+              <span className="w-10 h-10 rounded-icon bg-accent flex items-center justify-center text-white dark:text-[#160E28]">
+                <Icon name="note" size={19} />
+              </span>
+              <span>
+                <span className="block text-text-primary font-semibold text-[15px]">Neue Notiz</span>
+                <span className="block text-text-secondary text-[13px] mt-0.5">Schnell erfassen</span>
+              </span>
             </button>
 
-            {/* Datei importieren */}
             <button
               onClick={() => importRef.current?.click()}
-              className="flex-1 bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 flex flex-col gap-3 hover-lift text-left"
+              className="bg-surface rounded-card p-4 flex flex-col gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
             >
-              <div
-                className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 glow-green"
-                style={{ background: 'linear-gradient(145deg, #34C759, #1D9A38)' }}
-              >
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-text-primary font-semibold text-[14px]">Importieren</p>
-                <p className="text-text-muted text-[11px] mt-0.5">PDF oder Foto</p>
-              </div>
+              <span className="w-10 h-10 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-primary">
+                <Icon name="image" size={19} />
+              </span>
+              <span>
+                <span className="block text-text-primary font-semibold text-[15px]">Importieren</span>
+                <span className="block text-text-secondary text-[13px] mt-0.5">PDF oder Foto</span>
+              </span>
             </button>
           </div>
 
@@ -388,27 +431,30 @@ export function UnterrichtScreen() {
             if (!ohneFolder) return null
             const ohneCount = userNotes.filter((n) => n.folderId === 'folder-no-subject').length
             return (
-              <button
-                onClick={() => navigate('/unterricht/ohne-fach/ordner/folder-no-subject')}
-                className="w-full flex items-center gap-4 bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-4 press transition-all duration-150"
-              >
-                <div className="w-10 h-10 rounded-[12px] bg-surface-hover flex items-center justify-center shrink-0 text-[18px]">
-                  📁
-                </div>
-                <div className="flex-1 text-left">
-                  <p className="text-text-primary font-semibold text-[15px]">Schnellnotizen</p>
-                  <p className="text-text-muted text-[12px] mt-0.5">
-                    {ohneCount === 0 ? 'Keine Notizen' : `${ohneCount} ${ohneCount === 1 ? 'Notiz' : 'Notizen'}`}
-                  </p>
-                </div>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
-                  <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+              <ListGroup>
+                <ListRow
+                  leading={
+                    <span className="w-11 h-11 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-secondary shrink-0">
+                      <Icon name="folder" size={20} />
+                    </span>
+                  }
+                  title="Schnellnotizen"
+                  subtitle={ohneCount === 0 ? 'Keine Notizen' : `${ohneCount} ${ohneCount === 1 ? 'Notiz' : 'Notizen'}`}
+                  chevron
+                  onClick={() => navigate('/unterricht/ohne-fach/ordner/folder-no-subject')}
+                />
+              </ListGroup>
             )
           })()}
 
-          {/* ── Fächer ───────────────────────────────────────────── */}
+          {/* ── Fächer ─────────────────────────────────────────────
+              Eine zusammenhängende Liste statt eines Stapels einzelner Karten:
+              ruhiger, und pro Zeile bleibt mehr Platz für den Inhalt. Das
+              Aufklappen mit dem Ordner-Raster bleibt unverändert erhalten. */}
+          <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-2">
+            Deine Fächer
+          </p>
+          <ListGroup>
           {profileSubjects.map((subject) => {
             const subjectFolders = userFolders.filter((f) => f.subjectId === subject.id && !f.parentFolderId)
             const totalNotes = userNotes.filter((n) => n.subjectId === subject.id).length
@@ -416,33 +462,34 @@ export function UnterrichtScreen() {
             const customColorIdx = profile?.customFaecher?.findIndex((cf) => cf.id === subject.id) ?? -1
 
             return (
-              <div key={subject.id} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+              <div key={subject.id} className="border-b border-border/40 last:border-b-0">
                 <button
                   onClick={() => toggleSubject(subject.id)}
-                  className="w-full flex items-center gap-4 px-4 py-4 hover:bg-surface-hover transition-colors press-sm"
+                  aria-expanded={isExpanded}
+                  className="w-full flex items-center gap-3 px-4 py-3 min-h-[52px] hover:bg-surface-hover transition-colors press-sm"
                 >
                   <SubjectIcon
                     subjectId={subject.id}
                     size="md"
                     customColorIndex={customColorIdx >= 0 ? customColorIdx : undefined}
                   />
-                  <div className="flex-1 text-left">
-                    <p className="text-text-primary font-semibold text-[15px]">{subject.name}</p>
-                    <p className="text-text-muted text-[12px] mt-0.5">
+                  <span className="flex-1 min-w-0 flex flex-col gap-0.5 text-left">
+                    <span className="text-[16px] font-semibold tracking-[-0.015em] text-text-primary truncate">{subject.name}</span>
+                    <span className="text-[13px] text-text-secondary truncate">
                       {subjectFolders.length} {subjectFolders.length === 1 ? 'Ordner' : 'Ordner'}
                       {totalNotes > 0 && ` · ${totalNotes} ${totalNotes === 1 ? 'Notiz' : 'Notizen'}`}
-                    </p>
-                  </div>
+                    </span>
+                  </span>
                   <svg
-                    width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                    className={`text-text-muted transition-transform duration-200 shrink-0 ${isExpanded ? '' : '-rotate-90'}`}
+                    width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                    className={`text-text-muted transition-transform duration-200 motion-reduce:transition-none shrink-0 ${isExpanded ? '' : '-rotate-90'}`}
                   >
                     <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
 
                 {isExpanded && (
-                  <div className="border-t border-border/60 px-4 pt-5 pb-4">
+                  <div className="border-t border-border/40 px-4 pt-4 pb-4">
                     <div className="grid grid-cols-3 gap-x-3 gap-y-2">
                       {subjectFolders.map((folder) => (
                         <FolderGridItem
@@ -460,6 +507,7 @@ export function UnterrichtScreen() {
               </div>
             )
           })}
+          </ListGroup>
         </div>
       )}
 
