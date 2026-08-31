@@ -247,10 +247,10 @@ function GradeColumn({
     <div className="flex-1 min-w-0 flex flex-col py-3 px-2.5 gap-2.5">
       {/* Column header */}
       <div className="flex items-center justify-between px-0.5">
-        <p className="text-[9px] font-bold text-text-muted uppercase tracking-wider">{title}</p>
+        <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{title}</p>
         {multiAvg !== null && (
           <span
-            className="text-[9px] font-bold tabular-nums"
+            className="text-[11px] font-bold tabular-nums"
             style={{ color: getValueColor(multiAvg) }}
           >
             Ø {multiAvg.toFixed(1)}
@@ -269,7 +269,7 @@ function GradeColumn({
                 className="w-4 h-4 rounded-full flex items-center justify-center press-sm"
                 style={{ background: 'rgba(var(--color-border),0.55)' }}
               >
-                <span className="text-[10px] text-text-muted leading-none">×</span>
+                <span className="text-[11px] text-text-muted leading-none">×</span>
               </button>
             </div>
           )}
@@ -283,7 +283,7 @@ function GradeColumn({
       {/* Add grade button */}
       <button
         onClick={onAddGrade}
-        className="w-full py-1.5 rounded-[8px] text-[10px] font-bold press-sm"
+        className="w-full py-1.5 rounded-[8px] text-[11px] font-bold press-sm"
         style={{
           background: 'rgba(var(--color-accent),0.07)',
           color: 'rgb(var(--color-accent))',
@@ -374,7 +374,7 @@ function SubjectCard({
               {subj.name}
             </span>
             {subjectTypeLabel && (
-              <span className="text-[10px] text-text-muted font-medium">{subjectTypeLabel} · nicht eingerechnet</span>
+              <span className="text-[11px] text-text-muted font-medium">{subjectTypeLabel} · nicht eingerechnet</span>
             )}
           </div>
         </div>
@@ -382,7 +382,7 @@ function SubjectCard({
           {/* Nicht belegt toggle */}
           <button
             onClick={() => onChange({ ...entry, notBelegt: !entry.notBelegt })}
-            className="px-2 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
+            className="px-2 py-0.5 rounded-pill text-[11px] font-bold transition-all press-sm"
             style={
               entry.notBelegt
                 ? { background: 'rgba(var(--color-danger),0.15)', color: 'rgb(var(--color-danger))', border: '1px solid rgba(var(--color-danger),0.3)' }
@@ -399,7 +399,7 @@ function SubjectCard({
                 if (onLkChange) onLkChange(entry.subjectId, next)
                 else onChange({ ...entry, isLK: next })
               }}
-              className="px-2.5 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
+              className="px-2.5 py-0.5 rounded-pill text-[11px] font-bold transition-all press-sm"
               style={
                 entry.isLK
                   ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)', border: '1px solid transparent' }
@@ -471,7 +471,7 @@ function SubjectCard({
 
       {/* ── SubjectType row (Seminarfach / Ausschließen) ── */}
       <div className="px-4 pb-2.5 pt-2 border-t border-border/20 bg-background/30 flex items-center gap-1.5">
-        <span className="text-[9px] text-text-muted uppercase tracking-wider font-bold mr-1">Typ</span>
+        <span className="text-[11px] text-text-muted uppercase tracking-wider font-bold mr-1">Typ</span>
         {(['normal', 'excluded'] as const).map((t) => {
           const label = t === 'normal' ? 'Normal' : 'Ausschließen'
           const active = (!entry.subjectType || entry.subjectType === 'normal') ? t === 'normal' : entry.subjectType === t
@@ -479,7 +479,7 @@ function SubjectCard({
             <button
               key={t}
               onClick={() => onChange({ ...entry, subjectType: t })}
-              className="px-2 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
+              className="px-2 py-0.5 rounded-pill text-[11px] font-bold transition-all press-sm"
               style={
                 active
                   ? { background: '#7C3AED', color: 'white', boxShadow: '0 1px 6px rgba(124,58,237,0.35)' }
@@ -497,7 +497,7 @@ function SubjectCard({
       {/* ── Bottom bar: S/M weight (shown when both sides set and not excluded) ── */}
       {bothEntered && !entry.notBelegt && (
         <div className="px-4 py-3 border-t border-border/30 bg-background/40 space-y-2.5">
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">S / M Gewichtung</p>
+          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">S / M Gewichtung</p>
 
           <div className="flex flex-wrap gap-1">
             {SM_RATIOS.map(({ label, ratio: r }) => {
@@ -506,7 +506,7 @@ function SubjectCard({
                 <button
                   key={label}
                   onClick={() => { onChange({ ...entry, smRatio: r }); setManualOpen(false) }}
-                  className="px-2 py-1 rounded-pill text-[10px] font-bold transition-all press-sm"
+                  className="px-2 py-1 rounded-pill text-[11px] font-bold transition-all press-sm"
                   style={
                     active
                       ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)' }
@@ -519,7 +519,7 @@ function SubjectCard({
             })}
             <button
               onClick={() => setManualOpen((v) => !v)}
-              className="px-2 py-1 rounded-pill text-[10px] font-bold transition-all press-sm"
+              className="px-2 py-1 rounded-pill text-[11px] font-bold transition-all press-sm"
               style={
                 manualOpen
                   ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)' }
@@ -533,7 +533,7 @@ function SubjectCard({
           {manualOpen && (
             <div className="flex items-center gap-2.5">
               <div className="flex items-center gap-1.5 bg-background border border-border rounded-[10px] px-3 py-1.5">
-                <span className="text-[10px] font-bold text-text-muted">S</span>
+                <span className="text-[11px] font-bold text-text-muted">S</span>
                 <input
                   type="number"
                   min="1"
@@ -546,15 +546,15 @@ function SubjectCard({
                   }}
                   className="w-9 bg-transparent text-text-primary text-[14px] font-bold text-center focus:outline-none tabular-nums"
                 />
-                <span className="text-[10px] text-text-muted">%</span>
+                <span className="text-[11px] text-text-muted">%</span>
               </div>
               <span className="text-[11px] text-text-muted">/</span>
               <div className="flex items-center gap-1.5 bg-background border border-border/50 rounded-[10px] px-3 py-1.5 opacity-70">
-                <span className="text-[10px] font-bold text-text-muted">M</span>
+                <span className="text-[11px] font-bold text-text-muted">M</span>
                 <span className="w-9 text-text-secondary text-[14px] font-bold text-center tabular-nums">
                   {100 - manualPct}
                 </span>
-                <span className="text-[10px] text-text-muted">%</span>
+                <span className="text-[11px] text-text-muted">%</span>
               </div>
             </div>
           )}
@@ -597,7 +597,7 @@ function PruefungCard({
             </div>
           )}
           <div className="min-w-0">
-            <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider block">Prüfung {index + 1}</span>
+            <span className="text-[11px] text-text-muted font-bold uppercase tracking-wider block">Prüfung {index + 1}</span>
             <span className="font-semibold text-[14px] text-text-primary truncate block">
               {subj?.name ?? 'Fach wählen'}
             </span>
@@ -623,7 +623,7 @@ function PruefungCard({
       {expanded && (
         <div className="px-4 pb-4 pt-1 border-t border-border/30 space-y-3">
           <div>
-            <p className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
+            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
             <div className="flex flex-wrap gap-1.5">
               {availableSubjectIds.map((sid) => {
                 const info = resolveSubjectInfo(sid, customFaecher)
@@ -648,7 +648,7 @@ function PruefungCard({
 
           {pruefung.subjectId && (
             <div>
-              <p className="text-[9px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Notenpunkte (×4)</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Notenpunkte (×4)</p>
               <GradePicker value={pruefung.punkte} onChange={(v) => onChange({ ...pruefung, punkte: v })} />
             </div>
           )}
@@ -820,7 +820,7 @@ export function AbiRechnerScreen() {
         </div>
         {syncStatus && (
           <div
-            className="px-2.5 py-1 rounded-pill text-[10px] font-bold flex items-center gap-1.5 shrink-0"
+            className="px-2.5 py-1 rounded-pill text-[11px] font-bold flex items-center gap-1.5 shrink-0"
             style={{
               background: syncStatus === 'saved' ? 'rgba(52, 199, 89, 0.15)' : syncStatus === 'error' ? 'rgba(255, 59, 48, 0.15)' : 'rgba(124, 58, 237, 0.15)',
               color: syncStatus === 'saved' ? '#34C759' : syncStatus === 'error' ? '#FF3B30' : '#7C3AED',
@@ -864,7 +864,7 @@ export function AbiRechnerScreen() {
             <>
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1">
+                  <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1">
                     {summaryLabel}
                   </p>
                   <div className="flex items-end gap-2">
@@ -884,7 +884,7 @@ export function AbiRechnerScreen() {
                 </div>
                 {zielnote && (
                   <div className="text-right">
-                    <p className="text-[10px] text-text-muted uppercase tracking-wider mb-0.5">Zielnote</p>
+                    <p className="text-[11px] text-text-muted uppercase tracking-wider mb-0.5">Zielnote</p>
                     <p className="text-[28px] font-bold text-text-secondary leading-none">{zielnote}</p>
                     {diffPunkte !== null && (
                       <p className="text-[12px] font-bold mt-1" style={{ color: isOnTrack ? '#34C759' : '#FF9500' }}>
@@ -911,23 +911,23 @@ export function AbiRechnerScreen() {
                     />
                   </div>
                   <div className="flex justify-between mt-1.5">
-                    <span className="text-[9px] text-text-muted">0 Pkt</span>
-                    <span className="text-[9px] text-text-muted/60">Ziel {zielpunkte.toFixed(1)} Pkt (Note {zielnote})</span>
-                    <span className="text-[9px] text-text-muted">15 Pkt</span>
+                    <span className="text-[11px] text-text-muted">0 Pkt</span>
+                    <span className="text-[11px] text-text-muted/60">Ziel {zielpunkte.toFixed(1)} Pkt (Note {zielnote})</span>
+                    <span className="text-[11px] text-text-muted">15 Pkt</span>
                   </div>
                 </div>
               )}
 
               {isOberstufe && (
                 <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                  <span className="text-[10px] text-text-muted">Aus</span>
+                  <span className="text-[11px] text-text-muted">Aus</span>
                   {halbjahre.map((hj) => {
                     const pts = overallPunkteAbi(hj.entries)
                     const note = pts !== null ? pktToNoteAbi(pts) : null
                     return (
                       <span
                         key={hj.id}
-                        className="text-[10px] font-semibold px-2 py-0.5 rounded-pill"
+                        className="text-[11px] font-semibold px-2 py-0.5 rounded-pill"
                         style={{
                           background: note ? `${noteColorAbi(note)}18` : 'rgba(var(--color-border),0.3)',
                           color: note ? noteColorAbi(note) : 'rgb(var(--color-text-muted))',
@@ -965,7 +965,7 @@ export function AbiRechnerScreen() {
         {/* Abitur-Gesamt (Block I + II) — nur sobald mind. 1 Prüfung eingetragen ist */}
         {isOberstufe && gesamt900 !== null && (
           <div className="bg-surface border border-border/60 rounded-[20px] p-5">
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-3">
+            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">
               Abitur-Gesamt (Block I + II)
             </p>
             <div className="flex items-end gap-2 mb-4">
@@ -984,13 +984,13 @@ export function AbiRechnerScreen() {
             </div>
             <div className="flex gap-2.5">
               <div className="flex-1 bg-background/50 rounded-[12px] p-2.5">
-                <p className="text-[9px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Block I</p>
+                <p className="text-[11px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Block I</p>
                 <p className="text-[15px] font-bold text-text-primary tabular-nums">
                   {blockI ?? 0} <span className="text-[11px] font-normal text-text-muted">/ 600</span>
                 </p>
               </div>
               <div className="flex-1 bg-background/50 rounded-[12px] p-2.5">
-                <p className="text-[9px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Block II</p>
+                <p className="text-[11px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Block II</p>
                 <p className="text-[15px] font-bold text-text-primary tabular-nums">
                   {blockII} <span className="text-[11px] font-normal text-text-muted">/ 300</span>
                 </p>
@@ -1024,7 +1024,7 @@ export function AbiRechnerScreen() {
                     <span className="text-[13px] font-bold">{hj.label}</span>
                     {note && (
                       <span
-                        className="text-[10px] font-semibold px-1.5 py-0.5 rounded-pill"
+                        className="text-[11px] font-semibold px-1.5 py-0.5 rounded-pill"
                         style={
                           isActive
                             ? { background: 'rgba(255,255,255,0.22)', color: 'white' }
@@ -1120,7 +1120,7 @@ export function AbiRechnerScreen() {
 
         {/* Grade scale reference */}
         <div className="bg-surface border border-border/40 rounded-[14px] px-4 py-3.5">
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-3">Punkte → Note</p>
+          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">Punkte → Note</p>
           <div className="grid grid-cols-5 gap-1.5">
             {(
               [
@@ -1133,7 +1133,7 @@ export function AbiRechnerScreen() {
             ).map((item) => (
               <div key={item.pts} className="text-center">
                 <p className="text-[12px] font-bold text-text-primary">{item.pts}</p>
-                <p className="text-[9px] font-semibold" style={{ color: item.color }}>{item.note}</p>
+                <p className="text-[11px] font-semibold" style={{ color: item.color }}>{item.note}</p>
               </div>
             ))}
           </div>

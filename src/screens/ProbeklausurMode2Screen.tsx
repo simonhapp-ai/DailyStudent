@@ -54,7 +54,7 @@ function TaskAnswerCard({
     <div className="bg-background rounded-[14px] border border-border/60 p-4 mb-3">
       <div className="flex items-center gap-2 mb-2.5">
         <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
-        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+        <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
         {task.materialRefs.length > 0 && (
           <span className="text-text-muted text-[11px]">· {task.materialRefs.join(', ')}</span>
         )}
@@ -84,7 +84,7 @@ function CorrectionCard({
       >
         <div className="flex items-center gap-2">
           <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufg. {task.label}</span>
-          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+          <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[14px] font-bold" style={{ color: npColor(correction.scoreNP) }}>

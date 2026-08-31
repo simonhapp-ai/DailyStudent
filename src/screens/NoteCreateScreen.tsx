@@ -758,8 +758,8 @@ export function NoteCreateScreen() {
             {block.textAiResult.kcTiefeTotal > 0 && (
               <div className="px-4 py-3">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">KC-Tiefe</p>
-                  <span className="text-[10px] font-medium truncate max-w-[180px]" style={{ color: 'rgb(var(--color-accent))' }}>
+                  <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">KC-Tiefe</p>
+                  <span className="text-[11px] font-medium truncate max-w-[180px]" style={{ color: 'rgb(var(--color-accent))' }}>
                     {block.textAiResult.erkanntesTopic}
                   </span>
                 </div>
@@ -787,7 +787,7 @@ export function NoteCreateScreen() {
                     return (
                       <span
                         key={label}
-                        className="text-[10px]"
+                        className="text-[11px]"
                         style={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))' }}
                       >
                         {label}
@@ -801,7 +801,7 @@ export function NoteCreateScreen() {
             {/* Vertiefung — one entry per bullet point */}
             {block.textAiResult.elaborations.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2.5">Vertiefung</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2.5">Vertiefung</p>
                 <div className="space-y-3">
                   {block.textAiResult.elaborations.map((e, i) => (
                     <div key={i}>
@@ -822,7 +822,7 @@ export function NoteCreateScreen() {
             {/* Definitionen */}
             {block.textAiResult.definitionen.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Definitionen</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Definitionen</p>
                 <div className="space-y-2">
                   {block.textAiResult.definitionen.map((d, i) => (
                     <div key={i} className="flex gap-1.5">
@@ -837,7 +837,7 @@ export function NoteCreateScreen() {
             {/* Häufige Fehler */}
             {block.textAiResult.haeufigeFehler.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2 flex items-center gap-1">
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2 flex items-center gap-1">
                   <Icon name="warning" size={11} /> Häufige Fehler
                 </p>
                 <ul className="space-y-1.5">
@@ -854,7 +854,7 @@ export function NoteCreateScreen() {
             {/* Verwandte Themen */}
             {block.textAiResult.verbindungen.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Verwandte Themen</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Verwandte Themen</p>
                 <div className="flex flex-wrap gap-1.5">
                   {block.textAiResult.verbindungen.map((v, i) => (
                     <span key={i} className="px-2.5 py-1 rounded-pill text-[11px] font-medium border border-border text-text-secondary">
@@ -868,7 +868,7 @@ export function NoteCreateScreen() {
             {/* Offene KC-Punkte — click to add to note */}
             {block.textAiResult.offeneKcPunkte.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Noch nicht in deinen Notizen</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Noch nicht in deinen Notizen</p>
                 <div className="flex flex-wrap gap-1.5">
                   {block.textAiResult.offeneKcPunkte.map((p, i) => (
                     <button
@@ -887,7 +887,7 @@ export function NoteCreateScreen() {
             {/* Klausurhinweis */}
             {block.textAiResult.klausurhinweis && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1"><Icon name="clipboard" size={11} />Klausurhinweis</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1"><Icon name="clipboard" size={11} />Klausurhinweis</p>
                 <p className="text-[11px] text-text-secondary leading-relaxed">{block.textAiResult.klausurhinweis}</p>
               </div>
             )}
@@ -999,14 +999,14 @@ export function NoteCreateScreen() {
                     <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" /></svg>
                   </button>
                   <div className="absolute bottom-0.5 left-0.5 bg-black/50 rounded px-1">
-                    <span className="text-[9px] text-white font-medium">{i + 1}</span>
+                    <span className="text-[11px] text-white font-medium">{i + 1}</span>
                   </div>
                 </div>
               ))}
               {block.pdfLoading && (
                 <div className="aspect-square rounded-card border border-border bg-background flex flex-col items-center justify-center gap-1">
                   <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                  <span className="text-[9px] text-text-muted">PDF…</span>
+                  <span className="text-[11px] text-text-muted">PDF…</span>
                 </div>
               )}
               {/* Add more — only when below limit */}
@@ -1025,7 +1025,7 @@ export function NoteCreateScreen() {
           )}
           {/* Limit hint */}
           {block.attachments.length >= PHOTO_LIMIT && (
-            <p className="text-[10px] text-text-muted pb-2 px-1">Max. {PHOTO_LIMIT} Fotos pro Block · mehr mit Pro</p>
+            <p className="text-[11px] text-text-muted pb-2 px-1">Max. {PHOTO_LIMIT} Fotos pro Block · mehr mit Pro</p>
           )}
         </div>
 
@@ -1067,7 +1067,7 @@ export function NoteCreateScreen() {
             <div>
               <button
                 onClick={() => updateBlock(block.id, { transcriptionOpen: !block.transcriptionOpen } as Partial<PhotoBlock>)}
-                className="flex items-center gap-2 text-[10px] font-bold text-text-muted uppercase tracking-wider hover:text-text-secondary transition-colors"
+                className="flex items-center gap-2 text-[11px] font-bold text-text-muted uppercase tracking-wider hover:text-text-secondary transition-colors"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`transition-transform ${block.transcriptionOpen ? '' : '-rotate-90'}`}>
                   <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -1085,12 +1085,12 @@ export function NoteCreateScreen() {
             {block.aiResult.tasks.length > 0 && (
               <div className="space-y-4">
                 {block.aiResult.tasks.length > 1 && (
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{block.aiResult.tasks.length} Aufgaben gelöst</p>
+                  <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{block.aiResult.tasks.length} Aufgaben gelöst</p>
                 )}
                 {block.aiResult.tasks.map((task, ti) => (
                   <div key={ti} className={`${ti > 0 ? 'pt-4 border-t border-border' : ''}`}>
                     {block.aiResult!.tasks.length > 1 && (
-                      <p className="text-[10px] font-bold text-text-primary uppercase tracking-wider mb-1.5">Aufgabe {ti + 1}</p>
+                      <p className="text-[11px] font-bold text-text-primary uppercase tracking-wider mb-1.5">Aufgabe {ti + 1}</p>
                     )}
                     {task.question && (
                       <p className="text-xs text-text-muted italic mb-2"><MathRenderer text={task.question} /></p>
@@ -1121,7 +1121,7 @@ export function NoteCreateScreen() {
             {/* Summary */}
             {block.aiResult.summary && (
               <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Zusammenfassung</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Zusammenfassung</p>
                 <div className="text-text-secondary text-sm leading-relaxed"><RichText text={block.aiResult.summary} /></div>
               </div>
             )}
@@ -1473,7 +1473,7 @@ export function NoteCreateScreen() {
       {/* Subject pills — only when no note-level subject */}
       {!selectedSubjectId && (
         <div className="px-4 pb-2">
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
+          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
           <div className="flex flex-wrap gap-1.5">
             {profileSubjects.map((s) => (
               <button
@@ -1489,7 +1489,7 @@ export function NoteCreateScreen() {
             ))}
           </div>
           {!block.subjectId && (
-            <p className="text-[10px] text-text-secondary mt-1.5">Wähle ein Fach, damit die HA im Hausaufgabenheft erscheint</p>
+            <p className="text-[11px] text-text-secondary mt-1.5">Wähle ein Fach, damit die HA im Hausaufgabenheft erscheint</p>
           )}
         </div>
       )}
@@ -1535,7 +1535,7 @@ export function NoteCreateScreen() {
             )}
           </div>
           {nextLesson && block.dueDate === nextLesson && (
-            <p className="text-[10px] text-text-primary mt-1 pl-[72px]">
+            <p className="text-[11px] text-text-primary mt-1 pl-[72px]">
               → {new Date(nextLesson + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'short' })}
             </p>
           )}
@@ -1544,7 +1544,7 @@ export function NoteCreateScreen() {
         {/* Separator */}
         <div className="flex items-center gap-2">
           <div className="flex-1 h-px bg-border/60" />
-          <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">KI-Hilfe · optional</span>
+          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">KI-Hilfe · optional</span>
           <div className="flex-1 h-px bg-border/60" />
         </div>
 
@@ -1580,10 +1580,10 @@ export function NoteCreateScreen() {
         {block.aiHelp && (
           <div className="bg-accent/5 border border-accent/15 rounded-card px-3 py-2.5">
             <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[10px] font-bold text-text-primary uppercase tracking-wider">KI-Hilfe</p>
+              <p className="text-[11px] font-bold text-text-primary uppercase tracking-wider">KI-Hilfe</p>
               <button
                 onClick={() => updateBlock(block.id, { aiHelp: null })}
-                className="text-text-muted hover:text-text-primary text-[10px] transition-colors"
+                className="text-text-muted hover:text-text-primary text-[11px] transition-colors"
               >
                 Löschen
               </button>
@@ -1673,7 +1673,7 @@ export function NoteCreateScreen() {
 
         {/* Add more blocks */}
         <div className="mx-4 mb-4">
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Weitere Felder</p>
+          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Weitere Felder</p>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={addHomeworkBlock}
@@ -1709,7 +1709,7 @@ export function NoteCreateScreen() {
         {/* Q&A */}
         {(qaItems.length > 0 || askLoading) && (
           <div className="mx-4 mb-4 space-y-2">
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider px-1">Fragen &amp; Antworten</p>
+            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider px-1">Fragen &amp; Antworten</p>
             {qaItems.map((item, i) => (
               <div key={i} className="bg-surface border border-border rounded-card overflow-hidden">
                 <button
@@ -1898,7 +1898,7 @@ export function NoteCreateScreen() {
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className="text-[10px] font-bold text-text-primary uppercase tracking-wider">KI-Vorschlag</span>
+                    <span className="text-[11px] font-bold text-text-primary uppercase tracking-wider">KI-Vorschlag</span>
                     <p className="text-text-primary text-sm font-semibold">{suggestion.subjectName}</p>
                     <p className="text-text-muted text-xs mt-0.5 line-clamp-1">{suggestion.reason}</p>
                   </div>

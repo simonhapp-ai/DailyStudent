@@ -138,12 +138,12 @@ export function HausaufgabenheftScreen() {
         {showAddForm && (
           <div className="bg-surface border border-accent/30 rounded-2xl overflow-hidden">
             <div className="px-4 pt-4 pb-1">
-              <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Neue Hausaufgabe</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Neue Hausaufgabe</p>
             </div>
 
             {/* Subject pills */}
             <div className="px-4 pb-3">
-              <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
               <div className="flex flex-wrap gap-1.5">
                 {profileSubjects.map((s) => (
                   <button
@@ -177,7 +177,7 @@ export function HausaufgabenheftScreen() {
 
             {/* Date + next lesson */}
             <div className="px-4 pb-3">
-              <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Abgabe</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Abgabe</p>
               <div className="flex gap-2">
                 <input
                   type="date"
@@ -202,7 +202,7 @@ export function HausaufgabenheftScreen() {
                 )}
               </div>
               {nextLessonDate && addDueDate === nextLessonDate && (
-                <p className="text-[10px] text-text-primary mt-1">→ {formatDate(nextLessonDate)}</p>
+                <p className="text-[11px] text-text-primary mt-1">→ {formatDate(nextLessonDate)}</p>
               )}
             </div>
 
@@ -263,7 +263,7 @@ export function HausaufgabenheftScreen() {
                 </div>
                 {item.dueDate && days !== null && (
                   <span
-                    className="text-[10px] font-bold px-2 py-0.5 rounded-pill shrink-0"
+                    className="text-[11px] font-bold px-2 py-0.5 rounded-pill shrink-0"
                     style={{
                       background: days <= 0 ? 'rgba(255,59,48,0.12)' : days <= 2 ? 'rgba(255,149,0,0.12)' : 'rgba(var(--color-border),0.3)',
                       color: days <= 0 ? '#FF3B30' : days <= 2 ? '#FF9500' : 'rgb(var(--color-text-muted))',

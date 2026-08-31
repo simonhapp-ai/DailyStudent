@@ -451,7 +451,7 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
                   <p className={`font-bold text-[16px] ${active ? 'text-white' : 'text-text-primary'}`}>{opt.title}</p>
                   {opt.badge && (!isPro || betaPaused) && (
                     betaPaused
-                      ? <span className="px-1.5 py-0.5 rounded-pill text-[10px] font-bold bg-background text-text-muted inline-flex items-center gap-1"><Icon name="clock" size={10} />Bald verfügbar</span>
+                      ? <span className="px-1.5 py-0.5 rounded-pill text-[11px] font-bold bg-background text-text-muted inline-flex items-center gap-1"><Icon name="clock" size={10} />Bald verfügbar</span>
                       : <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
                   )}
                 </div>
@@ -620,7 +620,7 @@ function StepKlausurtermine({
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center ${hasTopics ? 'bg-accent' : 'bg-border'}`}>
                       {hasTopics
                         ? <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        : <span className="text-[9px] text-text-muted font-bold">!</span>
+                        : <span className="text-[11px] text-text-muted font-bold">!</span>
                       }
                     </div>
                   )}
@@ -841,7 +841,7 @@ function StepZeitBlocker({
           </div>
           <div className="flex gap-2">
             <div className="flex-1">
-              <p className="text-[10px] font-bold text-text-muted uppercase mb-1">Von</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase mb-1">Von</p>
               <input
                 type="time"
                 value={newBlock.startTime}
@@ -850,7 +850,7 @@ function StepZeitBlocker({
               />
             </div>
             <div className="flex-1">
-              <p className="text-[10px] font-bold text-text-muted uppercase mb-1">Bis</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase mb-1">Bis</p>
               <input
                 type="time"
                 value={newBlock.endTime}
@@ -929,7 +929,7 @@ function StepLernkapazitaet({
           onChange={(e) => onHoursChange(parseFloat(e.target.value))}
           className="w-full accent-accent"
         />
-        <div className="flex justify-between text-[10px] text-text-muted mt-1">
+        <div className="flex justify-between text-[11px] text-text-muted mt-1">
           <span>1h</span><span>4h</span><span>8h</span>
         </div>
       </div>
@@ -952,7 +952,7 @@ function StepLernkapazitaet({
             }`}
           >
             <p className={`text-[13px] font-bold ${studyTimePreference === opt.id ? 'text-white' : 'text-text-primary'}`}>{opt.label}</p>
-            <p className={`text-[10px] mt-0.5 ${studyTimePreference === opt.id ? 'text-white/70' : 'text-text-muted'}`}>{opt.sub}</p>
+            <p className={`text-[11px] mt-0.5 ${studyTimePreference === opt.id ? 'text-white/70' : 'text-text-muted'}`}>{opt.sub}</p>
           </button>
         ))}
       </div>
@@ -991,7 +991,7 @@ function StepLernkapazitaet({
           onChange={(e) => onGradeChange(e.target.value)}
           className="w-full accent-accent"
         />
-        <div className="flex justify-between text-[10px] text-text-muted mt-1">
+        <div className="flex justify-between text-[11px] text-text-muted mt-1">
           <span>0</span><span>5</span><span>10</span><span>15</span>
         </div>
       </div>
@@ -1017,7 +1017,7 @@ function StepLernkapazitaet({
                 >
                   <SubjectIcon subjectId={id} size="sm" />
                   {subj?.name ?? id}
-                  {isLK && <span className="text-[10px] font-black">LK</span>}
+                  {isLK && <span className="text-[11px] font-black">LK</span>}
                 </button>
               )
             })}

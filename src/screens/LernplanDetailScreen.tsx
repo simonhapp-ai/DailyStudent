@@ -412,9 +412,9 @@ export function LernplanDetailScreen() {
                   <div className={`flex flex-col items-center w-10 rounded-[10px] py-1 shrink-0 ${
                     todayMark ? 'bg-accent' : 'bg-background/60'
                   }`}>
-                    <p className={`text-[10px] font-bold leading-none ${todayMark ? 'text-white/80' : 'text-text-muted'}`}>{weekday}</p>
+                    <p className={`text-[11px] font-bold leading-none ${todayMark ? 'text-white/80' : 'text-text-muted'}`}>{weekday}</p>
                     <p className={`text-[18px] font-black leading-tight ${todayMark ? 'text-white' : 'text-text-primary'}`}>{dayNum}</p>
-                    <p className={`text-[10px] font-medium leading-none ${todayMark ? 'text-white/70' : 'text-text-muted'}`}>{month}</p>
+                    <p className={`text-[11px] font-medium leading-none ${todayMark ? 'text-white/70' : 'text-text-muted'}`}>{month}</p>
                   </div>
 
                   <div className="flex-1 min-w-0">
@@ -423,7 +423,7 @@ export function LernplanDetailScreen() {
                         {DAY_TYPE_LABELS[day.dayType]}
                       </span>
                       {todayMark && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-pill bg-accent text-white">Heute</span>
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-pill bg-accent text-white">Heute</span>
                       )}
                     </div>
                     {day.note && (
@@ -558,7 +558,7 @@ function SessionCard({
           <div className="flex items-center gap-1.5 flex-wrap">
             <p className="text-text-primary font-semibold text-[13px]">{session.subjectName}</p>
             {session.isLK && (
-              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-accent/15 text-text-primary">LK</span>
+              <span className="text-[11px] font-black px-1.5 py-0.5 rounded bg-accent/15 text-text-primary">LK</span>
             )}
             <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: priorityColor }} />
           </div>
@@ -650,7 +650,7 @@ function ActivityRow({
         <p className={`text-[12px] font-medium leading-tight ${isLocked ? 'text-text-secondary' : 'text-text-primary'}`}>
           {activity.title}
         </p>
-        <p className="text-[10px] text-text-muted mt-0.5">{METHOD_LABELS[activity.method]}</p>
+        <p className="text-[11px] text-text-muted mt-0.5">{METHOD_LABELS[activity.method]}</p>
       </div>
 
       {/* Action button */}

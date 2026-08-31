@@ -277,14 +277,14 @@ export function SmartNotesScreen() {
                     </svg>
                   </button>
                   <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1">
-                    <span className="text-[10px] text-text-muted font-medium">{i + 1}</span>
+                    <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </div>
               ))}
               {pdfLoading && (
                 <div className="w-24 h-24 shrink-0 rounded-card border border-border bg-surface flex flex-col items-center justify-center gap-1.5">
                   <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                  <span className="text-text-muted text-[10px]">PDF…</span>
+                  <span className="text-text-muted text-[11px]">PDF…</span>
                 </div>
               )}
               {/* Add buttons */}
@@ -296,7 +296,7 @@ export function SmartNotesScreen() {
                   <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
                   <circle cx="12" cy="13" r="4" />
                 </svg>
-                <span className="text-[10px] text-text-muted">Foto</span>
+                <span className="text-[11px] text-text-muted">Foto</span>
               </button>
               <button
                 onClick={() => fileRef.current?.click()}
@@ -307,7 +307,7 @@ export function SmartNotesScreen() {
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
                 </svg>
-                <span className="text-[10px] text-text-muted">Hochladen</span>
+                <span className="text-[11px] text-text-muted">Hochladen</span>
               </button>
             </div>
           </div>
@@ -433,7 +433,7 @@ export function SmartNotesScreen() {
                     className="w-28 h-28 object-cover rounded-card border border-border hover:opacity-90 transition-opacity"
                   />
                   <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1.5 py-0.5">
-                    <span className="text-[10px] text-text-muted font-medium">{i + 1}</span>
+                    <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </button>
               ))}
@@ -458,7 +458,7 @@ export function SmartNotesScreen() {
                     className="w-28 h-36 object-cover rounded-card border border-border hover:opacity-90 transition-opacity"
                   />
                   <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1.5 py-0.5">
-                    <span className="text-[10px] text-text-muted font-medium">{i + 1}</span>
+                    <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </button>
               ))}
@@ -596,7 +596,7 @@ export function SmartNotesScreen() {
               {note.tasks.map((task, ti) => (
                 <div key={ti} className={ti > 0 ? 'pt-4 border-t border-border' : ''}>
                   {note.tasks!.length > 1 && (
-                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5 text-text-secondary">Aufgabe {ti + 1}</p>
+                    <p className="text-[11px] font-bold uppercase tracking-wider mb-1.5 text-text-secondary">Aufgabe {ti + 1}</p>
                   )}
                   {task.question && (
                     <p className="text-xs text-text-muted italic mb-2"><MathRenderer text={task.question} /></p>
@@ -678,7 +678,7 @@ export function SmartNotesScreen() {
               </div>
               {selectedKeyword && (
                 <div className="mt-3 px-3 py-2.5 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] rounded-card">
-                  <p className="text-[10px] font-bold text-text-primary uppercase tracking-wider mb-1.5">{selectedKeyword}</p>
+                  <p className="text-[11px] font-bold text-text-primary uppercase tracking-wider mb-1.5">{selectedKeyword}</p>
                   {loadingKeyword === selectedKeyword ? (
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 border-2 border-accent border-t-transparent rounded-full animate-spin shrink-0" />
@@ -689,7 +689,7 @@ export function SmartNotesScreen() {
                   )}
                 </div>
               )}
-              <p className="text-[10px] text-text-muted mt-2">Antippen für KI-Erklärung</p>
+              <p className="text-[11px] text-text-muted mt-2">Antippen für KI-Erklärung</p>
             </div>
           ) : (
             <p className="text-text-muted text-sm">Werden nach der KI-Analyse generiert.</p>

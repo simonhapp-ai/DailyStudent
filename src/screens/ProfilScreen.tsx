@@ -343,7 +343,7 @@ export function ProfilScreen() {
                   {[1, 2, 3, 4, 5].map((n) => (
                     <span
                       key={n}
-                      className="text-[10px] font-medium"
+                      className="text-[11px] font-medium"
                       style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
                     >
                       {n === 5 ? <Icon name="gift" size={13} /> : `${n}`}
@@ -421,7 +421,7 @@ export function ProfilScreen() {
                   {stat.value}
                   {stat.unit && <span className="text-[11px] font-normal text-text-muted ml-0.5">{stat.unit}</span>}
                 </p>
-                <p className="text-text-muted text-[10px] font-medium uppercase tracking-wide mt-0.5">{stat.label}</p>
+                <p className="text-text-muted text-[11px] font-medium uppercase tracking-wide mt-0.5">{stat.label}</p>
               </div>
             ))}
           </div>

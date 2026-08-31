@@ -127,7 +127,7 @@ export function KlausurplanScreen() {
             <div className="px-5 pb-5 space-y-4">
               {/* Subject grid */}
               <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Fach</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Fach</p>
                 <div className="grid grid-cols-3 gap-1.5">
                   {faecher.map((id) => {
                     const subj = resolveSubjectInfo(id, profile?.customFaecher)
@@ -156,7 +156,7 @@ export function KlausurplanScreen() {
 
               {/* Date */}
               <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Datum</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Datum</p>
                 <input
                   type="date"
                   value={date}
@@ -168,7 +168,7 @@ export function KlausurplanScreen() {
 
               {/* Topic */}
               <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">
                   Thema <span className="text-text-muted/50 normal-case font-normal">(optional)</span>
                 </p>
                 {subjectTopics.length > 0 && (
@@ -237,7 +237,7 @@ export function KlausurplanScreen() {
                       <div className="flex items-center gap-2 flex-wrap mb-0.5">
                         <p className="text-text-primary font-semibold text-[14px]">{subj?.name ?? k.subjectId}</p>
                         <span
-                          className="px-2 py-0.5 rounded-pill text-[10px] font-bold shrink-0"
+                          className="px-2 py-0.5 rounded-pill text-[11px] font-bold shrink-0"
                           style={{ background: badgeStyle.bg, color: badgeStyle.color }}
                         >
                           {days === 0 ? 'Heute!' : days === 1 ? 'Morgen' : `in ${days} Tagen`}

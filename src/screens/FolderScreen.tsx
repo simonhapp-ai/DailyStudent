@@ -201,7 +201,7 @@ export function FolderScreen() {
                     <span className="text-[15px] font-bold text-text-primary tabular-nums">
                       {new Date(note.createdAt).getDate()}
                     </span>
-                    <span className="text-[10px] font-semibold uppercase text-text-secondary mt-0.5">
+                    <span className="text-[11px] font-semibold uppercase text-text-secondary mt-0.5">
                       {new Date(note.createdAt).toLocaleDateString('de-DE', { month: 'short' })}
                     </span>
                   </span>

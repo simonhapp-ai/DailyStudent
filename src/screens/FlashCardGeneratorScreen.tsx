@@ -174,7 +174,7 @@ export function FlashCardGeneratorScreen() {
                   {i > 0 && <div className="h-px w-8 bg-border" />}
                   <div className="flex items-center gap-1.5">
                     <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-all"
+                      className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold transition-all"
                       style={{
                         background: done
                           ? 'rgb(var(--color-success))'
@@ -247,7 +247,7 @@ export function FlashCardGeneratorScreen() {
                 Notizen aus {selectedSubject?.name}
                 {selectedNoteIds.length > 0 && (
                   <span
-                    className="ml-2 px-1.5 py-0.5 rounded-full text-white text-[10px] font-bold"
+                    className="ml-2 px-1.5 py-0.5 rounded-full text-white text-[11px] font-bold"
                     style={{ background: '#7C3AED' }}
                   >
                     {selectedNoteIds.length}

@@ -787,8 +787,8 @@ export function UnterrichtScreen() {
                 {grouped.map(({ hy, folders }: { hy: HalfYear; folders: typeof subjectFolders }) => (
                   <div key={hy.id}>
                     <div className="flex items-center gap-2 px-2 py-1.5">
-                      <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{hy.name}</span>
-                      {hy.isCurrent && <span className="text-[10px] px-1.5 py-0.5 rounded-pill bg-accent text-white dark:text-[#160E28] font-semibold">Aktuell</span>}
+                      <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{hy.name}</span>
+                      {hy.isCurrent && <span className="text-[11px] px-1.5 py-0.5 rounded-pill bg-accent text-white dark:text-[#160E28] font-semibold">Aktuell</span>}
                     </div>
                     {folders.map((folder) => (
                       <button
@@ -1038,7 +1038,7 @@ function FolderGridItem({
       <p className="text-[11px] font-semibold text-text-primary text-center line-clamp-2 leading-tight w-full">
         {name}
       </p>
-      <p className="text-[10px] text-text-muted">
+      <p className="text-[11px] text-text-muted">
         {noteCount === 0 ? 'Leer' : `${noteCount} ${noteCount === 1 ? 'Notiz' : 'Notizen'}`}
       </p>
     </button>
@@ -1071,7 +1071,7 @@ function AddFolderGridItem({ onClick }: { onClick: () => void }) {
         </div>
       </div>
       <p className="text-[11px] font-semibold text-text-primary text-center">Neuer Ordner</p>
-      <p className="text-[10px] text-transparent select-none">·</p>
+      <p className="text-[11px] text-transparent select-none">·</p>
     </button>
   )
 }

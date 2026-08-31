@@ -41,7 +41,7 @@ function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] 
       >
         <div className="flex items-center gap-2">
           <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
-          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+          <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
           <span className="text-text-muted text-[11px]">{task.be} BE</span>
         </div>
         <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] 
           {/* User answer */}
           {task.userAnswer.trim() && (
             <div>
-              <p className="text-[10px] font-bold text-text-muted uppercase tracking-wide mb-1">Deine Antwort</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wide mb-1">Deine Antwort</p>
               <p className="text-[12px] text-text-secondary leading-relaxed bg-surface/60 rounded-[10px] px-3 py-2 whitespace-pre-wrap">{task.userAnswer}</p>
             </div>
           )}
@@ -73,7 +73,7 @@ function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] 
           {/* Errors */}
           {task.errors.length > 0 && (
             <div>
-              <p className="text-[10px] font-bold text-red-400 uppercase tracking-wide mb-1">Fehler</p>
+              <p className="text-[11px] font-bold text-red-400 uppercase tracking-wide mb-1">Fehler</p>
               {task.errors.map((e, i) => (
                 <p key={i} className="text-[12px] text-text-secondary mb-0.5">· {e}</p>
               ))}
@@ -83,7 +83,7 @@ function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] 
           {/* Gaps */}
           {task.gaps.length > 0 && (
             <div>
-              <p className="text-[10px] font-bold text-amber-400 uppercase tracking-wide mb-1">Lücken</p>
+              <p className="text-[11px] font-bold text-amber-400 uppercase tracking-wide mb-1">Lücken</p>
               {task.gaps.map((g, i) => (
                 <p key={i} className="text-[12px] text-text-secondary mb-0.5">· {g}</p>
               ))}
@@ -182,7 +182,7 @@ export function ProbeklausurRetroScreen() {
               if (avg === null) return null
               return (
                 <div key={afb} className="flex items-center gap-3 mb-2">
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[afb]}`}>AFB {afb}</span>
+                  <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[afb]}`}>AFB {afb}</span>
                   <div className="flex-1 h-1.5 bg-border/40 rounded-full overflow-hidden">
                     <div className="h-full rounded-full" style={{ width: `${(avg / 15) * 100}%`, background: npColor(avg) }} />
                   </div>
@@ -299,7 +299,7 @@ export function ProbeklausurRetroScreen() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">
                     <p className="text-[15px] font-bold text-text-primary truncate">{pk.topic}</p>
-                    <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-border/40 text-text-muted shrink-0 whitespace-nowrap">
+                    <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-border/40 text-text-muted shrink-0 whitespace-nowrap">
                       {MODE_LABELS[pk.mode]}
                     </span>
                   </div>

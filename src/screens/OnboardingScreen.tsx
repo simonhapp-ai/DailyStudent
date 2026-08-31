@@ -512,7 +512,7 @@ function GradeSlider({ value, onChange }: { value: string; onChange: (v: string)
             return (
               <span
                 key={label}
-                className="absolute -translate-x-1/2 text-[10px] font-semibold text-text-muted"
+                className="absolute -translate-x-1/2 text-[11px] font-semibold text-text-muted"
                 style={{ left: `calc(14px + ${pct / 100} * (100% - 28px))` }}
               >
                 {label}
@@ -1041,7 +1041,7 @@ function StepFaecher({
                       {active && isOberstufe ? (
                         <button
                           onClick={(e) => { e.stopPropagation(); onToggleLK(id) }}
-                          className={`absolute top-2 right-2 px-1.5 py-0.5 rounded text-[9px] font-black tracking-wide transition-all ${
+                          className={`absolute top-2 right-2 px-1.5 py-0.5 rounded text-[11px] font-black tracking-wide transition-all ${
                             isLK
                               ? 'bg-accent text-white'
                               : 'bg-accent/15 text-text-primary border border-accent/30'
@@ -1150,7 +1150,7 @@ function StepFolderSort({
                     {opt.title}
                   </p>
                   {opt.comingSoon && (
-                    <span className="px-2 py-0.5 rounded-pill text-[10px] font-bold bg-border/80 text-text-muted">
+                    <span className="px-2 py-0.5 rounded-pill text-[11px] font-bold bg-border/80 text-text-muted">
                       Bald
                     </span>
                   )}
@@ -1562,7 +1562,7 @@ function StepStundenplan({
             {/* Time row */}
             <div className="flex gap-2">
               <div className="flex-1">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Von</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Von</p>
                 <input
                   type="time"
                   value={newSlot.startTime}
@@ -1571,7 +1571,7 @@ function StepStundenplan({
                 />
               </div>
               <div className="flex-1">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Bis</p>
+                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Bis</p>
                 <input
                   type="time"
                   value={newSlot.endTime}
@@ -1582,7 +1582,7 @@ function StepStundenplan({
             </div>
 
             {/* Subject picker */}
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Fach</p>
+            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Fach</p>
             <div className="grid grid-cols-3 gap-1.5">
               {profileSubjects.map((s) => (
                 <button

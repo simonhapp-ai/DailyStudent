@@ -60,7 +60,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
               <p className="text-[15px] font-black tabular-nums" style={{ color: streak >= m.days ? '#059669' : 'rgb(var(--color-text-muted))' }}>
                 {m.days}
               </p>
-              <p className="text-[10px] text-text-muted mt-0.5">+{m.reward}</p>
+              <p className="text-[11px] text-text-muted mt-0.5">+{m.reward}</p>
             </div>
           ))}
         </div>

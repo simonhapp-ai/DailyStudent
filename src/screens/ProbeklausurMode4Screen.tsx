@@ -37,7 +37,7 @@ function TaskAnswerCard({
     <div className="bg-background rounded-[14px] border border-border/60 p-4 mb-3">
       <div className="flex items-center gap-2 mb-2">
         <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
-        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+        <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
         <span className="ml-auto text-text-muted text-[11px] font-semibold">{task.be} BE</span>
       </div>
       {afbDesc[task.afb] && (
@@ -64,7 +64,7 @@ function CorrectionCard({
       <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center justify-between px-4 py-3 press-sm">
         <div className="flex items-center gap-2">
           <span className="text-text-muted text-[11px] font-semibold">Aufgabe {task.label}</span>
-          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+          <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[14px] font-bold" style={{ color: npColor(correction.scoreNP) }}>
@@ -275,7 +275,7 @@ export function ProbeklausurMode4Screen() {
                 { afb: 'AFB III', desc: 'Bewertung: Du bildest ein eigenes Urteil oder Erörterung — rein argumentativ.' },
               ].map(({ afb, desc }) => (
                 <div key={afb} className="flex items-start gap-3">
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold shrink-0 mt-0.5 ${AFB_COLORS[afb.split(' ')[1]]}`}>
+                  <span className={`px-2 py-0.5 rounded text-[11px] font-bold shrink-0 mt-0.5 ${AFB_COLORS[afb.split(' ')[1]]}`}>
                     {afb}
                   </span>
                   <p className="text-text-secondary text-[12px]">{desc}</p>

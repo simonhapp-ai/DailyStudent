@@ -200,7 +200,7 @@ export function DesktopSidebar() {
               style={{ color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))' }}
             >
               <Icon name={e.icon} size={20} />
-              <span className="text-[9px] leading-none tracking-tight truncate w-full text-center">{e.label}</span>
+              <span className="text-[11px] leading-none tracking-tight truncate w-full text-center">{e.label}</span>
             </button>
           )
         })}

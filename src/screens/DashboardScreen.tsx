@@ -372,7 +372,7 @@ function StreakMiniCard({ streak, onClick }: { streak: number; onClick: () => vo
     <Card className="flex flex-col items-center justify-center text-center min-h-[120px] gap-0.5" onClick={onClick}>
       <Icon name="flame" size={26} filled className="text-fill-orange" />
       <p className="text-[22px] font-black text-text-primary tabular-nums leading-none mt-1.5">{streak}</p>
-      <p className="text-[10px] text-text-muted mt-0.5">{streak === 1 ? 'Tag' : 'Tage'}</p>
+      <p className="text-[11px] text-text-muted mt-0.5">{streak === 1 ? 'Tag' : 'Tage'}</p>
     </Card>
   )
 }
@@ -616,7 +616,7 @@ export function DashboardScreen() {
                             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6" /><path d="M9 13h6M9 17h4" />
                           </svg>
                         </div>
-                        <span className="text-[10px] font-semibold text-text-muted bg-background px-2.5 py-1 rounded-pill truncate">
+                        <span className="text-[11px] font-semibold text-text-muted bg-background px-2.5 py-1 rounded-pill truncate">
                           {(info?.name ?? 'Notiz').toUpperCase()}
                         </span>
                       </div>

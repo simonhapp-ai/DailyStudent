@@ -66,14 +66,14 @@ function LernplanCard({ plan, onPress }: { plan: Lernplan; onPress: () => void }
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-[15px] font-bold text-text-primary truncate">{plan.title}</p>
             {plan.isActive && (
-              <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-accent/15 text-text-primary whitespace-nowrap shrink-0">
+              <span className="text-[11px] font-black px-2 py-0.5 rounded-full bg-accent/15 text-text-primary whitespace-nowrap shrink-0">
                 Aktuell
               </span>
             )}
           </div>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             <span
-              className="text-[10px] font-semibold px-2 py-0.5 rounded-full text-white shrink-0"
+              className="text-[11px] font-semibold px-2 py-0.5 rounded-full text-white shrink-0"
               style={{ background: PLAN_TYPE_COLORS[plan.planType] }}
             >
               {PLAN_TYPE_LABELS[plan.planType]}

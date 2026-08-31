@@ -270,7 +270,7 @@ export function DrawingCanvasScreen() {
                 </div>
               </div>
               <span
-                className="text-[9px] leading-none tracking-tight font-medium"
+                className="text-[11px] leading-none tracking-tight font-medium"
                 style={{ color: item.path === null ? '#7C3AED' : undefined }}
               >
                 {item.label}

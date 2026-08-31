@@ -105,7 +105,7 @@ function LernzettelRow({
           style={{ width: SWIPE_ACTION_WIDTH, background: '#FFD60A' }}
         >
           <StarIcon filled={lz.highlighted} />
-          <span className="text-[10px] font-semibold text-white">{lz.highlighted ? 'Entfernen' : 'Markieren'}</span>
+          <span className="text-[11px] font-semibold text-white">{lz.highlighted ? 'Entfernen' : 'Markieren'}</span>
         </button>
         <button
           onClick={onDelete}
@@ -113,7 +113,7 @@ function LernzettelRow({
           style={{ width: SWIPE_ACTION_WIDTH, background: '#FF3B30' }}
         >
           <TrashIcon />
-          <span className="text-[10px] font-semibold text-white">Löschen</span>
+          <span className="text-[11px] font-semibold text-white">Löschen</span>
         </button>
       </div>
 
@@ -171,14 +171,14 @@ function LernzettelRow({
                 {lz.selectedTopics.slice(0, 3).map((t) => (
                   <span
                     key={t}
-                    className="text-[10px] font-medium px-2 py-0.5 rounded-full text-white whitespace-nowrap"
+                    className="text-[11px] font-medium px-2 py-0.5 rounded-full text-white whitespace-nowrap"
                     style={{ background: G_LERNZETTEL }}
                   >
                     {t}
                   </span>
                 ))}
                 {lz.selectedTopics.length > 3 && (
-                  <span className="text-[10px] text-text-muted">+{lz.selectedTopics.length - 3}</span>
+                  <span className="text-[11px] text-text-muted">+{lz.selectedTopics.length - 3}</span>
                 )}
               </div>
             )}
@@ -302,7 +302,7 @@ export function LernzettelScreen() {
                 {activeLz.examTopics.map((t, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <span
-                      className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0 mt-0.5"
+                      className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0 mt-0.5"
                       style={{ background: G_LERNZETTEL }}
                     >
                       {i + 1}
@@ -534,7 +534,7 @@ export function LernzettelScreen() {
               {/* Thin footer row — title + caption in one line */}
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px', padding: '0 1px' }}>
                 <p className="text-[12px] font-bold text-text-primary truncate">{p.title}</p>
-                <span className="text-[10px] text-text-muted shrink-0">· Tippen zum Anzeigen</span>
+                <span className="text-[11px] text-text-muted shrink-0">· Tippen zum Anzeigen</span>
               </div>
             </div>
           ))}

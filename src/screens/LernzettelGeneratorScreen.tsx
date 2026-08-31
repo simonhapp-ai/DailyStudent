@@ -207,7 +207,7 @@ export function LernzettelGeneratorScreen() {
                   {i > 0 && <div className="h-px w-8 bg-border" />}
                   <div className="flex items-center gap-1.5">
                     <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold"
+                      className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold"
                       style={{
                         background: done
                           ? '#30D158'
@@ -424,7 +424,7 @@ export function LernzettelGeneratorScreen() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <p className="text-[14px] font-semibold text-text-primary truncate">{note.title}</p>
-                              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full text-white shrink-0" style={{ background: G_LERNZETTEL }}>
+                              <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full text-white shrink-0" style={{ background: G_LERNZETTEL }}>
                                 KI
                               </span>
                             </div>

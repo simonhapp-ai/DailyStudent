@@ -268,7 +268,7 @@ export function KalenderScreen() {
                 const hasEntry = personalEntries.some((e) => e.date === dayStr)
                 return (
                   <div key={i} className={`flex-1 flex flex-col items-center py-2 rounded-[12px] relative ${isToday ? 'bg-accent' : ''}`}>
-                    <span className={`text-[10px] font-semibold ${isToday ? 'text-white/80' : 'text-text-muted'}`}>{DAY_LABELS[i]}</span>
+                    <span className={`text-[11px] font-semibold ${isToday ? 'text-white/80' : 'text-text-muted'}`}>{DAY_LABELS[i]}</span>
                     <span className={`text-[14px] font-bold mt-0.5 leading-none ${isToday ? 'text-white' : 'text-text-secondary'}`}>{d.getDate()}</span>
                     {hasKlausur && <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isToday ? 'rgba(255,255,255,0.9)' : '#FF3B30' }} />}
                     {!hasKlausur && hasEntry && <span className="absolute bottom-1 w-1 h-1 rounded-full" style={{ backgroundColor: isToday ? 'rgba(255,255,255,0.7)' : 'rgb(var(--color-accent))' }} />}
@@ -429,7 +429,7 @@ export function KalenderScreen() {
                   </svg>
                   Heute
                 </button>
-                <span className="text-text-muted text-[10px]">Leere Stelle tippen → Eintrag</span>
+                <span className="text-text-muted text-[11px]">Leere Stelle tippen → Eintrag</span>
               </div>
             </div>
           </div>
@@ -517,7 +517,7 @@ export function KalenderScreen() {
                     <button
                       key={type}
                       onClick={() => setAddForm((f) => ({ ...f, type }))}
-                      className="py-2.5 rounded-[12px] text-[10px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
+                      className="py-2.5 rounded-[12px] text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
                       style={active ? { background: cfg.grad, borderColor: 'transparent', color: 'white', boxShadow: `0 4px 12px ${cfg.color}50` } : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
                     >
                       <Icon name={cfg.icon} size={15} />
@@ -530,7 +530,7 @@ export function KalenderScreen() {
                   return (
                     <button
                       onClick={() => setAddForm((f) => ({ ...f, type: 'klausur' }))}
-                      className="py-2.5 rounded-[12px] text-[10px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
+                      className="py-2.5 rounded-[12px] text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
                       style={active ? { background: '#FF3B30', borderColor: 'transparent', color: 'white', boxShadow: '0 4px 12px #FF3B3050' } : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
                     >
                       <span className="text-text-secondary"><Icon name="note" size={15} /></span>
@@ -633,7 +633,7 @@ export function KalenderScreen() {
                 {isRecurring && (
                   <div className="space-y-2.5 bg-background rounded-[12px] p-3 border border-border/40">
                     <div>
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Häufigkeit</p>
+                      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Häufigkeit</p>
                       <div className="flex gap-1.5 p-0.5 bg-surface rounded-[10px]">
                         {(['daily', 'weekly', 'monthly'] as RecurFreq[]).map((f) => {
                           const label = f === 'daily' ? 'Täglich' : f === 'weekly' ? 'Wöchentlich' : 'Monatlich'
@@ -656,7 +656,7 @@ export function KalenderScreen() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Bis</p>
+                      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Bis</p>
                       <input
                         type="date"
                         value={recurEnd}
@@ -1086,7 +1086,7 @@ function MonthView({ viewDate, todayStr, personalEntries, klausurtermine, onNavi
 
       <div className="grid grid-cols-7 px-2 shrink-0 border-b border-border/20 pb-1.5">
         {['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((d) => (
-          <div key={d} className="text-center text-[10px] font-bold text-text-muted/60">{d}</div>
+          <div key={d} className="text-center text-[11px] font-bold text-text-muted/60">{d}</div>
         ))}
       </div>
 
@@ -1466,11 +1466,11 @@ function AbiRechnerWidget({ abiHalbjahre, zielnote }: { abiHalbjahre?: AbiHalbja
               <span className="font-black" style={{ fontSize: 28, color: gradeColor, letterSpacing: '-0.03em' }}>
                 {overall!.toFixed(1).replace('.', ',')}
               </span>
-              <span className="text-[10px] text-text-muted mb-0.5">Pkt</span>
+              <span className="text-[11px] text-text-muted mb-0.5">Pkt</span>
             </div>
             <p className="text-[12px] font-bold mt-0.5" style={{ color: gradeColor }}>
               ≈ {noteStr}{zielnote && isOnTrack !== null && (
-                <span className="ml-1.5 text-[10px]" style={{ color: isOnTrack ? '#30D158' : '#FF9F0A' }}>
+                <span className="ml-1.5 text-[11px]" style={{ color: isOnTrack ? '#30D158' : '#FF9F0A' }}>
                   {isOnTrack ? 'Auf Ziel' : 'Unter Ziel'}
                 </span>
               )}
@@ -1544,9 +1544,9 @@ export function StundenplanWeekWidget({ stundenplan, onOpen }: { stundenplan: St
       <div className="grid grid-cols-5 gap-1.5 px-3 pb-3.5">
         {WEEK_DAYS.map((label, i) => (
           <div key={label} className="flex flex-col gap-1">
-            <span className="text-[10px] font-semibold text-text-muted text-center mb-0.5">{label}</span>
+            <span className="text-[11px] font-semibold text-text-muted text-center mb-0.5">{label}</span>
             {daySlots[i].length === 0 ? (
-              <span className="text-[10px] text-text-muted text-center">–</span>
+              <span className="text-[11px] text-text-muted text-center">–</span>
             ) : (
               daySlots[i].map((slot) => <StundenplanPill key={slot.id} slot={slot} variant="compact" />)
             )}
@@ -1583,7 +1583,7 @@ function KlausurFormFields({
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Fach</p>
+        <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Fach</p>
         <div className="grid grid-cols-3 gap-1.5">
           {faecher.map((id) => {
             const subj = SUBJECT_INFO[id]
@@ -1597,7 +1597,7 @@ function KlausurFormFields({
                 style={active ? { background: `${subj.color}18`, borderColor: subj.color } : { borderColor: 'rgba(var(--color-border),0.6)', background: 'transparent' }}
               >
                 <SubjectIcon subjectId={id} size="sm" className="!w-5 !h-5" />
-                <span className="text-[10px] font-semibold truncate leading-tight" style={{ color: active ? subj.color : 'rgb(var(--color-text-secondary))' }}>{subj.name}</span>
+                <span className="text-[11px] font-semibold truncate leading-tight" style={{ color: active ? subj.color : 'rgb(var(--color-text-secondary))' }}>{subj.name}</span>
               </button>
             )
           })}
@@ -1605,7 +1605,7 @@ function KlausurFormFields({
       </div>
 
       <div>
-        <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Datum</p>
+        <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Datum</p>
         <input
           type="date"
           value={date}
@@ -1616,7 +1616,7 @@ function KlausurFormFields({
       </div>
 
       <div>
-        <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Thema (optional)</p>
+        <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Thema (optional)</p>
         {subjectTopics.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-2">
             {subjectTopics.slice(0, 6).map((t) => (
@@ -1798,7 +1798,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                         borderColor: 'transparent',
                         boxShadow: '0 2px 8px rgba(124,58,237,0.35)',
                       } : { background: 'rgb(var(--color-background))', borderColor: 'rgba(var(--color-border),0.6)' }}>
-                      <span className={`text-[10px] font-semibold ${activeDay === i ? 'text-white/80' : 'text-text-muted'}`}>{d}</span>
+                      <span className={`text-[11px] font-semibold ${activeDay === i ? 'text-white/80' : 'text-text-muted'}`}>{d}</span>
                       <span className={`text-[12px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-text-primary' : 'text-text-muted/30'}`}>{count > 0 ? count : '·'}</span>
                     </button>
                   )
@@ -1843,25 +1843,25 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                 <div className="bg-background border border-accent/30 rounded-[14px] p-3.5 space-y-2.5">
                   <div className="flex gap-2">
                     <div className="flex-1">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1">Von</p>
+                      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1">Von</p>
                       <input type="time" value={newSlot.startTime} onChange={(e) => handleStartTime(e.target.value)} className="w-full bg-surface border border-border rounded-[10px] px-2.5 py-2 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1">Bis</p>
+                      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1">Bis</p>
                       <input type="time" value={newSlot.endTime} onChange={(e) => setNewSlot((n) => ({ ...n, endTime: e.target.value }))} className="w-full bg-surface border border-border rounded-[10px] px-2.5 py-2 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors" />
                     </div>
                   </div>
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Fach</p>
+                  <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Fach</p>
                   <div className="grid grid-cols-3 gap-1.5">
                     {profileSubjects.map((s) => (
                       <button key={s.id} onClick={() => setNewSlot((n) => ({ ...n, subjectId: s.id, isFreistunde: false }))} className={`flex items-center gap-1.5 p-2 rounded-[10px] border text-left transition-all duration-150 ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'}`}>
                         <SubjectIcon subjectId={s.id} size="sm" className="!w-5 !h-5" />
-                        <span className={`text-[10px] font-medium leading-tight truncate ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>{s.name}</span>
+                        <span className={`text-[11px] font-medium leading-tight truncate ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>{s.name}</span>
                       </button>
                     ))}
                     <button onClick={() => setNewSlot((n) => ({ ...n, subjectId: '', isFreistunde: true }))} className={`flex items-center gap-1.5 p-2 rounded-[10px] border border-dashed text-left transition-all duration-150 ${newSlot.isFreistunde ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'}`}>
                       <span className="shrink-0 text-text-secondary"><Icon name="coffee" size={14} /></span>
-                      <span className={`text-[10px] font-medium leading-tight truncate ${newSlot.isFreistunde ? 'text-text-primary' : 'text-text-secondary'}`}>Freistunde</span>
+                      <span className={`text-[11px] font-medium leading-tight truncate ${newSlot.isFreistunde ? 'text-text-primary' : 'text-text-secondary'}`}>Freistunde</span>
                     </button>
                   </div>
                   {!newSlot.isFreistunde && (

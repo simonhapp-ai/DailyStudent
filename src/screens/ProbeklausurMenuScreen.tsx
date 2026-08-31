@@ -252,12 +252,12 @@ export function ProbeklausurMenuScreen() {
               <p className="text-text-muted text-[12px] mt-1 leading-snug flex-1">{mode.subtitle}</p>
               <div className="mt-3 flex flex-wrap gap-1">
                 {mode.badges.map((badge) => (
-                  <span key={badge} className="px-2 py-0.5 rounded-pill text-[10px] font-semibold bg-background text-text-secondary">
+                  <span key={badge} className="px-2 py-0.5 rounded-pill text-[11px] font-semibold bg-background text-text-secondary">
                     {badge}
                   </span>
                 ))}
                 {modeEnabled[mode.id] === false ? (
-                  <span className="px-1.5 py-0.5 rounded-pill text-[10px] font-bold bg-background text-text-muted">
+                  <span className="px-1.5 py-0.5 rounded-pill text-[11px] font-bold bg-background text-text-muted">
                     Bald wieder da
                   </span>
                 ) : mode.proBadge && !isPro && (
@@ -342,7 +342,7 @@ export function ProbeklausurMenuScreen() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5">
                           <p className="text-text-primary font-semibold text-[13px] truncate">{pk.topic}</p>
-                          <span className="px-1.5 py-0.5 rounded text-[9px] font-bold text-emerald-400 bg-emerald-400/10 shrink-0">
+                          <span className="px-1.5 py-0.5 rounded text-[11px] font-bold text-emerald-400 bg-emerald-400/10 shrink-0">
                             Erledigt
                           </span>
                         </div>

@@ -397,7 +397,7 @@ function SubjectBarChart({ items }: { items: BarItem[] }) {
                 className="flex flex-col justify-end items-center w-full"
                 style={{ height: BAR_MAX + 18 }}
               >
-                <span className="text-[10px] font-bold mb-1 leading-none" style={{ color: c }}>
+                <span className="text-[11px] font-bold mb-1 leading-none" style={{ color: c }}>
                   {s.np}
                 </span>
                 <div
@@ -409,7 +409,7 @@ function SubjectBarChart({ items }: { items: BarItem[] }) {
               <div className="w-full h-px" style={{ background: 'rgba(var(--color-border), 0.7)' }} />
               {/* Subject icon + grade label */}
               <SubjectIcon subjectId={s.subjectId} size="sm" className="mt-1.5 !w-6 !h-6" />
-              <span className="text-[9px] font-semibold mt-0.5" style={{ color: c }}>
+              <span className="text-[11px] font-semibold mt-0.5" style={{ color: c }}>
                 {npToLabel(s.np)}
               </span>
             </div>
@@ -597,7 +597,7 @@ export function InsightsScreen() {
             <div>
               <div className="flex items-end justify-between mb-4">
                 <div>
-                  <p className="text-text-muted text-[10px] uppercase tracking-widest mb-1.5">Aktuell</p>
+                  <p className="text-text-muted text-[11px] uppercase tracking-widest mb-1.5">Aktuell</p>
                   <p className="text-[38px] font-bold leading-none" style={{ color: isOnTrack ? '#34C759' : '#FF6B35' }}>
                     {abiGesamtnote}
                   </p>
@@ -614,7 +614,7 @@ export function InsightsScreen() {
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="text-text-muted text-[10px] uppercase tracking-widest mb-1.5">Ziel</p>
+                  <p className="text-text-muted text-[11px] uppercase tracking-widest mb-1.5">Ziel</p>
                   <p className="text-[38px] font-bold text-text-secondary leading-none">{zielnote}</p>
                 </div>
               </div>
@@ -693,7 +693,7 @@ export function InsightsScreen() {
                       </svg>
                     )}
                   </div>
-                  <span className={`text-[10px] font-medium ${isToday ? 'text-text-primary' : 'text-text-muted'}`}>
+                  <span className={`text-[11px] font-medium ${isToday ? 'text-text-primary' : 'text-text-muted'}`}>
                     {dayLabel(day)}
                   </span>
                 </div>
@@ -810,14 +810,14 @@ export function InsightsScreen() {
                       <SubjectIcon subjectId={s.subjectId} size="sm" />
                       {s.isLK && (
                         <span
-                          className="px-1.5 py-0.5 rounded text-[9px] font-bold"
+                          className="px-1.5 py-0.5 rounded text-[11px] font-bold"
                           style={{ background: s.info.color, color: getSubjectOnColor(s.subjectId) }}
                         >
                           LK
                         </span>
                       )}
                     </div>
-                    {s.quarter && <span className="text-text-muted text-[10px]">{s.quarter}</span>}
+                    {s.quarter && <span className="text-text-muted text-[11px]">{s.quarter}</span>}
                   </div>
                   <p className="text-text-secondary text-[12px] truncate mb-1">{s.info.name}</p>
                   {s.np !== null ? (

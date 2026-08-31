@@ -379,7 +379,7 @@ export function BlurtingScreen() {
                         <div className="w-1 shrink-0 rounded-full self-stretch" style={{ background: selectedSubject.color }} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-2 mb-1">
-                            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-pill" style={{ background: `${selectedSubject.color}18`, color: selectedSubject.color }}>
+                            <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-pill" style={{ background: `${selectedSubject.color}18`, color: selectedSubject.color }}>
                               {item.isGenerated ? 'Smart Note' : 'Eigene Notiz'}
                             </span>
                             <span className="text-text-muted text-[11px] shrink-0">{formatDate(item.date)}</span>
@@ -668,11 +668,11 @@ function SubjectSquare({
       }}
     >
       <SubjectIcon subjectId={subject.id} size="sm" />
-      <p className="text-text-secondary text-[10px] font-semibold text-center leading-tight w-full px-0.5" style={{ wordBreak: 'break-word', hyphens: 'auto' }}>
+      <p className="text-text-secondary text-[11px] font-semibold text-center leading-tight w-full px-0.5" style={{ wordBreak: 'break-word', hyphens: 'auto' }}>
         {subject.name}
       </p>
       {noteCount > 0 && (
-        <div className="absolute top-1.5 right-1.5 w-[18px] h-[18px] rounded-full flex items-center justify-center text-[9px] font-bold text-white" style={{ background: subject.color }}>
+        <div className="absolute top-1.5 right-1.5 w-[18px] h-[18px] rounded-full flex items-center justify-center text-[11px] font-bold text-white" style={{ background: subject.color }}>
           {noteCount > 9 ? '9+' : noteCount}
         </div>
       )}
@@ -709,7 +709,7 @@ function ExamSuggestionCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5 flex-wrap">
             <p className="text-text-primary font-bold text-[14px]">{subjectName}</p>
-            <span className="px-2 py-0.5 rounded-pill text-[10px] font-semibold shrink-0" style={{ background: badgeStyle.bg, color: badgeStyle.color }}>
+            <span className="px-2 py-0.5 rounded-pill text-[11px] font-semibold shrink-0" style={{ background: badgeStyle.bg, color: badgeStyle.color }}>
               {daysLeft === 0 ? 'Heute' : daysLeft === 1 ? 'Morgen' : `in ${daysLeft} Tagen`}
             </span>
           </div>
@@ -728,9 +728,9 @@ function ExamSuggestionCard({
 
       {noteCount === 0 && suggestedTopics.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-1 border-t border-border/30">
-          <span className="text-[10px] text-text-muted font-medium w-full mb-0.5">Mögliche Themen:</span>
+          <span className="text-[11px] text-text-muted font-medium w-full mb-0.5">Mögliche Themen:</span>
           {suggestedTopics.slice(0, 6).map((t) => (
-            <span key={t} className="text-[10px] px-2 py-0.5 rounded-pill bg-surface-hover text-text-muted border border-border/40">
+            <span key={t} className="text-[11px] px-2 py-0.5 rounded-pill bg-surface-hover text-text-muted border border-border/40">
               {t.length > 30 ? t.slice(0, 30) + '…' : t}
             </span>
           ))}
