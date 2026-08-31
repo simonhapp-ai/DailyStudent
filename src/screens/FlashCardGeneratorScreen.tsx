@@ -178,7 +178,7 @@ export function FlashCardGeneratorScreen() {
                         background: done
                           ? 'rgb(var(--color-success))'
                           : active
-                          ? 'linear-gradient(135deg, #A78BFA, #6D28D9)'
+                          ? '#7C3AED'
                           : 'rgb(var(--color-border))',
                         color: done || active ? 'white' : 'rgb(var(--color-text-muted))',
                       }}
@@ -256,7 +256,7 @@ export function FlashCardGeneratorScreen() {
               {selectedNoteIds.length > 0 && (
                 <button
                   className="text-xs font-bold px-3 py-1.5 rounded-pill press-sm text-white"
-                  style={{ background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' }}
+                  style={{ background: '#7C3AED' }}
                   onClick={() => setStep('method')}
                 >
                   Weiter →
@@ -273,7 +273,7 @@ export function FlashCardGeneratorScreen() {
                 <button
                   onClick={() => navigate('/unterricht')}
                   className="mt-3 px-4 py-2 rounded-pill text-white text-sm font-semibold press-sm"
-                  style={{ background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' }}
+                  style={{ background: '#7C3AED' }}
                 >
                   Zum Unterrichtsmodus
                 </button>
@@ -313,7 +313,7 @@ export function FlashCardGeneratorScreen() {
                           </p>
                         )}
                         <div className="flex items-center gap-2 mt-1.5">
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-success/10 text-success font-medium">
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-fill-green text-fill-green-on font-medium">
                             KI analysiert
                           </span>
                           {genNote?.keywords && (
@@ -341,7 +341,7 @@ export function FlashCardGeneratorScreen() {
                   className={`flex-1 py-2.5 rounded-[10px] text-[13px] font-semibold transition-all press-sm ${
                     method === m ? 'text-white' : 'text-text-muted'
                   }`}
-                  style={method === m ? { background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' } : {}}
+                  style={method === m ? { background: '#7C3AED' } : {}}
                 >
                   {m === 'ki' ? '✨ KI generieren' : '✏️ Manuell erstellen'}
                 </button>
@@ -363,7 +363,7 @@ export function FlashCardGeneratorScreen() {
                         }`}
                         style={
                           cardCount === n
-                            ? { background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' }
+                            ? { background: '#7C3AED' }
                             : { background: 'rgb(var(--color-border) / 0.3)' }
                         }
                       >
@@ -379,14 +379,14 @@ export function FlashCardGeneratorScreen() {
 
                 {error && (
                   <div className="bg-danger/10 border border-danger/30 rounded-card px-4 py-3">
-                    <p className="text-danger text-sm">{error}</p>
+                    <p className="text-text-primary text-sm">{error}</p>
                   </div>
                 )}
 
                 <button
                   onClick={handleGenerateKI}
                   className="w-full py-3.5 rounded-[14px] text-white font-bold text-[15px] press"
-                  style={{ background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' }}
+                  style={{ background: '#7C3AED' }}
                 >
                   {cardCount} Karten mit KI erstellen
                 </button>
@@ -398,7 +398,7 @@ export function FlashCardGeneratorScreen() {
               <div className="space-y-3">
                 {error && (
                   <div className="bg-danger/10 border border-danger/30 rounded-card px-4 py-3">
-                    <p className="text-danger text-sm">{error}</p>
+                    <p className="text-text-primary text-sm">{error}</p>
                   </div>
                 )}
 
@@ -463,7 +463,7 @@ export function FlashCardGeneratorScreen() {
                   onClick={handleSaveManual}
                   disabled={validManualCount === 0}
                   className="w-full py-3.5 rounded-[14px] text-white font-bold text-[15px] press disabled:opacity-40"
-                  style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}
+                  style={{ background: '#34D399' }}
                 >
                   {validManualCount > 0 ? `${validManualCount} Karte${validManualCount !== 1 ? 'n' : ''} speichern` : 'Karten speichern'}
                 </button>
@@ -477,7 +477,7 @@ export function FlashCardGeneratorScreen() {
           <div className="flex flex-col items-center justify-center py-16 gap-5">
             <div
               className="w-16 h-16 rounded-[20px] flex items-center justify-center"
-              style={{ background: 'linear-gradient(145deg, #A78BFA, #6D28D9)' }}
+              style={{ background: '#7C3AED' }}
             >
               <svg className="animate-spin" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                 <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />

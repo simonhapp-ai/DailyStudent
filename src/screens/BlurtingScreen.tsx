@@ -75,7 +75,7 @@ function getSpeechRecognitionCtor(): (new () => MinimalSpeechRecognition) | null
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const BLURTING_GRADIENT = 'linear-gradient(145deg, #DB2777, #9D174D)'
+const BLURTING_GRADIENT = '#34D399'
 const MIN_WORDS = 20
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -317,7 +317,7 @@ export function BlurtingScreen() {
           >
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+              className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -589,7 +589,7 @@ export function BlurtingScreen() {
             className="flex items-center justify-between px-4 shrink-0"
             style={{ paddingTop: 'max(54px, calc(env(safe-area-inset-top, 0px) + 16px))', paddingBottom: '12px' }}
           >
-            <button onClick={handleNewTopic} className="text-accent text-[14px] font-medium press-sm">
+            <button onClick={handleNewTopic} className="text-text-primary text-[14px] font-medium press-sm">
               Neues Thema
             </button>
             {selectedSubject && selected && <TopicPill label={selected.title} color={selectedSubject.color} />}

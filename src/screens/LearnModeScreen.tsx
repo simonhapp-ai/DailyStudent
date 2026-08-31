@@ -7,7 +7,7 @@ import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo } from '../data/subjectInfo'
 import type { FlashCard as FlashCardType } from '../types'
 
-const GREEN = 'linear-gradient(145deg, #34D399 0%, #059669 100%)'
+const GREEN = '#34D399'
 
 type View = 'library' | 'session'
 
@@ -106,7 +106,7 @@ export function LearnModeScreen() {
               <span>
                 {cardIndex + 1} / {sessionCards.length}
                 {knownCount > 0 && (
-                  <span className="text-success ml-1.5">· {knownCount} gewusst</span>
+                  <span className="text-text-primary ml-1.5">· {knownCount} gewusst</span>
                 )}
               </span>
             </div>
@@ -117,7 +117,7 @@ export function LearnModeScreen() {
                 className="h-full rounded-pill transition-all duration-300"
                 style={{
                   width: `${Math.round((knownCount / sessionCards.length) * 100)}%`,
-                  background: 'linear-gradient(90deg, #34D399, #059669)',
+                  background: '#34D399',
                 }}
               />
             </div>
@@ -140,7 +140,7 @@ export function LearnModeScreen() {
               <button
                 onClick={handleKnown}
                 className="flex-1 py-3 rounded-card text-white text-sm font-semibold press transition-opacity hover:opacity-90"
-                style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+                style={{ background: '#34D399' }}
               >
                 Weiß ich ✓
               </button>

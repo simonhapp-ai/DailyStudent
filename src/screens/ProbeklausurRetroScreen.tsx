@@ -134,7 +134,7 @@ export function ProbeklausurRetroScreen() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => { setView('library'); setActive(null) }}
-              className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+              className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                 <path d="M15 18l-6-6 6-6" />
@@ -227,7 +227,7 @@ export function ProbeklausurRetroScreen() {
             <button onClick={() => setShowDeleteConfirm(false)} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press">
               Abbrechen
             </button>
-            <button onClick={() => handleDelete(active.id)} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'linear-gradient(145deg, #FF453A, #C0392B)' }}>
+            <button onClick={() => handleDelete(active.id)} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
               Löschen
             </button>
           </div>
@@ -244,7 +244,7 @@ export function ProbeklausurRetroScreen() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+            className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <path d="M15 18l-6-6 6-6" />
@@ -266,7 +266,7 @@ export function ProbeklausurRetroScreen() {
           <div className="bg-surface border border-border/60 rounded-[20px] p-8 shadow-card-adaptive text-center mt-4">
             <div
               className="w-14 h-14 rounded-[18px] flex items-center justify-center mx-auto mb-4"
-              style={{ background: 'linear-gradient(145deg, #0891B2, #065666)' }}
+              style={{ background: '#34D399' }}
             >
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />

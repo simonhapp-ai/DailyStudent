@@ -10,7 +10,7 @@ import { Dialog } from '../components/ui/Dialog'
 import type { Lernzettel } from '../types'
 import { Icon } from '../components/ui/Icon'
 
-const G_LERNZETTEL = 'linear-gradient(145deg, #0E7CDD, #052848)'
+const G_LERNZETTEL = '#34D399'
 
 type View = 'library' | 'detail'
 
@@ -327,7 +327,7 @@ export function LernzettelScreen() {
             <div className="flex items-center gap-3">
               <div
                 className="w-9 h-9 rounded-[12px] flex items-center justify-center shrink-0"
-                style={{ background: 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
+                style={{ background: '#7C3AED' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -361,7 +361,7 @@ export function LernzettelScreen() {
             <div className="flex items-center gap-3">
               <div
                 className="w-9 h-9 rounded-[12px] flex items-center justify-center shrink-0"
-                style={{ background: 'linear-gradient(145deg, #0891B2, #065666)' }}
+                style={{ background: '#34D399' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
@@ -382,7 +382,7 @@ export function LernzettelScreen() {
             onClick={() => {
               setConfirmDeleteId(activeLz.id)
             }}
-            className="w-full py-3 rounded-[20px] border border-danger/30 text-danger text-[14px] font-medium hover:bg-danger/5 transition-colors"
+            className="w-full py-3 rounded-[20px] border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
             Lernzettel löschen
           </button>

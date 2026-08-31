@@ -10,7 +10,7 @@ import { saveLocalAsset } from '../lib/noteStorage'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import type { Lernzettel, LernzettelImage, LernzettelModus } from '../types'
 
-const G_LERNZETTEL = 'linear-gradient(145deg, #5AC8FA, #007BB8)'
+const G_LERNZETTEL = '#34D399'
 
 type Step = 'fach' | 'modus' | 'select' | 'generating'
 
@@ -512,7 +512,7 @@ export function LernzettelGeneratorScreen() {
                   {/* Icon */}
                   <div
                     className="w-12 h-12 rounded-[16px] flex items-center justify-center mx-auto mb-4"
-                    style={{ background: 'linear-gradient(145deg, #FB923C, #EA580C)' }}
+                    style={{ background: 'rgb(var(--fill-orange))' }}
                   >
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -533,7 +533,7 @@ export function LernzettelGeneratorScreen() {
                   <button
                     onClick={() => { setShowNoNotesWarning(false); void handleGenerate() }}
                     className="w-full py-3.5 rounded-[16px] text-white font-semibold text-[15px] mb-3"
-                    style={{ background: 'linear-gradient(145deg, #FB923C, #EA580C)' }}
+                    style={{ background: 'rgb(var(--fill-orange))' }}
                   >
                     Trotzdem generieren
                   </button>

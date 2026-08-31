@@ -269,7 +269,7 @@ export function LernplanKonfiguratorScreen() {
       <div className="flex items-center gap-3 px-4 pb-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={step === 1 ? () => navigate(-1) : handleBack}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -369,7 +369,7 @@ export function LernplanKonfiguratorScreen() {
           <button
             onClick={handleNext}
             disabled={!canNext[step]}
-            className="w-full py-4 rounded-[20px] grad-accent text-white text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
+            className="w-full py-4 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
           >
             {step === TOTAL_STEPS - 1 ? 'Weiter zur Zusammenfassung' : 'Weiter'}
           </button>
@@ -615,7 +615,7 @@ function StepKlausurtermine({
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className={`text-[11px] font-bold px-2 py-0.5 rounded-pill ${
-                    days <= 3 ? 'bg-danger/15 text-danger' : days <= 7 ? 'bg-orange-500/15 text-orange-400' : 'bg-border text-text-muted'
+                    days <= 3 ? 'bg-danger/15 text-text-primary' : days <= 7 ? 'bg-orange-500/15 text-orange-400' : 'bg-border text-text-muted'
                   }`}>
                     {days === 0 ? 'Heute' : days === 1 ? 'Morgen' : `${days}d`}
                   </span>
@@ -655,7 +655,7 @@ function StepKlausurtermine({
                       {topics.map((topic) => (
                         <span
                           key={topic}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[12px] font-medium bg-accent/12 text-accent border border-accent/20"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[12px] font-medium bg-accent/12 text-text-primary border border-accent/20"
                         >
                           {topic}
                           <button
@@ -773,7 +773,7 @@ function StepZeitBlocker({
               </div>
               <button
                 onClick={() => onRemoveBlock(b.id)}
-                className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+                className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-danger/10 transition-colors"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
@@ -805,7 +805,7 @@ function StepZeitBlocker({
               ))}
             <button
               onClick={() => setAddingBlock(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-pill bg-accent-soft border border-accent/30 text-accent text-[13px] font-medium hover:bg-accent/20 transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-pill bg-accent-soft border border-accent/30 text-text-primary text-[13px] font-medium hover:bg-accent/20 transition-all"
             >
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -872,7 +872,7 @@ function StepZeitBlocker({
             <button
               onClick={() => onAddBlock()}
               disabled={!newBlock.label.trim()}
-              className="flex-1 py-2.5 rounded-card grad-accent text-white text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
+              className="flex-1 py-2.5 rounded-card bg-accent text-white dark:text-[#160E28] text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
             >
               Hinzufügen
             </button>
@@ -1078,7 +1078,7 @@ function StepMethoden({
                   {active && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                 </div>
               </div>
-              <span className={`text-[14px] font-semibold ${active ? 'text-accent' : 'text-text-primary'}`}>{meta.label}</span>
+              <span className={`text-[14px] font-semibold ${active ? 'text-text-primary' : 'text-text-primary'}`}>{meta.label}</span>
               <span className="text-[11px] text-text-muted leading-tight">{meta.desc}</span>
             </button>
           )
@@ -1110,7 +1110,7 @@ function StepSchwerpunkte({
       <p className="text-text-muted text-sm mb-1">
         Optional — welche Themen bereiten dir Probleme? Der Plan gibt diesen mehr Zeit.
       </p>
-      <button onClick={onSkip} className="text-accent text-[13px] font-medium mb-6 hover:text-accent/80 transition-colors">
+      <button onClick={onSkip} className="text-text-primary text-[13px] font-medium mb-6 hover:text-text-primary/80 transition-colors">
         Überspringen →
       </button>
 
@@ -1215,7 +1215,7 @@ function StepZusammenfassung({
       </div>
 
       {genError && (
-        <div className="mb-4 p-3 rounded-[14px] text-danger text-[13px]" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
+        <div className="mb-4 p-3 rounded-[14px] text-text-primary text-[13px]" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
           {genError}
         </div>
       )}
@@ -1231,7 +1231,7 @@ function StepZusammenfassung({
       ) : (
         <button
           onClick={onGenerate}
-          className="w-full py-4 rounded-[20px] grad-accent text-white text-[16px] font-bold active:scale-[0.98] transition-all"
+          className="w-full py-4 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[16px] font-bold active:scale-[0.98] transition-all"
         >
           Lernplan generieren ✨
         </button>

@@ -14,7 +14,7 @@ const AFB_COLORS: Record<string, string> = {
   II:  'bg-amber-500/15 text-amber-400',
   III: 'bg-purple-500/15 text-purple-400',
 }
-const ACCENT = 'linear-gradient(145deg, #DB2777, #9D174D)'
+const ACCENT = '#34D399'
 
 function npColor(np: number): string {
   if (np >= 13) return '#34D399'
@@ -79,19 +79,19 @@ function CorrectionCard({
         <div className="px-4 pb-4 space-y-3 border-t border-border/40 pt-3">
           {correction.errors.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold text-danger mb-1.5 uppercase tracking-wide">Fehler</p>
+              <p className="text-[11px] font-bold text-text-primary mb-1.5 uppercase tracking-wide">Fehler</p>
               {correction.errors.map((e, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {e}</p>)}
             </div>
           )}
           {correction.gaps.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold text-warning mb-1.5 uppercase tracking-wide">Lücken</p>
+              <p className="text-[11px] font-bold text-text-secondary mb-1.5 uppercase tracking-wide">Lücken</p>
               {correction.gaps.map((g, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {g}</p>)}
             </div>
           )}
           {correction.formulationHelp.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold text-accent mb-1.5 uppercase tracking-wide">Formulierungshilfen</p>
+              <p className="text-[11px] font-bold text-text-primary mb-1.5 uppercase tracking-wide">Formulierungshilfen</p>
               {correction.formulationHelp.map((f, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {f}</p>)}
             </div>
           )}
@@ -195,7 +195,7 @@ export function ProbeklausurMode4Screen() {
               if (phase === 'exam') { setShowExitWarning(true); return }
               navigate(-1)
             }}
-            className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+            className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <path d="M15 18l-6-6 6-6" />
@@ -284,8 +284,8 @@ export function ProbeklausurMode4Screen() {
 
             {error && (
               <div className="bg-danger/10 border border-danger/30 rounded-[14px] p-4">
-                <p className="text-danger text-[13px] font-semibold mb-1">Fehler</p>
-                <p className="text-danger/80 text-[12px]">{error}</p>
+                <p className="text-text-primary text-[13px] font-semibold mb-1">Fehler</p>
+                <p className="text-text-primary/80 text-[12px]">{error}</p>
               </div>
             )}
           </div>
@@ -304,7 +304,7 @@ export function ProbeklausurMode4Screen() {
           <div>
             {/* "no material" badge */}
             <div className="bg-surface rounded-[14px] border border-border/60 px-4 py-2.5 mb-4 flex items-center gap-2">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                 <circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
               </svg>
               <p className="text-text-secondary text-[12px] font-semibold">Kein Material — alles aus dem Gedächtnis</p>
@@ -319,7 +319,7 @@ export function ProbeklausurMode4Screen() {
             ))}
             {error && (
               <div className="bg-danger/10 border border-danger/30 rounded-[14px] p-4 mb-3">
-                <p className="text-danger text-[13px]">{error}</p>
+                <p className="text-text-primary text-[13px]">{error}</p>
               </div>
             )}
           </div>
@@ -383,7 +383,7 @@ export function ProbeklausurMode4Screen() {
                   <button
                     onClick={() => setShowProModal(true)}
                     className="w-full py-3 rounded-[14px] text-white text-[14px] font-bold press-sm"
-                    style={{ background: 'linear-gradient(135deg, #7C3AED, #6D28D9)' }}
+                    style={{ background: '#7C3AED' }}
                   >
                     Pro freischalten · €5/Mo
                   </button>
@@ -438,7 +438,7 @@ export function ProbeklausurMode4Screen() {
       <BottomSheet isOpen={showExitWarning} onClose={() => setShowExitWarning(false)}>
         <div className="px-5 pb-2 space-y-3">
           <div className="flex flex-col items-center text-center gap-2 pt-2 pb-1">
-            <div className="w-12 h-12 rounded-[16px] flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #FF453A, #C0392B)' }}>
+            <div className="w-12 h-12 rounded-[16px] flex items-center justify-center" style={{ background: 'rgb(var(--fill-red))' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                 <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
@@ -458,7 +458,7 @@ export function ProbeklausurMode4Screen() {
           >
             Klausur pausieren — Fortschritt gespeichert
           </button>
-          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'linear-gradient(145deg, #FF453A, #C0392B)' }}>
+          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
             Klausur beenden (Fortschritt gelöscht)
           </button>
         </div>

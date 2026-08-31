@@ -16,7 +16,7 @@ const MODES_FULL = [
   {
     id: 2,
     route: '/klausurmodus/probeklausur/vollstaendige-klausur',
-    gradient: 'linear-gradient(145deg, #7C3AED, #5B21B6)',
+    gradient: '#7C3AED',
     title: 'Vollständige Klausur',
     subtitle: 'Realistische Klausur-Simulation',
     description: 'Eine komplette 90-Minuten-Klausur mit AFB I–III, 2–3 Materialien und echter Zeitgrenzen — genau wie im echten Abitur.',
@@ -31,7 +31,7 @@ const MODES_FULL = [
   {
     id: 1,
     route: '/klausurmodus/probeklausur/afb-trainer',
-    gradient: 'linear-gradient(145deg, #34D399, #059669)',
+    gradient: '#34D399',
     title: 'AFB-Aufgabentrainer',
     subtitle: 'Einzelne Aufgabe gezielt üben',
     description: 'Du wählst das AFB-Level (I, II oder III) und bekommst genau eine präzise Abituraufgabe auf diesem Niveau — mit passenden Materialien wenn nötig.',
@@ -49,7 +49,7 @@ const MODES_HALF = [
   {
     id: 3,
     route: '/klausurmodus/probeklausur/materialklausur',
-    gradient: 'linear-gradient(145deg, #7C3AED, #5B21B6)',
+    gradient: '#7C3AED',
     title: 'Materialklausur',
     subtitle: 'Alle drei AFB zu einem Material',
     badges: ['1–3 Materialien', 'AFB I + II + III'],
@@ -63,7 +63,7 @@ const MODES_HALF = [
   {
     id: 4,
     route: '/klausurmodus/probeklausur/ohne-material',
-    gradient: 'linear-gradient(145deg, #7C3AED, #5B21B6)',
+    gradient: '#7C3AED',
     title: 'Ohne Material',
     subtitle: 'Alles aus dem Kopf',
     badges: ['Kein Material', 'AFB I + II + III'],
@@ -138,7 +138,7 @@ export function ProbeklausurMenuScreen() {
       <div className="px-5" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-accent text-[14px] font-semibold mb-4 press-sm"
+          className="flex items-center gap-1.5 text-text-primary text-[14px] font-semibold mb-4 press-sm"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
             <path d="M15 18l-6-6 6-6" />
@@ -271,7 +271,7 @@ export function ProbeklausurMenuScreen() {
         {/* Info footer */}
         <div className="bg-surface rounded-[16px] border border-border/60 p-4 flex items-start gap-3">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2" className="text-accent shrink-0 mt-0.5">
+            strokeWidth="2" className="text-text-primary shrink-0 mt-0.5">
             <circle cx="12" cy="12" r="10" />
             <line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="3" />
           </svg>
@@ -313,7 +313,7 @@ export function ProbeklausurMenuScreen() {
                       <button
                         onClick={() => navigate(MODE_ROUTE[pk.mode], { state: { resume: pk } })}
                         className="px-3 py-1.5 rounded-pill text-white text-[12px] font-semibold press-sm"
-                        style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)' }}
+                        style={{ background: '#7C3AED' }}
                       >
                         Fortfahren →
                       </button>

@@ -47,9 +47,9 @@ const DAY_TYPE_COLORS: Record<LernDayType, string> = {
 }
 
 const DAY_TYPE_TEXT: Record<LernDayType, string> = {
-  lern: 'text-accent',
+  lern: 'text-text-primary',
   pause: 'text-text-muted',
-  klausur: 'text-danger',
+  klausur: 'text-text-primary',
   puffer: 'text-[#FF9F0A]',
 }
 
@@ -123,7 +123,7 @@ export function LernplanDetailScreen() {
         <p className="text-text-primary font-semibold text-lg text-center">Lernplan nicht gefunden</p>
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -437,11 +437,11 @@ export function LernplanDetailScreen() {
                 {/* Exam banner */}
                 {day.dayType === 'klausur' && (
                   <div className="mx-4 mb-4 p-3 rounded-[14px] flex items-center gap-2" style={{ background: 'rgba(var(--color-danger),0.10)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger shrink-0">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
                       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                       <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
                     </svg>
-                    <p className="text-danger font-semibold text-[13px]">{day.note ?? 'Klausur heute'}</p>
+                    <p className="text-text-primary font-semibold text-[13px]">{day.note ?? 'Klausur heute'}</p>
                   </div>
                 )}
 
@@ -485,7 +485,7 @@ export function LernplanDetailScreen() {
           <button
             onClick={addToCalendar}
             className="w-full py-3.5 rounded-[20px] text-white text-[14px] font-bold press-sm flex items-center justify-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', boxShadow: '0 4px 16px rgba(124,58,237,0.35)' }}
+            style={{ background: '#7C3AED', boxShadow: '0 4px 16px rgba(124,58,237,0.35)' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -501,7 +501,7 @@ export function LernplanDetailScreen() {
         <div className="no-print px-4 pt-3">
           <button
             onClick={() => setConfirmDelete(true)}
-            className="w-full py-3 rounded-[20px] border border-danger/30 text-danger text-[14px] font-medium hover:bg-danger/5 transition-colors"
+            className="w-full py-3 rounded-[20px] border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
             Lernplan löschen
           </button>
@@ -557,7 +557,7 @@ function SessionCard({
           <div className="flex items-center gap-1.5 flex-wrap">
             <p className="text-text-primary font-semibold text-[13px]">{session.subjectName}</p>
             {session.isLK && (
-              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-accent/15 text-accent">LK</span>
+              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-accent/15 text-text-primary">LK</span>
             )}
             <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: priorityColor }} />
           </div>
@@ -658,8 +658,8 @@ function ActivityRow({
           onClick={handleAction}
           className={`flex items-center gap-1 px-2 py-1.5 rounded-[8px] text-[11px] font-semibold shrink-0 transition-all active:scale-[0.95] ${
             isLocked
-              ? 'bg-warning/15 text-warning'
-              : 'bg-accent/12 text-accent'
+              ? 'bg-warning/15 text-text-secondary'
+              : 'bg-accent/12 text-text-primary'
           }`}
         >
           {isLocked ? (

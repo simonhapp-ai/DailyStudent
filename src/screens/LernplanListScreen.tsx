@@ -4,7 +4,7 @@ import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { Lernplan, LernplanType } from '../types'
 
-const G_LERNPLAN = 'linear-gradient(145deg, #FFD060, #C07700)'
+const G_LERNPLAN = 'rgb(var(--fill-yellow))'
 
 const PLAN_TYPE_LABELS: Record<LernplanType, string> = {
   einzel: 'Einzel',
@@ -65,7 +65,7 @@ function LernplanCard({ plan, onPress }: { plan: Lernplan; onPress: () => void }
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-[15px] font-bold text-text-primary truncate">{plan.title}</p>
             {plan.isActive && (
-              <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-accent/15 text-accent whitespace-nowrap shrink-0">
+              <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-accent/15 text-text-primary whitespace-nowrap shrink-0">
                 Aktuell
               </span>
             )}
