@@ -62,8 +62,8 @@ function getTimeAgo(isoStr: string): string {
 // not just a mouse-only click target.
 
 const DARK_GLOW: Record<'purple' | 'mint', string> = {
-  purple: 'radial-gradient(130% 100% at 12% -10%, rgba(167,139,250,0.32) 0%, rgba(10,10,15,0) 48%), linear-gradient(155deg, #170f22 0%, #0a0a0f 62%)',
-  mint:   'radial-gradient(130% 100% at 12% -10%, rgba(52,211,153,0.24) 0%, rgba(10,10,15,0) 48%), linear-gradient(155deg, #0f1a17 0%, #0a0a0f 62%)',
+  purple: 'radial-gradient(130% 100% at 12% -10%, rgba(167,139,250,0.32) 0%, rgba(10,10,15,0) 48%), #170f22',
+  mint:   'radial-gradient(130% 100% at 12% -10%, rgba(52,211,153,0.24) 0%, rgba(10,10,15,0) 48%), #0f1a17',
 }
 
 function Card({ children, className = '', onClick, dark = false, glow = 'purple' }: {
@@ -140,7 +140,7 @@ function ErsteSchritteCard({ tasks, onDismiss }: { tasks: ErsteSchritteTask[]; o
       </div>
 
       <div className="h-2 rounded-pill overflow-hidden mb-3" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
-        <div className="h-full rounded-pill transition-all duration-500 grad-accent" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-pill transition-all duration-500 bg-accent" style={{ width: `${pct}%` }} />
       </div>
 
       {nextTasks.length > 0 && (
@@ -191,7 +191,7 @@ function HeroLernplanCard({
         <div className="flex items-center gap-4">
           <div
             className="w-14 h-14 rounded-[16px] flex items-center justify-center shrink-0"
-            style={{ background: 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
+            style={{ background: '#A78BFA' }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -206,7 +206,7 @@ function HeroLernplanCard({
         </div>
         <button
           onClick={onCreate}
-          className="mt-5 self-start px-5 py-2.5 rounded-[14px] grad-accent text-white text-[13px] font-semibold press-sm"
+          className="mt-5 self-start px-5 py-2.5 rounded-[14px] bg-accent text-white dark:text-[#160E28] text-[13px] font-semibold press-sm"
         >
           Lernplan erstellen
         </button>
@@ -239,7 +239,7 @@ function HeroLernplanCard({
 
       <div>
         <div className="h-2 rounded-pill overflow-hidden mb-2.5" style={{ background: 'rgba(255,255,255,0.15)' }}>
-          <div className="h-full rounded-pill transition-all duration-500 grad-accent" style={{ width: `${pct}%` }} />
+          <div className="h-full rounded-pill transition-all duration-500 bg-accent" style={{ width: `${pct}%` }} />
         </div>
         <div className="flex items-center justify-between">
           <span className="text-[12px] text-white/60">{pct}% erledigt</span>
@@ -350,7 +350,7 @@ function SchnellnotizCard({ onClick }: { onClick: () => void }) {
     <Card className="flex items-center gap-4 min-h-[120px]" onClick={onClick}>
       <div
         className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0"
-        style={{ background: 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
+        style={{ background: '#A78BFA' }}
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />

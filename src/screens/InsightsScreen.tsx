@@ -587,7 +587,7 @@ export function InsightsScreen() {
                 {abiGesamtnote ? 'Aktuelle Tendenz im Abi-Rechner' : 'Noch keine Noten eingetragen'}
               </p>
             </div>
-            <button onClick={() => navigate('/abi-rechner')} className="text-accent text-[13px] font-medium press-sm">
+            <button onClick={() => navigate('/abi-rechner')} className="text-text-primary text-[13px] font-medium press-sm">
               {abiGesamtnote ? 'Details →' : 'Eintragen →'}
             </button>
           </div>
@@ -624,7 +624,7 @@ export function InsightsScreen() {
                       className="h-full rounded-pill transition-all duration-700"
                       style={{
                         width: `${progressPct}%`,
-                        background: isOnTrack ? '#34C759' : 'linear-gradient(90deg, #FF6B35, #FF9500)',
+                        background: isOnTrack ? '#34C759' : '#FF6B35',
                       }}
                     />
                   </div>
@@ -692,7 +692,7 @@ export function InsightsScreen() {
                       </svg>
                     )}
                   </div>
-                  <span className={`text-[10px] font-medium ${isToday ? 'text-accent' : 'text-text-muted'}`}>
+                  <span className={`text-[10px] font-medium ${isToday ? 'text-text-primary' : 'text-text-muted'}`}>
                     {dayLabel(day)}
                   </span>
                 </div>
@@ -953,7 +953,7 @@ export function InsightsScreen() {
                     <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
                   </svg>
                   <p className="text-[13px] text-text-secondary leading-snug">
-                    <span className="font-semibold text-warning">Optimierungspotenzial:</span> AFB {weakAfb.join(' + ')} liegt unter 13 NP — {weakAfb.includes('III') ? 'Analyse- und Bewertungsaufgaben trainieren für volle Punktzahl' : weakAfb.includes('II') ? 'Transferaufgaben üben — hier entscheiden sich die Top-Punkte' : 'Basisaufgaben sichern, damit keine Pflichtpunkte verloren gehen'}.
+                    <span className="font-semibold text-text-secondary">Optimierungspotenzial:</span> AFB {weakAfb.join(' + ')} liegt unter 13 NP — {weakAfb.includes('III') ? 'Analyse- und Bewertungsaufgaben trainieren für volle Punktzahl' : weakAfb.includes('II') ? 'Transferaufgaben üben — hier entscheiden sich die Top-Punkte' : 'Basisaufgaben sichern, damit keine Pflichtpunkte verloren gehen'}.
                   </p>
                 </div>
               )}

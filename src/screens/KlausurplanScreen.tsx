@@ -68,7 +68,7 @@ export function KlausurplanScreen() {
       >
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <ChevronLeft />
           Zurück
@@ -97,7 +97,7 @@ export function KlausurplanScreen() {
           >
             <div
               className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0"
-              style={{ background: 'linear-gradient(135deg,#FF3B30,#CC2E28)' }}
+              style={{ background: '#FF3B30' }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -178,7 +178,7 @@ export function KlausurplanScreen() {
                         onClick={() => setTopic(topic === t ? '' : t)}
                         className="px-2.5 py-1 rounded-pill text-[11px] font-medium press-sm transition-all"
                         style={topic === t
-                          ? { background: 'linear-gradient(135deg,#FF3B30,#CC2E28)', color: 'white' }
+                          ? { background: '#FF3B30', color: 'white' }
                           : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }}
                       >
                         {t.length > 25 ? t.slice(0, 25) + '…' : t}
@@ -201,7 +201,7 @@ export function KlausurplanScreen() {
                 disabled={!subjectId || !date}
                 className="w-full py-3 rounded-[14px] text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
                 style={{
-                  background: 'linear-gradient(135deg,#FF3B30,#CC2E28)',
+                  background: '#FF3B30',
                   boxShadow: subjectId && date ? '0 4px 16px #FF3B3040' : 'none',
                 }}
               >
@@ -249,7 +249,7 @@ export function KlausurplanScreen() {
                     </div>
                     <button
                       onClick={() => removeKlausurtermin(k.subjectId, k.date)}
-                      className="w-7 h-7 flex items-center justify-center rounded-full text-text-muted hover:text-danger hover:bg-danger/10 transition-colors shrink-0 press-sm"
+                      className="w-7 h-7 flex items-center justify-center rounded-full text-text-muted hover:text-text-primary hover:bg-danger/10 transition-colors shrink-0 press-sm"
                     >
                       <CloseIcon size={12} />
                     </button>
@@ -296,7 +296,7 @@ export function KlausurplanScreen() {
                     </div>
                     <button
                       onClick={() => removeKlausurtermin(k.subjectId, k.date)}
-                      className="w-6 h-6 flex items-center justify-center text-text-muted/50 hover:text-danger hover:bg-danger/10 rounded-full transition-colors shrink-0"
+                      className="w-6 h-6 flex items-center justify-center text-text-muted/50 hover:text-text-primary hover:bg-danger/10 rounded-full transition-colors shrink-0"
                     >
                       <CloseIcon size={11} />
                     </button>

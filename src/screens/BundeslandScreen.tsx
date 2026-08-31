@@ -65,7 +65,7 @@ export function BundeslandScreen() {
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium mb-3 press-sm -ml-0.5"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -91,7 +91,7 @@ export function BundeslandScreen() {
                 <button
                   key={bl.id}
                   onClick={() => { setBundeslandId(bl.id); setSaved(false) }}
-                  className={`py-2.5 px-1 rounded-[12px] text-center press-sm transition-all duration-200 border ${active ? 'text-accent' : 'text-text-secondary'}`}
+                  className={`py-2.5 px-1 rounded-[12px] text-center press-sm transition-all duration-200 border ${active ? 'text-text-primary' : 'text-text-secondary'}`}
                   style={active ? {
                     background: 'rgba(var(--color-accent),0.08)',
                     borderColor: 'rgba(var(--color-accent),0.5)',
@@ -120,9 +120,9 @@ export function BundeslandScreen() {
                   className={`w-full flex items-center justify-between px-4 py-3.5 press-sm transition-all ${i < SCHULFORMEN.length - 1 ? 'border-b border-border/50' : ''}`}
                   style={active ? { background: 'rgba(var(--color-accent),0.06)' } : {}}
                 >
-                  <span className={`text-[15px] font-medium ${active ? 'text-accent' : 'text-text-primary'}`}>{sf}</span>
+                  <span className={`text-[15px] font-medium ${active ? 'text-text-primary' : 'text-text-primary'}`}>{sf}</span>
                   {active && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-accent shrink-0">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
                       <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   )}
@@ -155,8 +155,8 @@ export function BundeslandScreen() {
                       background: 'rgb(var(--color-surface))',
                     }}
                   >
-                    <p className={`font-bold text-[22px] leading-none ${active ? 'text-accent' : 'text-text-primary'}`}>{label}</p>
-                    <p className={`text-[11px] mt-1 ${active ? 'text-accent/70' : 'text-text-muted'}`}>{sub} · {range}</p>
+                    <p className={`font-bold text-[22px] leading-none ${active ? 'text-text-primary' : 'text-text-primary'}`}>{label}</p>
+                    <p className={`text-[11px] mt-1 ${active ? 'text-text-primary/70' : 'text-text-muted'}`}>{sub} · {range}</p>
                   </button>
                 )
               })}

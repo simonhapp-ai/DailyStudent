@@ -78,7 +78,7 @@ export function ProfilAccountScreen() {
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium mb-3 press-sm -ml-0.5"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -139,8 +139,8 @@ export function ProfilAccountScreen() {
             onClick={() => void signOut()}
             className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
           >
-            <span className="text-danger text-[15px]">Abmelden</span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
+            <span className="text-text-primary text-[15px]">Abmelden</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
               <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
@@ -155,10 +155,10 @@ export function ProfilAccountScreen() {
           </button>
         </div>
         {portalError && (
-          <p className="text-[13px] text-danger mt-2 px-1">{portalError}</p>
+          <p className="text-[13px] text-text-primary mt-2 px-1">{portalError}</p>
         )}
         {restoreMessage && (
-          <p className={`text-[13px] mt-2 px-1 ${restoreMessage.isError ? 'text-danger' : 'text-text-secondary'}`}>{restoreMessage.text}</p>
+          <p className={`text-[13px] mt-2 px-1 ${restoreMessage.isError ? 'text-text-primary' : 'text-text-secondary'}`}>{restoreMessage.text}</p>
         )}
       </div>
 

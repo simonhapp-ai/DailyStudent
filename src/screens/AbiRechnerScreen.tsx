@@ -401,7 +401,7 @@ function SubjectCard({
               className="px-2.5 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
               style={
                 entry.isLK
-                  ? { background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)', border: '1px solid transparent' }
+                  ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)', border: '1px solid transparent' }
                   : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
               }
             >
@@ -481,7 +481,7 @@ function SubjectCard({
               className="px-2 py-0.5 rounded-pill text-[10px] font-bold transition-all press-sm"
               style={
                 active
-                  ? { background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', color: 'white', boxShadow: '0 1px 6px rgba(124,58,237,0.35)' }
+                  ? { background: '#7C3AED', color: 'white', boxShadow: '0 1px 6px rgba(124,58,237,0.35)' }
                   : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-muted))' }
               }
             >
@@ -508,7 +508,7 @@ function SubjectCard({
                   className="px-2 py-1 rounded-pill text-[10px] font-bold transition-all press-sm"
                   style={
                     active
-                      ? { background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)' }
+                      ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)' }
                       : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }
                   }
                 >
@@ -521,7 +521,7 @@ function SubjectCard({
               className="px-2 py-1 rounded-pill text-[10px] font-bold transition-all press-sm"
               style={
                 manualOpen
-                  ? { background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)' }
+                  ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)' }
                   : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }
               }
             >
@@ -634,7 +634,7 @@ function PruefungCard({
                     className="px-2.5 py-1 rounded-pill text-[11px] font-bold flex items-center gap-1 press-sm transition-all"
                     style={
                       active
-                        ? { background: 'linear-gradient(135deg, #34D399, #059669)', color: 'white', boxShadow: '0 2px 8px rgba(52,211,153,0.4)' }
+                        ? { background: '#34D399', color: 'white', boxShadow: '0 2px 8px rgba(52,211,153,0.4)' }
                         : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-secondary))' }
                     }
                   >
@@ -803,7 +803,7 @@ export function AbiRechnerScreen() {
       >
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <ChevronLeft />
           Zurück
@@ -1016,7 +1016,7 @@ export function AbiRechnerScreen() {
                     className="flex items-center gap-2 px-4 py-2.5 rounded-pill shrink-0 press-sm transition-all duration-200"
                     style={
                       isActive
-                        ? { background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', color: 'white', boxShadow: '0 4px 16px rgba(124,58,237,0.55)' }
+                        ? { background: '#7C3AED', color: 'white', boxShadow: '0 4px 16px rgba(124,58,237,0.55)' }
                         : { background: 'rgb(var(--color-surface))', border: '1.5px solid rgba(var(--color-border),1)', color: 'rgb(var(--color-text-secondary))' }
                     }
                   >

@@ -86,7 +86,7 @@ export function TwoFactorVerifyScreen({ onVerified }: Props) {
 
         <div
           className="w-12 h-12 rounded-[14px] flex items-center justify-center mb-4 mx-auto"
-          style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+          style={{ background: '#8b5cf6' }}
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="5" y="11" width="14" height="10" rx="2" />
@@ -121,7 +121,7 @@ export function TwoFactorVerifyScreen({ onVerified }: Props) {
             type="submit"
             disabled={loading || code.length < 6 || !challengeId}
             className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+            style={{ background: '#8b5cf6' }}
           >
             {loading ? (
               <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />

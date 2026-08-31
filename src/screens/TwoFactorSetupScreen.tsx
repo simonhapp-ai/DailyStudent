@@ -113,7 +113,7 @@ export function TwoFactorSetupScreen() {
       <div className="px-4 flex items-center gap-3" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M15 18l-6-6 6-6" />
@@ -142,8 +142,8 @@ export function TwoFactorSetupScreen() {
                   className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0"
                   style={{
                     background: hasMfa
-                      ? 'linear-gradient(135deg, #30d158, #1a7a36)'
-                      : 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+                      ? '#30d158'
+                      : '#8b5cf6',
                   }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -184,11 +184,11 @@ export function TwoFactorSetupScreen() {
                 disabled={loading || step === 'disabling'}
                 className="w-full bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-4 flex items-center justify-between press-sm disabled:opacity-50"
               >
-                <span className="text-danger text-[15px] font-medium">2FA deaktivieren</span>
+                <span className="text-text-primary text-[15px] font-medium">2FA deaktivieren</span>
                 {loading ? (
                   <span className="w-4 h-4 border-2 border-danger/30 border-t-danger rounded-full animate-spin" />
                 ) : (
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                     <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 )}
@@ -198,7 +198,7 @@ export function TwoFactorSetupScreen() {
                 onClick={handleEnable}
                 disabled={loading}
                 className="w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-                style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+                style={{ background: '#8b5cf6' }}
               >
                 {loading ? (
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -236,7 +236,7 @@ export function TwoFactorSetupScreen() {
               {/* Manual secret toggle */}
               <button
                 onClick={() => setShowSecret(v => !v)}
-                className="w-full text-center text-[12px] text-accent font-medium py-1"
+                className="w-full text-center text-[12px] text-text-primary font-medium py-1"
               >
                 {showSecret ? 'Secret ausblenden' : 'Code manuell eingeben'}
               </button>
@@ -253,7 +253,7 @@ export function TwoFactorSetupScreen() {
             <button
               onClick={() => setStep('confirm')}
               className="w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform"
-              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+              style={{ background: '#8b5cf6' }}
             >
               Weiter — Code bestätigen
             </button>
@@ -291,7 +291,7 @@ export function TwoFactorSetupScreen() {
                   type="submit"
                   disabled={loading || code.length < 6}
                   className="w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-                  style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+                  style={{ background: '#8b5cf6' }}
                 >
                   {loading ? (
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -315,7 +315,7 @@ export function TwoFactorSetupScreen() {
             <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-6 text-center">
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-                style={{ background: 'linear-gradient(135deg, #30d158, #1a7a36)' }}
+                style={{ background: '#30d158' }}
               >
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M20 6L9 17l-5-5" />
@@ -330,7 +330,7 @@ export function TwoFactorSetupScreen() {
             <button
               onClick={() => navigate('/profil')}
               className="w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform"
-              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+              style={{ background: '#8b5cf6' }}
             >
               Fertig
             </button>

@@ -38,7 +38,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
     <button
       onClick={onToggle}
-      className={`relative w-12 h-6 rounded-full transition-all duration-200 press-sm shrink-0 ${on ? 'grad-accent' : 'bg-border'}`}
+      className={`relative w-12 h-6 rounded-full transition-all duration-200 press-sm shrink-0 ${on ? 'bg-accent' : 'bg-border'}`}
     >
       <span
         className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-200"
@@ -68,7 +68,7 @@ export function BenachrichtigungenScreen() {
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium mb-3 press-sm -ml-0.5"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />

@@ -190,7 +190,7 @@ export function AuthScreen() {
               type="submit"
               disabled={loading}
               className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+              style={{ background: '#8b5cf6' }}
             >
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Link senden'}
             </button>
@@ -239,7 +239,7 @@ export function AuthScreen() {
               type="submit"
               disabled={loading}
               className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+              style={{ background: '#8b5cf6' }}
             >
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Passwort speichern'}
             </button>
@@ -338,7 +338,7 @@ export function AuthScreen() {
               <button
                 type="button"
                 onClick={() => { setMode('forgot'); setError(null); setSuccessMsg(null) }}
-                className="text-xs text-accent hover:underline"
+                className="text-xs text-text-primary hover:underline"
               >
                 Passwort vergessen?
               </button>
@@ -356,7 +356,7 @@ export function AuthScreen() {
             type="submit"
             disabled={loading || googleLoading || appleLoading}
             className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+            style={{ background: '#8b5cf6' }}
           >
             {loading ? (
               <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
@@ -369,7 +369,7 @@ export function AuthScreen() {
         {/* Toggle login / signup */}
         <p className="text-xs text-muted text-center mt-4">
           {mode === 'login' ? 'Noch kein Konto? ' : 'Bereits ein Konto? '}
-          <button onClick={switchMode} className="text-accent font-semibold">
+          <button onClick={switchMode} className="text-text-primary font-semibold">
             {mode === 'login' ? 'Registrieren' : 'Anmelden'}
           </button>
         </p>

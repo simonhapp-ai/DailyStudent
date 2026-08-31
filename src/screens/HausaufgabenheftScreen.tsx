@@ -109,7 +109,7 @@ export function HausaufgabenheftScreen() {
       >
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -201,7 +201,7 @@ export function HausaufgabenheftScreen() {
                 )}
               </div>
               {nextLessonDate && addDueDate === nextLessonDate && (
-                <p className="text-[10px] text-accent mt-1">→ {formatDate(nextLessonDate)}</p>
+                <p className="text-[10px] text-text-primary mt-1">→ {formatDate(nextLessonDate)}</p>
               )}
             </div>
 
@@ -211,12 +211,12 @@ export function HausaufgabenheftScreen() {
                 onClick={handleAdd}
                 disabled={!addDescription.trim() || !addSubjectId}
                 className="w-full py-3 rounded-card text-white text-sm font-bold disabled:opacity-40 transition-all press-sm"
-                style={{ background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', boxShadow: '0 3px 12px rgba(124,58,237,0.4)' }}
+                style={{ background: '#7C3AED', boxShadow: '0 3px 12px rgba(124,58,237,0.4)' }}
               >
                 Hinzufügen
               </button>
               {!addSubjectId && addDescription.trim().length > 0 && (
-                <p className="text-[11px] text-warning text-center mt-2">Bitte zuerst ein Fach auswählen</p>
+                <p className="text-[11px] text-text-secondary text-center mt-2">Bitte zuerst ein Fach auswählen</p>
               )}
             </div>
           </div>
@@ -299,7 +299,7 @@ export function HausaufgabenheftScreen() {
                     <button
                       onClick={() => handleComplete(item.id)}
                       className="px-3 py-1.5 rounded-pill text-[11px] font-bold text-white press-sm"
-                      style={{ background: 'linear-gradient(135deg,#34C759,#28a745)' }}
+                      style={{ background: '#34C759' }}
                     >
                       Ja, erledigt ✓
                     </button>
@@ -307,7 +307,7 @@ export function HausaufgabenheftScreen() {
                 ) : (
                   <button
                     onClick={() => handleComplete(item.id)}
-                    className="flex items-center gap-2 text-[12px] font-semibold text-text-muted hover:text-success transition-colors press-sm"
+                    className="flex items-center gap-2 text-[12px] font-semibold text-text-muted hover:text-text-primary transition-colors press-sm"
                   >
                     <div className="w-5 h-5 rounded-full border-2 border-border flex items-center justify-center">
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -328,7 +328,7 @@ export function HausaufgabenheftScreen() {
         onClick={() => setShowAddForm((v) => !v)}
         className="fixed bottom-28 right-5 w-14 h-14 rounded-full flex items-center justify-center z-40 press transition-transform"
         style={{
-          background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)',
+          background: '#7C3AED',
           boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
         }}
       >

@@ -9,16 +9,16 @@ import { ProModal, WELCOME_COUPON_ID } from '../components/ui/ProModal'
 import { getActiveStreak } from '../lib/streak'
 
 const AVATAR_BG_OPTIONS = [
-  { id: 'purple', gradient: 'linear-gradient(145deg, #A78BFA, #7C3AED)' },
-  { id: 'blue',   gradient: 'linear-gradient(145deg, #60A5FA, #2563EB)' },
-  { id: 'teal',   gradient: 'linear-gradient(145deg, #5AC8FA, #0891B2)' },
-  { id: 'green',  gradient: 'linear-gradient(145deg, #34D399, #059669)' },
-  { id: 'orange', gradient: 'linear-gradient(145deg, #FBBF24, #D97706)' },
-  { id: 'pink',   gradient: 'linear-gradient(145deg, #F472B6, #DB2777)' },
-  { id: 'red',    gradient: 'linear-gradient(145deg, #F87171, #DC2626)' },
-  { id: 'indigo', gradient: 'linear-gradient(145deg, #818CF8, #4338CA)' },
-  { id: 'cyan',   gradient: 'linear-gradient(145deg, #67E8F9, #0E7490)' },
-  { id: 'rose',   gradient: 'linear-gradient(145deg, #FDA4AF, #E11D48)' },
+  { id: 'purple', gradient: '#A78BFA' },
+  { id: 'blue',   gradient: '#60A5FA' },
+  { id: 'teal',   gradient: '#5AC8FA' },
+  { id: 'green',  gradient: '#34D399' },
+  { id: 'orange', gradient: '#FBBF24' },
+  { id: 'pink',   gradient: '#F472B6' },
+  { id: 'red',    gradient: '#F87171' },
+  { id: 'indigo', gradient: '#818CF8' },
+  { id: 'cyan',   gradient: '#67E8F9' },
+  { id: 'rose',   gradient: '#FDA4AF' },
 ]
 
 const AVATAR_EMOJI_OPTIONS = ['🎓', '📚', '✏️', '🔬', '🧮', '📐', '🧪', '🔭', '💡', '📝']
@@ -39,10 +39,10 @@ function NavRow({ label, sublabel, onClick, danger = false }: {
       onClick={onClick}
       className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm"
     >
-      <span className={`text-[15px] ${danger ? 'text-danger' : 'text-text-primary'}`}>{label}</span>
+      <span className={`text-[15px] ${danger ? 'text-text-primary' : 'text-text-primary'}`}>{label}</span>
       <div className="flex items-center gap-1.5 shrink-0">
         {sublabel && <span className="text-text-muted text-[13px]">{sublabel}</span>}
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={danger ? 'text-danger' : 'text-text-muted'}>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={danger ? 'text-text-primary' : 'text-text-muted'}>
           <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
@@ -75,7 +75,7 @@ export function ProfilScreen() {
 
   const trialActive = trialEndsAt ? new Date(trialEndsAt) > new Date() : false
 
-  const avatarBg = profile?.avatarBg ?? 'linear-gradient(145deg, #A78BFA, #7C3AED)'
+  const avatarBg = profile?.avatarBg ?? '#A78BFA'
   const avatarEmoji = profile?.avatarEmoji ?? '🎓'
 
   useEffect(() => {
@@ -179,7 +179,7 @@ export function ProfilScreen() {
               </div>
               {/* Small edit badge */}
               <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface"
-                   style={{ background: 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}>
+                   style={{ background: '#A78BFA' }}>
                 <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -252,7 +252,7 @@ export function ProfilScreen() {
           >
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="text-accent font-bold text-[17px]">Pro freischalten</p>
+                <p className="text-text-primary font-bold text-[17px]">Pro freischalten</p>
                 <p className="text-text-secondary text-[13px] mt-0.5">Alle KI-Features. Kein Limit.</p>
               </div>
               <div className="text-right">
@@ -268,7 +268,7 @@ export function ProfilScreen() {
                 'Persönlicher Lernplan',
               ].map((f) => (
                 <li key={f} className="flex items-center gap-2.5 text-[14px] text-text-secondary">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success shrink-0">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
                     <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   {f}
@@ -284,7 +284,7 @@ export function ProfilScreen() {
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}
-              className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
+              className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
             >
               {checkoutLoading === 'yearly' ? 'Wird geladen…' : 'Pro freischalten · €59,99/Jahr'}
             </button>
@@ -309,7 +309,7 @@ export function ProfilScreen() {
                 <div className="flex items-center gap-2.5">
                   <div
                     className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
-                    style={{ background: 'linear-gradient(145deg, #FFD700, #FF8C00)' }}
+                    style={{ background: '#FFD700' }}
                   >
                     🎁
                   </div>
@@ -397,7 +397,7 @@ export function ProfilScreen() {
           >
             <div
               className="w-11 h-11 rounded-[12px] flex items-center justify-center text-[22px] shrink-0"
-              style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+              style={{ background: '#34D399' }}
             >
               🎉
             </div>
@@ -430,7 +430,7 @@ export function ProfilScreen() {
           >
             <div className="flex items-center gap-2">
               <div className="w-5 h-5 rounded-[6px] flex items-center justify-center shrink-0"
-                style={{ background: 'linear-gradient(145deg, #6366F1, #4C1D95)' }}>
+                style={{ background: '#6366F1' }}>
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>
@@ -530,7 +530,7 @@ export function ProfilScreen() {
               <button
                 onClick={() => setShowProComingSoon(true)}
                 className="relative w-full py-3 rounded-card text-white text-[14px] font-semibold press transition-all overflow-hidden"
-                style={{ background: 'linear-gradient(135deg, #34D399, #059669)', animation: 'ea-glow 2.4s ease-in-out infinite' }}
+                style={{ background: '#34D399', animation: 'ea-glow 2.4s ease-in-out infinite' }}
               >
                 <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
                 <span className="relative">Für Rabatt vormerken</span>
@@ -543,7 +543,7 @@ export function ProfilScreen() {
                   <div className="flex items-start gap-2.5 mb-4">
                     <div
                       className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
-                      style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+                      style={{ background: '#34D399' }}
                     >
                       🔗
                     </div>
@@ -616,7 +616,7 @@ export function ProfilScreen() {
       {/* Toast */}
       {paymentToast === 'success' && (
         <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-pill bg-success/10 border border-success/30 shadow-float animate-fade-in">
-          <p className="text-success text-[13px] font-semibold whitespace-nowrap">Zahlung erfolgreich! Pro wird aktiviert…</p>
+          <p className="text-text-primary text-[13px] font-semibold whitespace-nowrap">Zahlung erfolgreich! Pro wird aktiviert…</p>
         </div>
       )}
       {paymentToast === 'error' && (

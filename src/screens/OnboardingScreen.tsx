@@ -157,7 +157,7 @@ export function OnboardingScreen() {
     return (
       <div className="flex flex-col items-center justify-center min-h-dvh bg-background gap-4">
         <div className="w-12 h-12 rounded-btn bg-accent-soft flex items-center justify-center">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
@@ -177,7 +177,7 @@ export function OnboardingScreen() {
       {step > 1 && (
         <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
           <div
-            className="h-full grad-accent transition-all duration-300"
+            className="h-full bg-accent transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -187,7 +187,7 @@ export function OnboardingScreen() {
       {step > 1 && (
         <button
           onClick={back}
-          className="absolute left-4 flex items-center gap-1 text-accent text-[14px] font-medium press-sm z-10"
+          className="absolute left-4 flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm z-10"
           style={{ top: 'max(48px, calc(env(safe-area-inset-top, 0px) + 12px))' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -314,7 +314,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
         </div>
         <h1 className="text-4xl font-bold text-text-primary leading-tight mb-4">
           Smarter lernen.<br />
-          <span className="text-accent">Besser abschneiden.</span>
+          <span className="text-text-primary">Besser abschneiden.</span>
         </h1>
         <p className="text-text-secondary text-lg leading-relaxed mb-10">
           Die KI, die deinen echten Unterricht kennt — personalisiert auf deinen Lehrplan.
@@ -599,7 +599,7 @@ function StepPersonal({
             onClick={() => handleSetUserType(id)}
             className={`py-4 px-4 rounded-card border text-left transition-all duration-150 ${
               userType === id
-                ? 'grad-accent border-transparent'
+                ? 'bg-accent border-transparent'
                 : 'bg-surface border-border hover:bg-surface-hover'
             }`}
           >
@@ -615,10 +615,10 @@ function StepPersonal({
         <div className="rounded-[16px] px-4 py-3.5 flex items-center gap-3 mb-2"
           style={{ background: 'rgba(var(--color-accent), 0.08)', border: '1px solid rgba(var(--color-accent), 0.2)' }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-accent shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <p className="text-[13px] text-accent font-medium">
+          <p className="text-[13px] text-text-primary font-medium">
             Kein G8/G9 nötig — du legst deine Fächer im nächsten Schritt selbst an.
           </p>
         </div>
@@ -640,7 +640,7 @@ function StepPersonal({
                 onClick={() => { setSchultyp(id); setKlasse(''); setShowMittelstufePicker(false) }}
                 className={`py-4 px-4 rounded-card border text-left transition-all duration-150 ${
                   schultyp === id
-                    ? 'grad-accent border-transparent'
+                    ? 'bg-accent border-transparent'
                     : 'bg-surface border-border hover:bg-surface-hover'
                 }`}
               >
@@ -661,7 +661,7 @@ function StepPersonal({
                   onClick={() => { setShowMittelstufePicker(true); if (!mittelstufeSelected) setKlasse('') }}
                   className={`w-full py-3.5 px-4 rounded-card border text-left transition-all duration-150 ${
                     mittelstufeSelected
-                      ? 'grad-accent border-transparent'
+                      ? 'bg-accent border-transparent'
                       : 'bg-surface border-border hover:bg-surface-hover'
                   }`}
                 >
@@ -691,7 +691,7 @@ function StepPersonal({
                         onClick={() => setKlasse(k)}
                         className={`py-3 rounded-card text-sm font-bold border transition-all duration-150 ${
                           klasse === k
-                            ? 'grad-accent border-transparent text-white'
+                            ? 'bg-accent border-transparent text-white'
                             : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                         }`}
                       >
@@ -712,7 +712,7 @@ function StepPersonal({
                       onClick={() => { setKlasse(k); setShowMittelstufePicker(false) }}
                       className={`py-3.5 px-4 rounded-card border text-left transition-all duration-150 ${
                         klasse === k
-                          ? 'grad-accent border-transparent'
+                          ? 'bg-accent border-transparent'
                           : 'bg-surface border-border hover:bg-surface-hover'
                       }`}
                     >
@@ -738,7 +738,7 @@ function StepPersonal({
                 onClick={() => setSchulform(sf)}
                 className={`py-3 rounded-card text-sm font-medium border transition-all duration-150 ${
                   schulform === sf
-                    ? 'grad-accent border-transparent text-white'
+                    ? 'bg-accent border-transparent text-white'
                     : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                 }`}
               >
@@ -789,7 +789,7 @@ function StepBundesland({ selected, onSelect, isStudent }: { selected: string; o
             onClick={() => onSelect(bl.id)}
             className={`py-3 px-3 rounded-card text-sm font-medium border text-left transition-all duration-150 ${
               selected === bl.id
-                ? 'grad-accent border-transparent text-white'
+                ? 'bg-accent border-transparent text-white'
                 : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
             }`}
           >
@@ -799,7 +799,7 @@ function StepBundesland({ selected, onSelect, isStudent }: { selected: string; o
       </div>
 
       {selected && (
-        <div className="mt-5 flex items-center gap-2 text-success text-sm">
+        <div className="mt-5 flex items-center gap-2 text-text-primary text-sm">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -875,7 +875,7 @@ function CustomFaecherModal({
             {inputs.length > 1 && (
               <button
                 onClick={() => removeInput(i)}
-                className="w-11 h-11 rounded-card border border-border flex items-center justify-center text-text-muted hover:text-danger hover:border-danger/30 transition-colors shrink-0"
+                className="w-11 h-11 rounded-card border border-border flex items-center justify-center text-text-muted hover:text-text-primary hover:border-danger/30 transition-colors shrink-0"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
@@ -887,7 +887,7 @@ function CustomFaecherModal({
 
         <button
           onClick={addInput}
-          className="w-full py-3 border border-dashed border-border rounded-card flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all duration-200"
+          className="w-full py-3 border border-dashed border-border rounded-card flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-text-primary hover:bg-accent/5 transition-all duration-200"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -944,10 +944,10 @@ function StepFaecher({
         {isStudent
           ? 'Lege deine Studienfächer an.'
           : 'Wähle alle Fächer, die du lernst.'}
-        {' '}<span className="text-accent font-medium">{totalSelected} ausgewählt</span>
+        {' '}<span className="text-text-primary font-medium">{totalSelected} ausgewählt</span>
       </p>
       {isOberstufe && !isStudent && (
-        <p className="text-[11px] text-text-muted mb-4">Tippe auf <span className="font-bold text-accent">LK</span> um Leistungskurse zu markieren.</p>
+        <p className="text-[11px] text-text-muted mb-4">Tippe auf <span className="font-bold text-text-primary">LK</span> um Leistungskurse zu markieren.</p>
       )}
       {(!isOberstufe || isStudent) && <div className="mb-5" />}
 
@@ -967,7 +967,7 @@ function StepFaecher({
             </div>
             <button
               onClick={() => setShowCustomModal(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-[12px] grad-accent text-white text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-[12px] bg-accent text-white dark:text-[#160E28] text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -985,10 +985,10 @@ function StepFaecher({
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill"
                 style={{ background: 'rgba(var(--color-accent), 0.1)', border: '1px solid rgba(var(--color-accent), 0.25)' }}
               >
-                <span className="text-[13px] font-semibold text-accent">{cf.name}</span>
+                <span className="text-[13px] font-semibold text-text-primary">{cf.name}</span>
                 <button
                   onClick={() => setCustomFaecher(customFaecher.filter((c) => c.id !== cf.id))}
-                  className="text-accent/60 hover:text-accent transition-colors"
+                  className="text-text-primary/60 hover:text-text-primary transition-colors"
                 >
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
@@ -998,7 +998,7 @@ function StepFaecher({
             ))}
             <button
               onClick={() => setShowCustomModal(true)}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-pill text-[13px] font-medium text-text-muted border border-dashed border-border hover:border-accent/50 hover:text-accent transition-all"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-pill text-[13px] font-medium text-text-muted border border-dashed border-border hover:border-accent/50 hover:text-text-primary transition-all"
             >
               + bearbeiten
             </button>
@@ -1042,13 +1042,13 @@ function StepFaecher({
                           className={`absolute top-2 right-2 px-1.5 py-0.5 rounded text-[9px] font-black tracking-wide transition-all ${
                             isLK
                               ? 'bg-accent text-white'
-                              : 'bg-accent/15 text-accent border border-accent/30'
+                              : 'bg-accent/15 text-text-primary border border-accent/30'
                           }`}
                         >
                           LK
                         </button>
                       ) : active ? (
-                        <div className="absolute top-2 right-2 w-4 h-4 rounded-full grad-accent flex items-center justify-center shrink-0">
+                        <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-accent flex items-center justify-center shrink-0">
                           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
                             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
@@ -1133,7 +1133,7 @@ function StepFolderSort({
               onClick={() => { if (!opt.comingSoon) setSortMode(opt.id) }}
               className={`w-full flex items-start gap-4 p-4 rounded-[20px] border text-left transition-all duration-150 ${
                 active
-                  ? 'grad-accent border-transparent'
+                  ? 'bg-accent border-transparent'
                   : opt.comingSoon
                   ? 'bg-surface border-border/40 opacity-55 cursor-not-allowed'
                   : 'bg-surface border-border hover:bg-surface-hover active:scale-[0.98]'
@@ -1315,7 +1315,7 @@ function StepStundenplan({
         <div className="flex-1">
           <button
             onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
-            className="flex items-center gap-1.5 text-accent text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-1.5 text-text-primary text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -1359,7 +1359,7 @@ function StepStundenplan({
               </div>
               <button
                 onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }}
-                className="w-full py-3.5 rounded-[20px] grad-accent text-white text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full py-3.5 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Erneut versuchen
               </button>
@@ -1410,7 +1410,7 @@ function StepStundenplan({
                   setScanPhase('idle')
                   setMismatchData(null)
                 }}
-                className="w-full py-3.5 rounded-[20px] grad-accent text-white text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full py-3.5 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Fächer hinzufügen &amp; Stundenplan übernehmen
               </button>
@@ -1459,7 +1459,7 @@ function StepStundenplan({
       <div className="flex-1">
         <button
           onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }}
-          className="flex items-center gap-1.5 text-accent text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-1.5 text-text-primary text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -1469,10 +1469,10 @@ function StepStundenplan({
 
         {fromAI && totalSlots > 0 && (
           <div className="mb-5 rounded-[14px] px-4 py-3 flex items-center gap-2.5" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.25)' }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
               <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <p className="text-[13px] font-medium text-success">
+            <p className="text-[13px] font-medium text-text-primary">
               {totalSlots} Stunden erkannt — prüfen & anpassen
             </p>
           </div>
@@ -1494,11 +1494,11 @@ function StepStundenplan({
                 key={d}
                 onClick={() => { setActiveDay(i); setAddingSlot(false) }}
                 className={`flex-1 flex flex-col items-center py-2.5 rounded-[14px] transition-all duration-200 ${
-                  activeDay === i ? 'grad-accent' : 'bg-surface border border-border hover:bg-surface-hover'
+                  activeDay === i ? 'bg-accent' : 'bg-surface border border-border hover:bg-surface-hover'
                 }`}
               >
                 <span className={`text-[11px] font-semibold ${activeDay === i ? 'text-white/80' : 'text-text-muted'}`}>{d}</span>
-                <span className={`text-[13px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-accent' : 'text-text-muted/30'}`}>
+                <span className={`text-[13px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-text-primary' : 'text-text-muted/30'}`}>
                   {count > 0 ? count : '·'}
                 </span>
               </button>
@@ -1530,7 +1530,7 @@ function StepStundenplan({
                 </div>
                 <button
                   onClick={() => removeSlot(slot.id)}
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 transition-colors shrink-0 press-sm"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-danger/10 transition-colors shrink-0 press-sm"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
@@ -1545,7 +1545,7 @@ function StepStundenplan({
         {!addingSlot ? (
           <button
             onClick={() => setAddingSlot(true)}
-            className="w-full border border-dashed border-border rounded-card py-3.5 flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all duration-200"
+            className="w-full border border-dashed border-border rounded-card py-3.5 flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-text-primary hover:bg-accent/5 transition-all duration-200"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -1635,7 +1635,7 @@ function StepStundenplan({
               <button
                 onClick={commitSlot}
                 disabled={!newSlot.subjectId && !newSlot.isFreistunde}
-                className="flex-1 py-2.5 rounded-card grad-accent text-white text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
+                className="flex-1 py-2.5 rounded-card bg-accent text-white dark:text-[#160E28] text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
               >
                 Hinzufügen
               </button>
@@ -1696,7 +1696,7 @@ function StepKlausur({
             onClick={() => setSubject(s.id)}
             className={`flex items-center gap-3 py-3 px-4 rounded-card border text-left transition-all duration-150 ${
               subject === s.id
-                ? 'grad-accent border-transparent text-white'
+                ? 'bg-accent border-transparent text-white'
                 : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
             }`}
           >

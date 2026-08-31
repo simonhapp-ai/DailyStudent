@@ -31,7 +31,7 @@ export function CoinToast() {
                      pl-2 pr-5 py-2.5 rounded-2xl
                      text-white
                      shadow-[0_8px_36px_rgba(0,0,0,0.30)]"
-          style={{ background: 'linear-gradient(135deg, #F59E0B 0%, #EF4444 100%)' }}
+          style={{ background: '#F59E0B' }}
         >
           {/* Tier icon reflects total wealth — grows alongside the user's stash */}
           <CoinIcon coins={appStats.coins} size={34} noAnimation tilt={false}/>

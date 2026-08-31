@@ -143,7 +143,7 @@ function computeSuggestion(
 
   // 1. Klausur critical ≤ 3 days — no Probeklausur for that subject yet
   if (nextExam && nextExam.days <= 3 && probeklausurenFor(nextExam.subjectId).length === 0) {
-    return { icon: <AlertIcon />, gradient: 'linear-gradient(145deg, #FF3B30, #C0392B)', urgency: 'critical',
+    return { icon: <AlertIcon />, gradient: '#FF3B30', urgency: 'critical',
       title: `Probeklausur ${nextExamName}`,
       subtitle: `Klausur in ${nextExam.days === 0 ? 'heute' : `${nextExam.days} Tag${nextExam.days === 1 ? '' : 'en'}`} — noch keine Übungsklausur!`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Jetzt starten' }
@@ -153,7 +153,7 @@ function computeSuggestion(
   if (nextExam && nextExam.days <= 3) {
     const lastPk = probeklausurenFor(nextExam.subjectId).slice(-1)[0]
     if (lastPk && lastPk.totalNP < 8) {
-      return { icon: <AlertIcon />, gradient: 'linear-gradient(145deg, #FF9500, #E07008)', urgency: 'critical',
+      return { icon: <AlertIcon />, gradient: '#FF9500', urgency: 'critical',
         title: `Nochmal ${nextExamName}`,
         subtitle: `Du warst bei ${lastPk.totalNP} NP — eine weitere Probeklausur lohnt sich.`,
         actionPath: '/klausurmodus/probeklausur', actionLabel: 'Probeklausur' }
@@ -162,7 +162,7 @@ function computeSuggestion(
 
   // 3. Klausur ≤ 3 days — has Lernzettel for subject
   if (nextExam && nextExam.days <= 3 && lernzettelFor(nextExam.subjectId) > 0) {
-    return { icon: <BookIcon />, gradient: 'linear-gradient(145deg, #5AC8FA, #007BB8)', urgency: 'critical',
+    return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'critical',
       title: `Lernzettel ${nextExamName} wiederholen`,
       subtitle: `${lernzettelFor(nextExam.subjectId)} Lernzettel verfügbar — letzter Check vor der Klausur.`,
       actionPath: '/klausurmodus/lernzettel', actionLabel: 'Lernzettel öffnen' }
@@ -170,7 +170,7 @@ function computeSuggestion(
 
   // 4. Klausur ≤ 3 days — has flashcards for subject
   if (nextExam && nextExam.days <= 3 && flashFor(nextExam.subjectId) > 0) {
-    return { icon: <CardIcon />, gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)', urgency: 'critical',
+    return { icon: <CardIcon />, gradient: '#7C3AED', urgency: 'critical',
       title: `Karteikarten-Sprint: ${nextExamName}`,
       subtitle: `${flashFor(nextExam.subjectId)} Karten — perfekt für die letzten Stunden.`,
       actionPath: '/klausurmodus/lernen', actionLabel: 'Lernen starten' }
@@ -178,7 +178,7 @@ function computeSuggestion(
 
   // 5. Klausur ≤ 3 days — no materials at all
   if (nextExam && nextExam.days <= 3) {
-    return { icon: <CameraIcon />, gradient: 'linear-gradient(145deg, #FF3B30, #C0392B)', urgency: 'critical',
+    return { icon: <CameraIcon />, gradient: '#FF3B30', urgency: 'critical',
       title: `Smart Note zu ${nextExamName} erfassen`,
       subtitle: `Klausur in ${nextExam.days} Tag${nextExam.days === 1 ? '' : 'en'} — scanne deine Unterlagen.`,
       actionPath: '/unterricht', actionLabel: 'Unterricht öffnen' }
@@ -186,7 +186,7 @@ function computeSuggestion(
 
   // 6. Active Lernplan with session today
   if (hasTodaySession) {
-    return { icon: <CalendarIcon />, gradient: 'linear-gradient(145deg, #FFD060, #C07700)', urgency: 'normal',
+    return { icon: <CalendarIcon />, gradient: '#FFD060', urgency: 'normal',
       title: 'Heutiger Lernplan wartet',
       subtitle: 'Du hast heute eine geplante Lernsession — starte jetzt.',
       actionPath: '/klausurmodus/lernplan', actionLabel: 'Lernplan öffnen' }
@@ -194,7 +194,7 @@ function computeSuggestion(
 
   // 7. Klausur 4-7 days — no Lernzettel for subject
   if (nextExam && nextExam.days <= 7 && lernzettelFor(nextExam.subjectId) === 0 && notesFor(nextExam.subjectId) > 0) {
-    return { icon: <BookIcon />, gradient: 'linear-gradient(145deg, #5AC8FA, #007BB8)', urgency: 'normal',
+    return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'normal',
       title: `Lernzettel ${nextExamName} erstellen`,
       subtitle: `Klausur in ${nextExam.days} Tagen — du hast ${notesFor(nextExam.subjectId)} Notizen als Basis.`,
       actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -202,7 +202,7 @@ function computeSuggestion(
 
   // 8. Klausur 4-7 days — has notes, no flashcards
   if (nextExam && nextExam.days <= 7 && flashFor(nextExam.subjectId) === 0 && notesFor(nextExam.subjectId) > 0) {
-    return { icon: <CardIcon />, gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)', urgency: 'normal',
+    return { icon: <CardIcon />, gradient: '#7C3AED', urgency: 'normal',
       title: `Karteikarten aus ${notesFor(nextExam.subjectId)} Notizen`,
       subtitle: `${nextExamName} in ${nextExam.days} Tagen — Karteikarten helfen bei der Wiederholung.`,
       actionPath: '/klausurmodus/karteikarten/neu', actionLabel: 'Karteikarten erstellen' }
@@ -210,7 +210,7 @@ function computeSuggestion(
 
   // 9. Klausur 4-7 days — no Lernplan yet
   if (nextExam && nextExam.days <= 7 && !activePlan) {
-    return { icon: <CalendarIcon />, gradient: 'linear-gradient(145deg, #FFD060, #C07700)', urgency: 'normal',
+    return { icon: <CalendarIcon />, gradient: '#FFD060', urgency: 'normal',
       title: `Lernplan für ${nextExam.days} Tage`,
       subtitle: `Klausur ${nextExamName} — strukturiere deine Vorbereitung mit einem Lernplan.`,
       actionPath: '/klausurmodus/lernplan/neu', actionLabel: 'Lernplan erstellen' }
@@ -218,7 +218,7 @@ function computeSuggestion(
 
   // 10. Klausur 4-7 days — good streak, suggest Probeklausur
   if (nextExam && nextExam.days <= 7 && streak >= 3) {
-    return { icon: <BoltIcon />, gradient: 'linear-gradient(145deg, #0891B2, #065666)', urgency: 'normal',
+    return { icon: <BoltIcon />, gradient: '#0891B2', urgency: 'normal',
       title: `Weiter so! Probeklausur ${nextExamName}`,
       subtitle: `${streak} Tage Streak — du bist in der Spur. Teste dein Wissen.`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Probeklausur starten' }
@@ -226,7 +226,7 @@ function computeSuggestion(
 
   // 11. Weakest subject < 5 NP — no Smart Notes
   if (weakest && weakest.np < 5 && notesFor(weakest.subjectId) === 0) {
-    return { icon: <CameraIcon />, gradient: 'linear-gradient(145deg, #FF3B30, #C0392B)', urgency: 'normal',
+    return { icon: <CameraIcon />, gradient: '#FF3B30', urgency: 'normal',
       title: `${weakest.name} stärken — 0 Notizen`,
       subtitle: `Note ${weakest.np} NP — scanne deine Hefte für KI-Hilfe.`,
       actionPath: '/unterricht', actionLabel: 'Unterricht öffnen' }
@@ -234,7 +234,7 @@ function computeSuggestion(
 
   // 12. Weakest subject < 5 NP — has Smart Notes, do AFB
   if (weakest && weakest.np < 5) {
-    return { icon: <AlertIcon />, gradient: 'linear-gradient(145deg, #FF9500, #E07008)', urgency: 'normal',
+    return { icon: <AlertIcon />, gradient: '#FF9500', urgency: 'normal',
       title: `AFB-Training: ${weakest.name}`,
       subtitle: `Note ${weakest.np} NP — gezieltes AFB I/II/III Training gegen deine Lücken.`,
       actionPath: '/klausurmodus/probeklausur/afb-trainer', actionLabel: 'AFB-Trainer starten' }
@@ -242,7 +242,7 @@ function computeSuggestion(
 
   // 13. Weakest subject 5-7 NP — no Lernzettel
   if (weakest && weakest.np < 8 && lernzettelFor(weakest.subjectId) === 0) {
-    return { icon: <BookIcon />, gradient: 'linear-gradient(145deg, #5AC8FA, #007BB8)', urgency: 'normal',
+    return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'normal',
       title: `Lernzettel ${weakest.name} erstellen`,
       subtitle: `Note ${weakest.np} NP — ein guter Lernzettel hilft dir, die Lücken zu schließen.`,
       actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -251,7 +251,7 @@ function computeSuggestion(
   // 14. Two or more weak subjects (< 8 NP)
   if (weakSubjects.length >= 2) {
     const names = weakSubjects.slice(0, 2).map((sid) => SUBJECT_INFO[sid]?.name ?? sid)
-    return { icon: <AlertIcon />, gradient: 'linear-gradient(145deg, #FF9500, #E07008)', urgency: 'normal',
+    return { icon: <AlertIcon />, gradient: '#FF9500', urgency: 'normal',
       title: `${names[0]} oder ${names[1]} stärken?`,
       subtitle: `Du hast ${weakSubjects.length} Fächer unter 8 Punkten — wo willst du anfangen?`,
       actionPath: '/klausurmodus', actionLabel: 'Lernmethoden wählen' }
@@ -259,7 +259,7 @@ function computeSuggestion(
 
   // 15. Studied today — positive reinforcement
   if (studiedToday && nextExam) {
-    return { icon: <TrophyIcon />, gradient: 'linear-gradient(145deg, #34C759, #1A7A32)', urgency: 'low',
+    return { icon: <TrophyIcon />, gradient: '#34C759', urgency: 'low',
       title: 'Gut gemacht heute!',
       subtitle: `Noch ${nextExam.days} Tag${nextExam.days === 1 ? '' : 'en'} bis ${nextExamName} — du bist auf Kurs.`,
       actionPath: '/insights', actionLabel: 'Fortschritt ansehen' }
@@ -267,7 +267,7 @@ function computeSuggestion(
 
   // 16. 7+ day streak
   if (streak >= 7) {
-    return { icon: <TrophyIcon />, gradient: 'linear-gradient(145deg, #FFD060, #C07700)', urgency: 'low',
+    return { icon: <TrophyIcon />, gradient: '#FFD060', urgency: 'low',
       title: `${streak} Tage Streak!`,
       subtitle: 'Bemerkenswerte Kontinuität — bleib am Ball.',
       actionPath: '/insights', actionLabel: 'Statistiken ansehen' }
@@ -275,7 +275,7 @@ function computeSuggestion(
 
   // 17. 2 days since last study
   if (daysSinceStudy === 2) {
-    return { icon: <BoltIcon />, gradient: 'linear-gradient(145deg, #FF9500, #E07008)', urgency: 'normal',
+    return { icon: <BoltIcon />, gradient: '#FF9500', urgency: 'normal',
       title: '2 Tage Pause',
       subtitle: '15 Minuten reichen heute — Probeklausur oder Karteikarten.',
       actionPath: '/klausurmodus', actionLabel: 'Jetzt lernen' }
@@ -283,7 +283,7 @@ function computeSuggestion(
 
   // 18. 3+ days gap — streak broken
   if (daysSinceStudy >= 3 && appStats.streak > 0) {
-    return { icon: <BoltIcon />, gradient: 'linear-gradient(145deg, #FF3B30, #C0392B)', urgency: 'normal',
+    return { icon: <BoltIcon />, gradient: '#FF3B30', urgency: 'normal',
       title: 'Streak unterbrochen',
       subtitle: `${daysSinceStudy} Tage Pause — starte neu mit einer kurzen Probeklausur.`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Streak wiederbeleben' }
@@ -292,7 +292,7 @@ function computeSuggestion(
   // 19. Flashcards available — not studied in 3 days
   const totalFlash = flashCards.length
   if (totalFlash >= 5 && daysSinceStudy >= 3) {
-    return { icon: <CardIcon />, gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)', urgency: 'normal',
+    return { icon: <CardIcon />, gradient: '#7C3AED', urgency: 'normal',
       title: `${totalFlash} Karteikarten warten`,
       subtitle: 'Deine Karteikarten wurden zuletzt vor einigen Tagen gelernt.',
       actionPath: '/klausurmodus/lernen', actionLabel: 'Jetzt lernen' }
@@ -301,7 +301,7 @@ function computeSuggestion(
   // 20. Trend down — last 2 exams declining
   if (trendDown && lastTwo.length === 2) {
     const lastSubj = SUBJECT_INFO[lastTwo[1].subjectId]?.name ?? lastTwo[1].subjectId
-    return { icon: <AlertIcon />, gradient: 'linear-gradient(145deg, #FF9500, #E07008)', urgency: 'normal',
+    return { icon: <AlertIcon />, gradient: '#FF9500', urgency: 'normal',
       title: `Grundlagen ${lastSubj} wiederholen`,
       subtitle: `Deine letzten 2 Probeklausuren zeigen einen Abwärtstrend — fokussiere AFB I.`,
       actionPath: '/klausurmodus/probeklausur/afb-trainer', actionLabel: 'AFB I Trainer' }
@@ -311,7 +311,7 @@ function computeSuggestion(
   const lastPk = [...savedProbeklausuren].slice(-1)[0]
   if (lastPk && lastPk.totalNP < 6) {
     const lastSubj = SUBJECT_INFO[lastPk.subjectId]?.name ?? lastPk.subjectId
-    return { icon: <BookIcon />, gradient: 'linear-gradient(145deg, #FF9500, #E07008)', urgency: 'normal',
+    return { icon: <BookIcon />, gradient: '#FF9500', urgency: 'normal',
       title: `Lücken in ${lastSubj}`,
       subtitle: `Letzte Probeklausur: ${lastPk.totalNP} NP — Lernzettel erstellen und Grundlagen wiederholen.`,
       actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -321,7 +321,7 @@ function computeSuggestion(
   const richSubject = faecher.find((sid) => notesFor(sid) > 10)
   if (richSubject) {
     const subj = SUBJECT_INFO[richSubject]?.name ?? richSubject
-    return { icon: <ClipboardIcon />, gradient: 'linear-gradient(145deg, #0891B2, #065666)', urgency: 'low',
+    return { icon: <ClipboardIcon />, gradient: '#0891B2', urgency: 'low',
       title: `Probeklausur ${subj}`,
       subtitle: `Du hast ${notesFor(richSubject)} Smart Notes — teste dein Wissen mit einer Probeklausur.`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Probeklausur starten' }
@@ -330,7 +330,7 @@ function computeSuggestion(
   // 23. No Klausur in next 14 days — productive suggestion
   if (!nextExam || nextExam.days > 14) {
     if (weakest) {
-      return { icon: <BookIcon />, gradient: 'linear-gradient(145deg, #5AC8FA, #007BB8)', urgency: 'low',
+      return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'low',
         title: `Nutze die Zeit: ${weakest.name}`,
         subtitle: `Keine Klausur in Sicht — perfekt um Schwächen aufzuholen.`,
         actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -339,7 +339,7 @@ function computeSuggestion(
 
   // 24. Above Zielnote — positive
   if (gesamtnote !== null && zielnote !== null && gesamtnote <= zielnote - 0.4) {
-    return { icon: <TrophyIcon />, gradient: 'linear-gradient(145deg, #34C759, #1A7A32)', urgency: 'low',
+    return { icon: <TrophyIcon />, gradient: '#34C759', urgency: 'low',
       title: 'Du liegst über deiner Zielnote!',
       subtitle: `Schnitt ${profile.abiGesamtnote} · Ziel ${profile.zielnote} — weiter so.`,
       actionPath: '/abi-rechner', actionLabel: 'Noten ansehen' }
@@ -347,7 +347,7 @@ function computeSuggestion(
 
   // 25. Below Zielnote
   if (gesamtnote !== null && zielnote !== null && gesamtnote >= zielnote + 0.4) {
-    return { icon: <StarIcon />, gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)', urgency: 'low',
+    return { icon: <StarIcon />, gradient: '#7C3AED', urgency: 'low',
       title: `Zielnote ${profile.zielnote} ist erreichbar`,
       subtitle: `Aktueller Schnitt: ${profile.abiGesamtnote} — noch ${(gesamtnote - zielnote).toFixed(1)} Notenpunkte aufholen.`,
       actionPath: '/abi-rechner', actionLabel: 'Rechner öffnen' }
@@ -355,7 +355,7 @@ function computeSuggestion(
 
   // 26. Has Lernzettel — suggest reviewing them
   if (lernzettel.length > 0) {
-    return { icon: <BookIcon />, gradient: 'linear-gradient(145deg, #5AC8FA, #007BB8)', urgency: 'low',
+    return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'low',
       title: `Lernzettel wiederholen`,
       subtitle: `${lernzettel.length} Lernzettel verfügbar — kurze Wiederholung festigt das Wissen.`,
       actionPath: '/klausurmodus/lernzettel', actionLabel: 'Lernzettel öffnen' }
@@ -363,7 +363,7 @@ function computeSuggestion(
 
   // 27. No Klausurtermin set
   if (klausurtermine.length === 0) {
-    return { icon: <CalendarIcon />, gradient: 'linear-gradient(145deg, #5AC8FA, #007BB8)', urgency: 'low',
+    return { icon: <CalendarIcon />, gradient: '#5AC8FA', urgency: 'low',
       title: 'Klausurtermin eintragen',
       subtitle: 'Trage deine nächste Klausur ein — dann bekommst du gezielte Lernvorschläge.',
       actionPath: '/klausurmodus', actionLabel: 'Klausurmodus öffnen' }
@@ -371,7 +371,7 @@ function computeSuggestion(
 
   // 28. Yesterday — keep streak
   if (daysSinceStudy === 1 && nextExam) {
-    return { icon: <BoltIcon />, gradient: 'linear-gradient(145deg, #FF9F0A, #E07008)', urgency: 'low',
+    return { icon: <BoltIcon />, gradient: '#FF9F0A', urgency: 'low',
       title: `Streak halten: ${streak} Tag${streak === 1 ? '' : 'e'}`,
       subtitle: `${nextExamName} in ${nextExam.days} Tagen — heute weiterlernen.`,
       actionPath: '/klausurmodus', actionLabel: 'Lernen starten' }
@@ -379,7 +379,7 @@ function computeSuggestion(
 
   // 29. 0 Smart Notes total
   if (totalNotes === 0) {
-    return { icon: <CameraIcon />, gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)', urgency: 'low',
+    return { icon: <CameraIcon />, gradient: '#7C3AED', urgency: 'low',
       title: 'Erste Smart Note erfassen',
       subtitle: 'Scanne deine Unterlagen — die KI erstellt daraus Lernmaterial.',
       actionPath: '/unterricht', actionLabel: 'Unterricht öffnen' }
@@ -387,7 +387,7 @@ function computeSuggestion(
 
   // 30. Fallback — suggest Probeklausur for next subject
   if (nextExam) {
-    return { icon: <ClipboardIcon />, gradient: 'linear-gradient(145deg, #0891B2, #065666)', urgency: 'low',
+    return { icon: <ClipboardIcon />, gradient: '#0891B2', urgency: 'low',
       title: `Probeklausur ${nextExamName}`,
       subtitle: `${nextExam.days} Tag${nextExam.days === 1 ? '' : 'e'} bis zur Klausur — Wissen testen.`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Probeklausur starten' }

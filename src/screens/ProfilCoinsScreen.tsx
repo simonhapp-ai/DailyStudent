@@ -122,7 +122,7 @@ export function ProfilCoinsScreen() {
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium mb-3 press-sm -ml-0.5"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -222,7 +222,7 @@ export function ProfilCoinsScreen() {
                 disabled={!canAfford}
                 className="shrink-0 px-5 py-3 rounded-[14px] text-[13px] font-bold press-sm transition-all disabled:opacity-40"
                 style={canAfford
-                  ? { background: 'linear-gradient(135deg, #34D399, #059669)', color: '#fff', boxShadow: '0 3px 10px rgba(5,150,105,0.28)' }
+                  ? { background: '#34D399', color: '#fff', boxShadow: '0 3px 10px rgba(5,150,105,0.28)' }
                   : { background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}
               >
                 Kaufen
@@ -273,14 +273,14 @@ export function ProfilCoinsScreen() {
               </div>
               <div className="h-2 rounded-pill overflow-hidden" style={{ background: 'rgba(52,211,153,0.12)' }}>
                 <div className="h-full rounded-pill transition-all duration-500"
-                  style={{ width: `${progress15}%`, background: 'linear-gradient(90deg, #34D399, #059669)' }}/>
+                  style={{ width: `${progress15}%`, background: '#34D399' }}/>
               </div>
               {has15 && !used15 && (
                 appConfig.proPurchasesEnabled ? (
                   <button
                     onClick={() => handleRedeemDiscount('15')}
                     className="w-full mt-3 py-3 rounded-[14px] text-white text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
-                    style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}
+                    style={{ background: '#34D399' }}
                   >
                     15% Rabatt einlösen →
                   </button>
@@ -312,14 +312,14 @@ export function ProfilCoinsScreen() {
               </div>
               <div className="h-2 rounded-pill overflow-hidden" style={{ background: 'rgba(52,211,153,0.12)' }}>
                 <div className="h-full rounded-pill transition-all duration-500"
-                  style={{ width: `${progress30}%`, background: 'linear-gradient(90deg, #34D399, #059669)' }}/>
+                  style={{ width: `${progress30}%`, background: '#34D399' }}/>
               </div>
               {has30 && !used30 && (
                 appConfig.proPurchasesEnabled ? (
                   <button
                     onClick={() => handleRedeemDiscount('30')}
                     className="w-full mt-3 py-3 rounded-[14px] text-white text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
-                    style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}
+                    style={{ background: '#34D399' }}
                   >
                     30% Rabatt einlösen →
                   </button>

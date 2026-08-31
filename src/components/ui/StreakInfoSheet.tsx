@@ -67,7 +67,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
 
         <button
           onClick={onClose}
-          className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press transition-all"
+          className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press transition-all"
         >
           Verstanden
         </button>

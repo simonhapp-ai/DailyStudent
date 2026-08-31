@@ -622,7 +622,7 @@ export function UnterrichtScreen() {
             onClick={confirmAddFolder}
             disabled={!newFolderName.trim()}
             className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
-              newFolderName.trim() ? 'grad-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+              newFolderName.trim() ? 'bg-accent text-white dark:text-[#160E28] hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
             Ordner erstellen
@@ -685,7 +685,7 @@ export function UnterrichtScreen() {
                     importSuggestion.subjectName,
                     importSuggestion.folderId,
                   )}
-                  className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press hover:opacity-90 mb-2.5"
+                  className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press hover:opacity-90 mb-2.5"
                 >
                   Vorschlag annehmen
                 </button>
@@ -835,7 +835,7 @@ export function UnterrichtScreen() {
             <p className="text-text-muted text-[12px] mb-4 truncate">{importFiles[importCurrent]?.name}</p>
             <div className="h-2 bg-border/40 rounded-pill overflow-hidden mb-4">
               <div
-                className="h-full grad-accent rounded-pill transition-all duration-500"
+                className="h-full bg-accent rounded-pill transition-all duration-500"
                 style={{ width: `${importFiles.length > 0 ? ((importSucceeded + importFailed) / importFiles.length) * 100 : 0}%` }}
               />
             </div>
@@ -883,7 +883,7 @@ export function UnterrichtScreen() {
                 <p className="text-text-muted text-[13px] mt-1">{importFailed} {importFailed === 1 ? 'Datei' : 'Dateien'} fehlgeschlagen</p>
               )}
             </div>
-            <button onClick={finishImport} className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press hover:opacity-90">
+            <button onClick={finishImport} className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press hover:opacity-90">
               {importSucceeded > 0 ? 'Zum Fach' : 'Schließen'}
             </button>
           </div>
@@ -941,7 +941,7 @@ export function UnterrichtScreen() {
             onClick={confirmRename}
             disabled={!renameValue.trim()}
             className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
-              renameValue.trim() ? 'grad-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+              renameValue.trim() ? 'bg-accent text-white dark:text-[#160E28] hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
             Speichern

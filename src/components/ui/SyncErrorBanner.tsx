@@ -40,7 +40,7 @@ export function SyncErrorBanner() {
           onClick={retrySyncQueue}
           className="px-3 py-1.5 rounded-pill text-[12px] font-bold shrink-0 press-sm"
           style={{
-            background: 'linear-gradient(135deg, #FF3B30, #FF6B5B)',
+            background: '#FF3B30',
             color: 'white',
           }}
         >

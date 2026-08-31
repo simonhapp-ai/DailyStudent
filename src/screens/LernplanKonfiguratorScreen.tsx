@@ -264,7 +264,7 @@ export function LernplanKonfiguratorScreen() {
     <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto">
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
-        <div className="h-full grad-accent transition-all duration-300" style={{ width: `${progress}%` }} />
+        <div className="h-full bg-accent transition-all duration-300" style={{ width: `${progress}%` }} />
       </div>
 
       {/* Header */}
@@ -440,7 +440,7 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
                 onSelect(opt.id)
               }}
               className={`w-full flex items-start gap-4 p-4 rounded-[20px] border text-left transition-all duration-150 active:scale-[0.98] ${
-                active ? 'grad-accent border-transparent' : 'bg-surface border-border hover:bg-surface-hover'
+                active ? 'bg-accent border-transparent' : 'bg-surface border-border hover:bg-surface-hover'
               }`}
             >
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
@@ -617,7 +617,7 @@ function StepKlausurtermine({
                     {days === 0 ? 'Heute' : days === 1 ? 'Morgen' : `${days}d`}
                   </span>
                   {active && (
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${hasTopics ? 'grad-accent' : 'bg-border'}`}>
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${hasTopics ? 'bg-accent' : 'bg-border'}`}>
                       {hasTopics
                         ? <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                         : <span className="text-[9px] text-text-muted font-bold">!</span>
@@ -681,7 +681,7 @@ function StepKlausurtermine({
                     <button
                       onClick={() => addTopic(key)}
                       disabled={!(inputValues[key] ?? '').trim()}
-                      className="w-9 h-9 rounded-[12px] grad-accent flex items-center justify-center shrink-0 disabled:opacity-30 active:scale-[0.95] transition-all"
+                      className="w-9 h-9 rounded-[12px] bg-accent flex items-center justify-center shrink-0 disabled:opacity-30 active:scale-[0.95] transition-all"
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                         <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -831,7 +831,7 @@ function StepZeitBlocker({
                 onClick={() => toggleBlockDay(i)}
                 className={`w-9 h-9 rounded-btn text-[12px] font-bold border transition-all ${
                   newBlock.dayOfWeek.includes(i)
-                    ? 'grad-accent border-transparent text-white'
+                    ? 'bg-accent border-transparent text-white'
                     : 'bg-background border-border text-text-secondary hover:bg-surface-hover'
                 }`}
               >
@@ -947,7 +947,7 @@ function StepLernkapazitaet({
             onClick={() => onPreferenceChange(opt.id)}
             className={`py-3 px-2 rounded-card border text-center transition-all duration-150 ${
               studyTimePreference === opt.id
-                ? 'grad-accent border-transparent'
+                ? 'bg-accent border-transparent'
                 : 'bg-surface border-border hover:bg-surface-hover'
             }`}
           >

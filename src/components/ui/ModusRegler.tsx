@@ -55,7 +55,7 @@ export function ModusRegler({
     <div
       className="rounded-[24px] p-5 overflow-hidden relative"
       style={{
-        background: 'linear-gradient(165deg, #14141f 0%, #0d0d15 100%)',
+        background: '#14141f',
         boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
       }}
     >

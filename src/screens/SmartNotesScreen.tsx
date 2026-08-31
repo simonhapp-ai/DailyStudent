@@ -850,7 +850,7 @@ export function SmartNotesScreen() {
                   }
                 }}
                 className="flex-1 py-3 rounded-[12px] text-white text-[14px] font-bold press-sm"
-                style={{ background: 'linear-gradient(135deg, #FF453A, #CC2E28)', boxShadow: '0 4px 12px rgba(255,69,58,0.35)' }}
+                style={{ background: '#FF453A', boxShadow: '0 4px 12px rgba(255,69,58,0.35)' }}
               >
                 Löschen
               </button>

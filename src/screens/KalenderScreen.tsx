@@ -20,9 +20,9 @@ const MONTHS_DE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli',
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
 
 const TYPE_CONFIG: Record<EntryType, { label: string; icon: string; color: string; grad: string }> = {
-  lerneinheit: { label: 'Lernzeit',  icon: '📚', color: '#34C759', grad: 'linear-gradient(135deg,#34C759,#28a745)' },
-  termin:      { label: 'Termin',    icon: '📅', color: '#007AFF', grad: 'linear-gradient(135deg,#007AFF,#0055cc)' },
-  erinnerung:  { label: 'Sonstiges', icon: '🔔', color: '#FF9500', grad: 'linear-gradient(135deg,#FF9500,#e07b00)' },
+  lerneinheit: { label: 'Lernzeit',  icon: '📚', color: '#34C759', grad: '#34C759' },
+  termin:      { label: 'Termin',    icon: '📅', color: '#007AFF', grad: '#007AFF' },
+  erinnerung:  { label: 'Sonstiges', icon: '🔔', color: '#FF9500', grad: '#FF9500' },
 }
 
 const PX_PER_HOUR = 56
@@ -266,7 +266,7 @@ export function KalenderScreen() {
                 const hasKlausur = (profile?.klausurtermine ?? []).some((k) => k.date === dayStr)
                 const hasEntry = personalEntries.some((e) => e.date === dayStr)
                 return (
-                  <div key={i} className={`flex-1 flex flex-col items-center py-2 rounded-[12px] relative ${isToday ? 'grad-accent' : ''}`}>
+                  <div key={i} className={`flex-1 flex flex-col items-center py-2 rounded-[12px] relative ${isToday ? 'bg-accent' : ''}`}>
                     <span className={`text-[10px] font-semibold ${isToday ? 'text-white/80' : 'text-text-muted'}`}>{DAY_LABELS[i]}</span>
                     <span className={`text-[14px] font-bold mt-0.5 leading-none ${isToday ? 'text-white' : 'text-text-secondary'}`}>{d.getDate()}</span>
                     {hasKlausur && <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isToday ? 'rgba(255,255,255,0.9)' : '#FF3B30' }} />}
@@ -354,7 +354,7 @@ export function KalenderScreen() {
                     }}
                     className="flex items-center gap-1.5 px-3.5 py-2 rounded-[11px] text-[12px] font-bold press-sm"
                     style={{
-                      background: 'linear-gradient(135deg, #7C3AED, #9F5FFA, #7C3AED)',
+                      background: '#7C3AED',
                       backgroundSize: '200% 200%',
                       color: 'white',
                       boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
@@ -417,7 +417,7 @@ export function KalenderScreen() {
                   onClick={goToToday}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-[11px] text-white text-[12px] font-bold press-sm"
                   style={{
-                    background: 'linear-gradient(135deg, #7C3AED, #9F5FFA, #7C3AED)',
+                    background: '#7C3AED',
                     backgroundSize: '200% 200%',
                     boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
                     border: '1px solid rgba(159,95,250,0.5)',
@@ -530,7 +530,7 @@ export function KalenderScreen() {
                     <button
                       onClick={() => setAddForm((f) => ({ ...f, type: 'klausur' }))}
                       className="py-2.5 rounded-[12px] text-[10px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
-                      style={active ? { background: 'linear-gradient(135deg,#FF3B30,#CC2E28)', borderColor: 'transparent', color: 'white', boxShadow: '0 4px 12px #FF3B3050' } : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
+                      style={active ? { background: '#FF3B30', borderColor: 'transparent', color: 'white', boxShadow: '0 4px 12px #FF3B3050' } : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
                     >
                       <span>📝</span>
                       <span>Klausur</span>
@@ -614,7 +614,7 @@ export function KalenderScreen() {
                         onClick={() => setIsRecurring(val)}
                         className="flex-1 py-2.5 rounded-[9px] text-[12px] font-bold transition-all duration-200 press-sm"
                         style={active ? {
-                          background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)',
+                          background: '#7C3AED',
                           color: 'white',
                           boxShadow: '0 3px 10px rgba(124,58,237,0.38)',
                         } : {
@@ -679,7 +679,7 @@ export function KalenderScreen() {
                     className="w-full py-3 rounded-[14px] text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
                     style={{
                       background: addForm.type === 'klausur'
-                        ? 'linear-gradient(135deg,#FF3B30,#CC2E28)'
+                        ? '#FF3B30'
                         : 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
                       boxShadow: canAdd ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',
                     }}
@@ -880,7 +880,7 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
               <span
                 className="w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-bold transition-all"
                 style={isToday ? {
-                  background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)',
+                  background: '#7C3AED',
                   color: 'white',
                   boxShadow: '0 0 14px 4px rgba(124,58,237,0.65), 0 2px 6px rgba(124,58,237,0.45)',
                   border: '1px solid rgba(159,95,250,0.6)',
@@ -947,7 +947,7 @@ function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurt
           const isToday = toDateStr(d) === todayStr
           return (
             <div key={i} className={`flex-1 text-center py-2 border-l border-border/20`}>
-              <span className={`text-[11px] font-bold ${isToday ? 'text-accent' : 'text-text-secondary'}`}>
+              <span className={`text-[11px] font-bold ${isToday ? 'text-text-primary' : 'text-text-secondary'}`}>
                 {DAY_LABELS[dayLabelIdx(d)]} – {d.getDate()}. {MONTHS_SHORT[d.getMonth()]}
               </span>
             </div>
@@ -1206,7 +1206,7 @@ function StundenplanSetupCard({ onSetup, fullWidth }: { onSetup: () => void; ful
       style={{ minHeight: fullWidth ? undefined : 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill gradient="linear-gradient(145deg,#AEAEB4,#636366)" shadow="0 4px 14px rgba(99,99,102,0.4)">
+        <AppIconPill gradient="#AEAEB4" shadow="0 4px 14px rgba(99,99,102,0.4)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M12 14v4M10 16h4" strokeWidth="2.5" />
           </svg>
@@ -1247,7 +1247,7 @@ function HausaufgabenWidget({ userNotes, completedHomeworkIds, standaloneHomewor
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
         <AppIconPill
-          gradient={allDone ? 'linear-gradient(145deg,#30D158,#1A8C33)' : 'linear-gradient(145deg,#FF9F0A,#C97000)'}
+          gradient={allDone ? '#30D158' : '#FF9F0A'}
           shadow={allDone ? '0 4px 14px rgba(48,209,88,0.45)' : '0 4px 14px rgba(255,159,10,0.5)'}
         >
           {allDone ? (
@@ -1307,7 +1307,7 @@ function StundenplanFullView({
       >
         <button
           onClick={onClose}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <ChevronLeft />
           Zurück
@@ -1317,7 +1317,7 @@ function StundenplanFullView({
           onClick={onEdit}
           className="flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] press-sm"
           style={{
-            background: 'linear-gradient(135deg, #7C3AED, #5B21B6)',
+            background: '#7C3AED',
             boxShadow: '0 3px 10px rgba(124,58,237,0.35)',
           }}
         >
@@ -1395,7 +1395,7 @@ function KlausurterminWidget({ klausurtermine }: { klausurtermine: KlausurTermin
       style={{ minHeight: 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill gradient="linear-gradient(145deg,#FF453A,#B01208)" shadow="0 4px 14px rgba(255,69,58,0.5)">
+        <AppIconPill gradient="#FF453A" shadow="0 4px 14px rgba(255,69,58,0.5)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18M8 14h8M8 18h5" />
           </svg>
@@ -1451,7 +1451,7 @@ function AbiRechnerWidget({ abiHalbjahre, zielnote }: { abiHalbjahre?: AbiHalbja
       style={{ minHeight: 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill gradient="linear-gradient(145deg,#BF5AF2,#7C00CC)" shadow="0 4px 14px rgba(191,90,242,0.5)">
+        <AppIconPill gradient="#BF5AF2" shadow="0 4px 14px rgba(191,90,242,0.5)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
           </svg>
@@ -1497,7 +1497,7 @@ function LernplanWidget() {
       style={{ minHeight: 152 }}
     >
       <div className="flex items-start justify-between px-3.5 pt-3.5">
-        <AppIconPill gradient="linear-gradient(145deg,#FFD060,#C07700)" shadow="0 4px 14px rgba(192,119,0,0.4)">
+        <AppIconPill gradient="#FFD060" shadow="0 4px 14px rgba(192,119,0,0.4)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
             <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" strokeWidth="2.5" />
@@ -1532,7 +1532,7 @@ export function StundenplanWeekWidget({ stundenplan, onOpen }: { stundenplan: St
       className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm text-left w-full"
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5 pb-2.5">
-        <AppIconPill gradient="linear-gradient(145deg,#AEAEB4,#636366)" shadow="0 4px 14px rgba(99,99,102,0.4)">
+        <AppIconPill gradient="#AEAEB4" shadow="0 4px 14px rgba(99,99,102,0.4)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
           </svg>
@@ -1624,7 +1624,7 @@ function KlausurFormFields({
                 onClick={() => onTopic(topic === t ? '' : t)}
                 className="px-2.5 py-1 rounded-pill text-[11px] font-medium press-sm transition-all"
                 style={topic === t
-                  ? { background: 'linear-gradient(135deg,#FF3B30,#CC2E28)', color: 'white' }
+                  ? { background: '#FF3B30', color: 'white' }
                   : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }
                 }
               >
@@ -1735,7 +1735,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
 
           {mode === 'scan' && (
             <div className="p-4 space-y-3">
-              <button onClick={() => { setMode(totalSlots > 0 ? 'manual' : 'choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
+              <button onClick={() => { setMode(totalSlots > 0 ? 'manual' : 'choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }} className="flex items-center gap-1.5 text-text-primary text-sm font-medium hover:opacity-80 transition-opacity">
                 <ChevronLeft />Zurück
               </button>
               {scanPhase === 'idle' && (
@@ -1758,7 +1758,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                     <p className="text-text-primary font-semibold text-[14px] mb-1">Erkennung fehlgeschlagen</p>
                     <p className="text-text-muted text-[12px] leading-relaxed">{scanError}</p>
                   </div>
-                  <button onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }} className="w-full py-2.5 rounded-[12px] grad-accent text-white text-sm font-semibold active:scale-95 transition-all">Erneut versuchen</button>
+                  <button onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }} className="w-full py-2.5 rounded-[12px] bg-accent text-white dark:text-[#160E28] text-sm font-semibold active:scale-95 transition-all">Erneut versuchen</button>
                   <button onClick={() => { setMode('manual'); setScanPhase('idle'); setScanError('') }} className="w-full py-2.5 rounded-[12px] border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors">Manuell eintragen</button>
                 </div>
               )}
@@ -1769,7 +1769,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
           {mode === 'manual' && (
             <div className="p-4 space-y-3">
               <div className="flex items-center justify-between">
-                <button onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }} className="flex items-center gap-1.5 text-accent text-sm font-medium hover:opacity-80 transition-opacity">
+                <button onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }} className="flex items-center gap-1.5 text-text-primary text-sm font-medium hover:opacity-80 transition-opacity">
                   <ChevronLeft />Zurück
                 </button>
                 {totalSlots > 0 && !addingSlot && (
@@ -1781,8 +1781,8 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
 
               {fromAI && totalSlots > 0 && (
                 <div className="rounded-[12px] px-3 py-2.5 flex items-center gap-2" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.25)' }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success shrink-0"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  <p className="text-[12px] font-medium text-success">{totalSlots} Stunden erkannt — prüfen &amp; anpassen</p>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <p className="text-[12px] font-medium text-text-primary">{totalSlots} Stunden erkannt — prüfen &amp; anpassen</p>
                 </div>
               )}
 
@@ -1793,12 +1793,12 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                     <button key={d} onClick={() => { setActiveDay(i); setAddingSlot(false) }}
                       className="flex-1 flex flex-col items-center py-2 rounded-[12px] transition-all duration-200 border"
                       style={activeDay === i ? {
-                        background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)',
+                        background: '#7C3AED',
                         borderColor: 'transparent',
                         boxShadow: '0 2px 8px rgba(124,58,237,0.35)',
                       } : { background: 'rgb(var(--color-background))', borderColor: 'rgba(var(--color-border),0.6)' }}>
                       <span className={`text-[10px] font-semibold ${activeDay === i ? 'text-white/80' : 'text-text-muted'}`}>{d}</span>
-                      <span className={`text-[12px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-accent' : 'text-text-muted/30'}`}>{count > 0 ? count : '·'}</span>
+                      <span className={`text-[12px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-text-primary' : 'text-text-muted/30'}`}>{count > 0 ? count : '·'}</span>
                     </button>
                   )
                 })}
@@ -1824,7 +1824,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                           <p className="text-text-primary font-semibold text-[13px]">{name}</p>
                           <p className="text-text-muted text-[11px]">{slot.startTime} – {slot.endTime}{slot.room ? ` · ${slot.room}` : ''}</p>
                         </div>
-                        <button onClick={() => removeSlot(slot.id)} className="w-6 h-6 flex items-center justify-center text-text-muted hover:text-danger transition-colors shrink-0">
+                        <button onClick={() => removeSlot(slot.id)} className="w-6 h-6 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors shrink-0">
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" /></svg>
                         </button>
                       </div>
@@ -1834,7 +1834,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               )}
 
               {!addingSlot ? (
-                <button onClick={() => setAddingSlot(true)} className="w-full border border-dashed border-border rounded-[12px] py-3 flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all">
+                <button onClick={() => setAddingSlot(true)} className="w-full border border-dashed border-border rounded-[12px] py-3 flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-text-primary hover:bg-accent/5 transition-all">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 5v14M5 12h14" strokeLinecap="round" /></svg>
                   <span className="text-[13px] font-medium">Stunde hinzufügen</span>
                 </button>
@@ -1868,7 +1868,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                   )}
                   <div className="flex gap-2">
                     <button onClick={() => { setAddingSlot(false); setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '', isFreistunde: false }) }} className="flex-1 py-2 rounded-[10px] border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors">Abbrechen</button>
-                    <button onClick={commitSlot} disabled={!newSlot.subjectId && !newSlot.isFreistunde} className="flex-1 py-2 rounded-[10px] text-white text-sm font-bold disabled:opacity-40 active:scale-95 transition-all" style={{ background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}>Hinzufügen</button>
+                    <button onClick={commitSlot} disabled={!newSlot.subjectId && !newSlot.isFreistunde} className="flex-1 py-2 rounded-[10px] text-white text-sm font-bold disabled:opacity-40 active:scale-95 transition-all" style={{ background: '#7C3AED', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}>Hinzufügen</button>
                   </div>
                 </div>
               )}

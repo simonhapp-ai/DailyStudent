@@ -341,7 +341,7 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
             border: 'none',
             background: processing || !imgLoaded
               ? 'rgba(124,58,237,0.4)'
-              : 'linear-gradient(135deg, #7C3AED 0%, #9B59B6 100%)',
+              : '#7C3AED',
             color: 'white',
             fontSize: 16,
             fontWeight: 700,

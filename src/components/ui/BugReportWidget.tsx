@@ -68,7 +68,7 @@ export function BugReportWidget() {
         <div className="flex items-center gap-3">
           <div
             className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 text-white text-[14px] font-black"
-            style={{ background: 'linear-gradient(135deg, #FF453A, #FF6B5B)' }}
+            style={{ background: '#FF453A' }}
           >
             !
           </div>
@@ -142,7 +142,7 @@ export function BugReportWidget() {
               onClick={handleSend}
               disabled={!message.trim() || status === 'sending' || status === 'sent'}
               className="flex-1 py-3 rounded-[12px] text-[14px] font-bold text-white press-sm disabled:opacity-40"
-              style={{ background: 'linear-gradient(135deg, #FF453A, #FF6B5B)' }}
+              style={{ background: '#FF453A' }}
             >
               {status === 'sending' ? 'Sende…' : 'Senden'}
             </button>

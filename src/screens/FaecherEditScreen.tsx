@@ -112,7 +112,7 @@ export function FaecherEditScreen() {
         <div className="flex items-center justify-between px-4 pb-3" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-1.5 text-accent font-medium text-[15px] press-sm"
+            className="flex items-center gap-1.5 text-text-primary font-medium text-[15px] press-sm"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -134,7 +134,7 @@ export function FaecherEditScreen() {
         <h1 className="text-[28px] font-bold text-text-primary mb-1">Deine Fächer</h1>
         <p className="text-text-muted text-sm mb-6">
           Fächer hinzufügen oder entfernen.{' '}
-          <span className="text-accent font-medium">{totalSelected} ausgewählt</span>
+          <span className="text-text-primary font-medium">{totalSelected} ausgewählt</span>
         </p>
 
         {/* ── Eigene Fächer Widget ───────────────────────────────────────── */}
@@ -154,7 +154,7 @@ export function FaecherEditScreen() {
             </div>
             <div className="flex items-center gap-2 shrink-0 ml-3 mt-0.5">
               {hasCustom && !accordionOpen && (
-                <span className="text-[12px] text-accent font-semibold">Bearbeiten</span>
+                <span className="text-[12px] text-text-primary font-semibold">Bearbeiten</span>
               )}
               <motion.div
                 animate={{ rotate: accordionOpen ? 180 : 0 }}
@@ -187,10 +187,10 @@ export function FaecherEditScreen() {
                         border: '1px solid rgba(var(--color-accent), 0.25)',
                       }}
                     >
-                      <span className="text-[13px] font-semibold text-accent">{cf.name}</span>
+                      <span className="text-[13px] font-semibold text-text-primary">{cf.name}</span>
                       <button
                         onClick={(e) => handleRemoveCustomFach(cf.id, e)}
-                        className="text-accent/50 hover:text-danger transition-colors"
+                        className="text-text-primary/50 hover:text-text-primary transition-colors"
                       >
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
                           <path d="M18 6L6 18M6 6l12 12" />
@@ -230,7 +230,7 @@ export function FaecherEditScreen() {
                       {inputs.length > 1 && (
                         <button
                           onClick={() => removeInput(i)}
-                          className="w-11 h-11 rounded-card border border-border flex items-center justify-center text-text-muted hover:text-danger hover:border-danger/30 transition-colors shrink-0"
+                          className="w-11 h-11 rounded-card border border-border flex items-center justify-center text-text-muted hover:text-text-primary hover:border-danger/30 transition-colors shrink-0"
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                             <path d="M18 6L6 18M6 6l12 12" />
@@ -242,7 +242,7 @@ export function FaecherEditScreen() {
 
                   <button
                     onClick={addInput}
-                    className="w-full py-2.5 border border-dashed border-border rounded-card flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all"
+                    className="w-full py-2.5 border border-dashed border-border rounded-card flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-text-primary hover:bg-accent/5 transition-all"
                   >
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
                       <path d="M12 5v14M5 12h14" />
@@ -252,7 +252,7 @@ export function FaecherEditScreen() {
 
                   <button
                     onClick={handleSaveAccordion}
-                    className="w-full py-3.5 rounded-card text-[15px] font-semibold text-white grad-accent press-sm"
+                    className="w-full py-3.5 rounded-card text-[15px] font-semibold text-white bg-accent press-sm"
                   >
                     Speichern
                   </button>
@@ -297,7 +297,7 @@ export function FaecherEditScreen() {
                         {subject.name}
                       </p>
                       {active && (
-                        <div className="absolute top-2 right-2 w-4 h-4 rounded-full grad-accent flex items-center justify-center shrink-0">
+                        <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-accent flex items-center justify-center shrink-0">
                           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M20 6L9 17l-5-5" />
                           </svg>
