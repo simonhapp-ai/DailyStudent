@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react'
+import { Icon, type IconName } from '../components/ui/Icon'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Button } from '../components/ui/Button'
@@ -270,7 +272,7 @@ export function OnboardingScreen() {
           ) : (
             <div className="space-y-3">
               <Button variant="primary" fullWidth onClick={finish}>
-                Loslegen 🚀
+                Loslegen
               </Button>
               {!(klausurSubject && klausurDate) && (
                 <button
@@ -285,7 +287,7 @@ export function OnboardingScreen() {
                 className="rounded-[14px] p-4 flex items-center gap-3"
                 style={{ background: 'rgba(255,185,0,0.08)', border: '1px solid rgba(255,185,0,0.2)' }}
               >
-                <span className="text-[22px] shrink-0">🎁</span>
+                <span className="shrink-0 text-text-primary"><Icon name="gift" size={21} /></span>
                 <div>
                   <p className="text-text-primary font-semibold text-[13px]">
                     14 Tage Pro — kostenlos
@@ -310,7 +312,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
     <div className="flex flex-col justify-between min-h-[calc(100dvh-80px)]">
       <div className="flex-1 flex flex-col justify-center">
         <div className="w-16 h-16 rounded-2xl bg-accent-soft flex items-center justify-center text-3xl mb-8">
-          🎓
+          <Icon name="cap" size={30} />
         </div>
         <h1 className="text-4xl font-bold text-text-primary leading-tight mb-4">
           Smarter lernen.<br />
@@ -322,12 +324,12 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
 
         <div className="space-y-4 mb-6">
           {[
-            { icon: '📸', text: 'Tafelbilder scannen → fertige Lernnotiz in Sekunden' },
-            { icon: '📝', text: 'Probeklausuren genau wie im Unterricht (AFB I–III)' },
-            { icon: '🎯', text: 'KI-Feedback wie vom Lehrer — mit Erwartungshorizont' },
+            { icon: 'camera' as IconName, text: 'Tafelbilder scannen → fertige Lernnotiz in Sekunden' },
+            { icon: 'clipboard' as IconName, text: 'Probeklausuren genau wie im Unterricht (AFB I–III)' },
+            { icon: 'target' as IconName, text: 'KI-Feedback wie vom Lehrer — mit Erwartungshorizont' },
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-3">
-              <span className="text-xl shrink-0">{item.icon}</span>
+              <span className="shrink-0 text-text-secondary"><Icon name={item.icon} size={19} /></span>
               <p className="text-text-secondary text-sm leading-relaxed">{item.text}</p>
             </div>
           ))}
@@ -591,9 +593,9 @@ function StepPersonal({
       <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Ich bin …</p>
       <div className="grid grid-cols-2 gap-2 mb-8">
         {([
-          { id: 'schüler' as const, emoji: '🎒', label: 'Schüler', desc: 'Klasse 5–13, Gymnasium etc.' },
-          { id: 'student' as const, emoji: '🎓', label: 'Student', desc: 'Hochschule, Uni, FH …' },
-        ]).map(({ id, emoji, label, desc }) => (
+          { id: 'schüler' as const, icon: 'book' as IconName, label: 'Schüler', desc: 'Klasse 5–13, Gymnasium etc.' },
+          { id: 'student' as const, icon: 'cap' as IconName, label: 'Student', desc: 'Hochschule, Uni, FH …' },
+        ]).map(({ id, icon, label, desc }) => (
           <button
             key={id}
             onClick={() => handleSetUserType(id)}
@@ -603,7 +605,7 @@ function StepPersonal({
                 : 'bg-surface border-border hover:bg-surface-hover'
             }`}
           >
-            <p className="text-2xl mb-1">{emoji}</p>
+            <p className="mb-1.5 flex justify-center text-text-primary"><Icon name={icon} size={24} /></p>
             <p className={`text-[15px] font-bold ${userType === id ? 'text-white' : 'text-text-primary'}`}>{label}</p>
             <p className={`text-[11px] mt-0.5 ${userType === id ? 'text-white/80' : 'text-text-muted'}`}>{desc}</p>
           </button>
@@ -1066,7 +1068,7 @@ function StepFaecher({
       {/* Hint for students if no custom fächer yet */}
       {isStudent && customFaecher.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-3xl mb-3">📚</p>
+          <p className="mb-3 flex justify-center text-text-secondary"><Icon name="book" size={28} /></p>
           <p className="text-text-secondary text-[14px] font-medium">Noch keine Fächer angelegt</p>
           <p className="text-text-muted text-[12px] mt-1">Klicke auf "Anlegen" um deine Studienfächer hinzuzufügen</p>
         </div>
@@ -1092,10 +1094,10 @@ function StepFolderSort({
 }) {
   const isQPhase = !isStudent && (schultyp === 'g8' ? parseInt(klasse) >= 11 : parseInt(klasse) >= 12)
 
-  const options: { id: 'manual' | 'halbjahr' | 'themen'; icon: string; title: string; desc: string; comingSoon?: boolean }[] = [
+  const options: { id: 'manual' | 'halbjahr' | 'themen'; icon: IconName; title: string; desc: string; comingSoon?: boolean }[] = [
     {
       id: 'halbjahr',
-      icon: '📅',
+      icon: 'calendar',
       title: isStudent ? 'Nach Semester' : isQPhase ? 'Nach Quartal' : 'Nach Halbjahr',
       desc: isStudent
         ? 'Ordner werden automatisch nach 1., 2., 3. und 4. Semester erstellt'
@@ -1105,13 +1107,13 @@ function StepFolderSort({
     },
     {
       id: 'manual',
-      icon: '✋',
+      icon: 'settings',
       title: 'Manuell',
       desc: 'Du erstellst und benennst Ordner selbst — maximale Kontrolle',
     },
     {
       id: 'themen',
-      icon: '📚',
+      icon: 'book',
       title: 'Nach Themen',
       desc: 'Ordner nach Lehrplanthemen (KC) — folgt bald für alle Bundesländer',
       comingSoon: true,
@@ -1140,7 +1142,7 @@ function StepFolderSort({
               }`}
             >
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
-                {opt.icon}
+                <Icon name={opt.icon} size={20} />
               </div>
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -1272,7 +1274,7 @@ function StepStundenplan({
               onClick={() => setMode('manual')}
               className="w-full flex items-center gap-4 bg-surface border border-border rounded-[20px] p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-2xl shrink-0">✏️</div>
+              <div className="w-12 h-12 rounded-xl bg-accent text-white dark:text-[#160E28] flex items-center justify-center shrink-0"><Icon name="pencil" size={22} /></div>
               <div className="flex-1">
                 <p className="text-text-primary font-semibold text-[15px]">Manuell eintragen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">Fächer und Zeiten selbst eingeben</p>
@@ -1285,7 +1287,7 @@ function StepStundenplan({
               onClick={() => setMode('scan')}
               className="w-full flex items-center gap-4 bg-surface border border-border rounded-[20px] p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-2xl shrink-0">📷</div>
+              <div className="w-12 h-12 rounded-xl bg-accent text-white dark:text-[#160E28] flex items-center justify-center shrink-0"><Icon name="camera" size={22} /></div>
               <div className="flex-1">
                 <p className="text-text-primary font-semibold text-[15px]">Foto / Scan hochladen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">Stundenplan fotografieren oder PDF importieren</p>
@@ -1331,7 +1333,7 @@ function StepStundenplan({
               onClick={() => fileRef.current?.click()}
               className="w-full border-2 border-dashed border-border rounded-[20px] p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
             >
-              <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center text-3xl">📷</div>
+              <div className="w-16 h-16 rounded-2xl bg-accent text-white dark:text-[#160E28] flex items-center justify-center"><Icon name="camera" size={28} /></div>
               <div className="text-center">
                 <p className="text-text-primary font-semibold text-base">Foto oder PDF auswählen</p>
                 <p className="text-text-muted text-sm mt-1">JPG, PNG oder PDF</p>
@@ -1377,7 +1379,7 @@ function StepStundenplan({
             <div className="space-y-3">
               <div className="rounded-[20px] p-5 space-y-3" style={{ background: 'rgba(255,149,0,0.08)', border: '1px solid rgba(255,149,0,0.25)' }}>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">🔎</span>
+                  <span className="text-text-secondary"><Icon name="search" size={19} /></span>
                   <p className="text-text-primary font-semibold text-[15px]">Neue Fächer erkannt</p>
                 </div>
                 <p className="text-text-muted text-[13px] leading-relaxed">
@@ -1392,7 +1394,7 @@ function StepStundenplan({
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill"
                         style={{ background: `${subj?.color ?? '#7C3AED'}22`, border: `1px solid ${subj?.color ?? '#7C3AED'}40` }}
                       >
-                        <span className="text-sm">{subj?.icon ?? '📚'}</span>
+                        <SubjectIcon subjectId={id} size="sm" className="!w-5 !h-5" />
                         <span className="text-[13px] font-semibold" style={{ color: subj?.color ?? '#7C3AED' }}>
                           {subj?.name ?? id}
                         </span>
@@ -1510,17 +1512,20 @@ function StepStundenplan({
         <div className="space-y-2 mb-3">
           {daySlots.map((slot) => {
             const subj = SUBJECT_INFO[slot.subjectId]
-            const icon = slot.isFreistunde ? '☕' : (subj?.icon ?? '📚')
             const name = slot.isFreistunde ? 'Freistunde' : (subj?.name ?? slot.subjectId)
             const iconBg = slot.isFreistunde ? 'rgba(148,163,184,0.18)' : `${subj?.color ?? '#7C3AED'}22`
             return (
               <div key={slot.id} className="bg-surface border border-border/60 rounded-card p-3.5 flex items-center gap-3 animate-fade-in">
-                <div
-                  className="w-9 h-9 rounded-btn flex items-center justify-center text-lg shrink-0"
-                  style={{ backgroundColor: iconBg }}
-                >
-                  {icon}
-                </div>
+                {slot.isFreistunde ? (
+                  <div
+                    className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0 text-text-secondary"
+                    style={{ backgroundColor: iconBg }}
+                  >
+                    <Icon name="coffee" size={17} />
+                  </div>
+                ) : (
+                  <SubjectIcon subjectId={slot.subjectId} size="sm" className="!w-9 !h-9" />
+                )}
                 <div className="flex-1 min-w-0">
                   <p className="text-text-primary font-semibold text-[14px]">{name}</p>
                   <p className="text-text-muted text-[12px]">
@@ -1603,7 +1608,7 @@ function StepStundenplan({
                     : 'border-border bg-background hover:bg-surface-hover'
                 }`}
               >
-                <span className="text-base shrink-0">☕</span>
+                <span className="shrink-0 text-text-secondary"><Icon name="coffee" size={15} /></span>
                 <span className={`text-[11px] font-medium leading-tight truncate ${newSlot.isFreistunde ? 'text-text-primary' : 'text-text-secondary'}`}>
                   Freistunde
                 </span>
