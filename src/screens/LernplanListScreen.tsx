@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
@@ -78,7 +79,7 @@ function LernplanCard({ plan, onPress }: { plan: Lernplan; onPress: () => void }
               {PLAN_TYPE_LABELS[plan.planType]}
             </span>
             {subjects.slice(0, 4).map((sId) => (
-              <span key={sId} className="text-[12px] shrink-0">{SUBJECT_INFO[sId]?.icon ?? '📚'}</span>
+              <SubjectIcon key={sId} subjectId={sId} size="sm" className="!w-6 !h-6" />
             ))}
             <span className="text-[11px] text-text-muted">{formatDate(plan.createdAt)}</span>
           </div>

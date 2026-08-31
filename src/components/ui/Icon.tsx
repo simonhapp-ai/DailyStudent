@@ -24,8 +24,18 @@ export type IconName =
   | 'camera' | 'cards' | 'speech' | 'bulb' | 'snowflake' | 'chart' | 'clipboard'
   | 'cap' | 'lock' | 'bug' | 'cookie' | 'plus' | 'trash' | 'pin' | 'folder'
   | 'document' | 'image' | 'pencil' | 'play' | 'settings' | 'moon'
+  | 'repeat'
 
 const paths: Record<IconName, ReactElement> = {
+  // SF Symbols: arrow.triangle.2.circlepath
+  repeat: (
+    <>
+      <path d="M3.5 9.5a8.5 8.5 0 0114.2-3.4L21 9" />
+      <path d="M21 4.5V9h-4.5" />
+      <path d="M20.5 14.5a8.5 8.5 0 01-14.2 3.4L3 15" />
+      <path d="M3 19.5V15h4.5" />
+    </>
+  ),
   // SF Symbols: flame.fill
   flame: <path d="M12 22c4 0 6.5-2.6 6.5-6.2 0-4.4-4.3-6.4-3.6-11.8-2.4 1-4.1 3-4.4 5.6-1-.8-1.5-2-1.5-3.4C7 8 5.5 10.6 5.5 13.6 5.5 18.2 8.4 22 12 22z" />,
   // SF Symbols: sparkles

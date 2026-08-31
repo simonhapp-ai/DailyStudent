@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { evaluateBlurting } from '../lib/groq'
@@ -518,7 +519,7 @@ export function BlurtingScreen() {
           <div className="px-5 pb-10 pt-1 shrink-0 space-y-3">
             <div className="flex items-center justify-between text-[12px]">
               <span style={{ color: wordCount >= MIN_WORDS ? '#34D399' : 'rgb(var(--color-text-muted))' }}>
-                {wordCount} von {MIN_WORDS} Wörtern {wordCount >= MIN_WORDS ? '✓' : ''}
+                {wordCount} von {MIN_WORDS} Wörtern
               </span>
               <span className="text-text-muted">ca. {estimatedMinutes} Min</span>
             </div>
@@ -598,20 +599,17 @@ export function BlurtingScreen() {
           <div className="flex-1 overflow-y-auto px-4 pt-3 pb-4 space-y-3">
             {result.correct.length > 0 && (
               <div className="animate-fade-in" style={{ animationDelay: '0ms' }}>
-                <FeedbackSection icon="✅" title="Das hattest du drin" items={result.correct}
-                  color="#22C55E" borderColor="rgba(34,197,94,0.2)" bg="rgba(34,197,94,0.07)" />
+                <FeedbackSection icon="check" title="Das hattest du drin" items={result.correct} tone="green" />
               </div>
             )}
             {result.forgotten.length > 0 && (
               <div className="animate-fade-in" style={{ animationDelay: '60ms' }}>
-                <FeedbackSection icon="❓" title="Das hast du vergessen" items={result.forgotten}
-                  color="#F59E0B" borderColor="rgba(245,158,11,0.2)" bg="rgba(245,158,11,0.07)" />
+                <FeedbackSection icon="target" title="Das hast du vergessen" items={result.forgotten} tone="orange" />
               </div>
             )}
             {result.corrections.length > 0 && (
               <div className="animate-fade-in" style={{ animationDelay: '120ms' }}>
-                <FeedbackSection icon="💡" title="Kleine Korrekturen" items={result.corrections}
-                  color="#60A5FA" borderColor="rgba(96,165,250,0.2)" bg="rgba(96,165,250,0.07)" />
+                <FeedbackSection icon="bulb" title="Kleine Korrekturen" items={result.corrections} tone="blue" />
               </div>
             )}
           </div>
@@ -742,17 +740,30 @@ function ExamSuggestionCard({
   )
 }
 
-function FeedbackSection({ icon, title, items, color, borderColor, bg }: { icon: string; title: string; items: string[]; color: string; borderColor: string; bg: string }) {
+// Die drei Rückmeldungen trugen ihre Bedeutung bisher als Schriftfarbe auf
+// gleichfarbig getöntem Grund — grüner Text auf Grün, roter auf Rot. Jetzt
+// steht die Farbe im gefüllten Zeichen, die Karte bleibt neutral und die
+// Schrift behält ihren vollen Kontrast.
+const TONE_FILL: Record<'green' | 'orange' | 'blue', string> = {
+  green:  'bg-fill-green text-fill-green-on',
+  orange: 'bg-fill-orange text-fill-orange-on',
+  blue:   'bg-fill-blue text-fill-blue-on',
+}
+
+function FeedbackSection({ icon, title, items, tone }: { icon: IconName; title: string; items: string[]; tone: 'green' | 'orange' | 'blue' }) {
   return (
-    <div className="rounded-[18px] overflow-hidden" style={{ background: bg, border: `1px solid ${borderColor}` }}>
+    <div className="rounded-[18px] overflow-hidden bg-surface border border-border/60">
       <div className="px-4 pt-4 pb-2.5 flex items-center gap-2.5">
-        <span className="text-[18px] leading-none">{icon}</span>
-        <p className="text-[14px] font-bold" style={{ color }}>{title}</p>
+        <span className={`w-7 h-7 rounded-[9px] flex items-center justify-center shrink-0 ${TONE_FILL[tone]}`}>
+          <Icon name={icon} size={15} />
+        </span>
+        <p className="text-[14px] font-bold text-text-primary">{title}</p>
+        <span className="ml-auto text-[12px] font-semibold text-text-secondary tabular-nums">{items.length}</span>
       </div>
       <div className="px-4 pb-4 space-y-2">
         {items.map((item, i) => (
           <div key={i} className="flex gap-2.5">
-            <span className="text-[13px] mt-0.5 shrink-0 font-bold" style={{ color }}>·</span>
+            <span className="text-[13px] mt-0.5 shrink-0 font-bold text-text-muted">·</span>
             <p className="text-text-secondary text-[13px] leading-snug">{item}</p>
           </div>
         ))}

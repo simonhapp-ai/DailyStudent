@@ -142,7 +142,7 @@ export function LearnModeScreen() {
                 className="flex-1 py-3 rounded-card text-white text-sm font-semibold press transition-opacity hover:opacity-90"
                 style={{ background: '#34D399' }}
               >
-                Weiß ich ✓
+                Weiß ich
               </button>
             </div>
           </div>

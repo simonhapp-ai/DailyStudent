@@ -4,6 +4,8 @@ import { useUser } from '../context/UserContext'
 import { generateLernplan } from '../lib/gemini'
 import { extractTopicsFromImage } from '../lib/groq'
 import { buildKcPromptContext } from '../data/kcLoader'
+import { Icon, type IconName } from '../components/ui/Icon'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { SUBJECT_INFO, getTopicPlaceholder, getTopicsPlaceholder } from '../data/subjectInfo'
 import { ProModal } from '../components/ui/ProModal'
 import type { LernplanType, LernplanBlockedTime, Lernplan, LernplanGeneratorInput, LernMethode } from '../types'
@@ -398,10 +400,10 @@ export function LernplanKonfiguratorScreen() {
 /* ─── Step 1: Plan Type ────────────────────────────────────────── */
 
 function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday, betaPaused }: { planType: LernplanType; onSelect: (t: LernplanType) => void; isPro: boolean; onShowPro: () => void; einzelCreatedToday: number; betaPaused: boolean }) {
-  const options: { id: LernplanType; icon: string; title: string; desc: string; badge?: string }[] = [
+  const options: { id: LernplanType; icon: IconName; title: string; desc: string; badge?: string }[] = [
     {
       id: 'einzel',
-      icon: '🎯',
+      icon: 'target',
       title: 'Einzel-Lernplan',
       desc: !isPro
         ? `Fokussierter Plan für eine einzelne Klausur. ${Math.max(0, 3 - einzelCreatedToday)}/3 heute übrig (Free).`
@@ -409,14 +411,14 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
     },
     {
       id: 'vollstaendig',
-      icon: '📅',
+      icon: 'calendar',
       title: 'Vollständiger Lernplan',
       desc: 'Strukturierter Mehrwochen-Plan für alle anstehenden Klausuren — mit Priorisierung und Ausgleich.',
       badge: 'Pro',
     },
     {
       id: 'abitur',
-      icon: '🏆',
+      icon: 'cap',
       title: 'Abitur-Lernplan',
       desc: 'Der große Plan für die Abiprüfungen: 4 Semester Stoff, volle Tage verfügbar, LK-Gewichtung.',
       badge: 'Pro',
@@ -442,14 +444,14 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
               }`}
             >
               <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
-                {opt.icon}
+                <Icon name={opt.icon} size={22} />
               </div>
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className={`font-bold text-[16px] ${active ? 'text-white' : 'text-text-primary'}`}>{opt.title}</p>
                   {opt.badge && (!isPro || betaPaused) && (
                     betaPaused
-                      ? <span className="px-1.5 py-0.5 rounded-pill text-[10px] font-bold bg-background text-text-muted">🕒 Bald verfügbar</span>
+                      ? <span className="px-1.5 py-0.5 rounded-pill text-[10px] font-bold bg-background text-text-muted inline-flex items-center gap-1"><Icon name="clock" size={10} />Bald verfügbar</span>
                       : <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
                   )}
                 </div>
@@ -468,7 +470,7 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
       </div>
       {planType === 'einzel' && (
         <div className="mt-4 flex items-start gap-3 p-3.5 rounded-[16px] border border-amber-500/20" style={{ background: 'rgba(245,158,11,0.07)' }}>
-          <span className="shrink-0 mt-0.5">💡</span>
+          <span className="shrink-0 mt-0.5 text-text-secondary"><Icon name="bulb" size={15} /></span>
           <p className="text-[12px] text-text-secondary leading-relaxed">
             <strong className="text-text-primary">Hinweis:</strong> Bist du mitten in einer Klausurenphase mit mehreren Klausuren, empfehlen wir den{' '}
             <strong className="text-text-primary">Vollständigen Lernplan</strong> – er koordiniert alle Fächer gleichzeitig.
@@ -548,7 +550,7 @@ function StepKlausurtermine({
       <div>
         <h2 className="text-2xl font-bold text-text-primary mb-1">Klausurtermine</h2>
         <div className="mt-8 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-surface mx-auto flex items-center justify-center text-3xl mb-4">📅</div>
+          <div className="w-16 h-16 rounded-2xl bg-surface mx-auto flex items-center justify-center text-text-secondary mb-4"><Icon name="calendar" size={28} /></div>
           <p className="text-text-primary font-semibold mb-2">Keine Klausurtermine eingetragen</p>
           <p className="text-text-muted text-sm leading-relaxed">
             Trage zuerst deine Klausurtermine im Kalender ein, dann komm zurück.
@@ -603,12 +605,7 @@ function StepKlausurtermine({
                 onKeyDown={(e) => e.key === 'Enter' && onToggle(key)}
                 className="w-full flex items-center gap-3 p-4 cursor-pointer active:scale-[0.98] transition-all select-none"
               >
-                <div
-                  className="w-11 h-11 rounded-[14px] flex items-center justify-center text-xl shrink-0"
-                  style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
-                >
-                  {subj?.icon ?? '📚'}
-                </div>
+                <SubjectIcon subjectId={k.subjectId} size="md" />
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-[15px] text-text-primary">{subj?.name ?? k.subjectId}</p>
                   <p className="text-text-muted text-[12px] mt-0.5">{formatDate(k.date)}</p>
@@ -1018,7 +1015,7 @@ function StepLernkapazitaet({
                       : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                   }`}
                 >
-                  <span>{subj?.icon ?? '📚'}</span>
+                  <SubjectIcon subjectId={id} size="sm" />
                   {subj?.name ?? id}
                   {isLK && <span className="text-[10px] font-black">LK</span>}
                 </button>
@@ -1033,13 +1030,13 @@ function StepLernkapazitaet({
 
 /* ─── Step 5: Methoden ─────────────────────────────────────────── */
 
-const METHODEN_META: Record<LernMethode, { label: string; emoji: string; desc: string }> = {
-  karteikarten: { label: 'Karteikarten', emoji: '🎴', desc: 'Fragen & Antworten üben' },
-  blurting:     { label: 'Blurting',     emoji: '🧠', desc: 'Alles aus dem Gedächtnis aufschreiben' },
-  lernzettel:   { label: 'Lernzettel',   emoji: '📄', desc: 'Zusammenfassung lesen & merken' },
-  probeklausur: { label: 'Probeklausur', emoji: '📋', desc: 'Unter echten Bedingungen üben' },
-  lesen:        { label: 'Lesen',        emoji: '📖', desc: 'Notizen & Lernzettel durchlesen' },
-  wiederholen:  { label: 'Wiederholen',  emoji: '🔁', desc: 'Gelerntes kurz rekapitulieren' },
+const METHODEN_META: Record<LernMethode, { label: string; icon: IconName; desc: string }> = {
+  karteikarten: { label: 'Karteikarten', icon: 'cards',     desc: 'Fragen & Antworten üben' },
+  blurting:     { label: 'Blurting',     icon: 'bulb',      desc: 'Alles aus dem Gedächtnis aufschreiben' },
+  lernzettel:   { label: 'Lernzettel',   icon: 'document',  desc: 'Zusammenfassung lesen & merken' },
+  probeklausur: { label: 'Probeklausur', icon: 'clipboard', desc: 'Unter echten Bedingungen üben' },
+  lesen:        { label: 'Lesen',        icon: 'book',      desc: 'Notizen & Lernzettel durchlesen' },
+  wiederholen:  { label: 'Wiederholen',  icon: 'repeat',    desc: 'Gelerntes kurz rekapitulieren' },
 }
 
 function StepMethoden({
@@ -1071,7 +1068,7 @@ function StepMethoden({
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-2xl">{meta.emoji}</span>
+                <span className="text-text-primary"><Icon name={meta.icon} size={22} /></span>
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
                   active ? 'border-accent bg-accent' : 'border-border'
                 }`}>
@@ -1120,7 +1117,7 @@ function StepSchwerpunkte({
           return (
             <div key={id} className="bg-surface border border-border/60 rounded-[20px] p-4">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-xl">{subj?.icon ?? '📚'}</span>
+                <SubjectIcon subjectId={id} size="sm" />
                 <p className="text-text-primary font-bold text-[15px]">{subj?.name ?? id}</p>
               </div>
               <textarea
@@ -1184,9 +1181,9 @@ function StepZusammenfassung({
 
       {/* Summary card */}
       <div className="bg-surface border border-border/60 rounded-[20px] p-5 mb-5 space-y-4">
-        <SummaryRow icon="📋" label="Plantyp" value={planTypeLabels[planType]} />
+        <SummaryRow icon="clipboard" label="Plantyp" value={planTypeLabels[planType]} />
         <SummaryRow
-          icon="📚"
+          icon="book"
           label="Klausuren"
           value={selectedTermine.map((k) => {
             const name = SUBJECT_INFO[k.subjectId]?.name ?? k.subjectId
@@ -1194,23 +1191,23 @@ function StepZusammenfassung({
             return `${name} (${count} Thema${count !== 1 ? 'en' : ''})`
           }).join(', ')}
         />
-        <SummaryRow icon="📅" label="Startdatum" value={formatDate(startDate)} />
-        <SummaryRow icon="⏱️" label="Planungszeitraum" value={`${planDays} Tage`} />
-        <SummaryRow icon="🕐" label="Lernzeit/Tag" value={`${dailyStudyHours}h`} />
-        <SummaryRow icon="📅" label="Wochenende" value={includeWeekends ? 'Eingeschlossen' : 'Pausentage'} />
-        {targetGrade && <SummaryRow icon="🎯" label="Zielnote" value={`${targetGrade} NP`} />}
+        <SummaryRow icon="calendar" label="Startdatum" value={formatDate(startDate)} />
+        <SummaryRow icon="clock" label="Planungszeitraum" value={`${planDays} Tage`} />
+        <SummaryRow icon="clock" label="Lernzeit/Tag" value={`${dailyStudyHours}h`} />
+        <SummaryRow icon="calendar" label="Wochenende" value={includeWeekends ? 'Eingeschlossen' : 'Pausentage'} />
+        {targetGrade && <SummaryRow icon="target" label="Zielnote" value={`${targetGrade} NP`} />}
         {lkFaecher.length > 0 && (
           <SummaryRow
-            icon="⭐"
+            icon="star"
             label="Leistungskurse"
             value={lkFaecher.map((id) => SUBJECT_INFO[id]?.name ?? id).join(', ')}
           />
         )}
         {blockedTimes.length > 0 && (
-          <SummaryRow icon="🚫" label="Blockierungen" value={blockedTimes.map((b) => b.label).join(', ')} />
+          <SummaryRow icon="lock" label="Blockierungen" value={blockedTimes.map((b) => b.label).join(', ')} />
         )}
         {Object.values(weaknesses).some((v) => v.trim()) && (
-          <SummaryRow icon="⚠️" label="Schwächen eingetragen" value="Ja — mehr Sessions eingeplant" />
+          <SummaryRow icon="warning" label="Schwächen eingetragen" value="Ja — mehr Sessions eingeplant" />
         )}
       </div>
 
@@ -1233,17 +1230,17 @@ function StepZusammenfassung({
           onClick={onGenerate}
           className="w-full py-4 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[16px] font-bold active:scale-[0.98] transition-all"
         >
-          Lernplan generieren ✨
+          Lernplan generieren
         </button>
       )}
     </div>
   )
 }
 
-function SummaryRow({ icon, label, value }: { icon: string; label: string; value: string }) {
+function SummaryRow({ icon, label, value }: { icon: IconName; label: string; value: string }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="text-base shrink-0 mt-0.5">{icon}</span>
+      <span className="shrink-0 mt-0.5 text-text-secondary"><Icon name={icon} size={16} /></span>
       <div className="flex-1 min-w-0">
         <p className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">{label}</p>
         <p className="text-text-primary text-[14px] font-medium mt-0.5 break-words">{value}</p>

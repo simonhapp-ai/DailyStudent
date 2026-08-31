@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { ProModal } from '../components/ui/ProModal'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
@@ -386,13 +387,13 @@ export function ProbeklausurMode3Screen() {
                   </div>
                   <div className="space-y-2">
                     {[
-                      { icon: '🔴', label: 'Fehleranalyse', desc: 'Konkrete Fehler in deiner Antwort' },
-                      { icon: '🟡', label: 'Lücken', desc: 'Welche Inhalte noch gefehlt haben' },
-                      { icon: '💬', label: 'Formulierungshilfen', desc: 'Bessere Formulierungen für die Klausur' },
-                      { icon: '📊', label: 'Gesamtbewertung', desc: 'Detailliertes Fazit der KI pro Aufgabe' },
+                      { icon: 'warning'   as IconName, label: 'Fehleranalyse', desc: 'Konkrete Fehler in deiner Antwort' },
+                      { icon: 'target'    as IconName, label: 'Lücken', desc: 'Welche Inhalte noch gefehlt haben' },
+                      { icon: 'speech'    as IconName, label: 'Formulierungshilfen', desc: 'Bessere Formulierungen für die Klausur' },
+                      { icon: 'chart'     as IconName, label: 'Gesamtbewertung', desc: 'Detailliertes Fazit der KI pro Aufgabe' },
                     ].map(item => (
                       <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-[12px]" style={{ background: 'var(--color-surface)' }}>
-                        <span className="text-[15px]">{item.icon}</span>
+                        <span className="text-text-secondary shrink-0"><Icon name={item.icon} size={16} /></span>
                         <div className="flex-1 min-w-0">
                           <p className="text-[13px] font-semibold text-text-primary">{item.label}</p>
                           <p className="text-[11px] text-text-muted">{item.desc}</p>

@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Icon } from '../components/ui/Icon'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
@@ -215,7 +217,7 @@ export function LernzettelGeneratorScreen() {
                         color: 'white',
                       }}
                     >
-                      {done ? '✓' : i + 1}
+                      {done ? <Icon name="check" size={13} /> : i + 1}
                     </div>
                     <span className={`text-[12px] font-medium ${active ? 'text-text-primary' : 'text-text-muted'}`}>
                       {s === 'fach' ? 'Fach' : s === 'modus' ? 'Modus' : 'Auswahl'}
@@ -242,12 +244,7 @@ export function LernzettelGeneratorScreen() {
                   onClick={() => handleSelectSubject(subjectId)}
                   className="w-full bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive p-4 text-left press flex items-center gap-3"
                 >
-                  <div
-                    className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 text-xl"
-                    style={{ background: info?.color ? `${info.color}22` : '#ffffff11' }}
-                  >
-                    <span>{info?.icon ?? '📄'}</span>
-                  </div>
+                  <SubjectIcon subjectId={subjectId} size="md" />
                   <div className="flex-1 min-w-0">
                     <p className="text-[15px] font-bold text-text-primary">{info?.name ?? subjectId}</p>
                     <p className="text-[12px] text-text-muted mt-0.5">

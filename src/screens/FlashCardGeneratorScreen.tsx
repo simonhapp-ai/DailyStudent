@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Icon } from '../components/ui/Icon'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
@@ -183,7 +184,7 @@ export function FlashCardGeneratorScreen() {
                         color: done || active ? 'white' : 'rgb(var(--color-text-muted))',
                       }}
                     >
-                      {done ? '✓' : i + 1}
+                      {done ? <Icon name="check" size={13} /> : i + 1}
                     </div>
                     <span className={`text-xs font-medium ${active ? 'text-text-primary' : 'text-text-muted'}`}>
                       {label}
@@ -343,7 +344,7 @@ export function FlashCardGeneratorScreen() {
                   }`}
                   style={method === m ? { background: '#7C3AED' } : {}}
                 >
-                  {m === 'ki' ? '✨ KI generieren' : '✏️ Manuell erstellen'}
+                  <span className="inline-flex items-center gap-1.5"><Icon name={m === 'ki' ? 'sparkle' : 'pencil'} size={15} />{m === 'ki' ? 'KI generieren' : 'Manuell erstellen'}</span>
                 </button>
               ))}
             </div>

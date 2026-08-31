@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { BottomSheet } from '../components/ui/BottomSheet'
@@ -293,12 +294,7 @@ export function ProbeklausurRetroScreen() {
 
               <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
                 {/* Subject icon */}
-                <div
-                  className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 text-xl"
-                  style={{ background: info?.color ? `${info.color}22` : '#ffffff11' }}
-                >
-                  <span>{info?.icon ?? '📄'}</span>
-                </div>
+                <SubjectIcon subjectId={pk.subjectId} size="md" />
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-0.5">

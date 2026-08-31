@@ -5,15 +5,16 @@ import { SUBJECT_INFO } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { ProModal } from '../components/ui/ProModal'
 import { Dialog } from '../components/ui/Dialog'
+import { Icon, type IconName } from '../components/ui/Icon'
 import type { LernplanSession, LernplanActivity, LernDayType, LernMethode, StundenplanSlot } from '../types'
 
-const METHOD_ICONS: Record<LernMethode, string> = {
-  karteikarten: '🃏',
-  blurting: '✍️',
-  lernzettel: '📝',
-  probeklausur: '📋',
-  lesen: '📖',
-  wiederholen: '🔁',
+const METHOD_ICONS: Record<LernMethode, IconName> = {
+  karteikarten: 'cards',
+  blurting: 'bulb',
+  lernzettel: 'document',
+  probeklausur: 'clipboard',
+  lesen: 'book',
+  wiederholen: 'repeat',
 }
 
 const METHOD_LABELS: Record<LernMethode, string> = {
@@ -119,7 +120,7 @@ export function LernplanDetailScreen() {
     }
     return (
       <div className="flex flex-col items-center justify-center min-h-dvh bg-background gap-4 px-8">
-        <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center text-3xl">📅</div>
+        <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center text-text-secondary"><Icon name="calendar" size={28} /></div>
         <p className="text-text-primary font-semibold text-lg text-center">Lernplan nicht gefunden</p>
         <button
           onClick={() => navigate(-1)}
@@ -448,7 +449,7 @@ export function LernplanDetailScreen() {
                 {/* Pause banner */}
                 {day.dayType === 'pause' && (
                   <div className="mx-4 mb-4 p-3 rounded-[14px]" style={{ background: 'rgba(var(--color-border),0.3)' }}>
-                    <p className="text-text-muted text-[13px] text-center">🌿 Erholungstag — keine Lernaufgaben</p>
+                    <p className="text-text-muted text-[13px] text-center flex items-center justify-center gap-1.5"><Icon name="coffee" size={14} />Erholungstag — keine Lernaufgaben</p>
                   </div>
                 )}
 
@@ -570,7 +571,7 @@ function SessionCard({
               <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
             )}
             <span className="text-[11px] text-text-muted/70 flex items-center gap-0.5">
-              <span>{METHOD_ICONS[session.method]}</span>
+              <span className="text-text-secondary"><Icon name={METHOD_ICONS[session.method]} size={15} /></span>
             </span>
             {hasActivities && (
               <svg
@@ -590,7 +591,7 @@ function SessionCard({
           {/* Learning goal */}
           {session.learningGoal && (
             <div className="flex items-start gap-2 px-1 mb-3">
-              <span className="text-[13px] shrink-0 mt-0.5">🎯</span>
+              <span className="shrink-0 mt-0.5 text-text-secondary"><Icon name="target" size={14} /></span>
               <p className="text-text-secondary text-[12px] leading-relaxed italic">{session.learningGoal}</p>
             </div>
           )}
@@ -642,7 +643,7 @@ function ActivityRow({
       </span>
 
       {/* Method icon */}
-      <span className="text-[15px] shrink-0">{METHOD_ICONS[activity.method]}</span>
+      <span className="shrink-0 text-text-secondary"><Icon name={METHOD_ICONS[activity.method]} size={15} /></span>
 
       {/* Title */}
       <div className="flex-1 min-w-0">

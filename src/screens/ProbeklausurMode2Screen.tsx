@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode2Exam, correctExam } from '../lib/gemini'
@@ -390,14 +391,14 @@ export function ProbeklausurMode2Screen() {
             {/* What to expect */}
             <div className="bg-surface rounded-[14px] border border-border/60 p-4 space-y-2.5">
               <p className="text-text-secondary text-[12px] font-bold">Was erwartet dich:</p>
-              {[
-                { icon: '⏱', text: '90-Minuten-Countdown startet automatisch' },
-                { icon: '📋', text: '3–5 Teilaufgaben mit AFB I→II→III Progression' },
-                { icon: '📊', text: '2–3 Materialien (Tabellen, Diagramme, Texte)' },
-                { icon: '🤖', text: 'KI-Korrektur mit Fehlern, Lücken & Note' },
-              ].map(({ icon, text }) => (
+              {([
+                { icon: 'clock',     text: '90-Minuten-Countdown startet automatisch' },
+                { icon: 'clipboard', text: '3–5 Teilaufgaben mit AFB I→II→III Progression' },
+                { icon: 'chart',     text: '2–3 Materialien (Tabellen, Diagramme, Texte)' },
+                { icon: 'sparkle',   text: 'KI-Korrektur mit Fehlern, Lücken & Note' },
+              ] as { icon: IconName; text: string }[]).map(({ icon, text }) => (
                 <div key={text} className="flex items-start gap-2.5">
-                  <span className="text-[14px]">{icon}</span>
+                  <span className="text-text-secondary shrink-0 mt-0.5"><Icon name={icon} size={14} /></span>
                   <p className="text-text-secondary text-[12px]">{text}</p>
                 </div>
               ))}
@@ -504,13 +505,13 @@ export function ProbeklausurMode2Screen() {
                   </div>
                   <div className="space-y-2">
                     {[
-                      { icon: '🔴', label: 'Fehleranalyse', desc: 'Konkrete Fehler in deiner Antwort' },
-                      { icon: '🟡', label: 'Lücken', desc: 'Welche Inhalte noch gefehlt haben' },
-                      { icon: '💬', label: 'Formulierungshilfen', desc: 'Bessere Formulierungen für die Klausur' },
-                      { icon: '📊', label: 'Gesamtbewertung', desc: 'Detailliertes Fazit der KI pro Aufgabe' },
+                      { icon: 'warning'   as IconName, label: 'Fehleranalyse', desc: 'Konkrete Fehler in deiner Antwort' },
+                      { icon: 'target'    as IconName, label: 'Lücken', desc: 'Welche Inhalte noch gefehlt haben' },
+                      { icon: 'speech'    as IconName, label: 'Formulierungshilfen', desc: 'Bessere Formulierungen für die Klausur' },
+                      { icon: 'chart'     as IconName, label: 'Gesamtbewertung', desc: 'Detailliertes Fazit der KI pro Aufgabe' },
                     ].map(item => (
                       <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-[12px]" style={{ background: 'var(--color-surface)' }}>
-                        <span className="text-[15px]">{item.icon}</span>
+                        <span className="text-text-secondary shrink-0"><Icon name={item.icon} size={16} /></span>
                         <div className="flex-1 min-w-0">
                           <p className="text-[13px] font-semibold text-text-primary">{item.label}</p>
                           <p className="text-[11px] text-text-muted">{item.desc}</p>
