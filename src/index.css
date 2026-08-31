@@ -52,6 +52,9 @@
   /* Bühne — hell die dunkelste Fläche des Screens */
   --stage-bg: linear-gradient(146deg, #160E28 0%, #2A1B5C 100%);
 
+  /* Schrift auf gefülltem Purple. Hell ist Purple dunkel genug für Weiß. */
+  --mode-on-purple: #FFFFFF;
+
   /* Liquid Glass nav pill — light mode */
   --nav-pill-bg:     rgba(255, 255, 255, 0.58);
   --nav-pill-shadow:
@@ -112,6 +115,9 @@
 
   /* Bühne — dunkel die hellste Fläche des Screens (Rolle dreht sich um) */
   --stage-bg: linear-gradient(146deg, #241C3C 0%, #3E2C74 100%);
+
+  /* Dunkel wird Purple aufgehellt (#A78BFA) — Schrift darauf wird fast schwarz */
+  --mode-on-purple: #160E28;
 
   /* Liquid Glass nav pill — dark mode */
   --nav-pill-bg:     rgba(36, 36, 42, 0.72);

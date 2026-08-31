@@ -3,7 +3,9 @@ import type { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import type { AbiGradeEntry, AbiHalbjahr, AbiPruefung } from '../types'
+import { PlanenBar } from '../components/ui/PlanenBar'
 
 // ── Internal helpers ──────────────────────────────────────────────────────────
 
@@ -586,12 +588,13 @@ function PruefungCard({
         onClick={() => setExpanded((e) => !e)}
       >
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
-          <div
-            className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
-            style={{ background: subj ? `${subj.color}22` : 'rgba(var(--color-border),0.4)' }}
-          >
-            {subj?.icon ?? (index + 1)}
-          </div>
+          {pruefung.subjectId ? (
+            <SubjectIcon subjectId={pruefung.subjectId} size="sm" />
+          ) : (
+            <div className="w-8 h-8 rounded-btn flex items-center justify-center text-[13px] font-bold text-text-muted shrink-0" style={{ background: 'rgba(var(--color-border),0.4)' }}>
+              {index + 1}
+            </div>
+          )}
           <div className="min-w-0">
             <span className="text-[9px] text-text-muted font-bold uppercase tracking-wider block">Prüfung {index + 1}</span>
             <span className="font-semibold text-[14px] text-text-primary truncate block">
@@ -846,6 +849,10 @@ export function AbiRechnerScreen() {
             )}
           </div>
         )}
+      </div>
+
+      <div className="px-4 pb-1">
+        <PlanenBar />
       </div>
 
       <div className="px-4 pt-4 pb-8 space-y-4">

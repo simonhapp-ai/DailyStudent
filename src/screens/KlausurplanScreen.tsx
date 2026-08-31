@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { topics } from '../data/mockData'
+import { PlanenBar } from '../components/ui/PlanenBar'
 
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -79,6 +81,10 @@ export function KlausurplanScreen() {
             </p>
           )}
         </div>
+      </div>
+
+      <div className="px-4 pb-1">
+        <PlanenBar />
       </div>
 
       <div className="px-4 pt-4 space-y-4">
@@ -225,12 +231,7 @@ export function KlausurplanScreen() {
                     key={`${k.subjectId}-${k.date}`}
                     className="bg-surface border border-border/60 rounded-[16px] px-4 py-3.5 flex items-center gap-3"
                   >
-                    <div
-                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-xl shrink-0"
-                      style={{ background: `${subj?.color ?? '#FF3B30'}18` }}
-                    >
-                      {subj?.icon ?? '📝'}
-                    </div>
+                    <SubjectIcon subjectId={k.subjectId} size="md" />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-0.5">
                         <p className="text-text-primary font-semibold text-[14px]">{subj?.name ?? k.subjectId}</p>
@@ -285,12 +286,7 @@ export function KlausurplanScreen() {
                     key={`past-${k.subjectId}-${k.date}`}
                     className="bg-surface border border-border/40 rounded-[16px] px-4 py-3 flex items-center gap-3 opacity-55"
                   >
-                    <div
-                      className="w-9 h-9 rounded-[10px] flex items-center justify-center text-lg shrink-0"
-                      style={{ background: `${subj?.color ?? '#94A3B8'}15` }}
-                    >
-                      {subj?.icon ?? '📝'}
-                    </div>
+                    <SubjectIcon subjectId={k.subjectId} size="sm" />
                     <div className="flex-1 min-w-0">
                       <p className="text-text-secondary font-medium text-[13px]">{subj?.name ?? k.subjectId}</p>
                       <p className="text-text-muted text-[11px]">

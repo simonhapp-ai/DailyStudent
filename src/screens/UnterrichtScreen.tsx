@@ -290,11 +290,34 @@ export function UnterrichtScreen() {
     <div className="flex flex-col min-h-dvh bg-background pb-28">
 
       {/* ── Header ─────────────────────────────────────────────── */}
-      <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
-        <h1 className="text-[28px] font-bold text-text-primary">Unterricht</h1>
-        <p className="text-[13px] text-text-muted mt-0.5">
-          {profile?.schulform ?? 'Gymnasium'}{profile?.bundesland ? ` · ${profile.bundesland}` : ''}
-        </p>
+      {/* Kopfzeile mit Avatar (Version C) — seit die Navigationsleiste nur noch zwei
+          Modi kennt, ist der Avatar oben rechts der Weg ins Profil und zu allem
+          Persönlichen. Personalisierung richtet man einmal ein und fasst sie selten
+          an; sie gehört nicht in die Hauptnavigation, muss aber von überall in einem
+          Griff erreichbar sein. */}
+      <div
+        className="px-4 flex items-start justify-between gap-3"
+        style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}
+      >
+        <div className="min-w-0">
+          <h1 className="text-[28px] font-bold text-text-primary">Unterricht</h1>
+          <p className="text-[13px] text-text-muted mt-0.5">
+            {profile?.schulform ?? 'Gymnasium'}{profile?.bundesland ? ` · ${profile.bundesland}` : ''}
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/profil')}
+          aria-label="Profil und Einstellungen"
+          className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold press mt-1"
+          style={{ background: 'var(--stage-bg)' }}
+        >
+          {(profile?.name ?? '')
+            .split(' ')
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((w) => w[0]?.toUpperCase() ?? '')
+            .join('') || '·'}
+        </button>
       </div>
 
       {profileSubjects.length === 0 ? (

@@ -1,140 +1,78 @@
 import { useLocation, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { recenterScreen } from '../../lib/nativeBridge'
+import { modeForPath, MODE_HOME, type AppMode } from '../../lib/appMode'
 
-const navItems = [
-  {
-    label: 'Unterricht',
-    path: '/unterricht',
-    icon: (active: boolean) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        strokeWidth={active ? 2.2 : 1.7} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"
-          fill="currentColor" fillOpacity={active ? 0.18 : 0} />
-        <path d="M14 2v6h6" />
-        <line x1="8" y1="13" x2="16" y2="13" />
-        <line x1="8" y1="17" x2="16" y2="17" />
-        <line x1="8" y1="9" x2="10" y2="9" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Klausur',
-    path: '/klausurmodus',
-    icon: (active: boolean) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        strokeWidth={active ? 2.2 : 1.7} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 10l10-5 10 5-10 5z"
-          fill="currentColor" fillOpacity={active ? 0.18 : 0} />
-        <path d="M22 10v6" />
-        <path d="M6 12v5c3 3 9 3 12 0v-5" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Kalender',
-    path: '/kalender',
-    icon: (active: boolean) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        strokeWidth={active ? 2.2 : 1.7} strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="3" ry="3"
-          fill="currentColor" fillOpacity={active ? 0.18 : 0} />
-        <line x1="16" y1="2" x2="16" y2="6" />
-        <line x1="8" y1="2" x2="8" y2="6" />
-        <line x1="3" y1="10" x2="21" y2="10" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Profil',
-    path: '/profil',
-    icon: (active: boolean) => (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        strokeWidth={active ? 2.2 : 1.7} strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="7" r="4"
-          fill="currentColor" fillOpacity={active ? 0.18 : 0} />
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"
-          fill="currentColor" fillOpacity={active ? 0.15 : 0} />
-      </svg>
-    ),
-  },
+// Zwei Modi statt vier Tabs (Version C).
+//
+// Die Leiste kennt nur noch Unterricht und Klausur, weil es im Alltag der Nutzer
+// genau diese zwei Situationen gibt. Alles Weitere hängt an einem der beiden:
+// Profil und Personalisierung am Avatar oben rechts im Unterrichtsmodus, Kalender,
+// Statistiken, Stundenplan, Notenrechner, Hausaufgaben und Klausurtermine hinter
+// „Planen" im Klausurenmodus.
+//
+// Farbe: Der aktive Modus trägt seine eigene Farbe als Fläche — Purple für
+// Unterricht, Mint für Klausur. Schrift darauf ist weiß oder fast schwarz nach
+// Kontrast, nie die Akzentfarbe selbst.
+const MODES: Array<{ mode: AppMode; label: string; fill: string; on: string }> = [
+  { mode: 'unterricht', label: 'Unterricht', fill: 'rgb(var(--color-accent))', on: 'var(--mode-on-purple)' },
+  { mode: 'klausur', label: 'Klausur', fill: '#34D399', on: '#062017' },
 ]
 
 export function BottomNav() {
   const location = useLocation()
   const navigate = useNavigate()
-
-  const isActive = (path: string) => location.pathname.startsWith(path)
+  const reducedMotion = useReducedMotion()
+  const current = modeForPath(location.pathname)
 
   return (
     <nav
       className="fixed left-4 right-4 z-50"
-      style={{
-        bottom: 'max(4px, calc(env(safe-area-inset-bottom, 0px) - 12px))',
-      }}
+      style={{ bottom: 'max(4px, calc(env(safe-area-inset-bottom, 0px) - 12px))' }}
+      aria-label="Modus"
     >
       <div
-        className="flex items-center rounded-full px-2 py-[5px]"
+        className="flex items-center rounded-full p-[5px] gap-[5px]"
         style={{
-          backdropFilter: 'blur(44px) saturate(2.8) brightness(1.06)',
-          WebkitBackdropFilter: 'blur(44px) saturate(2.8) brightness(1.06)',
+          backdropFilter: 'blur(var(--material-blur-thick)) saturate(2.8) brightness(1.06)',
+          WebkitBackdropFilter: 'blur(var(--material-blur-thick)) saturate(2.8) brightness(1.06)',
           backgroundColor: 'var(--nav-pill-bg)',
           boxShadow: 'var(--nav-pill-shadow)',
         }}
       >
-        {navItems.map((item) => {
-          const active = isActive(item.path)
+        {MODES.map(({ mode, label, fill, on }) => {
+          const active = current === mode
           return (
             <button
-              key={item.path}
+              key={mode}
               onClick={() => {
-                // Always recenter — covers both re-tapping the already-active
-                // tab (route won't change, so the app-wide route-change
-                // effect never fires) and switching tabs (native rubber-band
-                // bounce can be mid-flight independent of route/scroll state).
+                // Immer neu zentrieren — deckt sowohl das erneute Tippen auf den
+                // bereits aktiven Modus ab (der Pfad ändert sich nicht, der
+                // app-weite Route-Effect feuert also nicht) als auch den Wechsel.
                 recenterScreen()
-                if (!active) navigate(item.path)
+                if (!active) navigate(MODE_HOME[mode])
               }}
-              className="flex-1 relative flex flex-col items-center justify-center gap-[3px] rounded-full py-[9px] px-2"
+              aria-current={active ? 'page' : undefined}
+              className="flex-1 relative flex items-center justify-center rounded-full h-[46px] px-3"
             >
-              {/* Sliding active bubble */}
               {active && (
                 <motion.div
-                  layoutId="nav-bubble"
+                  layoutId={reducedMotion ? undefined : 'nav-mode'}
                   className="absolute inset-0 rounded-full"
-                  style={{ backgroundColor: 'rgb(var(--color-accent) / 0.13)' }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30, mass: 0.8 }}
+                  style={{ backgroundColor: fill }}
+                  transition={{ type: 'spring', duration: 0.32, bounce: 0.18 }}
                 />
               )}
-
-              {/* Icon */}
               <span
-                className="relative z-10 flex shrink-0"
+                className="relative z-10 whitespace-nowrap text-[16px]"
                 style={{
-                  color: active
-                    ? 'rgb(var(--color-accent))'
-                    : 'rgb(var(--color-text-primary) / 0.5)',
+                  color: active ? on : 'rgb(var(--color-text-primary) / 0.55)',
+                  fontWeight: active ? 700 : 500,
+                  letterSpacing: '-0.015em',
                   transition: 'color 180ms ease',
                 }}
               >
-                {item.icon(active)}
-              </span>
-
-              {/* Label — centered below icon */}
-              <span
-                className="relative z-10 whitespace-nowrap"
-                style={{
-                  color: active
-                    ? 'rgb(var(--color-accent))'
-                    : 'rgb(var(--color-text-primary) / 0.5)',
-                  fontSize: '10px',
-                  fontWeight: active ? 600 : 400,
-                  lineHeight: 1,
-                  letterSpacing: '-0.01em',
-                  transition: 'color 180ms ease',
-                }}
-              >
-                {item.label}
+                {label}
               </span>
             </button>
           )

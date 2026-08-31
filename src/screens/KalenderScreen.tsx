@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser, type EntryType, type PersonalEntry, type KlausurTermin } from '../context/UserContext'
 import { SUBJECT_INFO, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { topics } from '../data/mockData'
 import type { StundenplanSlot, Stundenplan, AbiHalbjahr, UserNote } from '../types'
 import type { StandaloneHomeworkItem } from '../context/UserContext'
@@ -9,6 +10,7 @@ import { totalPunkteAllHalbjahre, pktToNoteAbi, noteColorAbi } from './AbiRechne
 import { parseStundenplanFromImage } from '../lib/groq'
 import { LernvorschlagWidget } from '../components/ui/LernvorschlagWidget'
 import { StundenplanPill } from '../components/ui/StundenplanPill'
+import { PlanenBar } from '../components/ui/PlanenBar'
 
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -235,6 +237,8 @@ export function KalenderScreen() {
             </h1>
           </div>
         </div>
+        {/* Planen-Leiste — Kalender ist die erste von sechs Rubriken. */}
+        <PlanenBar className="mt-4" />
       </div>
 
       {/* ── 2-column layout on desktop ──────────────────────── */}
@@ -1202,7 +1206,7 @@ function StundenplanSetupCard({ onSetup, fullWidth }: { onSetup: () => void; ful
       style={{ minHeight: fullWidth ? undefined : 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill gradient="linear-gradient(145deg,#5AC8FA,#0080B8)" shadow="0 4px 14px rgba(0,128,184,0.5)">
+        <AppIconPill gradient="linear-gradient(145deg,#AEAEB4,#636366)" shadow="0 4px 14px rgba(99,99,102,0.4)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M12 14v4M10 16h4" strokeWidth="2.5" />
           </svg>
@@ -1211,7 +1215,7 @@ function StundenplanSetupCard({ onSetup, fullWidth }: { onSetup: () => void; ful
       </div>
       <div className="flex-1 px-3.5 pb-3.5 pt-2.5 flex flex-col justify-end">
         <p className="text-[16px] font-black text-text-muted">–</p>
-        <p className="text-[11px] font-semibold mt-0.5" style={{ color: '#5AC8FA' }}>Einrichten →</p>
+        <p className="text-[11px] font-semibold mt-0.5" style={{ color: 'rgb(var(--color-text-secondary))' }}>Einrichten →</p>
       </div>
     </button>
   )
@@ -1515,7 +1519,7 @@ function LernplanWidget() {
 
 const WEEK_DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr']
 
-function StundenplanWeekWidget({ stundenplan, onOpen }: { stundenplan: Stundenplan; onOpen: () => void }) {
+export function StundenplanWeekWidget({ stundenplan, onOpen }: { stundenplan: Stundenplan; onOpen: () => void }) {
   const daySlots = WEEK_DAYS.map((_, i) =>
     stundenplan.slots
       .filter((s) => s.day === i)
@@ -1528,13 +1532,13 @@ function StundenplanWeekWidget({ stundenplan, onOpen }: { stundenplan: Stundenpl
       className="flex flex-col bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden press-sm text-left w-full"
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5 pb-2.5">
-        <AppIconPill gradient="linear-gradient(145deg,#5AC8FA,#0080B8)" shadow="0 4px 14px rgba(0,128,184,0.5)">
+        <AppIconPill gradient="linear-gradient(145deg,#AEAEB4,#636366)" shadow="0 4px 14px rgba(99,99,102,0.4)">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
           </svg>
         </AppIconPill>
         <span className="text-[13px] font-bold text-text-primary leading-tight flex-1">Stundenplan</span>
-        <span className="text-[11px] font-semibold" style={{ color: '#5AC8FA' }}>Bearbeiten →</span>
+        <span className="text-[11px] font-semibold" style={{ color: 'rgb(var(--color-text-secondary))' }}>Bearbeiten →</span>
       </div>
       <div className="grid grid-cols-5 gap-1.5 px-3 pb-3.5">
         {WEEK_DAYS.map((label, i) => (
@@ -1645,7 +1649,7 @@ function KlausurFormFields({
 
 const SP_DAY_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr'] as const
 
-function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: string[]; onSave: (slots: StundenplanSlot[]) => void; initialSlots?: StundenplanSlot[] }) {
+export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: string[]; onSave: (slots: StundenplanSlot[]) => void; initialSlots?: StundenplanSlot[] }) {
   const { profile: spProfile } = useUser()
   const [open, setOpen] = useState(() => !!initialSlots)
   const [mode, setMode] = useState<'choose' | 'manual' | 'scan'>(() => (initialSlots && initialSlots.length > 0 ? 'manual' : 'choose'))
@@ -1804,12 +1808,18 @@ function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faecher: st
                 <div className="space-y-1.5">
                   {daySlots.map((slot) => {
                     const subj = SUBJECT_INFO[slot.subjectId]
-                    const icon = slot.isFreistunde ? '☕' : (subj?.icon ?? '📚')
                     const name = slot.isFreistunde ? 'Freistunde' : (subj?.name ?? slot.subjectId)
-                    const iconBg = slot.isFreistunde ? 'rgba(148,163,184,0.18)' : `${subj?.color ?? '#7C3AED'}22`
                     return (
                       <div key={slot.id} className="bg-background border border-border/60 rounded-[12px] p-3 flex items-center gap-2.5 animate-fade-in">
-                        <div className="w-8 h-8 rounded-btn flex items-center justify-center text-base shrink-0" style={{ backgroundColor: iconBg }}>{icon}</div>
+                        {slot.isFreistunde ? (
+                          <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 bg-surface-hover">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-text-muted))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M18 8h1a4 4 0 010 8h-1" /><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z" /><line x1="6" y1="1" x2="6" y2="4" /><line x1="10" y1="1" x2="10" y2="4" /><line x1="14" y1="1" x2="14" y2="4" />
+                            </svg>
+                          </div>
+                        ) : (
+                          <SubjectIcon subjectId={slot.subjectId} size="sm" />
+                        )}
                         <div className="flex-1 min-w-0">
                           <p className="text-text-primary font-semibold text-[13px]">{name}</p>
                           <p className="text-text-muted text-[11px]">{slot.startTime} – {slot.endTime}{slot.room ? ` · ${slot.room}` : ''}</p>

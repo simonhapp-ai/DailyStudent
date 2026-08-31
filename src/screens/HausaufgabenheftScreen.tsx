@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo } from '../data/subjectInfo'
+import { PlanenBar } from '../components/ui/PlanenBar'
 
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -122,6 +123,12 @@ export function HausaufgabenheftScreen() {
           )}
         </div>
         <div className="w-9 h-9 shrink-0" />
+      </div>
+
+      {/* Planen-Leiste — Hausaufgaben sind der eine Bestand mit zwei Wegen hinein:
+          erfasst im Unterrichtsmodus, geplant hier. */}
+      <div className="px-4 pb-1">
+        <PlanenBar />
       </div>
 
       <div className="px-4 pt-4 space-y-3">

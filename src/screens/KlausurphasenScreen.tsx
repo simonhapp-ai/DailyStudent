@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { endnoteForEntry } from './AbiRechnerScreen'
 import { LernvorschlagWidget } from '../components/ui/LernvorschlagWidget'
 import { getActiveStreak } from '../lib/streak'
@@ -91,19 +92,22 @@ function MiniBarChart({ halbjahre, faecher }: { halbjahre: AbiHalbjahr[]; faeche
 }
 
 // ── Icon-Gradienten ──────────────────────────────────────────────────────────
+// Identity palette redefinition (31.08.2026, Simon): only Purple/Mint/Gold/Navy
+// from here on — no more Pink/random-Blue sitting next to each other. Adjacent
+// widget pairs (in each group below) never share a color.
 const G = {
-  // Pro-Feature — Premium Gold
+  // Pro-Feature — Gold (unchanged)
   lernplan:     'linear-gradient(145deg, #FFD060, #C07700)',
 
-  // Auswendig lernen — Karteikarten in Landing-Page-Mint (Simons Wunsch,
-  // 31.07.2026), Blurting bleibt Pink
+  // Auswendig lernen — Mint + Purple (was Pink)
   karteikarten: 'linear-gradient(145deg, #34D399, #059669)',
-  blurting:     'linear-gradient(145deg, #DB2777, #9D174D)',
+  blurting:     'linear-gradient(145deg, #A78BFA, #5B21B6)',
 
-  // Tiefer lernen — Lernzettel bleibt Blau, Probeklausur jetzt Purple
-  // (Simons Wunsch, 31.07.2026)
-  lernzettel:   'linear-gradient(145deg, #5AC8FA, #007BB8)',
-  probeklausur: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+  // Tiefer lernen — Navy (was ambiguous Blue) + Purple, consolidated on the
+  // single established dark-purple partner #5B21B6 (was #4C1D95 here, a second
+  // undocumented "dark purple" that had crept in — see Änderungsprotokoll)
+  lernzettel:   'linear-gradient(145deg, #0E7CDD, #052848)',
+  probeklausur: 'linear-gradient(145deg, #7C3AED, #5B21B6)',
 
   // Statistik
   streak:       'linear-gradient(145deg, #FF9F0A, #E07008)',
@@ -167,13 +171,28 @@ export function KlausurphasenScreen() {
     <div className="flex flex-col min-h-dvh bg-background pb-28">
 
       {/* ── Header ───────────────────────────────────────────────────────── */}
-      <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
-        <h1 className="text-[28px] font-bold text-text-primary">Klausurenmodus</h1>
-        <p className="text-[13px] text-text-muted mt-0.5">
-          {nextExam
-            ? `${subjectName} · Klausur in ${daysUntilExam} Tagen`
-            : 'Bereite dich auf deine Klausuren vor'}
-        </p>
+      {/* Kopfzeile mit „Planen" (Version C) — Kalender, Statistiken, Stundenplan,
+          Notenrechner, Hausaufgaben und Klausurtermine liegen hinter diesem einen
+          Knopf. Zum ersten Mal an einem Ort: Geplant wird zuhause, also im
+          Klausurenmodus. */}
+      <div
+        className="px-4 flex items-start justify-between gap-3"
+        style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}
+      >
+        <div className="min-w-0">
+          <h1 className="text-[28px] font-bold text-text-primary">Klausurenmodus</h1>
+          <p className="text-[13px] text-text-muted mt-0.5">
+            {nextExam
+              ? `${subjectName} · Klausur in ${daysUntilExam} Tagen`
+              : 'Bereite dich auf deine Klausuren vor'}
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/kalender')}
+          className="shrink-0 px-4 h-11 rounded-pill text-[15px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press mt-1"
+        >
+          Planen
+        </button>
       </div>
 
       <div className="px-4 mt-5 space-y-3 lg:px-6">
@@ -206,8 +225,8 @@ export function KlausurphasenScreen() {
                   <div key={day.date} className="flex-1 bg-background rounded-[14px] p-3 text-center">
                     <p className="text-text-muted text-[10px] font-semibold uppercase tracking-wide">{WEEKDAY_SHORT[d.getDay()]}</p>
                     <p className="text-text-secondary text-[11px] mt-0.5">{d.getDate()}. {['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][d.getMonth()]}</p>
-                    <div className="mt-2 mx-auto w-6 h-6 rounded-btn flex items-center justify-center text-base">
-                      {SUBJECT_INFO[day.sessions[0]?.subjectId]?.icon ?? '📚'}
+                    <div className="mt-2 mx-auto w-fit">
+                      {day.sessions[0]?.subjectId && <SubjectIcon subjectId={day.sessions[0].subjectId} size="sm" />}
                     </div>
                     <p className="text-text-muted text-[10px] font-medium mt-1 leading-tight">{subjectName}</p>
                     <p className="text-text-secondary text-[10px] font-medium mt-0.5 leading-tight line-clamp-2">{mainTopic}</p>

@@ -36,6 +36,7 @@ import { UserProvider, useUser } from '../context/UserContext'
 import { useDeepLinkAuth } from '../hooks/useDeepLinkAuth'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { KalenderScreen } from '../screens/KalenderScreen'
+import { StundenplanScreen } from '../screens/StundenplanScreen'
 import { UnterrichtScreen } from '../screens/UnterrichtScreen'
 import { LessonScreen } from '../screens/LessonScreen'
 import { SmartNotesScreen } from '../screens/SmartNotesScreen'
@@ -45,7 +46,6 @@ import { NoteCreateScreen } from '../screens/NoteCreateScreen'
 import { FolderScreen } from '../screens/FolderScreen'
 import { ProfilScreen } from '../screens/ProfilScreen'
 import { ProfilCoinsScreen } from '../screens/ProfilCoinsScreen'
-import { ProfilErscheinungsbildScreen } from '../screens/ProfilErscheinungsbildScreen'
 import { ProfilAccountScreen } from '../screens/ProfilAccountScreen'
 import { ProfilSupportScreen } from '../screens/ProfilSupportScreen'
 import { ProfilDevToolsScreen } from '../screens/ProfilDevToolsScreen'
@@ -89,30 +89,22 @@ import { analyticsAllowed, hasConsent, saveConsent } from '../lib/consent'
 import { Capacitor } from '@capacitor/core'
 
 function ThemeApplier() {
-  const { theme } = useUser()
-
+  // Apple HIG (Dark Mode): "Avoid offering an app-specific appearance setting" —
+  // the in-app Hell/Dunkel/System picker was removed 31.08.2026, app now always
+  // follows the system appearance, unconditionally.
   useEffect(() => {
-    const isDark = theme === 'dark'
-      ? true
-      : theme === 'light'
-        ? false
-        : window.matchMedia('(prefers-color-scheme: dark)').matches
-    document.documentElement.classList.toggle('dark', isDark)
-    // Native (iOS wrapper) can't see this in-app theme choice on its own —
-    // it only knows the device's OS-level appearance, which can differ.
-    notifyNativeTheme(isDark)
-  }, [theme])
-
-  useEffect(() => {
-    if (theme !== 'system') return
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => {
-      document.documentElement.classList.toggle('dark', e.matches)
-      notifyNativeTheme(e.matches)
+    const apply = (isDark: boolean) => {
+      document.documentElement.classList.toggle('dark', isDark)
+      // Native (iOS wrapper) can't see this in-app theme choice on its own —
+      // it only knows the device's OS-level appearance, which can differ.
+      notifyNativeTheme(isDark)
     }
+    apply(mq.matches)
+    const handler = (e: MediaQueryListEvent) => apply(e.matches)
     mq.addEventListener('change', handler)
     return () => mq.removeEventListener('change', handler)
-  }, [theme])
+  }, [])
 
   return null
 }
@@ -179,6 +171,7 @@ function AppRoutes() {
       <Route path="/" element={<SmartRedirect />} />
       <Route path="/dashboard" element={<DashboardScreen />} />
       <Route path="/kalender" element={<KalenderScreen />} />
+      <Route path="/stundenplan" element={<StundenplanScreen />} />
       <Route path="/hausaufgaben" element={<HausaufgabenheftScreen />} />
       <Route path="/klausuren" element={<KlausurplanScreen />} />
       <Route path="/abi-rechner" element={<AbiRechnerScreen />} />
@@ -209,7 +202,6 @@ function AppRoutes() {
       <Route path="/klausurmodus/lernplan/:id" element={<LernplanDetailScreen />} />
       <Route path="/profil" element={<ProfilScreen />} />
       <Route path="/profil/coins" element={<ProfilCoinsScreen />} />
-      <Route path="/profil/erscheinungsbild" element={<ProfilErscheinungsbildScreen />} />
       <Route path="/profil/account" element={<ProfilAccountScreen />} />
       <Route path="/profil/support" element={<ProfilSupportScreen />} />
       <Route path="/profil/dev-tools" element={<ProfilDevToolsScreen />} />

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO, getSubjectOnColor } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { PlanenBar } from '../components/ui/PlanenBar'
 import { endnoteForEntry } from './AbiRechnerScreen'
 import { getActiveStreak } from '../lib/streak'
 import type { AbiHalbjahr } from '../types'
@@ -540,16 +541,11 @@ export function InsightsScreen() {
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-            <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Zurück
-        </button>
-        <h1 className="text-[28px] font-bold text-text-primary">Statistiken</h1>
+        <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
+        {/* Die Planen-Leiste ersetzt den Zurück-Knopf: Sie IST die Navigation dieses
+            Bereichs. Zurück in den Klausurenmodus führt die Modus-Leiste unten. */}
+        <PlanenBar className="mt-4" />
+        <h2 className="text-[22px] font-bold text-text-primary mt-5">Statistiken</h2>
         <p className="text-[13px] text-text-muted mt-0.5">Dein Lernfortschritt auf einen Blick</p>
       </div>
 
