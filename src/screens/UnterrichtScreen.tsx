@@ -462,7 +462,7 @@ export function UnterrichtScreen() {
               <ListGroup>
                 <ListRow
                   leading={
-                    <span className="w-11 h-11 rounded-icon bg-fill-1 flex items-center justify-center text-text-secondary shrink-0">
+                    <span className="w-11 h-11 rounded-icon bg-fill-1 flex items-center justify-center text-text-primary shrink-0">
                       <Icon name="folder" size={20} />
                     </span>
                   }

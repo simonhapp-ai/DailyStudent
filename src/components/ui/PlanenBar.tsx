@@ -41,7 +41,7 @@ export function PlanenBar({ className = '' }: { className?: string }) {
         className={`w-full h-9 px-2 rounded-pill text-[12.5px] font-semibold truncate press-sm transition-colors ${
           active
             ? 'bg-accent text-white dark:text-[#160E28]'
-            : 'bg-surface text-text-primary hover:bg-surface-hover'
+            : 'bg-fill-3 text-text-primary hover:bg-fill-2'
         }`}
       >
         {label}

@@ -171,7 +171,7 @@ export function FolderScreen() {
                   <ListRow
                     key={sub.id}
                     leading={
-                      <span className="w-11 h-11 rounded-icon bg-fill-1 flex items-center justify-center shrink-0 text-text-secondary">
+                      <span className="w-11 h-11 rounded-icon bg-fill-1 flex items-center justify-center shrink-0 text-text-primary">
                         <Icon name="folder" size={19} />
                       </span>
                     }

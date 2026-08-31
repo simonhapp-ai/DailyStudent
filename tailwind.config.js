@@ -51,11 +51,11 @@ export default {
         'fill-blue-on': 'rgb(var(--fill-blue-on) / <alpha-value>)',
         'fill-yellow': 'rgb(var(--fill-yellow) / <alpha-value>)',
         'fill-yellow-on': 'rgb(var(--fill-yellow-on) / <alpha-value>)',
-        // Füllstufen — Stufe nach Flächengröße, siehe index.css
-        'fill-1': 'var(--fill-primary)',
-        'fill-2': 'var(--fill-secondary)',
-        'fill-3': 'var(--fill-tertiary)',
-        'fill-4': 'var(--fill-quaternary)',
+        // Graustufen — Apple systemGray, Stufe nach Flächengröße, siehe index.css
+        'fill-1': 'rgb(var(--fill-primary) / <alpha-value>)',
+        'fill-2': 'rgb(var(--fill-secondary) / <alpha-value>)',
+        'fill-3': 'rgb(var(--fill-tertiary) / <alpha-value>)',
+        'fill-4': 'rgb(var(--fill-quaternary) / <alpha-value>)',
         elevated: 'rgb(var(--color-elevated) / <alpha-value>)',
         // Kalendereintrag
         'ev-bg': 'rgb(var(--ev-bg) / <alpha-value>)',

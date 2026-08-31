@@ -49,10 +49,15 @@
      neue Farbe ein, liegt nur auf dem Fachzeichen. */
   --subj-fade: linear-gradient(155deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,0) 56%, rgba(0,0,0,.11) 100%);
 
-  /* ── Füllstufen (Apple-Hierarchie) ───────────────────────────────────────
-     Vier Stufen desselben neutralen Tons. Die Stufe kodiert die GRÖSSE der
-     Fläche, nicht den Geschmack: Kleine Formen brauchen mehr Deckkraft, um
-     überhaupt zu lesen, große weniger, sonst erdrücken sie den Inhalt.
+  /* ── Graustufen (Apple systemGray 1–6) ───────────────────────────────────
+     Vier ECHTE Töne aus Apples Graureihe, nicht ein Ton in vier Deckkraften.
+     Deckkraftstufen desselben Grundtons unterscheiden sich am Ende kaum —
+     erst getrennte Werte ergeben sichtbare Abwechslung. Die Stufe kodiert die
+     GRÖSSE der Fläche: Kleine Formen tragen den kräftigeren Ton, große den
+     leiseren, sonst erdrücken sie den Inhalt.
+
+     Undurchsichtig, nicht durchscheinend: So bleibt der Ton derselbe, egal ob
+     die Fläche auf dem Grund, auf einer Karte oder in einer Karte liegt.
 
        primary     kleine Formen — Symbolfelder, Datumsfelder, Schalterspuren
        secondary   mittlere Formen — sekundäre Knöpfe, Segmentleisten, Pillen
@@ -62,10 +67,10 @@
      Apple benennt die Stufen semantisch nach Zweck, nicht nach Farbwert; das
      Schema ist plattformunabhängig übertragbar (siehe APPLE_HIG_DESIGN_SYSTEM.md,
      Abschnitt Color). */
-  --fill-primary:    rgba(120, 120, 128, 0.20);
-  --fill-secondary:  rgba(120, 120, 128, 0.16);
-  --fill-tertiary:   rgba(120, 120, 128, 0.12);
-  --fill-quaternary: rgba(120, 120, 128, 0.08);
+  --fill-primary:    209 209 214;   /* Apple Gray 4  #D1D1D6 */
+  --fill-secondary:  222 222 228;   /* zwischen Gray 4 und 5     */
+  --fill-tertiary:   233 233 238;   /* nahe Gray 5   #E5E5EA     */
+  --fill-quaternary: 242 242 247;   /* Apple Gray 6  #F2F2F7     */
 
   /* Erhöhte Fläche — was auf einer Karte liegt, nicht die Karte selbst */
   --color-elevated: 255 255 255;
@@ -140,12 +145,12 @@
      sichtbar ist — das Symbol darauf ist die eine Ausnahme und wird schwarz. */
   --subj-cst:     255 255 255;  --subj-cst-on:    0   0   0;
 
-  /* Dunkel liegen dieselben Stufen höher — auf Schwarz braucht derselbe
-     Eindruck mehr Deckkraft als auf Weiß. */
-  --fill-primary:    rgba(120, 120, 128, 0.36);
-  --fill-secondary:  rgba(120, 120, 128, 0.32);
-  --fill-tertiary:   rgba(120, 120, 128, 0.24);
-  --fill-quaternary: rgba(120, 120, 128, 0.18);
+  /* Dunkel kehrt sich die Reihe um: Auf Schwarz ist der HELLERE Grauton der
+     kräftigere. Dieselben vier Rollen, gespiegelte Werte. */
+  --fill-primary:     99  99 102;   /* Apple Gray 2 (dunkel) #636366 */
+  --fill-secondary:   72  72  74;   /* Apple Gray 3 (dunkel) #48484A */
+  --fill-tertiary:    58  58  60;   /* Apple Gray 4 (dunkel) #3A3A3C */
+  --fill-quaternary:  44  44  46;   /* Apple Gray 5 (dunkel) #2C2C2E */
 
   --color-elevated: 44 44 46;
 
@@ -483,7 +488,7 @@ textarea::placeholder {
 /* ── Nav button — neutral hover, Emil Kowalski ──────────────── */
 
 .nav-btn {
-  background: transparent;
+  background: rgb(var(--fill-quaternary));
   transition:
     background 140ms cubic-bezier(0.23, 1, 0.32, 1),
     color      140ms cubic-bezier(0.23, 1, 0.32, 1),
@@ -491,7 +496,7 @@ textarea::placeholder {
 }
 
 .nav-active {
-  background: rgba(var(--color-text-primary), 0.08);
+  background: rgb(var(--fill-secondary));
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -499,10 +504,10 @@ textarea::placeholder {
     transform: scale(1.08);
   }
   .nav-btn:not(.nav-active):hover {
-    background: rgba(var(--color-text-primary), 0.06);
+    background: rgb(var(--fill-tertiary));
   }
   .nav-btn.nav-active:hover {
-    background: rgba(var(--color-text-primary), 0.13);
+    background: rgb(var(--fill-primary));
   }
 }
 
