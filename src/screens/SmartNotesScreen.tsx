@@ -359,7 +359,7 @@ export function SmartNotesScreen() {
                 <p className="text-sm mb-3 text-text-primary">{analysisError}</p>
               )}
               {analysisStatus === 'done' && editGeneratedNote && (
-                <p className="text-xs text-text-primary font-medium mb-2">✓ Neue Analyse bereit — wird beim Speichern übernommen</p>
+                <p className="text-xs text-text-primary font-medium mb-2">Neue Analyse bereit — wird beim Speichern übernommen</p>
               )}
               {displayNote.summary ? (
                 <div className="text-text-secondary text-sm leading-relaxed"><RichText text={displayNote.summary} /></div>
@@ -420,7 +420,8 @@ export function SmartNotesScreen() {
         {/* Fotos */}
         {photos.length > 0 && (
           <CollapsibleSection
-            title="📸 Fotos"
+            title="Fotos"
+            icon="camera"
             badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{photos.length}</span>}
           >
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
@@ -492,7 +493,7 @@ export function SmartNotesScreen() {
                 : 'bg-accent text-white dark:text-[#160E28] hover:opacity-90'
               }`}
             >
-              {transferStatus === 'uploading' ? 'Läuft…' : transferStatus === 'done' ? 'Übertragen ✓' : 'Übertragen'}
+              {transferStatus === 'uploading' ? 'Läuft…' : transferStatus === 'done' ? 'Übertragen' : 'Übertragen'}
             </button>
           </div>
         )}
@@ -551,7 +552,7 @@ export function SmartNotesScreen() {
                       </p>
                       {isDone && (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0" style={{ backgroundColor: 'rgba(48,209,88,0.12)', color: '#30D158' }}>
-                          ✓ Erledigt
+                          Erledigt
                         </span>
                       )}
                     </div>

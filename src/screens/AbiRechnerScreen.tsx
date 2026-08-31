@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from '../components/ui/Icon'
 import type { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -388,7 +389,7 @@ function SubjectCard({
                 : { background: 'rgba(var(--color-border),0.3)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
             }
           >
-            {entry.notBelegt ? '✕ Nicht belegt' : '— Nicht belegt'}
+            {entry.notBelegt ? 'Nicht belegt' : '— Nicht belegt'}
           </button>
           {/* LK 2× toggle */}
           {!entry.notBelegt && !hideLk && (
@@ -887,7 +888,7 @@ export function AbiRechnerScreen() {
                     <p className="text-[28px] font-bold text-text-secondary leading-none">{zielnote}</p>
                     {diffPunkte !== null && (
                       <p className="text-[12px] font-bold mt-1" style={{ color: isOnTrack ? '#34C759' : '#FF9500' }}>
-                        {isOnTrack ? `+${diffPunkte.toFixed(1)} Pkt ✓` : `${diffPunkte.toFixed(1)} Pkt`}
+                        {isOnTrack ? `+${diffPunkte.toFixed(1)} Pkt` : `${diffPunkte.toFixed(1)} Pkt`}
                       </p>
                     )}
                   </div>
@@ -951,7 +952,7 @@ export function AbiRechnerScreen() {
                 className="w-12 h-12 rounded-[14px] flex items-center justify-center text-2xl shrink-0"
                 style={{ background: 'rgba(var(--color-accent),0.1)' }}
               >
-                🎓
+                <Icon name="cap" size={28} />
               </div>
               <div>
                 <p className="text-text-primary font-semibold text-[15px]">Noch keine Noten eingetragen</p>

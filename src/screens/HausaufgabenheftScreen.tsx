@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo } from '../data/subjectInfo'
@@ -225,7 +226,7 @@ export function HausaufgabenheftScreen() {
         {/* ── Pending homework list ────────────────────────────── */}
         {pending.length === 0 && !showAddForm && (
           <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-success/10 flex items-center justify-center text-3xl">✅</div>
+            <div className="w-16 h-16 rounded-2xl bg-fill-green text-fill-green-on flex items-center justify-center"><Icon name="check" size={28} /></div>
             <p className="text-text-primary font-bold text-[16px]">Alle Hausaufgaben erledigt!</p>
             <p className="text-text-muted text-[13px]">Tippe + um neue hinzuzufügen</p>
           </div>
@@ -253,7 +254,7 @@ export function HausaufgabenheftScreen() {
                     {subj.icon}
                   </div>
                 ) : (
-                  <div className="w-7 h-7 rounded-[8px] bg-surface-hover flex items-center justify-center shrink-0 text-sm">📚</div>
+                  <div className="w-7 h-7 rounded-[8px] bg-surface-hover flex items-center justify-center shrink-0 text-text-secondary"><Icon name="book" size={14} /></div>
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-[12px] font-bold truncate" style={{ color: subj ? color : 'rgb(var(--color-text-muted))' }}>
@@ -301,7 +302,7 @@ export function HausaufgabenheftScreen() {
                       className="px-3 py-1.5 rounded-pill text-[11px] font-bold text-white press-sm"
                       style={{ background: '#34C759' }}
                     >
-                      Ja, erledigt ✓
+                      Ja, erledigt
                     </button>
                   </div>
                 ) : (

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO, getSubjectOnColor } from '../data/subjectInfo'
@@ -246,7 +247,7 @@ interface TipCtx {
 
 interface TipDef {
   id: string
-  icon: string
+  icon: IconName
   accentColor: string
   title: (ctx: TipCtx) => string
   text: (ctx: TipCtx) => string
@@ -257,7 +258,7 @@ interface TipDef {
 const ALL_TIPS: TipDef[] = [
   {
     id: 'exam-urgent',
-    icon: '🔔',
+    icon: 'bell' as IconName,
     accentColor: '#EF4444',
     title: (ctx) => `Klausur in ${ctx.nextExamInDays} Tagen`,
     text: () => 'Nutze jetzt Active Recall: Schreib ohne Notizen alles auf, was du weißt. Das ist 2× effektiver als erneutes Lesen.',
@@ -266,7 +267,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'exam-soon',
-    icon: '⏰',
+    icon: 'clock',
     accentColor: '#F97316',
     title: (ctx) => `Klausur in ${ctx.nextExamInDays} Tagen`,
     text: () => 'Starte täglich mit 25 Minuten Probeklausur. So trainierst du das Abrufen unter Zeitdruck — genau wie im echten Abi.',
@@ -275,7 +276,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'weakness',
-    icon: '📈',
+    icon: 'chart' as IconName,
     accentColor: '#6366F1',
     title: (ctx) => `${ctx.weakestName} verbessern`,
     text: () => '5 Karteikarten pro Tag fürs Schwachfach. Kleine, konsistente Einheiten schlagen Marathon-Lernen am Wochenende.',
@@ -284,7 +285,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'streak-high',
-    icon: '🔥',
+    icon: 'flame' as IconName,
     accentColor: '#FF9500',
     title: (ctx) => `${ctx.streak} Tage Streak — stark!`,
     text: () => 'Konstanz ist der stärkste Lernbooster. Selbst 10 Minuten täglich reichen, um den Streak zu halten.',
@@ -293,7 +294,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'on-track',
-    icon: '⭐',
+    icon: 'star',
     accentColor: '#34C759',
     title: () => 'Du bist auf Kurs!',
     text: () => 'Deine Note liegt im Zielbereich. Halte dieses Niveau durch regelmäßige Wiederholungen — Konstanz schlägt Intensität.',
@@ -302,7 +303,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'spaced-rep',
-    icon: '🧠',
+    icon: 'bulb' as IconName,
     accentColor: '#8B5CF6',
     title: () => 'Spaced Repetition',
     text: () => 'Dein Gehirn vergisst 80% innerhalb von 24h. Wiederhole Karteikarten täglich in kurzen Sessions — das verankert Wissen im Langzeitgedächtnis.',
@@ -311,7 +312,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'active-recall',
-    icon: '✏️',
+    icon: 'pencil' as IconName,
     accentColor: '#14B8A6',
     title: () => 'Active Recall',
     text: () => 'Schreib auf, was du weißt — ohne Notizen. Fehler jetzt zu machen ist der effektivste Weg zum Lernen.',
@@ -320,7 +321,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'feynman',
-    icon: '💡',
+    icon: 'bulb' as IconName,
     accentColor: '#EAB308',
     title: () => 'Feynman-Methode',
     text: () => 'Erkläre ein Thema, als wärst du der Lehrer und dein Schüler ist 10 Jahre alt. Wo du stockst — da sind deine Lücken.',
@@ -329,7 +330,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'pomodoro',
-    icon: '🍅',
+    icon: 'clock' as IconName,
     accentColor: '#EF4444',
     title: () => 'Pomodoro-Technik',
     text: () => '25 Minuten fokussiert lernen, 5 Minuten Pause. Dein Gehirn braucht diese Erholung, um Gelerntes zu festigen.',
@@ -338,7 +339,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'sleep',
-    icon: '💤',
+    icon: 'moon' as IconName,
     accentColor: '#6366F1',
     title: () => 'Schlaf konsolidiert Wissen',
     text: () => 'Während du schläfst, schreibt dein Gehirn das Gelernte ins Langzeitgedächtnis. 8 Stunden vor der Klausur sind Gold wert.',
@@ -407,7 +408,7 @@ function SubjectBarChart({ items }: { items: BarItem[] }) {
               {/* Baseline */}
               <div className="w-full h-px" style={{ background: 'rgba(var(--color-border), 0.7)' }} />
               {/* Subject icon + grade label */}
-              <span className="text-[18px] leading-none mt-1.5">{s.info.icon}</span>
+              <SubjectIcon subjectId={s.subjectId} size="sm" className="mt-1.5 !w-6 !h-6" />
               <span className="text-[9px] font-semibold mt-0.5" style={{ color: c }}>
                 {npToLabel(s.np)}
               </span>
@@ -558,16 +559,16 @@ export function InsightsScreen() {
         {/* ── Quick Stats ──────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           {([
-            { icon: '🔥', value: activeStreak.toString(), unit: 'Tage', label: 'Streak' },
-            { icon: '📝', value: userNotes.length.toString(), unit: '', label: 'Notizen' },
-            { icon: '📸', value: totalPhotos.toString(), unit: '', label: 'Fotos' },
-            { icon: '📋', value: savedProbeklausuren.length.toString(), unit: '', label: 'Probeklausuren' },
-            { icon: '📄', value: lernzettel.length.toString(), unit: '', label: 'Lernzettel' },
-            { icon: '🎴', value: generatedFlashCards.length.toString(), unit: '', label: 'Karteikarten' },
+            { icon: 'flame' as IconName, value: activeStreak.toString(), unit: 'Tage', label: 'Streak' },
+            { icon: 'note' as IconName, value: userNotes.length.toString(), unit: '', label: 'Notizen' },
+            { icon: 'camera' as IconName, value: totalPhotos.toString(), unit: '', label: 'Fotos' },
+            { icon: 'clipboard' as IconName, value: savedProbeklausuren.length.toString(), unit: '', label: 'Probeklausuren' },
+            { icon: 'document' as IconName, value: lernzettel.length.toString(), unit: '', label: 'Lernzettel' },
+            { icon: 'cards' as IconName, value: generatedFlashCards.length.toString(), unit: '', label: 'Karteikarten' },
           ] as const).map((s) => (
             <div key={s.label} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 lg:p-5">
               <div className="flex items-start justify-between mb-1.5">
-                <span className="text-[22px] lg:text-[26px]">{s.icon}</span>
+                <span className="text-text-secondary"><Icon name={s.icon} size={22} /></span>
                 <p className="text-text-primary font-bold text-[22px] leading-none">
                   {s.value}
                   {s.unit && <span className="text-text-muted text-[12px] font-normal ml-1">{s.unit}</span>}
@@ -604,7 +605,7 @@ export function InsightsScreen() {
                 <div className="flex-1 flex justify-center">
                   {isOnTrack ? (
                     <span className="px-3 py-1.5 rounded-pill text-[12px] font-semibold" style={{ background: 'rgba(52,199,89,0.15)', color: '#34C759' }}>
-                      ✓ Auf Kurs
+                      Auf Kurs
                     </span>
                   ) : (
                     <span className="px-3 py-1.5 rounded-pill text-[12px] font-semibold" style={{ background: 'rgba(255,107,53,0.15)', color: '#FF6B35' }}>
@@ -671,7 +672,7 @@ export function InsightsScreen() {
               <p className="text-text-muted text-[12px] mt-0.5">{daysStudiedThisWeek}/7 Tage gelernt</p>
             </div>
             {daysStudiedThisWeek === 7 && (
-              <span className="text-[13px]">🏆</span>
+              <span className="text-text-secondary"><Icon name="star" size={13} /></span>
             )}
           </div>
           <div className="flex justify-between mb-4">
@@ -708,7 +709,7 @@ export function InsightsScreen() {
             </div>
             <p className="text-text-muted text-[11px] mt-1.5">
               {daysStudiedThisWeek === 7
-                ? '🏆 Perfekte Woche — großartig!'
+                ? 'Perfekte Woche — großartig!'
                 : `Noch ${7 - daysStudiedThisWeek} ${7 - daysStudiedThisWeek === 1 ? 'Tag' : 'Tage'} für eine perfekte Woche`}
             </p>
           </div>
@@ -716,7 +717,7 @@ export function InsightsScreen() {
             <div className="flex gap-3 mt-4 pt-4 border-t border-border/50">
               {notesThisWeek > 0 && (
                 <div className="flex items-center gap-2">
-                  <span className="text-[16px]">📝</span>
+                  <span className="text-text-secondary"><Icon name="note" size={16} /></span>
                   <div>
                     <p className="text-text-primary font-semibold text-[14px] leading-none">{notesThisWeek}</p>
                     <p className="text-text-muted text-[11px] mt-0.5">Notiz{notesThisWeek !== 1 ? 'en' : ''}</p>
@@ -725,7 +726,7 @@ export function InsightsScreen() {
               )}
               {examsThisWeek > 0 && (
                 <div className="flex items-center gap-2">
-                  <span className="text-[16px]">📋</span>
+                  <span className="text-text-secondary"><Icon name="clipboard" size={16} /></span>
                   <div>
                     <p className="text-text-primary font-semibold text-[14px] leading-none">{examsThisWeek}</p>
                     <p className="text-text-muted text-[11px] mt-0.5">Klausur{examsThisWeek !== 1 ? 'en' : ''}</p>
@@ -768,11 +769,8 @@ export function InsightsScreen() {
                 style={{ borderLeft: `3px solid ${tip.accentColor}` }}
               >
                 <div className="flex items-start gap-3">
-                  <div
-                    className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 text-[18px]"
-                    style={{ background: tip.accentColor + '1A' }}
-                  >
-                    {tip.icon}
+                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
+                    <Icon name={tip.icon} size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-text-primary font-semibold text-[14px]">{tip.title(tipCtx)}</p>

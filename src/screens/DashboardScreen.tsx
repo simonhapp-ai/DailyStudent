@@ -124,7 +124,7 @@ function ErsteSchritteCard({ tasks, onDismiss }: { tasks: ErsteSchritteTask[]; o
     <div className="bg-surface rounded-[20px] border border-border/60 shadow-card-adaptive p-5 mb-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-[20px]">🚀</span>
+          <span className="text-text-primary"><Icon name="target" size={19} /></span>
           <p className="text-[15px] font-bold text-text-primary">Erste Schritte</p>
         </div>
         <div className="flex items-center gap-3">
@@ -324,7 +324,7 @@ function ToDoCard({
           className="flex-1 flex flex-col items-center justify-center text-center px-4 py-4 press-sm"
         >
           <div className="w-11 h-11 rounded-[14px] flex items-center justify-center text-[20px] mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
-            📓
+            <Icon name="note" size={26} />
           </div>
           {homeworkCount > 0 ? (
             <>
@@ -333,7 +333,7 @@ function ToDoCard({
             </>
           ) : (
             <>
-              <p className="text-[14px] font-semibold text-white/85">Alles erledigt 🎉</p>
+              <p className="text-[14px] font-semibold text-white/85">Alles erledigt</p>
               <p className="text-[11px] text-white/45 mt-1">Neue Notiz erstellen →</p>
             </>
           )}
@@ -391,7 +391,7 @@ function TagesplanCard({ slots }: { slots: StundenplanSlot[] }) {
 
       {slots.length === 0 ? (
         <div className="flex items-center gap-3 py-1">
-          <span className="text-[24px]">🎉</span>
+          <span className="text-text-primary"><Icon name="check" size={22} /></span>
           <div>
             <p className="text-[14px] font-bold text-text-primary">Freier Tag!</p>
             <p className="text-[12px] text-text-muted">Nutze die Zeit zum Lernen</p>
