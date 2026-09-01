@@ -1,13 +1,17 @@
 import { useState } from 'react'
+import { Progress } from '../components/ui/Progress'
+import { Icon } from '../components/ui/Icon'
+import { Tag } from '../components/ui/Tag'
+import { EmptyState } from '../components/ui/EmptyState'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { FlashCard } from '../components/learn/FlashCard'
-import { Button } from '../components/ui/Button'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo } from '../data/subjectInfo'
 import type { FlashCard as FlashCardType } from '../types'
 
-const GREEN = '#34D399'
 
 type View = 'library' | 'session'
 
@@ -96,31 +100,20 @@ export function LearnModeScreen() {
         />
         <div className="px-4 flex-1">
           <div className="space-y-6">
-            <div className="flex items-center justify-between text-sm text-text-muted">
-              <span
-                className="text-xs font-semibold px-2 py-1 rounded-pill"
-                style={{ backgroundColor: `${activeDeck.subjectColor}22`, color: activeDeck.subjectColor }}
-              >
-                {activeDeck.subjectIcon} {activeDeck.subjectName}
+            <div className="flex items-center justify-between gap-3">
+              <span className="flex items-center gap-2 min-w-0">
+                <SubjectIcon subjectId={activeDeck.subjectId} size="sm" className="!w-6 !h-6" />
+                <span className="text-[13px] font-semibold text-text-primary truncate">
+                  {activeDeck.subjectName}
+                </span>
               </span>
-              <span>
+              <span className="text-[13px] text-text-secondary tabular-nums shrink-0">
                 {cardIndex + 1} / {sessionCards.length}
-                {knownCount > 0 && (
-                  <span className="text-text-primary ml-1.5">· {knownCount} gewusst</span>
-                )}
+                {knownCount > 0 && <span className="text-text-primary ml-1.5">· {knownCount} gewusst</span>}
               </span>
             </div>
 
-            {/* Progress bar */}
-            <div className="h-1.5 bg-border/40 rounded-pill overflow-hidden -mt-2">
-              <div
-                className="h-full rounded-pill transition-all duration-300"
-                style={{
-                  width: `${Math.round((knownCount / sessionCards.length) * 100)}%`,
-                  background: '#34D399',
-                }}
-              />
-            </div>
+            <Progress value={knownCount / sessionCards.length} className="-mt-2" />
 
             <div className="relative" style={{ height: '260px' }}>
               <FlashCard
@@ -133,14 +126,17 @@ export function LearnModeScreen() {
               />
             </div>
 
-            <div className="flex gap-3">
-              <Button variant="secondary" className="flex-1" onClick={handleAgain}>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={handleAgain}
+                className="h-12 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary text-[15px] font-semibold press"
+              >
                 Nochmal
-              </Button>
+              </button>
               <button
                 onClick={handleKnown}
-                className="flex-1 py-3 rounded-card text-on-accent text-sm font-semibold press transition-opacity hover:opacity-90"
-                style={{ background: 'rgb(var(--color-accent))' }}
+                className="h-12 rounded-pill text-[15px] font-semibold press"
+                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
               >
                 Weiß ich
               </button>
@@ -167,109 +163,61 @@ export function LearnModeScreen() {
 
       <div className="px-4 mt-5 space-y-5">
 
-        {/* ── Neue Karten erstellen ─────────────────────────────────────── */}
+        {/* Eine Pille wie ueberall sonst — der Knopf traegt die Modusfarbe,
+            nicht einen eigenen Verlauf mit eigenem Schlagschatten. */}
         <button
           onClick={() => navigate('/klausurmodus/karteikarten/neu')}
-          className="w-full rounded-card px-4 py-3.5 flex items-center gap-3 text-left press hover:opacity-95 transition-opacity"
-          style={{ background: GREEN, boxShadow: '0 3px 12px rgba(5, 150, 105, 0.25)' }}
+          className="w-full h-12 rounded-pill flex items-center justify-center gap-2 font-semibold text-[15px] press"
+          style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
         >
-          <div className="w-8 h-8 rounded-btn bg-white/20 flex items-center justify-center shrink-0">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.6" />
-              <rect x="4" y="9" width="13" height="12" rx="2.5" />
-              <line x1="10.5" y1="13" x2="10.5" y2="17" />
-              <line x1="8.5" y1="15" x2="12.5" y2="15" />
-            </svg>
-          </div>
-          <p className="text-white font-semibold text-[14px]">Neue Karteikarten erstellen</p>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeOpacity="0.6" className="ml-auto shrink-0">
-            <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <Icon name="plus" size={17} />
+          Neue Karteikarten erstellen
         </button>
 
-        {/* ── Deck-Bibliothek ───────────────────────────────────────────── */}
         {decks.length === 0 ? (
-          <div className="bg-surface border border-border/60 rounded-card px-5 py-10 flex flex-col items-center text-center gap-3">
-            <div className="w-14 h-14 rounded-card bg-border/30 flex items-center justify-center">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-muted" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.5" />
-                <rect x="4" y="9" width="13" height="12" rx="2.5" />
-                <line x1="7" y1="14" x2="14" y2="14" />
-                <line x1="7" y1="16.5" x2="11" y2="16.5" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-text-primary font-semibold text-[15px]">Keine Karten vorhanden</p>
-              <p className="text-text-muted text-[13px] mt-1 leading-relaxed max-w-[220px]">
-                Erstelle dein erstes Set aus einer analysierten Smart Note.
-              </p>
-            </div>
-          </div>
+          <EmptyState
+            title="Noch keine Karteikarten"
+            note="Lass eine Notiz im Unterrichtsmodus analysieren — daraus macht die KI Fragen und Antworten."
+            action={
+              <button
+                onClick={() => navigate('/klausurmodus/karteikarten/neu')}
+                className="w-full h-12 rounded-pill font-semibold text-[15px] press"
+                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+              >
+                Erstes Set erstellen
+              </button>
+            }
+          />
         ) : (
+          /* Nach Fach gruppiert: Das Fachzeichen traegt die Zeile, die
+             Ueberschrift bleibt neutral. Der farbige Randstreifen und die
+             zweite getoente Kachel waren zwei Anzeigen fuer dasselbe Fach. */
           Object.entries(subjectGroups).map(([subjectId, group]) => (
-            <div key={subjectId}>
-
-              {/* Subject label */}
-              <div className="flex items-center gap-2 px-1 mb-2.5">
-                <span className="text-base">{group.icon}</span>
-                <p
-                  className="text-[12px] font-bold uppercase tracking-widest"
-                  style={{ color: group.color }}
-                >
+            <div key={subjectId} className="space-y-2.5">
+              <div className="flex items-center gap-2 px-1">
+                <SubjectIcon subjectId={subjectId} size="sm" className="!w-6 !h-6" />
+                <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary">
                   {group.name}
                 </p>
-                <div className="flex-1 h-px" style={{ background: `${group.color}30` }} />
+                <div className="flex-1 h-px bg-border/60" />
+                <span className="text-[11px] text-text-secondary tabular-nums">
+                  {group.decks.length} {group.decks.length === 1 ? 'Set' : 'Sets'}
+                </span>
               </div>
 
-              {/* Deck cards */}
-              <div className="space-y-2.5">
+              <ListGroup>
                 {group.decks.map((deck) => (
-                  <button
+                  <ListRow
                     key={deck.noteId}
+                    leading={<SubjectIcon subjectId={subjectId} size="md" />}
+                    title={deck.noteTitle}
+                    subtitle={`${deck.cards.length} ${deck.cards.length === 1 ? 'Karte' : 'Karten'}`}
+                    value={<Tag size="sm">Lernen</Tag>}
+                    chevron
                     onClick={() => startSession(deck)}
-                    className="w-full bg-surface border border-border/60 rounded-card shadow-card-adaptive overflow-hidden flex items-stretch text-left press hover:border-border transition-colors"
-                  >
-                    {/* Left color accent */}
-                    <div
-                      className="w-1 shrink-0 rounded-l-card"
-                      style={{ background: deck.subjectColor }}
-                    />
-
-                    <div className="flex-1 px-4 py-4 flex items-center gap-3">
-                      {/* Icon */}
-                      <div
-                        className="w-11 h-11 rounded-icon flex items-center justify-center shrink-0 text-lg"
-                        style={{ backgroundColor: `${deck.subjectColor}18` }}
-                      >
-                        {deck.subjectIcon}
-                      </div>
-
-                      {/* Text */}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-text-primary font-semibold text-[14px] leading-snug line-clamp-2">{deck.noteTitle}</p>
-                        <div className="flex items-center gap-2 mt-1.5">
-                          <span
-                            className="text-[11px] font-bold px-2 py-0.5 rounded-pill"
-                            style={{ backgroundColor: `${deck.subjectColor}18`, color: deck.subjectColor }}
-                          >
-                            {deck.cards.length} Karten
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Play button */}
-                      <div
-                        className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
-                        style={{ background: `${deck.subjectColor}18` }}
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="2.5" className="ml-0.5" style={{ stroke: deck.subjectColor }}>
-                          <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
-                    </div>
-                  </button>
+                  />
                 ))}
-              </div>
+              </ListGroup>
             </div>
           ))
         )}
