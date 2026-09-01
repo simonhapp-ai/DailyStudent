@@ -115,9 +115,13 @@ export function KlausurphasenScreen() {
         </div>
         <button
           onClick={() => navigate('/kalender')}
-          className="shrink-0 px-4 h-11 rounded-pill text-[15px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press mt-1"
+          className="shrink-0 h-11 pl-4 pr-3 rounded-pill text-[15px] font-semibold text-text-primary bg-surface border border-border/60 press mt-1 flex items-center gap-1.5"
         >
           Planen
+          <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
+            strokeLinecap="round" strokeLinejoin="round" className="text-text-muted" aria-hidden>
+            <path d="M1 1l6 6-6 6" />
+          </svg>
         </button>
       </div>
 
@@ -130,6 +134,7 @@ export function KlausurphasenScreen() {
             der Screen beginnt mit den Methoden (Regel 1). */}
         {activePlan && upcomingDays.length > 0 ? (
           <Stage
+            tone="klausur"
             eyebrow={nextExam ? `${subjectName} · in ${daysUntilExam} Tagen` : 'Aktiver Lernplan'}
             title={upcomingDays[0]?.sessions[0]?.topic ?? activePlan.title}
             progress={planFortschritt}
@@ -147,6 +152,7 @@ export function KlausurphasenScreen() {
           />
         ) : nextExam ? (
           <Stage
+            tone="klausur"
             eyebrow={`Nächste Klausur · ${subjectName}`}
             title={`In ${daysUntilExam} Tagen, kein Plan`}
             note="Ein Lernplan verteilt den Stoff auf die verbleibenden Tage — um deinen Stundenplan herum."
@@ -159,37 +165,56 @@ export function KlausurphasenScreen() {
               </button>
             }
           />
-        ) : null}
+        ) : (
+          <Stage
+            tone="klausur"
+            eyebrow="Kein Klausurtermin eingetragen"
+            title="Womit soll ich rechnen?"
+            note="Mit einem Termin weiß die App, wie viele Tage bleiben — daraus entstehen Lernplan, Vorschläge und Countdown."
+            action={
+              <button
+                onClick={() => navigate('/klausuren')}
+                className="w-full h-12 rounded-pill bg-white text-[#160E28] text-[16px] font-semibold press"
+              >
+                Klausurtermin eintragen
+              </button>
+            }
+          />
+        )}
 
         {/* ── Lernen ──────────────────────────────────────────────────
             Vier gleichwertige Kacheln mit ihrem echten Bestand. Flache
             Flächen statt Verlaufs-Icons mit farbigem Glow; das Chevron oben
             rechts zeigt, dass die Kachel antippbar ist. */}
         <p className="section-label px-1 pt-1">Lernen</p>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
           {([
             {
               label: 'Karteikarten',
               note: totalCards > 0 ? `${totalCards} Karten` : 'Noch keine',
               icon: 'cards' as const,
+              fill: '#34D399', on: '#062017',
               to: totalCards > 0 ? '/klausurmodus/lernen' : '/klausurmodus/karteikarten/neu',
             },
             {
               label: 'Blurting',
               note: 'Aus dem Kopf',
               icon: 'speech' as const,
+              fill: 'rgb(var(--subj-spr))', on: '#062017',
               to: '/klausurmodus/blurting',
             },
             {
               label: 'Lernzettel',
               note: lernzettel.length > 0 ? `${lernzettel.length} gespeichert` : 'Noch keine',
               icon: 'document' as const,
+              fill: 'rgb(var(--subj-ges))', on: '#2A1200',
               to: '/klausurmodus/lernzettel',
             },
             {
               label: 'Probeklausur',
               note: savedProbeklausuren.length > 0 ? `${savedProbeklausuren.length} geschrieben` : '4 Arten',
               icon: 'clipboard' as const,
+              fill: 'rgb(var(--subj-kre))', on: '#2A0A1B',
               to: '/klausurmodus/probeklausur',
             },
           ]).map((m) => (
@@ -203,8 +228,11 @@ export function KlausurphasenScreen() {
                   <path d="M1 1l6 6-6 6" />
                 </svg>
               </span>
-              <span className="w-10 h-10 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-primary">
-                <Icon name={m.icon} size={19} />
+              <span
+                className="w-11 h-11 rounded-icon flex items-center justify-center shrink-0"
+                style={{ backgroundColor: m.fill, backgroundImage: 'var(--subj-fade)', color: m.on }}
+              >
+                <Icon name={m.icon} size={21} />
               </span>
               <span>
                 <span className="block text-[15px] font-semibold text-text-primary">{m.label}</span>
