@@ -607,8 +607,8 @@ export function ProfilScreen() {
               </p>
               <button
                 onClick={() => setShowProComingSoon(true)}
-                className="relative w-full h-12 rounded-pill on-mint text-[14px] font-semibold press transition-all overflow-hidden"
-                style={{ background: '#34D399', animation: 'ea-glow 2.4s ease-in-out infinite' }}
+                className="relative w-full h-12 rounded-pill text-[14px] font-semibold press transition-all overflow-hidden"
+                style={{ background: '#FFFFFF', color: '#1B1B1F' }}
               >
                 <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
                 <span className="relative">Für Rabatt vormerken</span>

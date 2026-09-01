@@ -396,7 +396,7 @@ function SubjectCard({
               className="px-2.5 py-0.5 rounded-pill text-[11px] font-bold transition-all press-sm"
               style={
                 entry.isLK
-                  ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)', border: '1px solid transparent' }
+                  ? { background: 'var(--grad-mode)', color: '#FFFFFF', border: '1px solid transparent' }
                   : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
               }
             >
@@ -629,7 +629,7 @@ function PruefungCard({
                     className="px-2.5 py-1 rounded-pill text-[11px] font-bold flex items-center gap-1 press-sm transition-all"
                     style={
                       active
-                        ? { background: '#34D399', color: '#FFFFFF' }
+                        ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
                         : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-secondary))' }
                     }
                   >

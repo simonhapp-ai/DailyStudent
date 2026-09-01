@@ -19,7 +19,7 @@ export const UNTERRICHT_TIPS: Tip[] = [
     body: 'Lieber einmal zu viel fotografieren. Die KI erkennt Fach und Thema selbst und schlägt den Ordner vor.',
   },
   {
-    title: 'Hausaufgaben',
+    title: 'Gleich mitschreiben',
     body: 'Erfasse sie direkt in der Notiz der Stunde. Sie erscheinen dann von allein im Kalender am Abgabetag.',
   },
   {
@@ -38,15 +38,15 @@ export const KLAUSUR_TIPS: Tip[] = [
     body: 'Drei Tage vorher eine vollständige Probeklausur — danach bleibt noch Zeit, die Lücken zu schließen, die sie zeigt.',
   },
   {
-    title: 'Blurting',
+    title: 'Aus dem Kopf',
     body: 'Erst alles aus dem Kopf aufschreiben, dann vergleichen lassen. Was dabei fehlt, ist genau das, was du wiederholen musst.',
   },
   {
-    title: 'Lernzettel',
+    title: 'Erklärart wählen',
     body: 'Vier Erklärarten. „Von Grund auf", wenn du ein Thema noch nicht verstehst — „Stichpunkte" am Abend vorher.',
   },
   {
-    title: 'Lernplan',
+    title: 'Einmal einrichten',
     body: 'Einmal erstellt, reicht danach ein Tipp am Tag. Der Plan verteilt den Stoff um deinen Stundenplan herum.',
   },
 ]

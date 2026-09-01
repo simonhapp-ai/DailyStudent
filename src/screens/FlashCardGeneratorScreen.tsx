@@ -351,7 +351,7 @@ export function FlashCardGeneratorScreen() {
                   className={`flex-1 py-2.5 rounded-btn text-[13px] font-semibold transition-all press-sm ${
                     method === m ? 'text-on-accent' : 'text-text-muted'
                   }`}
-                  style={method === m ? { background: '#34D399' } : {}}
+                  style={method === m ? { background: 'var(--grad-mode)' } : {}}
                 >
                   <span className="inline-flex items-center gap-1.5"><Icon name={m === 'ki' ? 'sparkle' : 'pencil'} size={15} />{m === 'ki' ? 'KI generieren' : 'Manuell erstellen'}</span>
                 </button>
@@ -373,7 +373,7 @@ export function FlashCardGeneratorScreen() {
                         }`}
                         style={
                           cardCount === n
-                            ? { background: '#34D399' }
+                            ? { background: 'var(--grad-mode)' }
                             : { background: 'rgb(var(--color-border) / 0.3)' }
                         }
                       >

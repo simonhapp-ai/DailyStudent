@@ -238,7 +238,7 @@ export function ProbeklausurMode3Screen() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-4 py-5 overflow-y-auto">
+      <div className="flex-1 px-4 py-5 overflow-y-auto lg:px-6 lg:max-w-[880px] lg:w-full">
 
         {phase === 'setup' && (
           <div className="space-y-5">

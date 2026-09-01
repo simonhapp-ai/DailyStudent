@@ -259,7 +259,7 @@ export function ProbeklausurMode1Screen() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-4 py-5 overflow-y-auto">
+      <div className="flex-1 px-4 py-5 overflow-y-auto lg:px-6 lg:max-w-[880px] lg:w-full">
 
         {/* SETUP */}
         {phase === 'setup' && (
