@@ -33,7 +33,7 @@ function FolderBreadcrumb({ parts, className = 'mb-4' }: { parts: string[]; clas
         <div key={i} className="flex items-center gap-1.5">
           <span className={`px-2.5 py-1 rounded-chip text-[11px] font-semibold ${
             i === parts.length - 1
-              ? 'bg-accent text-on-accent'
+              ? 'btn-mode'
               : 'bg-surface-hover border border-border/60 text-text-muted'
           }`}>
             {part}
@@ -282,7 +282,7 @@ export function FolderScreen() {
         <button
           onClick={() => { setFabOpen(false); navigate(newNoteUrl) }}
           style={{ transitionDelay: fabOpen ? '40ms' : '0ms' }}
-          className={`flex items-center gap-2.5 bg-accent text-on-accent rounded-full pl-4 pr-5 py-3
+          className={`flex items-center gap-2.5 btn-mode rounded-full pl-4 pr-5 py-3
             shadow-float whitespace-nowrap press
             transition-all duration-300 ease-out
             ${fabOpen
@@ -299,7 +299,7 @@ export function FolderScreen() {
         {/* The + bubble — shrinks to nothing when open */}
         <button
           onClick={() => isNoSubject ? navigate(newNoteUrl) : setFabOpen((o) => !o)}
-          className={`w-14 h-14 rounded-full bg-accent text-on-accent
+          className={`w-14 h-14 rounded-full btn-mode
             flex items-center justify-center press
             transition-all duration-200 ease-in-out
             ${fabOpen ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100 scale-100'}`}
@@ -328,7 +328,7 @@ export function FolderScreen() {
             onClick={createFolder}
             disabled={!newFolderName.trim()}
             className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
-              newFolderName.trim() ? 'bg-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+              newFolderName.trim() ? 'btn-mode hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
             Ordner erstellen

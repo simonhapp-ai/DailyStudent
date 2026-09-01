@@ -969,7 +969,7 @@ function StepFaecher({
             </div>
             <button
               onClick={() => setShowCustomModal(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-btn bg-accent text-on-accent text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-btn btn-mode text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -1038,7 +1038,7 @@ function StepFaecher({
                           onClick={(e) => { e.stopPropagation(); onToggleLK(id) }}
                           className={`absolute top-2 right-2 px-1.5 py-0.5 rounded-chip text-[11px] font-black tracking-wide transition-all ${
                             isLK
-                              ? 'bg-accent text-white'
+                              ? 'btn-mode'
                               : 'bg-accent/15 text-text-primary border border-accent/30'
                           }`}
                         >
@@ -1269,7 +1269,7 @@ function StepStundenplan({
               onClick={() => setMode('manual')}
               className="w-full flex items-center gap-4 bg-surface border border-border rounded-card p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-btn bg-accent text-on-accent flex items-center justify-center shrink-0"><Icon name="pencil" size={22} /></div>
+              <div className="w-12 h-12 rounded-btn btn-mode flex items-center justify-center shrink-0"><Icon name="pencil" size={22} /></div>
               <div className="flex-1">
                 <p className="text-text-primary font-semibold text-[15px]">Manuell eintragen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">Fächer und Zeiten selbst eingeben</p>
@@ -1282,7 +1282,7 @@ function StepStundenplan({
               onClick={() => setMode('scan')}
               className="w-full flex items-center gap-4 bg-surface border border-border rounded-card p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-btn bg-accent text-on-accent flex items-center justify-center shrink-0"><Icon name="camera" size={22} /></div>
+              <div className="w-12 h-12 rounded-btn btn-mode flex items-center justify-center shrink-0"><Icon name="camera" size={22} /></div>
               <div className="flex-1">
                 <p className="text-text-primary font-semibold text-[15px]">Foto / Scan hochladen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">Stundenplan fotografieren oder PDF importieren</p>
@@ -1328,7 +1328,7 @@ function StepStundenplan({
               onClick={() => fileRef.current?.click()}
               className="w-full border-2 border-dashed border-border rounded-card p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
             >
-              <div className="w-16 h-16 rounded-card bg-accent text-on-accent flex items-center justify-center"><Icon name="camera" size={28} /></div>
+              <div className="w-16 h-16 rounded-card btn-mode flex items-center justify-center"><Icon name="camera" size={28} /></div>
               <div className="text-center">
                 <p className="text-text-primary font-semibold text-base">Foto oder PDF auswählen</p>
                 <p className="text-text-muted text-sm mt-1">JPG, PNG oder PDF</p>
@@ -1356,7 +1356,7 @@ function StepStundenplan({
               </div>
               <button
                 onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }}
-                className="w-full h-12 rounded-pill bg-accent text-on-accent text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Erneut versuchen
               </button>
@@ -1407,7 +1407,7 @@ function StepStundenplan({
                   setScanPhase('idle')
                   setMismatchData(null)
                 }}
-                className="w-full h-12 rounded-pill bg-accent text-on-accent text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Fächer hinzufügen &amp; Stundenplan übernehmen
               </button>
@@ -1635,7 +1635,7 @@ function StepStundenplan({
               <button
                 onClick={commitSlot}
                 disabled={!newSlot.subjectId && !newSlot.isFreistunde}
-                className="flex-1 py-2.5 rounded-card bg-accent text-on-accent text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
+                className="flex-1 py-2.5 rounded-card btn-mode text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
               >
                 Hinzufügen
               </button>

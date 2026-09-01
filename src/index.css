@@ -11,7 +11,14 @@
   --color-border:         199 199 204;   /* #C7C7CC — Apple Gray 3 */
   --color-accent:         124  58 237;   /* #7C3AED — violet-600 */
   --color-accent-soft:    rgba(124, 58, 237, 0.10);
-  --color-on-accent:      255 255 255;   /* Schrift auf der Modusfarbe */
+  --color-on-accent:      255 255 255;   /* Schrift auf der Modusfarbe — immer Weiß */
+  /* Knopfflächen tragen den Verlauf der Landing Page, nicht einen Flachton.
+     Das ist Simons Referenz und gilt für JEDEN Modus-Knopf der App. */
+  --grad-mode: linear-gradient(135deg, #7C3AED, #5B21B6);
+  /* Die Bühne ist im Hellen eine hellere Fläche als im Dunkeln — vorher waren
+     beide fast gleich dunkel, wodurch der Helligkeitswechsel ausblieb. */
+  --stage-bg:         linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%);
+  --stage-bg-klausur: linear-gradient(135deg, #059669 0%, #34D399 100%);
   --color-success:        52  199  89;   /* #34C759 — Apple Green, Default (light) — exact match, unchanged */
   --color-warning:        255 141  40;   /* #FF8D28 — Apple Orange, Default (light) */
   --color-danger:         255  56  60;   /* #FF383C — Apple Red, Default (light) */
@@ -58,8 +65,7 @@
      Zwei Ausführungen, eine je Modus: Der Unterrichtsmodus trägt Lila, der
      Klausurenmodus Mint. Die Bühne selbst bleibt in beiden Fällen dunkel —
      nur der Farbstich wechselt, damit man am Grund erkennt, wo man ist. */
-  --stage-bg:         linear-gradient(146deg, #160E28 0%, #2A1B5C 100%);
-  --stage-bg-klausur: linear-gradient(146deg, #05231A 0%, #0B4635 100%);
+
 
   /* Schrift auf gefülltem Purple. Hell ist Purple dunkel genug für Weiß. */
   --mode-on-purple: #FFFFFF;
@@ -92,7 +98,7 @@
   --color-border:         58  58  60;    /* #3A3A3C — Apple Gray 4 (dark) */
   --color-accent:        167 139 250;   /* #A78BFA — violet-400 */
   --color-accent-soft:   rgba(167, 139, 250, 0.15);
-  --color-on-accent:      22  14  40;    /* Lila ist dunkel aufgehellt — Schrift darauf fast schwarz */
+  --color-on-accent:     255 255 255;    /* Auch im Dunkeln Weiß — nie Schwarz auf Lila oder Mint */
   --color-success:        48 209  88;   /* #30D158 — Apple Green, Default (dark) — exact match, unchanged */
   --color-warning:       255 146  48;   /* #FF9230 — Apple Orange, Default (dark) */
   --color-danger:        255  66  69;   /* #FF4245 — Apple Red, Default (dark) */
@@ -128,11 +134,11 @@
   --ev-bg:         58  58  60;  --ev-on:        255 255 255;
 
   /* Bühne — dunkel die hellste Fläche des Screens (Rolle dreht sich um) */
-  --stage-bg:         linear-gradient(146deg, #241C3C 0%, #3E2C74 100%);
-  --stage-bg-klausur: linear-gradient(146deg, #0D3327 0%, #175944 100%);
+  --stage-bg:         linear-gradient(135deg, #3B1D82 0%, #6D28D9 100%);
+  --stage-bg-klausur: linear-gradient(135deg, #05593F 0%, #0E9B6E 100%);
 
   /* Dunkel wird Purple aufgehellt (#A78BFA) — Schrift darauf wird fast schwarz */
-  --mode-on-purple: #160E28;
+  --mode-on-purple: #FFFFFF;
 
   /* Liquid Glass nav pill — dark mode */
   --nav-pill-bg:     rgba(36, 36, 42, 0.72);
@@ -460,6 +466,12 @@ textarea::placeholder {
   }
 }
 
+/* Modus-Knopf — Verlauf der Landing Page, immer weiße Schrift. */
+.btn-mode {
+  background: var(--grad-mode);
+  color: #FFFFFF;
+}
+
 /* ── Tippflaeche ─────────────────────────────────────────────
    Apple nennt 44x44 pt als Mindestgroesse. Kleine Knoepfe — Loeschen,
    Schliessen, Schrittweite — sollen aber klein AUSSEHEN. Diese Klasse
@@ -491,12 +503,13 @@ textarea::placeholder {
 .mode-klausur {
   --color-accent:       52 211 153;
   --color-accent-soft:  rgba(52, 211, 153, 0.12);
-  --color-on-accent:     6  32  23;
+  --color-on-accent:   255 255 255;
+  --grad-mode: linear-gradient(135deg, #34D399, #059669);
 }
 
 /* Schrift auf Mint. Die Modusfarbe des Klausurenmodus ist hell — weisse
    Schrift darauf liegt bei rund 1,8:1 und ist praktisch unlesbar. */
-.on-mint { color: #062017; }
+.on-mint { color: #FFFFFF; }
 
 /* ── Nav button — neutral hover, Emil Kowalski ──────────────── */
 

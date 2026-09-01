@@ -738,7 +738,7 @@ export function NoteCreateScreen() {
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
               !canAnalyze ? 'bg-surface-hover text-text-muted cursor-not-allowed'
               : block.aiStatus === 'done' ? 'bg-fill-green text-fill-green-on hover:opacity-90'
-              : 'bg-accent text-on-accent hover:opacity-90'
+              : 'btn-mode hover:opacity-90'
             }`}
           >
             {block.aiStatus === 'analyzing' ? (
@@ -1048,7 +1048,7 @@ export function NoteCreateScreen() {
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
               !canAnalyze ? 'bg-surface-hover text-text-muted cursor-not-allowed'
               : block.aiStatus === 'done' ? 'bg-fill-green text-fill-green-on hover:opacity-90'
-              : 'bg-accent text-on-accent hover:opacity-90'
+              : 'btn-mode hover:opacity-90'
             }`}
           >
             {block.aiStatus === 'analyzing' ? (
@@ -1567,7 +1567,7 @@ export function NoteCreateScreen() {
             className={`flex items-center gap-2 px-3 py-2 rounded-card text-xs font-semibold transition-all press-sm ${
               !block.description.trim()
                 ? 'bg-surface-hover text-text-muted cursor-not-allowed'
-                : 'bg-accent text-on-accent hover:opacity-90'
+                : 'btn-mode hover:opacity-90'
             }`}
           >
             {block.aiLoading ? (
@@ -1767,7 +1767,7 @@ export function NoteCreateScreen() {
             <button
               onClick={() => void submitAsk()}
               disabled={!askInput.trim()}
-              className={`w-8 h-8 rounded-btn flex items-center justify-center shrink-0 transition-all ${askInput.trim() ? 'bg-accent text-on-accent hover:opacity-90 active:scale-95' : 'bg-surface-hover text-text-muted cursor-not-allowed'}`}
+              className={`w-8 h-8 rounded-btn flex items-center justify-center shrink-0 transition-all ${askInput.trim() ? 'btn-mode hover:opacity-90 active:scale-95' : 'bg-surface-hover text-text-muted cursor-not-allowed'}`}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round" />
@@ -1835,7 +1835,7 @@ export function NoteCreateScreen() {
               {folderId && (
                 <button
                   onClick={() => { setShowCancelConfirm(false); confirmSave(folderId) }}
-                  className="w-full h-12 rounded-pill bg-accent text-on-accent text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
+                  className="w-full h-12 rounded-pill btn-mode text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
                 >
                   {currentFolder ? `In „${currentFolder.name}" speichern` : 'Im Ordner speichern'}
                 </button>

@@ -40,7 +40,7 @@ const MODES: Mode[] = [
     id: 2,
     route: '/klausurmodus/probeklausur/vollstaendige-klausur',
     fill: '#34D399',
-    on: '#062017',
+    on: '#FFFFFF',
     icon: 'clock',
     title: 'Vollständige Klausur',
     subtitle: 'Realistische Klausur-Simulation',
@@ -52,7 +52,7 @@ const MODES: Mode[] = [
     id: 1,
     route: '/klausurmodus/probeklausur/afb-trainer',
     fill: 'rgb(var(--subj-spr))',
-    on: '#062017',
+    on: '#FFFFFF',
     icon: 'target',
     title: 'AFB-Aufgabentrainer',
     subtitle: 'Einzelne Aufgabe gezielt üben',
@@ -64,7 +64,7 @@ const MODES: Mode[] = [
     id: 3,
     route: '/klausurmodus/probeklausur/materialklausur',
     fill: 'rgb(var(--subj-ges))',
-    on: '#2A1200',
+    on: '#FFFFFF',
     icon: 'document',
     title: 'Materialklausur',
     subtitle: 'Alle drei AFB zu einem Material',
@@ -76,7 +76,7 @@ const MODES: Mode[] = [
     id: 4,
     route: '/klausurmodus/probeklausur/ohne-material',
     fill: 'rgb(var(--subj-kre))',
-    on: '#2A0A1B',
+    on: '#FFFFFF',
     icon: 'bulb',
     title: 'Ohne Material',
     subtitle: 'Alles aus dem Kopf',
@@ -200,7 +200,7 @@ export function ProbeklausurMenuScreen() {
                 <button
                   onClick={() => navigate(MODE_ROUTE[offen.mode], { state: { resume: offen } })}
                   className="h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
-                  style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+                  style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                 >
                   <Icon name="play" size={16} />
                   Fortfahren

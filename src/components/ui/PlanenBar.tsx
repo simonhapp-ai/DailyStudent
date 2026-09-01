@@ -40,7 +40,7 @@ export function PlanenBar({ className = '' }: { className?: string }) {
         title={label}
         className={`w-full h-9 px-2 rounded-pill text-[12.5px] font-semibold truncate press-sm transition-colors ${
           active
-            ? 'bg-accent text-on-accent'
+            ? 'btn-mode'
             : 'bg-surface text-text-primary hover:bg-surface-hover'
         }`}
       >

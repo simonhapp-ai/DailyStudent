@@ -268,7 +268,7 @@ export function ProfilCoinsScreen() {
                       style={{ background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>Eingelöst</span>
                   : has15
                   ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill shrink-0"
-                      style={{ background: '#34D399', color: '#062017' }}>Verfügbar</span>
+                      style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}>Verfügbar</span>
                   : <span className="text-text-muted text-[11px] shrink-0">Noch {Math.max(0, RABATT_15 - coins)}</span>
                 }
               </div>
@@ -281,7 +281,7 @@ export function ProfilCoinsScreen() {
                   <button
                     onClick={() => handleRedeemDiscount('15')}
                     className="w-full mt-3 py-3 rounded-icon on-mint text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
-                    style={{ background: '#34D399' }}
+                    style={{ background: 'var(--grad-mode)' }}
                   >
                     15% Rabatt einlösen
                   </button>
@@ -307,7 +307,7 @@ export function ProfilCoinsScreen() {
                       style={{ background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>Eingelöst</span>
                   : has30
                   ? <span className="text-[11px] font-bold px-2.5 py-1 rounded-pill shrink-0"
-                      style={{ background: '#34D399', color: '#062017' }}>Verfügbar</span>
+                      style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}>Verfügbar</span>
                   : <span className="text-text-muted text-[11px] shrink-0">Noch {Math.max(0, RABATT_30 - coins)}</span>
                 }
               </div>
@@ -320,7 +320,7 @@ export function ProfilCoinsScreen() {
                   <button
                     onClick={() => handleRedeemDiscount('30')}
                     className="w-full mt-3 py-3 rounded-icon on-mint text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
-                    style={{ background: '#34D399' }}
+                    style={{ background: 'var(--grad-mode)' }}
                   >
                     30% Rabatt einlösen
                   </button>

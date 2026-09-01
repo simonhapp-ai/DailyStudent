@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
+import { QuickNotesIcon } from './SubjectIcon'
 import { Icon, type IconName } from './Icon'
 import { SubjectIcon } from './SubjectIcon'
 import { resolveSubjectInfo } from '../../data/subjectInfo'
@@ -123,7 +124,9 @@ function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => v
         style={{
           left: mode === 'unterricht' ? '0.25rem' : '50%',
           right: mode === 'unterricht' ? '50%' : '0.25rem',
-          background: mode === 'unterricht' ? '#7C3AED' : '#34D399',
+          background: mode === 'unterricht'
+            ? 'linear-gradient(135deg, #8B5CF6, #7C3AED)'
+            : 'linear-gradient(135deg, #34D399, #10B981)',
         }}
         transition={reducedMotion ? { duration: 0 } : { type: 'spring', duration: 0.34, bounce: 0.16 }}
       />
@@ -138,7 +141,7 @@ function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => v
             className="relative flex-1 h-9 rounded-pill text-[14px] font-semibold press-sm transition-colors"
             style={{
               color: active
-                ? (m === 'unterricht' ? 'var(--mode-on-purple)' : '#062017')
+                ? '#FFFFFF'
                 : 'rgb(var(--color-text-secondary))',
             }}
           >
@@ -196,7 +199,7 @@ export function DesktopSidebar() {
                 active
                   ? {
                       background: m === 'unterricht' ? '#7C3AED' : '#34D399',
-                      color: m === 'unterricht' ? 'var(--mode-on-purple)' : '#062017',
+                      color: '#FFFFFF',
                     }
                   : { color: 'rgb(var(--color-text-primary) / 0.55)' }
               }
@@ -344,9 +347,16 @@ function SideRow({ entry, active, onClick }: { entry: NavEntry; active: boolean;
         fontWeight: active ? 600 : 500,
       }}
     >
-      <span className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
-        <Icon name={entry.icon} size={17} />
-      </span>
+      {/* Schnellnotizen traegt sein eigenes Zeichen — dasselbe wie im
+          Unterrichtsmodus, damit man dieselbe Sache nicht zweimal
+          unterschiedlich dargestellt sieht. */}
+      {entry.label === 'Schnellnotizen' ? (
+        <QuickNotesIcon size="sm" />
+      ) : (
+        <span className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+          <Icon name={entry.icon} size={17} />
+        </span>
+      )}
       <span className="text-[14px] truncate flex-1">{entry.label}</span>
       {entry.badge && (
         <span className="text-[11px] font-semibold px-2 py-0.5 rounded-pill bg-fill-red text-fill-red-on shrink-0">

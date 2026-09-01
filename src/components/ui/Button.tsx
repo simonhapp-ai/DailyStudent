@@ -10,7 +10,7 @@ export function Button({ variant = 'primary', size = 'md', fullWidth, className 
   const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-btn transition-all duration-150 disabled:opacity-40 press'
 
   const variants = {
-    primary:   'bg-accent text-on-accent hover:opacity-90',
+    primary:   'btn-mode hover:opacity-90',
     secondary: 'bg-surface border border-border text-text-primary hover:bg-surface-hover',
     ghost:     'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
     danger:    'bg-fill-red text-fill-red-on hover:opacity-90',

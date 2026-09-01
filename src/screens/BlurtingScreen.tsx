@@ -385,7 +385,7 @@ export function BlurtingScreen() {
                             isActive ? (
                               <span
                                 className="w-6 h-6 rounded-full flex items-center justify-center"
-                                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+                                style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                               >
                                 <Icon name="check" size={14} />
                               </span>
@@ -473,7 +473,7 @@ export function BlurtingScreen() {
               onClick={handleOpenWrite}
               disabled={!selectedSubjectId}
               className="w-full h-12 rounded-pill text-[15px] font-semibold press disabled:opacity-40 transition-opacity flex items-center justify-center gap-2"
-              style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+              style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
             >
               <Icon name="pencil" size={16} />
               Leere Seite öffnen
@@ -563,7 +563,7 @@ export function BlurtingScreen() {
                 onClick={handleAuswerten}
                 disabled={!text.trim() || wordCount < MIN_WORDS}
                 className="flex-1 h-12 rounded-pill text-[15px] font-semibold press disabled:opacity-40 transition-opacity"
-                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+                style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
               >
                 Auswerten
               </button>
@@ -614,7 +614,7 @@ export function BlurtingScreen() {
             )}
           </div>
           <div className="px-4 pb-10 shrink-0">
-            <button onClick={handleRetry} className="w-full h-12 rounded-pill text-[15px] font-semibold press" style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}>
+            <button onClick={handleRetry} className="w-full h-12 rounded-pill text-[15px] font-semibold press" style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}>
               Nochmal versuchen
             </button>
           </div>
@@ -682,7 +682,7 @@ function SubjectSquare({
       {noteCount > 0 && (
         <span
           className="shrink-0 min-w-[20px] h-5 px-1.5 rounded-pill flex items-center justify-center text-[11px] font-bold tabular-nums"
-          style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+          style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
         >
           {noteCount > 9 ? '9+' : noteCount}
         </span>

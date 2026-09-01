@@ -15,8 +15,8 @@ import { modeForPath, MODE_HOME, type AppMode } from '../../lib/appMode'
 // Unterricht, Mint für Klausur. Schrift darauf ist weiß oder fast schwarz nach
 // Kontrast, nie die Akzentfarbe selbst.
 const MODES: Array<{ mode: AppMode; label: string; fill: string; on: string }> = [
-  { mode: 'unterricht', label: 'Unterricht', fill: 'rgb(var(--color-accent))', on: 'var(--mode-on-purple)' },
-  { mode: 'klausur', label: 'Klausur', fill: '#34D399', on: '#062017' },
+  { mode: 'unterricht', label: 'Unterricht', fill: 'linear-gradient(135deg, #7C3AED, #5B21B6)', on: '#FFFFFF' },
+  { mode: 'klausur', label: 'Klausur', fill: 'linear-gradient(135deg, #34D399, #059669)', on: '#FFFFFF' },
 ]
 
 export function BottomNav() {
@@ -59,7 +59,7 @@ export function BottomNav() {
                 <motion.div
                   layoutId={reducedMotion ? undefined : 'nav-mode'}
                   className="absolute inset-0 rounded-full"
-                  style={{ backgroundColor: fill }}
+                  style={{ background: fill }}
                   transition={{ type: 'spring', duration: 0.32, bounce: 0.18 }}
                 />
               )}

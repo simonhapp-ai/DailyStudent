@@ -322,7 +322,7 @@ export function KalenderScreen() {
                       onClick={() => setCalView(view)}
                       className="px-4 py-1.5 rounded-chip text-[12px] font-bold transition-all duration-200 press-sm"
                       style={calView === view ? {
-                        background: 'rgb(var(--color-accent))',
+                        background: 'var(--grad-mode)',
                         color: 'rgb(var(--color-on-accent))',
                       } : { color: 'rgb(var(--color-text-secondary))' }}
                     >
@@ -336,7 +336,7 @@ export function KalenderScreen() {
                       onClick={toggleStundenplan}
                       className="flex items-center gap-1 px-2.5 py-1.5 rounded-chip text-[11px] font-bold transition-all press-sm"
                       style={showStundenplan ? {
-                        background: 'rgb(var(--color-accent))',
+                        background: 'var(--grad-mode)',
                         color: 'rgb(var(--color-on-accent))',
                       } : {
                         background: 'rgba(var(--color-border), 0.5)',
@@ -644,7 +644,7 @@ export function KalenderScreen() {
                               onClick={() => setRecurFreq(f)}
                               className="flex-1 py-1.5 rounded-chip text-[11px] font-bold transition-all press-sm"
                               style={active ? {
-                                background: 'rgb(var(--color-accent))',
+                                background: 'var(--grad-mode)',
                                 color: 'white',
                                 boxShadow: '0 2px 6px rgba(var(--color-accent),0.35)',
                               } : { color: 'rgb(var(--color-text-muted))', background: 'transparent' }}
@@ -697,7 +697,7 @@ export function KalenderScreen() {
             onClick={closeFab}
             className="fixed bottom-[100px] right-5 w-14 h-14 rounded-full flex items-center justify-center z-[46] press-sm"
             style={{
-              background: 'rgb(var(--color-accent))',
+              background: 'var(--grad-mode)',
               boxShadow: '0 8px 24px rgba(var(--color-accent),0.45), 0 2px 8px rgba(0,0,0,0.2)',
             }}
           >
@@ -1041,7 +1041,7 @@ function TwoDayView({ dayCount = 2, viewDate, todayStr, stundenplan, personalEnt
                   if (nowMin < START_H * 60 || nowMin > END_H * 60) return null
                   return (
                     <div className="absolute left-0 right-0 flex items-center pointer-events-none" style={{ top: minToPx(nowMin) }}>
-                      <div className="w-2 h-2 rounded-full -ml-1 shrink-0" style={{ background: 'rgb(var(--color-accent))' }} />
+                      <div className="w-2 h-2 rounded-full -ml-1 shrink-0" style={{ background: 'var(--grad-mode)' }} />
                       <div className="flex-1 h-[1.5px]" style={{ background: 'rgb(var(--color-accent))', opacity: 0.85 }} />
                     </div>
                   )
@@ -1110,7 +1110,7 @@ function MonthView({ viewDate, todayStr, personalEntries, klausurtermine, onNavi
               <span
                 className="w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-semibold transition-all"
                 style={isToday ? {
-                  background: 'rgb(var(--color-accent))',
+                  background: 'var(--grad-mode)',
                   color: 'white',
                   boxShadow: '0 2px 6px rgba(var(--color-accent),0.4)',
                 } : isPast ? { color: 'rgb(var(--color-text-muted) / 0.4)' } : { color: 'rgb(var(--color-text-primary))' }}
@@ -1202,7 +1202,7 @@ type PillTone = 'neutral' | 'mode' | 'warn' | 'done'
 function AppIconPill({ tone = 'neutral', children }: { tone?: PillTone; children: React.ReactNode }) {
   const styles: Record<PillTone, string> = {
     neutral: 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary',
-    mode:    'bg-accent text-on-accent',
+    mode:    'btn-mode',
     warn:    'bg-fill-red text-fill-red-on',
     done:    'bg-fill-green text-fill-green-on',
   }
@@ -1720,7 +1720,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
   return (
     <section>
       <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-3 bg-surface border border-border/60 rounded-card shadow-card-adaptive px-5 py-4 text-left hover:bg-surface-hover active:scale-[0.99] transition-all duration-200">
-        <div className="w-10 h-10 rounded-btn bg-accent text-on-accent flex items-center justify-center shrink-0"><Icon name="calendar" size={19} /></div>
+        <div className="w-10 h-10 rounded-btn btn-mode flex items-center justify-center shrink-0"><Icon name="calendar" size={19} /></div>
         <div className="flex-1">
           <p className="text-text-primary font-semibold text-[15px]">Stundenplan einrichten</p>
           <p className="text-text-muted text-[12px] mt-0.5">Dein Schultag auf einen Blick</p>
@@ -1754,7 +1754,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               </button>
               {scanPhase === 'idle' && (
                 <button onClick={() => fileRef.current?.click()} className="w-full border-2 border-dashed border-border rounded-card p-6 flex flex-col items-center gap-2 hover:border-accent/50 hover:bg-accent/5 transition-all">
-                  <div className="w-12 h-12 rounded-btn bg-accent text-on-accent flex items-center justify-center"><Icon name="camera" size={22} /></div>
+                  <div className="w-12 h-12 rounded-btn btn-mode flex items-center justify-center"><Icon name="camera" size={22} /></div>
                   <p className="text-text-primary font-semibold text-[14px]">Foto oder PDF auswählen</p>
                   <p className="text-text-muted text-xs">KI erkennt Fächer und Zeiten automatisch</p>
                 </button>
@@ -1772,7 +1772,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                     <p className="text-text-primary font-semibold text-[14px] mb-1">Erkennung fehlgeschlagen</p>
                     <p className="text-text-muted text-[12px] leading-relaxed">{scanError}</p>
                   </div>
-                  <button onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }} className="w-full py-2.5 rounded-btn bg-accent text-on-accent text-sm font-semibold active:scale-95 transition-all">Erneut versuchen</button>
+                  <button onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }} className="w-full py-2.5 rounded-btn btn-mode text-sm font-semibold active:scale-95 transition-all">Erneut versuchen</button>
                   <button onClick={() => { setMode('manual'); setScanPhase('idle'); setScanError('') }} className="w-full py-2.5 rounded-btn border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors">Manuell eintragen</button>
                 </div>
               )}

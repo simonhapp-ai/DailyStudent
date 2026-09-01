@@ -144,7 +144,7 @@ export function KlausurphasenScreen() {
             action={
               <button
                 onClick={() => navigate(`/klausurmodus/lernplan/${activePlan.id}`)}
-                className="w-full h-12 rounded-pill bg-white text-[#160E28] text-[16px] font-semibold press"
+                className="w-full h-12 rounded-pill bg-white text-[#1B1B1F] text-[16px] font-semibold press"
               >
                 Weiterlernen
               </button>
@@ -159,7 +159,7 @@ export function KlausurphasenScreen() {
             action={
               <button
                 onClick={() => navigate('/klausurmodus/lernplan/neu')}
-                className="w-full h-12 rounded-pill bg-white text-[#160E28] text-[16px] font-semibold press"
+                className="w-full h-12 rounded-pill bg-white text-[#1B1B1F] text-[16px] font-semibold press"
               >
                 Lernplan erstellen
               </button>
@@ -174,7 +174,7 @@ export function KlausurphasenScreen() {
             action={
               <button
                 onClick={() => navigate('/klausuren')}
-                className="w-full h-12 rounded-pill bg-white text-[#160E28] text-[16px] font-semibold press"
+                className="w-full h-12 rounded-pill bg-white text-[#1B1B1F] text-[16px] font-semibold press"
               >
                 Klausurtermin eintragen
               </button>
@@ -193,28 +193,28 @@ export function KlausurphasenScreen() {
               label: 'Karteikarten',
               note: totalCards > 0 ? `${totalCards} Karten` : 'Noch keine',
               icon: 'cards' as const,
-              fill: '#34D399', on: '#062017',
+              fill: '#34D399', on: '#FFFFFF',
               to: totalCards > 0 ? '/klausurmodus/lernen' : '/klausurmodus/karteikarten/neu',
             },
             {
               label: 'Blurting',
               note: 'Aus dem Kopf',
               icon: 'speech' as const,
-              fill: 'rgb(var(--subj-spr))', on: '#062017',
+              fill: 'rgb(var(--subj-spr))', on: '#FFFFFF',
               to: '/klausurmodus/blurting',
             },
             {
               label: 'Lernzettel',
               note: lernzettel.length > 0 ? `${lernzettel.length} gespeichert` : 'Noch keine',
               icon: 'document' as const,
-              fill: 'rgb(var(--subj-ges))', on: '#2A1200',
+              fill: 'rgb(var(--subj-ges))', on: '#FFFFFF',
               to: '/klausurmodus/lernzettel',
             },
             {
               label: 'Probeklausur',
               note: savedProbeklausuren.length > 0 ? `${savedProbeklausuren.length} geschrieben` : '4 Arten',
               icon: 'clipboard' as const,
-              fill: 'rgb(var(--subj-kre))', on: '#2A0A1B',
+              fill: 'rgb(var(--subj-kre))', on: '#FFFFFF',
               to: '/klausurmodus/probeklausur',
             },
           ]).map((m) => (

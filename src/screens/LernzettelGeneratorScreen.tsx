@@ -279,7 +279,7 @@ export function LernzettelGeneratorScreen() {
             <button
               onClick={handleConfirmModus}
               className="w-full h-12 rounded-pill flex items-center justify-center font-semibold text-[15px] press"
-              style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+              style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
             >
               Weiter
             </button>

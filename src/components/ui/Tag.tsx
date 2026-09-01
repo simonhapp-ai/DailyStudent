@@ -18,7 +18,7 @@ interface TagProps extends HTMLAttributes<HTMLSpanElement> {
 // zweites Signal trägt (Wort, Position oder Symbol).
 const tones: Record<TagTone, string> = {
   neutral:   'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary',
-  accent:    'bg-accent text-on-accent',
+  accent:    'btn-mode',
   red:       'bg-fill-red text-fill-red-on',
   orange:    'bg-fill-orange text-fill-orange-on',
   green:     'bg-fill-green text-fill-green-on',

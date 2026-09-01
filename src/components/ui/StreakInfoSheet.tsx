@@ -67,7 +67,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
 
         <button
           onClick={onClose}
-          className="w-full h-12 rounded-pill bg-accent text-on-accent text-[15px] font-semibold press transition-all"
+          className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold press transition-all"
         >
           Verstanden
         </button>

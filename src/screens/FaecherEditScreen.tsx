@@ -124,7 +124,7 @@ export function FaecherEditScreen() {
           <button
             onClick={handleSave}
             disabled={selectedFaecher.length === 0}
-            className="px-4 py-1.5 rounded-pill bg-accent text-white text-[14px] font-semibold press-sm disabled:opacity-40"
+            className="px-4 py-1.5 rounded-pill btn-mode text-[14px] font-semibold press-sm disabled:opacity-40"
           >
             Fertig
           </button>

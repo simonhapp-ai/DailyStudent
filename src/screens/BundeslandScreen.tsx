@@ -170,7 +170,7 @@ export function BundeslandScreen() {
           disabled={!changed || saved}
           className="w-full h-12 rounded-pill text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
           style={{
-            background: 'rgb(var(--color-accent))',
+            background: 'var(--grad-mode)',
             boxShadow: changed && !saved ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',
           }}
         >

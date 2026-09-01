@@ -114,7 +114,7 @@ export function LessonScreen() {
             action={
               <button
                 onClick={() => navigate(`/unterricht/${id}/neue-notiz`)}
-                className="w-full h-12 rounded-pill bg-accent text-on-accent text-[16px] font-semibold press"
+                className="w-full h-12 rounded-pill btn-mode text-[16px] font-semibold press"
               >
                 Erste Notiz erstellen
               </button>
@@ -128,7 +128,7 @@ export function LessonScreen() {
         <button
           onClick={() => navigate(`/unterricht/${id}/neue-notiz`)}
           aria-label="Neue Notiz"
-          className="fixed bottom-28 right-5 w-14 h-14 rounded-full bg-accent text-on-accent flex items-center justify-center press"
+          className="fixed bottom-28 right-5 w-14 h-14 rounded-full btn-mode flex items-center justify-center press"
           style={{ boxShadow: '0 6px 16px rgba(0,0,0,.18)' }}
         >
           <Icon name="plus" size={24} />

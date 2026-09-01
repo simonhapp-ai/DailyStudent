@@ -136,7 +136,7 @@ export function LearnModeScreen() {
               <button
                 onClick={handleKnown}
                 className="h-12 rounded-pill text-[15px] font-semibold press"
-                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+                style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
               >
                 Weiß ich
               </button>
@@ -168,7 +168,7 @@ export function LearnModeScreen() {
         <button
           onClick={() => navigate('/klausurmodus/karteikarten/neu')}
           className="w-full h-12 rounded-pill flex items-center justify-center gap-2 font-semibold text-[15px] press"
-          style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+          style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
         >
           <Icon name="plus" size={17} />
           Neue Karteikarten erstellen
@@ -182,7 +182,7 @@ export function LearnModeScreen() {
               <button
                 onClick={() => navigate('/klausurmodus/karteikarten/neu')}
                 className="w-full h-12 rounded-pill font-semibold text-[15px] press"
-                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+                style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
               >
                 Erstes Set erstellen
               </button>

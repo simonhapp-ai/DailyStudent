@@ -404,7 +404,7 @@ export function LernplanDetailScreen() {
                 <button
                   onClick={() => toggleTag(naechsterOffener.date)}
                   className="w-full h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
-                  style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+                  style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                 >
                   <Icon name="check" size={16} />
                   Tag als erledigt markieren
@@ -457,7 +457,7 @@ export function LernplanDetailScreen() {
                         {DAY_TYPE_LABELS[day.dayType]}
                       </span>
                       {todayMark && (
-                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-pill bg-accent text-white">Heute</span>
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-pill btn-mode">Heute</span>
                       )}
                     </div>
                     {day.note && (
@@ -537,7 +537,7 @@ export function LernplanDetailScreen() {
           <button
             onClick={addToCalendar}
             className="w-full h-12 rounded-pill text-on-accent text-[14px] font-bold press-sm flex items-center justify-center gap-2"
-            style={{ background: 'rgb(var(--color-accent))' }}
+            style={{ background: 'var(--grad-mode)' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />

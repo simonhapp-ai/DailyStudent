@@ -313,7 +313,7 @@ export function ProfilScreen() {
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}
-              className="w-full h-12 rounded-pill bg-accent text-on-accent text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
+              className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
             >
               {checkoutLoading === 'yearly' ? 'Wird geladen…' : 'Pro freischalten · €59,99/Jahr'}
             </button>
@@ -426,7 +426,7 @@ export function ProfilScreen() {
           >
             <div
               className="w-11 h-11 rounded-btn flex items-center justify-center text-[22px] shrink-0"
-              style={{ background: '#34D399' }}
+              style={{ background: 'var(--grad-mode)' }}
             >
               <Icon name="gift" size={26} />
             </div>
@@ -572,7 +572,7 @@ export function ProfilScreen() {
                   <div className="flex items-start gap-2.5 mb-4">
                     <div
                       className="w-10 h-10 rounded-btn flex items-center justify-center text-[20px] shrink-0"
-                      style={{ background: '#34D399' }}
+                      style={{ background: 'var(--grad-mode)' }}
                     >
                       <Icon name="gift" size={19} />
                     </div>

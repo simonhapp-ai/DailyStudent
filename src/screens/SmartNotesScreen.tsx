@@ -335,7 +335,7 @@ export function SmartNotesScreen() {
                 disabled={!canReanalyze}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all ${
                   canReanalyze
-                    ? 'bg-accent text-on-accent hover:opacity-90'
+                    ? 'btn-mode hover:opacity-90'
                     : 'bg-surface-hover text-text-muted cursor-not-allowed'
                 }`}
               >
@@ -490,7 +490,7 @@ export function SmartNotesScreen() {
               disabled={transferStatus === 'uploading' || transferStatus === 'done'}
               className={`shrink-0 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
                 transferStatus === 'done' ? 'bg-fill-green text-fill-green-on'
-                : 'bg-accent text-on-accent hover:opacity-90'
+                : 'btn-mode hover:opacity-90'
               }`}
             >
               {transferStatus === 'uploading' ? 'Läuft…' : transferStatus === 'done' ? 'Übertragen' : 'Übertragen'}
@@ -664,7 +664,7 @@ export function SmartNotesScreen() {
                       onClick={() => void handleKeywordClick(kw)}
                       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-xs font-medium border transition-all active:scale-95 ${
                         isSelected
-                          ? 'bg-accent text-on-accent border-transparent'
+                          ? 'btn-mode border-transparent'
                           : 'bg-surface-hover border-border text-text-secondary hover:border-accent/50 hover:text-text-primary'
                       }`}
                     >
@@ -734,8 +734,8 @@ export function SmartNotesScreen() {
             {fcStatus === 'done' ? (
               <div className="bg-surface border border-success/30 rounded-card px-4 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-btn flex items-center justify-center" style={{ background: '#34D399' }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="w-9 h-9 rounded-btn flex items-center justify-center" style={{ background: 'var(--grad-mode)' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
                   </div>
@@ -747,7 +747,7 @@ export function SmartNotesScreen() {
                 <button
                   onClick={() => navigate('/klausurmodus/lernen')}
                   className="px-3.5 py-2 rounded-pill text-sm font-semibold press-sm"
-                  style={{ background: '#34D399', color: '#062017' }}
+                  style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                 >
                   Jetzt lernen
                 </button>
@@ -758,13 +758,13 @@ export function SmartNotesScreen() {
                 disabled={fcStatus === 'generating'}
                 className="w-full bg-surface border border-border rounded-card px-4 py-4 flex items-center gap-4 press disabled:opacity-60"
               >
-                <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: '#34D399' }}>
+                <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'var(--grad-mode)' }}>
                   {fcStatus === 'generating' ? (
-                    <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2.5">
+                    <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
                       <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
                     </svg>
                   ) : (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.5" />
                       <rect x="4" y="9" width="13" height="12" rx="2.5" />
                       <line x1="7" y1="14" x2="14" y2="14" />

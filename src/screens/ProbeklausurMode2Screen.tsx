@@ -521,7 +521,7 @@ export function ProbeklausurMode2Screen() {
                   <button
                     onClick={() => setShowProModal(true)}
                     className="w-full py-3 rounded-icon text-on-accent text-[14px] font-bold press-sm"
-                    style={{ background: 'rgb(var(--color-accent))' }}
+                    style={{ background: 'var(--grad-mode)' }}
                   >
                     Pro freischalten · €5/Mo
                   </button>

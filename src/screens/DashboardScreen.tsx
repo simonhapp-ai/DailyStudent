@@ -206,7 +206,7 @@ function HeroLernplanCard({
         </div>
         <button
           onClick={onCreate}
-          className="mt-5 self-start px-5 py-2.5 rounded-icon bg-accent text-on-accent text-[13px] font-semibold press-sm"
+          className="mt-5 self-start px-5 py-2.5 rounded-icon btn-mode text-[13px] font-semibold press-sm"
         >
           Lernplan erstellen
         </button>
@@ -540,7 +540,7 @@ export function DashboardScreen() {
               className="shrink-0 flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-pill whitespace-nowrap"
               style={{ background: 'rgba(var(--color-accent), 0.1)', color: 'rgb(var(--color-accent))' }}
             >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'rgb(var(--color-accent))' }} />
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--grad-mode)' }} />
               {upcomingExamsCount} Klausur{upcomingExamsCount === 1 ? '' : 'en'} in Sicht
             </span>
           )}

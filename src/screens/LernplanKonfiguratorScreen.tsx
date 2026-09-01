@@ -372,7 +372,7 @@ export function LernplanKonfiguratorScreen() {
           <button
             onClick={handleNext}
             disabled={!canNext[step]}
-            className="w-full h-12 rounded-pill bg-accent text-on-accent text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
+            className="w-full h-12 rounded-pill btn-mode text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
           >
             {step === TOTAL_STEPS - 1 ? 'Weiter zur Zusammenfassung' : 'Weiter'}
           </button>
@@ -870,7 +870,7 @@ function StepZeitBlocker({
             <button
               onClick={() => onAddBlock()}
               disabled={!newBlock.label.trim()}
-              className="flex-1 py-2.5 rounded-card bg-accent text-on-accent text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
+              className="flex-1 py-2.5 rounded-card btn-mode text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
             >
               Hinzufügen
             </button>
@@ -1012,7 +1012,7 @@ function StepLernkapazitaet({
                   onClick={() => onToggleLK(id)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-pill border text-[13px] font-semibold transition-all ${
                     isLK
-                      ? 'bg-accent text-on-accent border-accent'
+                      ? 'btn-mode border-accent'
                       : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                   }`}
                 >
@@ -1227,7 +1227,7 @@ function StepZusammenfassung({
       ) : (
         <button
           onClick={onGenerate}
-          className="w-full h-12 rounded-pill bg-accent text-on-accent text-[16px] font-bold active:scale-[0.98] transition-all"
+          className="w-full h-12 rounded-pill btn-mode text-[16px] font-bold active:scale-[0.98] transition-all"
         >
           Lernplan generieren
         </button>

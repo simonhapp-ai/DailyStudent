@@ -9,7 +9,7 @@ export function Badge({ color = 'accent', className = '', children, ...props }: 
   // matte Tönung PLUS gleichfarbige Schrift ergibt eine Marke, die weder
   // richtig leuchtet noch richtig lesbar ist.
   const colors = {
-    accent:  'bg-accent text-on-accent',
+    accent:  'btn-mode',
     success: 'bg-fill-green text-fill-green-on',
     warning: 'bg-fill-orange text-fill-orange-on',
     danger:  'bg-fill-red text-fill-red-on',
