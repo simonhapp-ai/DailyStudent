@@ -53,8 +53,12 @@
      ohnehin die Schrift, deshalb hell statt kräftig. */
   --ev-bg:        229 229 234;  --ev-on:          0   0   0;
 
-  /* Bühne — hell die dunkelste Fläche des Screens */
-  --stage-bg: linear-gradient(146deg, #160E28 0%, #2A1B5C 100%);
+  /* Bühne — hell die dunkelste Fläche des Screens.
+     Zwei Ausführungen, eine je Modus: Der Unterrichtsmodus trägt Lila, der
+     Klausurenmodus Mint. Die Bühne selbst bleibt in beiden Fällen dunkel —
+     nur der Farbstich wechselt, damit man am Grund erkennt, wo man ist. */
+  --stage-bg:         linear-gradient(146deg, #160E28 0%, #2A1B5C 100%);
+  --stage-bg-klausur: linear-gradient(146deg, #05231A 0%, #0B4635 100%);
 
   /* Schrift auf gefülltem Purple. Hell ist Purple dunkel genug für Weiß. */
   --mode-on-purple: #FFFFFF;
@@ -122,7 +126,8 @@
   --ev-bg:         58  58  60;  --ev-on:        255 255 255;
 
   /* Bühne — dunkel die hellste Fläche des Screens (Rolle dreht sich um) */
-  --stage-bg: linear-gradient(146deg, #241C3C 0%, #3E2C74 100%);
+  --stage-bg:         linear-gradient(146deg, #241C3C 0%, #3E2C74 100%);
+  --stage-bg-klausur: linear-gradient(146deg, #0D3327 0%, #175944 100%);
 
   /* Dunkel wird Purple aufgehellt (#A78BFA) — Schrift darauf wird fast schwarz */
   --mode-on-purple: #160E28;

@@ -10,6 +10,8 @@ interface StageProps {
   progress?: number
   /** Die eine Handlung. Trägt immer ein Verb, das die Arbeit benennt. */
   action?: ReactNode
+  /** Modus, dessen Farbe die Bühne trägt. Klausur leuchtet mint, Unterricht lila. */
+  tone?: 'unterricht' | 'klausur'
   className?: string
 }
 
@@ -22,17 +24,18 @@ interface StageProps {
 //
 // Hell ist sie die dunkelste Fläche des Screens, dunkel die hellste — sie bleibt in
 // beiden Erscheinungen die, die heraussticht.
-export function Stage({ eyebrow, title, note, progress, action, className = '' }: StageProps) {
+export function Stage({ eyebrow, title, note, progress, action, tone = 'unterricht', className = '' }: StageProps) {
+  const klausur = tone === 'klausur'
   return (
     <div
       className={`relative overflow-hidden rounded-sheet p-5 flex flex-col gap-2 text-white ${className}`}
-      style={{ background: 'var(--stage-bg)' }}
+      style={{ background: klausur ? 'var(--stage-bg-klausur)' : 'var(--stage-bg)' }}
     >
       {/* Glow in der Modusfarbe — reine Fläche, nie Schrift */}
       <span
         aria-hidden
         className="pointer-events-none absolute -right-16 -top-[70px] w-[200px] h-[200px] rounded-full opacity-50"
-        style={{ background: 'radial-gradient(circle, rgb(var(--color-accent)), transparent 70%)' }}
+        style={{ background: `radial-gradient(circle, ${klausur ? '#34D399' : 'rgb(var(--color-accent))'}, transparent 70%)` }}
       />
       {eyebrow && <span className="relative text-[13px] text-white/70">{eyebrow}</span>}
       <span className="relative text-[22px] font-bold tracking-[-0.03em] leading-tight">{title}</span>
