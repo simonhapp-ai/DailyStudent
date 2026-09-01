@@ -51,12 +51,12 @@ export function PlanenBar({ className = '' }: { className?: string }) {
 
   return (
     <div className={`flex flex-col gap-2 lg:hidden ${className}`}>
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-3 min-[420px]:grid-cols-4 gap-2">
         {PRIMARY.map((i) => pill(i.label, i.path))}
         <button
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="h-9 px-2 rounded-pill text-[12.5px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm flex items-center justify-center gap-1"
+          className="col-span-3 min-[420px]:col-span-1 h-9 px-2 rounded-pill text-[12.5px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm flex items-center justify-center gap-1"
         >
           Mehr
           <motion.svg
@@ -82,7 +82,7 @@ export function PlanenBar({ className = '' }: { className?: string }) {
             transition={reducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
             className="overflow-hidden"
           >
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 min-[420px]:grid-cols-4 gap-2">
               {SECONDARY.map((i, idx) => (
                 <motion.div
                   key={i.path}
