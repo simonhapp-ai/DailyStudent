@@ -677,6 +677,12 @@ export function DrawingCanvas({
   // ── Color helpers ─────────────────────────────────────────────────────────
 
   const handleColorDotClick = (idx: number) => {
+    // Bei offenem Textfeld faerbt der Farbpunkt DIESES Feld — sonst waere die
+    // Farbe waehrend des Schreibens nicht erreichbar.
+    if (tool === 'text' && activeTextId) {
+      setCurrentTexts(currentTextsRef.current.map((t) =>
+        t.id === activeTextId ? { ...t, colorHex: colors[idx] } : t))
+    }
     if (activeColorIdx === idx) {
       editingColorIdxRef.current = idx
       if (colorInputRef.current) {
@@ -1156,7 +1162,7 @@ export function DrawingCanvas({
       return
     }
     const shape = detectGeomShape(active.points)
-    const newId = `g${Date.now()}`
+    const newId = genId()
     const snap: StrokeRecord = { id: newId, points: active.points, tool: 'geometry', colorHex: active.colorHex, size: active.size, shape }
     // Paint shape to sk canvas
     const sk = skCanvasRef.current
@@ -1178,7 +1184,7 @@ export function DrawingCanvas({
     // Textwerkzeug: Tippen legt ein Feld an und setzt den Schreibpunkt hinein.
     if (tool === 'text') {
       const [cx, cy] = getXY(e)
-      const id = `t${Date.now()}`
+      const id = genId()
       setCurrentTexts([
         ...currentTextsRef.current,
         { id, text: '', x: cx, y: cy, w: 260, size: 16, colorHex: colors[activeColorIdx] },
@@ -2316,7 +2322,7 @@ export function DrawingCanvas({
         <div className="w-px h-7 mx-2 shrink-0" style={{ background: 'rgba(0,0,0,0.12)' }} />
 
         {/* 6 Color dots */}
-        {(tool === 'pen' || tool === 'highlighter' || tool === 'geometry') && (
+        {(tool === 'pen' || tool === 'highlighter' || tool === 'geometry' || tool === 'text') && (
           <div className="flex items-center gap-1.5 shrink-0">
             {colors.map((hex, idx) => {
               const isActive = activeColorIdx === idx
