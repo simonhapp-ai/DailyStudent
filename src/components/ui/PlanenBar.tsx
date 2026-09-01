@@ -50,7 +50,7 @@ export function PlanenBar({ className = '' }: { className?: string }) {
   }
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
+    <div className={`flex flex-col gap-2 lg:hidden ${className}`}>
       <div className="grid grid-cols-4 gap-2">
         {PRIMARY.map((i) => pill(i.label, i.path))}
         <button

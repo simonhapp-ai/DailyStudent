@@ -312,7 +312,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   if (location.pathname === '/agb') return <AGBScreen />
 
   // Only redirect to auth once Supabase has confirmed there's no valid session
-  const designPreview = !IS_NATIVE && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && new URLSearchParams(window.location.search).get('vorschau') === '1'
+  const designPreview = !IS_NATIVE && /^(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3})$/.test(window.location.hostname) && new URLSearchParams(window.location.search).get('vorschau') === '1'
     if (!authLoading && !authUser && !designPreview) {
     if (location.pathname === '/') {
       // Native app cold start: consent → demo → login, once per device —

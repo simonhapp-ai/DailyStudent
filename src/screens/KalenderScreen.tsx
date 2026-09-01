@@ -39,6 +39,15 @@ function addDays(d: Date, n: number): Date {
   const r = new Date(d); r.setDate(r.getDate() + n); return r
 }
 
+/** Montag der Woche, in der das Datum liegt. */
+function mondayOf(ref: Date): Date {
+  const dow = ref.getDay()
+  const mon = new Date(ref)
+  mon.setDate(ref.getDate() - (dow === 0 ? 6 : dow - 1))
+  mon.setHours(0, 0, 0, 0)
+  return mon
+}
+
 function getWeekDays(ref: Date = new Date()): Date[] {
   const dow = ref.getDay()
   const mon = new Date(ref)
@@ -326,7 +335,7 @@ export function KalenderScreen() {
                         color: 'rgb(var(--color-on-accent))',
                       } : { color: 'rgb(var(--color-text-secondary))' }}
                     >
-                      {[isDesktop ? '4T' : '2T', 'M', 'J'][i]}
+                      {[isDesktop ? 'Woche' : '2 Tage', 'Monat', 'Jahr'][i]}
                     </button>
                   ))}
                 </div>
@@ -372,8 +381,8 @@ export function KalenderScreen() {
                   viewDate={viewDate}
                   todayStr={todayStr}
                   onDaySelect={(d) => setViewDate(d)}
-                  onPrevWeek={() => setViewDate((v) => addDays(v, isDesktop ? -4 : -2))}
-                  onNextWeek={() => setViewDate((v) => addDays(v, isDesktop ? 4 : 2))}
+                  onPrevWeek={() => setViewDate((v) => addDays(v, isDesktop ? -7 : -2))}
+                  onNextWeek={() => setViewDate((v) => addDays(v, isDesktop ? 7 : 2))}
                 />
               )}
 
@@ -381,7 +390,7 @@ export function KalenderScreen() {
               <div className="flex-1 overflow-hidden min-h-0">
                 {calView === 'twoday' && (
                   <TwoDayView
-                    dayCount={isDesktop ? 4 : 2}
+                    dayCount={isDesktop ? 7 : 2}
                     viewDate={viewDate} todayStr={todayStr}
                     stundenplan={profile?.stundenplan}
                     personalEntries={personalEntries}
@@ -918,7 +927,10 @@ interface TwoDayProps {
 function TwoDayView({ dayCount = 2, viewDate, todayStr, stundenplan, personalEntries, klausurtermine, calOpen, showStundenplan, onSlotPress, onEntryPress }: TwoDayProps) {
   // Auf dem Schreibtisch ist Platz fuer vier Tage — dieselbe Ansicht, mehr
   // Spalten. Auf dem Telefon bleiben es zwei.
-  const days = Array.from({ length: dayCount }, (_, i) => addDays(viewDate, i))
+  // Sieben Spalten heissen: ganze Woche ab Montag. Weniger heisst: ab dem
+  // gewaehlten Tag vorwaerts.
+  const start = dayCount >= 7 ? mondayOf(viewDate) : viewDate
+  const days = Array.from({ length: dayCount }, (_, i) => addDays(start, i))
   const gridHeight = TOTAL_H * PX_PER_HOUR
   const hours = Array.from({ length: TOTAL_H }, (_, i) => START_H + i)
   const scrollRef = useRef<HTMLDivElement>(null)
