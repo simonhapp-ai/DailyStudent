@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { Icon, type IconName } from './Icon'
@@ -104,24 +105,42 @@ function TipCard({ tip }: { tip: Tip }) {
 }
 
 function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => void }) {
+  const reducedMotion = useReducedMotion()
   return (
-    <div className="flex gap-1 p-1 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+    <div
+      role="tablist"
+      aria-label="Modus"
+      className="relative flex p-1 rounded-pill border border-border/50"
+      style={{ background: 'rgb(var(--color-bg))' }}
+    >
+      {/* Der Schieber liegt UNTER den Beschriftungen und wandert zwischen den
+          beiden Haelften. Dadurch liest sich die Leiste als ein Schalter statt
+          als zwei Knoepfe auf grauem Grund. */}
+      <motion.span
+        aria-hidden
+        layout
+        className="absolute top-1 bottom-1 rounded-pill"
+        style={{
+          left: mode === 'unterricht' ? '0.25rem' : '50%',
+          right: mode === 'unterricht' ? '50%' : '0.25rem',
+          background: mode === 'unterricht' ? '#7C3AED' : '#34D399',
+        }}
+        transition={reducedMotion ? { duration: 0 } : { type: 'spring', duration: 0.34, bounce: 0.16 }}
+      />
       {(['unterricht', 'klausur'] as AppMode[]).map((m) => {
         const active = mode === m
         return (
           <button
             key={m}
+            role="tab"
+            aria-selected={active}
             onClick={() => onPick(m)}
-            aria-current={active ? 'page' : undefined}
-            className="flex-1 h-9 rounded-btn text-[14px] font-semibold press-sm transition-colors"
-            style={
-              active
-                ? {
-                    background: m === 'unterricht' ? '#7C3AED' : '#34D399',
-                    color: m === 'unterricht' ? 'var(--mode-on-purple)' : '#062017',
-                  }
-                : { color: 'rgb(var(--color-text-primary) / 0.6)' }
-            }
+            className="relative flex-1 h-9 rounded-pill text-[14px] font-semibold press-sm transition-colors"
+            style={{
+              color: active
+                ? (m === 'unterricht' ? 'var(--mode-on-purple)' : '#062017')
+                : 'rgb(var(--color-text-secondary))',
+            }}
           >
             {m === 'unterricht' ? 'Unterricht' : 'Klausur'}
           </button>
