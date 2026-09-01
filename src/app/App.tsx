@@ -90,22 +90,35 @@ import { analyticsAllowed, hasConsent, saveConsent } from '../lib/consent'
 import { Capacitor } from '@capacitor/core'
 
 function ThemeApplier() {
-  // Apple HIG (Dark Mode): "Avoid offering an app-specific appearance setting" —
-  // the in-app Hell/Dunkel/System picker was removed 31.08.2026, app now always
-  // follows the system appearance, unconditionally.
+  // Erscheinungsbild.
+  //
+  // Apples HIG raet von einem app-eigenen Appearance-Setting ab ("users may
+  // think your app is broken because it doesn't respond to their systemwide
+  // appearance choice"). Deshalb war der Schalter am 31.08.2026 entfernt worden
+  // und die App folgte immer dem System.
+  //
+  // Er ist zurueck — mit "System" als einer der drei Moeglichkeiten und als
+  // Standard. Damit bleibt Apples eigentliche Sorge beantwortet: Wer nichts
+  // einstellt, folgt dem Geraet. Wer bewusst etwas anderes waehlt, bekommt es.
+  // Ein Schalter, der in den Speicher schreibt und nichts bewirkt, waere die
+  // schlechteste der drei Varianten gewesen.
+  const { theme } = useUser()
+
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const apply = (isDark: boolean) => {
+    const apply = () => {
+      const isDark = theme === 'system' ? mq.matches : theme === 'dark'
       document.documentElement.classList.toggle('dark', isDark)
       // Native (iOS wrapper) can't see this in-app theme choice on its own —
       // it only knows the device's OS-level appearance, which can differ.
       notifyNativeTheme(isDark)
     }
-    apply(mq.matches)
-    const handler = (e: MediaQueryListEvent) => apply(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
+    apply()
+    // Dem System nur folgen, solange nichts anderes gewaehlt ist.
+    if (theme !== 'system') return
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
+  }, [theme])
 
   return null
 }
