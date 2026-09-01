@@ -43,6 +43,17 @@ const ACCENT: Record<ModeTone, string> = {
   klausur: '#10B981',
 }
 
+// Die App-Store-Adresse steht hier, sobald sie oeffentlich ist. Solange sie
+// leer ist, erscheint der Hinweis gar nicht — ein Link ins Leere waere
+// schlimmer als kein Link.
+const APP_STORE_URL = ''
+
+/** iPad meldet sich seit iPadOS 13 als Macintosh. Erkennbar bleibt es nur an
+ *  den Beruehrpunkten: Ein echter Mac hat keine. */
+function istTablet(): boolean {
+  return /Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1
+}
+
 const SURFACE: Record<ModeTone, string> = {
   unterricht: 'linear-gradient(158deg, #241640 0%, #1B1130 55%, #2B1B5E 100%)',
   klausur: 'linear-gradient(158deg, #0A3A2B 0%, #06251B 55%, #0E5540 100%)',
@@ -70,7 +81,13 @@ export function DemoScreen() {
   }, [beat, running, current.hold])
 
   const finished = beat >= BEATS.length - 1
-  const goOn = () => navigate(authUser ? '/unterricht' : '/auth')
+
+  const goOn = () => {
+    // Merken, dass die Demo lief — beim naechsten Besuch geht es direkt zur
+    // Anmeldung statt noch einmal durch die Vorstellung.
+    try { localStorage.setItem('demoShown', 'true') } catch { /* privates Fenster */ }
+    navigate(authUser ? '/unterricht' : '/auth')
+  }
 
   return (
     <div className="min-h-dvh bg-background flex flex-col items-center px-5"
@@ -192,6 +209,19 @@ export function DemoScreen() {
         >
           {finished ? 'Starten und durchziehen' : 'Überspringen und loslegen'}
         </motion.button>
+
+        {/* Auf dem iPad ist die App aus dem App Store die bessere Wahl — dort
+            gibt es Kamera, Stift und den Start ohne Browser. Der Hinweis
+            erscheint nur, wenn es wirklich ein Tablet ist UND die Adresse
+            hinterlegt wurde. */}
+        {APP_STORE_URL && istTablet() && (
+          <a
+            href={APP_STORE_URL}
+            className="mt-3 text-center text-[13px] text-text-secondary underline underline-offset-2 press-sm"
+          >
+            Auf dem iPad? Hol dir die App im App Store.
+          </a>
+        )}
       </div>
     </div>
   )
