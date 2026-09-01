@@ -323,11 +323,10 @@ export function KalenderScreen() {
                       className="px-4 py-1.5 rounded-chip text-[12px] font-bold transition-all duration-200 press-sm"
                       style={calView === view ? {
                         background: 'rgb(var(--color-accent))',
-                        color: 'white',
-                        boxShadow: '0 2px 8px rgba(var(--color-accent),0.35)',
-                      } : { color: 'rgb(var(--color-text-muted))' }}
+                        color: 'rgb(var(--color-on-accent))',
+                      } : { color: 'rgb(var(--color-text-secondary))' }}
                     >
-                      {['2T', 'M', 'J'][i]}
+                      {[isDesktop ? '4T' : '2T', 'M', 'J'][i]}
                     </button>
                   ))}
                 </div>
@@ -337,8 +336,8 @@ export function KalenderScreen() {
                       onClick={toggleStundenplan}
                       className="flex items-center gap-1 px-2.5 py-1.5 rounded-chip text-[11px] font-bold transition-all press-sm"
                       style={showStundenplan ? {
-                        background: 'rgba(var(--color-accent), 0.12)',
-                        color: 'rgb(var(--color-accent))',
+                        background: 'rgb(var(--color-accent))',
+                        color: 'rgb(var(--color-on-accent))',
                       } : {
                         background: 'rgba(var(--color-border), 0.5)',
                         color: 'rgb(var(--color-text-muted))',
@@ -373,8 +372,8 @@ export function KalenderScreen() {
                   viewDate={viewDate}
                   todayStr={todayStr}
                   onDaySelect={(d) => setViewDate(d)}
-                  onPrevWeek={() => setViewDate((v) => addDays(v, -2))}
-                  onNextWeek={() => setViewDate((v) => addDays(v, 2))}
+                  onPrevWeek={() => setViewDate((v) => addDays(v, isDesktop ? -4 : -2))}
+                  onNextWeek={() => setViewDate((v) => addDays(v, isDesktop ? 4 : 2))}
                 />
               )}
 
@@ -382,6 +381,7 @@ export function KalenderScreen() {
               <div className="flex-1 overflow-hidden min-h-0">
                 {calView === 'twoday' && (
                   <TwoDayView
+                    dayCount={isDesktop ? 4 : 2}
                     viewDate={viewDate} todayStr={todayStr}
                     stundenplan={profile?.stundenplan}
                     personalEntries={personalEntries}
@@ -906,6 +906,8 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
 // ─── Two-Day View ─────────────────────────────────────────────────────────────
 
 interface TwoDayProps {
+  /** Wie viele Tagesspalten nebeneinander stehen — zwei auf dem Telefon, vier im Querformat. */
+  dayCount?: number
   viewDate: Date; todayStr: string; stundenplan: Stundenplan | undefined
   personalEntries: PersonalEntry[]; klausurtermine: { subjectId: string; date: string }[]
   calOpen: boolean; showStundenplan: boolean
@@ -913,8 +915,10 @@ interface TwoDayProps {
   onEntryPress: (entry: PersonalEntry) => void
 }
 
-function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurtermine, calOpen, showStundenplan, onSlotPress, onEntryPress }: TwoDayProps) {
-  const days = [viewDate, addDays(viewDate, 1)]
+function TwoDayView({ dayCount = 2, viewDate, todayStr, stundenplan, personalEntries, klausurtermine, calOpen, showStundenplan, onSlotPress, onEntryPress }: TwoDayProps) {
+  // Auf dem Schreibtisch ist Platz fuer vier Tage — dieselbe Ansicht, mehr
+  // Spalten. Auf dem Telefon bleiben es zwei.
+  const days = Array.from({ length: dayCount }, (_, i) => addDays(viewDate, i))
   const gridHeight = TOTAL_H * PX_PER_HOUR
   const hours = Array.from({ length: TOTAL_H }, (_, i) => START_H + i)
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -943,7 +947,7 @@ function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurt
   return (
     <div className="flex flex-col h-full">
       {/* Column headers */}
-      <div className="flex shrink-0 border-b border-border/20" style={{ paddingLeft: 40 }}>
+      <div className="flex shrink-0 border-b border-border/20" style={{ paddingLeft: 48 }}>
         {days.map((d, i) => {
           const isToday = toDateStr(d) === todayStr
           return (
@@ -960,10 +964,10 @@ function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurt
       <div ref={scrollRef} className="flex-1 overflow-y-auto">
         <div className="flex" style={{ minHeight: gridHeight }}>
           {/* Time axis */}
-          <div className="shrink-0 relative" style={{ width: 40, height: gridHeight }}>
+          <div className="shrink-0 relative" style={{ width: 48, height: gridHeight }}>
             {hours.map((h) => (
               <div key={h} className="absolute right-2 flex items-center" style={{ top: minToPx(h * 60) - 7 }}>
-                <span className="text-[8px] text-text-muted/50 tabular-nums leading-none">{h}:00</span>
+                <span className="text-[11px] text-text-secondary tabular-nums leading-none">{h}:00</span>
               </div>
             ))}
           </div>
@@ -1186,12 +1190,24 @@ function YearView({ viewDate, todayStr, personalEntries, klausurtermine, onNavig
 
 // ─── Shared: App Icon Pill ────────────────────────────────────────────────────
 
-function AppIconPill({ gradient, shadow, children }: { gradient: string; shadow: string; children: React.ReactNode }) {
+// Zeichen der Planen-Kacheln.
+//
+// Vorher trug jede Kachel eine eigene Farbe mit farbigem Schein darunter —
+// Grau, Orange, Rot, Lila, Gelb nebeneinander, ohne dass die Farbe etwas
+// bedeutet haette. Jetzt gilt: Neutral ist der Normalfall, Farbe sagt etwas
+// ueber den Zustand (offene Aufgaben, naher Termin), und was dem Modus selbst
+// gehoert, traegt die Modusfarbe. Der Schein ist ersatzlos entfallen.
+type PillTone = 'neutral' | 'mode' | 'warn' | 'done'
+
+function AppIconPill({ tone = 'neutral', children }: { tone?: PillTone; children: React.ReactNode }) {
+  const styles: Record<PillTone, string> = {
+    neutral: 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary',
+    mode:    'bg-accent text-on-accent',
+    warn:    'bg-fill-red text-fill-red-on',
+    done:    'bg-fill-green text-fill-green-on',
+  }
   return (
-    <div
-      className="w-11 h-11 rounded-icon flex items-center justify-center shrink-0"
-      style={{ background: gradient, boxShadow: shadow }}
-    >
+    <div className={`w-11 h-11 rounded-icon flex items-center justify-center shrink-0 ${styles[tone]}`}>
       {children}
     </div>
   )
@@ -1207,8 +1223,8 @@ function StundenplanSetupCard({ onSetup, fullWidth }: { onSetup: () => void; ful
       style={{ minHeight: fullWidth ? undefined : 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill gradient="#AEAEB4" shadow="0 4px 14px rgba(99,99,102,0.4)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <AppIconPill>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /><path d="M12 14v4M10 16h4" strokeWidth="2.5" />
           </svg>
         </AppIconPill>
@@ -1247,10 +1263,7 @@ function HausaufgabenWidget({ userNotes, completedHomeworkIds, standaloneHomewor
       style={{ minHeight: 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill
-          gradient={allDone ? '#30D158' : '#FF9F0A'}
-          shadow={allDone ? '0 4px 14px rgba(48,209,88,0.45)' : '0 4px 14px rgba(255,159,10,0.5)'}
-        >
+        <AppIconPill tone={allDone ? 'done' : 'warn'}>
           {allDone ? (
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#0A2413" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 6L9 17l-5-5" />
@@ -1396,8 +1409,8 @@ function KlausurterminWidget({ klausurtermine }: { klausurtermine: KlausurTermin
       style={{ minHeight: 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill gradient="#FF453A" shadow="0 4px 14px rgba(255,69,58,0.5)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <AppIconPill tone={daysLeft !== null && daysLeft <= 7 ? 'warn' : 'neutral'}>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18M8 14h8M8 18h5" />
           </svg>
         </AppIconPill>
@@ -1452,8 +1465,8 @@ function AbiRechnerWidget({ abiHalbjahre, zielnote }: { abiHalbjahre?: AbiHalbja
       style={{ minHeight: 152 }}
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5">
-        <AppIconPill gradient="#BF5AF2" shadow="0 4px 14px rgba(191,90,242,0.5)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <AppIconPill>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
           </svg>
         </AppIconPill>
@@ -1498,8 +1511,8 @@ function LernplanWidget() {
       style={{ minHeight: 152 }}
     >
       <div className="flex items-start justify-between px-3.5 pt-3.5">
-        <AppIconPill gradient="#FFD060" shadow="0 4px 14px rgba(192,119,0,0.4)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <AppIconPill tone="mode">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
             <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" strokeWidth="2.5" />
           </svg>
@@ -1533,8 +1546,8 @@ export function StundenplanWeekWidget({ stundenplan, onOpen }: { stundenplan: St
       className="flex flex-col bg-surface border border-border/60 rounded-card shadow-card-adaptive overflow-hidden press-sm text-left w-full"
     >
       <div className="flex items-center gap-2.5 px-3.5 pt-3.5 pb-2.5">
-        <AppIconPill gradient="#AEAEB4" shadow="0 4px 14px rgba(99,99,102,0.4)">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <AppIconPill>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
           </svg>
         </AppIconPill>
