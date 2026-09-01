@@ -27,6 +27,7 @@ export default {
         'text-primary': 'rgb(var(--color-text-primary) / <alpha-value>)',
         'text-secondary': 'rgb(var(--color-text-secondary) / <alpha-value>)',
         'text-muted': 'rgb(var(--color-text-muted) / <alpha-value>)',
+        'on-accent': 'rgb(var(--color-on-accent) / <alpha-value>)',
         teal: 'rgb(var(--color-teal) / <alpha-value>)',
         blue: 'rgb(var(--color-blue) / <alpha-value>)',
         // Notenskala — 5 Stufen (Version C)

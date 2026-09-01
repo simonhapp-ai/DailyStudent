@@ -11,6 +11,7 @@
   --color-border:         199 199 204;   /* #C7C7CC — Apple Gray 3 */
   --color-accent:         124  58 237;   /* #7C3AED — violet-600 */
   --color-accent-soft:    rgba(124, 58, 237, 0.10);
+  --color-on-accent:      255 255 255;   /* Schrift auf der Modusfarbe */
   --color-success:        52  199  89;   /* #34C759 — Apple Green, Default (light) — exact match, unchanged */
   --color-warning:        255 141  40;   /* #FF8D28 — Apple Orange, Default (light) */
   --color-danger:         255  56  60;   /* #FF383C — Apple Red, Default (light) */
@@ -91,6 +92,7 @@
   --color-border:         58  58  60;    /* #3A3A3C — Apple Gray 4 (dark) */
   --color-accent:        167 139 250;   /* #A78BFA — violet-400 */
   --color-accent-soft:   rgba(167, 139, 250, 0.15);
+  --color-on-accent:      22  14  40;    /* Lila ist dunkel aufgehellt — Schrift darauf fast schwarz */
   --color-success:        48 209  88;   /* #30D158 — Apple Green, Default (dark) — exact match, unchanged */
   --color-warning:       255 146  48;   /* #FF9230 — Apple Orange, Default (dark) */
   --color-danger:        255  66  69;   /* #FF4245 — Apple Red, Default (dark) */
@@ -453,6 +455,22 @@ textarea::placeholder {
     animation: none;
     opacity: 0.35;
   }
+}
+
+/* ── Modusfarbe ──────────────────────────────────────────────
+   Konzept C kennt genau zwei Modi und je eine Farbe: Lila fuer den
+   Unterricht, Mint fuer die Klausur. Statt das in jedem Screen einzeln zu
+   setzen, schaltet die Klasse an der Modusgrenze den Wert um — jedes
+   bg-accent, border-accent und accent/xx folgt dann automatisch.
+
+   Mint traegt in beiden Erscheinungen denselben Ton, genau wie die
+   Fachzeichen: Ein Zeichen, das seine Farbe je nach Erscheinung wechselt,
+   verliert seinen Wiedererkennungswert. Die Schrift darauf ist deshalb in
+   beiden Faellen dunkel. */
+.mode-klausur {
+  --color-accent:       52 211 153;
+  --color-accent-soft:  rgba(52, 211, 153, 0.12);
+  --color-on-accent:     6  32  23;
 }
 
 /* Schrift auf Mint. Die Modusfarbe des Klausurenmodus ist hell — weisse

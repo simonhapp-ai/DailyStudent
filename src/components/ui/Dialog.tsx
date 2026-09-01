@@ -55,7 +55,7 @@ export function Dialog({
             className={`h-12 rounded-pill text-[16px] font-semibold press ${
               destructive
                 ? 'bg-fill-red text-fill-red-on'
-                : 'bg-accent text-white dark:text-[#160E28]'
+                : 'bg-accent text-on-accent'
             }`}
           >
             {confirmLabel}

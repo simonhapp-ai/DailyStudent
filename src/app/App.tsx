@@ -1,4 +1,5 @@
 import { Component, useEffect, useRef, useState } from 'react'
+import { modeForPath } from '../lib/appMode'
 import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
@@ -367,7 +368,10 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
       <div className="flex h-dvh bg-background overflow-hidden">
         <DesktopSidebar />
         <DesktopSidebarWide />
-        <main ref={desktopMainRef} className="flex-1 overflow-y-auto relative">
+        <main
+          ref={desktopMainRef}
+          className={`flex-1 overflow-y-auto relative ${modeForPath(location.pathname) === 'klausur' ? 'mode-klausur' : ''}`}
+        >
           <RouteFade routeKey={location.pathname}>
             <AppRoutes />
           </RouteFade>
@@ -383,9 +387,11 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   // ── Mobile layout (screen.width < 768px) ───────────────────────────────────
   return (
     <div className="max-w-lg mx-auto relative min-h-dvh">
-      <RouteFade routeKey={location.pathname}>
-        <AppRoutes />
-      </RouteFade>
+      <div className={modeForPath(location.pathname) === 'klausur' ? 'mode-klausur' : undefined}>
+        <RouteFade routeKey={location.pathname}>
+          <AppRoutes />
+        </RouteFade>
+      </div>
       {!hideNav && <BottomNav />}
       <SyncErrorBanner />
       <StreakBadge />

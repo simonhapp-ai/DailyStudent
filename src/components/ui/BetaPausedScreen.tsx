@@ -27,7 +27,7 @@ export function BetaPausedScreen({ title }: BetaPausedScreenProps) {
       </p>
       <button
         onClick={() => navigate('/klausurmodus/probeklausur/afb-trainer')}
-        className="px-5 py-3 rounded-card bg-accent text-white dark:text-[#160E28] text-[14px] font-semibold press mb-3"
+        className="px-5 py-3 rounded-card bg-accent text-on-accent text-[14px] font-semibold press mb-3"
       >
         AFB-Aufgabentrainer ausprobieren →
       </button>

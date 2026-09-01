@@ -285,7 +285,7 @@ export function ProfilScreen() {
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}
-              className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
+              className="w-full h-12 rounded-pill bg-accent text-on-accent text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
             >
               {checkoutLoading === 'yearly' ? 'Wird geladen…' : 'Pro freischalten · €59,99/Jahr'}
             </button>

@@ -206,7 +206,7 @@ function HeroLernplanCard({
         </div>
         <button
           onClick={onCreate}
-          className="mt-5 self-start px-5 py-2.5 rounded-icon bg-accent text-white dark:text-[#160E28] text-[13px] font-semibold press-sm"
+          className="mt-5 self-start px-5 py-2.5 rounded-icon bg-accent text-on-accent text-[13px] font-semibold press-sm"
         >
           Lernplan erstellen
         </button>

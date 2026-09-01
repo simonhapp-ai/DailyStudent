@@ -117,7 +117,7 @@ function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => v
             style={
               active
                 ? {
-                    background: m === 'unterricht' ? 'rgb(var(--color-accent))' : '#34D399',
+                    background: m === 'unterricht' ? '#7C3AED' : '#34D399',
                     color: m === 'unterricht' ? 'var(--mode-on-purple)' : '#062017',
                   }
                 : { color: 'rgb(var(--color-text-primary) / 0.6)' }
@@ -176,7 +176,7 @@ export function DesktopSidebar() {
               style={
                 active
                   ? {
-                      background: m === 'unterricht' ? 'rgb(var(--color-accent))' : '#34D399',
+                      background: m === 'unterricht' ? '#7C3AED' : '#34D399',
                       color: m === 'unterricht' ? 'var(--mode-on-purple)' : '#062017',
                     }
                   : { color: 'rgb(var(--color-text-primary) / 0.55)' }

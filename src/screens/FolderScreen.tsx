@@ -33,7 +33,7 @@ function FolderBreadcrumb({ parts, className = 'mb-4' }: { parts: string[]; clas
         <div key={i} className="flex items-center gap-1.5">
           <span className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold ${
             i === parts.length - 1
-              ? 'bg-accent text-white dark:text-[#160E28]'
+              ? 'bg-accent text-on-accent'
               : 'bg-surface-hover border border-border/60 text-text-muted'
           }`}>
             {part}
@@ -282,7 +282,7 @@ export function FolderScreen() {
         <button
           onClick={() => { setFabOpen(false); navigate(newNoteUrl) }}
           style={{ transitionDelay: fabOpen ? '40ms' : '0ms' }}
-          className={`flex items-center gap-2.5 bg-accent text-white dark:text-[#160E28] rounded-full pl-4 pr-5 py-3
+          className={`flex items-center gap-2.5 bg-accent text-on-accent rounded-full pl-4 pr-5 py-3
             shadow-float whitespace-nowrap press
             transition-all duration-300 ease-out
             ${fabOpen
@@ -299,7 +299,7 @@ export function FolderScreen() {
         {/* The + bubble — shrinks to nothing when open */}
         <button
           onClick={() => isNoSubject ? navigate(newNoteUrl) : setFabOpen((o) => !o)}
-          className={`w-14 h-14 rounded-full bg-accent text-white dark:text-[#160E28]
+          className={`w-14 h-14 rounded-full bg-accent text-on-accent
             flex items-center justify-center press
             transition-all duration-200 ease-in-out
             ${fabOpen ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100 scale-100'}`}

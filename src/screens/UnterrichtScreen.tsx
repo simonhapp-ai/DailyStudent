@@ -368,7 +368,7 @@ export function UnterrichtScreen() {
             action={
               <button
                 onClick={() => navigate('/profil/faecher')}
-                className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[16px] font-semibold press"
+                className="w-full h-12 rounded-pill bg-accent text-on-accent text-[16px] font-semibold press"
               >
                 Fächer auswählen
               </button>
@@ -603,7 +603,7 @@ export function UnterrichtScreen() {
           <h2 className="text-[20px] font-bold text-text-primary mb-2">Neuen Ordner erstellen</h2>
           {addFolderFor && (
             <div className="flex items-center gap-1.5 flex-wrap mb-4">
-              <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-accent text-white dark:text-[#160E28]">
+              <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-accent text-on-accent">
                 {subjects.find((s) => s.id === addFolderFor)?.name
                   ?? profile?.customFaecher?.find((cf) => cf.id === addFolderFor)?.name
                   ?? addFolderFor}
@@ -622,7 +622,7 @@ export function UnterrichtScreen() {
             onClick={confirmAddFolder}
             disabled={!newFolderName.trim()}
             className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
-              newFolderName.trim() ? 'bg-accent text-white dark:text-[#160E28] hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+              newFolderName.trim() ? 'bg-accent text-on-accent hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
             Ordner erstellen
@@ -685,7 +685,7 @@ export function UnterrichtScreen() {
                     importSuggestion.subjectName,
                     importSuggestion.folderId,
                   )}
-                  className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press hover:opacity-90 mb-2.5"
+                  className="w-full h-12 rounded-pill bg-accent text-on-accent text-[15px] font-semibold press hover:opacity-90 mb-2.5"
                 >
                   Vorschlag annehmen
                 </button>
@@ -788,7 +788,7 @@ export function UnterrichtScreen() {
                   <div key={hy.id}>
                     <div className="flex items-center gap-2 px-2 py-1.5">
                       <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{hy.name}</span>
-                      {hy.isCurrent && <span className="text-[11px] px-1.5 py-0.5 rounded-pill bg-accent text-white dark:text-[#160E28] font-semibold">Aktuell</span>}
+                      {hy.isCurrent && <span className="text-[11px] px-1.5 py-0.5 rounded-pill bg-accent text-on-accent font-semibold">Aktuell</span>}
                     </div>
                     {folders.map((folder) => (
                       <button
@@ -883,7 +883,7 @@ export function UnterrichtScreen() {
                 <p className="text-text-muted text-[13px] mt-1">{importFailed} {importFailed === 1 ? 'Datei' : 'Dateien'} fehlgeschlagen</p>
               )}
             </div>
-            <button onClick={finishImport} className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press hover:opacity-90">
+            <button onClick={finishImport} className="w-full h-12 rounded-pill bg-accent text-on-accent text-[15px] font-semibold press hover:opacity-90">
               {importSucceeded > 0 ? 'Zum Fach' : 'Schließen'}
             </button>
           </div>
@@ -941,7 +941,7 @@ export function UnterrichtScreen() {
             onClick={confirmRename}
             disabled={!renameValue.trim()}
             className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
-              renameValue.trim() ? 'bg-accent text-white dark:text-[#160E28] hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+              renameValue.trim() ? 'bg-accent text-on-accent hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
             Speichern

@@ -284,7 +284,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
           <button
             onClick={() => setPlan('annual')}
             className={`flex-1 py-2.5 rounded-btn text-sm font-medium transition-all duration-150 ${
-              plan === 'annual' ? 'bg-accent text-white dark:text-[#160E28]' : 'text-text-secondary'
+              plan === 'annual' ? 'bg-accent text-on-accent' : 'text-text-secondary'
             }`}
           >
             Jährlich · €5/Mo
@@ -293,7 +293,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
           <button
             onClick={() => setPlan('monthly')}
             className={`flex-1 py-2.5 rounded-btn text-sm font-medium transition-all duration-150 ${
-              plan === 'monthly' ? 'bg-accent text-white dark:text-[#160E28]' : 'text-text-secondary'
+              plan === 'monthly' ? 'bg-accent text-on-accent' : 'text-text-secondary'
             }`}
           >
             Monatlich · €7,99
@@ -317,7 +317,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
         <button
           onClick={handleCheckout}
           disabled={loading}
-          className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3"
+          className="w-full h-12 rounded-pill bg-accent text-on-accent text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3"
         >
           {loading
             ? 'Wird geladen…'

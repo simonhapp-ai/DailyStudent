@@ -1707,7 +1707,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
   return (
     <section>
       <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-3 bg-surface border border-border/60 rounded-card shadow-card-adaptive px-5 py-4 text-left hover:bg-surface-hover active:scale-[0.99] transition-all duration-200">
-        <div className="w-10 h-10 rounded-btn bg-accent text-white dark:text-[#160E28] flex items-center justify-center shrink-0"><Icon name="calendar" size={19} /></div>
+        <div className="w-10 h-10 rounded-btn bg-accent text-on-accent flex items-center justify-center shrink-0"><Icon name="calendar" size={19} /></div>
         <div className="flex-1">
           <p className="text-text-primary font-semibold text-[15px]">Stundenplan einrichten</p>
           <p className="text-text-muted text-[12px] mt-0.5">Dein Schultag auf einen Blick</p>
@@ -1741,7 +1741,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               </button>
               {scanPhase === 'idle' && (
                 <button onClick={() => fileRef.current?.click()} className="w-full border-2 border-dashed border-border rounded-card p-6 flex flex-col items-center gap-2 hover:border-accent/50 hover:bg-accent/5 transition-all">
-                  <div className="w-12 h-12 rounded-xl bg-accent text-white dark:text-[#160E28] flex items-center justify-center"><Icon name="camera" size={22} /></div>
+                  <div className="w-12 h-12 rounded-xl bg-accent text-on-accent flex items-center justify-center"><Icon name="camera" size={22} /></div>
                   <p className="text-text-primary font-semibold text-[14px]">Foto oder PDF auswählen</p>
                   <p className="text-text-muted text-xs">KI erkennt Fächer und Zeiten automatisch</p>
                 </button>
@@ -1759,7 +1759,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                     <p className="text-text-primary font-semibold text-[14px] mb-1">Erkennung fehlgeschlagen</p>
                     <p className="text-text-muted text-[12px] leading-relaxed">{scanError}</p>
                   </div>
-                  <button onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }} className="w-full py-2.5 rounded-btn bg-accent text-white dark:text-[#160E28] text-sm font-semibold active:scale-95 transition-all">Erneut versuchen</button>
+                  <button onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }} className="w-full py-2.5 rounded-btn bg-accent text-on-accent text-sm font-semibold active:scale-95 transition-all">Erneut versuchen</button>
                   <button onClick={() => { setMode('manual'); setScanPhase('idle'); setScanError('') }} className="w-full py-2.5 rounded-btn border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors">Manuell eintragen</button>
                 </div>
               )}

@@ -335,7 +335,7 @@ export function SmartNotesScreen() {
                 disabled={!canReanalyze}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all ${
                   canReanalyze
-                    ? 'bg-accent text-white dark:text-[#160E28] hover:opacity-90'
+                    ? 'bg-accent text-on-accent hover:opacity-90'
                     : 'bg-surface-hover text-text-muted cursor-not-allowed'
                 }`}
               >
@@ -490,7 +490,7 @@ export function SmartNotesScreen() {
               disabled={transferStatus === 'uploading' || transferStatus === 'done'}
               className={`shrink-0 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
                 transferStatus === 'done' ? 'bg-fill-green text-fill-green-on'
-                : 'bg-accent text-white dark:text-[#160E28] hover:opacity-90'
+                : 'bg-accent text-on-accent hover:opacity-90'
               }`}
             >
               {transferStatus === 'uploading' ? 'Läuft…' : transferStatus === 'done' ? 'Übertragen' : 'Übertragen'}
@@ -664,7 +664,7 @@ export function SmartNotesScreen() {
                       onClick={() => void handleKeywordClick(kw)}
                       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-xs font-medium border transition-all active:scale-95 ${
                         isSelected
-                          ? 'bg-accent text-white dark:text-[#160E28] border-transparent'
+                          ? 'bg-accent text-on-accent border-transparent'
                           : 'bg-surface-hover border-border text-text-secondary hover:border-accent/50 hover:text-text-primary'
                       }`}
                     >
