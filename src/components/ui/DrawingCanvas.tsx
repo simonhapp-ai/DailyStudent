@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
+import { pdfToImages } from '../../lib/pdf'
 import { getStroke } from 'perfect-freehand'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -499,6 +500,7 @@ export function DrawingCanvas({
   const imgCacheRef  = useRef(new Map<string, HTMLImageElement>())
   const bgInputRef   = useRef<HTMLInputElement>(null)
   const canvasImgInputRef = useRef<HTMLInputElement>(null)
+  const pdfInputRef = useRef<HTMLInputElement>(null)
   const colorInputRef = useRef<HTMLInputElement>(null)
   const editingColorIdxRef = useRef(0)
   const canvasSizeRef = useRef({ w: 0, h: 0 })
@@ -1583,6 +1585,58 @@ export function DrawingCanvas({
     setSelectedImageId(null); exportAndNotify(); notifyPagesChanged()
   }
 
+  // ── PDF als Papier ────────────────────────────────────────────────────
+  // Ein Arbeitsblatt wird nicht als BILD in die Seite gelegt, sondern als
+  // deren PAPIER — pro PDF-Seite eine Seite im Block. Damit liegen die Striche
+  // darueber wie auf jedem anderen Papier auch, der Export flacht ohnehin alle
+  // Ebenen zusammen, und es braucht keine einzige neue Zeile Zeichenlogik.
+  const [pdfLoading, setPdfLoading] = useState(false)
+
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setPdfLoading(true)
+    try {
+      const seiten = await pdfToImages(file)
+      if (seiten.length === 0) return
+
+      // Laufende Seite sichern, bevor der Bestand ersetzt wird.
+      pagesRef.current[curIdxRef.current].strokes = [...strokesRef.current]
+      pagesRef.current[curIdxRef.current].images  = currentImagesRef.current
+      pagesRef.current[curIdxRef.current].texts   = currentTextsRef.current
+
+      const neue: CanvasPageData[] = seiten.map((dataUrl, i) => ({
+        id: `pdf${Date.now()}-${i}`,
+        background: { type: 'image', dataUrl },
+        strokes: [], images: [], texts: [],
+      }))
+      seiten.forEach(preloadImage)
+
+      // Ist der Block noch leer und unbeschrieben, ERSETZT das PDF ihn —
+      // sonst haette man immer eine leere erste Seite davor.
+      const leer = pagesRef.current.length === 1
+        && pagesRef.current[0].strokes.length === 0
+        && (pagesRef.current[0].images ?? []).length === 0
+      pagesRef.current = leer ? neue : [...pagesRef.current, ...neue]
+
+      const idx = leer ? 0 : pagesRef.current.length - seiten.length
+      curIdxRef.current = idx
+      strokesRef.current = []
+      undoStackRef.current = []; redoStackRef.current = []
+      currentImagesRef.current = []; currentTextsRef.current = []
+      setCurrentImagesState([]); setCurrentTextsState([]); setActiveTextId(null)
+      setPageCount(pagesRef.current.length); setCurrentIdx(idx)
+      setCurrentBgType('image')
+      updateHistoryState()
+      redrawBgCanvas(pagesRef.current[idx].background)
+      redrawStrokeCanvas([])
+      exportAndNotify(); notifyPagesChanged()
+    } finally {
+      setPdfLoading(false)
+    }
+  }
+
   const handleCanvasImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return
     const reader = new FileReader()
@@ -2200,6 +2254,28 @@ export function DrawingCanvas({
           </button>
         )}
         <input ref={canvasImgInputRef} type="file" accept="image/*" className="hidden" onChange={handleCanvasImageUpload} />
+
+        {/* Arbeitsblatt als PDF — wird zum Papier, nicht zum Bild darauf. */}
+        <button
+          onClick={() => pdfInputRef.current?.click()}
+          disabled={pdfLoading}
+          className="flex items-center justify-center w-11 h-11 rounded-btn press-sm shrink-0 disabled:opacity-50"
+          style={{ color: 'rgb(var(--color-text-muted))' }}
+          title="PDF öffnen und beschreiben"
+        >
+          {pdfLoading ? (
+            <svg className="animate-spin" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1"
+              strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <path d="M14 2v6h6M9 15l2 2 4-4" />
+            </svg>
+          )}
+        </button>
+        <input ref={pdfInputRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => void handlePdfUpload(e)} />
 
         {/* Textfeld */}
         <button
