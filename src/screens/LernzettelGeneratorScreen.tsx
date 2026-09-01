@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { EmptyState } from '../components/ui/EmptyState'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { Icon } from '../components/ui/Icon'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
@@ -12,7 +14,7 @@ import { saveLocalAsset } from '../lib/noteStorage'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import type { Lernzettel, LernzettelImage, LernzettelModus } from '../types'
 
-const G_LERNZETTEL = '#34D399'
+const G_LERNZETTEL = 'rgb(var(--color-accent))'
 
 type Step = 'fach' | 'modus' | 'select' | 'generating'
 
@@ -233,37 +235,34 @@ export function LernzettelGeneratorScreen() {
         {step === 'fach' && (
           <div className="space-y-2.5">
             <p className="section-label px-0.5 mb-1">Fach wählen</p>
-            {availableSubjectIds.map((subjectId) => {
-              const info = resolveSubjectInfo(subjectId, profile?.customFaecher)
-              const noteCount = userNotes.filter(
-                (n) => n.subjectId === subjectId && generatedNotes[n.id]
-              ).length
-              return (
-                <button
-                  key={subjectId}
-                  onClick={() => handleSelectSubject(subjectId)}
-                  className="w-full bg-surface border border-border/60 rounded-card shadow-card-adaptive p-4 text-left press flex items-center gap-3"
-                >
-                  <SubjectIcon subjectId={subjectId} size="md" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-bold text-text-primary">{info?.name ?? subjectId}</p>
-                    <p className="text-[12px] text-text-muted mt-0.5">
-                      {noteCount === 0
-                        ? 'Keine Smart Notes vorhanden'
-                        : `${noteCount} Smart Note${noteCount !== 1 ? 's' : ''} verfügbar`}
-                    </p>
-                  </div>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted shrink-0" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 18l6-6-6-6" />
-                  </svg>
-                </button>
-              )
-            })}
-
-            {availableSubjectIds.length === 0 && (
-              <div className="bg-surface border border-border/60 rounded-card p-6 text-center">
-                <p className="text-[14px] text-text-muted">Keine Fächer in deinem Profil.</p>
-              </div>
+            {availableSubjectIds.length === 0 ? (
+              <EmptyState
+                title="Keine Fächer ausgewählt"
+                note="Wähle im Profil deine Fächer — danach kannst du daraus Lernzettel erstellen."
+              />
+            ) : (
+              <ListGroup>
+                {availableSubjectIds.map((subjectId) => {
+                  const info = resolveSubjectInfo(subjectId, profile?.customFaecher)
+                  const noteCount = userNotes.filter(
+                    (n) => n.subjectId === subjectId && generatedNotes[n.id]
+                  ).length
+                  return (
+                    <ListRow
+                      key={subjectId}
+                      leading={<SubjectIcon subjectId={subjectId} size="md" />}
+                      title={info?.name ?? subjectId}
+                      subtitle={
+                        noteCount === 0
+                          ? 'Keine Smart Notes vorhanden'
+                          : `${noteCount} Smart Note${noteCount !== 1 ? 's' : ''} verfügbar`
+                      }
+                      chevron
+                      onClick={() => handleSelectSubject(subjectId)}
+                    />
+                  )
+                })}
+              </ListGroup>
             )}
           </div>
         )}
@@ -279,13 +278,10 @@ export function LernzettelGeneratorScreen() {
             />
             <button
               onClick={handleConfirmModus}
-              className="w-full h-12 rounded-pill flex items-center justify-center gap-2 text-white font-semibold text-[15px] press"
-              style={{ background: G_LERNZETTEL }}
+              className="w-full h-12 rounded-pill flex items-center justify-center font-semibold text-[15px] press"
+              style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
             >
               Weiter
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
             </button>
           </div>
         )}
@@ -307,7 +303,7 @@ export function LernzettelGeneratorScreen() {
                         onClick={() => toggleTopic(ht.thema)}
                         className={`px-3 py-1.5 rounded-full text-[12px] font-medium border transition-all press-sm ${
                           active
-                            ? 'text-white'
+                            ? 'text-on-accent'
                             : 'bg-surface border-border text-text-secondary'
                         }`}
                         style={active ? { background: G_LERNZETTEL, borderColor: 'transparent' } : {}}
@@ -349,7 +345,7 @@ export function LernzettelGeneratorScreen() {
                         setCustomTopicInput('')
                       }}
                       disabled={!customTopicInput.trim()}
-                      className="px-4 py-2.5 rounded-icon text-white text-[15px] font-bold transition-opacity"
+                      className="px-4 py-2.5 rounded-icon text-on-accent text-[15px] font-bold transition-opacity"
                       style={{ background: G_LERNZETTEL, opacity: customTopicInput.trim() ? 1 : 0.4 }}
                     >
                       +
@@ -361,7 +357,7 @@ export function LernzettelGeneratorScreen() {
                         <button
                           key={t}
                           onClick={() => setSelectedTopics((prev) => prev.filter((x) => x !== t))}
-                          className="flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-medium text-white"
+                          className="flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-medium text-on-accent"
                           style={{ background: G_LERNZETTEL }}
                         >
                           {t}
@@ -424,7 +420,7 @@ export function LernzettelGeneratorScreen() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <p className="text-[14px] font-semibold text-text-primary truncate">{note.title}</p>
-                              <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full text-white shrink-0" style={{ background: G_LERNZETTEL }}>
+                              <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full text-on-accent shrink-0" style={{ background: G_LERNZETTEL }}>
                                 KI
                               </span>
                             </div>
@@ -483,7 +479,7 @@ export function LernzettelGeneratorScreen() {
                   void handleGenerate()
                 }
               }}
-              className="w-full h-12 rounded-pill flex items-center justify-center gap-2 text-white font-semibold text-[15px] press"
+              className="w-full h-12 rounded-pill flex items-center justify-center gap-2 text-on-accent font-semibold text-[15px] press"
               style={{ background: G_LERNZETTEL }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
