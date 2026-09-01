@@ -460,6 +460,24 @@ textarea::placeholder {
   }
 }
 
+/* ── Tippflaeche ─────────────────────────────────────────────
+   Apple nennt 44x44 pt als Mindestgroesse. Kleine Knoepfe — Loeschen,
+   Schliessen, Schrittweite — sollen aber klein AUSSEHEN. Diese Klasse
+   vergroessert nur die Flaeche, nicht das Bild: ein unsichtbares Feld,
+   das den Knopf auf 44 pt aufpolstert. */
+.tap-44 {
+  position: relative;
+}
+.tap-44::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
 /* ── Modusfarbe ──────────────────────────────────────────────
    Konzept C kennt genau zwei Modi und je eine Farbe: Lila fuer den
    Unterricht, Mint fuer die Klausur. Statt das in jedem Screen einzeln zu

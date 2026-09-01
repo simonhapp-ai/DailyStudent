@@ -502,7 +502,7 @@ export function KalenderScreen() {
             {/* Modal header */}
             <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-border/40">
               <h2 className="text-[17px] font-bold text-text-primary">Eintrag hinzufügen</h2>
-              <button onClick={closeFab} className="w-8 h-8 rounded-full bg-surface-hover flex items-center justify-center text-text-muted press-sm">
+              <button onClick={closeFab} className="w-8 h-8 rounded-full bg-surface-hover flex items-center justify-center text-text-muted press-sm tap-44">
                 <CloseIcon />
               </button>
             </div>
@@ -742,7 +742,7 @@ export function KalenderScreen() {
                   {new Date(selectedEntry.date + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}
                 </p>
               </div>
-              <button onClick={closeDetail} className="w-8 h-8 rounded-full bg-surface-hover flex items-center justify-center text-text-muted press-sm shrink-0">
+              <button onClick={closeDetail} className="w-8 h-8 rounded-full bg-surface-hover flex items-center justify-center text-text-muted press-sm shrink-0 tap-44">
                 <CloseIcon />
               </button>
             </div>
@@ -867,7 +867,7 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
 
   return (
     <div className="flex items-center px-2 py-2 border-b border-border/30 shrink-0 gap-1">
-      <button onClick={onPrevWeek} className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-hover border border-border/30 shadow-sm text-text-secondary hover:bg-surface press-sm shrink-0">
+      <button onClick={onPrevWeek} className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-hover border border-border/30 shadow-sm text-text-secondary hover:bg-surface press-sm shrink-0 tap-44">
         <ChevronLeft />
       </button>
       <div className="flex flex-1 justify-between">
@@ -896,7 +896,7 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
           )
         })}
       </div>
-      <button onClick={onNextWeek} className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-hover border border-border/30 shadow-sm text-text-secondary hover:bg-surface press-sm shrink-0">
+      <button onClick={onNextWeek} className="w-8 h-8 flex items-center justify-center rounded-full bg-surface-hover border border-border/30 shadow-sm text-text-secondary hover:bg-surface press-sm shrink-0 tap-44">
         <ChevronRight />
       </button>
     </div>

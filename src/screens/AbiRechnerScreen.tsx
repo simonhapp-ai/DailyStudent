@@ -194,7 +194,7 @@ function EndnoteControl({
       {isOverride && (
         <button
           onClick={onReset}
-          className="w-4 h-4 flex items-center justify-center rounded-full text-text-muted/50 hover:text-text-muted transition-colors press-sm shrink-0"
+          className="w-4 h-4 flex items-center justify-center rounded-full text-text-muted/50 hover:text-text-muted transition-colors press-sm shrink-0 tap-44"
           title="Zurück zu berechnet"
         >
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -204,7 +204,7 @@ function EndnoteControl({
       )}
       <button
         onClick={onDecrement}
-        className="w-5 h-5 rounded-full bg-surface-hover flex items-center justify-center text-text-secondary press-sm shrink-0"
+        className="w-5 h-5 rounded-full bg-surface-hover flex items-center justify-center text-text-secondary press-sm shrink-0 tap-44"
       >
         <span className="text-[12px] font-bold leading-none">−</span>
       </button>
@@ -216,7 +216,7 @@ function EndnoteControl({
       </span>
       <button
         onClick={onIncrement}
-        className="w-5 h-5 rounded-full bg-surface-hover flex items-center justify-center text-text-secondary press-sm shrink-0"
+        className="w-5 h-5 rounded-full bg-surface-hover flex items-center justify-center text-text-secondary press-sm shrink-0 tap-44"
       >
         <span className="text-[12px] font-bold leading-none">+</span>
       </button>

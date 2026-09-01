@@ -2313,7 +2313,7 @@ export function DrawingCanvas({
                 />
               ))}
               <div className="w-px h-3 bg-black/15 mx-0.5" />
-              <button onClick={addPage} className="w-6 h-6 rounded-full flex items-center justify-center text-black/40 hover:text-black/70 transition-all press-sm">
+              <button onClick={addPage} className="w-6 h-6 rounded-full flex items-center justify-center text-black/40 hover:text-black/70 transition-all press-sm tap-44">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <path d="M12 5v14M5 12h14" strokeLinecap="round" />
                 </svg>

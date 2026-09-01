@@ -1806,7 +1806,7 @@ export function NoteCreateScreen() {
         <div className="fixed inset-0 z-[70] bg-black/95 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
           <img src={lightbox} alt="Vollansicht" className="max-w-full max-h-full object-contain rounded-card" />
           <button
-            className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+            className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center tap-44"
             onClick={() => setLightbox(null)}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
