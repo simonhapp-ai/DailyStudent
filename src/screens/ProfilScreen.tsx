@@ -280,15 +280,15 @@ export function ProfilScreen() {
             nirgends in der App vorkommt. Die Modusfarbe steht im Knopf, nicht als
             Tönung über der ganzen Karte. */}
         {!isPro && appConfig.proPurchasesEnabled && (
-          <div className="card-premium rounded-card p-5 shadow-card-adaptive">
+          <div className="card-pro rounded-card p-5 shadow-card-adaptive">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="text-text-primary font-bold text-[17px]">Pro freischalten</p>
-                <p className="text-text-secondary text-[13px] mt-0.5">Alle KI-Features. Kein Limit.</p>
+                <p className="pro-title font-bold text-[17px]">Pro freischalten</p>
+                <p className="pro-sub text-[13px] mt-0.5">Alle KI-Features. Kein Limit.</p>
               </div>
               <div className="text-right">
-                <p className="text-text-primary font-bold text-[20px]">€7,99<span className="text-text-muted text-[13px] font-normal">/Mo</span></p>
-                <p className="text-text-muted text-[11px]">jährlich</p>
+                <p className="pro-title font-bold text-[20px]">€7,99<span className="pro-sub text-[13px] font-normal">/Mo</span></p>
+                <p className="pro-sub text-[11px]">jährlich</p>
               </div>
             </div>
             <ul className="space-y-2.5 mb-5">
@@ -298,8 +298,8 @@ export function ProfilScreen() {
                 'KI-Rotstift-Korrektur',
                 'Persönlicher Lernplan',
               ].map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-[14px] text-text-secondary">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
+                <li key={f} className="flex items-center gap-2.5 text-[14px] pro-feature">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="pro-check shrink-0">
                     <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   {f}
@@ -318,14 +318,14 @@ export function ProfilScreen() {
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}
-              className="w-full h-12 rounded-pill btn-premium text-[15px] font-bold hover:opacity-90 press transition-all disabled:opacity-60"
+              className="w-full h-12 rounded-pill btn-mode text-[15px] font-bold hover:opacity-90 press transition-all disabled:opacity-60"
             >
               {checkoutLoading === 'yearly' ? 'Wird geladen…' : 'Pro freischalten · €59,99/Jahr'}
             </button>
             <button
               onClick={() => handleUpgrade('monthly')}
               disabled={checkoutLoading !== null}
-              className="w-full py-2 text-[13px] text-text-muted hover:text-text-secondary transition-colors disabled:opacity-60"
+              className="w-full py-2 text-[13px] pro-sub hover:opacity-80 transition-opacity disabled:opacity-60"
             >
               {checkoutLoading === 'monthly' ? 'Wird geladen…' : 'Oder monatlich: €7,99/Monat'}
             </button>

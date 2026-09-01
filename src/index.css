@@ -466,47 +466,25 @@ textarea::placeholder {
   }
 }
 
-/* ── Premium ────────────────────────────────────────────────
-   Pro kaufen und Freunde einladen sind die zwei Stellen, die HERAUSSTECHEN
-   sollen — sie verkaufen etwas beziehungsweise verschenken etwas. Sie tragen
-   deshalb Gold, nicht die Modusfarbe: Gold kommt sonst nirgends in der App vor
-   und ist damit reserviert.
+/* ── Pro-Karte ──────────────────────────────────────────────
+   Die Preiskarte der Landing Page: eine immer dunkle, tiefviolette Flaeche mit
+   weisser Schrift. Sie ist die einzige Karte der App, die in beiden
+   Erscheinungen dunkel bleibt — genau wie die Buehne, und aus demselben Grund:
+   Sie soll herausstechen, nicht sich einfuegen.
 
-   Die Flaeche ist eine Karte mit goldenem Rand und feinem Schimmer, nicht
-   flaechig gold — flaechiges Gold auf einer ganzen Karte wirkt billig, nicht
-   wertig. Der KNOPF darin ist flaechig gold mit dunkler Schrift, weil Gold
-   hell ist und Weiss darauf nicht traegt. */
-.card-premium {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(212, 175, 55, 0.42);
-  background:
-    linear-gradient(150deg, rgba(212, 175, 55, 0.10) 0%, rgba(212, 175, 55, 0.02) 46%, transparent 72%),
-    rgb(var(--color-surface));
+   Weil sie immer dunkel ist, tragen ihre Kinder feste helle Werte statt der
+   theme-abhaengigen Token — sonst waere die Schrift im hellen Modus schwarz
+   auf dunkelviolett. Das ist dieselbe Ausnahme, die schon fuer die Buehne gilt. */
+.card-pro {
+  background: linear-gradient(158deg, #241640 0%, #1B1130 55%, #2B1B5E 100%);
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  color: #FFFFFF;
 }
 
-.card-premium::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(105deg, transparent 38%, rgba(255, 236, 170, 0.16) 50%, transparent 62%);
-  background-size: 220% 100%;
-  animation: gold-shimmer 9s infinite ease-in-out;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card-premium::after { animation: none; }
-}
-
-/* Knopf auf einer Premium-Karte — flaechig Gold, dunkle Schrift. */
-.btn-premium {
-  position: relative;
-  overflow: hidden;
-  color: #3B1F00;
-  background: linear-gradient(135deg, #C8860A 0%, #F5C842 38%, #FFD700 52%, #D4AF37 68%, #C07700 100%);
-  box-shadow: 0 1px 8px rgba(200, 134, 10, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-}
+.card-pro .pro-title   { color: #FFFFFF; }
+.card-pro .pro-sub     { color: rgba(255, 255, 255, 0.62); }
+.card-pro .pro-feature { color: rgba(255, 255, 255, 0.86); }
+.card-pro .pro-check   { color: #A78BFA; }
 
 /* Modus-Knopf — Verlauf der Landing Page, immer weiße Schrift. */
 .btn-mode {
