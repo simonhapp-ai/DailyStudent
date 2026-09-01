@@ -196,7 +196,7 @@ export function LearnModeScreen() {
             <div key={subjectId} className="space-y-2.5">
               <div className="flex items-center gap-2 px-1">
                 <SubjectIcon subjectId={subjectId} size="sm" className="!w-6 !h-6" />
-                <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary">
+                <p className="section-label">
                   {group.name}
                 </p>
                 <div className="flex-1 h-px bg-border/60" />

@@ -133,7 +133,7 @@ function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => v
 
 function SectionLabel({ children }: { children: string }) {
   return (
-    <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-3.5 pt-4 pb-1.5">
+    <p className="section-label px-3.5 pt-4 pb-1.5">
       {children}
     </p>
   )

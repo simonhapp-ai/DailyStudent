@@ -163,7 +163,7 @@ export function FolderScreen() {
         {/* Subfolders */}
         {subFolders.length > 0 && (
           <div className="space-y-2">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-1">Unterordner</p>
+            <p className="section-label px-1 pt-1">Unterordner</p>
             <ListGroup>
               {subFolders.map((sub) => {
                 const subNoteCount = userNotes.filter((n) => n.folderId === sub.id).length
@@ -187,7 +187,7 @@ export function FolderScreen() {
         )}
 
         {subFolders.length > 0 && folderNotes.length > 0 && (
-          <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-1">Notizen</p>
+          <p className="section-label px-1 pt-1">Notizen</p>
         )}
 
         {/* Notes */}

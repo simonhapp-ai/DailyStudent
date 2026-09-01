@@ -235,7 +235,7 @@ export function ProbeklausurMenuScreen() {
 
           {/* ── Klausurarten ──────────────────────────────────────── */}
           <div className="space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1">
+            <p className="section-label px-1">
               Klausurart wählen
             </p>
             {MODES.map((mode) => {
@@ -294,7 +294,7 @@ export function ProbeklausurMenuScreen() {
 
           {/* ── Bestand ───────────────────────────────────────────── */}
           <div className="space-y-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1">
+            <p className="section-label px-1">
               Deine Klausuren
             </p>
 

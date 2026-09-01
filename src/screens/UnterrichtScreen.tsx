@@ -464,7 +464,7 @@ export function UnterrichtScreen() {
               Eine zusammenhängende Liste statt eines Stapels einzelner Karten:
               ruhiger, und pro Zeile bleibt mehr Platz für den Inhalt. Das
               Aufklappen mit dem Ordner-Raster bleibt unverändert erhalten. */}
-          <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-2">
+          <p className="section-label px-1 pt-2">
             Deine Fächer
           </p>
           <ListGroup>
@@ -524,7 +524,7 @@ export function UnterrichtScreen() {
             </div>
 
             <div className="order-1 xl:order-2 space-y-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 hidden xl:block">
+          <p className="section-label px-1 hidden xl:block">
             Heute offen
           </p>
           {/* ── Schnellnotizen ───────────────────────────────────── */}
@@ -578,7 +578,7 @@ export function UnterrichtScreen() {
               im Querformat füllt er die rechte Spalte, die sonst leer bliebe. */}
           {heuteSlots.length > 0 && (
             <div className="bg-surface rounded-card p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary">
+              <p className="section-label">
                 Stundenplan heute
               </p>
               <p className="text-[16px] font-semibold text-text-primary mt-1.5 leading-snug">

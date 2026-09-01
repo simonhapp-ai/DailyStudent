@@ -244,9 +244,12 @@ body {
 .section-label {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: rgb(var(--color-text-muted));
+  /* Sekundaer statt gedaempft: Abschnittsbeschriftungen sind Struktur, kein
+     Kleingedrucktes. Damit trifft die Klasse denselben Ton wie die von Hand
+     gesetzten Beschriftungen der umgebauten Screens. */
+  color: rgb(var(--color-text-secondary));
 }
 
 /* ── Input ──────────────────────────────────────────────────── */

@@ -412,7 +412,7 @@ export function LernzettelScreen() {
         {/* Lernzettel list */}
         {sorted.length > 0 && (
           <div className="space-y-2.5">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-2">
+            <p className="section-label px-1 pt-2">
               Gespeicherte Lernzettel
             </p>
             {sorted.map((lz) => (

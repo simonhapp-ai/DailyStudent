@@ -165,7 +165,7 @@ export function KlausurphasenScreen() {
             Vier gleichwertige Kacheln mit ihrem echten Bestand. Flache
             Flächen statt Verlaufs-Icons mit farbigem Glow; das Chevron oben
             rechts zeigt, dass die Kachel antippbar ist. */}
-        <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-1">Lernen</p>
+        <p className="section-label px-1 pt-1">Lernen</p>
         <div className="grid grid-cols-2 gap-3">
           {([
             {
@@ -218,7 +218,7 @@ export function KlausurphasenScreen() {
             Aus acht Statistik-Pillen in verschiedenen Formen werden drei
             Kennzahlfelder. Die Diagramme liegen jetzt vollständig unter
             Planen › Statistiken statt hier als Vorschau. */}
-        <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-1">Stand</p>
+        <p className="section-label px-1 pt-1">Stand</p>
         <MetricRow>
           <Metric value={durchschnittNP !== null ? durchschnittNP.toFixed(1) : '—'} label="Ø Notenpunkte" />
           <Metric value={activeStreak} label="Tage Streak" />
