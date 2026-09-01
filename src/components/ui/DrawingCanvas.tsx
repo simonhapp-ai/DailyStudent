@@ -1067,22 +1067,23 @@ export function DrawingCanvas({
       // Tapped empty space — deselect
       selectedGeomIdRef.current = null; setSelectedGeomId(null)
       // Zeichnen auf leerer Fläche. Bisher durfte das AUSSCHLIESSLICH ein Stift,
-      // wodurch das Werkzeug auf dem Telefon und am Schreibtisch wirkungslos war:
-      // Finger und Maus kamen nie bis zum Zeichnen. Jetzt gilt dieselbe Regel wie
-      // bei allen anderen Werkzeugen — der Finger zeichnet, solange auf diesem
-      // Gerät noch kein Stift benutzt wurde; danach bleibt er fürs Auswählen und
-      // Schieben reserviert.
-      if (e.pointerType !== 'pen') {
-        if (penOnlyModeRef.current) return
-        if (hasSeenPenRef.current) return
-      }
-      // sonst weiter zum Zeichnen
+      // wodurch das Werkzeug auf dem Telefon und am Schreibtisch wirkungslos war.
+      // Jetzt entscheidet allein der Schalter, siehe unten.
+      if (e.pointerType !== 'pen' && penOnlyModeRef.current) return
     }
 
-    // Standard pen-only / touch blocking (for non-geometry tools)
+    // Wer zeichnen darf, entscheidet AUSSCHLIESSLICH der Nur-Stift-Schalter:
+    //
+    //   an  — nur der Stift zeichnet, ein Finger schiebt das Blatt.
+    //   aus — ein Finger zeichnet, zwei Finger schieben und zoomen.
+    //
+    // Vorher sperrte sich der Finger zusaetzlich selbst aus, sobald auf dem
+    // Geraet einmal ein Stift benutzt worden war — auch bei ausgeschaltetem
+    // Schalter. Das legte den Zustand hinter dem Ruecken des Nutzers fest;
+    // wer den Stift weglegte, konnte ohne Neustart nicht mehr mit dem Finger
+    // schreiben. Nichts soll sich hier von selbst festlegen.
     if (tool !== 'geometry') {
       if (penOnlyModeRef.current && e.pointerType !== 'pen') return
-      if (!penOnlyModeRef.current && hasSeenPenRef.current && e.pointerType === 'touch') return
     }
 
     // ── Lasso tool: selection drag or new lasso ───────────────────────────────
@@ -1819,11 +1820,26 @@ export function DrawingCanvas({
         </div>
       )}
 
-      {/* ── Main toolbar (icon-only) ── */}
-      <div
-        className="flex items-center gap-0.5 px-3 border-b border-border/30 bg-surface shrink-0"
-        style={{ paddingTop: 'max(env(safe-area-inset-top), 10px)', paddingBottom: 10 }}
-      >
+      {/* ── Werkzeugleiste ────────────────────────────────────────────
+          Zwei feste Zeilen nach dem Vorbild von Goodnotes: Oben alles, was das
+          DOKUMENT betrifft, unten die WERKZEUGE. Sie liegen fest ueber dem
+          Blatt und nehmen ihm nichts weg — die Auswahlfelder klappen nur auf,
+          wenn man ein Werkzeug bewusst antippt.
+
+          Zwei Zeilen kosten wenig Platz, weil das Blatt zoombar ist; eine
+          einzelne Zeile mit allem darin war dagegen gedraengt und zwang zu
+          Symbolen ohne Beschriftung. */}
+      <div className="shrink-0 border-b border-border/30">
+
+        {/* Obere Zeile — Dokument. Traegt die Modusfarbe. */}
+        <div
+          className="flex items-center gap-0.5 px-3 text-white"
+          style={{
+            background: 'var(--grad-mode)',
+            paddingTop: 'max(env(safe-area-inset-top), 8px)',
+            paddingBottom: 8,
+          }}
+        >
 
         {/* Back */}
         {isFullscreen && onBack && (
@@ -1868,8 +1884,43 @@ export function DrawingCanvas({
           </svg>
         </button>
 
-        {/* Divider */}
-        <div className="w-px h-6 bg-border/50 mx-1.5 shrink-0" />
+          {/* Titel — sagt, wo man ist. Ohne Navigationsleiste im Vollbild
+              waere sonst nicht erkennbar, dass man sich noch in einer Smart
+              Note befindet. */}
+          {isFullscreen && (
+            <span className="flex-1 min-w-0 px-2 text-[13px] font-semibold truncate opacity-90">
+              Schreibblock · Smart Note
+            </span>
+          )}
+
+          <div className="flex-1" />
+
+          {/* KI-Analyse und Export gehoeren zum Dokument, nicht zum Werkzeug. */}
+          {isFullscreen && onAnalyzeRequest && (
+            <button onClick={handleAnalyzeRequest}
+              className="flex items-center justify-center h-11 px-3 rounded-btn press-sm shrink-0 text-[13px] font-bold"
+              title="KI-Analyse"
+            >
+              KI
+            </button>
+          )}
+          {isFullscreen && (
+            <button onClick={handleExportPDF} disabled={isExporting}
+              className="flex items-center justify-center w-11 h-11 rounded-btn press-sm shrink-0"
+              style={{ opacity: isExporting ? 0.5 : 1 }}
+              title="Als PDF exportieren"
+            >
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* Untere Zeile — Werkzeuge. Neutral, damit die Farbpunkte daneben
+            lesbar bleiben; auf Lila waere jede Farbe verfaelscht. */}
+        <div className="flex items-center gap-0.5 px-3 py-1.5 bg-surface overflow-x-auto">
 
         {/* ── Tool icons ── */}
 
@@ -1987,37 +2038,7 @@ export function DrawingCanvas({
           </div>
         )}
 
-        <div className="flex-1" />
-
-        {/* KI-Analyse */}
-        {isFullscreen && onAnalyzeRequest && (
-          <button onClick={handleAnalyzeRequest}
-            className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
-            title="KI-Analyse"
-          >
-            <span style={{ fontSize: 13, fontWeight: 800, color: '#059669', letterSpacing: '-0.3px' }}>KI</span>
-          </button>
-        )}
-
-        {/* PDF export */}
-        {isFullscreen && (
-          <button onClick={handleExportPDF} disabled={isExporting}
-            className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
-            style={{ color: '#7C3AED', opacity: isExporting ? 0.5 : 1 }}
-            title="Als PDF exportieren"
-          >
-            {isExporting ? (
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" className="animate-spin">
-                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" strokeLinecap="round" />
-              </svg>
-            ) : (
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            )}
-          </button>
-        )}
+        </div>
       </div>
 
       {/* ── Canvas area ── */}
