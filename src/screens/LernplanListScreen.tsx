@@ -1,11 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { Header } from '../components/ui/Header'
+import { Stage } from '../components/ui/Stage'
+import { Tag, type TagTone } from '../components/ui/Tag'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { EmptyState } from '../components/ui/EmptyState'
+import { Icon } from '../components/ui/Icon'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { Lernplan, LernplanType } from '../types'
-
-const G_LERNPLAN = 'rgb(var(--fill-yellow))'
 
 const PLAN_TYPE_LABELS: Record<LernplanType, string> = {
   einzel: 'Einzel',
@@ -13,114 +16,29 @@ const PLAN_TYPE_LABELS: Record<LernplanType, string> = {
   abitur: 'Abitur',
 }
 
-const PLAN_TYPE_COLORS: Record<LernplanType, string> = {
-  einzel: '#34C759',
-  vollstaendig: 'rgb(var(--subj-spr))',
-  abitur: '#FF9F0A',
+// Die drei Plantypen sind Inhaltskategorien und tragen deshalb Töne aus dem
+// bestehenden Vorrat — keine eigenen Hexwerte.
+const PLAN_TYPE_TONE: Record<LernplanType, TagTone> = {
+  einzel: 'green',
+  vollstaendig: 'blue',
+  abitur: 'orange',
 }
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' })
 }
 
-function formatDateShort(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' })
+/** Anteil erledigter Tage — dieselbe Quelle, aus der die Übersicht ihre Hero-Karte speist. */
+function fortschritt(plan: Lernplan): { erledigt: number; gesamt: number; anteil: number } {
+  const gesamt = plan.days?.length ?? 0
+  const erledigt = plan.completedDays?.length ?? 0
+  return { erledigt, gesamt, anteil: gesamt > 0 ? Math.min(1, erledigt / gesamt) : 0 }
 }
 
-function ChevronRight() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted shrink-0">
-      <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function CalendarIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  )
-}
-
-function LernplanCard({ plan, onPress }: { plan: Lernplan; onPress: () => void }) {
-  const subjects = [...new Set(plan.examSchedule.map((e) => e.subjectId))]
-
-  return (
-    <button
-      onClick={onPress}
-      className="w-full bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive text-left press overflow-hidden flex active:scale-[0.98] transition-all"
-    >
-      <div className="w-1 shrink-0 rounded-l-[20px]" style={{ background: '#C07700' }} />
-      <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
-        <div
-          className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0"
-          style={{ background: G_LERNPLAN }}
-        >
-          <CalendarIcon />
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-[15px] font-bold text-text-primary truncate">{plan.title}</p>
-            {plan.isActive && (
-              <span className="text-[11px] font-black px-2 py-0.5 rounded-full bg-accent/15 text-text-primary whitespace-nowrap shrink-0">
-                Aktuell
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
-            <span
-              className="text-[11px] font-semibold px-2 py-0.5 rounded-full text-white shrink-0"
-              style={{ background: PLAN_TYPE_COLORS[plan.planType] }}
-            >
-              {PLAN_TYPE_LABELS[plan.planType]}
-            </span>
-            {subjects.slice(0, 4).map((sId) => (
-              <SubjectIcon key={sId} subjectId={sId} size="sm" className="!w-6 !h-6" />
-            ))}
-            <span className="text-[11px] text-text-muted">{formatDate(plan.createdAt)}</span>
-          </div>
-          {plan.examSchedule.length > 0 && (
-            <p className="text-[11px] text-text-muted mt-0.5 truncate">
-              {plan.examSchedule.map((e) => {
-                const info = SUBJECT_INFO[e.subjectId]
-                const name = info?.name ?? e.subjectId
-                return `${name}${e.topic ? ` – ${e.topic}` : ''} ${formatDateShort(e.date)}`
-              }).join(' · ')}
-            </p>
-          )}
-        </div>
-        <ChevronRight />
-      </div>
-    </button>
-  )
-}
-
-function EmptyState({ onCreate }: { onCreate: () => void }) {
-  return (
-    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-      <div
-        className="w-16 h-16 rounded-[20px] flex items-center justify-center mb-4"
-        style={{ background: G_LERNPLAN }}
-      >
-        <CalendarIcon />
-      </div>
-      <p className="text-[17px] font-bold text-text-primary mb-2">Noch kein Lernplan</p>
-      <p className="text-[13px] text-text-muted leading-relaxed mb-6 max-w-[260px]">
-        Erstelle deinen ersten KI-Lernplan und behalte deine Klausurvorbereitung im Blick.
-      </p>
-      <button
-        onClick={onCreate}
-        className="px-6 py-3 rounded-[16px] text-white font-semibold text-[14px] active:scale-[0.98] transition-all"
-        style={{ background: G_LERNPLAN }}
-      >
-        Lernplan erstellen
-      </button>
-    </div>
-  )
+/** Der nächste noch offene Tag eines Plans — das, was als Nächstes ansteht. */
+function naechsterTag(plan: Lernplan) {
+  const erledigt = new Set(plan.completedDays ?? [])
+  return plan.days?.find((d) => !erledigt.has(d.date))
 }
 
 export function LernplanListScreen() {
@@ -129,45 +47,114 @@ export function LernplanListScreen() {
 
   const sorted = [...lernplaene].sort((a, b) => b.createdAt.localeCompare(a.createdAt))
 
+  // Bühne nach Regel 1: Es gibt genau dann eine zeitkritische Handlung, wenn ein
+  // Plan läuft und noch Tage offen sind. Sonst ist dieser Screen ein Bestand und
+  // der Titel genügt.
+  const aktiv = sorted.find((p) => p.isActive) ?? sorted[0]
+  const aktivTag = aktiv ? naechsterTag(aktiv) : undefined
+  const aktivFortschritt = aktiv ? fortschritt(aktiv) : null
+
   const handleCreate = () => navigate('/klausurmodus/lernplan/neu')
 
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-28">
       <Header
-        title="Meine Lernpläne"
-        subtitle="KI-generierte Lernpläne"
+        title="Lernpläne"
+        subtitle={sorted.length > 0 ? `${sorted.length} ${sorted.length === 1 ? 'Plan' : 'Pläne'}` : 'KI-generiert'}
         onBack={() => navigate(-1)}
       />
 
       <div className="px-4 space-y-3 mt-2">
+
+        {aktiv && aktivTag && aktivFortschritt && (
+          <Stage
+            tone="klausur"
+            eyebrow={`${PLAN_TYPE_LABELS[aktiv.planType]} · ${aktivFortschritt.erledigt} von ${aktivFortschritt.gesamt} Tagen`}
+            title={aktiv.title}
+            progress={aktivFortschritt.anteil}
+            note={
+              aktivTag.sessions?.length
+                ? `Als Nächstes: ${aktivTag.sessions
+                    .map((s) => SUBJECT_INFO[s.subjectId]?.name ?? s.subjectId)
+                    .join(' · ')}`
+                : 'Als Nächstes: freier Tag'
+            }
+            action={
+              <button
+                onClick={() => navigate(`/klausurmodus/lernplan/${aktiv.id}`)}
+                className="w-full h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
+                style={{ background: '#34D399', color: '#062017' }}
+              >
+                <Icon name="play" size={16} />
+                Weiterlernen
+              </button>
+            }
+          />
+        )}
+
         <button
           onClick={handleCreate}
-          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[20px] text-white font-semibold text-[15px] shadow-lg active:scale-[0.98] transition-all"
-          style={{ background: G_LERNPLAN }}
+          className="w-full flex items-center justify-center gap-2 h-12 rounded-pill font-semibold text-[15px] press"
+          style={{ background: '#34D399', color: '#062017' }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-            <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-          </svg>
+          <Icon name="plus" size={17} />
           Neuen Lernplan erstellen
         </button>
 
-        {sorted.length === 0 && (
-          <EmptyState onCreate={handleCreate} />
-        )}
-
-        {sorted.length > 0 && (
-          <div className="space-y-2.5">
-            <p className="text-[11px] font-semibold text-text-muted uppercase tracking-wider px-1 mt-2">
+        {sorted.length === 0 ? (
+          <EmptyState
+            title="Noch kein Lernplan"
+            note="Sag der KI, wann deine Klausuren sind und wie viel Zeit du hast — sie verteilt den Stoff auf die Tage dazwischen."
+          />
+        ) : (
+          <>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-2">
               Gespeicherte Lernpläne
             </p>
-            {sorted.map((plan) => (
-              <LernplanCard
-                key={plan.id}
-                plan={plan}
-                onPress={() => navigate(`/klausurmodus/lernplan/${plan.id}`)}
-              />
-            ))}
-          </div>
+            <ListGroup>
+              {sorted.map((plan) => {
+                const f = fortschritt(plan)
+                const faecher = [...new Set(plan.examSchedule.map((e) => e.subjectId))].slice(0, 3)
+                return (
+                  <ListRow
+                    key={plan.id}
+                    leading={
+                      <span className="flex -space-x-2 shrink-0">
+                        {faecher.length > 0 ? (
+                          faecher.map((sId) => (
+                            <SubjectIcon
+                              key={sId}
+                              subjectId={sId}
+                              size="sm"
+                              className="!w-9 !h-9 ring-2 ring-surface"
+                            />
+                          ))
+                        ) : (
+                          <span className="w-9 h-9 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-primary">
+                            <Icon name="calendar" size={17} />
+                          </span>
+                        )}
+                      </span>
+                    }
+                    title={
+                      <span className="flex items-center gap-2">
+                        <span className="truncate">{plan.title}</span>
+                        {plan.isActive && <Tag tone="green" size="sm">Aktuell</Tag>}
+                      </span>
+                    }
+                    subtitle={
+                      f.gesamt > 0
+                        ? `${PLAN_TYPE_LABELS[plan.planType]} · ${f.erledigt}/${f.gesamt} Tage · ${formatDate(plan.createdAt)}`
+                        : `${PLAN_TYPE_LABELS[plan.planType]} · ${formatDate(plan.createdAt)}`
+                    }
+                    value={<Tag tone={PLAN_TYPE_TONE[plan.planType]} size="sm">{PLAN_TYPE_LABELS[plan.planType]}</Tag>}
+                    chevron
+                    onClick={() => navigate(`/klausurmodus/lernplan/${plan.id}`)}
+                  />
+                )
+              })}
+            </ListGroup>
+          </>
         )}
       </div>
     </div>
