@@ -43,7 +43,12 @@ export function LernplanKonfiguratorScreen() {
   const TOTAL_STEPS = 7
 
   // Step 1: Plan type
-  const [planType, setPlanType] = useState<LernplanType>('vollstaendig')
+  // Vorausgewaehlt war "Vollstaendig" — ein Typ, der waehrend der Beta gar
+  // nicht verfuegbar ist. Wer einfach auf Weiter tippte, lief damit direkt in
+  // die Sperre. Der Einzel-Lernplan ist der einzige frei nutzbare und deshalb
+  // die richtige Vorauswahl. (Regel 4: Vorauswahl ist ein Vorschlag — sie muss
+  // funktionieren, sonst ist sie keiner.)
+  const [planType, setPlanType] = useState<LernplanType>('einzel')
   const [showProModal, setShowProModal] = useState(false)
 
   // Step 2: Klausurtermine + Themen-Checklisten

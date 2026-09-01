@@ -537,8 +537,14 @@ textarea::placeholder {
    verliert seinen Wiedererkennungswert. Die Schrift darauf ist deshalb in
    beiden Faellen dunkel. */
 .mode-klausur {
-  --color-accent:       52 211 153;
-  --color-accent-soft:  rgba(52, 211, 153, 0.12);
+  /* Gemessen: Weiss auf #34D399 liegt bei 1,92:1 — auf einer ganzen Karte
+     unlesbar. Da alle farbigen Flaechen weisse Schrift tragen sollen, muss die
+     Modusfarbe selbst dunkel genug dafuer sein: #059669 gibt 3,77:1 und
+     erfuellt damit die Schwelle fuer grosse Schrift und Bedienelemente.
+     Das helle #34D399 lebt weiter im Verlauf und in der Navigationsleiste,
+     wo es als Flaeche ohne Schrift darauf wirkt. */
+  --color-accent:        5 150 105;
+  --color-accent-soft:  rgba(5, 150, 105, 0.12);
   --color-on-accent:   255 255 255;
   --grad-mode: linear-gradient(135deg, #047857, #10B981);
 }
