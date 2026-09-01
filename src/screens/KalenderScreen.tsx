@@ -268,8 +268,8 @@ export function KalenderScreen() {
                 const hasEntry = personalEntries.some((e) => e.date === dayStr)
                 return (
                   <div key={i} className={`flex-1 flex flex-col items-center py-2 rounded-btn relative ${isToday ? 'bg-accent' : ''}`}>
-                    <span className={`text-[11px] font-semibold ${isToday ? 'text-white/80' : 'text-text-muted'}`}>{DAY_LABELS[i]}</span>
-                    <span className={`text-[14px] font-bold mt-0.5 leading-none ${isToday ? 'text-white' : 'text-text-secondary'}`}>{d.getDate()}</span>
+                    <span className={`text-[11px] font-semibold ${isToday ? 'text-on-accent/80' : 'text-text-muted'}`}>{DAY_LABELS[i]}</span>
+                    <span className={`text-[14px] font-bold mt-0.5 leading-none ${isToday ? 'text-on-accent' : 'text-text-secondary'}`}>{d.getDate()}</span>
                     {hasKlausur && <span className="absolute bottom-1 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isToday ? 'rgba(255,255,255,0.9)' : '#FF3B30' }} />}
                     {!hasKlausur && hasEntry && <span className="absolute bottom-1 w-1 h-1 rounded-full" style={{ backgroundColor: isToday ? 'rgba(255,255,255,0.7)' : 'rgb(var(--color-accent))' }} />}
                   </div>
@@ -677,7 +677,7 @@ export function KalenderScreen() {
                   <button
                     onClick={handleAdd}
                     disabled={!canAdd}
-                    className="w-full py-3 rounded-icon text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
+                    className="w-full py-3 rounded-icon text-on-accent text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
                     style={{
                       background: addForm.type === 'klausur'
                         ? '#FF3B30'
@@ -1774,7 +1774,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                   <ChevronLeft />Zurück
                 </button>
                 {totalSlots > 0 && !addingSlot && (
-                  <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-white text-[12px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 3px 10px rgba(var(--color-accent),0.35)' }}>
+                  <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-on-accent text-[12px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 3px 10px rgba(var(--color-accent),0.35)' }}>
                     Speichern · {totalSlots} Std
                   </button>
                 )}
@@ -1875,7 +1875,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               )}
 
               {totalSlots > 0 && !addingSlot && (
-                <button onClick={handleSave} className="w-full py-3 rounded-icon text-white text-[14px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 4px 16px rgba(var(--color-accent),0.4)' }}>
+                <button onClick={handleSave} className="w-full py-3 rounded-icon text-on-accent text-[14px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 4px 16px rgba(var(--color-accent),0.4)' }}>
                   Stundenplan speichern · {totalSlots} Stunde{totalSlots === 1 ? '' : 'n'}
                 </button>
               )}

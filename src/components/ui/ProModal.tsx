@@ -185,7 +185,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
             <button
               onClick={handleWaitlist}
               disabled={waitlistLoading}
-              className="relative w-full h-12 rounded-pill text-white text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3 overflow-hidden"
+              className="relative w-full h-12 rounded-pill on-mint text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3 overflow-hidden"
               style={{ background: '#34D399', animation: 'ea-glow 2.4s ease-in-out infinite' }}
             >
               <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
