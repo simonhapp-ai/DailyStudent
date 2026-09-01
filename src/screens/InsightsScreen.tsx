@@ -248,7 +248,6 @@ interface TipCtx {
 interface TipDef {
   id: string
   icon: IconName
-  accentColor: string
   title: (ctx: TipCtx) => string
   text: (ctx: TipCtx) => string
   condition: ((ctx: TipCtx) => boolean) | null
@@ -259,7 +258,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'exam-urgent',
     icon: 'bell' as IconName,
-    accentColor: '#EF4444',
     title: (ctx) => `Klausur in ${ctx.nextExamInDays} Tagen`,
     text: () => 'Nutze jetzt Active Recall: Schreib ohne Notizen alles auf, was du weißt. Das ist 2× effektiver als erneutes Lesen.',
     condition: (ctx) => ctx.nextExamInDays !== null && ctx.nextExamInDays > 0 && ctx.nextExamInDays <= 7,
@@ -268,7 +266,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'exam-soon',
     icon: 'clock',
-    accentColor: '#F97316',
     title: (ctx) => `Klausur in ${ctx.nextExamInDays} Tagen`,
     text: () => 'Starte täglich mit 25 Minuten Probeklausur. So trainierst du das Abrufen unter Zeitdruck — genau wie im echten Abi.',
     condition: (ctx) => ctx.nextExamInDays !== null && ctx.nextExamInDays > 7 && ctx.nextExamInDays <= 21,
@@ -277,7 +274,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'weakness',
     icon: 'chart' as IconName,
-    accentColor: 'rgb(var(--color-accent))',
     title: (ctx) => `${ctx.weakestName} verbessern`,
     text: () => '5 Karteikarten pro Tag fürs Schwachfach. Kleine, konsistente Einheiten schlagen Marathon-Lernen am Wochenende.',
     condition: (ctx) => ctx.weakestNP !== null && ctx.weakestNP < 13 && ctx.weakestName !== null,
@@ -286,7 +282,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'streak-high',
     icon: 'flame' as IconName,
-    accentColor: '#FF9500',
     title: (ctx) => `${ctx.streak} Tage Streak — stark!`,
     text: () => 'Konstanz ist der stärkste Lernbooster. Selbst 10 Minuten täglich reichen, um den Streak zu halten.',
     condition: (ctx) => ctx.streak >= 7,
@@ -295,7 +290,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'on-track',
     icon: 'star',
-    accentColor: '#34C759',
     title: () => 'Du bist auf Kurs!',
     text: () => 'Deine Note liegt im Zielbereich. Halte dieses Niveau durch regelmäßige Wiederholungen — Konstanz schlägt Intensität.',
     condition: (ctx) => ctx.isOnTrack === true,
@@ -304,7 +298,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'spaced-rep',
     icon: 'bulb' as IconName,
-    accentColor: '#8B5CF6',
     title: () => 'Spaced Repetition',
     text: () => 'Dein Gehirn vergisst 80% innerhalb von 24h. Wiederhole Karteikarten täglich in kurzen Sessions — das verankert Wissen im Langzeitgedächtnis.',
     condition: null,
@@ -313,7 +306,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'active-recall',
     icon: 'pencil' as IconName,
-    accentColor: '#14B8A6',
     title: () => 'Active Recall',
     text: () => 'Schreib auf, was du weißt — ohne Notizen. Fehler jetzt zu machen ist der effektivste Weg zum Lernen.',
     condition: null,
@@ -322,7 +314,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'feynman',
     icon: 'bulb' as IconName,
-    accentColor: '#EAB308',
     title: () => 'Feynman-Methode',
     text: () => 'Erkläre ein Thema, als wärst du der Lehrer und dein Schüler ist 10 Jahre alt. Wo du stockst — da sind deine Lücken.',
     condition: null,
@@ -331,7 +322,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'pomodoro',
     icon: 'clock' as IconName,
-    accentColor: '#EF4444',
     title: () => 'Pomodoro-Technik',
     text: () => '25 Minuten fokussiert lernen, 5 Minuten Pause. Dein Gehirn braucht diese Erholung, um Gelerntes zu festigen.',
     condition: null,
@@ -340,7 +330,6 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'sleep',
     icon: 'moon' as IconName,
-    accentColor: 'rgb(var(--color-accent))',
     title: () => 'Schlaf konsolidiert Wissen',
     text: () => 'Während du schläfst, schreibt dein Gehirn das Gelernte ins Langzeitgedächtnis. 8 Stunden vor der Klausur sind Gold wert.',
     condition: null,
@@ -766,7 +755,7 @@ export function InsightsScreen() {
               <div
                 key={tip.id}
                 className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4"
-                style={{ borderLeft: `3px solid ${tip.accentColor}` }}
+                style={{ borderLeft: '3px solid rgb(var(--color-accent))' }}
               >
                 <div className="flex items-start gap-3">
                   <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">

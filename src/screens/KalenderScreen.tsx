@@ -358,7 +358,7 @@ export function KalenderScreen() {
                       backgroundSize: '200% 200%',
                       color: 'white',
                       boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
-                      border: '1px solid rgba(159,95,250,0.5)',
+                      border: '1px solid rgb(var(--color-accent) / 0.6)',
                     }}
                   >
                     + Eintrag
@@ -421,7 +421,7 @@ export function KalenderScreen() {
                     background: 'var(--grad-mode)',
                     backgroundSize: '200% 200%',
                     boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
-                    border: '1px solid rgba(159,95,250,0.5)',
+                    border: '1px solid rgb(var(--color-accent) / 0.6)',
                   }}
                 >
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -884,7 +884,7 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
                   background: 'var(--grad-mode)',
                   color: 'white',
                   boxShadow: '0 0 14px 4px rgba(124,58,237,0.65), 0 2px 6px rgba(124,58,237,0.45)',
-                  border: '1px solid rgba(159,95,250,0.6)',
+                  border: '1px solid rgb(var(--color-accent) / 0.6)',
                 } : isSelected ? {
                   border: '2px solid rgb(var(--color-accent))',
                   color: 'rgb(var(--color-accent))',
