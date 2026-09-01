@@ -27,8 +27,8 @@ const TYPE_CONFIG: Record<EntryType, { label: string; icon: IconName; color: str
 }
 
 const PX_PER_HOUR = 56
-const START_H = 0
-const END_H = 24
+const START_H = 6
+const END_H = 23
 const TOTAL_H = END_H - START_H
 
 type RecurFreq = 'daily' | 'weekly' | 'monthly'
@@ -376,7 +376,7 @@ export function KalenderScreen() {
               </div>
 
               {/* Date strip (2T only) */}
-              {calView === 'twoday' && (
+              {calView === 'twoday' && !isDesktop && (
                 <DateStrip
                   viewDate={viewDate}
                   todayStr={todayStr}
@@ -446,7 +446,7 @@ export function KalenderScreen() {
         </div>{/* end right column */}
 
         {/* ── LEFT COLUMN (desktop) / BELOW calendar (mobile) ── */}
-        <div className="space-y-3 mt-4 lg:mt-0 lg:w-[40%] lg:min-w-[360px] lg:shrink-0 lg:order-1 lg:overflow-y-auto lg:pb-4">
+        <div className="space-y-3 mt-4 lg:mt-0 lg:w-[300px] xl:w-[340px] lg:shrink-0 lg:order-1 lg:overflow-y-auto lg:pb-4">
 
         {/* ── Row 1: Hausaufgaben + Klausuren ──────────────────── */}
         <div className="grid grid-cols-2 gap-3">
@@ -925,10 +925,9 @@ interface TwoDayProps {
 }
 
 function TwoDayView({ dayCount = 2, viewDate, todayStr, stundenplan, personalEntries, klausurtermine, calOpen, showStundenplan, onSlotPress, onEntryPress }: TwoDayProps) {
-  // Auf dem Schreibtisch ist Platz fuer vier Tage — dieselbe Ansicht, mehr
-  // Spalten. Auf dem Telefon bleiben es zwei.
-  // Sieben Spalten heissen: ganze Woche ab Montag. Weniger heisst: ab dem
-  // gewaehlten Tag vorwaerts.
+  // Sieben Spalten heissen: ganze Woche ab Montag — so sieht der Schreibtisch
+  // aus. Auf dem Telefon sind es zwei Tage ab dem gewaehlten, mit Wochenleiste
+  // darueber.
   const start = dayCount >= 7 ? mondayOf(viewDate) : viewDate
   const days = Array.from({ length: dayCount }, (_, i) => addDays(start, i))
   const gridHeight = TOTAL_H * PX_PER_HOUR
@@ -936,7 +935,9 @@ function TwoDayView({ dayCount = 2, viewDate, todayStr, stundenplan, personalEnt
   const scrollRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!calOpen || !scrollRef.current) return
+    // Auf dem Schreibtisch gibt es kein Auf- und Zuklappen; dort muss der
+    // Sprung zur aktuellen Stunde trotzdem passieren.
+    if ((!calOpen && dayCount < 7) || !scrollRef.current) return
     requestAnimationFrame(() => {
       if (!scrollRef.current) return
       const now = new Date()
@@ -945,7 +946,7 @@ function TwoDayView({ dayCount = 2, viewDate, todayStr, stundenplan, personalEnt
       const viewH = scrollRef.current.clientHeight || 320
       scrollRef.current.scrollTop = Math.max(0, nowPx - viewH / 2)
     })
-  }, [calOpen])
+  }, [calOpen, dayCount])
 
   const handleColumnClick = (e: React.MouseEvent<HTMLDivElement>, dateStr: string) => {
     const rect = e.currentTarget.getBoundingClientRect()
