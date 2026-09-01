@@ -263,7 +263,7 @@ export function SmartNotesScreen() {
 
           {/* Photos */}
           <div>
-            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Fotos / Arbeitsblätter</p>
+            <p className="section-label mb-2">Fotos / Arbeitsblätter</p>
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
               {resolvedEditAttachments.map((src, i) => (
                 <div key={i} className="relative shrink-0">
@@ -314,7 +314,7 @@ export function SmartNotesScreen() {
 
           {/* Mitschrift */}
           <div>
-            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Meine Mitschrift</p>
+            <p className="section-label mb-2">Meine Mitschrift</p>
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}

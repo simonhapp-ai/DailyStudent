@@ -246,7 +246,7 @@ function GradeColumn({
     <div className="flex-1 min-w-0 flex flex-col py-3 px-2.5 gap-2.5">
       {/* Column header */}
       <div className="flex items-center justify-between px-0.5">
-        <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{title}</p>
+        <p className="section-label">{title}</p>
         {multiAvg !== null && (
           <span
             className="text-[11px] font-bold tabular-nums"
@@ -491,7 +491,7 @@ function SubjectCard({
       {/* ── Bottom bar: S/M weight (shown when both sides set and not excluded) ── */}
       {bothEntered && !entry.notBelegt && (
         <div className="px-4 py-3 border-t border-border/30 bg-background/40 space-y-2.5">
-          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">S / M Gewichtung</p>
+          <p className="section-label">S / M Gewichtung</p>
 
           <div className="flex flex-wrap gap-1">
             {SM_RATIOS.map(({ label, ratio: r }) => {
@@ -617,7 +617,7 @@ function PruefungCard({
       {expanded && (
         <div className="px-4 pb-4 pt-1 border-t border-border/30 space-y-3">
           <div>
-            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
+            <p className="section-label mb-1.5">Fach</p>
             <div className="flex flex-wrap gap-1.5">
               {availableSubjectIds.map((sid) => {
                 const info = resolveSubjectInfo(sid, customFaecher)
@@ -642,7 +642,7 @@ function PruefungCard({
 
           {pruefung.subjectId && (
             <div>
-              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Notenpunkte (×4)</p>
+              <p className="section-label mb-1.5">Notenpunkte (×4)</p>
               <GradePicker value={pruefung.punkte} onChange={(v) => onChange({ ...pruefung, punkte: v })} />
             </div>
           )}
@@ -822,7 +822,7 @@ export function AbiRechnerScreen() {
             <>
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1">
+                  <p className="section-label mb-1">
                     {summaryLabel}
                   </p>
                   <div className="flex items-end gap-2">
@@ -923,7 +923,7 @@ export function AbiRechnerScreen() {
         {/* Abitur-Gesamt (Block I + II) — nur sobald mind. 1 Prüfung eingetragen ist */}
         {isOberstufe && gesamt900 !== null && (
           <div className="bg-surface border border-border/60 rounded-card p-5">
-            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">
+            <p className="section-label mb-3">
               Abitur-Gesamt (Block I + II)
             </p>
             <div className="flex items-end gap-2 mb-4">
@@ -1028,7 +1028,7 @@ export function AbiRechnerScreen() {
           <div className="space-y-3">
             {activeEntries.length > 0 && (
               <>
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
+                <p className="section-label">
                   {activeHj?.label ?? ''} — Noten
                 </p>
                 <div className="grid gap-3 xl:grid-cols-2 xl:items-start">
@@ -1047,7 +1047,7 @@ export function AbiRechnerScreen() {
 
             {seminarfachEntry && (
               <>
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider pt-1">
+                <p className="section-label pt-1">
                   Seminarfach
                 </p>
                 <SubjectCard
@@ -1066,7 +1066,7 @@ export function AbiRechnerScreen() {
         {isOberstufe && (
           <div className="space-y-3">
             <div>
-              <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Abiturprüfungen (Block II)</p>
+              <p className="section-label">Abiturprüfungen (Block II)</p>
               <p className="text-[11px] text-text-muted mt-0.5">5 Prüfungen, je 0–15 Notenpunkte ×4 — max. 300 Punkte gesamt.</p>
             </div>
             <div className="grid gap-3 xl:grid-cols-2 xl:items-start">
@@ -1086,7 +1086,7 @@ export function AbiRechnerScreen() {
 
         {/* Grade scale reference */}
         <div className="bg-surface border border-border/40 rounded-icon px-4 py-3.5">
-          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">Punkte → Note</p>
+          <p className="section-label mb-3">Punkte → Note</p>
           <div className="grid grid-cols-5 gap-1.5">
             {(
               [

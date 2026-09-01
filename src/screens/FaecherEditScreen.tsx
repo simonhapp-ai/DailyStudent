@@ -132,8 +132,8 @@ export function FaecherEditScreen() {
       </div>
 
       {/* Content */}
-      <div className="flex-1 px-4 pt-6 pb-10 overflow-y-auto">
-        <h1 className="text-[28px] font-bold text-text-primary mb-1">Deine Fächer</h1>
+      <div className="flex-1 px-4 pt-6 pb-10 overflow-y-auto lg:px-6 lg:max-w-[760px] lg:w-full">
+        <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary mb-1">Deine Fächer</h1>
         <p className="text-text-muted text-sm mb-6">
           Fächer hinzufügen oder entfernen.{' '}
           <span className="text-text-primary font-medium">{totalSelected} ausgewählt</span>
@@ -268,7 +268,7 @@ export function FaecherEditScreen() {
         <div className="space-y-5">
           {SUBJECT_GROUPS.map((group) => (
             <div key={group.label}>
-              <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+              <p className="section-label mb-2">
                 {group.label}
               </p>
               <div className="grid grid-cols-2 gap-2">

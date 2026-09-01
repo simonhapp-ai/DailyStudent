@@ -627,7 +627,7 @@ export function KalenderScreen() {
                 {isRecurring && (
                   <div className="space-y-2.5 bg-background rounded-btn p-3 border border-border/40">
                     <div>
-                      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Häufigkeit</p>
+                      <p className="section-label mb-1.5">Häufigkeit</p>
                       <div className="flex gap-1.5 p-0.5 bg-surface rounded-btn">
                         {(['daily', 'weekly', 'monthly'] as RecurFreq[]).map((f) => {
                           const label = f === 'daily' ? 'Täglich' : f === 'weekly' ? 'Wöchentlich' : 'Monatlich'
@@ -650,7 +650,7 @@ export function KalenderScreen() {
                       </div>
                     </div>
                     <div>
-                      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Bis</p>
+                      <p className="section-label mb-1.5">Bis</p>
                       <input
                         type="date"
                         value={recurEnd}
@@ -1592,7 +1592,7 @@ function KlausurFormFields({
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Fach</p>
+        <p className="section-label mb-2">Fach</p>
         <div className="grid grid-cols-3 gap-1.5">
           {faecher.map((id) => {
             const subj = SUBJECT_INFO[id]
@@ -1614,7 +1614,7 @@ function KlausurFormFields({
       </div>
 
       <div>
-        <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Datum</p>
+        <p className="section-label mb-1.5">Datum</p>
         <input
           type="date"
           value={date}
@@ -1625,7 +1625,7 @@ function KlausurFormFields({
       </div>
 
       <div>
-        <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Thema (optional)</p>
+        <p className="section-label mb-1.5">Thema (optional)</p>
         {subjectTopics.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-2">
             {subjectTopics.slice(0, 6).map((t) => (
@@ -1851,15 +1851,15 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                 <div className="bg-background border border-accent/30 rounded-icon p-3.5 space-y-2.5">
                   <div className="flex gap-2">
                     <div className="flex-1">
-                      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1">Von</p>
+                      <p className="section-label mb-1">Von</p>
                       <input type="time" value={newSlot.startTime} onChange={(e) => handleStartTime(e.target.value)} className="w-full bg-surface border border-border rounded-btn px-2.5 py-2 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1">Bis</p>
+                      <p className="section-label mb-1">Bis</p>
                       <input type="time" value={newSlot.endTime} onChange={(e) => setNewSlot((n) => ({ ...n, endTime: e.target.value }))} className="w-full bg-surface border border-border rounded-btn px-2.5 py-2 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors" />
                     </div>
                   </div>
-                  <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Fach</p>
+                  <p className="section-label">Fach</p>
                   <div className="grid grid-cols-3 gap-1.5">
                     {profileSubjects.map((s) => (
                       <button key={s.id} onClick={() => setNewSlot((n) => ({ ...n, subjectId: s.id, isFreistunde: false }))} className={`flex items-center gap-1.5 p-2 rounded-btn border text-left transition-all duration-150 ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'}`}>

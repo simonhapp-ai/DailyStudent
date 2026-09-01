@@ -19,7 +19,7 @@ export function ProfilSupportScreen() {
         <h1 className="text-[28px] font-bold text-text-primary">Hilfe & Feedback</h1>
       </div>
 
-      <div className="px-4 mt-5 space-y-3">
+      <div className="px-4 lg:px-6 mt-5 space-y-3 lg:max-w-[760px]">
         <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
           <button
             onClick={() => navigate('/landing')}

@@ -79,7 +79,7 @@ export function BundeslandScreen() {
         </p>
       </div>
 
-      <div className="px-4 mt-5 space-y-5">
+      <div className="px-4 lg:px-6 mt-5 space-y-5 lg:max-w-[760px]">
 
         {/* ── Bundesland ──────────────────────────────────────── */}
         <div>

@@ -1013,7 +1013,7 @@ function StepFaecher({
         <div className="space-y-5">
           {SUBJECT_GROUPS.map((group) => (
             <div key={group.label}>
-              <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+              <p className="section-label mb-2">
                 {group.label}
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -1557,7 +1557,7 @@ function StepStundenplan({
             {/* Time row */}
             <div className="flex gap-2">
               <div className="flex-1">
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Von</p>
+                <p className="section-label mb-1.5">Von</p>
                 <input
                   type="time"
                   value={newSlot.startTime}
@@ -1566,7 +1566,7 @@ function StepStundenplan({
                 />
               </div>
               <div className="flex-1">
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Bis</p>
+                <p className="section-label mb-1.5">Bis</p>
                 <input
                   type="time"
                   value={newSlot.endTime}
@@ -1577,7 +1577,7 @@ function StepStundenplan({
             </div>
 
             {/* Subject picker */}
-            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Fach</p>
+            <p className="section-label">Fach</p>
             <div className="grid grid-cols-3 gap-1.5">
               {profileSubjects.map((s) => (
                 <button

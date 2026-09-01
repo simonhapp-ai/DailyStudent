@@ -752,7 +752,7 @@ function StepZeitBlocker({
       <p className="text-text-muted text-sm mb-6">Ab wann soll der Plan starten und welche Zeiten sind blockiert?</p>
 
       {/* Start date */}
-      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Startdatum</p>
+      <p className="section-label mb-2">Startdatum</p>
       <input
         type="date"
         value={startDate}
@@ -764,7 +764,7 @@ function StepZeitBlocker({
       {/* Existing blocks */}
       {blockedTimes.length > 0 && (
         <div className="space-y-2 mb-4">
-          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Blockierte Zeiten</p>
+          <p className="section-label mb-2">Blockierte Zeiten</p>
           {blockedTimes.map((b) => (
             <div key={b.id} className="flex items-center gap-3 bg-surface border border-border/60 rounded-card p-3">
               <div className="flex-1 min-w-0">
@@ -790,7 +790,7 @@ function StepZeitBlocker({
       {/* Preset suggestions */}
       {!addingBlock && (
         <div>
-          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Schnell hinzufügen</p>
+          <p className="section-label mb-2">Schnell hinzufügen</p>
           <div className="flex flex-wrap gap-2 mb-3">
             {presets
               .filter((p) => !blockedTimes.some((b) => b.label === p.label))
@@ -941,7 +941,7 @@ function StepLernkapazitaet({
       </div>
 
       {/* Study time preference */}
-      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Lernzeit bevorzugt</p>
+      <p className="section-label mb-2">Lernzeit bevorzugt</p>
       <div className="grid grid-cols-3 gap-2 mb-4">
         {[
           { id: 'morgen' as const, label: 'Morgens', sub: '7–13 Uhr' },
@@ -978,7 +978,7 @@ function StepLernkapazitaet({
       </div>
 
       {/* Target grade */}
-      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Zielnote (Notenpunkte)</p>
+      <p className="section-label mb-2">Zielnote (Notenpunkte)</p>
       <div className="bg-surface border border-border/60 rounded-card p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
           <p className="text-text-primary font-bold text-[16px]">
@@ -1005,7 +1005,7 @@ function StepLernkapazitaet({
       {/* LK subjects */}
       {isOberstufe && selectedSubjectIds.length > 0 && (
         <>
-          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Leistungskurse (LK)</p>
+          <p className="section-label mb-2">Leistungskurse (LK)</p>
           <p className="text-[12px] text-text-muted mb-3">LK-Fächer erhalten im Plan ~40% mehr Lernzeit.</p>
           <div className="flex flex-wrap gap-2">
             {selectedSubjectIds.map((id) => {

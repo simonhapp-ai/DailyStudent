@@ -88,7 +88,7 @@ export function ProfilAccountScreen() {
         <h1 className="text-[28px] font-bold text-text-primary">Account</h1>
       </div>
 
-      <div className="px-4 mt-5">
+      <div className="px-4 lg:px-6 mt-5 lg:max-w-[760px]">
         <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
           <div className="px-4 py-3.5 flex items-center justify-between border-b border-border/50">
             <span className="text-text-muted text-[13px]">E-Mail</span>

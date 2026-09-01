@@ -79,7 +79,7 @@ export function BenachrichtigungenScreen() {
         <h1 className="text-[28px] font-bold text-text-primary">Benachrichtigungen</h1>
       </div>
 
-      <div className="px-4 mt-5 space-y-4">
+      <div className="px-4 lg:px-6 mt-5 space-y-4 lg:max-w-[760px]">
 
         {/* ── Coming soon banner ──────────────────────────────── */}
         <div

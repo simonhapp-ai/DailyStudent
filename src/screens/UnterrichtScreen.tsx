@@ -787,7 +787,7 @@ export function UnterrichtScreen() {
                 {grouped.map(({ hy, folders }: { hy: HalfYear; folders: typeof subjectFolders }) => (
                   <div key={hy.id}>
                     <div className="flex items-center gap-2 px-2 py-1.5">
-                      <span className="text-[11px] font-bold text-text-muted uppercase tracking-wider">{hy.name}</span>
+                      <span className="section-label">{hy.name}</span>
                       {hy.isCurrent && <span className="text-[11px] px-1.5 py-0.5 rounded-pill btn-mode font-semibold">Aktuell</span>}
                     </div>
                     {folders.map((folder) => (
