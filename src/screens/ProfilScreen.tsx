@@ -337,7 +337,7 @@ export function ProfilScreen() {
             widget now lives at the bottom of the page, this normal-state version
             just doesn't render while paused. */}
         {!isPro && !trialActive && appConfig.proPurchasesEnabled && (
-          <div className="card-premium rounded-card shadow-card-adaptive overflow-hidden">
+          <div className="card-invite rounded-card shadow-card-adaptive overflow-hidden">
             <div className="p-5">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
@@ -348,10 +348,10 @@ export function ProfilScreen() {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
+                      <p className="inv-title font-bold text-[15px]">14 Tage Pro gratis</p>
                       <Tag tone="gold" size="sm">Nur kurze Zeit</Tag>
                     </div>
-                    <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
+                    <p className="inv-sub text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
                   </div>
                 </div>
               </div>
@@ -359,8 +359,8 @@ export function ProfilScreen() {
               {/* Progress bar */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-text-muted text-[12px]">Fortschritt</span>
-                  <span className="text-text-primary font-bold text-[13px] tabular-nums">{referralCount}/5</span>
+                  <span className="inv-sub text-[12px]">Fortschritt</span>
+                  <span className="inv-title font-bold text-[13px] tabular-nums">{referralCount}/5</span>
                 </div>
                 <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(128,128,128,0.15)' }}>
                   <div
@@ -400,8 +400,8 @@ export function ProfilScreen() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
-                    <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
+                    <p className="inv-sub text-[11px] mb-1.5">Dein Einladungslink</p>
+                    <p className="inv-mono font-mono text-[12px] truncate mb-2">{referralLink}</p>
                     {copyToast ? (
                       <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]">
                         Kopiert
@@ -621,8 +621,8 @@ export function ProfilScreen() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
-                        <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
+                        <p className="inv-sub text-[11px] mb-1.5">Dein Einladungslink</p>
+                        <p className="inv-mono font-mono text-[12px] truncate mb-2">{referralLink}</p>
                         {copyToast ? (
                           <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
                             style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>

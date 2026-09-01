@@ -486,6 +486,22 @@ textarea::placeholder {
 .card-pro .pro-feature { color: rgba(255, 255, 255, 0.86); }
 .card-pro .pro-check   { color: #A78BFA; }
 
+/* ── Empfehlungs-Karte ──────────────────────────────────────
+   Zweite immer dunkle Karte, nach demselben Prinzip wie .card-pro — aber in
+   warmem Ton statt Violett. So sind die beiden herausgehobenen Karten
+   unterscheidbar, ohne dass eine davon flaechig Gold traegt: Pro verkauft
+   etwas, Einladen verschenkt etwas. Gold bleibt auf die Akzente beschraenkt
+   (Zeichen, Fortschritt, Marke). */
+.card-invite {
+  background: linear-gradient(158deg, #2B2010 0%, #1E1709 55%, #3A2B12 100%);
+  border: 1px solid rgba(212, 175, 55, 0.30);
+  color: #FFFFFF;
+}
+
+.card-invite .inv-title { color: #FFFFFF; }
+.card-invite .inv-sub   { color: rgba(255, 255, 255, 0.62); }
+.card-invite .inv-mono  { color: rgba(255, 255, 255, 0.90); }
+
 /* Modus-Knopf — Verlauf der Landing Page, immer weiße Schrift. */
 .btn-mode {
   background: var(--grad-mode);
