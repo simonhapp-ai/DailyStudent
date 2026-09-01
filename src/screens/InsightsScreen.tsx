@@ -589,7 +589,7 @@ export function InsightsScreen() {
               </p>
             </div>
             <button onClick={() => navigate('/abi-rechner')} className="text-text-primary text-[13px] font-medium press-sm">
-              {abiGesamtnote ? 'Details →' : 'Eintragen →'}
+              {abiGesamtnote ? 'Details' : 'Eintragen'}
             </button>
           </div>
 

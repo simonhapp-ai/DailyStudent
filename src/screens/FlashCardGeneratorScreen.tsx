@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react'
+import { EmptyState } from '../components/ui/EmptyState'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { Icon } from '../components/ui/Icon'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
@@ -177,11 +180,15 @@ export function FlashCardGeneratorScreen() {
                       className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold transition-all"
                       style={{
                         background: done
-                          ? 'rgb(var(--color-success))'
+                          ? 'rgb(var(--fill-green))'
                           : active
                           ? '#34D399'
                           : 'rgb(var(--color-border))',
-                        color: done || active ? 'white' : 'rgb(var(--color-text-muted))',
+                        color: done
+                          ? 'rgb(var(--fill-green-on))'
+                          : active
+                          ? '#062017'
+                          : 'rgb(var(--color-text-muted))',
                       }}
                     >
                       {done ? <Icon name="check" size={13} /> : i + 1}
@@ -201,40 +208,41 @@ export function FlashCardGeneratorScreen() {
           <div className="space-y-2">
             <p className="section-label px-1">Für welches Fach?</p>
             {availableSubjects.length === 0 ? (
-              <div className="bg-surface border border-border rounded-card px-4 py-6 text-center">
-                <p className="text-text-muted text-sm">Keine Fächer gefunden. Bitte erst Fächer im Profil auswählen.</p>
-              </div>
-            ) : (
-              availableSubjects.map((subject) => {
-                const noteCount = userNotes.filter(
-                  (n) => n.subjectId === subject.id && generatedNotes[n.id]
-                ).length
-                return (
+              <EmptyState
+                title="Keine Fächer ausgewählt"
+                note="Wähle im Profil deine Fächer — danach kannst du daraus Karteikarten erstellen."
+                action={
                   <button
-                    key={subject.id}
-                    onClick={() => handleSelectSubject(subject.id)}
-                    className="w-full bg-surface border border-border rounded-card px-4 py-4 flex items-center gap-4 text-left press hover:border-accent/40 transition-colors"
+                    onClick={() => navigate('/profil/faecher')}
+                    className="w-full h-12 rounded-pill font-semibold text-[15px] press"
+                    style={{ background: '#34D399', color: '#062017' }}
                   >
-                    <div
-                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-lg shrink-0"
-                      style={{ backgroundColor: `${subject.color}22` }}
-                    >
-                      {subject.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-text-primary font-semibold text-[15px]">{subject.name}</p>
-                      <p className="text-text-muted text-xs mt-0.5">
-                        {noteCount > 0
-                          ? `${noteCount} analysierte Notiz${noteCount > 1 ? 'en' : ''}`
-                          : 'Noch keine analysierten Notizen'}
-                      </p>
-                    </div>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
-                      <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    Fächer auswählen
                   </button>
-                )
-              })
+                }
+              />
+            ) : (
+              <ListGroup>
+                {availableSubjects.map((subject) => {
+                  const noteCount = userNotes.filter(
+                    (n) => n.subjectId === subject.id && generatedNotes[n.id]
+                  ).length
+                  return (
+                    <ListRow
+                      key={subject.id}
+                      leading={<SubjectIcon subjectId={subject.id} size="md" />}
+                      title={subject.name}
+                      subtitle={
+                        noteCount > 0
+                          ? `${noteCount} analysierte Notiz${noteCount > 1 ? 'en' : ''}`
+                          : 'Noch keine analysierten Notizen'
+                      }
+                      chevron
+                      onClick={() => handleSelectSubject(subject.id)}
+                    />
+                  )
+                })}
+              </ListGroup>
             )}
           </div>
         )}
@@ -260,25 +268,25 @@ export function FlashCardGeneratorScreen() {
                   style={{ background: '#34D399', color: '#062017' }}
                   onClick={() => setStep('method')}
                 >
-                  Weiter →
+                  Weiter
                 </button>
               )}
             </div>
 
             {notesForSubject.length === 0 ? (
-              <div className="bg-surface border border-border rounded-card px-4 py-8 text-center space-y-2">
-                <p className="text-text-primary text-sm font-medium">Noch keine analysierten Notizen</p>
-                <p className="text-text-muted text-xs leading-relaxed">
-                  Öffne eine Notiz und tippe auf „Analysieren" um eine Smart Note zu erstellen.
-                </p>
+              <EmptyState
+                title="Noch keine analysierten Notizen"
+                note="Öffne eine Notiz im Unterrichtsmodus und lass sie analysieren — daraus entstehen die Karten."
+                action={
                 <button
                   onClick={() => navigate('/unterricht')}
-                  className="mt-3 px-4 py-2 rounded-pill on-mint text-sm font-semibold press-sm"
+                  className="w-full h-12 rounded-pill on-mint text-[15px] font-semibold press"
                   style={{ background: '#34D399' }}
                 >
                   Zum Unterrichtsmodus
                 </button>
-              </div>
+                }
+              />
             ) : (
               notesForSubject.map((note) => {
                 const genNote = generatedNotes[note.id]
@@ -288,7 +296,7 @@ export function FlashCardGeneratorScreen() {
                     key={note.id}
                     onClick={() => toggleNote(note.id)}
                     className={`w-full bg-surface border rounded-card px-4 py-4 text-left press transition-colors ${
-                      isSelected ? 'border-accent/60' : 'border-border hover:border-accent/30'
+                      isSelected ? 'border-[#34D399]' : 'border-border hover:border-[#34D399]/40'
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -302,7 +310,7 @@ export function FlashCardGeneratorScreen() {
                       >
                         {isSelected && (
                           <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                            <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M2 6l3 3 5-5" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         )}
                       </div>
