@@ -1,4 +1,6 @@
 import { useUser } from '../context/UserContext'
+import type { AppTheme } from '../context/UserContext'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
 import { useState, useEffect } from 'react'
@@ -30,31 +32,57 @@ const PRO_TOGGLE_ALLOWLIST = [
   // 'weitere@email.de',
 ]
 
-const THEME_LABELS = { light: 'Hell', dark: 'Dunkel', system: 'System' } as const
 
-function NavRow({ label, sublabel, onClick, danger = false }: {
-  label: string; sublabel?: string; onClick: () => void; danger?: boolean
+function NavRow({ label, sublabel, onClick }: {
+  label: string; sublabel?: string; onClick: () => void
 }) {
   return (
-    <button
+    <ListRow
+      title={<span className="text-[15px] font-normal">{label}</span>}
+      value={sublabel}
+      chevron
       onClick={onClick}
-      className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm"
-    >
-      <span className={`text-[15px] ${danger ? 'text-text-primary' : 'text-text-primary'}`}>{label}</span>
-      <div className="flex items-center gap-1.5 shrink-0">
-        {sublabel && <span className="text-text-muted text-[13px]">{sublabel}</span>}
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={danger ? 'text-text-primary' : 'text-text-muted'}>
-          <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+    />
+  )
+}
+
+// Erscheinungsbild steht direkt hier statt hinter einer eigenen Seite: Drei
+// Moeglichkeiten, eine Zeile — dafuer lohnt kein Screenwechsel. (Die frühere
+// Unterseite war beim Umbau entfallen, die Zeile zeigte danach ins Leere.)
+function ThemeRow({ theme, onPick }: { theme: AppTheme; onPick: (t: AppTheme) => void }) {
+  const options: { value: AppTheme; label: string }[] = [
+    { value: 'light', label: 'Hell' },
+    { value: 'dark', label: 'Dunkel' },
+    { value: 'system', label: 'System' },
+  ]
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 min-h-[52px] border-b border-border/40 last:border-b-0">
+      <span className="text-[15px] text-text-primary flex-1">Erscheinungsbild</span>
+      <div className="flex p-0.5 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] shrink-0">
+        {options.map((o) => (
+          <button
+            key={o.value}
+            onClick={() => onPick(o.value)}
+            aria-pressed={theme === o.value}
+            className="h-8 px-3 rounded-pill text-[13px] font-semibold press-sm transition-colors"
+            style={
+              theme === o.value
+                ? { background: 'rgb(var(--color-surface))', color: 'rgb(var(--color-text-primary))' }
+                : { color: 'rgb(var(--color-text-secondary))' }
+            }
+          >
+            {o.label}
+          </button>
+        ))}
       </div>
-    </button>
+    </div>
   )
 }
 
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt, appConfig } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt, appConfig } = useUser()
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string | null>(null)
@@ -465,47 +493,47 @@ export function ProfilScreen() {
         {/* ── Allgemein ──────────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Allgemein</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden divide-y divide-border/50">
-            <NavRow label="Erscheinungsbild" sublabel={THEME_LABELS[theme]} onClick={() => navigate('/profil/erscheinungsbild')} />
+          <ListGroup>
+            <ThemeRow theme={theme} onPick={setTheme} />
             {authUser && <NavRow label="Account" onClick={() => navigate('/profil/account')} />}
-          </div>
+          </ListGroup>
         </div>
 
         {/* ── Einstellungen ──────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Einstellungen</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden divide-y divide-border/50">
+          <ListGroup>
             <NavRow label="Fach hinzufügen" onClick={() => navigate('/profil/faecher')} />
             <NavRow label="Benachrichtigungen" onClick={() => navigate('/profil/benachrichtigungen')} />
             <NavRow label="Bundesland & Lehrplan" onClick={() => navigate('/profil/bundesland')} />
-          </div>
+          </ListGroup>
         </div>
 
         {/* ── Rechtliches ────────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Rechtliches</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden divide-y divide-border/50">
+          <ListGroup>
             <NavRow label="Impressum" onClick={() => navigate('/profil/impressum')} />
             <NavRow label="Datenschutzerklärung" onClick={() => navigate('/profil/datenschutz')} />
             <NavRow label="Nutzungsbedingungen (AGB)" onClick={() => navigate('/profil/agb')} />
-          </div>
+          </ListGroup>
         </div>
 
         {/* ── Support ────────────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Support</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+          <ListGroup>
             <NavRow label="Hilfe & Feedback" onClick={() => navigate('/profil/support')} />
-          </div>
+          </ListGroup>
         </div>
 
         {/* ── Dev-Tools (nur allowlisted) ─────────────────────────── */}
         {isDevAllowlisted && (
           <div>
             <h2 className="section-label mb-2">Entwickler</h2>
-            <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+            <ListGroup>
               <NavRow label="Dev-Tools" sublabel={isPro ? 'Pro aktiv' : undefined} onClick={() => navigate('/profil/dev-tools')} />
-            </div>
+            </ListGroup>
           </div>
         )}
 
