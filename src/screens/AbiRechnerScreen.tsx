@@ -851,7 +851,7 @@ export function AbiRechnerScreen() {
         <PlanenBar />
       </div>
 
-      <div className="px-4 pt-4 pb-8 space-y-4">
+      <div className="px-4 pt-4 pb-8 space-y-4 lg:px-6 lg:max-w-[1100px]">
 
         {/* Summary card */}
         <div className="bg-surface border border-border/60 rounded-card p-5">
@@ -1064,6 +1064,7 @@ export function AbiRechnerScreen() {
                 <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">
                   {activeHj?.label ?? ''} — Noten
                 </p>
+                <div className="grid gap-3 xl:grid-cols-2 xl:items-start">
                 {activeEntries.map((entry) => (
                   <SubjectCard
                     key={`${activeId}-${entry.subjectId}`}
@@ -1073,6 +1074,7 @@ export function AbiRechnerScreen() {
                     customFaecher={profile?.customFaecher}
                   />
                 ))}
+                </div>
               </>
             )}
 
@@ -1100,6 +1102,7 @@ export function AbiRechnerScreen() {
               <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider">Abiturprüfungen (Block II)</p>
               <p className="text-[11px] text-text-muted mt-0.5">5 Prüfungen, je 0–15 Notenpunkte ×4 — max. 300 Punkte gesamt.</p>
             </div>
+            <div className="grid gap-3 xl:grid-cols-2 xl:items-start">
             {pruefungen.map((p, i) => (
               <PruefungCard
                 key={p.id}
@@ -1110,6 +1113,7 @@ export function AbiRechnerScreen() {
                 customFaecher={profile?.customFaecher}
               />
             ))}
+            </div>
           </div>
         )}
 

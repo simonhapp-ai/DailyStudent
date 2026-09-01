@@ -88,7 +88,7 @@ export function KlausurplanScreen() {
         <PlanenBar />
       </div>
 
-      <div className="px-4 pt-4 space-y-4">
+      <div className="px-4 pt-4 space-y-4 lg:px-6 lg:max-w-[760px]">
 
         {/* ── Add section ──────────────────────────────────────── */}
         {!addOpen ? (

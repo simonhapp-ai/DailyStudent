@@ -133,7 +133,7 @@ export function HausaufgabenheftScreen() {
         <PlanenBar />
       </div>
 
-      <div className="px-4 pt-4 space-y-3">
+      <div className="px-4 pt-4 space-y-3 lg:max-w-[760px] lg:px-6">
 
         {/* ── Add form (inline, no popup) ─────────────────────── */}
         {showAddForm && (

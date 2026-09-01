@@ -29,7 +29,7 @@ export function StundenplanScreen() {
         <PlanenBar />
       </div>
 
-      <div className="px-5 mt-5 space-y-4">
+      <div className="px-5 mt-5 space-y-4 lg:px-6 lg:max-w-[980px]">
         {editing || !hasSlots ? (
           <>
             {hasSlots && (
