@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { WorkingState } from '../components/ui/EmptyState'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { generateLernplan } from '../lib/gemini'
@@ -443,23 +444,23 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
                 active ? 'bg-accent border-transparent' : 'bg-surface border-border hover:bg-surface-hover'
               }`}
             >
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-[rgb(var(--color-on-accent)/0.18)] text-on-accent' : 'bg-accent/10'}`}>
                 <Icon name={opt.icon} size={22} />
               </div>
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className={`font-bold text-[16px] ${active ? 'text-white' : 'text-text-primary'}`}>{opt.title}</p>
+                  <p className={`font-bold text-[16px] ${active ? 'text-on-accent' : 'text-text-primary'}`}>{opt.title}</p>
                   {opt.badge && (!isPro || betaPaused) && (
                     betaPaused
                       ? <span className="px-1.5 py-0.5 rounded-pill text-[11px] font-bold bg-background text-text-muted inline-flex items-center gap-1"><Icon name="clock" size={10} />Bald verfügbar</span>
                       : <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
                   )}
                 </div>
-                <p className={`text-[13px] mt-1 leading-snug ${active ? 'text-white/80' : 'text-text-muted'}`}>{opt.desc}</p>
+                <p className={`text-[13px] mt-1 leading-snug ${active ? 'text-on-accent/80' : 'text-text-muted'}`}>{opt.desc}</p>
               </div>
               {active && (
-                <div className="w-5 h-5 rounded-full bg-white/25 flex items-center justify-center shrink-0 mt-0.5">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-on-accent" style={{ background: 'rgb(var(--color-on-accent) / 0.22)' }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
@@ -831,7 +832,7 @@ function StepZeitBlocker({
                 onClick={() => toggleBlockDay(i)}
                 className={`w-9 h-9 rounded-btn text-[12px] font-bold border transition-all ${
                   newBlock.dayOfWeek.includes(i)
-                    ? 'bg-accent border-transparent text-white'
+                    ? 'bg-accent border-transparent text-on-accent'
                     : 'bg-background border-border text-text-secondary hover:bg-surface-hover'
                 }`}
               >
@@ -951,8 +952,8 @@ function StepLernkapazitaet({
                 : 'bg-surface border-border hover:bg-surface-hover'
             }`}
           >
-            <p className={`text-[13px] font-bold ${studyTimePreference === opt.id ? 'text-white' : 'text-text-primary'}`}>{opt.label}</p>
-            <p className={`text-[11px] mt-0.5 ${studyTimePreference === opt.id ? 'text-white/70' : 'text-text-muted'}`}>{opt.sub}</p>
+            <p className={`text-[13px] font-bold ${studyTimePreference === opt.id ? 'text-on-accent' : 'text-text-primary'}`}>{opt.label}</p>
+            <p className={`text-[11px] mt-0.5 ${studyTimePreference === opt.id ? 'text-on-accent/70' : 'text-text-muted'}`}>{opt.sub}</p>
           </button>
         ))}
       </div>
@@ -1011,7 +1012,7 @@ function StepLernkapazitaet({
                   onClick={() => onToggleLK(id)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-pill border text-[13px] font-semibold transition-all ${
                     isLK
-                      ? 'bg-accent text-white border-accent'
+                      ? 'bg-accent text-on-accent border-accent'
                       : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                   }`}
                 >
@@ -1218,13 +1219,11 @@ function StepZusammenfassung({
       )}
 
       {generating ? (
-        <div className="bg-surface border border-border/60 rounded-card p-6 flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-[3px] border-accent/25 border-t-accent rounded-full animate-spin" />
-          <div className="text-center">
-            <p className="text-text-primary font-semibold text-[15px]">KI erstellt deinen Lernplan…</p>
-            <p className="text-text-muted text-[13px] mt-1">Das kann 20–40 Sekunden dauern.</p>
-          </div>
-        </div>
+        <WorkingState
+          tone="klausur"
+          title="KI erstellt deinen Lernplan"
+          note="Das dauert 20 bis 40 Sekunden."
+        />
       ) : (
         <button
           onClick={onGenerate}
