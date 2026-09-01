@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { EmptyState } from '../components/ui/EmptyState'
+import { Tag } from '../components/ui/Tag'
 import { useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Header } from '../components/ui/Header'
@@ -67,7 +70,7 @@ const SWIPE_REVEAL = SWIPE_ACTION_WIDTH * 2
 
 function StarIcon({ filled }: { filled?: boolean }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? 'white' : 'none'} stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
     </svg>
   )
@@ -75,7 +78,7 @@ function StarIcon({ filled }: { filled?: boolean }) {
 
 function TrashIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="3 6 5 6 21 6" />
       <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
       <path d="M10 11v6M14 11v6" />
@@ -100,21 +103,23 @@ function LernzettelRow({
     <div className="relative rounded-[20px] overflow-hidden">
       {/* Reveal actions — Markieren (gelb) + Löschen (rot), wie in Apple Notizen */}
       <div className="absolute inset-y-0 right-0 flex">
+        {/* Gelb traegt schwarze Schrift, Rot weisse — beide aus den Fuellmarken,
+            damit die Beschriftung auf der Flaeche lesbar bleibt. */}
         <button
           onClick={() => { onToggleHighlight(); onOpenChange(false) }}
-          className="flex flex-col items-center justify-center gap-1 press-sm"
-          style={{ width: SWIPE_ACTION_WIDTH, background: '#FFD60A' }}
+          className="flex flex-col items-center justify-center gap-1 press-sm bg-fill-yellow text-fill-yellow-on"
+          style={{ width: SWIPE_ACTION_WIDTH }}
         >
           <StarIcon filled={lz.highlighted} />
-          <span className="text-[11px] font-semibold text-white">{lz.highlighted ? 'Entfernen' : 'Markieren'}</span>
+          <span className="text-[11px] font-semibold">{lz.highlighted ? 'Entfernen' : 'Markieren'}</span>
         </button>
         <button
           onClick={onDelete}
-          className="flex flex-col items-center justify-center gap-1 press-sm"
-          style={{ width: SWIPE_ACTION_WIDTH, background: '#FF3B30' }}
+          className="flex flex-col items-center justify-center gap-1 press-sm bg-fill-red text-fill-red-on"
+          style={{ width: SWIPE_ACTION_WIDTH }}
         >
           <TrashIcon />
-          <span className="text-[11px] font-semibold text-white">Löschen</span>
+          <span className="text-[11px] font-semibold">Löschen</span>
         </button>
       </div>
 
@@ -134,35 +139,24 @@ function LernzettelRow({
         className="relative z-10 bg-surface border border-border/60 shadow-card-adaptive text-left overflow-hidden flex"
         style={{ touchAction: 'pan-y' }}
       >
-        {/* Left color accent bar */}
-        <div className="w-1 shrink-0" style={{ background: info?.color ?? '#094C86' }} />
-
-        <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
-          {/* Gradient icon */}
-          <div
-            className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 glow-teal"
-            style={{ background: G_LERNZETTEL }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-              <path d="M14 2v6h6" />
-              <path d="M9 13h6M9 17h4" />
-            </svg>
-          </div>
+        <div className="flex items-center gap-3 px-4 py-3.5 flex-1 min-w-0">
+          {/* Das Fach traegt die Zeile — Farbstreifen UND eine zweite gefaerbte
+              Kachel waren zwei Anzeigen fuer dieselbe Angabe. */}
+          <SubjectIcon subjectId={lz.subjectId} size="md" />
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5">
-              <p className="text-[15px] font-bold text-text-primary truncate">{lz.title}</p>
+              <p className="text-[16px] font-semibold tracking-[-0.015em] text-text-primary truncate">{lz.title}</p>
               {lz.highlighted && (
-                <span className="shrink-0" style={{ color: '#FFD60A' }}>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-fill-yellow text-fill-yellow-on flex items-center justify-center">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
                 </span>
               )}
             </div>
             {/* Subject + date row */}
-            <p className="text-[12px] text-text-muted mt-0.5">
+            <p className="text-[13px] text-text-secondary mt-0.5 truncate">
               {info?.name ?? lz.subjectName} · {formatDate(lz.generatedAt)}
               {MODUS_LABELS[lz.modus] && ` · ${MODUS_LABELS[lz.modus]}`}
             </p>
@@ -170,13 +164,7 @@ function LernzettelRow({
             {lz.selectedTopics.length > 0 && (
               <div className="flex gap-1 mt-1.5 flex-wrap">
                 {lz.selectedTopics.slice(0, 3).map((t) => (
-                  <span
-                    key={t}
-                    className="text-[11px] font-medium px-2 py-0.5 rounded-full text-white whitespace-nowrap"
-                    style={{ background: G_LERNZETTEL }}
-                  >
-                    {t}
-                  </span>
+                  <Tag key={t} size="sm" className="whitespace-nowrap">{t}</Tag>
                 ))}
                 {lz.selectedTopics.length > 3 && (
                   <span className="text-[11px] text-text-muted">+{lz.selectedTopics.length - 3}</span>
@@ -407,39 +395,26 @@ export function LernzettelScreen() {
         {/* Neuer Lernzettel Button */}
         <button
           onClick={handleNew}
-          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[20px] text-white font-semibold text-[15px] shadow-lg press active:scale-[0.98]"
-          style={{ background: G_LERNZETTEL }}
+          className="w-full flex items-center justify-center gap-2 h-12 rounded-pill font-semibold text-[15px] press"
+          style={{ background: '#34D399', color: '#062017' }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 5v14M5 12h14" />
-          </svg>
+          <Icon name="plus" size={17} />
           Neuen Lernzettel erstellen
         </button>
 
-        {/* Empty state */}
         {sorted.length === 0 && (
-          <div className="bg-surface border border-border/60 rounded-[20px] p-8 shadow-card-adaptive text-center mt-4">
-            <div
-              className="w-14 h-14 rounded-[18px] flex items-center justify-center mx-auto mb-4"
-              style={{ background: G_LERNZETTEL }}
-            >
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
-                <path d="M14 2v6h6" />
-                <path d="M9 13h6M9 17h4" />
-              </svg>
-            </div>
-            <p className="text-[16px] font-bold text-text-primary mb-1">Noch keine Lernzettel</p>
-            <p className="text-[13px] text-text-muted leading-snug">
-              Erstelle deinen ersten Lernzettel aus deinen Smart Notes — KI-generiert, passend zum Kerncurriculum.
-            </p>
-          </div>
+          <EmptyState
+            title="Noch keine Lernzettel"
+            note="Wähle ein Fach und deine Notizen — die KI schreibt daraus eine Zusammenfassung, passend zum Lehrplan deines Bundeslands."
+          />
         )}
 
         {/* Lernzettel list */}
         {sorted.length > 0 && (
           <div className="space-y-2.5">
-            <p className="section-label px-1 mt-2">Gespeicherte Lernzettel</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary px-1 pt-2">
+              Gespeicherte Lernzettel
+            </p>
             {sorted.map((lz) => (
               <LernzettelRow
                 key={lz.id}
