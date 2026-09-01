@@ -342,12 +342,12 @@ export function FlashCardGeneratorScreen() {
         {step === 'method' && (
           <div className="space-y-4">
             {/* Tab switcher */}
-            <div className="flex gap-1.5 bg-surface border border-border rounded-[14px] p-1">
+            <div className="flex gap-1.5 bg-surface border border-border rounded-icon p-1">
               {(['ki', 'manuell'] as Method[]).map((m) => (
                 <button
                   key={m}
                   onClick={() => { setMethod(m); setError('') }}
-                  className={`flex-1 py-2.5 rounded-[10px] text-[13px] font-semibold transition-all press-sm ${
+                  className={`flex-1 py-2.5 rounded-btn text-[13px] font-semibold transition-all press-sm ${
                     method === m ? 'on-mint' : 'text-text-muted'
                   }`}
                   style={method === m ? { background: '#34D399' } : {}}
@@ -360,14 +360,14 @@ export function FlashCardGeneratorScreen() {
             {/* ── KI Pfad ──────────────────────────────────────── */}
             {method === 'ki' && (
               <div className="space-y-4">
-                <div className="bg-surface border border-border rounded-[16px] p-4">
+                <div className="bg-surface border border-border rounded-card p-4">
                   <p className="section-label mb-3">Wie viele Karten?</p>
                   <div className="flex gap-2">
                     {COUNT_OPTIONS.map((n) => (
                       <button
                         key={n}
                         onClick={() => setCardCount(n)}
-                        className={`flex-1 py-2.5 rounded-[10px] text-sm font-bold press-sm transition-all ${
+                        className={`flex-1 py-2.5 rounded-btn text-sm font-bold press-sm transition-all ${
                           cardCount === n ? 'on-mint' : 'text-text-muted'
                         }`}
                         style={
@@ -394,7 +394,7 @@ export function FlashCardGeneratorScreen() {
 
                 <button
                   onClick={handleGenerateKI}
-                  className="w-full py-3.5 rounded-[14px] font-bold text-[15px] press"
+                  className="w-full py-3.5 rounded-icon font-bold text-[15px] press"
                   style={{ background: '#34D399', color: '#062017' }}
                 >
                   {cardCount} Karten mit KI erstellen
@@ -412,7 +412,7 @@ export function FlashCardGeneratorScreen() {
                 )}
 
                 {manualCards.map((card, idx) => (
-                  <div key={idx} className="bg-surface border border-border rounded-[16px] p-4 space-y-3">
+                  <div key={idx} className="bg-surface border border-border rounded-card p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <p className="text-[11px] font-bold text-text-muted uppercase tracking-wide">
                         Karte {idx + 1}
@@ -440,7 +440,7 @@ export function FlashCardGeneratorScreen() {
                         }
                         placeholder="Frage oder Begriff…"
                         rows={2}
-                        className="w-full bg-background border border-border rounded-[10px] px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent/60 transition-colors"
+                        className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent/60 transition-colors"
                       />
                     </div>
                     <div>
@@ -454,7 +454,7 @@ export function FlashCardGeneratorScreen() {
                         }
                         placeholder="Antwort oder Erklärung…"
                         rows={2}
-                        className="w-full bg-background border border-border rounded-[10px] px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent/60 transition-colors"
+                        className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent/60 transition-colors"
                       />
                     </div>
                   </div>
@@ -462,7 +462,7 @@ export function FlashCardGeneratorScreen() {
 
                 <button
                   onClick={() => setManualCards((prev) => [...prev, { front: '', back: '' }])}
-                  className="w-full py-3 rounded-[14px] border-2 border-dashed text-text-muted text-sm font-semibold press-sm hover:border-accent/40 transition-colors"
+                  className="w-full py-3 rounded-icon border-2 border-dashed text-text-muted text-sm font-semibold press-sm hover:border-accent/40 transition-colors"
                   style={{ borderColor: 'rgb(var(--color-border))' }}
                 >
                   + Karte hinzufügen
@@ -471,7 +471,7 @@ export function FlashCardGeneratorScreen() {
                 <button
                   onClick={handleSaveManual}
                   disabled={validManualCount === 0}
-                  className="w-full py-3.5 rounded-[14px] on-mint font-bold text-[15px] press disabled:opacity-40"
+                  className="w-full py-3.5 rounded-icon on-mint font-bold text-[15px] press disabled:opacity-40"
                   style={{ background: '#34D399' }}
                 >
                   {validManualCount > 0 ? `${validManualCount} Karte${validManualCount !== 1 ? 'n' : ''} speichern` : 'Karten speichern'}
@@ -485,7 +485,7 @@ export function FlashCardGeneratorScreen() {
         {step === 'generating' && (
           <div className="flex flex-col items-center justify-center py-16 gap-5">
             <div
-              className="w-16 h-16 rounded-[20px] flex items-center justify-center"
+              className="w-16 h-16 rounded-card flex items-center justify-center"
               style={{ background: '#34D399' }}
             >
               <svg className="animate-spin" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2.5">

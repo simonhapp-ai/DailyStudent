@@ -734,7 +734,7 @@ export function SmartNotesScreen() {
             {fcStatus === 'done' ? (
               <div className="bg-surface border border-success/30 rounded-card px-4 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: '#34D399' }}>
+                  <div className="w-9 h-9 rounded-btn flex items-center justify-center" style={{ background: '#34D399' }}>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
@@ -758,7 +758,7 @@ export function SmartNotesScreen() {
                 disabled={fcStatus === 'generating'}
                 className="w-full bg-surface border border-border rounded-card px-4 py-4 flex items-center gap-4 press disabled:opacity-60"
               >
-                <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: '#34D399' }}>
+                <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: '#34D399' }}>
                   {fcStatus === 'generating' ? (
                     <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2.5">
                       <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
@@ -821,7 +821,7 @@ export function SmartNotesScreen() {
             style={{ top: '30%', maxWidth: 380, margin: '0 auto' }}
           >
             <div className="px-5 pt-5 pb-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-[14px] mx-auto mb-4"
+              <div className="flex items-center justify-center w-12 h-12 rounded-icon mx-auto mb-4"
                 style={{ background: 'rgba(var(--color-danger), 0.12)' }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgb(var(--color-danger))' }}>
@@ -839,7 +839,7 @@ export function SmartNotesScreen() {
             <div className="px-5 pb-5 flex gap-2.5">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-3 rounded-[12px] bg-surface-hover border border-border text-text-secondary text-[14px] font-semibold press-sm"
+                className="flex-1 py-3 rounded-btn bg-surface-hover border border-border text-text-secondary text-[14px] font-semibold press-sm"
               >
                 Abbrechen
               </button>
@@ -850,7 +850,7 @@ export function SmartNotesScreen() {
                     navigate(-1)
                   }
                 }}
-                className="flex-1 py-3 rounded-[12px] text-white text-[14px] font-bold press-sm"
+                className="flex-1 py-3 rounded-btn text-white text-[14px] font-bold press-sm"
                 style={{ background: '#FF453A', boxShadow: '0 4px 12px rgba(255,69,58,0.35)' }}
               >
                 Löschen

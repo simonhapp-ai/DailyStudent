@@ -224,7 +224,7 @@ export function ProfilScreen() {
                   <button
                     key={emoji}
                     onClick={() => updateProfile({ avatarEmoji: emoji })}
-                    className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[22px] press-sm transition-all"
+                    className="w-10 h-10 rounded-btn flex items-center justify-center text-[22px] press-sm transition-all"
                     style={{
                       background: avatarEmoji === emoji
                         ? 'rgba(var(--color-accent), 0.15)'
@@ -309,7 +309,7 @@ export function ProfilScreen() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
                   <div
-                    className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
+                    className="w-10 h-10 rounded-btn flex items-center justify-center text-[20px] shrink-0"
                     style={{ background: '#FFD700' }}
                   >
                     <Icon name="gift" size={22} />
@@ -356,7 +356,7 @@ export function ProfilScreen() {
               {referralCode && (
                 <div className="flex items-center gap-3">
                   <div
-                    className="shrink-0 rounded-[10px] overflow-hidden"
+                    className="shrink-0 rounded-btn overflow-hidden"
                     style={{ width: 64, height: 64, background: '#fff' }}
                   >
                     <img
@@ -397,7 +397,7 @@ export function ProfilScreen() {
             style={{ borderColor: 'rgba(48,209,88,0.25)', background: 'linear-gradient(140deg, rgba(48,209,88,0.07) 0%, rgba(48,209,88,0.02) 100%)' }}
           >
             <div
-              className="w-11 h-11 rounded-[12px] flex items-center justify-center text-[22px] shrink-0"
+              className="w-11 h-11 rounded-btn flex items-center justify-center text-[22px] shrink-0"
               style={{ background: '#34D399' }}
             >
               <Icon name="gift" size={26} />
@@ -543,7 +543,7 @@ export function ProfilScreen() {
                 <div className="p-5">
                   <div className="flex items-start gap-2.5 mb-4">
                     <div
-                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
+                      className="w-10 h-10 rounded-btn flex items-center justify-center text-[20px] shrink-0"
                       style={{ background: '#34D399' }}
                     >
                       <Icon name="gift" size={19} />
@@ -557,7 +557,7 @@ export function ProfilScreen() {
                   {referralCode && (
                     <div className="flex items-center gap-3">
                       <div
-                        className="shrink-0 rounded-[10px] overflow-hidden"
+                        className="shrink-0 rounded-btn overflow-hidden"
                         style={{ width: 64, height: 64, background: '#fff' }}
                       >
                         <img

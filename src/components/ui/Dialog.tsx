@@ -44,7 +44,7 @@ export function Dialog({
         role="alertdialog"
         aria-modal="true"
         aria-label={title}
-        className="relative w-full max-w-[320px] bg-surface rounded-[26px] p-5 pb-4 flex flex-col gap-3 text-center shadow-modal animate-fade-in motion-reduce:animate-none"
+        className="relative w-full max-w-[320px] bg-surface rounded-sheet p-5 pb-4 flex flex-col gap-3 text-center shadow-modal animate-fade-in motion-reduce:animate-none"
       >
         <span className="text-[19px] font-bold tracking-[-0.02em] text-text-primary">{title}</span>
         {message && <span className="text-[13px] leading-snug text-text-secondary">{message}</span>}

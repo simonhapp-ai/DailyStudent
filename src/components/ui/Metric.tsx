@@ -5,7 +5,7 @@ import { type ReactNode } from 'react'
 // Vergleich sagt nichts.
 export function Metric({ value, label, className = '' }: { value: ReactNode; label: string; className?: string }) {
   return (
-    <div className={`bg-surface rounded-[16px] px-3.5 py-3 flex flex-col gap-1 ${className}`}>
+    <div className={`bg-surface rounded-card px-3.5 py-3 flex flex-col gap-1 ${className}`}>
       <span className="text-[28px] font-extrabold tracking-[-0.04em] leading-none text-text-primary tabular-nums">{value}</span>
       <span className="text-[11px] font-semibold uppercase tracking-[0.07em] text-text-secondary">{label}</span>
     </div>

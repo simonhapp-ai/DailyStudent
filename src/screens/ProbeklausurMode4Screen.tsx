@@ -34,7 +34,7 @@ function TaskAnswerCard({
     III: 'Bilde ein eigenständiges Urteil / Erörterung',
   }
   return (
-    <div className="bg-background rounded-[14px] border border-border/60 p-4 mb-3">
+    <div className="bg-background rounded-icon border border-border/60 p-4 mb-3">
       <div className="flex items-center gap-2 mb-2">
         <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
         <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
@@ -49,7 +49,7 @@ function TaskAnswerCard({
         onChange={(e) => onChange(e.target.value)}
         placeholder="Schreibe deine Antwort hier — ganz ohne Hilfsmittel…"
         rows={task.afb === 'III' ? 8 : 6}
-        className="w-full bg-surface rounded-[12px] border border-border p-3 text-[13px] text-text-primary placeholder-text-muted resize-none focus:outline-none focus:border-accent"
+        className="w-full bg-surface rounded-btn border border-border p-3 text-[13px] text-text-primary placeholder-text-muted resize-none focus:outline-none focus:border-accent"
       />
     </div>
   )
@@ -60,7 +60,7 @@ function CorrectionCard({
 }: { task: GeneratedExam['tasks'][0]; correction: ExamCorrection['taskCorrections'][0] }) {
   const [open, setOpen] = useState(true)
   return (
-    <div className="bg-background rounded-[14px] border border-border/60 mb-3 overflow-hidden">
+    <div className="bg-background rounded-icon border border-border/60 mb-3 overflow-hidden">
       <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center justify-between px-4 py-3 press-sm">
         <div className="flex items-center gap-2">
           <span className="text-text-muted text-[11px] font-semibold">Aufgabe {task.label}</span>
@@ -252,7 +252,7 @@ export function ProbeklausurMode4Screen() {
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder={getTopicPlaceholder(subjectId)}
-                className="w-full bg-surface border border-border rounded-[14px] px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent"
+                className="w-full bg-surface border border-border rounded-icon px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent"
               />
               {subjectTopics.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-2.5">
@@ -267,7 +267,7 @@ export function ProbeklausurMode4Screen() {
             </div>
 
             {/* How it works */}
-            <div className="bg-surface rounded-[14px] border border-border/60 p-4 space-y-3">
+            <div className="bg-surface rounded-icon border border-border/60 p-4 space-y-3">
               <p className="text-text-secondary text-[12px] font-bold">3 Aufgaben — alles aus dem Kopf:</p>
               {[
                 { afb: 'AFB I', desc: 'Reproduktion: Du gibst Fachwissen aus dem Gedächtnis wieder.' },
@@ -284,7 +284,7 @@ export function ProbeklausurMode4Screen() {
             </div>
 
             {error && (
-              <div className="bg-danger/10 border border-danger/30 rounded-[14px] p-4">
+              <div className="bg-danger/10 border border-danger/30 rounded-icon p-4">
                 <p className="text-text-primary text-[13px] font-semibold mb-1">Fehler</p>
                 <p className="text-text-primary/80 text-[12px]">{error}</p>
               </div>
@@ -304,7 +304,7 @@ export function ProbeklausurMode4Screen() {
         {phase === 'exam' && exam && (
           <div>
             {/* "no material" badge */}
-            <div className="bg-surface rounded-[14px] border border-border/60 px-4 py-2.5 mb-4 flex items-center gap-2">
+            <div className="bg-surface rounded-icon border border-border/60 px-4 py-2.5 mb-4 flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                 <circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
               </svg>
@@ -319,7 +319,7 @@ export function ProbeklausurMode4Screen() {
               />
             ))}
             {error && (
-              <div className="bg-danger/10 border border-danger/30 rounded-[14px] p-4 mb-3">
+              <div className="bg-danger/10 border border-danger/30 rounded-icon p-4 mb-3">
                 <p className="text-text-primary text-[13px]">{error}</p>
               </div>
             )}
@@ -328,7 +328,7 @@ export function ProbeklausurMode4Screen() {
 
         {phase === 'result' && exam && correction && (
           <div>
-            <div className="rounded-[18px] p-5 mb-4 text-center" style={{ background: ACCENT }}>
+            <div className="rounded-card p-5 mb-4 text-center" style={{ background: ACCENT }}>
               <p className="text-white/70 text-[12px] font-semibold uppercase tracking-wide mb-1">Ergebnis</p>
               <p className="text-white text-[48px] font-black leading-none">{correction.totalNP}</p>
               <p className="text-white/80 text-[13px] mt-1">von 15 Notenpunkten · {correction.gradeLabel}</p>
@@ -336,7 +336,7 @@ export function ProbeklausurMode4Screen() {
             {isPro ? (
               <>
                 {correction.overallJustification && (
-                  <div className="bg-surface rounded-[14px] border border-border/60 p-4 mb-4">
+                  <div className="bg-surface rounded-icon border border-border/60 p-4 mb-4">
                     <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-1.5">Gesamtbewertung</p>
                     <p className="text-text-secondary text-[13px] leading-relaxed">{correction.overallJustification}</p>
                   </div>
@@ -349,10 +349,10 @@ export function ProbeklausurMode4Screen() {
                 })}
               </>
             ) : (
-              <div className="mt-2 rounded-[18px] border border-accent/20 overflow-hidden" style={{ background: 'rgba(124,58,237,0.04)' }}>
+              <div className="mt-2 rounded-card border border-accent/20 overflow-hidden" style={{ background: 'rgba(124,58,237,0.04)' }}>
                 <div className="p-5 space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: 'rgba(124,58,237,0.15)' }}>
+                    <div className="w-10 h-10 rounded-icon flex items-center justify-center shrink-0" style={{ background: 'rgba(124,58,237,0.15)' }}>
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                       </svg>
@@ -369,7 +369,7 @@ export function ProbeklausurMode4Screen() {
                       { icon: 'speech'    as IconName, label: 'Formulierungshilfen', desc: 'Bessere Formulierungen für die Klausur' },
                       { icon: 'chart'     as IconName, label: 'Gesamtbewertung', desc: 'Detailliertes Fazit der KI pro Aufgabe' },
                     ].map(item => (
-                      <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-[12px]" style={{ background: 'var(--color-surface)' }}>
+                      <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-btn" style={{ background: 'var(--color-surface)' }}>
                         <span className="text-text-secondary shrink-0"><Icon name={item.icon} size={16} /></span>
                         <div className="flex-1 min-w-0">
                           <p className="text-[13px] font-semibold text-text-primary">{item.label}</p>
@@ -383,7 +383,7 @@ export function ProbeklausurMode4Screen() {
                   </div>
                   <button
                     onClick={() => setShowProModal(true)}
-                    className="w-full py-3 rounded-[14px] on-mint text-[14px] font-bold press-sm"
+                    className="w-full py-3 rounded-icon on-mint text-[14px] font-bold press-sm"
                     style={{ background: '#34D399' }}
                   >
                     Pro freischalten · €5/Mo
@@ -402,7 +402,7 @@ export function ProbeklausurMode4Screen() {
           <button
             onClick={handleGenerate}
             disabled={!subjectId || !topic.trim()}
-            className="w-full py-4 rounded-[16px] text-white text-[15px] font-bold press disabled:opacity-40"
+            className="w-full py-4 rounded-card text-white text-[15px] font-bold press disabled:opacity-40"
             style={{ background: ACCENT }}
           >
             Aufgaben generieren
@@ -411,7 +411,7 @@ export function ProbeklausurMode4Screen() {
         {phase === 'exam' && (
           <button
             onClick={handleSubmit}
-            className="w-full py-4 rounded-[16px] text-white text-[15px] font-bold press"
+            className="w-full py-4 rounded-card text-white text-[15px] font-bold press"
             style={{ background: ACCENT }}
           >
             Abgeben & korrigieren lassen
@@ -421,13 +421,13 @@ export function ProbeklausurMode4Screen() {
           <div className="flex gap-3">
             <button
               onClick={() => { setPhase('setup'); setExam(null); setCorrection(null) }}
-              className="flex-1 py-4 rounded-[16px] text-text-primary text-[15px] font-bold bg-surface border border-border press"
+              className="flex-1 py-4 rounded-card text-text-primary text-[15px] font-bold bg-surface border border-border press"
             >
               Neue Aufgaben
             </button>
             <button
               onClick={() => navigate(-1)}
-              className="flex-1 py-4 rounded-[16px] text-white text-[15px] font-bold press"
+              className="flex-1 py-4 rounded-card text-white text-[15px] font-bold press"
               style={{ background: ACCENT }}
             >
               Menü
@@ -439,7 +439,7 @@ export function ProbeklausurMode4Screen() {
       <BottomSheet isOpen={showExitWarning} onClose={() => setShowExitWarning(false)}>
         <div className="px-5 pb-2 space-y-3">
           <div className="flex flex-col items-center text-center gap-2 pt-2 pb-1">
-            <div className="w-12 h-12 rounded-[16px] flex items-center justify-center" style={{ background: 'rgb(var(--fill-red))' }}>
+            <div className="w-12 h-12 rounded-card flex items-center justify-center" style={{ background: 'rgb(var(--fill-red))' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                 <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
@@ -455,11 +455,11 @@ export function ProbeklausurMode4Screen() {
               setShowExitWarning(false)
               navigate(-1)
             }}
-            className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press"
+            className="w-full py-3.5 rounded-card font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press"
           >
             Klausur pausieren — Fortschritt gespeichert
           </button>
-          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
+          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full py-3.5 rounded-card font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
             Klausur beenden (Fortschritt gelöscht)
           </button>
         </div>

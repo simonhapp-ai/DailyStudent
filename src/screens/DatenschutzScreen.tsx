@@ -136,7 +136,7 @@ export function DatenschutzScreen() {
                   clearConsent()
                   setConsentReset(true)
                 }}
-                className="w-full mt-1 py-2.5 rounded-[12px] border border-border/60 text-text-secondary text-[13px] font-medium press-sm hover:bg-surface-hover transition-colors"
+                className="w-full mt-1 py-2.5 rounded-btn border border-border/60 text-text-secondary text-[13px] font-medium press-sm hover:bg-surface-hover transition-colors"
               >
                 Cookie-Einstellungen zurücksetzen
               </button>
@@ -195,7 +195,7 @@ export function DatenschutzScreen() {
                 Diese Aktion kann nicht rückgängig gemacht werden. Folgendes wird gelöscht:
               </p>
 
-              <div className="bg-background rounded-[12px] px-4 py-3 mb-4 space-y-2">
+              <div className="bg-background rounded-btn px-4 py-3 mb-4 space-y-2">
                 {DELETE_ITEMS.map((item) => (
                   <div key={item} className="flex items-center gap-2.5">
                     <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'rgb(var(--color-danger))' }} />
@@ -205,7 +205,7 @@ export function DatenschutzScreen() {
               </div>
 
               {deleteError && (
-                <div className="bg-danger/10 border border-danger/20 rounded-[10px] px-3 py-2.5 mb-4">
+                <div className="bg-danger/10 border border-danger/20 rounded-btn px-3 py-2.5 mb-4">
                   <p className="text-[12px] text-text-primary leading-snug">{deleteError}</p>
                 </div>
               )}
@@ -219,7 +219,7 @@ export function DatenschutzScreen() {
                 onChange={(e) => setConfirmInput(e.target.value)}
                 placeholder="löschen"
                 autoFocus
-                className="w-full bg-background border rounded-[12px] px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none transition-colors mb-4"
+                className="w-full bg-background border rounded-btn px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none transition-colors mb-4"
                 style={{
                   borderColor: canDelete
                     ? 'rgba(var(--color-danger), 0.6)'
@@ -231,14 +231,14 @@ export function DatenschutzScreen() {
                 <button
                   onClick={closeConfirm}
                   disabled={deleting}
-                  className="flex-1 py-3 rounded-[14px] bg-surface-hover text-text-secondary text-[14px] font-semibold press-sm disabled:opacity-50"
+                  className="flex-1 py-3 rounded-icon bg-surface-hover text-text-secondary text-[14px] font-semibold press-sm disabled:opacity-50"
                 >
                   Abbrechen
                 </button>
                 <button
                   onClick={handleDelete}
                   disabled={!canDelete || deleting}
-                  className="flex-1 py-3 rounded-[14px] text-white text-[14px] font-bold press-sm disabled:opacity-40 transition-all"
+                  className="flex-1 py-3 rounded-icon text-white text-[14px] font-bold press-sm disabled:opacity-40 transition-all"
                   style={{
                     background: canDelete
                       ? 'linear-gradient(135deg, rgb(var(--color-danger)), rgba(var(--color-danger),0.85))'

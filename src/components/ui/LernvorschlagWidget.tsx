@@ -416,7 +416,7 @@ export function LernvorschlagWidget() {
       className={`w-full bg-surface rounded-card shadow-card-adaptive border ${urgencyBorder} p-4 text-left press flex items-start gap-3.5`}
     >
       <div
-        className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0"
+        className="w-12 h-12 rounded-icon flex items-center justify-center shrink-0"
         style={{ background: suggestion.gradient }}
       >
         {suggestion.icon}

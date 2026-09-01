@@ -53,7 +53,7 @@ export function ModusRegler({
 
   return (
     <div
-      className="rounded-[24px] p-5 overflow-hidden relative"
+      className="rounded-sheet p-5 overflow-hidden relative"
       style={{
         background: '#14141f',
         boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
@@ -129,7 +129,7 @@ export function ModusRegler({
             className="flex flex-col items-center text-center px-2 pt-1 pb-1"
           >
             <div
-              className="w-14 h-14 rounded-[18px] flex items-center justify-center mb-3"
+              className="w-14 h-14 rounded-card flex items-center justify-center mb-3"
               style={{ background: `linear-gradient(145deg, ${MINT}, ${MINT_DARK})`, boxShadow: '0 4px 18px rgba(52,211,153,0.4)' }}
             >
               <span className="w-6 h-6" style={{ color: '#0a0a0f' }}>{active.icon}</span>

@@ -170,10 +170,10 @@ export function LearnModeScreen() {
         {/* ── Neue Karten erstellen ─────────────────────────────────────── */}
         <button
           onClick={() => navigate('/klausurmodus/karteikarten/neu')}
-          className="w-full rounded-[16px] px-4 py-3.5 flex items-center gap-3 text-left press hover:opacity-95 transition-opacity"
+          className="w-full rounded-card px-4 py-3.5 flex items-center gap-3 text-left press hover:opacity-95 transition-opacity"
           style={{ background: GREEN, boxShadow: '0 3px 12px rgba(5, 150, 105, 0.25)' }}
         >
-          <div className="w-8 h-8 rounded-[10px] bg-white/20 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-btn bg-white/20 flex items-center justify-center shrink-0">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.6" />
               <rect x="4" y="9" width="13" height="12" rx="2.5" />
@@ -189,8 +189,8 @@ export function LearnModeScreen() {
 
         {/* ── Deck-Bibliothek ───────────────────────────────────────────── */}
         {decks.length === 0 ? (
-          <div className="bg-surface border border-border/60 rounded-[20px] px-5 py-10 flex flex-col items-center text-center gap-3">
-            <div className="w-14 h-14 rounded-[16px] bg-border/30 flex items-center justify-center">
+          <div className="bg-surface border border-border/60 rounded-card px-5 py-10 flex flex-col items-center text-center gap-3">
+            <div className="w-14 h-14 rounded-card bg-border/30 flex items-center justify-center">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-text-muted" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.5" />
                 <rect x="4" y="9" width="13" height="12" rx="2.5" />
@@ -227,18 +227,18 @@ export function LearnModeScreen() {
                   <button
                     key={deck.noteId}
                     onClick={() => startSession(deck)}
-                    className="w-full bg-surface border border-border/60 rounded-[18px] shadow-card-adaptive overflow-hidden flex items-stretch text-left press hover:border-border transition-colors"
+                    className="w-full bg-surface border border-border/60 rounded-card shadow-card-adaptive overflow-hidden flex items-stretch text-left press hover:border-border transition-colors"
                   >
                     {/* Left color accent */}
                     <div
-                      className="w-1 shrink-0 rounded-l-[18px]"
+                      className="w-1 shrink-0 rounded-l-card"
                       style={{ background: deck.subjectColor }}
                     />
 
                     <div className="flex-1 px-4 py-4 flex items-center gap-3">
                       {/* Icon */}
                       <div
-                        className="w-11 h-11 rounded-[13px] flex items-center justify-center shrink-0 text-lg"
+                        className="w-11 h-11 rounded-icon flex items-center justify-center shrink-0 text-lg"
                         style={{ backgroundColor: `${deck.subjectColor}18` }}
                       >
                         {deck.subjectIcon}

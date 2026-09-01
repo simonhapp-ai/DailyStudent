@@ -37,7 +37,7 @@ function formatDate(iso: string) {
 function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="bg-background rounded-[14px] border border-border/60 mb-2.5 overflow-hidden">
+    <div className="bg-background rounded-icon border border-border/60 mb-2.5 overflow-hidden">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between px-4 py-3 press-sm"
@@ -69,7 +69,7 @@ function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] 
           {task.userAnswer.trim() && (
             <div>
               <p className="text-[11px] font-bold text-text-muted uppercase tracking-wide mb-1">Deine Antwort</p>
-              <p className="text-[12px] text-text-secondary leading-relaxed bg-surface/60 rounded-[10px] px-3 py-2 whitespace-pre-wrap">{task.userAnswer}</p>
+              <p className="text-[12px] text-text-secondary leading-relaxed bg-surface/60 rounded-btn px-3 py-2 whitespace-pre-wrap">{task.userAnswer}</p>
             </div>
           )}
 
@@ -160,7 +160,7 @@ export function ProbeklausurRetroScreen() {
 
         <div className="px-4 py-5 space-y-5">
           {/* Grade card */}
-          <div className="bg-surface border border-border/60 rounded-[20px] p-5 shadow-card-adaptive">
+          <div className="bg-surface border border-border/60 rounded-card p-5 shadow-card-adaptive">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <p className="text-[13px] text-text-muted mb-0.5">{MODE_LABELS[active.mode]} · {formatDate(active.completedAt)}</p>
@@ -170,7 +170,7 @@ export function ProbeklausurRetroScreen() {
                 <p className="text-[13px] text-text-muted">{active.totalNP} von 15 Notenpunkten</p>
               </div>
               <div
-                className="w-16 h-16 rounded-[20px] flex items-center justify-center"
+                className="w-16 h-16 rounded-card flex items-center justify-center"
                 style={{ background: npColor(active.totalNP) }}
               >
                 <span className="text-[28px] font-black tabular-nums" style={{ color: npOn(active.totalNP) }}>
@@ -197,7 +197,7 @@ export function ProbeklausurRetroScreen() {
 
           {/* Overall feedback */}
           {active.overallJustification && (
-            <div className="bg-surface border border-border/60 rounded-[20px] p-4 shadow-card-adaptive">
+            <div className="bg-surface border border-border/60 rounded-card p-4 shadow-card-adaptive">
               <p className="text-[11px] font-bold text-text-muted uppercase tracking-wide mb-2">KI-Gesamturteil</p>
               <p className="text-[13px] text-text-secondary leading-relaxed">{active.overallJustification}</p>
             </div>
@@ -228,10 +228,10 @@ export function ProbeklausurRetroScreen() {
                 Die Klausur "{active.topic}" wird dauerhaft gelöscht.
               </p>
             </div>
-            <button onClick={() => setShowDeleteConfirm(false)} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press">
+            <button onClick={() => setShowDeleteConfirm(false)} className="w-full py-3.5 rounded-card font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press">
               Abbrechen
             </button>
-            <button onClick={() => handleDelete(active.id)} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
+            <button onClick={() => handleDelete(active.id)} className="w-full py-3.5 rounded-card font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
               Löschen
             </button>
           </div>

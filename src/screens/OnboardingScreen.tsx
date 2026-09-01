@@ -284,7 +284,7 @@ export function OnboardingScreen() {
               )}
               {/* Referral teaser */}
               <div
-                className="rounded-[14px] p-4 flex items-center gap-3"
+                className="rounded-icon p-4 flex items-center gap-3"
                 style={{ background: 'rgba(255,185,0,0.08)', border: '1px solid rgba(255,185,0,0.2)' }}
               >
                 <span className="shrink-0 text-text-primary"><Icon name="gift" size={21} /></span>
@@ -614,7 +614,7 @@ function StepPersonal({
 
       {/* Student confirmation — no G8/G9 needed */}
       {userType === 'student' && (
-        <div className="rounded-[16px] px-4 py-3.5 flex items-center gap-3 mb-2"
+        <div className="rounded-card px-4 py-3.5 flex items-center gap-3 mb-2"
           style={{ background: 'rgba(var(--color-accent), 0.08)', border: '1px solid rgba(var(--color-accent), 0.2)' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
@@ -954,7 +954,7 @@ function StepFaecher({
       {(!isOberstufe || isStudent) && <div className="mb-5" />}
 
       {/* ── Custom Fächer section ────────────────────────── */}
-      <div className="mb-6 rounded-[20px] border border-border/60 bg-surface overflow-hidden">
+      <div className="mb-6 rounded-card border border-border/60 bg-surface overflow-hidden">
         <div className="px-4 pt-4 pb-3">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -969,7 +969,7 @@ function StepFaecher({
             </div>
             <button
               onClick={() => setShowCustomModal(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-[12px] bg-accent text-white dark:text-[#160E28] text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-btn bg-accent text-white dark:text-[#160E28] text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -1133,7 +1133,7 @@ function StepFolderSort({
             <button
               key={opt.id}
               onClick={() => { if (!opt.comingSoon) setSortMode(opt.id) }}
-              className={`w-full flex items-start gap-4 p-4 rounded-[20px] border text-left transition-all duration-150 ${
+              className={`w-full flex items-start gap-4 p-4 rounded-card border text-left transition-all duration-150 ${
                 active
                   ? 'bg-accent border-transparent'
                   : opt.comingSoon
@@ -1272,7 +1272,7 @@ function StepStundenplan({
           <div className="space-y-3">
             <button
               onClick={() => setMode('manual')}
-              className="w-full flex items-center gap-4 bg-surface border border-border rounded-[20px] p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
+              className="w-full flex items-center gap-4 bg-surface border border-border rounded-card p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
               <div className="w-12 h-12 rounded-xl bg-accent text-white dark:text-[#160E28] flex items-center justify-center shrink-0"><Icon name="pencil" size={22} /></div>
               <div className="flex-1">
@@ -1285,7 +1285,7 @@ function StepStundenplan({
             </button>
             <button
               onClick={() => setMode('scan')}
-              className="w-full flex items-center gap-4 bg-surface border border-border rounded-[20px] p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
+              className="w-full flex items-center gap-4 bg-surface border border-border rounded-card p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
               <div className="w-12 h-12 rounded-xl bg-accent text-white dark:text-[#160E28] flex items-center justify-center shrink-0"><Icon name="camera" size={22} /></div>
               <div className="flex-1">
@@ -1331,7 +1331,7 @@ function StepStundenplan({
           {scanPhase === 'idle' && (
             <button
               onClick={() => fileRef.current?.click()}
-              className="w-full border-2 border-dashed border-border rounded-[20px] p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
+              className="w-full border-2 border-dashed border-border rounded-card p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
             >
               <div className="w-16 h-16 rounded-2xl bg-accent text-white dark:text-[#160E28] flex items-center justify-center"><Icon name="camera" size={28} /></div>
               <div className="text-center">
@@ -1343,7 +1343,7 @@ function StepStundenplan({
 
           {/* ANALYZING — spinner */}
           {scanPhase === 'analyzing' && (
-            <div className="bg-surface border border-border rounded-[20px] p-6 flex flex-col items-center gap-4">
+            <div className="bg-surface border border-border rounded-card p-6 flex flex-col items-center gap-4">
               <div className="w-12 h-12 border-[3px] border-accent/25 border-t-accent rounded-full animate-spin" />
               <div className="text-center">
                 <p className="text-text-primary font-semibold text-[15px]">KI analysiert Stundenplan…</p>
@@ -1355,19 +1355,19 @@ function StepStundenplan({
           {/* ERROR */}
           {scanPhase === 'error' && (
             <div className="space-y-3">
-              <div className="rounded-[20px] p-5" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
+              <div className="rounded-card p-5" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
                 <p className="text-text-primary font-semibold text-[15px] mb-1">Erkennung fehlgeschlagen</p>
                 <p className="text-text-muted text-[13px] leading-relaxed">{scanError}</p>
               </div>
               <button
                 onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }}
-                className="w-full py-3.5 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Erneut versuchen
               </button>
               <button
                 onClick={() => { setMode('manual'); setScanPhase('idle'); setScanError('') }}
-                className="w-full py-3 rounded-[20px] border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
+                className="w-full py-3 rounded-card border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
               >
                 Manuell eintragen
               </button>
@@ -1377,7 +1377,7 @@ function StepStundenplan({
           {/* MISMATCH — AI found subjects not in user's faecher selection */}
           {scanPhase === 'mismatch' && mismatchData && (
             <div className="space-y-3">
-              <div className="rounded-[20px] p-5 space-y-3" style={{ background: 'rgba(255,149,0,0.08)', border: '1px solid rgba(255,149,0,0.25)' }}>
+              <div className="rounded-card p-5 space-y-3" style={{ background: 'rgba(255,149,0,0.08)', border: '1px solid rgba(255,149,0,0.25)' }}>
                 <div className="flex items-center gap-2">
                   <span className="text-text-secondary"><Icon name="search" size={19} /></span>
                   <p className="text-text-primary font-semibold text-[15px]">Neue Fächer erkannt</p>
@@ -1412,7 +1412,7 @@ function StepStundenplan({
                   setScanPhase('idle')
                   setMismatchData(null)
                 }}
-                className="w-full py-3.5 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Fächer hinzufügen &amp; Stundenplan übernehmen
               </button>
@@ -1425,7 +1425,7 @@ function StepStundenplan({
                   setScanPhase('idle')
                   setMismatchData(null)
                 }}
-                className="w-full py-3 rounded-[20px] border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
+                className="w-full py-3 rounded-card border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
               >
                 Nur meine Fächer verwenden
               </button>
@@ -1470,7 +1470,7 @@ function StepStundenplan({
         </button>
 
         {fromAI && totalSlots > 0 && (
-          <div className="mb-5 rounded-[14px] px-4 py-3 flex items-center gap-2.5" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.25)' }}>
+          <div className="mb-5 rounded-icon px-4 py-3 flex items-center gap-2.5" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.25)' }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
               <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -1495,7 +1495,7 @@ function StepStundenplan({
               <button
                 key={d}
                 onClick={() => { setActiveDay(i); setAddingSlot(false) }}
-                className={`flex-1 flex flex-col items-center py-2.5 rounded-[14px] transition-all duration-200 ${
+                className={`flex-1 flex flex-col items-center py-2.5 rounded-icon transition-all duration-200 ${
                   activeDay === i ? 'bg-accent' : 'bg-surface border border-border hover:bg-surface-hover'
                 }`}
               >
@@ -1558,7 +1558,7 @@ function StepStundenplan({
             <span className="text-[13px] font-medium">Stunde hinzufügen</span>
           </button>
         ) : (
-          <div className="bg-surface border border-accent/30 rounded-[20px] p-4 space-y-3">
+          <div className="bg-surface border border-accent/30 rounded-card p-4 space-y-3">
             {/* Time row */}
             <div className="flex gap-2">
               <div className="flex-1">

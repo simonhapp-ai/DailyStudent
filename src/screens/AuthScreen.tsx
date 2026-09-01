@@ -154,7 +154,7 @@ export function AuthScreen() {
         <img
           src="/logo.png"
           alt="DailyStudent"
-          className="w-16 h-16 rounded-[22px] mx-auto mb-4 shadow-lg object-cover"
+          className="w-16 h-16 rounded-card mx-auto mb-4 shadow-lg object-cover"
         />
         <h1 className="text-2xl font-bold text-foreground">DailyStudent</h1>
         <p className="text-sm text-muted mt-1">Dein KI-Lernassistent</p>

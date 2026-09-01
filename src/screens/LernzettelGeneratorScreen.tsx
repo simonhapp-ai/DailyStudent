@@ -242,7 +242,7 @@ export function LernzettelGeneratorScreen() {
                 <button
                   key={subjectId}
                   onClick={() => handleSelectSubject(subjectId)}
-                  className="w-full bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive p-4 text-left press flex items-center gap-3"
+                  className="w-full bg-surface border border-border/60 rounded-card shadow-card-adaptive p-4 text-left press flex items-center gap-3"
                 >
                   <SubjectIcon subjectId={subjectId} size="md" />
                   <div className="flex-1 min-w-0">
@@ -261,7 +261,7 @@ export function LernzettelGeneratorScreen() {
             })}
 
             {availableSubjectIds.length === 0 && (
-              <div className="bg-surface border border-border/60 rounded-[20px] p-6 text-center">
+              <div className="bg-surface border border-border/60 rounded-card p-6 text-center">
                 <p className="text-[14px] text-text-muted">Keine Fächer in deinem Profil.</p>
               </div>
             )}
@@ -279,7 +279,7 @@ export function LernzettelGeneratorScreen() {
             />
             <button
               onClick={handleConfirmModus}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-[20px] text-white font-semibold text-[15px] press"
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-card text-white font-semibold text-[15px] press"
               style={{ background: G_LERNZETTEL }}
             >
               Weiter
@@ -340,7 +340,7 @@ export function LernzettelGeneratorScreen() {
                         }
                       }}
                       placeholder={getTopicPlaceholder(selectedSubjectId)}
-                      className="flex-1 bg-surface border border-border rounded-[14px] px-3.5 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-[#5AC8FA] transition-colors"
+                      className="flex-1 bg-surface border border-border rounded-icon px-3.5 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-[#5AC8FA] transition-colors"
                     />
                     <button
                       onClick={() => {
@@ -349,7 +349,7 @@ export function LernzettelGeneratorScreen() {
                         setCustomTopicInput('')
                       }}
                       disabled={!customTopicInput.trim()}
-                      className="px-4 py-2.5 rounded-[14px] text-white text-[15px] font-bold transition-opacity"
+                      className="px-4 py-2.5 rounded-icon text-white text-[15px] font-bold transition-opacity"
                       style={{ background: G_LERNZETTEL, opacity: customTopicInput.trim() ? 1 : 0.4 }}
                     >
                       +
@@ -382,7 +382,7 @@ export function LernzettelGeneratorScreen() {
                 Smart Notes einbeziehen <span className="normal-case font-normal">(optional)</span>
               </p>
               {notesForSubject.length === 0 ? (
-                <div className="bg-surface border border-border/60 rounded-[20px] p-4 flex items-start gap-3">
+                <div className="bg-surface border border-border/60 rounded-card p-4 flex items-start gap-3">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-muted shrink-0 mt-0.5">
                     <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" />
                   </svg>
@@ -399,7 +399,7 @@ export function LernzettelGeneratorScreen() {
                       <button
                         key={note.id}
                         onClick={() => toggleNote(note.id)}
-                        className="w-full text-left press rounded-[16px] border transition-all overflow-hidden"
+                        className="w-full text-left press rounded-card border transition-all overflow-hidden"
                         style={
                           selected
                             ? { borderColor: '#5AC8FA', background: 'rgba(90,200,250,0.08)' }
@@ -448,7 +448,7 @@ export function LernzettelGeneratorScreen() {
             {/* Erklärbilder toggle */}
             <button
               onClick={() => setWithImages((v) => !v)}
-              className="w-full bg-surface border border-border/60 rounded-[20px] p-4 text-left press flex items-center gap-3"
+              className="w-full bg-surface border border-border/60 rounded-card p-4 text-left press flex items-center gap-3"
             >
               <div className="flex-1 min-w-0">
                 <p className="text-[14px] font-semibold text-text-primary">Mit Erklärbildern <span className="text-[11px] font-normal text-text-muted">(Beta)</span></p>
@@ -469,7 +469,7 @@ export function LernzettelGeneratorScreen() {
 
             {/* Error banner */}
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 rounded-[16px] p-3">
+              <div className="bg-red-500/10 border border-red-500/30 rounded-card p-3">
                 <p className="text-[13px] text-red-500">{error}</p>
               </div>
             )}
@@ -483,7 +483,7 @@ export function LernzettelGeneratorScreen() {
                   void handleGenerate()
                 }
               }}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-[20px] text-white font-semibold text-[15px] press"
+              className="w-full flex items-center justify-center gap-2 py-4 rounded-card text-white font-semibold text-[15px] press"
               style={{ background: G_LERNZETTEL }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -508,7 +508,7 @@ export function LernzettelGeneratorScreen() {
 
                   {/* Icon */}
                   <div
-                    className="w-12 h-12 rounded-[16px] flex items-center justify-center mx-auto mb-4"
+                    className="w-12 h-12 rounded-card flex items-center justify-center mx-auto mb-4"
                     style={{ background: 'rgb(var(--fill-orange))' }}
                   >
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--fill-orange-on))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -549,7 +549,7 @@ export function LernzettelGeneratorScreen() {
         {step === 'generating' && (
           <div className="flex flex-col items-center justify-center pt-20 gap-6">
             <div
-              className="w-20 h-20 rounded-[24px] flex items-center justify-center"
+              className="w-20 h-20 rounded-sheet flex items-center justify-center"
               style={{ background: G_LERNZETTEL }}
             >
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

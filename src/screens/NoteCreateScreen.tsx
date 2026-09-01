@@ -1347,7 +1347,7 @@ export function NoteCreateScreen() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-2 py-8" style={{ backgroundColor: 'rgb(var(--color-surface))' }}>
-                <div className="w-11 h-11 rounded-[14px] flex items-center justify-center" style={{ background: '#7C3AED', backgroundImage: 'var(--subj-fade)' }}>
+                <div className="w-11 h-11 rounded-icon flex items-center justify-center" style={{ background: '#7C3AED', backgroundImage: 'var(--subj-fade)' }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                     <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -2026,7 +2026,7 @@ export function NoteCreateScreen() {
           <div className="relative w-full max-w-lg bg-surface rounded-t-2xl px-5 pt-5 shadow-2xl" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom, 0px))' }}>
             <div className="w-10 h-1 rounded-full bg-border mx-auto mb-4" />
             <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0" style={{ background: '#7C3AED', backgroundImage: 'var(--subj-fade)' }}>
+              <div className="w-10 h-10 rounded-btn flex items-center justify-center shrink-0" style={{ background: '#7C3AED', backgroundImage: 'var(--subj-fade)' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                   <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

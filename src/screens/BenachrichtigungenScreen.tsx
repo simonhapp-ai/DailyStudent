@@ -83,7 +83,7 @@ export function BenachrichtigungenScreen() {
 
         {/* ── Coming soon banner ──────────────────────────────── */}
         <div
-          className="rounded-[16px] px-4 py-3.5 flex items-start gap-3"
+          className="rounded-card px-4 py-3.5 flex items-start gap-3"
           style={{ background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
@@ -104,7 +104,7 @@ export function BenachrichtigungenScreen() {
                 className={`flex items-center gap-3 px-4 py-4 ${i < ITEMS.length - 1 ? 'border-b border-border/50' : ''}`}
               >
                 <div
-                  className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
+                  className="w-10 h-10 rounded-btn flex items-center justify-center text-[20px] shrink-0"
                   style={{ background: item.color + '18' }}
                 >
                   <Icon name={item.icon} size={18} />

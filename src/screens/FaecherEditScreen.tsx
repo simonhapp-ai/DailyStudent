@@ -140,7 +140,7 @@ export function FaecherEditScreen() {
         </p>
 
         {/* ── Eigene Fächer Widget ───────────────────────────────────────── */}
-        <div className="mb-7 rounded-[20px] border border-border/60 bg-surface overflow-hidden shadow-card-adaptive">
+        <div className="mb-7 rounded-card border border-border/60 bg-surface overflow-hidden shadow-card-adaptive">
           {/* Header row — always clickable */}
           <button
             onClick={handleToggleAccordion}

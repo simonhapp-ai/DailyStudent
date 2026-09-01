@@ -18,10 +18,10 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
 function ImageBlock({ src, alt }: { src: string; alt: string }) {
   const isResolved = !src.startsWith('idb:') && !src.startsWith('cloud:')
   if (!isResolved) {
-    return <div className="w-full h-40 rounded-[16px] bg-surface-hover animate-pulse my-3" />
+    return <div className="w-full h-40 rounded-card bg-surface-hover animate-pulse my-3" />
   }
   return (
-    <div className="my-3 rounded-[16px] overflow-hidden border border-border/60 bg-surface-hover">
+    <div className="my-3 rounded-card overflow-hidden border border-border/60 bg-surface-hover">
       <img src={src} alt={alt} className="w-full h-auto block" />
       {alt && <p className="text-[11px] text-text-muted px-3 py-2">{alt}</p>}
     </div>

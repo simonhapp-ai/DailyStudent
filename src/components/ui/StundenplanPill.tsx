@@ -52,7 +52,7 @@ export function StundenplanPill({ slot, variant, isCurrent, isPast, isNext, styl
   if (variant === 'stack') {
     return (
       <div
-        className="rounded-[10px] px-2 py-2.5 flex flex-col items-center gap-0.5 overflow-hidden"
+        className="rounded-btn px-2 py-2.5 flex flex-col items-center gap-0.5 overflow-hidden"
         style={{ background, borderLeft: `2.5px solid ${accent}90`, opacity: isPast ? 0.5 : 1 }}
       >
         <span className="text-[9px] font-bold text-center leading-tight truncate w-full" style={{ color: accent }}>{name}</span>
@@ -76,7 +76,7 @@ export function StundenplanPill({ slot, variant, isCurrent, isPast, isNext, styl
   // 'row'
   return (
     <div
-      className="flex items-center gap-2 rounded-[12px] px-3 py-2 overflow-hidden"
+      className="flex items-center gap-2 rounded-btn px-3 py-2 overflow-hidden"
       style={{ background, borderLeft: `2.5px solid ${accent}90`, opacity: isPast ? 0.5 : 1 }}
     >
       <span className={`text-[11px] font-mono font-semibold ${isPast ? 'line-through' : ''}`} style={{ color: isCurrent ? '#30D158' : 'rgb(var(--color-text-muted))' }}>
@@ -112,7 +112,7 @@ function FreistundeBlock({ variant, style, onClick }: { variant: StundenplanPill
 
   if (variant === 'stack') {
     return (
-      <div className={`rounded-[10px] px-2 py-2.5 flex flex-col items-center gap-0.5 ${base}`} style={{ background: bg, borderColor }}>
+      <div className={`rounded-btn px-2 py-2.5 flex flex-col items-center gap-0.5 ${base}`} style={{ background: bg, borderColor }}>
         <Icon name="coffee" size={15} className="opacity-60" />
         <span className="text-[9px] font-semibold text-center leading-tight" style={{ color: textColor }}>Frei</span>
       </div>
@@ -129,7 +129,7 @@ function FreistundeBlock({ variant, style, onClick }: { variant: StundenplanPill
 
   // 'row'
   return (
-    <div className={`flex items-center gap-2 rounded-[12px] px-3 py-2 ${base}`} style={{ background: bg, borderColor }}>
+    <div className={`flex items-center gap-2 rounded-btn px-3 py-2 ${base}`} style={{ background: bg, borderColor }}>
       <Icon name="coffee" size={14} className="opacity-60" />
       <span className="text-[13px] font-medium" style={{ color: textColor }}>Freistunde</span>
     </div>

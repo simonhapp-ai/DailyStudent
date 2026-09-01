@@ -158,7 +158,7 @@ function GradePicker({
           <button
             key={i}
             onClick={() => onChange(i)}
-            className="w-9 h-9 rounded-[10px] press-sm transition-all flex items-center justify-center shrink-0"
+            className="w-9 h-9 rounded-btn press-sm transition-all flex items-center justify-center shrink-0"
             style={
               isSelected
                 ? { background: `${color}22`, color, border: `2px solid ${color}`, fontWeight: 800, fontSize: 14, boxShadow: `0 2px 8px ${color}40` }
@@ -283,7 +283,7 @@ function GradeColumn({
       {/* Add grade button */}
       <button
         onClick={onAddGrade}
-        className="w-full py-1.5 rounded-[8px] text-[11px] font-bold press-sm"
+        className="w-full py-1.5 rounded-chip text-[11px] font-bold press-sm"
         style={{
           background: 'rgba(var(--color-accent),0.07)',
           color: 'rgb(var(--color-accent))',
@@ -354,7 +354,7 @@ function SubjectCard({
   const subjectTypeLabel = entry.subjectType === 'seminarfach' ? 'Seminarfach' : entry.subjectType === 'excluded' ? 'Ausgeschlossen' : null
 
   return (
-    <div className={`bg-surface border border-border/60 rounded-[18px] overflow-hidden transition-opacity ${isExcluded ? 'opacity-50' : ''}`}>
+    <div className={`bg-surface border border-border/60 rounded-card overflow-hidden transition-opacity ${isExcluded ? 'opacity-50' : ''}`}>
 
       {/* ── Top bar: icon · name · LK toggle · Endnote · expand chevron ── */}
       <button
@@ -532,7 +532,7 @@ function SubjectCard({
 
           {manualOpen && (
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center gap-1.5 bg-background border border-border rounded-[10px] px-3 py-1.5">
+              <div className="flex items-center gap-1.5 bg-background border border-border rounded-btn px-3 py-1.5">
                 <span className="text-[11px] font-bold text-text-muted">S</span>
                 <input
                   type="number"
@@ -549,7 +549,7 @@ function SubjectCard({
                 <span className="text-[11px] text-text-muted">%</span>
               </div>
               <span className="text-[11px] text-text-muted">/</span>
-              <div className="flex items-center gap-1.5 bg-background border border-border/50 rounded-[10px] px-3 py-1.5 opacity-70">
+              <div className="flex items-center gap-1.5 bg-background border border-border/50 rounded-btn px-3 py-1.5 opacity-70">
                 <span className="text-[11px] font-bold text-text-muted">M</span>
                 <span className="w-9 text-text-secondary text-[14px] font-bold text-center tabular-nums">
                   {100 - manualPct}
@@ -583,7 +583,7 @@ function PruefungCard({
   const subj = pruefung.subjectId ? resolveSubjectInfo(pruefung.subjectId, customFaecher) : null
 
   return (
-    <div className="bg-surface border border-border/60 rounded-[18px] overflow-hidden">
+    <div className="bg-surface border border-border/60 rounded-card overflow-hidden">
       <button
         className="w-full flex items-center justify-between px-4 py-3 text-left press-sm"
         onClick={() => setExpanded((e) => !e)}
@@ -859,7 +859,7 @@ export function AbiRechnerScreen() {
       <div className="px-4 pt-4 pb-8 space-y-4">
 
         {/* Summary card */}
-        <div className="bg-surface border border-border/60 rounded-[20px] p-5">
+        <div className="bg-surface border border-border/60 rounded-card p-5">
           {totalPunkte !== null ? (
             <>
               <div className="flex items-start justify-between mb-4">
@@ -949,7 +949,7 @@ export function AbiRechnerScreen() {
           ) : (
             <div className="flex items-center gap-4">
               <div
-                className="w-12 h-12 rounded-[14px] flex items-center justify-center text-2xl shrink-0"
+                className="w-12 h-12 rounded-icon flex items-center justify-center text-2xl shrink-0"
                 style={{ background: 'rgba(var(--color-accent),0.1)' }}
               >
                 <Icon name="cap" size={28} />
@@ -964,7 +964,7 @@ export function AbiRechnerScreen() {
 
         {/* Abitur-Gesamt (Block I + II) — nur sobald mind. 1 Prüfung eingetragen ist */}
         {isOberstufe && gesamt900 !== null && (
-          <div className="bg-surface border border-border/60 rounded-[20px] p-5">
+          <div className="bg-surface border border-border/60 rounded-card p-5">
             <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">
               Abitur-Gesamt (Block I + II)
             </p>
@@ -983,13 +983,13 @@ export function AbiRechnerScreen() {
               </div>
             </div>
             <div className="flex gap-2.5">
-              <div className="flex-1 bg-background/50 rounded-[12px] p-2.5">
+              <div className="flex-1 bg-background/50 rounded-btn p-2.5">
                 <p className="text-[11px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Block I</p>
                 <p className="text-[15px] font-bold text-text-primary tabular-nums">
                   {blockI ?? 0} <span className="text-[11px] font-normal text-text-muted">/ 600</span>
                 </p>
               </div>
-              <div className="flex-1 bg-background/50 rounded-[12px] p-2.5">
+              <div className="flex-1 bg-background/50 rounded-btn p-2.5">
                 <p className="text-[11px] text-text-muted uppercase font-bold tracking-wider mb-0.5">Block II</p>
                 <p className="text-[15px] font-bold text-text-primary tabular-nums">
                   {blockII} <span className="text-[11px] font-normal text-text-muted">/ 300</span>
@@ -1119,7 +1119,7 @@ export function AbiRechnerScreen() {
         )}
 
         {/* Grade scale reference */}
-        <div className="bg-surface border border-border/40 rounded-[14px] px-4 py-3.5">
+        <div className="bg-surface border border-border/40 rounded-icon px-4 py-3.5">
           <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">Punkte → Note</p>
           <div className="grid grid-cols-5 gap-1.5">
             {(

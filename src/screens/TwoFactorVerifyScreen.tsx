@@ -76,7 +76,7 @@ export function TwoFactorVerifyScreen({ onVerified }: Props) {
         <img
           src="/logo.png"
           alt="DailyStudent"
-          className="w-16 h-16 rounded-[22px] mx-auto mb-4 shadow-lg object-cover"
+          className="w-16 h-16 rounded-card mx-auto mb-4 shadow-lg object-cover"
         />
         <h1 className="text-2xl font-bold text-foreground">DailyStudent</h1>
         <p className="text-sm text-muted mt-1">Zwei-Faktor-Authentifizierung</p>
@@ -85,7 +85,7 @@ export function TwoFactorVerifyScreen({ onVerified }: Props) {
       <div className="w-full max-w-sm bg-surface rounded-2xl shadow-card-adaptive border border-border/60 p-6">
 
         <div
-          className="w-12 h-12 rounded-[14px] flex items-center justify-center mb-4 mx-auto"
+          className="w-12 h-12 rounded-icon flex items-center justify-center mb-4 mx-auto"
           style={{ background: '#8b5cf6' }}
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

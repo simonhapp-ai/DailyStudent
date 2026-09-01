@@ -94,10 +94,10 @@ export function KlausurplanScreen() {
         {!addOpen ? (
           <button
             onClick={() => setAddOpen(true)}
-            className="w-full flex items-center gap-3 bg-surface border border-border/60 rounded-[20px] px-5 py-4 text-left hover:bg-surface-hover active:scale-[0.99] transition-all duration-200"
+            className="w-full flex items-center gap-3 bg-surface border border-border/60 rounded-card px-5 py-4 text-left hover:bg-surface-hover active:scale-[0.99] transition-all duration-200"
           >
             <div
-              className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0"
+              className="w-10 h-10 rounded-btn flex items-center justify-center shrink-0"
               style={{ background: '#FF3B30' }}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -113,7 +113,7 @@ export function KlausurplanScreen() {
             </svg>
           </button>
         ) : (
-          <div className="bg-surface border border-border/60 rounded-[20px] overflow-hidden">
+          <div className="bg-surface border border-border/60 rounded-card overflow-hidden">
             <div className="flex items-center justify-between px-5 pt-4 pb-2">
               <p className="text-[16px] font-bold text-text-primary">Neue Klausur</p>
               <button
@@ -136,7 +136,7 @@ export function KlausurplanScreen() {
                       <button
                         key={id}
                         onClick={() => setSubjectId(id)}
-                        className="flex items-center gap-2 p-2.5 rounded-[10px] border text-left transition-all press-sm"
+                        className="flex items-center gap-2 p-2.5 rounded-btn border text-left transition-all press-sm"
                         style={active
                           ? { background: `${subj.color}18`, borderColor: subj.color }
                           : { borderColor: 'rgba(var(--color-border),0.6)' }}
@@ -162,7 +162,7 @@ export function KlausurplanScreen() {
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   min={todayStr}
-                  className="w-full bg-background border border-border rounded-[12px] px-3 py-2.5 text-[13px] text-text-primary focus:outline-none focus:border-accent transition-colors"
+                  className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[13px] text-text-primary focus:outline-none focus:border-accent transition-colors"
                 />
               </div>
 
@@ -192,7 +192,7 @@ export function KlausurplanScreen() {
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder={getTopicPlaceholder(subjectId)}
-                  className="w-full bg-background border border-border rounded-[12px] px-3 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+                  className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
                 />
               </div>
 
@@ -200,7 +200,7 @@ export function KlausurplanScreen() {
               <button
                 onClick={handleAdd}
                 disabled={!subjectId || !date}
-                className="w-full py-3 rounded-[14px] text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
+                className="w-full py-3 rounded-icon text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
                 style={{
                   background: '#FF3B30',
                   boxShadow: subjectId && date ? '0 4px 16px #FF3B3040' : 'none',
@@ -230,7 +230,7 @@ export function KlausurplanScreen() {
                 return (
                   <div
                     key={`${k.subjectId}-${k.date}`}
-                    className="bg-surface border border-border/60 rounded-[16px] px-4 py-3.5 flex items-center gap-3"
+                    className="bg-surface border border-border/60 rounded-card px-4 py-3.5 flex items-center gap-3"
                   >
                     <SubjectIcon subjectId={k.subjectId} size="md" />
                     <div className="flex-1 min-w-0">
@@ -285,7 +285,7 @@ export function KlausurplanScreen() {
                 return (
                   <div
                     key={`past-${k.subjectId}-${k.date}`}
-                    className="bg-surface border border-border/40 rounded-[16px] px-4 py-3 flex items-center gap-3 opacity-55"
+                    className="bg-surface border border-border/40 rounded-card px-4 py-3 flex items-center gap-3 opacity-55"
                   >
                     <SubjectIcon subjectId={k.subjectId} size="sm" />
                     <div className="flex-1 min-w-0">

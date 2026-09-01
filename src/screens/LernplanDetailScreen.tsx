@@ -375,7 +375,7 @@ export function LernplanDetailScreen() {
 
         {/* Summary strip */}
         <div className="px-4 py-4">
-          <div className="bg-surface border border-border/60 rounded-[20px] p-4 flex items-start gap-0">
+          <div className="bg-surface border border-border/60 rounded-card p-4 flex items-start gap-0">
             {[
               { label: 'Lerntage', value: String(totalStudyDays) },
               { label: 'Lernzeit', value: `${Math.round(totalMinutes / 60)}h` },
@@ -402,14 +402,14 @@ export function LernplanDetailScreen() {
             return (
               <div
                 key={day.date}
-                className={`relative rounded-[20px] border overflow-hidden transition-all ${
+                className={`relative rounded-card border overflow-hidden transition-all ${
                   todayMark ? 'border-accent shadow-lg' : 'border-border/60'
                 } ${pastMark && !todayMark ? 'opacity-60' : ''}`}
                 style={{ background: DAY_TYPE_COLORS[day.dayType] }}
               >
                 {/* Day header */}
                 <div className="flex items-center gap-3 px-4 pt-4 pb-3">
-                  <div className={`flex flex-col items-center w-10 rounded-[10px] py-1 shrink-0 ${
+                  <div className={`flex flex-col items-center w-10 rounded-btn py-1 shrink-0 ${
                     todayMark ? 'bg-accent' : 'bg-background/60'
                   }`}>
                     <p className={`text-[11px] font-bold leading-none ${todayMark ? 'text-white/80' : 'text-text-muted'}`}>{weekday}</p>
@@ -437,7 +437,7 @@ export function LernplanDetailScreen() {
 
                 {/* Exam banner */}
                 {day.dayType === 'klausur' && (
-                  <div className="mx-4 mb-4 p-3 rounded-[14px] flex items-center gap-2" style={{ background: 'rgba(var(--color-danger),0.10)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
+                  <div className="mx-4 mb-4 p-3 rounded-icon flex items-center gap-2" style={{ background: 'rgba(var(--color-danger),0.10)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
                       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                       <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
@@ -448,7 +448,7 @@ export function LernplanDetailScreen() {
 
                 {/* Pause banner */}
                 {day.dayType === 'pause' && (
-                  <div className="mx-4 mb-4 p-3 rounded-[14px]" style={{ background: 'rgba(var(--color-border),0.3)' }}>
+                  <div className="mx-4 mb-4 p-3 rounded-icon" style={{ background: 'rgba(var(--color-border),0.3)' }}>
                     <p className="text-text-muted text-[13px] text-center flex items-center justify-center gap-1.5"><Icon name="coffee" size={14} />Erholungstag — keine Lernaufgaben</p>
                   </div>
                 )}
@@ -485,7 +485,7 @@ export function LernplanDetailScreen() {
         <div className="no-print px-4 pt-6">
           <button
             onClick={addToCalendar}
-            className="w-full py-3.5 rounded-[20px] on-mint text-[14px] font-bold press-sm flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-card on-mint text-[14px] font-bold press-sm flex items-center justify-center gap-2"
             style={{ background: '#34D399' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -502,7 +502,7 @@ export function LernplanDetailScreen() {
         <div className="no-print px-4 pt-3">
           <button
             onClick={() => setConfirmDelete(true)}
-            className="w-full py-3 rounded-[20px] border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
+            className="w-full py-3 rounded-card border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
             Lernplan löschen
           </button>
@@ -547,7 +547,7 @@ function SessionCard({
   const hasProActivity = session.activities?.some((a) => a.isPro) ?? false
 
   return (
-    <div className="bg-background/70 border border-border/40 rounded-[14px] overflow-hidden">
+    <div className="bg-background/70 border border-border/40 rounded-icon overflow-hidden">
       {/* Collapsed header — always clickable */}
       <button
         onClick={onToggle}
@@ -634,7 +634,7 @@ function ActivityRow({
   }
 
   return (
-    <div className={`flex items-center gap-2.5 p-2.5 rounded-[10px] ${
+    <div className={`flex items-center gap-2.5 p-2.5 rounded-btn ${
       isLocked ? 'bg-warning/6 border border-warning/15' : 'bg-surface/60 border border-border/30'
     }`}>
       {/* Duration chip */}
@@ -657,7 +657,7 @@ function ActivityRow({
       {route && (
         <button
           onClick={handleAction}
-          className={`flex items-center gap-1 px-2 py-1.5 rounded-[8px] text-[11px] font-semibold shrink-0 transition-all active:scale-[0.95] ${
+          className={`flex items-center gap-1 px-2 py-1.5 rounded-chip text-[11px] font-semibold shrink-0 transition-all active:scale-[0.95] ${
             isLocked
               ? 'bg-warning/15 text-text-secondary'
               : 'bg-accent/12 text-text-primary'

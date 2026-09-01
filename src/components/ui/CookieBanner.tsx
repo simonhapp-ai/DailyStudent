@@ -36,7 +36,7 @@ export function CookieBanner({ onConsent }: CookieBannerProps) {
       animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
       transition={reducedMotion ? { duration: 0.16 } : { type: 'spring', duration: 0.5, bounce: 0.22 }}
     >
-      <div className="rounded-[28px] border border-border/60 bg-background/95 backdrop-blur-lg shadow-float p-4">
+      <div className="rounded-sheet border border-border/60 bg-background/95 backdrop-blur-lg shadow-float p-4">
         <p className="text-[12px] leading-relaxed text-muted-foreground mb-3">
           Wir nutzen{' '}
           <span className="font-medium text-foreground">Vercel Analytics</span>

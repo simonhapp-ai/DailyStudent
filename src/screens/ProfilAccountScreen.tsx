@@ -188,7 +188,7 @@ export function ProfilAccountScreen() {
               </p>
 
               {deleteError && (
-                <div className="rounded-[10px] px-3 py-2.5 mb-4 border" style={{ background: 'rgba(var(--color-danger),0.08)', borderColor: 'rgba(var(--color-danger),0.2)' }}>
+                <div className="rounded-btn px-3 py-2.5 mb-4 border" style={{ background: 'rgba(var(--color-danger),0.08)', borderColor: 'rgba(var(--color-danger),0.2)' }}>
                   <p className="text-[12px] leading-snug" style={{ color: 'rgb(var(--color-danger))' }}>{deleteError}</p>
                 </div>
               )}
@@ -202,7 +202,7 @@ export function ProfilAccountScreen() {
                 onChange={(e) => setDeleteInput(e.target.value)}
                 placeholder="löschen"
                 autoFocus
-                className="w-full bg-background border rounded-[12px] px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none mb-4"
+                className="w-full bg-background border rounded-btn px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none mb-4"
                 style={{ borderColor: deleteInput.toLowerCase() === 'löschen' ? 'rgba(var(--color-danger),0.6)' : 'rgba(var(--color-border),0.8)' }}
               />
 
@@ -210,14 +210,14 @@ export function ProfilAccountScreen() {
                 <button
                   onClick={() => setDeleteOpen(false)}
                   disabled={deleting}
-                  className="flex-1 py-3 rounded-[14px] bg-surface-hover text-text-secondary text-[14px] font-semibold press-sm disabled:opacity-50"
+                  className="flex-1 py-3 rounded-icon bg-surface-hover text-text-secondary text-[14px] font-semibold press-sm disabled:opacity-50"
                 >
                   Abbrechen
                 </button>
                 <button
                   onClick={handleDeleteAccount}
                   disabled={deleteInput.toLowerCase() !== 'löschen' || deleting}
-                  className="flex-1 py-3 rounded-[14px] text-white text-[14px] font-bold press-sm disabled:opacity-40 transition-all"
+                  className="flex-1 py-3 rounded-icon text-white text-[14px] font-bold press-sm disabled:opacity-40 transition-all"
                   style={{
                     background: deleteInput.toLowerCase() === 'löschen'
                       ? 'linear-gradient(135deg, rgb(var(--color-danger)), rgba(var(--color-danger),0.85))'

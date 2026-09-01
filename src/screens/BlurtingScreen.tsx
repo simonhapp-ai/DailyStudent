@@ -373,7 +373,7 @@ export function BlurtingScreen() {
                       <button
                         key={item.id}
                         onClick={() => setNoteSelection({ kind: 'note', item })}
-                        className="w-full bg-surface rounded-[16px] border shadow-card-adaptive p-4 text-left press flex items-start gap-3 transition-colors"
+                        className="w-full bg-surface rounded-card border shadow-card-adaptive p-4 text-left press flex items-start gap-3 transition-colors"
                         style={{ borderColor: isActive ? selectedSubject.color : 'rgb(var(--color-border) / 0.6)' }}
                       >
                         <div className="w-1 shrink-0 rounded-full self-stretch" style={{ background: selectedSubject.color }} />
@@ -399,10 +399,10 @@ export function BlurtingScreen() {
                   {notesForSelected.length > 1 && (
                     <button
                       onClick={() => setNoteSelection({ kind: 'all' })}
-                      className="w-full bg-surface rounded-[16px] border p-4 text-left press flex items-center gap-3 transition-colors"
+                      className="w-full bg-surface rounded-card border p-4 text-left press flex items-center gap-3 transition-colors"
                       style={{ borderColor: noteSelection.kind === 'all' ? selectedSubject.color : 'rgb(var(--color-border) / 0.6)' }}
                     >
-                      <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: `${selectedSubject.color}15` }}>
+                      <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: `${selectedSubject.color}15` }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: selectedSubject.color }}>
                           <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
                         </svg>
@@ -421,10 +421,10 @@ export function BlurtingScreen() {
 
                   <button
                     onClick={() => setNoteSelection({ kind: 'none' })}
-                    className="w-full bg-surface rounded-[16px] border p-4 text-left press flex items-center gap-3 transition-colors"
+                    className="w-full bg-surface rounded-card border p-4 text-left press flex items-center gap-3 transition-colors"
                     style={{ borderColor: noteSelection.kind === 'none' ? 'rgb(var(--color-text-muted))' : 'rgb(var(--color-border) / 0.6)', borderStyle: 'dashed' }}
                   >
-                    <div className="w-9 h-9 rounded-[10px] bg-surface-hover flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-btn bg-surface-hover flex items-center justify-center shrink-0">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
                         <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                       </svg>
@@ -574,7 +574,7 @@ export function BlurtingScreen() {
       {/* ── Phase: Loading ──────────────────────────────────────────────── */}
       {phase === 'loading' && (
         <div className="flex-1 flex flex-col items-center justify-center gap-4 px-8">
-          <div className="w-14 h-14 rounded-[16px] flex items-center justify-center" style={{ background: BLURTING_GRADIENT }}>
+          <div className="w-14 h-14 rounded-card flex items-center justify-center" style={{ background: BLURTING_GRADIENT }}>
             <svg className="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round">
               <path d="M21 12a9 9 0 11-6.219-8.56" />
             </svg>
@@ -660,7 +660,7 @@ function SubjectSquare({
   return (
     <button
       onClick={onTap}
-      className="aspect-square bg-surface rounded-[16px] border shadow-card-adaptive flex flex-col items-center justify-center gap-1.5 p-2 press relative overflow-hidden transition-colors"
+      className="aspect-square bg-surface rounded-card border shadow-card-adaptive flex flex-col items-center justify-center gap-1.5 p-2 press relative overflow-hidden transition-colors"
       style={{
         borderColor: selected ? subject.color : 'rgb(var(--color-border) / 0.6)',
         borderWidth: selected ? '2px' : '1px',
@@ -701,7 +701,7 @@ function ExamSuggestionCard({
   return (
     <button
       onClick={onTap}
-      className="w-full bg-surface rounded-[18px] border shadow-card-adaptive p-4 flex flex-col gap-2.5 text-left press transition-colors"
+      className="w-full bg-surface rounded-card border shadow-card-adaptive p-4 flex flex-col gap-2.5 text-left press transition-colors"
       style={{ borderColor: active ? 'rgb(var(--color-accent))' : 'rgb(var(--color-border) / 0.6)' }}
     >
       <div className="flex items-center gap-3">
@@ -752,9 +752,9 @@ const TONE_FILL: Record<'green' | 'orange' | 'blue', string> = {
 
 function FeedbackSection({ icon, title, items, tone }: { icon: IconName; title: string; items: string[]; tone: 'green' | 'orange' | 'blue' }) {
   return (
-    <div className="rounded-[18px] overflow-hidden bg-surface border border-border/60">
+    <div className="rounded-card overflow-hidden bg-surface border border-border/60">
       <div className="px-4 pt-4 pb-2.5 flex items-center gap-2.5">
-        <span className={`w-7 h-7 rounded-[9px] flex items-center justify-center shrink-0 ${TONE_FILL[tone]}`}>
+        <span className={`w-7 h-7 rounded-chip flex items-center justify-center shrink-0 ${TONE_FILL[tone]}`}>
           <Icon name={icon} size={15} />
         </span>
         <p className="text-[14px] font-bold text-text-primary">{title}</p>

@@ -371,7 +371,7 @@ export function LernplanKonfiguratorScreen() {
           <button
             onClick={handleNext}
             disabled={!canNext[step]}
-            className="w-full py-4 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
+            className="w-full py-4 rounded-card bg-accent text-white dark:text-[#160E28] text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
           >
             {step === TOTAL_STEPS - 1 ? 'Weiter zur Zusammenfassung' : 'Weiter'}
           </button>
@@ -439,7 +439,7 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
                 if (opt.badge && (!isPro || betaPaused)) { onShowPro(); return }
                 onSelect(opt.id)
               }}
-              className={`w-full flex items-start gap-4 p-4 rounded-[20px] border text-left transition-all duration-150 active:scale-[0.98] ${
+              className={`w-full flex items-start gap-4 p-4 rounded-card border text-left transition-all duration-150 active:scale-[0.98] ${
                 active ? 'bg-accent border-transparent' : 'bg-surface border-border hover:bg-surface-hover'
               }`}
             >
@@ -469,7 +469,7 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
         })}
       </div>
       {planType === 'einzel' && (
-        <div className="mt-4 flex items-start gap-3 p-3.5 rounded-[16px] border border-amber-500/20" style={{ background: 'rgba(245,158,11,0.07)' }}>
+        <div className="mt-4 flex items-start gap-3 p-3.5 rounded-card border border-amber-500/20" style={{ background: 'rgba(245,158,11,0.07)' }}>
           <span className="shrink-0 mt-0.5 text-text-secondary"><Icon name="bulb" size={15} /></span>
           <p className="text-[12px] text-text-secondary leading-relaxed">
             <strong className="text-text-primary">Hinweis:</strong> Bist du mitten in einer Klausurenphase mit mehreren Klausuren, empfehlen wir den{' '}
@@ -593,7 +593,7 @@ function StepKlausurtermine({
           return (
             <div
               key={key}
-              className={`w-full rounded-[20px] border transition-all duration-150 ${
+              className={`w-full rounded-card border transition-all duration-150 ${
                 active ? 'border-accent bg-accent-soft' : 'border-border bg-surface'
               }`}
             >
@@ -636,7 +636,7 @@ function StepKlausurtermine({
                     <button
                       onClick={() => handleScanClick(key)}
                       disabled={isScanning}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[10px] bg-surface border border-border text-text-secondary text-[12px] font-medium hover:bg-surface-hover active:scale-[0.97] transition-all disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-btn bg-surface border border-border text-text-secondary text-[12px] font-medium hover:bg-surface-hover active:scale-[0.97] transition-all disabled:opacity-50"
                     >
                       {isScanning
                         ? <span className="w-3.5 h-3.5 border border-accent/40 border-t-accent rounded-full animate-spin" />
@@ -676,12 +676,12 @@ function StepKlausurtermine({
                       onChange={(e) => setInputValues((prev) => ({ ...prev, [key]: e.target.value }))}
                       onKeyDown={(e) => e.key === 'Enter' && addTopic(key)}
                       placeholder={getTopicPlaceholder(k.subjectId)}
-                      className="flex-1 bg-background border border-border rounded-[12px] px-3 py-2 text-text-primary text-[13px] placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+                      className="flex-1 bg-background border border-border rounded-btn px-3 py-2 text-text-primary text-[13px] placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
                     />
                     <button
                       onClick={() => addTopic(key)}
                       disabled={!(inputValues[key] ?? '').trim()}
-                      className="w-9 h-9 rounded-[12px] bg-accent flex items-center justify-center shrink-0 disabled:opacity-30 active:scale-[0.95] transition-all"
+                      className="w-9 h-9 rounded-btn bg-accent flex items-center justify-center shrink-0 disabled:opacity-30 active:scale-[0.95] transition-all"
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                         <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -815,7 +815,7 @@ function StepZeitBlocker({
 
       {/* Custom block form */}
       {addingBlock && (
-        <div className="bg-surface border border-accent/30 rounded-[20px] p-4 space-y-3">
+        <div className="bg-surface border border-accent/30 rounded-card p-4 space-y-3">
           <input
             type="text"
             value={newBlock.label}
@@ -915,7 +915,7 @@ function StepLernkapazitaet({
       <p className="text-text-muted text-sm mb-6">Wie viel kannst und willst du täglich lernen?</p>
 
       {/* Hours */}
-      <div className="bg-surface border border-border/60 rounded-[20px] p-5 mb-4">
+      <div className="bg-surface border border-border/60 rounded-card p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
           <p className="text-text-primary font-bold text-[16px]">{dailyStudyHours}h pro Tag</p>
           <span className="text-[12px] text-text-muted">{dailyStudyHours <= 2 ? 'Leicht' : dailyStudyHours <= 4 ? 'Moderat' : dailyStudyHours <= 6 ? 'Intensiv' : 'Vollgas'}</span>
@@ -973,7 +973,7 @@ function StepLernkapazitaet({
 
       {/* Target grade */}
       <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Zielnote (Notenpunkte)</p>
-      <div className="bg-surface border border-border/60 rounded-[20px] p-5 mb-4">
+      <div className="bg-surface border border-border/60 rounded-card p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
           <p className="text-text-primary font-bold text-[16px]">
             {targetGrade ? `${targetGrade} NP` : '— NP'}
@@ -1061,7 +1061,7 @@ function StepMethoden({
             <button
               key={m}
               onClick={() => onToggle(m)}
-              className={`flex flex-col gap-1.5 p-4 rounded-[16px] border text-left transition-all press ${
+              className={`flex flex-col gap-1.5 p-4 rounded-card border text-left transition-all press ${
                 active
                   ? 'border-accent bg-accent/10'
                   : 'border-border/60 bg-surface'
@@ -1115,7 +1115,7 @@ function StepSchwerpunkte({
         {subjectIds.map((id) => {
           const subj = SUBJECT_INFO[id]
           return (
-            <div key={id} className="bg-surface border border-border/60 rounded-[20px] p-4">
+            <div key={id} className="bg-surface border border-border/60 rounded-card p-4">
               <div className="flex items-center gap-2 mb-3">
                 <SubjectIcon subjectId={id} size="sm" />
                 <p className="text-text-primary font-bold text-[15px]">{subj?.name ?? id}</p>
@@ -1180,7 +1180,7 @@ function StepZusammenfassung({
       <p className="text-text-muted text-sm mb-6">Überprüfe deine Einstellungen, dann erstellt die KI deinen Plan.</p>
 
       {/* Summary card */}
-      <div className="bg-surface border border-border/60 rounded-[20px] p-5 mb-5 space-y-4">
+      <div className="bg-surface border border-border/60 rounded-card p-5 mb-5 space-y-4">
         <SummaryRow icon="clipboard" label="Plantyp" value={planTypeLabels[planType]} />
         <SummaryRow
           icon="book"
@@ -1212,13 +1212,13 @@ function StepZusammenfassung({
       </div>
 
       {genError && (
-        <div className="mb-4 p-3 rounded-[14px] text-text-primary text-[13px]" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
+        <div className="mb-4 p-3 rounded-icon text-text-primary text-[13px]" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
           {genError}
         </div>
       )}
 
       {generating ? (
-        <div className="bg-surface border border-border/60 rounded-[20px] p-6 flex flex-col items-center gap-4">
+        <div className="bg-surface border border-border/60 rounded-card p-6 flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-[3px] border-accent/25 border-t-accent rounded-full animate-spin" />
           <div className="text-center">
             <p className="text-text-primary font-semibold text-[15px]">KI erstellt deinen Lernplan…</p>
@@ -1228,7 +1228,7 @@ function StepZusammenfassung({
       ) : (
         <button
           onClick={onGenerate}
-          className="w-full py-4 rounded-[20px] bg-accent text-white dark:text-[#160E28] text-[16px] font-bold active:scale-[0.98] transition-all"
+          className="w-full py-4 rounded-card bg-accent text-white dark:text-[#160E28] text-[16px] font-bold active:scale-[0.98] transition-all"
         >
           Lernplan generieren
         </button>

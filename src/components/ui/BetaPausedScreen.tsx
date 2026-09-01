@@ -14,7 +14,7 @@ export function BetaPausedScreen({ title }: BetaPausedScreenProps) {
   return (
     <div className="flex flex-col min-h-dvh bg-background items-center justify-center px-8 text-center">
       <div
-        className="w-16 h-16 rounded-[20px] flex items-center justify-center mb-5"
+        className="w-16 h-16 rounded-card flex items-center justify-center mb-5"
         style={{ background: '#7C3AED' }}
       >
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">

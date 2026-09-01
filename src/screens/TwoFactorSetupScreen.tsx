@@ -139,7 +139,7 @@ export function TwoFactorSetupScreen() {
             <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-5">
               <div className="flex items-start gap-4">
                 <div
-                  className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0"
+                  className="w-11 h-11 rounded-icon flex items-center justify-center shrink-0"
                   style={{
                     background: hasMfa
                       ? '#30d158'

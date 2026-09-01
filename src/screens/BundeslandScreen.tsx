@@ -91,7 +91,7 @@ export function BundeslandScreen() {
                 <button
                   key={bl.id}
                   onClick={() => { setBundeslandId(bl.id); setSaved(false) }}
-                  className={`py-2.5 px-1 rounded-[12px] text-center press-sm transition-all duration-200 border ${active ? 'text-text-primary' : 'text-text-secondary'}`}
+                  className={`py-2.5 px-1 rounded-btn text-center press-sm transition-all duration-200 border ${active ? 'text-text-primary' : 'text-text-secondary'}`}
                   style={active ? {
                     background: 'rgba(var(--color-accent),0.08)',
                     borderColor: 'rgba(var(--color-accent),0.5)',
@@ -146,7 +146,7 @@ export function BundeslandScreen() {
                   <button
                     key={id}
                     onClick={() => { setSchultyp(id); setSaved(false) }}
-                    className="py-3.5 px-4 rounded-[14px] border press-sm transition-all text-left"
+                    className="py-3.5 px-4 rounded-icon border press-sm transition-all text-left"
                     style={active ? {
                       background: 'rgba(var(--color-accent),0.08)',
                       borderColor: 'rgba(var(--color-accent),0.5)',

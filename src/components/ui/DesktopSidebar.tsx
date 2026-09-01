@@ -89,7 +89,7 @@ function useSidebar() {
 // bliebe. Sie beschreibt eine Gewohnheit, kein Feature.
 function TipCard({ tip }: { tip: Tip }) {
   return (
-    <div className="mt-5 mx-1 rounded-[16px] bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] p-3.5 flex gap-2.5">
+    <div className="mt-5 mx-1 rounded-card bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] p-3.5 flex gap-2.5">
       <span className="text-text-secondary shrink-0 mt-0.5">
         <Icon name="speech" size={16} />
       </span>
@@ -105,7 +105,7 @@ function TipCard({ tip }: { tip: Tip }) {
 
 function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => void }) {
   return (
-    <div className="flex gap-1 p-1 rounded-[14px] bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+    <div className="flex gap-1 p-1 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
       {(['unterricht', 'klausur'] as AppMode[]).map((m) => {
         const active = mode === m
         return (
@@ -113,7 +113,7 @@ function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => v
             key={m}
             onClick={() => onPick(m)}
             aria-current={active ? 'page' : undefined}
-            className="flex-1 h-9 rounded-[11px] text-[14px] font-semibold press-sm transition-colors"
+            className="flex-1 h-9 rounded-btn text-[14px] font-semibold press-sm transition-colors"
             style={
               active
                 ? {
@@ -172,7 +172,7 @@ export function DesktopSidebar() {
               key={m}
               onClick={() => navigate(MODE_HOME[m])}
               title={m === 'unterricht' ? 'Unterricht' : 'Klausur'}
-              className="w-full h-11 rounded-[13px] text-[11px] font-bold press-sm transition-colors"
+              className="w-full h-11 rounded-icon text-[11px] font-bold press-sm transition-colors"
               style={
                 active
                   ? {
@@ -196,7 +196,7 @@ export function DesktopSidebar() {
               key={e.path}
               onClick={() => navigate(e.path)}
               title={e.label}
-              className={`w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn ${active ? 'nav-active' : ''}`}
+              className={`w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-btn press-sm nav-btn ${active ? 'nav-active' : ''}`}
               style={{ color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))' }}
             >
               <Icon name={e.icon} size={20} />
@@ -270,7 +270,7 @@ export function DesktopSidebarWide() {
                       <button
                         key={id}
                         onClick={() => navigate(`/unterricht/${id}`)}
-                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-[12px] press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-btn press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
                         style={{ color: 'rgb(var(--color-text-primary))' }}
                       >
                         <SubjectIcon subjectId={id} size="sm" />
@@ -319,13 +319,13 @@ function SideRow({ entry, active, onClick }: { entry: NavEntry; active: boolean;
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-3 py-2 rounded-[12px] press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
+      className={`w-full flex items-center gap-3 px-3 py-2 rounded-btn press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
       style={{
         color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-secondary))',
         fontWeight: active ? 600 : 500,
       }}
     >
-      <span className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+      <span className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
         <Icon name={entry.icon} size={17} />
       </span>
       <span className="text-[14px] truncate flex-1">{entry.label}</span>

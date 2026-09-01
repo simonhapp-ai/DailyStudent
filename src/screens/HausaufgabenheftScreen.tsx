@@ -248,13 +248,13 @@ export function HausaufgabenheftScreen() {
               <div className="flex items-center gap-2 px-4 pt-3.5 pb-1">
                 {subj ? (
                   <div
-                    className="w-7 h-7 rounded-[8px] flex items-center justify-center text-sm shrink-0"
+                    className="w-7 h-7 rounded-chip flex items-center justify-center text-sm shrink-0"
                     style={{ backgroundColor: `${color}20` }}
                   >
                     {subj.icon}
                   </div>
                 ) : (
-                  <div className="w-7 h-7 rounded-[8px] bg-surface-hover flex items-center justify-center shrink-0 text-text-secondary"><Icon name="book" size={14} /></div>
+                  <div className="w-7 h-7 rounded-chip bg-surface-hover flex items-center justify-center shrink-0 text-text-secondary"><Icon name="book" size={14} /></div>
                 )}
                 <div className="flex-1 min-w-0">
                   <p className="text-[12px] font-bold truncate" style={{ color: subj ? color : 'rgb(var(--color-text-muted))' }}>

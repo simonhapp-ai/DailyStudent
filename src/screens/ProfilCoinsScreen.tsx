@@ -139,7 +139,7 @@ export function ProfilCoinsScreen() {
           {/* ── PURPLE — Checklist ─────────────────────────────────── */}
           <motion.div
             {...panelMotion('left', 0)}
-            className="rounded-[28px] p-7"
+            className="rounded-sheet p-7"
             style={{
               background: 'linear-gradient(155deg, rgba(124,58,237,0.09) 0%, rgba(124,58,237,0.02) 100%)',
               border: '1px solid rgba(124,58,237,0.18)',
@@ -191,7 +191,7 @@ export function ProfilCoinsScreen() {
           {/* ── MINT — Shop ────────────────────────────────────────── */}
           <motion.div
             {...panelMotion('right', shouldReduceMotion ? 0.06 : 0.09)}
-            className="rounded-[28px] p-7"
+            className="rounded-sheet p-7"
             style={{
               background: 'linear-gradient(155deg, rgba(52,211,153,0.09) 0%, rgba(52,211,153,0.02) 100%)',
               border: '1px solid rgba(52,211,153,0.18)',
@@ -221,7 +221,7 @@ export function ProfilCoinsScreen() {
               <button
                 onClick={handleBuyFreeze}
                 disabled={!canAfford}
-                className="shrink-0 px-5 py-3 rounded-[14px] text-[13px] font-bold press-sm transition-all disabled:opacity-40"
+                className="shrink-0 px-5 py-3 rounded-icon text-[13px] font-bold press-sm transition-all disabled:opacity-40"
                 style={canAfford
                   ? { background: '#34D399', color: '#fff', boxShadow: '0 3px 10px rgba(5,150,105,0.28)' }
                   : { background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}
@@ -231,13 +231,13 @@ export function ProfilCoinsScreen() {
             </div>
 
             {freezeToast === 'success' && (
-              <div className="rounded-[12px] px-3.5 py-2.5 mt-4 border text-center"
+              <div className="rounded-btn px-3.5 py-2.5 mt-4 border text-center"
                 style={{ background: 'rgba(52,211,153,0.1)', borderColor: 'rgba(52,211,153,0.3)' }}>
                 <p className="text-[12px] font-semibold text-text-primary">Streak Freeze gekauft</p>
               </div>
             )}
             {freezeToast === 'error' && (
-              <div className="rounded-[12px] px-3.5 py-2.5 mt-4 border text-center"
+              <div className="rounded-btn px-3.5 py-2.5 mt-4 border text-center"
                 style={{ background: 'rgba(239,68,68,0.08)', borderColor: 'rgba(239,68,68,0.25)' }}>
                 <p className="text-[12px] font-semibold" style={{ color: '#EF4444' }}>
                   Nicht genug Coins — 500 nötig
@@ -280,13 +280,13 @@ export function ProfilCoinsScreen() {
                 appConfig.proPurchasesEnabled ? (
                   <button
                     onClick={() => handleRedeemDiscount('15')}
-                    className="w-full mt-3 py-3 rounded-[14px] on-mint text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
+                    className="w-full mt-3 py-3 rounded-icon on-mint text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
                     style={{ background: '#34D399' }}
                   >
                     15% Rabatt einlösen
                   </button>
                 ) : (
-                  <p className="w-full mt-3 py-3 rounded-[14px] text-center text-[12px] font-semibold text-text-muted bg-background">
+                  <p className="w-full mt-3 py-3 rounded-icon text-center text-[12px] font-semibold text-text-muted bg-background">
                     Deine Coins sind sicher — einlösbar sobald Pro startet
                   </p>
                 )
@@ -319,13 +319,13 @@ export function ProfilCoinsScreen() {
                 appConfig.proPurchasesEnabled ? (
                   <button
                     onClick={() => handleRedeemDiscount('30')}
-                    className="w-full mt-3 py-3 rounded-[14px] on-mint text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
+                    className="w-full mt-3 py-3 rounded-icon on-mint text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
                     style={{ background: '#34D399' }}
                   >
                     30% Rabatt einlösen
                   </button>
                 ) : (
-                  <p className="w-full mt-3 py-3 rounded-[14px] text-center text-[12px] font-semibold text-text-muted bg-background">
+                  <p className="w-full mt-3 py-3 rounded-icon text-center text-[12px] font-semibold text-text-muted bg-background">
                     Deine Coins sind sicher — einlösbar sobald Pro startet
                   </p>
                 )
@@ -333,7 +333,7 @@ export function ProfilCoinsScreen() {
             </div>
 
             {redeemToast === 'error' && (
-              <div className="rounded-[12px] px-3.5 py-2.5 mt-4 border text-center"
+              <div className="rounded-btn px-3.5 py-2.5 mt-4 border text-center"
                 style={{ background: 'rgba(239,68,68,0.08)', borderColor: 'rgba(239,68,68,0.25)' }}>
                 <p className="text-[12px] font-semibold" style={{ color: '#EF4444' }}>
                   Einlösen fehlgeschlagen. Bitte erneut versuchen.

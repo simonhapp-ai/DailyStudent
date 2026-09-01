@@ -76,7 +76,7 @@ function Card({ children, className = '', onClick, dark = false, glow = 'purple'
   const interactive = !!onClick
   return (
     <div
-      className={`rounded-[20px] p-5 transition-shadow ${
+      className={`rounded-card p-5 transition-shadow ${
         dark ? 'text-white' : 'bg-surface border border-border/60 shadow-card-adaptive'
       } ${interactive ? 'cursor-pointer press' : ''} ${className}`}
       style={dark ? {
@@ -121,7 +121,7 @@ function ErsteSchritteCard({ tasks, onDismiss }: { tasks: ErsteSchritteTask[]; o
   const nextTasks = tasks.filter(t => !t.done)
 
   return (
-    <div className="bg-surface rounded-[20px] border border-border/60 shadow-card-adaptive p-5 mb-4">
+    <div className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-5 mb-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
           <span className="text-text-primary"><Icon name="target" size={19} /></span>
@@ -190,7 +190,7 @@ function HeroLernplanCard({
         <SectionLabel dark>Lernplan</SectionLabel>
         <div className="flex items-center gap-4">
           <div
-            className="w-14 h-14 rounded-[16px] flex items-center justify-center shrink-0"
+            className="w-14 h-14 rounded-card flex items-center justify-center shrink-0"
             style={{ background: '#A78BFA' }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -206,7 +206,7 @@ function HeroLernplanCard({
         </div>
         <button
           onClick={onCreate}
-          className="mt-5 self-start px-5 py-2.5 rounded-[14px] bg-accent text-white dark:text-[#160E28] text-[13px] font-semibold press-sm"
+          className="mt-5 self-start px-5 py-2.5 rounded-icon bg-accent text-white dark:text-[#160E28] text-[13px] font-semibold press-sm"
         >
           Lernplan erstellen
         </button>
@@ -245,7 +245,7 @@ function HeroLernplanCard({
           <span className="text-[12px] text-white/60">{pct}% erledigt</span>
           <button
             onClick={onContinue}
-            className="px-5 py-2 rounded-[12px] bg-white text-[13px] font-bold text-[#0a0a0f] press-sm"
+            className="px-5 py-2 rounded-btn bg-white text-[13px] font-bold text-[#0a0a0f] press-sm"
           >
             Fortsetzen
           </button>
@@ -304,7 +304,7 @@ function ToDoCard({
             </>
           ) : (
             <>
-              <div className="w-11 h-11 rounded-[14px] flex items-center justify-center mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
+              <div className="w-11 h-11 rounded-icon flex items-center justify-center mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="4" width="18" height="18" rx="3" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
                   <line x1="3" y1="10" x2="21" y2="10" />
@@ -323,7 +323,7 @@ function ToDoCard({
           onClick={onHomeworkNavigate}
           className="flex-1 flex flex-col items-center justify-center text-center px-4 py-4 press-sm"
         >
-          <div className="w-11 h-11 rounded-[14px] flex items-center justify-center text-[20px] mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
+          <div className="w-11 h-11 rounded-icon flex items-center justify-center text-[20px] mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
             <Icon name="note" size={26} />
           </div>
           {homeworkCount > 0 ? (
@@ -349,7 +349,7 @@ function SchnellnotizCard({ onClick }: { onClick: () => void }) {
   return (
     <Card className="flex items-center gap-4 min-h-[120px]" onClick={onClick}>
       <div
-        className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0"
+        className="w-12 h-12 rounded-icon flex items-center justify-center shrink-0"
         style={{ background: '#A78BFA' }}
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -600,16 +600,16 @@ export function DashboardScreen() {
                   <button key={note.id} onClick={() => navigate(notePath)} className="relative block text-left press-sm" style={{ minHeight: 128 }}>
                     {/* Back layer 2 — furthest back, most rotated, softest */}
                     <div
-                      className="absolute inset-0 bg-surface rounded-[22px] border border-border/40"
+                      className="absolute inset-0 bg-surface rounded-card border border-border/40"
                       style={{ transform: 'rotate(5deg) translate(3px, 3px)', boxShadow: '0 2px 6px rgba(0,0,0,0.04)', opacity: 0.55 }}
                     />
                     {/* Back layer 1 */}
                     <div
-                      className="absolute inset-0 bg-surface rounded-[22px] border border-border/50"
+                      className="absolute inset-0 bg-surface rounded-card border border-border/50"
                       style={{ transform: 'rotate(2.5deg) translate(1.5px, 1.5px)', boxShadow: '0 3px 8px rgba(0,0,0,0.06)', opacity: 0.8 }}
                     />
                     {/* Front card — actual content */}
-                    <div className="relative bg-surface rounded-[22px] border border-border/60 shadow-card-adaptive p-4 h-full flex flex-col justify-between hover:bg-surface-hover transition-colors">
+                    <div className="relative bg-surface rounded-card border border-border/60 shadow-card-adaptive p-4 h-full flex flex-col justify-between hover:bg-surface-hover transition-colors">
                       <div className="flex items-center justify-between gap-2">
                         <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgb(var(--color-text-primary))' }}>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-bg))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

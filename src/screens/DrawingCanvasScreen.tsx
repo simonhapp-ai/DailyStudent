@@ -262,7 +262,7 @@ export function DrawingCanvasScreen() {
               style={{ color: 'rgb(var(--color-text-muted))' }}
             >
               <div
-                className="px-2 py-1.5 rounded-[10px]"
+                className="px-2 py-1.5 rounded-btn"
                 style={{ background: item.path === null ? 'rgba(124,58,237,0.12)' : 'rgba(var(--color-border), 0.22)' }}
               >
                 <div style={{ color: item.path === null ? '#7C3AED' : undefined }}>

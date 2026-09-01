@@ -42,7 +42,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
           </p>
         </div>
 
-        <div className="rounded-[14px] bg-background px-4 py-3 mb-5 flex items-center justify-between">
+        <div className="rounded-icon bg-background px-4 py-3 mb-5 flex items-center justify-between">
           <span className="text-text-secondary text-[13px]">Deine Streak Freezes</span>
           <span className="text-text-primary font-bold text-[15px] tabular-nums flex items-center gap-1.5"><Icon name="snowflake" size={15} />{freezes}</span>
         </div>
@@ -52,7 +52,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
           {MILESTONES.map((m) => (
             <div
               key={m.days}
-              className="rounded-[12px] py-2.5 text-center"
+              className="rounded-btn py-2.5 text-center"
               style={{
                 background: streak >= m.days ? 'rgba(52,211,153,0.12)' : 'rgba(var(--color-border), 0.4)',
               }}

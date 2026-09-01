@@ -742,15 +742,15 @@ export function InsightsScreen() {
           <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-5">
             <p className="text-text-primary font-bold text-[16px] mb-4">Lernmaterial gesamt</p>
             <div className="flex gap-3">
-              <div className="flex-1 bg-background rounded-[14px] p-3 text-center">
+              <div className="flex-1 bg-background rounded-icon p-3 text-center">
                 <p className="font-bold text-[22px] text-text-primary">{userNotes.length}</p>
                 <p className="text-text-muted text-[11px] mt-0.5">Notizen</p>
               </div>
-              <div className="flex-1 bg-background rounded-[14px] p-3 text-center">
+              <div className="flex-1 bg-background rounded-icon p-3 text-center">
                 <p className="font-bold text-[22px] text-text-primary">{generatedFlashCards.length}</p>
                 <p className="text-text-muted text-[11px] mt-0.5">Karten</p>
               </div>
-              <div className="flex-1 bg-background rounded-[14px] p-3 text-center">
+              <div className="flex-1 bg-background rounded-icon p-3 text-center">
                 <p className="font-bold text-[22px] text-text-primary">{appStats.examCount}</p>
                 <p className="text-text-muted text-[11px] mt-0.5">Klausuren</p>
               </div>
@@ -769,7 +769,7 @@ export function InsightsScreen() {
                 style={{ borderLeft: `3px solid ${tip.accentColor}` }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
+                  <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
                     <Icon name={tip.icon} size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -917,7 +917,7 @@ export function InsightsScreen() {
           return (
             <div>
               <p className="section-label px-1 mb-2.5">Klausurergebnisse</p>
-              <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden mb-3">
+              <div className="bg-surface border border-border/60 rounded-card shadow-card-adaptive overflow-hidden mb-3">
                 {recent.map((pk, i) => (
                   <div key={pk.id} className={`flex items-center gap-3 px-4 py-3 ${i < recent.length - 1 ? 'border-b border-border/40' : ''}`}>
                     <div className="flex-1 min-w-0">
@@ -945,7 +945,7 @@ export function InsightsScreen() {
                 ))}
               </div>
               {weakAfb.length > 0 && (
-                <div className="bg-warning/10 border border-warning/30 rounded-[16px] p-4 flex items-start gap-3">
+                <div className="bg-warning/10 border border-warning/30 rounded-card p-4 flex items-start gap-3">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
                     <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                     <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />

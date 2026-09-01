@@ -100,7 +100,7 @@ function LernzettelRow({
 }) {
   const reducedMotion = useReducedMotion()
   return (
-    <div className="relative rounded-[20px] overflow-hidden">
+    <div className="relative rounded-card overflow-hidden">
       {/* Reveal actions — Markieren (gelb) + Löschen (rot), wie in Apple Notizen */}
       <div className="absolute inset-y-0 right-0 flex">
         {/* Gelb traegt schwarze Schrift, Rot weisse — beide aus den Fuellmarken,
@@ -262,7 +262,7 @@ export function LernzettelScreen() {
           )}
 
           {/* Content */}
-          <div className="bg-surface border border-border/60 rounded-[20px] p-5 shadow-card-adaptive">
+          <div className="bg-surface border border-border/60 rounded-card p-5 shadow-card-adaptive">
             <RichText text={activeLz.content} images={activeLz.images} />
           </div>
 
@@ -287,7 +287,7 @@ export function LernzettelScreen() {
           {activeLz.examTopics.length > 0 && (
             <div>
               <p className="section-label px-0.5 mb-2">Klausurrelevanz</p>
-              <div className="bg-surface border border-border/60 rounded-[20px] p-4 shadow-card-adaptive space-y-2">
+              <div className="bg-surface border border-border/60 rounded-card p-4 shadow-card-adaptive space-y-2">
                 {activeLz.examTopics.map((t, i) => (
                   <div key={i} className="flex items-start gap-3">
                     <span
@@ -311,11 +311,11 @@ export function LernzettelScreen() {
                 prefilledNoteId: activeLz.sourceNoteIds[0] ?? null,
               },
             })}
-            className="w-full bg-surface border border-border/60 rounded-[20px] p-4 shadow-card-adaptive text-left press flex items-center justify-between"
+            className="w-full bg-surface border border-border/60 rounded-card p-4 shadow-card-adaptive text-left press flex items-center justify-between"
           >
             <div className="flex items-center gap-3">
               <div
-                className="w-9 h-9 rounded-[12px] flex items-center justify-center shrink-0"
+                className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0"
                 style={{ background: '#34D399' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -345,11 +345,11 @@ export function LernzettelScreen() {
                 },
               },
             })}
-            className="w-full bg-surface border border-border/60 rounded-[20px] p-4 shadow-card-adaptive text-left press flex items-center justify-between"
+            className="w-full bg-surface border border-border/60 rounded-card p-4 shadow-card-adaptive text-left press flex items-center justify-between"
           >
             <div className="flex items-center gap-3">
               <div
-                className="w-9 h-9 rounded-[12px] flex items-center justify-center shrink-0"
+                className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0"
                 style={{ background: '#34D399' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -371,7 +371,7 @@ export function LernzettelScreen() {
             onClick={() => {
               setConfirmDeleteId(activeLz.id)
             }}
-            className="w-full py-3 rounded-[20px] border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
+            className="w-full py-3 rounded-card border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
             Lernzettel löschen
           </button>
@@ -522,7 +522,7 @@ export function LernzettelScreen() {
             {appConfig.proPurchasesEnabled ? (
               <button
                 onClick={() => setShowPro(true)}
-                className="w-full py-3.5 rounded-[18px] font-bold text-[14px] press"
+                className="w-full py-3.5 rounded-card font-bold text-[14px] press"
                 style={{
                   background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
                   color: '#3B1F00',
@@ -534,7 +534,7 @@ export function LernzettelScreen() {
             ) : (
               <button
                 onClick={() => setShowPro(true)}
-                className="w-full py-3.5 rounded-[18px] font-bold text-[14px] press bg-surface border border-border/60 text-text-secondary"
+                className="w-full py-3.5 rounded-card font-bold text-[14px] press bg-surface border border-border/60 text-text-secondary"
               >
                 Für Update vormerken
               </button>
