@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { saveConsent } from '../../lib/consent'
 
 interface CookieBannerProps {
@@ -8,6 +8,7 @@ interface CookieBannerProps {
 }
 
 export function CookieBanner({ onConsent }: CookieBannerProps) {
+  const reducedMotion = useReducedMotion()
   const [visible, setVisible] = useState(true)
   const location = useLocation()
 
@@ -31,9 +32,9 @@ export function CookieBanner({ onConsent }: CookieBannerProps) {
       style={{ right: 16, bottom: 'max(16px, calc(env(safe-area-inset-bottom, 0px) + 12px))' }}
       role="dialog"
       aria-label="Cookie-Einstellungen"
-      initial={{ opacity: 0, y: 24, scale: 0.94 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ type: 'spring', duration: 0.5, bounce: 0.22 }}
+      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.94 }}
+      animate={reducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+      transition={reducedMotion ? { duration: 0.16 } : { type: 'spring', duration: 0.5, bounce: 0.22 }}
     >
       <div className="rounded-[28px] border border-border/60 bg-background/95 backdrop-blur-lg shadow-float p-4">
         <p className="text-[12px] leading-relaxed text-muted-foreground mb-3">

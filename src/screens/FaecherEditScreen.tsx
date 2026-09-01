@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO, SUBJECT_GROUPS } from '../data/subjectInfo'
 import { BottomSheet } from '../components/ui/BottomSheet'
@@ -9,6 +9,7 @@ import { BottomSheet } from '../components/ui/BottomSheet'
 type CustomFach = { id: string; name: string; icon?: string }
 
 export function FaecherEditScreen() {
+  const reducedMotion = useReducedMotion()
   const navigate = useNavigate()
   const { profile, applyFaecherChanges } = useUser()
 
@@ -159,7 +160,7 @@ export function FaecherEditScreen() {
               )}
               <motion.div
                 animate={{ rotate: accordionOpen ? 180 : 0 }}
-                transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6 9l6 6 6-6" />
@@ -172,10 +173,10 @@ export function FaecherEditScreen() {
           <AnimatePresence>
             {!accordionOpen && hasCustom && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
+                initial={reducedMotion ? { opacity: 1 } : { opacity: 0, height: 0 }}
+                animate={reducedMotion ? { opacity: 1 } : { opacity: 1, height: 'auto' }}
+                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, height: 0 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.2 }}
                 className="overflow-hidden"
               >
                 <div className="px-4 pb-4 flex flex-wrap gap-2">

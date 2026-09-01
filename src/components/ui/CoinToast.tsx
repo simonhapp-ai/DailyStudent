@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { useUser } from '../../context/UserContext'
 import { CoinIcon } from './CoinIcon'
 
 export function CoinToast() {
+  const reducedMotion = useReducedMotion()
   const { coinToastVisible, coinToastAmount, hideCoinToast, appStats } = useUser()
 
   useEffect(() => {
@@ -18,11 +19,11 @@ export function CoinToast() {
         <motion.div
           key="coin-toast"
           // ease-out enter (Emil: enters should use ease-out — starts fast, feels responsive)
-          initial={{ y: 18, opacity: 0, scale: 0.88 }}
-          animate={{ y: 0,  opacity: 1, scale: 1 }}
+          initial={reducedMotion ? { opacity: 0 } : { y: 18, opacity: 0, scale: 0.88 }}
+          animate={reducedMotion ? { opacity: 1 } : { y: 0,  opacity: 1, scale: 1 }}
           // Faster exit (Emil: release/exit should always be snappy)
-          exit={{ y: -14, opacity: 0, scale: 0.88, transition: { duration: 0.16, ease: [0.23, 1, 0.32, 1] } }}
-          transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+          exit={reducedMotion ? { opacity: 0, transition: { duration: 0.12 } } : { y: -14, opacity: 0, scale: 0.88, transition: { duration: 0.16, ease: [0.23, 1, 0.32, 1] } }}
+          transition={reducedMotion ? { duration: 0.14 } : { type: 'spring', stiffness: 380, damping: 26 }}
           className="fixed z-[200] pointer-events-none select-none
                      left-1/2 -translate-x-1/2
                      bottom-[calc(env(safe-area-inset-bottom,0px)+84px)]

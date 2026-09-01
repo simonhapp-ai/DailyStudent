@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Header } from '../components/ui/Header'
 import { ProModal } from '../components/ui/ProModal'
 import { RichText } from '../components/ui/RichText'
@@ -95,6 +95,7 @@ function LernzettelRow({
   onToggleHighlight: () => void
   onDelete: () => void
 }) {
+  const reducedMotion = useReducedMotion()
   return (
     <div className="relative rounded-[20px] overflow-hidden">
       {/* Reveal actions — Markieren (gelb) + Löschen (rot), wie in Apple Notizen */}
@@ -123,7 +124,7 @@ function LernzettelRow({
         dragConstraints={{ left: -SWIPE_REVEAL, right: 0 }}
         dragElastic={{ left: 0.1, right: 0.35 }}
         animate={{ x: isOpen ? -SWIPE_REVEAL : 0 }}
-        transition={{ type: 'spring', stiffness: 500, damping: 42 }}
+        transition={reducedMotion ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 42 }}
         onDragStart={() => onOpenChange(true)}
         onDragEnd={(_, dragInfo) => {
           const shouldStayOpen = dragInfo.offset.x < -SWIPE_REVEAL / 2 || dragInfo.velocity.x < -400
