@@ -285,9 +285,11 @@ export function HausaufgabenheftScreen() {
                         )}
                       </div>
 
-                      <p className="text-[15px] text-text-primary leading-relaxed mt-1">{item.description}</p>
+                      <p className="text-[15px] text-text-primary leading-relaxed mt-1">
+                        {item.description?.trim() || item.noteTitle || 'Ohne Beschreibung'}
+                      </p>
 
-                      {item.noteTitle && (
+                      {item.noteTitle && item.description?.trim() && (
                         <p className="text-[12px] text-text-muted mt-0.5 truncate">aus: {item.noteTitle}</p>
                       )}
 

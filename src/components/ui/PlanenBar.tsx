@@ -1,23 +1,22 @@
-import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 
 // Planen-Leiste (Version C) — sechs Rubriken in einem festen Raster.
 //
-// Erste Zeile: die drei häufigsten plus „Mehr". Ein Tipp klappt die zweite Zeile
-// auf, die exakt unter den ersten drei sitzt — gleiche Spalten, gleiche Breite,
-// nichts versetzt. Man bleibt dabei im aktuellen Screen und wählt von dort seine
-// Rubrik.
+// Zwei Zeilen zu dritt, alle sechs sichtbar. Vorher stand in der ersten Zeile
+// „Mehr" und klappte die zweite auf. Das kostete auf jedem Telefon unter 420 px
+// — also auf fast allen — eine Zeile in voller Breite für ein einziges Wort,
+// und es versteckte drei von sechs Rubriken hinter einem Tipp.
+//
+// Drei Spalten sind auch auf dem schmalsten Gerät breit genug, dass „Stundenplan"
+// und „Notenrechner" ungekürzt hineinpassen. Gekürzte Beschriftungen in einer
+// Navigation sind schlimmer als eine Zeile mehr.
 //
 // Reihenfolge nach Häufigkeit, nicht nach Alphabet. Alle sechs liegen im
 // Klausurenmodus: Geplant wird zuhause, erfasst wird in der Schule.
-const PRIMARY = [
+const RUBRIKEN = [
   { label: 'Kalender', path: '/kalender' },
   { label: 'Statistiken', path: '/insights' },
   { label: 'Stundenplan', path: '/stundenplan' },
-]
-
-const SECONDARY = [
   { label: 'Notenrechner', path: '/abi-rechner' },
   { label: 'Hausaufgaben', path: '/hausaufgaben' },
   { label: 'Klausuren', path: '/klausuren' },
@@ -26,78 +25,24 @@ const SECONDARY = [
 export function PlanenBar({ className = '' }: { className?: string }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const reducedMotion = useReducedMotion()
-  const inSecondary = SECONDARY.some((i) => location.pathname.startsWith(i.path))
-  const [open, setOpen] = useState(inSecondary)
-
-  const pill = (label: string, path: string) => {
-    const active = location.pathname.startsWith(path)
-    return (
-      <button
-        key={path}
-        onClick={() => { if (!active) navigate(path) }}
-        aria-current={active ? 'page' : undefined}
-        title={label}
-        className={`w-full h-9 px-2 rounded-pill text-[12.5px] font-semibold truncate press-sm transition-colors ${
-          active
-            ? 'btn-mode'
-            : 'bg-surface text-text-primary hover:bg-surface-hover'
-        }`}
-      >
-        {label}
-      </button>
-    )
-  }
 
   return (
-    <div className={`flex flex-col gap-2 lg:hidden ${className}`}>
-      <div className="grid grid-cols-3 min-[420px]:grid-cols-4 gap-2">
-        {PRIMARY.map((i) => pill(i.label, i.path))}
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          className="col-span-3 min-[420px]:col-span-1 h-9 px-2 rounded-pill text-[12.5px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm flex items-center justify-center gap-1"
-        >
-          Mehr
-          <motion.svg
-            width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor"
-            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden
-            animate={{ rotate: open ? 180 : 0 }}
-            transition={reducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+    <div className={`grid grid-cols-3 gap-2 lg:hidden ${className}`}>
+      {RUBRIKEN.map(({ label, path }) => {
+        const active = location.pathname.startsWith(path)
+        return (
+          <button
+            key={path}
+            onClick={() => { if (!active) navigate(path) }}
+            aria-current={active ? 'page' : undefined}
+            className={`w-full h-9 px-2 rounded-pill text-[12.5px] font-semibold truncate press-sm transition-colors ${
+              active ? 'btn-mode' : 'bg-surface text-text-primary hover:bg-surface-hover'
+            }`}
           >
-            <path d="M1 1l4 4 4-4" />
-          </motion.svg>
-        </button>
-      </div>
-
-      {/* Zweite Zeile — dasselbe Vier-Spalten-Raster, damit die drei Rubriken
-          bündig unter den ersten dreien stehen statt versetzt. */}
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            key="more"
-            initial={reducedMotion ? { opacity: 1 } : { height: 0, opacity: 0 }}
-            animate={reducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
-            exit={reducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            transition={reducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-            className="overflow-hidden"
-          >
-            <div className="grid grid-cols-3 min-[420px]:grid-cols-4 gap-2">
-              {SECONDARY.map((i, idx) => (
-                <motion.div
-                  key={i.path}
-                  className="flex"
-                  initial={reducedMotion ? false : { opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={reducedMotion ? { duration: 0 } : { delay: idx * 0.04, duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-                >
-                  {pill(i.label, i.path)}
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {label}
+          </button>
+        )
+      })}
     </div>
   )
 }

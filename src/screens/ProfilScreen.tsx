@@ -12,6 +12,7 @@ import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { purchasePlan } from '../lib/revenuecat'
 import { ProModal, WELCOME_COUPON_ID } from '../components/ui/ProModal'
 import { getActiveStreak } from '../lib/streak'
+import { bundeslandName } from '../data/bundeslaender'
 
 const AVATAR_BG_OPTIONS = [
   { id: 'purple', gradient: '#A78BFA' },
@@ -192,7 +193,7 @@ export function ProfilScreen() {
   ]
 
   const subtitle = profile
-    ? `${profile.schulform} · ${profile.klasse}. Klasse · ${profile.bundesland}`
+    ? `${profile.schulform.charAt(0).toUpperCase()}${profile.schulform.slice(1)} · ${profile.klasse}. Klasse · ${bundeslandName(profile.bundesland)}`
     : 'Gymnasium · 12. Klasse'
 
   const isDevAllowlisted = PRO_TOGGLE_ALLOWLIST.includes(authUser?.email ?? '')
@@ -521,7 +522,7 @@ export function ProfilScreen() {
               </span>
               <span className="min-w-0">
                 <span className="block text-[15px] font-semibold text-text-primary">Kalender</span>
-                <span className="block text-[13px] text-text-secondary truncate">Termine und Lernzeiten</span>
+                <span className="block text-[13px] text-text-secondary truncate">Termine</span>
               </span>
             </button>
             <button
@@ -533,7 +534,7 @@ export function ProfilScreen() {
               </span>
               <span className="min-w-0">
                 <span className="block text-[15px] font-semibold text-text-primary">Stundenplan</span>
-                <span className="block text-[13px] text-text-secondary truncate">Deine Wochenstunden</span>
+                <span className="block text-[13px] text-text-secondary truncate">Wochenstunden</span>
               </span>
             </button>
           </div>

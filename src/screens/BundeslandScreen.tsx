@@ -2,24 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 
-const BUNDESLAENDER = [
-  { id: 'by', name: 'Bayern' },
-  { id: 'bw', name: 'Baden-Württ.' },
-  { id: 'be', name: 'Berlin' },
-  { id: 'bb', name: 'Brandenburg' },
-  { id: 'hb', name: 'Bremen' },
-  { id: 'hh', name: 'Hamburg' },
-  { id: 'he', name: 'Hessen' },
-  { id: 'mv', name: 'Meckl.-Vorp.' },
-  { id: 'ni', name: 'Niedersachsen' },
-  { id: 'nw', name: 'NRW' },
-  { id: 'rp', name: 'Rheinl.-Pfalz' },
-  { id: 'sl', name: 'Saarland' },
-  { id: 'sn', name: 'Sachsen' },
-  { id: 'st', name: 'Sachsen-Anh.' },
-  { id: 'sh', name: 'Schleswig-H.' },
-  { id: 'th', name: 'Thüringen' },
-]
+
+import { BUNDESLAENDER } from '../data/bundeslaender'
 
 const SCHULFORMEN = ['Gymnasium', 'Gesamtschule', 'FOS']
 
