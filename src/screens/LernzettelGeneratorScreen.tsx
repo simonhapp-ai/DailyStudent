@@ -279,7 +279,7 @@ export function LernzettelGeneratorScreen() {
             />
             <button
               onClick={handleConfirmModus}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-card text-white font-semibold text-[15px] press"
+              className="w-full h-12 rounded-pill flex items-center justify-center gap-2 text-white font-semibold text-[15px] press"
               style={{ background: G_LERNZETTEL }}
             >
               Weiter
@@ -483,7 +483,7 @@ export function LernzettelGeneratorScreen() {
                   void handleGenerate()
                 }
               }}
-              className="w-full flex items-center justify-center gap-2 py-4 rounded-card text-white font-semibold text-[15px] press"
+              className="w-full h-12 rounded-pill flex items-center justify-center gap-2 text-white font-semibold text-[15px] press"
               style={{ background: G_LERNZETTEL }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -254,7 +254,7 @@ export function FaecherEditScreen() {
 
                   <button
                     onClick={handleSaveAccordion}
-                    className="w-full py-3.5 rounded-card text-[15px] font-semibold text-white bg-accent press-sm"
+                    className="w-full h-12 rounded-pill text-[15px] font-semibold text-white bg-accent press-sm"
                   >
                     Speichern
                   </button>
@@ -351,14 +351,14 @@ export function FaecherEditScreen() {
           <div className="flex flex-col gap-2.5 pb-2">
             <button
               onClick={handleConfirmDelete}
-              className="w-full py-3.5 rounded-card text-[15px] font-semibold text-white press-sm"
+              className="w-full h-12 rounded-pill text-[15px] font-semibold text-white press-sm"
               style={{ backgroundColor: '#FF453A' }}
             >
               Fach &amp; Daten löschen
             </button>
             <button
               onClick={() => setConfirmDelete(null)}
-              className="w-full py-3.5 rounded-card text-[15px] font-semibold text-text-primary bg-surface border border-border press-sm"
+              className="w-full h-12 rounded-pill text-[15px] font-semibold text-text-primary bg-surface border border-border press-sm"
             >
               Abbrechen
             </button>

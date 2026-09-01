@@ -485,7 +485,7 @@ export function LernplanDetailScreen() {
         <div className="no-print px-4 pt-6">
           <button
             onClick={addToCalendar}
-            className="w-full py-3.5 rounded-card on-mint text-[14px] font-bold press-sm flex items-center justify-center gap-2"
+            className="w-full h-12 rounded-pill on-mint text-[14px] font-bold press-sm flex items-center justify-center gap-2"
             style={{ background: '#34D399' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -502,7 +502,7 @@ export function LernplanDetailScreen() {
         <div className="no-print px-4 pt-3">
           <button
             onClick={() => setConfirmDelete(true)}
-            className="w-full py-3 rounded-card border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
+            className="w-full h-12 rounded-pill border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
             Lernplan löschen
           </button>

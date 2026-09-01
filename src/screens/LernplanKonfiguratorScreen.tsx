@@ -371,7 +371,7 @@ export function LernplanKonfiguratorScreen() {
           <button
             onClick={handleNext}
             disabled={!canNext[step]}
-            className="w-full py-4 rounded-card bg-accent text-white dark:text-[#160E28] text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
+            className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
           >
             {step === TOTAL_STEPS - 1 ? 'Weiter zur Zusammenfassung' : 'Weiter'}
           </button>
@@ -1228,7 +1228,7 @@ function StepZusammenfassung({
       ) : (
         <button
           onClick={onGenerate}
-          className="w-full py-4 rounded-card bg-accent text-white dark:text-[#160E28] text-[16px] font-bold active:scale-[0.98] transition-all"
+          className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[16px] font-bold active:scale-[0.98] transition-all"
         >
           Lernplan generieren
         </button>

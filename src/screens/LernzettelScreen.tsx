@@ -371,7 +371,7 @@ export function LernzettelScreen() {
             onClick={() => {
               setConfirmDeleteId(activeLz.id)
             }}
-            className="w-full py-3 rounded-card border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
+            className="w-full h-12 rounded-pill border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
             Lernzettel löschen
           </button>
@@ -522,7 +522,7 @@ export function LernzettelScreen() {
             {appConfig.proPurchasesEnabled ? (
               <button
                 onClick={() => setShowPro(true)}
-                className="w-full py-3.5 rounded-card font-bold text-[14px] press"
+                className="w-full h-12 rounded-pill font-bold text-[14px] press"
                 style={{
                   background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
                   color: '#3B1F00',
@@ -534,7 +534,7 @@ export function LernzettelScreen() {
             ) : (
               <button
                 onClick={() => setShowPro(true)}
-                className="w-full py-3.5 rounded-card font-bold text-[14px] press bg-surface border border-border/60 text-text-secondary"
+                className="w-full h-12 rounded-pill font-bold text-[14px] press bg-surface border border-border/60 text-text-secondary"
               >
                 Für Update vormerken
               </button>

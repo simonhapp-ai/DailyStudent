@@ -1361,13 +1361,13 @@ function StepStundenplan({
               </div>
               <button
                 onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }}
-                className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Erneut versuchen
               </button>
               <button
                 onClick={() => { setMode('manual'); setScanPhase('idle'); setScanError('') }}
-                className="w-full py-3 rounded-card border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
+                className="w-full h-12 rounded-pill border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
               >
                 Manuell eintragen
               </button>
@@ -1412,7 +1412,7 @@ function StepStundenplan({
                   setScanPhase('idle')
                   setMismatchData(null)
                 }}
-                className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Fächer hinzufügen &amp; Stundenplan übernehmen
               </button>
@@ -1425,7 +1425,7 @@ function StepStundenplan({
                   setScanPhase('idle')
                   setMismatchData(null)
                 }}
-                className="w-full py-3 rounded-card border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
+                className="w-full h-12 rounded-pill border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
               >
                 Nur meine Fächer verwenden
               </button>

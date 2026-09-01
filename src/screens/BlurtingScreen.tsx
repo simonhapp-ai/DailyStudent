@@ -469,7 +469,7 @@ export function BlurtingScreen() {
             <button
               onClick={handleOpenWrite}
               disabled={!selectedSubjectId}
-              className="w-full py-4 rounded-card text-white text-[15px] font-semibold press disabled:opacity-40 transition-opacity flex items-center justify-center gap-2"
+              className="w-full h-12 rounded-pill text-white text-[15px] font-semibold press disabled:opacity-40 transition-opacity flex items-center justify-center gap-2"
               style={{ background: BLURTING_GRADIENT }}
             >
               Leere Seite öffnen
@@ -614,7 +614,7 @@ export function BlurtingScreen() {
             )}
           </div>
           <div className="px-4 pb-10 shrink-0">
-            <button onClick={handleRetry} className="w-full py-4 rounded-card text-white text-[15px] font-semibold press" style={{ background: BLURTING_GRADIENT }}>
+            <button onClick={handleRetry} className="w-full h-12 rounded-pill text-white text-[15px] font-semibold press" style={{ background: BLURTING_GRADIENT }}>
               Nochmal versuchen
             </button>
           </div>

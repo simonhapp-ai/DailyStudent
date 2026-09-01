@@ -228,10 +228,10 @@ export function ProbeklausurRetroScreen() {
                 Die Klausur "{active.topic}" wird dauerhaft gelöscht.
               </p>
             </div>
-            <button onClick={() => setShowDeleteConfirm(false)} className="w-full py-3.5 rounded-card font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press">
+            <button onClick={() => setShowDeleteConfirm(false)} className="w-full h-12 rounded-pill font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press">
               Abbrechen
             </button>
-            <button onClick={() => handleDelete(active.id)} className="w-full py-3.5 rounded-card font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
+            <button onClick={() => handleDelete(active.id)} className="w-full h-12 rounded-pill font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
               Löschen
             </button>
           </div>

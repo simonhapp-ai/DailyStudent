@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
+import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { Icon, type IconName } from '../components/ui/Icon'
@@ -284,10 +285,10 @@ export function ProbeklausurMode4Screen() {
             </div>
 
             {error && (
-              <div className="bg-danger/10 border border-danger/30 rounded-icon p-4">
-                <p className="text-text-primary text-[13px] font-semibold mb-1">Fehler</p>
-                <p className="text-text-primary/80 text-[12px]">{error}</p>
-              </div>
+              <Banner tone="danger">
+                <span className="font-semibold">Fehler</span>
+                <span className="block text-text-secondary mt-0.5">{error}</span>
+              </Banner>
             )}
           </div>
         )}
@@ -319,9 +320,7 @@ export function ProbeklausurMode4Screen() {
               />
             ))}
             {error && (
-              <div className="bg-danger/10 border border-danger/30 rounded-icon p-4 mb-3">
-                <p className="text-text-primary text-[13px]">{error}</p>
-              </div>
+              <Banner tone="danger" className="mb-3">{error}</Banner>
             )}
           </div>
         )}
@@ -402,7 +401,7 @@ export function ProbeklausurMode4Screen() {
           <button
             onClick={handleGenerate}
             disabled={!subjectId || !topic.trim()}
-            className="w-full py-4 rounded-card text-white text-[15px] font-bold press disabled:opacity-40"
+            className="w-full h-12 rounded-pill text-white text-[15px] font-bold press disabled:opacity-40"
             style={{ background: ACCENT }}
           >
             Aufgaben generieren
@@ -411,7 +410,7 @@ export function ProbeklausurMode4Screen() {
         {phase === 'exam' && (
           <button
             onClick={handleSubmit}
-            className="w-full py-4 rounded-card text-white text-[15px] font-bold press"
+            className="w-full h-12 rounded-pill text-white text-[15px] font-bold press"
             style={{ background: ACCENT }}
           >
             Abgeben & korrigieren lassen
@@ -455,11 +454,11 @@ export function ProbeklausurMode4Screen() {
               setShowExitWarning(false)
               navigate(-1)
             }}
-            className="w-full py-3.5 rounded-card font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press"
+            className="w-full h-12 rounded-pill font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press"
           >
             Klausur pausieren — Fortschritt gespeichert
           </button>
-          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full py-3.5 rounded-card font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
+          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full h-12 rounded-pill font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
             Klausur beenden (Fortschritt gelöscht)
           </button>
         </div>

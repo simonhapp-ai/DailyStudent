@@ -168,7 +168,7 @@ export function BundeslandScreen() {
         <button
           onClick={handleSave}
           disabled={!changed || saved}
-          className="w-full py-3.5 rounded-card text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
+          className="w-full h-12 rounded-pill text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
           style={{
             background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
             boxShadow: changed && !saved ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',

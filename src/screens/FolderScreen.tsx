@@ -327,7 +327,7 @@ export function FolderScreen() {
           <button
             onClick={createFolder}
             disabled={!newFolderName.trim()}
-            className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
+            className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
               newFolderName.trim() ? 'bg-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >

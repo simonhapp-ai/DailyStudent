@@ -305,14 +305,14 @@ export function DrawingCanvasScreen() {
             >
               <button
                 onClick={confirmNavAway}
-                className="w-full py-3 rounded-card border text-sm font-semibold transition-all active:scale-95"
+                className="w-full h-12 rounded-pill border text-sm font-semibold transition-all active:scale-95"
                 style={{ borderColor: 'rgba(248,113,113,0.3)', color: '#F87171' }}
               >
                 Trotzdem verlassen
               </button>
               <button
                 onClick={() => setWarnNavTarget(null)}
-                className="w-full py-3 rounded-card bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
+                className="w-full h-12 rounded-pill bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
               >
                 Weiter zeichnen
               </button>

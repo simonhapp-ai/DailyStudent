@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Banner } from '../components/ui/Banner'
 import { EmptyState } from '../components/ui/EmptyState'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
@@ -387,9 +388,7 @@ export function FlashCardGeneratorScreen() {
                 </div>
 
                 {error && (
-                  <div className="bg-danger/10 border border-danger/30 rounded-card px-4 py-3">
-                    <p className="text-text-primary text-sm">{error}</p>
-                  </div>
+                  <Banner tone="danger">{error}</Banner>
                 )}
 
                 <button
@@ -406,9 +405,7 @@ export function FlashCardGeneratorScreen() {
             {method === 'manuell' && (
               <div className="space-y-3">
                 {error && (
-                  <div className="bg-danger/10 border border-danger/30 rounded-card px-4 py-3">
-                    <p className="text-text-primary text-sm">{error}</p>
-                  </div>
+                  <Banner tone="danger">{error}</Banner>
                 )}
 
                 {manualCards.map((card, idx) => (

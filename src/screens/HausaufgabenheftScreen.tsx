@@ -211,7 +211,7 @@ export function HausaufgabenheftScreen() {
               <button
                 onClick={handleAdd}
                 disabled={!addDescription.trim() || !addSubjectId}
-                className="w-full py-3 rounded-card text-white text-sm font-bold disabled:opacity-40 transition-all press-sm"
+                className="w-full h-12 rounded-pill text-white text-sm font-bold disabled:opacity-40 transition-all press-sm"
                 style={{ background: '#7C3AED', boxShadow: '0 3px 12px rgba(124,58,237,0.4)' }}
               >
                 Hinzufügen

@@ -1834,7 +1834,7 @@ export function NoteCreateScreen() {
               {folderId && (
                 <button
                   onClick={() => { setShowCancelConfirm(false); confirmSave(folderId) }}
-                  className="w-full py-3 rounded-card bg-accent text-white dark:text-[#160E28] text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
+                  className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
                 >
                   {currentFolder ? `In „${currentFolder.name}" speichern` : 'Im Ordner speichern'}
                 </button>
@@ -1844,7 +1844,7 @@ export function NoteCreateScreen() {
                   setShowCancelConfirm(false)
                   navigate('/unterricht', { replace: true })
                 }}
-                className="w-full py-3 rounded-card border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
+                className="w-full h-12 rounded-pill border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
                 style={{ borderColor: 'rgba(248,113,113,0.3)', color: '#F87171' }}
               >
                 Trotzdem verlassen
@@ -1853,7 +1853,7 @@ export function NoteCreateScreen() {
                 onClick={() => {
                   setShowCancelConfirm(false)
                 }}
-                className="w-full py-3 rounded-card bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
+                className="w-full h-12 rounded-pill bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
               >
                 Zurück
               </button>

@@ -621,7 +621,7 @@ export function UnterrichtScreen() {
           <button
             onClick={confirmAddFolder}
             disabled={!newFolderName.trim()}
-            className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
+            className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
               newFolderName.trim() ? 'bg-accent text-white dark:text-[#160E28] hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
@@ -647,7 +647,7 @@ export function UnterrichtScreen() {
             </div>
             <button
               onClick={goManual}
-              className="w-full py-3 rounded-card border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover"
+              className="w-full h-12 rounded-pill border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover"
             >
               Manuell wählen
             </button>
@@ -685,7 +685,7 @@ export function UnterrichtScreen() {
                     importSuggestion.subjectName,
                     importSuggestion.folderId,
                   )}
-                  className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press hover:opacity-90 mb-2.5"
+                  className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press hover:opacity-90 mb-2.5"
                 >
                   Vorschlag annehmen
                 </button>
@@ -697,7 +697,7 @@ export function UnterrichtScreen() {
             )}
             <button
               onClick={goManual}
-              className="w-full py-3 rounded-card border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover"
+              className="w-full h-12 rounded-pill border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover"
             >
               Manuell wählen
             </button>
@@ -858,7 +858,7 @@ export function UnterrichtScreen() {
               )}
             </div>
             <p className="text-text-muted text-[11px] text-center mb-4">App offen lassen · KI verarbeitet Datei für Datei</p>
-            <button onClick={closeImport} className="w-full py-3 rounded-card border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover">
+            <button onClick={closeImport} className="w-full h-12 rounded-pill border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover">
               Abbrechen
             </button>
           </div>
@@ -883,7 +883,7 @@ export function UnterrichtScreen() {
                 <p className="text-text-muted text-[13px] mt-1">{importFailed} {importFailed === 1 ? 'Datei' : 'Dateien'} fehlgeschlagen</p>
               )}
             </div>
-            <button onClick={finishImport} className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press hover:opacity-90">
+            <button onClick={finishImport} className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press hover:opacity-90">
               {importSucceeded > 0 ? 'Zum Fach' : 'Schließen'}
             </button>
           </div>
@@ -940,7 +940,7 @@ export function UnterrichtScreen() {
           <button
             onClick={confirmRename}
             disabled={!renameValue.trim()}
-            className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
+            className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
               renameValue.trim() ? 'bg-accent text-white dark:text-[#160E28] hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >

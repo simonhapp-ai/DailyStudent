@@ -176,7 +176,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
 
           {waitlistDone ? (
             <div
-              className="w-full py-3.5 rounded-card text-center text-[15px] font-semibold mb-3"
+              className="w-full h-12 rounded-pill text-center text-[15px] font-semibold mb-3"
               style={{ background: 'rgba(52,211,153,0.12)', color: '#34D399' }}
             >
               Danke, du bekommst als Erstes Bescheid
@@ -185,7 +185,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
             <button
               onClick={handleWaitlist}
               disabled={waitlistLoading}
-              className="relative w-full py-3.5 rounded-card text-white text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3 overflow-hidden"
+              className="relative w-full h-12 rounded-pill text-white text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3 overflow-hidden"
               style={{ background: '#34D399', animation: 'ea-glow 2.4s ease-in-out infinite' }}
             >
               <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
@@ -317,7 +317,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
         <button
           onClick={handleCheckout}
           disabled={loading}
-          className="w-full py-3.5 rounded-card bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3"
+          className="w-full h-12 rounded-pill bg-accent text-white dark:text-[#160E28] text-[15px] font-semibold press transition-all disabled:opacity-60 mb-3"
         >
           {loading
             ? 'Wird geladen…'

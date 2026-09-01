@@ -156,7 +156,7 @@ export function DatenschutzScreen() {
           </p>
           <button
             onClick={openConfirm}
-            className="w-full py-3.5 rounded-card border press-sm transition-all text-[15px] font-bold"
+            className="w-full h-12 rounded-pill border press-sm transition-all text-[15px] font-bold"
             style={{
               borderColor: 'rgba(var(--color-danger), 0.35)',
               color: 'rgb(var(--color-danger))',
