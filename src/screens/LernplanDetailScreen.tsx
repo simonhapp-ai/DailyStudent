@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { Stage } from '../components/ui/Stage'
+import { Metric, MetricRow } from '../components/ui/Metric'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useUser, type PersonalEntry } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
@@ -85,10 +87,16 @@ function uid() {
   return `pe-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 }
 
+/** Setzt den Dokumenttitel — steht bewusst ausserhalb des Bauteils, weil er
+ *  zur Seite gehoert und nicht zum Zustand des Screens. */
+function setDocumentTitle(title: string) {
+  document.title = title
+}
+
 export function LernplanDetailScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { lernplaene, deleteLernplan, addEntries, personalEntries, profile, isPro, appConfig, supabaseDataLoading } = useUser()
+  const { lernplaene, deleteLernplan, saveLernplan, addEntries, personalEntries, profile, isPro, appConfig, supabaseDataLoading } = useUser()
 
   const plan = lernplaene.find((p) => p.id === id)
 
@@ -283,9 +291,9 @@ export function LernplanDetailScreen() {
       const abbrevs = [...new Set(plan.examSchedule.map((e) => SUBJECT_INFO[e.subjectId]?.name?.slice(0, 3) ?? e.subjectId))]
       suffix = abbrevs.join(', ')
     }
-    document.title = `Lernapp – ${planTypeLabel} – ${suffix}`
+    setDocumentTitle(`Lernapp – ${planTypeLabel} – ${suffix}`)
     window.print()
-    setTimeout(() => { document.title = prevTitle }, 500)
+    setTimeout(() => setDocumentTitle(prevTitle), 500)
   }
 
   const handleDelete = () => {
@@ -294,6 +302,19 @@ export function LernplanDetailScreen() {
   }
 
   const planTypeLabel = plan.planType === 'einzel' ? 'Einzel' : plan.planType === 'abitur' ? 'Abitur' : 'Vollständig'
+
+  const erledigteTage = plan.completedDays ?? []
+  const lerntage = plan.days.filter((d) => d.totalMin > 0)
+  const erledigtAnzahl = lerntage.filter((d) => erledigteTage.includes(d.date)).length
+  const naechsterOffener = lerntage.find((d) => !erledigteTage.includes(d.date))
+
+  const toggleTag = (date: string) => {
+    const drin = erledigteTage.includes(date)
+    saveLernplan({
+      ...plan,
+      completedDays: drin ? erledigteTage.filter((d) => d !== date) : [...erledigteTage, date],
+    })
+  }
 
   return (
     <>
@@ -317,8 +338,7 @@ export function LernplanDetailScreen() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 px-2 py-1.5 rounded-btn"
-              style={{ color: 'rgb(var(--color-accent))' }}
+              className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 px-2 py-1.5 rounded-btn text-text-primary"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -358,8 +378,7 @@ export function LernplanDetailScreen() {
               </button>
               <button
                 onClick={() => setConfirmDelete(true)}
-                className="w-9 h-9 flex items-center justify-center rounded-btn transition-colors"
-                style={{ color: 'rgb(var(--color-danger))' }}
+                className="w-9 h-9 flex items-center justify-center rounded-btn text-text-secondary hover:text-text-primary transition-colors"
                 title="Lernplan löschen"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -373,20 +392,35 @@ export function LernplanDetailScreen() {
           </div>
         </div>
 
+        {naechsterOffener && (
+          <div className="px-4 pt-4">
+            <Stage
+              tone="klausur"
+              eyebrow={`${erledigtAnzahl} von ${lerntage.length} Lerntagen erledigt`}
+              title={naechsterOffener.note ?? formatDay(naechsterOffener.date).weekday + ', ' + formatDay(naechsterOffener.date).day + '. ' + formatDay(naechsterOffener.date).month}
+              progress={lerntage.length > 0 ? erledigtAnzahl / lerntage.length : 0}
+              note={naechsterOffener.totalMin > 0 ? `${durationLabel(naechsterOffener.totalMin)} geplant` : undefined}
+              action={
+                <button
+                  onClick={() => toggleTag(naechsterOffener.date)}
+                  className="w-full h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
+                  style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+                >
+                  <Icon name="check" size={16} />
+                  Tag als erledigt markieren
+                </button>
+              }
+            />
+          </div>
+        )}
+
         {/* Summary strip */}
         <div className="px-4 py-4">
-          <div className="bg-surface border border-border/60 rounded-card p-4 flex items-start gap-0">
-            {[
-              { label: 'Lerntage', value: String(totalStudyDays) },
-              { label: 'Lernzeit', value: `${Math.round(totalMinutes / 60)}h` },
-              { label: 'Klausuren', value: String(plan.examSchedule.length) },
-            ].map((item, i) => (
-              <div key={i} className={`flex-1 text-center ${i < 2 ? 'border-r border-border/40' : ''}`}>
-                <p className="text-[26px] font-black text-text-primary leading-none">{item.value}</p>
-                <p className="text-[11px] text-text-muted mt-1">{item.label}</p>
-              </div>
-            ))}
-          </div>
+          <MetricRow>
+            <Metric value={totalStudyDays} label="Lerntage" />
+            <Metric value={`${Math.round(totalMinutes / 60)}h`} label="Lernzeit" />
+            <Metric value={plan.examSchedule.length} label="Klausuren" />
+          </MetricRow>
           {plan.summary && (
             <p className="text-text-muted text-[13px] mt-3 leading-relaxed px-1">{plan.summary}</p>
           )}
@@ -433,6 +467,23 @@ export function LernplanDetailScreen() {
                       <p className="text-[12px] text-text-muted mt-0.5">{durationLabel(day.totalMin)} geplant</p>
                     )}
                   </div>
+
+                  {/* Erledigt-Schalter — gefuellte Marke, wenn der Tag steht */}
+                  {day.totalMin > 0 && (
+                    <button
+                      onClick={() => toggleTag(day.date)}
+                      aria-pressed={erledigteTage.includes(day.date)}
+                      aria-label={erledigteTage.includes(day.date) ? 'Tag wieder öffnen' : 'Tag als erledigt markieren'}
+                      className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 press-sm border transition-colors"
+                      style={
+                        erledigteTage.includes(day.date)
+                          ? { background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))', borderColor: 'transparent' }
+                          : { borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-text-muted))' }
+                      }
+                    >
+                      <Icon name="check" size={15} />
+                    </button>
+                  )}
                 </div>
 
                 {/* Exam banner */}
