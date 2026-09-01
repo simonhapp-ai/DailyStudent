@@ -128,7 +128,7 @@ export function LernplanDetailScreen() {
     }
     return (
       <div className="flex flex-col items-center justify-center min-h-dvh bg-background gap-4 px-8">
-        <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center text-text-secondary"><Icon name="calendar" size={28} /></div>
+        <div className="w-16 h-16 rounded-card bg-surface flex items-center justify-center text-text-secondary"><Icon name="calendar" size={28} /></div>
         <p className="text-text-primary font-semibold text-lg text-center">Lernplan nicht gefunden</p>
         <button
           onClick={() => navigate(-1)}
@@ -609,7 +609,7 @@ function SessionCard({
           <div className="flex items-center gap-1.5 flex-wrap">
             <p className="text-text-primary font-semibold text-[13px]">{session.subjectName}</p>
             {session.isLK && (
-              <span className="text-[11px] font-black px-1.5 py-0.5 rounded bg-accent/15 text-text-primary">LK</span>
+              <span className="text-[11px] font-black px-1.5 py-0.5 rounded-chip bg-accent/15 text-text-primary">LK</span>
             )}
             <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: priorityColor }} />
           </div>

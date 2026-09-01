@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, extractTextFromImage, suggestNoteSubject, analyzeTextBlock } from '../lib/groq'
 import { loadKcForSubject } from '../data/kcLoader'
@@ -998,7 +999,7 @@ export function NoteCreateScreen() {
                   >
                     <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" /></svg>
                   </button>
-                  <div className="absolute bottom-0.5 left-0.5 bg-black/50 rounded px-1">
+                  <div className="absolute bottom-0.5 left-0.5 bg-black/50 rounded-chip px-1">
                     <span className="text-[11px] text-white font-medium">{i + 1}</span>
                   </div>
                 </div>
@@ -1193,7 +1194,7 @@ export function NoteCreateScreen() {
                 {/* Thumbnail card */}
                 <button
                   onClick={openCanvas}
-                  className="absolute inset-0 rounded-lg overflow-hidden press-sm transition-shadow"
+                  className="absolute inset-0 rounded-chip overflow-hidden press-sm transition-shadow"
                   style={{
                     background: '#fff',
                     border: '1.5px solid rgba(0,0,0,0.1)',
@@ -1246,7 +1247,7 @@ export function NoteCreateScreen() {
                 {/* Mini popup */}
                 {pageMenu?.blockId === block.id && pageMenu?.pageId === page.id && (
                   <div
-                    className="absolute rounded-xl overflow-hidden"
+                    className="absolute rounded-btn overflow-hidden"
                     style={{
                       top: 26, ...(i === 0 ? { left: 0 } : { right: 0 }),
                       background: '#2C2C2E',
@@ -1276,7 +1277,7 @@ export function NoteCreateScreen() {
             {/* Add page tile — looks like a new page */}
             <button
               onClick={openCanvas}
-              className="shrink-0 rounded-lg press-sm relative overflow-hidden"
+              className="shrink-0 rounded-chip press-sm relative overflow-hidden"
               style={{
                 width: 68, height: 96,
                 background: 'rgb(var(--color-surface))',
@@ -1399,7 +1400,7 @@ export function NoteCreateScreen() {
             )}
             {block.aiStatus === 'done' && block.aiResult && (
               <div className="px-4 py-3 space-y-3">
-                <div className="flex items-start gap-2 rounded-xl px-3 py-2.5" style={{ backgroundColor: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
+                <div className="flex items-start gap-2 rounded-btn px-3 py-2.5" style={{ backgroundColor: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" className="shrink-0 mt-0.5">
                     <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><path d="M12 9v4M12 17h.01" strokeLinecap="round" />
                   </svg>
@@ -1414,7 +1415,7 @@ export function NoteCreateScreen() {
                       <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </summary>
-                  <p className="mt-2 text-[12px] text-text-secondary leading-relaxed whitespace-pre-wrap font-mono bg-surface-hover rounded-lg px-3 py-2.5">
+                  <p className="mt-2 text-[12px] text-text-secondary leading-relaxed whitespace-pre-wrap font-mono bg-surface-hover rounded-chip px-3 py-2.5">
                     {block.transcription}
                   </p>
                 </details>
@@ -1484,7 +1485,8 @@ export function NoteCreateScreen() {
                   ? { backgroundColor: s.color, borderColor: 'transparent', color: 'white' }
                   : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
               >
-                {s.icon} {s.name}
+                <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
+                    {s.name}
               </button>
             ))}
           </div>
@@ -1611,9 +1613,7 @@ export function NoteCreateScreen() {
         </button>
         <div className="flex items-center gap-2">
           {subject && (
-            <div className="w-6 h-6 rounded flex items-center justify-center text-sm" style={{ backgroundColor: `${subject.color}22` }}>
-              {subject.icon}
-            </div>
+            <SubjectIcon subjectId={subject.id} size="sm" className="!w-6 !h-6" />
           )}
           <span className="text-text-primary font-semibold text-sm">Neue Notiz</span>
         </div>
@@ -1642,7 +1642,8 @@ export function NoteCreateScreen() {
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-medium border transition-all ${selectedSubjectId === s.id ? 'text-white border-transparent' : 'border-border text-text-muted hover:bg-surface-hover'}`}
                 style={selectedSubjectId === s.id ? { backgroundColor: s.color } : undefined}
               >
-                {s.icon} {s.name}
+                <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
+                    {s.name}
               </button>
             ))}
           </div>
@@ -1947,7 +1948,7 @@ export function NoteCreateScreen() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h2 className="text-base font-bold text-text-primary">Wo speichern?</h2>
-                    <p className="text-text-muted text-xs mt-0.5">{subject ? `${subject.icon} ${subject.name}` : 'Kein Fach'}</p>
+                    <p className="text-text-muted text-xs mt-0.5">{subject ? subject.name : 'Kein Fach'}</p>
                   </div>
                   <button onClick={() => navigate(-1)} className="p-1.5 rounded-btn hover:bg-danger/5 transition-colors -mt-0.5 -mr-1">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">

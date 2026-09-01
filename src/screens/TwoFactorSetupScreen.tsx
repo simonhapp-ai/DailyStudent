@@ -175,7 +175,7 @@ export function TwoFactorSetupScreen() {
             </div>
 
             {error && (
-              <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-center">{error}</p>
+              <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-center">{error}</p>
             )}
 
             {hasMfa ? (
@@ -197,7 +197,7 @@ export function TwoFactorSetupScreen() {
               <button
                 onClick={handleEnable}
                 disabled={loading}
-                className="w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full rounded-btn px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
                 style={{ background: '#8b5cf6' }}
               >
                 {loading ? (
@@ -227,7 +227,7 @@ export function TwoFactorSetupScreen() {
               {/* QR Code display */}
               <div className="flex justify-center mb-4">
                 <div
-                  className="p-3 rounded-xl bg-white"
+                  className="p-3 rounded-btn bg-white"
                   style={{ lineHeight: 0 }}
                   dangerouslySetInnerHTML={{ __html: qrSvg }}
                 />
@@ -241,7 +241,7 @@ export function TwoFactorSetupScreen() {
                 {showSecret ? 'Secret ausblenden' : 'Code manuell eingeben'}
               </button>
               {showSecret && secret && (
-                <div className="mt-2 bg-background rounded-xl px-3 py-2.5 text-center">
+                <div className="mt-2 bg-background rounded-btn px-3 py-2.5 text-center">
                   <p className="text-[11px] text-text-muted mb-1">Manueller Einrichtungsschlüssel</p>
                   <p className="text-[13px] font-mono font-bold text-text-primary tracking-widest break-all select-all">
                     {secret.match(/.{1,4}/g)?.join(' ')}
@@ -252,7 +252,7 @@ export function TwoFactorSetupScreen() {
 
             <button
               onClick={() => setStep('confirm')}
-              className="w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform"
+              className="w-full rounded-btn px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform"
               style={{ background: '#8b5cf6' }}
             >
               Weiter — Code bestätigen
@@ -280,17 +280,17 @@ export function TwoFactorSetupScreen() {
                   onChange={handleCodeChange}
                   autoFocus
                   autoComplete="one-time-code"
-                  className="w-full bg-background border border-border rounded-xl px-4 py-4 text-center text-3xl font-bold tracking-[0.5em] text-foreground placeholder:text-muted/30 focus:outline-none focus:border-accent transition-colors"
+                  className="w-full bg-background border border-border rounded-btn px-4 py-4 text-center text-3xl font-bold tracking-[0.5em] text-foreground placeholder:text-muted/30 focus:outline-none focus:border-accent transition-colors"
                 />
 
                 {error && (
-                  <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-center">{error}</p>
+                  <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-center">{error}</p>
                 )}
 
                 <button
                   type="submit"
                   disabled={loading || code.length < 6}
-                  className="w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full rounded-btn px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
                   style={{ background: '#8b5cf6' }}
                 >
                   {loading ? (
@@ -329,7 +329,7 @@ export function TwoFactorSetupScreen() {
 
             <button
               onClick={() => navigate('/profil')}
-              className="w-full rounded-xl px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform"
+              className="w-full rounded-btn px-4 py-3.5 text-sm font-semibold text-white active:scale-[0.98] transition-transform"
               style={{ background: '#8b5cf6' }}
             >
               Fertig

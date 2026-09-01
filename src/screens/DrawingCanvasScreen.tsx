@@ -196,7 +196,7 @@ export function DrawingCanvasScreen() {
             style={{ zIndex: 20, bottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)' }}
           >
             <div
-              className="flex items-center gap-2 px-3 py-2 rounded-2xl"
+              className="flex items-center gap-2 px-3 py-2 rounded-card"
               style={{
                 background: 'rgba(30,30,40,0.88)',
                 backdropFilter: 'blur(12px)',

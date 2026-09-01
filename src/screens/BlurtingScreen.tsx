@@ -344,7 +344,7 @@ export function BlurtingScreen() {
               {profileSubjects.length === 0 ? (
                 <p className="text-text-muted text-[13px] px-1">Keine Fächer im Profil gefunden.</p>
               ) : (
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                   {profileSubjects.map((subj) => (
                     <SubjectSquare
                       key={subj.id}
@@ -649,6 +649,13 @@ function TopicPill({ label, color }: { label: string; color: string }) {
   )
 }
 
+// Fachauswahl als Zeile mit fester Hoehe, nicht als Quadrat.
+//
+// aspect-square hat auf dem Telefon funktioniert und auf dem Schreibtisch alles
+// zerrissen: In einem vierspaltigen Raster ueber 1600 px wurde jede Kachel rund
+// 380 px hoch, und acht Faecher fuellten zwei Bildschirme. Eine feste Hoehe
+// haelt die Auswahl auf jeder Breite gleich kompakt; nur die Anzahl der Spalten
+// waechst mit dem Platz.
 function SubjectSquare({
   subject, noteCount, selected, onTap,
 }: {
@@ -660,7 +667,8 @@ function SubjectSquare({
   return (
     <button
       onClick={onTap}
-      className="aspect-square bg-surface rounded-card border shadow-card-adaptive flex flex-col items-center justify-center gap-1.5 p-2 press relative overflow-hidden transition-colors"
+      aria-pressed={selected}
+      className="relative h-[60px] bg-surface rounded-card border flex items-center gap-2.5 px-3 text-left press-sm transition-colors"
       style={{
         borderColor: selected ? 'rgb(var(--color-accent))' : 'rgb(var(--color-border) / 0.6)',
         borderWidth: selected ? '2px' : '1px',
@@ -668,13 +676,16 @@ function SubjectSquare({
       }}
     >
       <SubjectIcon subjectId={subject.id} size="sm" />
-      <p className="text-text-secondary text-[11px] font-semibold text-center leading-tight w-full px-0.5" style={{ wordBreak: 'break-word', hyphens: 'auto' }}>
+      <span className="flex-1 min-w-0 text-[13px] font-semibold text-text-primary leading-tight line-clamp-2">
         {subject.name}
-      </p>
+      </span>
       {noteCount > 0 && (
-        <div className="absolute top-1.5 right-1.5 w-[18px] h-[18px] rounded-full flex items-center justify-center text-[11px] font-bold text-white" style={{ background: subject.color }}>
+        <span
+          className="shrink-0 min-w-[20px] h-5 px-1.5 rounded-pill flex items-center justify-center text-[11px] font-bold tabular-nums"
+          style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+        >
           {noteCount > 9 ? '9+' : noteCount}
-        </div>
+        </span>
       )}
     </button>
   )

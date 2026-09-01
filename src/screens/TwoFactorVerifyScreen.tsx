@@ -82,7 +82,7 @@ export function TwoFactorVerifyScreen({ onVerified }: Props) {
         <p className="text-sm text-muted mt-1">Zwei-Faktor-Authentifizierung</p>
       </div>
 
-      <div className="w-full max-w-sm bg-surface rounded-2xl shadow-card-adaptive border border-border/60 p-6">
+      <div className="w-full max-w-sm bg-surface rounded-card shadow-card-adaptive border border-border/60 p-6">
 
         <div
           className="w-12 h-12 rounded-icon flex items-center justify-center mb-4 mx-auto"
@@ -110,17 +110,17 @@ export function TwoFactorVerifyScreen({ onVerified }: Props) {
             value={code}
             onChange={handleCodeChange}
             autoComplete="one-time-code"
-            className="w-full bg-background border border-border rounded-xl px-4 py-4 text-center text-3xl font-bold tracking-[0.5em] text-foreground placeholder:text-muted/30 focus:outline-none focus:border-accent transition-colors"
+            className="w-full bg-background border border-border rounded-btn px-4 py-4 text-center text-3xl font-bold tracking-[0.5em] text-foreground placeholder:text-muted/30 focus:outline-none focus:border-accent transition-colors"
           />
 
           {error && (
-            <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-center">{error}</p>
+            <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-center">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={loading || code.length < 6 || !challengeId}
-            className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full rounded-btn px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
             style={{ background: '#8b5cf6' }}
           >
             {loading ? (

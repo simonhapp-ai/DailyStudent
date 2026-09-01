@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { WorkingState } from '../components/ui/EmptyState'
 import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -35,7 +36,7 @@ function MaterialCard({ m }: { m: GeneratedExam['materials'][0] }) {
   return (
     <div className="bg-background rounded-icon border border-border/60 p-4 mb-3">
       <div className="flex items-center gap-2 mb-2">
-        <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-accent/15 text-text-primary">{m.id}</span>
+        <span className="px-2 py-0.5 rounded-chip text-[11px] font-bold bg-accent/15 text-text-primary">{m.id}</span>
         <span className="text-text-muted text-[11px] font-semibold uppercase">{typeLabel[m.type] ?? m.type}</span>
         <p className="text-text-secondary text-[12px] font-semibold truncate">{m.title}</p>
       </div>
@@ -51,7 +52,7 @@ function TaskAnswerCard({
     <div className="bg-background rounded-icon border border-border/60 p-4 mb-3">
       <div className="flex items-center gap-2 mb-2.5">
         <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
-        <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+        <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
         {task.materialRefs.length > 0 && (
           <span className="text-text-muted text-[11px]">· {task.materialRefs.join(', ')}</span>
         )}
@@ -78,7 +79,7 @@ function CorrectionCard({
       <button onClick={() => setOpen((o) => !o)} className="w-full flex items-center justify-between px-4 py-3 press-sm">
         <div className="flex items-center gap-2">
           <span className="text-text-muted text-[11px] font-semibold">Aufgabe {task.label}</span>
-          <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+          <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[14px] font-bold" style={{ color: npColor(correction.scoreNP) }}>
@@ -253,7 +254,8 @@ export function ProbeklausurMode3Screen() {
                     }`}
                     style={subjectId === s.id ? { background: ACCENT } : undefined}
                   >
-                    {s.icon} {s.name}
+                    <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
+                    {s.name}
                   </button>
                 ))}
               </div>
@@ -290,7 +292,7 @@ export function ProbeklausurMode3Screen() {
                 { label: 'Aufgabe 3 · AFB III', desc: 'Über die Materialien hinaus: Hypothese, Bewertung, Stellung' },
               ].map(({ label, desc }) => (
                 <div key={label} className="flex items-start gap-3">
-                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-500/15 text-emerald-400 shrink-0 mt-0.5">{label}</span>
+                  <span className="px-2 py-0.5 rounded-chip text-[11px] font-bold bg-emerald-500/15 text-emerald-400 shrink-0 mt-0.5">{label}</span>
                   <p className="text-text-secondary text-[12px]">{desc}</p>
                 </div>
               ))}

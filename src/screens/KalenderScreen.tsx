@@ -249,7 +249,7 @@ export function KalenderScreen() {
         <div className="lg:flex-1 lg:order-2 lg:overflow-hidden lg:flex lg:flex-col">
 
         {/* ── Kalender Widget (inline accordion) ──────────────── */}
-        <div className="bg-surface border border-border/60 rounded-2xl shadow-card-adaptive overflow-hidden lg:flex-1 lg:flex lg:flex-col lg:overflow-hidden">
+        <div className="bg-surface border border-border/60 rounded-card shadow-card-adaptive overflow-hidden lg:flex-1 lg:flex lg:flex-col lg:overflow-hidden">
 
           {/* Collapsed header — mobile only */}
           <button
@@ -485,7 +485,7 @@ export function KalenderScreen() {
 
           {/* Modal card — top-anchored so keyboard doesn't push it */}
           <div
-            className="fixed z-[45] bg-surface rounded-2xl shadow-float overflow-hidden"
+            className="fixed z-[45] bg-surface rounded-card shadow-float overflow-hidden"
             style={{
               top: 'max(60px, calc(env(safe-area-inset-top, 0px) + 52px))',
               left: 16,
@@ -716,7 +716,7 @@ export function KalenderScreen() {
         <>
           <div className="fixed inset-0 z-[50] bg-black/40" onClick={closeDetail} />
           <div
-            className="fixed inset-x-4 z-[51] bg-surface rounded-2xl shadow-float overflow-hidden"
+            className="fixed inset-x-4 z-[51] bg-surface rounded-card shadow-float overflow-hidden"
             style={{
               top: '22%',
               transformOrigin: 'center center',
@@ -1160,7 +1160,7 @@ function YearView({ viewDate, todayStr, personalEntries, klausurtermine, onNavig
           while (cells.length % 7 !== 0) cells.push(null)
 
           return (
-            <button key={m} onClick={() => onMonthPress(new Date(year, m, 1))} className="bg-background rounded-xl p-2 border text-left press-sm" style={{ borderColor: isCurrent ? 'rgba(var(--color-accent),0.6)' : 'rgba(var(--color-border),0.3)', boxShadow: isCurrent ? '0 0 0 1px rgba(var(--color-accent),0.2)' : 'none' }}>
+            <button key={m} onClick={() => onMonthPress(new Date(year, m, 1))} className="bg-background rounded-btn p-2 border text-left press-sm" style={{ borderColor: isCurrent ? 'rgba(var(--color-accent),0.6)' : 'rgba(var(--color-border),0.3)', boxShadow: isCurrent ? '0 0 0 1px rgba(var(--color-accent),0.2)' : 'none' }}>
               <p className="text-[9px] font-bold mb-1 text-center" style={{ color: isCurrent ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-secondary))' }}>{MONTHS_SHORT[m]}</p>
               <div className="grid grid-cols-7 gap-y-px">
                 {['M','D','M','D','F','S','S'].map((l, i) => <div key={i} className="text-center text-[4px] text-text-muted/30">{l}</div>)}
@@ -1741,7 +1741,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               </button>
               {scanPhase === 'idle' && (
                 <button onClick={() => fileRef.current?.click()} className="w-full border-2 border-dashed border-border rounded-card p-6 flex flex-col items-center gap-2 hover:border-accent/50 hover:bg-accent/5 transition-all">
-                  <div className="w-12 h-12 rounded-xl bg-accent text-on-accent flex items-center justify-center"><Icon name="camera" size={22} /></div>
+                  <div className="w-12 h-12 rounded-btn bg-accent text-on-accent flex items-center justify-center"><Icon name="camera" size={22} /></div>
                   <p className="text-text-primary font-semibold text-[14px]">Foto oder PDF auswählen</p>
                   <p className="text-text-muted text-xs">KI erkennt Fächer und Zeiten automatisch</p>
                 </button>

@@ -603,7 +603,7 @@ export function UnterrichtScreen() {
           <h2 className="text-[20px] font-bold text-text-primary mb-2">Neuen Ordner erstellen</h2>
           {addFolderFor && (
             <div className="flex items-center gap-1.5 flex-wrap mb-4">
-              <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-accent text-on-accent">
+              <span className="px-2.5 py-1 rounded-chip text-[11px] font-semibold bg-accent text-on-accent">
                 {subjects.find((s) => s.id === addFolderFor)?.name
                   ?? profile?.customFaecher?.find((cf) => cf.id === addFolderFor)?.name
                   ?? addFolderFor}
@@ -1025,7 +1025,7 @@ function FolderGridItem({
       onPointerLeave={clearPressTimer}
       onPointerCancel={clearPressTimer}
       onContextMenu={(e) => { if (onLongPress) e.preventDefault() }}
-      className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-2xl active:bg-surface-hover press-sm transition-colors"
+      className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-card active:bg-surface-hover press-sm transition-colors"
     >
       <svg width="62" height="52" viewBox="0 0 62 52" fill="none">
         {/* folder tab — darker blue as shadow/back */}
@@ -1049,7 +1049,7 @@ function AddFolderGridItem({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-2xl active:bg-surface-hover press-sm transition-colors"
+      className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-card active:bg-surface-hover press-sm transition-colors"
     >
       <div className="relative" style={{ width: 62, height: 52 }}>
         <svg width="62" height="52" viewBox="0 0 62 52" fill="none" className="absolute inset-0 text-text-primary">

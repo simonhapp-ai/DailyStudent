@@ -363,12 +363,7 @@ function SubjectCard({
         style={{ cursor: entry.notBelegt ? 'default' : 'pointer' }}
       >
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
-          <div
-            className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
-            style={{ background: `${subj.color}22` }}
-          >
-            {subj.icon}
-          </div>
+          <SubjectIcon subjectId={entry.subjectId} size="md" />
           <div className="min-w-0">
             <span className="font-semibold text-[14px] text-text-primary truncate block">
               {subj.name}
@@ -639,7 +634,7 @@ function PruefungCard({
                         : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-secondary))' }
                     }
                   >
-                    <span>{info.icon}</span>{info.name}
+                    <SubjectIcon subjectId={sid} size="sm" className="!w-4 !h-4" />{info.name}
                   </button>
                 )
               })}

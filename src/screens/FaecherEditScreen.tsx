@@ -289,12 +289,7 @@ export function FaecherEditScreen() {
                           : 'border-border bg-surface hover:bg-surface-hover'
                       }`}
                     >
-                      <div
-                        className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
-                        style={{ backgroundColor: `${subject.color}22` }}
-                      >
-                        {subject.icon}
-                      </div>
+                      <SubjectIcon subjectId={id} size="sm" />
                       <p className={`text-xs font-semibold leading-tight ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
                         {subject.name}
                       </p>

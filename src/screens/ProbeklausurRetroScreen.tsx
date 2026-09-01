@@ -44,7 +44,7 @@ function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] 
       >
         <div className="flex items-center gap-2">
           <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
-          <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+          <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
           <span className="text-text-muted text-[11px]">{task.be} BE</span>
         </div>
         <div className="flex items-center gap-2">
@@ -185,7 +185,7 @@ export function ProbeklausurRetroScreen() {
               if (avg === null) return null
               return (
                 <div key={afb} className="flex items-center gap-3 mb-2">
-                  <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${AFB_COLORS[afb]}`}>AFB {afb}</span>
+                  <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_COLORS[afb]}`}>AFB {afb}</span>
                   <div className="flex-1 h-1.5 bg-border/40 rounded-full overflow-hidden">
                     <div className="h-full rounded-full" style={{ width: `${(avg / 15) * 100}%`, background: npColor(avg) }} />
                   </div>

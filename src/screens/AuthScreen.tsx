@@ -161,7 +161,7 @@ export function AuthScreen() {
       </div>
 
       {/* Card */}
-      <div className="w-full max-w-sm bg-surface rounded-2xl shadow-card-adaptive border border-border/60 p-6">
+      <div className="w-full max-w-sm bg-surface rounded-card shadow-card-adaptive border border-border/60 p-6">
         <h2 className="text-xl font-bold text-foreground mb-5 text-left">
           {mode === 'login' ? 'Willkommen zurück'
             : mode === 'signup' ? 'Konto erstellen'
@@ -182,14 +182,14 @@ export function AuthScreen() {
               onChange={e => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-background border border-border rounded-btn px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
             />
-            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>}
-            {successMsg && <p className="text-xs text-green-500 bg-green-500/10 rounded-xl px-3 py-2 text-left">{successMsg}</p>}
+            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-left">{error}</p>}
+            {successMsg && <p className="text-xs text-green-500 bg-green-500/10 rounded-btn px-3 py-2 text-left">{successMsg}</p>}
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full rounded-btn px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
               style={{ background: '#8b5cf6' }}
             >
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Link senden'}
@@ -216,7 +216,7 @@ export function AuthScreen() {
                 required
                 minLength={6}
                 autoComplete="new-password"
-                className="w-full bg-background border border-border rounded-xl px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+                className="w-full bg-background border border-border rounded-btn px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
               />
               <button type="button" onClick={() => setShowNewPassword(v => !v)} tabIndex={-1}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors">
@@ -234,11 +234,11 @@ export function AuthScreen() {
                 )}
               </button>
             </div>
-            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>}
+            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-left">{error}</p>}
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full rounded-btn px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
               style={{ background: '#8b5cf6' }}
             >
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Passwort speichern'}
@@ -252,7 +252,7 @@ export function AuthScreen() {
           <button
             onClick={handleGoogle}
             disabled={googleLoading || appleLoading || loading}
-            className="flex-1 flex items-center justify-center gap-2 bg-background border border-border rounded-xl px-4 py-3 text-sm font-semibold text-foreground active:scale-[0.98] transition-transform disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-2 bg-background border border-border rounded-btn px-4 py-3 text-sm font-semibold text-foreground active:scale-[0.98] transition-transform disabled:opacity-50"
           >
             {googleLoading ? (
               <span className="w-5 h-5 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin inline-block" />
@@ -270,7 +270,7 @@ export function AuthScreen() {
           <button
             onClick={handleApple}
             disabled={appleLoading || googleLoading || loading}
-            className="flex-1 flex items-center justify-center gap-2 bg-background border border-border rounded-xl px-4 py-3 text-sm font-semibold text-foreground active:scale-[0.98] transition-transform disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-2 bg-background border border-border rounded-btn px-4 py-3 text-sm font-semibold text-foreground active:scale-[0.98] transition-transform disabled:opacity-50"
           >
             {appleLoading ? (
               <span className="w-5 h-5 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin inline-block" />
@@ -299,7 +299,7 @@ export function AuthScreen() {
             onChange={e => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+            className="w-full bg-background border border-border rounded-btn px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
           />
           <div className="relative">
             <input
@@ -310,7 +310,7 @@ export function AuthScreen() {
               required
               minLength={6}
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-              className="w-full bg-background border border-border rounded-xl px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-background border border-border rounded-btn px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
             />
             <button
               type="button"
@@ -346,16 +346,16 @@ export function AuthScreen() {
           )}
 
           {error && (
-            <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>
+            <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-left">{error}</p>
           )}
           {successMsg && (
-            <p className="text-xs text-green-500 bg-green-500/10 rounded-xl px-3 py-2 text-left">{successMsg}</p>
+            <p className="text-xs text-green-500 bg-green-500/10 rounded-btn px-3 py-2 text-left">{successMsg}</p>
           )}
 
           <button
             type="submit"
             disabled={loading || googleLoading || appleLoading}
-            className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full rounded-btn px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
             style={{ background: '#8b5cf6' }}
           >
             {loading ? (

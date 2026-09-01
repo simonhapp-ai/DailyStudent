@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { Icon } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -136,7 +137,7 @@ export function HausaufgabenheftScreen() {
 
         {/* ── Add form (inline, no popup) ─────────────────────── */}
         {showAddForm && (
-          <div className="bg-surface border border-accent/30 rounded-2xl overflow-hidden">
+          <div className="bg-surface border border-accent/30 rounded-card overflow-hidden">
             <div className="px-4 pt-4 pb-1">
               <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Neue Hausaufgabe</p>
             </div>
@@ -154,7 +155,8 @@ export function HausaufgabenheftScreen() {
                       ? { backgroundColor: s.color, borderColor: 'transparent', color: 'white' }
                       : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
                   >
-                    {s.icon} {s.name}
+                    <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
+                    {s.name}
                   </button>
                 ))}
               </div>
@@ -226,7 +228,7 @@ export function HausaufgabenheftScreen() {
         {/* ── Pending homework list ────────────────────────────── */}
         {pending.length === 0 && !showAddForm && (
           <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-fill-green text-fill-green-on flex items-center justify-center"><Icon name="check" size={28} /></div>
+            <div className="w-16 h-16 rounded-card bg-fill-green text-fill-green-on flex items-center justify-center"><Icon name="check" size={28} /></div>
             <p className="text-text-primary font-bold text-[16px]">Alle Hausaufgaben erledigt!</p>
             <p className="text-text-muted text-[13px]">Tippe + um neue hinzuzufügen</p>
           </div>
@@ -241,18 +243,13 @@ export function HausaufgabenheftScreen() {
           return (
             <div
               key={item.id}
-              className="bg-surface border border-border/60 rounded-2xl overflow-hidden transition-all"
+              className="bg-surface border border-border/60 rounded-card overflow-hidden transition-all"
               style={isConfirming ? { borderColor: 'rgba(74,222,128,0.4)' } : undefined}
             >
               {/* Subject + meta row */}
               <div className="flex items-center gap-2 px-4 pt-3.5 pb-1">
                 {subj ? (
-                  <div
-                    className="w-7 h-7 rounded-chip flex items-center justify-center text-sm shrink-0"
-                    style={{ backgroundColor: `${color}20` }}
-                  >
-                    {subj.icon}
-                  </div>
+                  <SubjectIcon subjectId={item.subjectId!} size="sm" className="!w-7 !h-7" />
                 ) : (
                   <div className="w-7 h-7 rounded-chip bg-surface-hover flex items-center justify-center shrink-0 text-text-secondary"><Icon name="book" size={14} /></div>
                 )}

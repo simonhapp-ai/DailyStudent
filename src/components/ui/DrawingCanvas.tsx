@@ -1531,7 +1531,7 @@ export function DrawingCanvas({
             }}
           >
             <div
-              className="rounded-2xl overflow-hidden"
+              className="rounded-card overflow-hidden"
               style={{
                 background: '#2C2C2E',
                 border: '1px solid rgba(255,255,255,0.08)',
@@ -1546,7 +1546,7 @@ export function DrawingCanvas({
                 onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }}>
+                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }}>
                   <BgIcon type={currentBgType} size={15} />
                 </div>
                 <span className="text-[14px] font-semibold" style={{ color: 'rgba(255,255,255,0.92)' }}>Vorlage wechseln</span>
@@ -1562,7 +1562,7 @@ export function DrawingCanvas({
                     <button
                       key={type}
                       onClick={() => { setPageBackground({ type }); setShowBgPicker(false) }}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all press-sm mt-2"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-btn text-[11px] font-semibold transition-all press-sm mt-2"
                       style={
                         currentBgType === type
                           ? { background: 'rgba(124,58,237,0.3)', border: '1.5px solid rgba(124,58,237,0.7)', color: '#C4B5FD' }
@@ -1575,7 +1575,7 @@ export function DrawingCanvas({
                   ))}
                   <button
                     onClick={() => { bgInputRef.current?.click(); setShowBgPicker(false) }}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all press-sm mt-2"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-btn text-[11px] font-semibold transition-all press-sm mt-2"
                     style={
                       currentBgType === 'image'
                         ? { background: 'rgba(124,58,237,0.3)', border: '1.5px solid rgba(124,58,237,0.7)', color: '#C4B5FD' }
@@ -1598,7 +1598,7 @@ export function DrawingCanvas({
                 disabled
                 style={{ opacity: 0.38 }}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(90,200,250,0.15)' }}>
+                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(90,200,250,0.15)' }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" strokeWidth="2.2">
                     <path d="M1 4v6h6" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M3.51 15a9 9 0 1 0 .49-4.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -1624,7 +1624,7 @@ export function DrawingCanvas({
                 onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: penOnlyMode ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.1)' }}>
+                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0" style={{ background: penOnlyMode ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.1)' }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={penOnlyMode ? '#C4B5FD' : 'rgba(255,255,255,0.7)'} strokeWidth="2.2">
                     <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -1657,7 +1657,7 @@ export function DrawingCanvas({
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,59,48,0.12)' }}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,59,48,0.18)' }}>
+                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(255,59,48,0.18)' }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" strokeWidth="2.2">
                     <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
                   </svg>
@@ -1808,12 +1808,12 @@ export function DrawingCanvas({
       {/* Clear confirm overlay */}
       {showClearConfirm && (
         <div className="fixed inset-0 flex items-center justify-center" style={{ zIndex: 60, background: 'rgba(0,0,0,0.4)' }}>
-          <div className="rounded-2xl px-6 py-5 flex flex-col gap-3" style={{ background: 'var(--color-surface, #fff)', boxShadow: '0 16px 48px rgba(0,0,0,0.2)', minWidth: 240 }}>
+          <div className="rounded-card px-6 py-5 flex flex-col gap-3" style={{ background: 'var(--color-surface, #fff)', boxShadow: '0 16px 48px rgba(0,0,0,0.2)', minWidth: 240 }}>
             <p className="text-[15px] font-bold text-text-primary text-center">Seite löschen?</p>
             <p className="text-[12px] text-text-secondary text-center">Alle Striche auf dieser Seite werden entfernt.</p>
             <div className="flex gap-2 mt-1">
-              <button onClick={() => setShowClearConfirm(false)} className="flex-1 py-2 rounded-xl text-[13px] font-semibold transition-all press-sm" style={{ background: 'rgba(0,0,0,0.07)', color: 'rgb(var(--color-text-secondary))' }}>Abbrechen</button>
-              <button onClick={handleClear} className="flex-1 py-2 rounded-xl text-[13px] font-bold transition-all press-sm" style={{ background: '#FF3B30', color: 'white' }}>Löschen</button>
+              <button onClick={() => setShowClearConfirm(false)} className="flex-1 py-2 rounded-btn text-[13px] font-semibold transition-all press-sm" style={{ background: 'rgba(0,0,0,0.07)', color: 'rgb(var(--color-text-secondary))' }}>Abbrechen</button>
+              <button onClick={handleClear} className="flex-1 py-2 rounded-btn text-[13px] font-bold transition-all press-sm" style={{ background: '#FF3B30', color: 'white' }}>Löschen</button>
             </div>
           </div>
         </div>
@@ -1829,7 +1829,7 @@ export function DrawingCanvas({
         {isFullscreen && onBack && (
           <button
             onClick={onBack}
-            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
             style={{ color: 'rgb(var(--color-text-secondary))' }}
             title="Zurück"
           >
@@ -1843,7 +1843,7 @@ export function DrawingCanvas({
         <button
           ref={settingsBtnRef}
           onClick={() => { setShowSettings(v => !v); if (showSettings) setShowBgPicker(false) }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={showSettings
             ? { background: 'rgba(124,58,237,0.12)', color: '#7C3AED' }
             : { color: 'rgb(var(--color-text-muted))' }}
@@ -1855,13 +1855,13 @@ export function DrawingCanvas({
         </button>
 
         {/* Undo / Redo */}
-        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0 ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Rückgängig">
+        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Rückgängig">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
             <path d="M3 7v6h6" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
-        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0 ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Wiederholen">
+        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Wiederholen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
             <path d="M21 7v6h-6" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7" strokeLinecap="round" strokeLinejoin="round" />
@@ -1877,7 +1877,7 @@ export function DrawingCanvas({
         <button
           ref={penBtnRef}
           onClick={() => { if (tool === 'pen') setActiveToolPopup(v => v === 'pen' ? null : 'pen'); else { setTool('pen'); setActiveToolPopup(null) } }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={tool === 'pen' ? { background: 'rgba(124,58,237,0.14)', color: '#7C3AED' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Stift"
         >
@@ -1893,7 +1893,7 @@ export function DrawingCanvas({
         <button
           ref={hlBtnRef}
           onClick={() => { if (tool === 'highlighter') setActiveToolPopup(v => v === 'highlighter' ? null : 'highlighter'); else { setTool('highlighter'); setActiveToolPopup(null) } }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={tool === 'highlighter' ? { background: 'rgba(250,204,21,0.15)', color: '#CA8A04' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Marker"
         >
@@ -1909,7 +1909,7 @@ export function DrawingCanvas({
         <button
           ref={erBtnRef}
           onClick={() => { if (tool === 'eraser') setActiveToolPopup(v => v === 'eraser' ? null : 'eraser'); else { setTool('eraser'); setActiveToolPopup(null) } }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={tool === 'eraser' ? { background: 'rgba(255,59,48,0.11)', color: '#FF3B30' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Radierer"
         >
@@ -1926,7 +1926,7 @@ export function DrawingCanvas({
         <button
           ref={geomBtnRef}
           onClick={() => { if (tool === 'geometry') setActiveToolPopup(v => v === 'geometry' ? null : 'geometry'); else { setTool('geometry'); setActiveToolPopup(null) } }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={tool === 'geometry' ? { background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Geometrie-Stift"
         >
@@ -1939,7 +1939,7 @@ export function DrawingCanvas({
         </button>
 
         {/* Lasso — dashed selection oval */}
-        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl">
+        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round">
             <ellipse cx="13" cy="10" rx="8.5" ry="6" strokeWidth="1.75" strokeDasharray="2.8 2"/>
             <path d="M4.5 11C3.2 13.5 3.8 16.5 6.5 16.5L9 16.5" strokeWidth="1.65" strokeDasharray="2.8 2"/>
@@ -1950,7 +1950,7 @@ export function DrawingCanvas({
 
         {/* Foto hinzufügen */}
         {isFullscreen && (
-          <button onClick={() => canvasImgInputRef.current?.click()} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={{ color: 'rgb(var(--color-text-muted))' }} title="Foto einfügen">
+          <button onClick={() => canvasImgInputRef.current?.click()} className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0" style={{ color: 'rgb(var(--color-text-muted))' }} title="Foto einfügen">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2.5" y="4" width="19" height="16" rx="2.5" />
               <circle cx="8.5" cy="9.5" r="2" />
@@ -1992,7 +1992,7 @@ export function DrawingCanvas({
         {/* KI-Analyse */}
         {isFullscreen && onAnalyzeRequest && (
           <button onClick={handleAnalyzeRequest}
-            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
             title="KI-Analyse"
           >
             <span style={{ fontSize: 13, fontWeight: 800, color: '#059669', letterSpacing: '-0.3px' }}>KI</span>
@@ -2002,7 +2002,7 @@ export function DrawingCanvas({
         {/* PDF export */}
         {isFullscreen && (
           <button onClick={handleExportPDF} disabled={isExporting}
-            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
             style={{ color: '#7C3AED', opacity: isExporting ? 0.5 : 1 }}
             title="Als PDF exportieren"
           >

@@ -323,7 +323,7 @@ export function FlashCardGeneratorScreen() {
                           </p>
                         )}
                         <div className="flex items-center gap-2 mt-1.5">
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-fill-green text-fill-green-on font-medium">
+                          <span className="text-xs px-1.5 py-0.5 rounded-chip bg-fill-green text-fill-green-on font-medium">
                             KI analysiert
                           </span>
                           {genNote?.keywords && (

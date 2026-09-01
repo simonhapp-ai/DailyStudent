@@ -31,7 +31,7 @@ function FolderBreadcrumb({ parts, className = 'mb-4' }: { parts: string[]; clas
     <div className={`flex items-center gap-1.5 flex-wrap ${className}`}>
       {parts.map((part, i) => (
         <div key={i} className="flex items-center gap-1.5">
-          <span className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold ${
+          <span className={`px-2.5 py-1 rounded-chip text-[11px] font-semibold ${
             i === parts.length - 1
               ? 'bg-accent text-on-accent'
               : 'bg-surface-hover border border-border/60 text-text-muted'

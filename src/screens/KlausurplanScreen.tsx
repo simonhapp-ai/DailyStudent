@@ -141,7 +141,7 @@ export function KlausurplanScreen() {
                           ? { background: `${subj.color}18`, borderColor: subj.color }
                           : { borderColor: 'rgba(var(--color-border),0.6)' }}
                       >
-                        <span className="text-base shrink-0">{subj.icon}</span>
+                        <SubjectIcon subjectId={id} size="sm" className="!w-5 !h-5" />
                         <span
                           className="text-[11px] font-semibold truncate leading-tight"
                           style={{ color: active ? subj.color : 'rgb(var(--color-text-secondary))' }}
@@ -265,7 +265,7 @@ export function KlausurplanScreen() {
         {upcoming.length === 0 && !addOpen && (
           <div className="text-center py-12">
             <div
-              className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center text-3xl"
+              className="w-16 h-16 rounded-card mx-auto mb-4 flex items-center justify-center text-3xl"
               style={{ background: 'rgba(255,59,48,0.08)' }}
             >
               <Icon name="note" size={26} />

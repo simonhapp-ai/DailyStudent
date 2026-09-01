@@ -444,7 +444,7 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
                 active ? 'bg-accent border-transparent' : 'bg-surface border-border hover:bg-surface-hover'
               }`}
             >
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-[rgb(var(--color-on-accent)/0.18)] text-on-accent' : 'bg-accent/10'}`}>
+              <div className={`w-12 h-12 rounded-btn flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-[rgb(var(--color-on-accent)/0.18)] text-on-accent' : 'bg-accent/10'}`}>
                 <Icon name={opt.icon} size={22} />
               </div>
               <div className="flex-1 min-w-0 pt-0.5">
@@ -551,7 +551,7 @@ function StepKlausurtermine({
       <div>
         <h2 className="text-2xl font-bold text-text-primary mb-1">Klausurtermine</h2>
         <div className="mt-8 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-surface mx-auto flex items-center justify-center text-text-secondary mb-4"><Icon name="calendar" size={28} /></div>
+          <div className="w-16 h-16 rounded-card bg-surface mx-auto flex items-center justify-center text-text-secondary mb-4"><Icon name="calendar" size={28} /></div>
           <p className="text-text-primary font-semibold mb-2">Keine Klausurtermine eingetragen</p>
           <p className="text-text-muted text-sm leading-relaxed">
             Trage zuerst deine Klausurtermine im Kalender ein, dann komm zurück.

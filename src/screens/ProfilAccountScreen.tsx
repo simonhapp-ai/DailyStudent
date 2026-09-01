@@ -167,7 +167,7 @@ export function ProfilAccountScreen() {
         <>
           <div className="fixed inset-0 z-[50] bg-black/50" onClick={() => { if (!deleting) { setDeleteOpen(false) } }} />
           <div
-            className="fixed inset-x-4 z-[51] bg-surface rounded-2xl shadow-float overflow-hidden"
+            className="fixed inset-x-4 z-[51] bg-surface rounded-card shadow-float overflow-hidden"
             style={{ top: '12%' }}
           >
             <div className="px-5 pt-6 pb-5">

@@ -311,7 +311,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col justify-between min-h-[calc(100dvh-80px)]">
       <div className="flex-1 flex flex-col justify-center">
-        <div className="w-16 h-16 rounded-2xl bg-accent-soft flex items-center justify-center text-3xl mb-8">
+        <div className="w-16 h-16 rounded-card bg-accent-soft flex items-center justify-center text-3xl mb-8">
           <Icon name="cap" size={30} />
         </div>
         <h1 className="text-4xl font-bold text-text-primary leading-tight mb-4">
@@ -335,7 +335,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
           ))}
         </div>
 
-        <div className="rounded-2xl px-4 py-3.5 mb-8" style={{ background: 'rgba(255,159,10,0.08)', border: '1px solid rgba(255,159,10,0.2)' }}>
+        <div className="rounded-card px-4 py-3.5 mb-8" style={{ background: 'rgba(255,159,10,0.08)', border: '1px solid rgba(255,159,10,0.2)' }}>
           <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: '#FF9F0A' }}>
             Beta-Hinweis
           </p>
@@ -1029,19 +1029,14 @@ function StepFaecher({
                         active ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'
                       }`}
                     >
-                      <div
-                        className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
-                        style={{ backgroundColor: `${subject.color}22` }}
-                      >
-                        {subject.icon}
-                      </div>
+                      <SubjectIcon subjectId={id} size="sm" />
                       <p className={`text-xs font-semibold leading-tight flex-1 min-w-0 ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
                         {subject.name}
                       </p>
                       {active && isOberstufe ? (
                         <button
                           onClick={(e) => { e.stopPropagation(); onToggleLK(id) }}
-                          className={`absolute top-2 right-2 px-1.5 py-0.5 rounded text-[11px] font-black tracking-wide transition-all ${
+                          className={`absolute top-2 right-2 px-1.5 py-0.5 rounded-chip text-[11px] font-black tracking-wide transition-all ${
                             isLK
                               ? 'bg-accent text-white'
                               : 'bg-accent/15 text-text-primary border border-accent/30'
@@ -1141,7 +1136,7 @@ function StepFolderSort({
                   : 'bg-surface border-border hover:bg-surface-hover active:scale-[0.98]'
               }`}
             >
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
+              <div className={`w-12 h-12 rounded-btn flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
                 <Icon name={opt.icon} size={20} />
               </div>
               <div className="flex-1 min-w-0 pt-0.5">
@@ -1274,7 +1269,7 @@ function StepStundenplan({
               onClick={() => setMode('manual')}
               className="w-full flex items-center gap-4 bg-surface border border-border rounded-card p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-xl bg-accent text-on-accent flex items-center justify-center shrink-0"><Icon name="pencil" size={22} /></div>
+              <div className="w-12 h-12 rounded-btn bg-accent text-on-accent flex items-center justify-center shrink-0"><Icon name="pencil" size={22} /></div>
               <div className="flex-1">
                 <p className="text-text-primary font-semibold text-[15px]">Manuell eintragen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">Fächer und Zeiten selbst eingeben</p>
@@ -1287,7 +1282,7 @@ function StepStundenplan({
               onClick={() => setMode('scan')}
               className="w-full flex items-center gap-4 bg-surface border border-border rounded-card p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-xl bg-accent text-on-accent flex items-center justify-center shrink-0"><Icon name="camera" size={22} /></div>
+              <div className="w-12 h-12 rounded-btn bg-accent text-on-accent flex items-center justify-center shrink-0"><Icon name="camera" size={22} /></div>
               <div className="flex-1">
                 <p className="text-text-primary font-semibold text-[15px]">Foto / Scan hochladen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">Stundenplan fotografieren oder PDF importieren</p>
@@ -1333,7 +1328,7 @@ function StepStundenplan({
               onClick={() => fileRef.current?.click()}
               className="w-full border-2 border-dashed border-border rounded-card p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
             >
-              <div className="w-16 h-16 rounded-2xl bg-accent text-on-accent flex items-center justify-center"><Icon name="camera" size={28} /></div>
+              <div className="w-16 h-16 rounded-card bg-accent text-on-accent flex items-center justify-center"><Icon name="camera" size={28} /></div>
               <div className="text-center">
                 <p className="text-text-primary font-semibold text-base">Foto oder PDF auswählen</p>
                 <p className="text-text-muted text-sm mt-1">JPG, PNG oder PDF</p>
@@ -1594,7 +1589,7 @@ function StepStundenplan({
                       : 'border-border bg-background hover:bg-surface-hover'
                   }`}
                 >
-                  <span className="text-base shrink-0">{s.icon}</span>
+                  <SubjectIcon subjectId={s.id} size="sm" className="!w-5 !h-5" />
                   <span className={`text-[11px] font-medium leading-tight truncate ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {s.name}
                   </span>
@@ -1705,7 +1700,7 @@ function StepKlausur({
                 : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
             }`}
           >
-            <span className="text-xl">{s.icon}</span>
+            <SubjectIcon subjectId={s.id} size="sm" />
             <span className="font-medium text-sm">{s.name}</span>
           </button>
         ))}

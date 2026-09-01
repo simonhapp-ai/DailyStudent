@@ -810,7 +810,7 @@ export function InsightsScreen() {
                       <SubjectIcon subjectId={s.subjectId} size="sm" />
                       {s.isLK && (
                         <span
-                          className="px-1.5 py-0.5 rounded text-[11px] font-bold"
+                          className="px-1.5 py-0.5 rounded-chip text-[11px] font-bold"
                           style={{ background: s.info.color, color: getSubjectOnColor(s.subjectId) }}
                         >
                           LK

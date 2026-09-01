@@ -276,7 +276,7 @@ export function SmartNotesScreen() {
                       <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                     </svg>
                   </button>
-                  <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1">
+                  <div className="absolute bottom-1 left-1 bg-background/80 rounded-chip px-1">
                     <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </div>
@@ -422,7 +422,7 @@ export function SmartNotesScreen() {
           <CollapsibleSection
             title="Fotos"
             icon="camera"
-            badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{photos.length}</span>}
+            badge={<span className="text-xs px-1.5 py-0.5 rounded-chip bg-surface-hover text-text-muted font-medium">{photos.length}</span>}
           >
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
               {resolvedPhotos.map((src, i) => (
@@ -432,7 +432,7 @@ export function SmartNotesScreen() {
                     alt={`Seite ${i + 1}`}
                     className="w-28 h-28 object-cover rounded-card border border-border hover:opacity-90 transition-opacity"
                   />
-                  <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1.5 py-0.5">
+                  <div className="absolute bottom-1 left-1 bg-background/80 rounded-chip px-1.5 py-0.5">
                     <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </button>
@@ -447,7 +447,7 @@ export function SmartNotesScreen() {
           <CollapsibleSection
             title="Schreibnotizen"
             icon="pencil"
-            badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{drawings.length}</span>}
+            badge={<span className="text-xs px-1.5 py-0.5 rounded-chip bg-surface-hover text-text-muted font-medium">{drawings.length}</span>}
           >
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
               {resolvedDrawings.map((src, i) => (
@@ -457,7 +457,7 @@ export function SmartNotesScreen() {
                     alt={`Seite ${i + 1}`}
                     className="w-28 h-36 object-cover rounded-card border border-border hover:opacity-90 transition-opacity"
                   />
-                  <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1.5 py-0.5">
+                  <div className="absolute bottom-1 left-1 bg-background/80 rounded-chip px-1.5 py-0.5">
                     <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </button>
@@ -535,7 +535,7 @@ export function SmartNotesScreen() {
             title="Hausaufgaben"
             icon="book"
             badge={
-              <span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">
+              <span className="text-xs px-1.5 py-0.5 rounded-chip bg-surface-hover text-text-muted font-medium">
                 {userNote.homeworkItems.length}
               </span>
             }
@@ -579,7 +579,7 @@ export function SmartNotesScreen() {
           title="KI-Zusammenfassung"
           icon="sparkle"
           badge={generatedNote ? (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-fill-green text-fill-green-on font-medium">KI</span>
+            <span className="text-xs px-1.5 py-0.5 rounded-chip bg-fill-green text-fill-green-on font-medium">KI</span>
           ) : undefined}
         >
           {note.summary ? (
@@ -817,7 +817,7 @@ export function SmartNotesScreen() {
         <>
           <div className="fixed inset-0 z-[60] bg-black/50" onClick={() => setShowDeleteConfirm(false)} />
           <div
-            className="fixed inset-x-5 z-[61] bg-surface rounded-2xl shadow-float overflow-hidden"
+            className="fixed inset-x-5 z-[61] bg-surface rounded-card shadow-float overflow-hidden"
             style={{ top: '30%', maxWidth: 380, margin: '0 auto' }}
           >
             <div className="px-5 pt-5 pb-4">

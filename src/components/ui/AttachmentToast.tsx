@@ -26,7 +26,7 @@ export function AttachmentToast() {
                      bottom-[calc(env(safe-area-inset-bottom,0px)+84px)]
                      lg:bottom-8 lg:left-auto lg:right-8 lg:translate-x-0
                      flex items-center gap-3
-                     pl-3 pr-5 py-2.5 rounded-2xl
+                     pl-3 pr-5 py-2.5 rounded-card
                      text-white
                      shadow-[0_8px_36px_rgba(0,0,0,0.30)]"
           style={{ background: 'rgba(20,20,22,0.92)', backdropFilter: 'blur(14px)' }}
