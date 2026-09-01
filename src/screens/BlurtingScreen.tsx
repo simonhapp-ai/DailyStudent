@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import { WorkingState } from '../components/ui/EmptyState'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -76,7 +78,6 @@ function getSpeechRecognitionCtor(): (new () => MinimalSpeechRecognition) | null
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const BLURTING_GRADIENT = '#34D399'
 const MIN_WORDS = 20
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -367,34 +368,36 @@ export function BlurtingScreen() {
                     </p>
                   )}
 
-                  {notesForSelected.map((item) => {
-                    const isActive = noteSelection.kind === 'note' && noteSelection.item.id === item.id
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => setNoteSelection({ kind: 'note', item })}
-                        className="w-full bg-surface rounded-card border shadow-card-adaptive p-4 text-left press flex items-start gap-3 transition-colors"
-                        style={{ borderColor: isActive ? selectedSubject.color : 'rgb(var(--color-border) / 0.6)' }}
-                      >
-                        <div className="w-1 shrink-0 rounded-full self-stretch" style={{ background: selectedSubject.color }} />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-2 mb-1">
-                            <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-pill" style={{ background: `${selectedSubject.color}18`, color: selectedSubject.color }}>
-                              {item.isGenerated ? 'Smart Note' : 'Eigene Notiz'}
-                            </span>
-                            <span className="text-text-muted text-[11px] shrink-0">{formatDate(item.date)}</span>
-                          </div>
-                          <p className="text-text-primary text-[14px] font-bold leading-snug">{item.title}</p>
-                          {item.preview && <p className="text-text-muted text-[12px] mt-1 leading-snug line-clamp-2">{item.preview}</p>}
-                        </div>
-                        {isActive && (
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={selectedSubject.color} strokeWidth="2.5" className="shrink-0 mt-1">
-                            <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        )}
-                      </button>
-                    )
-                  })}
+                  <ListGroup>
+                    {notesForSelected.map((item) => {
+                      const isActive = noteSelection.kind === 'note' && noteSelection.item.id === item.id
+                      return (
+                        <ListRow
+                          key={item.id}
+                          leading={<SubjectIcon subjectId={selectedSubjectId} size="md" />}
+                          title={item.title}
+                          subtitle={
+                            item.preview
+                              ? `${item.isGenerated ? 'Smart Note' : 'Eigene Notiz'} · ${item.preview}`
+                              : `${item.isGenerated ? 'Smart Note' : 'Eigene Notiz'} · ${formatDate(item.date)}`
+                          }
+                          value={
+                            isActive ? (
+                              <span
+                                className="w-6 h-6 rounded-full flex items-center justify-center"
+                                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
+                              >
+                                <Icon name="check" size={14} />
+                              </span>
+                            ) : (
+                              <span className="text-[13px] text-text-secondary">{formatDate(item.date)}</span>
+                            )
+                          }
+                          onClick={() => setNoteSelection({ kind: 'note', item })}
+                        />
+                      )
+                    })}
+                  </ListGroup>
 
                   {notesForSelected.length > 1 && (
                     <button
@@ -469,13 +472,11 @@ export function BlurtingScreen() {
             <button
               onClick={handleOpenWrite}
               disabled={!selectedSubjectId}
-              className="w-full h-12 rounded-pill text-white text-[15px] font-semibold press disabled:opacity-40 transition-opacity flex items-center justify-center gap-2"
-              style={{ background: BLURTING_GRADIENT }}
+              className="w-full h-12 rounded-pill text-[15px] font-semibold press disabled:opacity-40 transition-opacity flex items-center justify-center gap-2"
+              style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
             >
+              <Icon name="pencil" size={16} />
               Leere Seite öffnen
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
             </button>
           </div>
         </>
@@ -561,8 +562,8 @@ export function BlurtingScreen() {
               <button
                 onClick={handleAuswerten}
                 disabled={!text.trim() || wordCount < MIN_WORDS}
-                className="flex-1 py-4 rounded-card text-white text-[15px] font-semibold press disabled:opacity-40 transition-opacity"
-                style={{ background: BLURTING_GRADIENT }}
+                className="flex-1 h-12 rounded-pill text-[15px] font-semibold press disabled:opacity-40 transition-opacity"
+                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
               >
                 Auswerten
               </button>
@@ -573,13 +574,12 @@ export function BlurtingScreen() {
 
       {/* ── Phase: Loading ──────────────────────────────────────────────── */}
       {phase === 'loading' && (
-        <div className="flex-1 flex flex-col items-center justify-center gap-4 px-8">
-          <div className="w-14 h-14 rounded-card flex items-center justify-center" style={{ background: BLURTING_GRADIENT }}>
-            <svg className="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round">
-              <path d="M21 12a9 9 0 11-6.219-8.56" />
-            </svg>
-          </div>
-          <p className="text-text-secondary text-[15px] text-center">KI analysiert dein Blurting...</p>
+        <div className="flex-1 flex flex-col justify-center px-5">
+          <WorkingState
+            tone="klausur"
+            title="KI vergleicht mit deiner Notiz"
+            note="Gleich siehst du, was drin war und was gefehlt hat."
+          />
         </div>
       )}
 
@@ -614,7 +614,7 @@ export function BlurtingScreen() {
             )}
           </div>
           <div className="px-4 pb-10 shrink-0">
-            <button onClick={handleRetry} className="w-full h-12 rounded-pill text-white text-[15px] font-semibold press" style={{ background: BLURTING_GRADIENT }}>
+            <button onClick={handleRetry} className="w-full h-12 rounded-pill text-[15px] font-semibold press" style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}>
               Nochmal versuchen
             </button>
           </div>
@@ -662,9 +662,9 @@ function SubjectSquare({
       onClick={onTap}
       className="aspect-square bg-surface rounded-card border shadow-card-adaptive flex flex-col items-center justify-center gap-1.5 p-2 press relative overflow-hidden transition-colors"
       style={{
-        borderColor: selected ? subject.color : 'rgb(var(--color-border) / 0.6)',
+        borderColor: selected ? 'rgb(var(--color-accent))' : 'rgb(var(--color-border) / 0.6)',
         borderWidth: selected ? '2px' : '1px',
-        background: selected ? `${subject.color}0F` : undefined,
+        background: selected ? 'var(--color-accent-soft)' : undefined,
       }}
     >
       <SubjectIcon subjectId={subject.id} size="sm" />
