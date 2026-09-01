@@ -94,7 +94,10 @@ const DEFAULT_APP_CONFIG: AppConfig = {
 const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
 
 export const COIN_VALUES = {
-  LOGIN: 5,
+  // Anwesenheit ist keine Leistung: Der taegliche Login-Bonus ist auf 0
+  // gesetzt, statt den Schluessel zu entfernen — so bleiben bestehende
+  // Cooldown-Eintraege in Supabase gueltig und nichts muss migriert werden.
+  LOGIN: 0,
   SMART_NOTE: 5,
   FLASHCARD_LEARNED: 10,
   BLURTING: 10,

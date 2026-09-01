@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Icon } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
+import { rangFuer } from '../lib/xp'
 
 // Emails die die Dev-Tools sehen dürfen
 const PRO_TOGGLE_ALLOWLIST = [
@@ -62,17 +62,16 @@ export function ProfilDevToolsScreen() {
             </button>
           </div>
 
-          {/* ── Coins Configurator ─────────────────────── */}
+          {/* ── XP-Regler ─────────────────────────────── */}
           <div className="border-t border-border/40 px-4 py-3.5">
             <div className="flex items-center gap-3 mb-3">
-              <CoinIcon coins={appStats.coins ?? 0} size={36} tilt={false}/>
               <div className="flex-1">
-                <p className="text-text-primary text-[15px] font-medium">Coins</p>
+                <p className="text-text-primary text-[15px] font-medium">XP</p>
                 <p className="text-text-muted text-[12px] mt-0.5">
-                  {appStats.coins ?? 0} · Tier {getCoinTier(appStats.coins ?? 0)}: {COIN_TIERS[getCoinTier(appStats.coins ?? 0)].label}
+                  {appStats.coins ?? 0} XP · Stufe {rangFuer(appStats.coins ?? 0).stufe}: {rangFuer(appStats.coins ?? 0).label}
                 </p>
               </div>
-              <span className="text-[22px] font-black tabular-nums" style={{ color: '#F59E0B' }}>
+              <span className="text-[22px] font-black tabular-nums text-text-primary">
                 {appStats.coins ?? 0}
               </span>
             </div>

@@ -30,7 +30,6 @@ import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSide
 import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
 import { CoinToast } from '../components/ui/CoinToast'
 import { AttachmentToast } from '../components/ui/AttachmentToast'
-import { CoinIconGlobalDefs } from '../components/ui/CoinIcon'
 import { StreakBadge } from '../components/ui/StreakBadge'
 import { ReferralPill } from '../components/ui/ReferralPill'
 import { UserProvider, useUser } from '../context/UserContext'
@@ -431,7 +430,6 @@ export function App() {
 
   return (
     <ErrorBoundary>
-      <CoinIconGlobalDefs />
       <UserProvider>
         <ThemeApplier />
         <BrowserRouter>

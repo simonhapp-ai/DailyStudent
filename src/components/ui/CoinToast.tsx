@@ -1,11 +1,10 @@
 import { useEffect } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { useUser } from '../../context/UserContext'
-import { CoinIcon } from './CoinIcon'
 
 export function CoinToast() {
   const reducedMotion = useReducedMotion()
-  const { coinToastVisible, coinToastAmount, hideCoinToast, appStats } = useUser()
+  const { coinToastVisible, coinToastAmount, hideCoinToast } = useUser()
 
   useEffect(() => {
     if (!coinToastVisible) return
@@ -28,18 +27,17 @@ export function CoinToast() {
                      left-1/2 -translate-x-1/2
                      bottom-[calc(env(safe-area-inset-bottom,0px)+84px)]
                      lg:bottom-8 lg:left-auto lg:right-8 lg:translate-x-0
-                     flex items-center gap-3
-                     pl-2 pr-5 py-2.5 rounded-card
+                     flex items-baseline gap-2
+                     px-5 py-3 rounded-pill
                      text-white
                      shadow-[0_8px_36px_rgba(0,0,0,0.30)]"
-          style={{ background: '#F59E0B' }}
+          style={{ background: 'var(--grad-mode)' }}
         >
-          {/* Tier icon reflects total wealth — grows alongside the user's stash */}
-          <CoinIcon coins={appStats.coins} size={34} noAnimation tilt={false}/>
-          <div>
-            <p className="text-[11px] font-semibold opacity-80 leading-none mb-0.5">Coins verdient</p>
-            <p className="text-[17px] font-black leading-none">+{coinToastAmount}</p>
-          </div>
+          {/* Eine Zahl, kein Bild. Das gezeichnete Muenzenbild war das
+              Auffaelligste an einer Belohnung, die selbst unauffaellig sein
+              sollte — sie unterbricht ja gerade das Lernen. */}
+          <span className="text-[17px] font-black leading-none tabular-nums">+{coinToastAmount}</span>
+          <span className="text-[13px] font-semibold opacity-80 leading-none">XP</span>
         </motion.div>
       )}
     </AnimatePresence>

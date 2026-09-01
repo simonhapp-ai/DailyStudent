@@ -4,7 +4,7 @@ import { Metric, MetricRow } from '../components/ui/Metric'
 import type { AppTheme } from '../context/UserContext'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { Icon, type IconName } from '../components/ui/Icon'
-import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
+import { rangFuer, rangFortschritt } from '../lib/xp'
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
@@ -78,6 +78,28 @@ function ThemeRow({ theme, onPick }: { theme: AppTheme; onPick: (t: AppTheme) =>
         ))}
       </div>
     </div>
+  )
+}
+
+/** Fortschrittsring zum naechsten Rang — dieselbe Sprache wie die Kennzahlen,
+ *  nur rund. Ersetzt das gezeichnete Muenzbild. */
+function RangRing({ xp }: { xp: number }) {
+  const anteil = rangFortschritt(xp)
+  const umfang = 2 * Math.PI * 15
+  return (
+    <span className="relative w-9 h-9 shrink-0 flex items-center justify-center">
+      <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden>
+        <circle cx="18" cy="18" r="15" fill="none" strokeWidth="3"
+          stroke="rgb(var(--color-border))" />
+        <circle cx="18" cy="18" r="15" fill="none" strokeWidth="3" strokeLinecap="round"
+          stroke="rgb(var(--color-accent))"
+          strokeDasharray={`${umfang * anteil} ${umfang}`}
+          transform="rotate(-90 18 18)" />
+      </svg>
+      <span className="absolute text-[12px] font-bold tabular-nums text-text-primary">
+        {rangFuer(xp).stufe}
+      </span>
+    </span>
   )
 }
 
@@ -469,11 +491,14 @@ export function ProfilScreen() {
             chevron
             onClick={() => navigate('/insights')}
           />
+          {/* Rang statt Muenze: eine Zahl und ein Ring, kein Bild. Der Rang
+              sagt etwas ueber den Umfang, die Streak ueber die Regelmaessigkeit —
+              zwei Dinge, deshalb zwei Anzeigen. */}
           <ListRow
-            leading={<CoinIcon coins={appStats.coins ?? 0} size={34} tilt={false} noAnimation />}
-            title={<span className="text-[15px] font-normal">Coins</span>}
-            subtitle={COIN_TIERS[getCoinTier(appStats.coins ?? 0)].label}
-            value={<span className="tabular-nums font-semibold text-text-primary">{appStats.coins ?? 0}</span>}
+            leading={<RangRing xp={appStats.coins ?? 0} />}
+            title={<span className="text-[15px] font-normal">Rang</span>}
+            subtitle={`Stufe ${rangFuer(appStats.coins ?? 0).stufe} · ${rangFuer(appStats.coins ?? 0).label}`}
+            value={<span className="tabular-nums font-semibold text-text-primary">{appStats.coins ?? 0} XP</span>}
             chevron
             onClick={() => navigate('/profil/coins')}
           />
