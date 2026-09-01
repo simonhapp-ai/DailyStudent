@@ -354,7 +354,7 @@ export function FolderScreen() {
             </button>
             <button
               onClick={confirmDelete}
-              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-fill-red text-fill-red-on hover:opacity-90 transition-colors press"
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] hover:opacity-90 transition-colors press"
             >
               Löschen
             </button>

@@ -559,7 +559,7 @@ export function UnterrichtScreen() {
               <span className="flex items-center gap-2">
                 <span className="text-[16px] font-semibold text-text-primary">Hausaufgaben</span>
                 {offeneHausaufgaben > 0 && (
-                  <span className="text-[13px] font-semibold px-2.5 py-0.5 rounded-pill bg-fill-red text-fill-red-on">
+                  <span className="text-[13px] font-semibold px-2.5 py-0.5 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))]">
                     {offeneHausaufgaben} offen
                   </span>
                 )}
@@ -967,7 +967,7 @@ export function UnterrichtScreen() {
             </button>
             <button
               onClick={confirmDeleteFolder}
-              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-fill-red text-fill-red-on hover:opacity-90 transition-colors press"
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] hover:opacity-90 transition-colors press"
             >
               Löschen
             </button>

@@ -280,7 +280,7 @@ export function ProfilScreen() {
             nirgends in der App vorkommt. Die Modusfarbe steht im Knopf, nicht als
             Tönung über der ganzen Karte. */}
         {!isPro && appConfig.proPurchasesEnabled && (
-          <div className="bg-surface rounded-card p-5 border border-border/60 shadow-card-adaptive">
+          <div className="card-premium rounded-card p-5 shadow-card-adaptive">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <p className="text-text-primary font-bold text-[17px]">Pro freischalten</p>
@@ -311,14 +311,14 @@ export function ProfilScreen() {
                 just marketing copy pointing at whichever offer applies. */}
             {/* Das Angebot ist eine Marke, keine farbige Schrift. */}
             <div className="mb-3">
-              <Tag tone="green" size="sm">
+              <Tag tone="gold" size="sm">
                 {Capacitor.isNativePlatform() ? '1 Woche kostenlos beim Monatsabo' : '20% Rabatt auf deinen ersten Kauf'}
               </Tag>
             </div>
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}
-              className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
+              className="w-full h-12 rounded-pill btn-premium text-[15px] font-bold hover:opacity-90 press transition-all disabled:opacity-60"
             >
               {checkoutLoading === 'yearly' ? 'Wird geladen…' : 'Pro freischalten · €59,99/Jahr'}
             </button>
@@ -337,20 +337,19 @@ export function ProfilScreen() {
             widget now lives at the bottom of the page, this normal-state version
             just doesn't render while paused. */}
         {!isPro && !trialActive && appConfig.proPurchasesEnabled && (
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+          <div className="card-premium rounded-card shadow-card-adaptive overflow-hidden">
             <div className="p-5">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
                   <div
-                    className="w-10 h-10 rounded-btn flex items-center justify-center shrink-0 text-white"
-                    style={{ background: 'var(--grad-mode)' }}
+                    className="w-10 h-10 rounded-btn flex items-center justify-center shrink-0 btn-premium"
                   >
                     <Icon name="gift" size={22} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
-                      <Tag size="sm">Nur kurze Zeit</Tag>
+                      <Tag tone="gold" size="sm">Nur kurze Zeit</Tag>
                     </div>
                     <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
                   </div>
@@ -368,7 +367,7 @@ export function ProfilScreen() {
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${Math.min(100, (referralCount / 5) * 100)}%`,
-                      background: 'var(--grad-mode)',
+                      background: 'linear-gradient(90deg, #C8860A, #F5C842, #FFD700)',
                     }}
                   />
                 </div>
@@ -377,7 +376,7 @@ export function ProfilScreen() {
                     <span
                       key={n}
                       className="text-[11px] font-medium"
-                      style={{ color: referralCount >= n ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))' }}
+                      style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
                     >
                       {n === 5 ? <Icon name="gift" size={13} /> : `${n}`}
                     </span>
@@ -404,7 +403,7 @@ export function ProfilScreen() {
                     <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
                     <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
                     {copyToast ? (
-                      <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center bg-fill-green text-fill-green-on">
+                      <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]">
                         Kopiert
                       </div>
                     ) : (

@@ -737,7 +737,7 @@ export function NoteCreateScreen() {
             disabled={!canAnalyze}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
               !canAnalyze ? 'bg-surface-hover text-text-muted cursor-not-allowed'
-              : block.aiStatus === 'done' ? 'bg-fill-green text-fill-green-on hover:opacity-90'
+              : block.aiStatus === 'done' ? 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] hover:opacity-90'
               : 'btn-mode hover:opacity-90'
             }`}
           >
@@ -1047,7 +1047,7 @@ export function NoteCreateScreen() {
             disabled={!canAnalyze}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
               !canAnalyze ? 'bg-surface-hover text-text-muted cursor-not-allowed'
-              : block.aiStatus === 'done' ? 'bg-fill-green text-fill-green-on hover:opacity-90'
+              : block.aiStatus === 'done' ? 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] hover:opacity-90'
               : 'btn-mode hover:opacity-90'
             }`}
           >

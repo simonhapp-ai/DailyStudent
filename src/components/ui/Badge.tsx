@@ -10,9 +10,9 @@ export function Badge({ color = 'accent', className = '', children, ...props }: 
   // richtig leuchtet noch richtig lesbar ist.
   const colors = {
     accent:  'btn-mode',
-    success: 'bg-fill-green text-fill-green-on',
-    warning: 'bg-fill-orange text-fill-orange-on',
-    danger:  'bg-fill-red text-fill-red-on',
+    success: 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]',
+    warning: 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-orange))]',
+    danger:  'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))]',
     muted:   'bg-surface-hover text-text-primary',
   }
 

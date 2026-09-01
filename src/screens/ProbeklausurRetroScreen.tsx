@@ -19,9 +19,9 @@ const MODE_LABELS: Record<number, string> = {
 // gefuellte Marken aus dem bestehenden Vorrat, nie Toenung plus gleichfarbige
 // Schrift (Regel 3).
 const AFB_COLORS: Record<string, string> = {
-  I:   'bg-fill-blue text-fill-blue-on',
-  II:  'bg-fill-orange text-fill-orange-on',
-  III: 'bg-fill-red text-fill-red-on',
+  I:   'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-blue))]',
+  II:  'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-orange))]',
+  III: 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))]',
 }
 
 function npStep(np: number): 1 | 2 | 3 | 4 | 5 {
@@ -214,7 +214,7 @@ export function ProbeklausurRetroScreen() {
           {/* Delete */}
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="w-full h-12 rounded-pill font-semibold text-[14px] bg-fill-red text-fill-red-on press"
+            className="w-full h-12 rounded-pill font-semibold text-[14px] bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] press"
           >
             Klausur löschen
           </button>

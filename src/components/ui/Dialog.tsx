@@ -54,7 +54,7 @@ export function Dialog({
             onClick={onConfirm}
             className={`h-12 rounded-pill text-[16px] font-semibold press ${
               destructive
-                ? 'bg-fill-red text-fill-red-on'
+                ? 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))]'
                 : 'btn-mode'
             }`}
           >

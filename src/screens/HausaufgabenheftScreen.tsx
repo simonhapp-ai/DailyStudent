@@ -228,7 +228,7 @@ export function HausaufgabenheftScreen() {
         {/* ── Pending homework list ────────────────────────────── */}
         {pending.length === 0 && !showAddForm && (
           <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <div className="w-16 h-16 rounded-card bg-fill-green text-fill-green-on flex items-center justify-center"><Icon name="check" size={28} /></div>
+            <div className="w-16 h-16 rounded-card bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] flex items-center justify-center"><Icon name="check" size={28} /></div>
             <p className="text-text-primary font-bold text-[16px]">Alle Hausaufgaben erledigt!</p>
             <p className="text-text-muted text-[13px]">Tippe + um neue hinzuzufügen</p>
           </div>
@@ -296,7 +296,7 @@ export function HausaufgabenheftScreen() {
                     </button>
                     <button
                       onClick={() => handleComplete(item.id)}
-                      className="px-3 py-1.5 rounded-pill text-[11px] font-bold bg-fill-green text-fill-green-on press-sm"
+                      className="px-3 py-1.5 rounded-pill text-[11px] font-bold bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] press-sm"
                     >
                       Ja, erledigt
                     </button>

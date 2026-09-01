@@ -756,9 +756,9 @@ function ExamSuggestionCard({
 // steht die Farbe im gefüllten Zeichen, die Karte bleibt neutral und die
 // Schrift behält ihren vollen Kontrast.
 const TONE_FILL: Record<'green' | 'orange' | 'blue', string> = {
-  green:  'bg-fill-green text-fill-green-on',
-  orange: 'bg-fill-orange text-fill-orange-on',
-  blue:   'bg-fill-blue text-fill-blue-on',
+  green:  'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]',
+  orange: 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-orange))]',
+  blue:   'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-blue))]',
 }
 
 function FeedbackSection({ icon, title, items, tone }: { icon: IconName; title: string; items: string[]; tone: 'green' | 'orange' | 'blue' }) {

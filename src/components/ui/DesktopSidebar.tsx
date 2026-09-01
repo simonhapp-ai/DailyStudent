@@ -401,7 +401,7 @@ function SideRow({ entry, active, onClick }: { entry: NavEntry; active: boolean;
       )}
       <span className="text-[14px] truncate flex-1">{entry.label}</span>
       {entry.badge && (
-        <span className="text-[11px] font-semibold px-2 py-0.5 rounded-pill bg-fill-red text-fill-red-on shrink-0">
+        <span className="text-[11px] font-semibold px-2 py-0.5 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] shrink-0">
           {entry.badge}
         </span>
       )}

@@ -16,14 +16,20 @@ interface TagProps extends HTMLAttributes<HTMLSpanElement> {
 // Standard-Dunkelvariante mit schwarzer. Beide Richtungen liegen über 4,5:1 — außer
 // Rot (3,89:1), das deshalb nie unter 13 px halbfett gesetzt wird und immer ein
 // zweites Signal trägt (Wort, Position oder Symbol).
+// Signalfarben stehen auf neutralem Grund, nicht als gefuellte Flaeche:
+// Gruen und Rot dienen der Bedeutung (Gefahr, Belohnung) und stoeren sich mit
+// den Modusfarben, sobald sie selbst zur Flaeche werden. Farbige FLAECHEN
+// tragen dagegen immer weisse Schrift — das sind die Modusfarben und Gold.
+const SIGNAL_BG = 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]'
+
 const tones: Record<TagTone, string> = {
-  neutral:   'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary',
+  neutral:   `${SIGNAL_BG} text-text-primary`,
   accent:    'btn-mode',
-  red:       'bg-fill-red text-fill-red-on',
-  orange:    'bg-fill-orange text-fill-orange-on',
-  green:     'bg-fill-green text-fill-green-on',
-  blue:      'bg-fill-blue text-fill-blue-on',
-  yellow:    'bg-fill-yellow text-fill-yellow-on',
+  red:       `${SIGNAL_BG} text-[rgb(var(--fill-red))]`,
+  orange:    `${SIGNAL_BG} text-[rgb(var(--fill-orange))]`,
+  green:     `${SIGNAL_BG} text-[rgb(var(--fill-green))]`,
+  blue:      `${SIGNAL_BG} text-[rgb(var(--fill-blue))]`,
+  yellow:    `${SIGNAL_BG} text-[rgb(var(--fill-yellow))]`,
   gold:      'badge-pro-gold',
   'grade-1': 'bg-grade-1 text-grade-1-on',
   'grade-2': 'bg-grade-2 text-grade-2-on',

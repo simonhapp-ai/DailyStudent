@@ -13,7 +13,7 @@ export function Button({ variant = 'primary', size = 'md', fullWidth, className 
     primary:   'btn-mode hover:opacity-90',
     secondary: 'bg-surface border border-border text-text-primary hover:bg-surface-hover',
     ghost:     'text-text-secondary hover:text-text-primary hover:bg-surface-hover',
-    danger:    'bg-fill-red text-fill-red-on hover:opacity-90',
+    danger:    'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] hover:opacity-90',
   }
 
   const sizes = {

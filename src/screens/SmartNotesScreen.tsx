@@ -489,7 +489,7 @@ export function SmartNotesScreen() {
               onClick={() => void transferToCloud()}
               disabled={transferStatus === 'uploading' || transferStatus === 'done'}
               className={`shrink-0 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
-                transferStatus === 'done' ? 'bg-fill-green text-fill-green-on'
+                transferStatus === 'done' ? 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]'
                 : 'btn-mode hover:opacity-90'
               }`}
             >
@@ -579,7 +579,7 @@ export function SmartNotesScreen() {
           title="KI-Zusammenfassung"
           icon="sparkle"
           badge={generatedNote ? (
-            <span className="text-xs px-1.5 py-0.5 rounded-chip bg-fill-green text-fill-green-on font-medium">KI</span>
+            <span className="text-xs px-1.5 py-0.5 rounded-chip bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] font-medium">KI</span>
           ) : undefined}
         >
           {note.summary ? (

@@ -1216,8 +1216,8 @@ function AppIconPill({ tone = 'neutral', children }: { tone?: PillTone; children
   const styles: Record<PillTone, string> = {
     neutral: 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary',
     mode:    'btn-mode',
-    warn:    'bg-fill-red text-fill-red-on',
-    done:    'bg-fill-green text-fill-green-on',
+    warn:    'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))]',
+    done:    'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]',
   }
   return (
     <div className={`w-11 h-11 rounded-icon flex items-center justify-center shrink-0 ${styles[tone]}`}>

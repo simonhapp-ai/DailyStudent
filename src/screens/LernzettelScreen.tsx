@@ -107,7 +107,7 @@ function LernzettelRow({
             damit die Beschriftung auf der Flaeche lesbar bleibt. */}
         <button
           onClick={() => { onToggleHighlight(); onOpenChange(false) }}
-          className="flex flex-col items-center justify-center gap-1 press-sm bg-fill-yellow text-fill-yellow-on"
+          className="flex flex-col items-center justify-center gap-1 press-sm bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-yellow))]"
           style={{ width: SWIPE_ACTION_WIDTH }}
         >
           <StarIcon filled={lz.highlighted} />
@@ -115,7 +115,7 @@ function LernzettelRow({
         </button>
         <button
           onClick={onDelete}
-          className="flex flex-col items-center justify-center gap-1 press-sm bg-fill-red text-fill-red-on"
+          className="flex flex-col items-center justify-center gap-1 press-sm bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))]"
           style={{ width: SWIPE_ACTION_WIDTH }}
         >
           <TrashIcon />
@@ -148,7 +148,7 @@ function LernzettelRow({
             <div className="flex items-center gap-1.5">
               <p className="text-[16px] font-semibold tracking-[-0.015em] text-text-primary truncate">{lz.title}</p>
               {lz.highlighted && (
-                <span className="shrink-0 w-5 h-5 rounded-full bg-fill-yellow text-fill-yellow-on flex items-center justify-center">
+                <span className="shrink-0 w-5 h-5 rounded-full bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-yellow))] flex items-center justify-center">
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>

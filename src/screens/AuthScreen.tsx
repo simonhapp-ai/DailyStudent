@@ -202,7 +202,7 @@ export function AuthScreen() {
           </button>
 
           {error && (
-            <p className="text-[13px] text-text-primary bg-fill-red text-fill-red-on rounded-btn px-3 py-2 mt-4">{error}</p>
+            <p className="text-[13px] text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] rounded-btn px-3 py-2 mt-4">{error}</p>
           )}
         </div>
       </div>

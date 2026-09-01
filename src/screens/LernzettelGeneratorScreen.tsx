@@ -525,7 +525,7 @@ export function LernzettelGeneratorScreen() {
 
                   <button
                     onClick={() => { setShowNoNotesWarning(false); void handleGenerate() }}
-                    className="w-full h-12 rounded-pill bg-fill-orange text-fill-orange-on font-semibold text-[15px] mb-3 press"
+                    className="w-full h-12 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-orange))] font-semibold text-[15px] mb-3 press"
                   >
                     Trotzdem generieren
                   </button>
