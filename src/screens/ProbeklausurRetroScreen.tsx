@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { EmptyState } from '../components/ui/EmptyState'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -13,19 +15,20 @@ const MODE_LABELS: Record<number, string> = {
   4: 'Ohne Material',
 }
 
+// Die drei Anforderungsbereiche steigen an, also steigt auch der Ton —
+// gefuellte Marken aus dem bestehenden Vorrat, nie Toenung plus gleichfarbige
+// Schrift (Regel 3).
 const AFB_COLORS: Record<string, string> = {
-  I:   'bg-blue-500/15 text-blue-400',
-  II:  'bg-amber-500/15 text-amber-400',
-  III: 'bg-purple-500/15 text-purple-400',
+  I:   'bg-fill-blue text-fill-blue-on',
+  II:  'bg-fill-orange text-fill-orange-on',
+  III: 'bg-fill-red text-fill-red-on',
 }
 
-function npColor(np: number): string {
-  if (np >= 13) return '#34D399'
-  if (np >= 10) return '#60A5FA'
-  if (np >= 7)  return '#FACC15'
-  if (np >= 4)  return '#FB923C'
-  return '#F87171'
+function npStep(np: number): 1 | 2 | 3 | 4 | 5 {
+  return np >= 13 ? 5 : np >= 10 ? 4 : np >= 7 ? 3 : np >= 4 ? 2 : 1
 }
+function npColor(np: number): string { return `rgb(var(--grade-${npStep(np)}))` }
+function npOn(np: number): string { return `rgb(var(--grade-${npStep(np)}-on))` }
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' })
@@ -83,7 +86,7 @@ function CorrectionDetail({ task }: { task: SavedProbeklausur['taskResults'][0] 
           {/* Gaps */}
           {task.gaps.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold text-amber-400 uppercase tracking-wide mb-1">Lücken</p>
+              <p className="text-[11px] font-bold text-text-secondary uppercase tracking-wide mb-1">Lücken</p>
               {task.gaps.map((g, i) => (
                 <p key={i} className="text-[12px] text-text-secondary mb-0.5">· {g}</p>
               ))}
@@ -168,9 +171,9 @@ export function ProbeklausurRetroScreen() {
               </div>
               <div
                 className="w-16 h-16 rounded-[20px] flex items-center justify-center"
-                style={{ background: `${npColor(active.totalNP)}22` }}
+                style={{ background: npColor(active.totalNP) }}
               >
-                <span className="text-[28px] font-black" style={{ color: npColor(active.totalNP) }}>
+                <span className="text-[28px] font-black tabular-nums" style={{ color: npOn(active.totalNP) }}>
                   {active.totalNP}
                 </span>
               </div>
@@ -211,7 +214,7 @@ export function ProbeklausurRetroScreen() {
           {/* Delete */}
           <button
             onClick={() => setShowDeleteConfirm(true)}
-            className="w-full py-3.5 rounded-[16px] font-semibold text-[14px] border border-red-500/30 text-red-400 press"
+            className="w-full h-12 rounded-pill font-semibold text-[14px] bg-fill-red text-fill-red-on press"
           >
             Klausur löschen
           </button>
@@ -262,67 +265,33 @@ export function ProbeklausurRetroScreen() {
       </div>
 
       <div className="px-4 py-5 space-y-3">
-        {/* Empty state */}
-        {sorted.length === 0 && (
-          <div className="bg-surface border border-border/60 rounded-[20px] p-8 shadow-card-adaptive text-center mt-4">
-            <div
-              className="w-14 h-14 rounded-[18px] flex items-center justify-center mx-auto mb-4"
-              style={{ background: '#34D399' }}
-            >
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
-              </svg>
-            </div>
-            <p className="text-[16px] font-bold text-text-primary mb-1">Noch keine Klausuren</p>
-            <p className="text-[13px] text-text-muted leading-snug">
-              Schließe eine Probeklausur ab — sie wird hier automatisch gespeichert.
-            </p>
-          </div>
+        {sorted.length === 0 ? (
+          <EmptyState
+            title="Noch keine Klausuren"
+            note="Schließe eine Probeklausur ab — sie wird hier automatisch gespeichert, mit Korrektur und Punkten."
+          />
+        ) : (
+          <ListGroup>
+            {sorted.map((pk) => (
+              <ListRow
+                key={pk.id}
+                leading={<SubjectIcon subjectId={pk.subjectId} size="md" />}
+                title={pk.topic}
+                subtitle={`${SUBJECT_INFO[pk.subjectId]?.name ?? pk.subjectName} · ${MODE_LABELS[pk.mode]} · ${formatDate(pk.completedAt)}`}
+                value={
+                  <span
+                    className="px-2.5 py-1 rounded-pill text-[12px] font-bold tabular-nums"
+                    style={{ background: npColor(pk.totalNP), color: npOn(pk.totalNP) }}
+                  >
+                    {pk.totalNP}/15
+                  </span>
+                }
+                chevron
+                onClick={() => { setActive(pk); setView('detail') }}
+              />
+            ))}
+          </ListGroup>
         )}
-
-        {/* Exam list */}
-        {sorted.map((pk) => {
-          const info = SUBJECT_INFO[pk.subjectId]
-          return (
-            <button
-              key={pk.id}
-              onClick={() => { setActive(pk); setView('detail') }}
-              className="w-full bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive text-left press overflow-hidden flex"
-            >
-              {/* Left color accent */}
-              <div className="w-1 shrink-0 rounded-l-[20px]" style={{ background: npColor(pk.totalNP) }} />
-
-              <div className="flex items-center gap-3 p-4 flex-1 min-w-0">
-                {/* Subject icon */}
-                <SubjectIcon subjectId={pk.subjectId} size="md" />
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <p className="text-[15px] font-bold text-text-primary truncate">{pk.topic}</p>
-                    <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded bg-border/40 text-text-muted shrink-0 whitespace-nowrap">
-                      {MODE_LABELS[pk.mode]}
-                    </span>
-                  </div>
-                  <p className="text-[12px] text-text-muted">
-                    {info?.name ?? pk.subjectName} · {formatDate(pk.completedAt)}
-                  </p>
-                </div>
-
-                {/* NP badge */}
-                <div
-                  className="px-2.5 py-1 rounded-full text-white text-[12px] font-bold shrink-0 whitespace-nowrap"
-                  style={{ background: npColor(pk.totalNP) }}
-                >
-                  {pk.totalNP}/15
-                </div>
-
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted shrink-0" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 18l6-6-6-6" />
-                </svg>
-              </div>
-            </button>
-          )
-        })}
       </div>
     </div>
   )
