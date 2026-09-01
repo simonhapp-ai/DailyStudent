@@ -3,7 +3,7 @@ import { getStroke } from 'perfect-freehand'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type Tool = 'pen' | 'highlighter' | 'eraser' | 'select' | 'geometry' | 'lasso'
+type Tool = 'pen' | 'highlighter' | 'eraser' | 'select' | 'geometry' | 'lasso' | 'text'
 type PenType = 'füller' | 'bleistift' | 'fineliner' | 'edding'
 type BackgroundType = 'white' | 'lined' | 'grid' | 'dotted'
 type Background = { type: BackgroundType } | { type: 'image'; dataUrl: string }
@@ -15,6 +15,23 @@ export interface CanvasImageData {
   y: number
   w: number
   h: number
+}
+
+// ── Textfeld ──────────────────────────────────────────────────────────────
+// Getippter Text neben der Handschrift. Bewusst NICHT in die Zeichenflaeche
+// gemalt, sondern als HTML darueber gelegt — genau wie die Bilder: So bleibt
+// er auswaehlbar, aenderbar und bei jedem Zoom scharf. Gemalter Text waere
+// beim Hineinzoomen unscharf und nachtraeglich nicht mehr zu bearbeiten.
+// Erst beim Export und fuer die Vorschaubilder wird er einmalig mitgemalt.
+export interface CanvasTextData {
+  id: string
+  text: string
+  x: number
+  y: number
+  /** Breite des Feldes; die Hoehe ergibt sich aus dem Umbruch. */
+  w: number
+  size: number
+  colorHex: string
 }
 
 type GeomShape =
@@ -37,6 +54,8 @@ export interface CanvasPageData {
   background: Background
   strokes: StrokeRecord[]
   images: CanvasImageData[]
+  /** Optional, damit bestehende Seiten ohne Migration weiter gelten. */
+  texts?: CanvasTextData[]
   thumbnail?: string
 }
 
@@ -197,6 +216,32 @@ function drawBackground(
   } else if (bg.type === 'image') {
     const img = imgCache.get((bg as { dataUrl: string }).dataUrl)
     if (img?.complete && img.naturalWidth > 0) ctx.drawImage(img, 0, 0, w, h)
+  }
+}
+
+/** Malt Textfelder in eine Zeichenflaeche. Wird NUR fuer Vorschaubilder und
+ *  den PDF-Export gebraucht: Auf dem Bildschirm liegen sie als HTML darueber,
+ *  damit sie aenderbar und scharf bleiben. */
+function drawCanvasTexts(ctx: CanvasRenderingContext2D, texts: CanvasTextData[]) {
+  for (const t of texts) {
+    if (!t.text.trim()) continue
+    ctx.save()
+    ctx.fillStyle = t.colorHex
+    ctx.font = `${t.size}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+    ctx.textBaseline = 'top'
+    // Zeilenumbruch von Hand: Die Zeichenflaeche kann das nicht selbst.
+    const zeilen: string[] = []
+    for (const absatz of t.text.split('\n')) {
+      let zeile = ''
+      for (const wort of absatz.split(' ')) {
+        const test = zeile ? `${zeile} ${wort}` : wort
+        if (ctx.measureText(test).width > t.w - 8 && zeile) { zeilen.push(zeile); zeile = wort }
+        else zeile = test
+      }
+      zeilen.push(zeile)
+    }
+    zeilen.forEach((z, i) => ctx.fillText(z, t.x + 4, t.y + 2 + i * t.size * 1.35))
+    ctx.restore()
   }
 }
 
@@ -526,6 +571,9 @@ export function DrawingCanvas({
   // Image state
   const currentImagesRef = useRef<CanvasImageData[]>([])
   const [currentImagesState, setCurrentImagesState] = useState<CanvasImageData[]>([])
+  const currentTextsRef = useRef<CanvasTextData[]>([])
+  const [currentTexts, setCurrentTextsState] = useState<CanvasTextData[]>([])
+  const [activeTextId, setActiveTextId] = useState<string | null>(null)
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null)
   const imageInteractionRef = useRef<{
     action: ImageInteractionAction
@@ -663,6 +711,12 @@ export function DrawingCanvas({
     pagesRef.current[curIdxRef.current].images = images
   }, [])
 
+  const setCurrentTexts = useCallback((texts: CanvasTextData[]) => {
+    currentTextsRef.current = texts
+    setCurrentTextsState(texts)
+    pagesRef.current[curIdxRef.current].texts = texts
+  }, [])
+
   const preloadImage = useCallback((dataUrl: string) => {
     if (imgCacheRef.current.has(dataUrl)) return
     const el = new Image()
@@ -687,6 +741,7 @@ export function DrawingCanvas({
     drawCanvasImages(ctx, w, h, page.images ?? [], imgCacheRef.current)
     const strokes = pageIdx === curIdxRef.current ? strokesRef.current : page.strokes
     for (const s of strokes) paintStrokeRecord(ctx, s)
+    drawCanvasTexts(ctx, pageIdx === curIdxRef.current ? currentTextsRef.current : (page.texts ?? []))
     return off.toDataURL('image/png', 0.75)
   }, [])
 
@@ -695,6 +750,7 @@ export function DrawingCanvas({
     const idx = curIdxRef.current
     pagesRef.current[idx].strokes   = [...strokesRef.current]
     pagesRef.current[idx].images    = currentImagesRef.current
+    pagesRef.current[idx].texts     = currentTextsRef.current
     pagesRef.current[idx].thumbnail = generateThumbnail(idx)
     onPagesChange(pagesRef.current.map(p => ({
       id: p.id, background: p.background,
@@ -721,6 +777,9 @@ export function DrawingCanvas({
     const imgs0 = pagesRef.current[0].images ?? []
     currentImagesRef.current = imgs0
     setCurrentImagesState(imgs0)
+    const txt0 = pagesRef.current[0].texts ?? []
+    currentTextsRef.current = txt0
+    setCurrentTextsState(txt0)
     pagesRef.current.forEach(page => {
       if (page.background.type === 'image') preloadImage((page.background as { dataUrl: string }).dataUrl)
       ;(page.images ?? []).forEach(img => preloadImage(img.dataUrl))
@@ -783,15 +842,18 @@ export function DrawingCanvas({
     const leaving = curIdxRef.current
     pagesRef.current[leaving].strokes   = [...strokesRef.current]
     pagesRef.current[leaving].images    = currentImagesRef.current
+    pagesRef.current[leaving].texts     = currentTextsRef.current
     pagesRef.current[leaving].thumbnail = generateThumbnail(leaving)
     curIdxRef.current = idx
     strokesRef.current = [...pagesRef.current[idx].strokes]
     undoStackRef.current = []; redoStackRef.current = []
     const newBg  = pagesRef.current[idx].background
     const newImg = pagesRef.current[idx].images ?? []
+    const newTxt = pagesRef.current[idx].texts ?? []
     setCurrentIdx(idx); setCurrentBgType(newBg.type)
     currentImagesRef.current = newImg; setCurrentImagesState(newImg)
-    setSelectedImageId(null); updateHistoryState()
+    currentTextsRef.current = newTxt; setCurrentTextsState(newTxt)
+    setSelectedImageId(null); setActiveTextId(null); updateHistoryState()
     redrawBgCanvas(newBg); redrawStrokeCanvas(strokesRef.current)
     notifyPagesChanged()
   }, [redrawBgCanvas, redrawStrokeCanvas, updateHistoryState, notifyPagesChanged, generateThumbnail])
@@ -799,12 +861,15 @@ export function DrawingCanvas({
   const addPage = useCallback(() => {
     pagesRef.current[curIdxRef.current].strokes = [...strokesRef.current]
     pagesRef.current[curIdxRef.current].images  = currentImagesRef.current
-    const newPage: CanvasPageData = { id: `p${Date.now()}`, background: { type: 'white' }, strokes: [], images: [] }
+    pagesRef.current[curIdxRef.current].texts   = currentTextsRef.current
+    const newPage: CanvasPageData = { id: `p${Date.now()}`, background: { type: 'white' }, strokes: [], images: [], texts: [] }
     pagesRef.current.push(newPage)
     const newIdx = pagesRef.current.length - 1
     curIdxRef.current = newIdx
     strokesRef.current = []; undoStackRef.current = []; redoStackRef.current = []
     currentImagesRef.current = []
+    currentTextsRef.current = []
+    setCurrentTextsState([]); setActiveTextId(null)
     setPageCount(pagesRef.current.length); setCurrentIdx(newIdx)
     setCurrentBgType('white'); setCurrentImagesState([]); setSelectedImageId(null)
     updateHistoryState(); redrawBgCanvas({ type: 'white' }); redrawStrokeCanvas([])
@@ -1107,6 +1172,19 @@ export function DrawingCanvas({
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (tool === 'select') return
+
+    // Textwerkzeug: Tippen legt ein Feld an und setzt den Schreibpunkt hinein.
+    if (tool === 'text') {
+      const [cx, cy] = getXY(e)
+      const id = `t${Date.now()}`
+      setCurrentTexts([
+        ...currentTextsRef.current,
+        { id, text: '', x: cx, y: cy, w: 260, size: 16, colorHex: colors[activeColorIdx] },
+      ])
+      setActiveTextId(id)
+      notifyPagesChanged()
+      return
+    }
 
     if (e.pointerType === 'pen') { hasSeenPenRef.current = true; penIsActiveRef.current = true }
 
@@ -1580,6 +1658,7 @@ export function DrawingCanvas({
         drawBackground(ctx, w, h, page.background, imgCacheRef.current)
         drawCanvasImages(ctx, w, h, page.images ?? [], imgCacheRef.current)
         for (const s of page.strokes) paintStrokeRecord(ctx, s)
+        drawCanvasTexts(ctx, page.texts ?? [])
         doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297)
       }
       doc.save('notiz.pdf')
@@ -2122,6 +2201,22 @@ export function DrawingCanvas({
         )}
         <input ref={canvasImgInputRef} type="file" accept="image/*" className="hidden" onChange={handleCanvasImageUpload} />
 
+        {/* Textfeld */}
+        <button
+          onClick={() => setTool(tool === 'text' ? 'pen' : 'text')}
+          aria-pressed={tool === 'text'}
+          className="flex items-center justify-center w-11 h-11 rounded-btn press-sm shrink-0 transition-colors"
+          style={tool === 'text'
+            ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
+            : { color: 'rgb(var(--color-text-muted))' }}
+          title="Textfeld"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1"
+            strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 5h14M12 5v14M9 19h6" />
+          </svg>
+        </button>
+
         {/* Zoom-Schreibfeld — nur im Vollbild sinnvoll, sonst fehlt die Hoehe. */}
         {isFullscreen && (
           <button
@@ -2307,6 +2402,42 @@ export function DrawingCanvas({
                     }}
                   />
               )}
+
+              {/* Textfelder — HTML ueber der Zeichenflaeche, damit sie
+                  auswaehlbar, aenderbar und bei jedem Zoom scharf bleiben. */}
+              {currentTexts.map((t) => (
+                <textarea
+                  key={t.id}
+                  value={t.text}
+                  autoFocus={t.id === activeTextId}
+                  onChange={(ev) => setCurrentTexts(
+                    currentTextsRef.current.map((x) => x.id === t.id ? { ...x, text: ev.target.value } : x),
+                  )}
+                  onBlur={() => {
+                    // Leere Felder verschwinden von selbst — ein leeres
+                    // Kaestchen auf dem Blatt waere nur Muell.
+                    if (!t.text.trim()) {
+                      setCurrentTexts(currentTextsRef.current.filter((x) => x.id !== t.id))
+                    }
+                    setActiveTextId(null)
+                    notifyPagesChanged()
+                  }}
+                  placeholder="Text…"
+                  spellCheck={false}
+                  className="absolute bg-transparent resize-none outline-none leading-snug"
+                  style={{
+                    zIndex: 6,
+                    left: t.x, top: t.y, width: t.w,
+                    fontSize: t.size,
+                    color: t.colorHex,
+                    minHeight: t.size * 1.6,
+                    border: t.id === activeTextId ? '1px dashed rgb(var(--color-accent))' : '1px solid transparent',
+                    borderRadius: 4,
+                    padding: '2px 4px',
+                    pointerEvents: tool === 'text' || t.id === activeTextId ? 'auto' : 'none',
+                  }}
+                />
+              ))}
 
               {/* Eraser circle cursor */}
               {tool === 'eraser' && eraserCursorPos && (() => {
