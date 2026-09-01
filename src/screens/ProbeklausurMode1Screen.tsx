@@ -1,4 +1,5 @@
 import { useState, useRef, useMemo } from 'react'
+import { WorkingState } from '../components/ui/EmptyState'
 import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -360,13 +361,7 @@ export function ProbeklausurMode1Screen() {
 
         {/* LOADING */}
         {(phase === 'loading' || phase === 'correcting') && (
-          <div className="flex flex-col items-center justify-center h-64 gap-4">
-            <div className="w-10 h-10 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
-            <p className="text-text-muted text-[14px]">
-              {phase === 'loading' ? 'KI generiert deine Aufgabe…' : 'KI korrigiert deine Antwort…'}
-            </p>
-            <p className="text-text-muted text-[12px]">Einen Moment Geduld</p>
-          </div>
+          <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert deine Aufgabe…' : 'KI korrigiert deine Antwort…'} note="Einen Moment Geduld" />
         )}
 
         {/* EXAM */}
