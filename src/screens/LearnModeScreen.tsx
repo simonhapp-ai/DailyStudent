@@ -165,14 +165,19 @@ export function LearnModeScreen() {
 
         {/* Eine Pille wie ueberall sonst — der Knopf traegt die Modusfarbe,
             nicht einen eigenen Verlauf mit eigenem Schlagschatten. */}
-        <button
-          onClick={() => navigate('/klausurmodus/karteikarten/neu')}
-          className="w-full h-12 rounded-pill flex items-center justify-center gap-2 font-semibold text-[15px] press"
-          style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
-        >
-          <Icon name="plus" size={17} />
-          Neue Karteikarten erstellen
-        </button>
+        {/* Nur wenn es schon Sets gibt: Im leeren Zustand steht derselbe Weg
+            ohnehin im EmptyState, und zwei Knoepfe fuer dieselbe Sache
+            nebeneinander sind einer zu viel. */}
+        {decks.length > 0 && (
+          <button
+            onClick={() => navigate('/klausurmodus/karteikarten/neu')}
+            className="w-full h-12 rounded-pill flex items-center justify-center gap-2 font-semibold text-[15px] press"
+            style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+          >
+            <Icon name="plus" size={17} />
+            Neue Karteikarten erstellen
+          </button>
+        )}
 
         {decks.length === 0 ? (
           <EmptyState
