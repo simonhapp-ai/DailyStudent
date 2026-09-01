@@ -450,6 +450,10 @@ textarea::placeholder {
   }
 }
 
+/* Schrift auf Mint. Die Modusfarbe des Klausurenmodus ist hell — weisse
+   Schrift darauf liegt bei rund 1,8:1 und ist praktisch unlesbar. */
+.on-mint { color: #062017; }
+
 /* ── Nav button — neutral hover, Emil Kowalski ──────────────── */
 
 .nav-btn {

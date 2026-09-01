@@ -139,7 +139,7 @@ export function LearnModeScreen() {
               </Button>
               <button
                 onClick={handleKnown}
-                className="flex-1 py-3 rounded-card text-white text-sm font-semibold press transition-opacity hover:opacity-90"
+                className="flex-1 py-3 rounded-card on-mint text-sm font-semibold press transition-opacity hover:opacity-90"
                 style={{ background: '#34D399' }}
               >
                 Weiß ich

@@ -242,8 +242,8 @@ export function LernzettelScreen() {
           {/* Subject badge */}
           <div className="flex items-center gap-2">
             <span
-              className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-white"
-              style={{ background: info?.color ?? '#7C3AED' }}
+              className="text-[11px] font-semibold px-2.5 py-1 rounded-full on-mint"
+              style={{ background: info?.color ?? '#34D399' }}
             >
               {info?.name ?? activeLz.subjectName}
             </span>
@@ -328,7 +328,7 @@ export function LernzettelScreen() {
             <div className="flex items-center gap-3">
               <div
                 className="w-9 h-9 rounded-[12px] flex items-center justify-center shrink-0"
-                style={{ background: '#7C3AED' }}
+                style={{ background: '#34D399' }}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="3" width="20" height="14" rx="2" />

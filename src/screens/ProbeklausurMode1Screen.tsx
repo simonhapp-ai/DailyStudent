@@ -216,7 +216,7 @@ export function ProbeklausurMode1Screen() {
     }
   }
 
-  const ACCENT = '#7C3AED'
+  const ACCENT = '#34D399'
 
   return (
     <div className="flex flex-col min-h-dvh bg-background">
@@ -418,7 +418,7 @@ export function ProbeklausurMode1Screen() {
                 <div className="p-5 space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: 'rgba(124,58,237,0.15)' }}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                       </svg>
                     </div>
@@ -448,8 +448,8 @@ export function ProbeklausurMode1Screen() {
                   </div>
                   <button
                     onClick={() => setShowProModal(true)}
-                    className="w-full py-3 rounded-[14px] text-white text-[14px] font-bold press-sm"
-                    style={{ background: '#7C3AED' }}
+                    className="w-full py-3 rounded-[14px] on-mint text-[14px] font-bold press-sm"
+                    style={{ background: '#34D399' }}
                   >
                     Pro freischalten · €5/Mo
                   </button>

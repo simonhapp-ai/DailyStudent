@@ -16,7 +16,7 @@ const MODES_FULL = [
   {
     id: 2,
     route: '/klausurmodus/probeklausur/vollstaendige-klausur',
-    gradient: '#7C3AED',
+    gradient: '#34D399',
     title: 'Vollständige Klausur',
     subtitle: 'Realistische Klausur-Simulation',
     description: 'Eine komplette 90-Minuten-Klausur mit AFB I–III, 2–3 Materialien und echter Zeitgrenzen — genau wie im echten Abitur.',
@@ -31,7 +31,7 @@ const MODES_FULL = [
   {
     id: 1,
     route: '/klausurmodus/probeklausur/afb-trainer',
-    gradient: '#34D399',
+    gradient: 'rgb(var(--subj-spr))',
     title: 'AFB-Aufgabentrainer',
     subtitle: 'Einzelne Aufgabe gezielt üben',
     description: 'Du wählst das AFB-Level (I, II oder III) und bekommst genau eine präzise Abituraufgabe auf diesem Niveau — mit passenden Materialien wenn nötig.',
@@ -49,7 +49,7 @@ const MODES_HALF = [
   {
     id: 3,
     route: '/klausurmodus/probeklausur/materialklausur',
-    gradient: '#7C3AED',
+    gradient: 'rgb(var(--subj-ges))',
     title: 'Materialklausur',
     subtitle: 'Alle drei AFB zu einem Material',
     badges: ['1–3 Materialien', 'AFB I + II + III'],
@@ -63,7 +63,7 @@ const MODES_HALF = [
   {
     id: 4,
     route: '/klausurmodus/probeklausur/ohne-material',
-    gradient: '#7C3AED',
+    gradient: 'rgb(var(--subj-kre))',
     title: 'Ohne Material',
     subtitle: 'Alles aus dem Kopf',
     badges: ['Kein Material', 'AFB I + II + III'],
@@ -95,12 +95,9 @@ function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: '2-digit' })
 }
 
-function npColor(np: number): string {
-  if (np >= 13) return '#34D399'
-  if (np >= 10) return '#60A5FA'
-  if (np >= 7) return '#FACC15'
-  if (np >= 4) return '#FB923C'
-  return '#F87171'
+function npTone(np: number): { bg: string; fg: string } {
+  const step = np >= 13 ? 5 : np >= 10 ? 4 : np >= 7 ? 3 : np >= 4 ? 2 : 1
+  return { bg: `rgb(var(--grade-${step}))`, fg: `rgb(var(--grade-${step}-on))` }
 }
 
 export function ProbeklausurMenuScreen() {
@@ -312,10 +309,10 @@ export function ProbeklausurMenuScreen() {
                       </button>
                       <button
                         onClick={() => navigate(MODE_ROUTE[pk.mode], { state: { resume: pk } })}
-                        className="px-3 py-1.5 rounded-pill text-white text-[12px] font-semibold press-sm"
-                        style={{ background: '#7C3AED' }}
+                        className="px-3 py-1.5 rounded-pill text-[12px] font-semibold press-sm"
+                        style={{ background: '#34D399', color: '#062017' }}
                       >
-                        Fortfahren →
+                        Fortfahren
                       </button>
                     </div>
                   </div>
@@ -351,7 +348,10 @@ export function ProbeklausurMenuScreen() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <div className="px-2.5 py-1 rounded-full text-white text-[11px] font-bold" style={{ background: npColor(pk.totalNP) }}>
+                        <div
+                          className="px-2.5 py-1 rounded-full text-[11px] font-bold tabular-nums"
+                          style={{ background: npTone(pk.totalNP).bg, color: npTone(pk.totalNP).fg }}
+                        >
                           {pk.totalNP}/15
                         </div>
                         <button

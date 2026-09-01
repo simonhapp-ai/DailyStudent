@@ -280,10 +280,10 @@ export function ProfilCoinsScreen() {
                 appConfig.proPurchasesEnabled ? (
                   <button
                     onClick={() => handleRedeemDiscount('15')}
-                    className="w-full mt-3 py-3 rounded-[14px] text-white text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
+                    className="w-full mt-3 py-3 rounded-[14px] on-mint text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
                     style={{ background: '#34D399' }}
                   >
-                    15% Rabatt einlösen →
+                    15% Rabatt einlösen
                   </button>
                 ) : (
                   <p className="w-full mt-3 py-3 rounded-[14px] text-center text-[12px] font-semibold text-text-muted bg-background">
@@ -319,10 +319,10 @@ export function ProfilCoinsScreen() {
                 appConfig.proPurchasesEnabled ? (
                   <button
                     onClick={() => handleRedeemDiscount('30')}
-                    className="w-full mt-3 py-3 rounded-[14px] text-white text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
+                    className="w-full mt-3 py-3 rounded-[14px] on-mint text-[13px] font-bold press-sm transition-opacity hover:opacity-90"
                     style={{ background: '#34D399' }}
                   >
-                    30% Rabatt einlösen →
+                    30% Rabatt einlösen
                   </button>
                 ) : (
                   <p className="w-full mt-3 py-3 rounded-[14px] text-center text-[12px] font-semibold text-text-muted bg-background">

@@ -15,7 +15,7 @@ const PLAN_TYPE_LABELS: Record<LernplanType, string> = {
 
 const PLAN_TYPE_COLORS: Record<LernplanType, string> = {
   einzel: '#34C759',
-  vollstaendig: '#7C3AED',
+  vollstaendig: 'rgb(var(--subj-spr))',
   abitur: '#FF9F0A',
 }
 
