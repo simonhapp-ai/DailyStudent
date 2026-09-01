@@ -21,6 +21,19 @@ const KLAUSUR_PREFIXES = [
   '/hausaufgaben',
 ]
 
+// Planen ist kein dritter Modus, sondern ein Bereich INNERHALB des
+// Klausurenmodus: Man steigt aus der Lernwerkzeug-Liste dorthin ab und wieder
+// heraus. Die Farbe bleibt dabei Mint, nur die Werkzeuge wechseln.
+const PLANEN_PREFIXES = [
+  '/kalender', '/stundenplan', '/insights', '/abi-rechner', '/hausaufgaben', '/klausuren',
+]
+
+export function isPlanenPath(pathname: string): boolean {
+  return PLANEN_PREFIXES.some((p) => pathname.startsWith(p))
+}
+
+export const PLANEN_HOME = '/kalender'
+
 export function modeForPath(pathname: string): AppMode {
   return KLAUSUR_PREFIXES.some((p) => pathname.startsWith(p)) ? 'klausur' : 'unterricht'
 }

@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { QuickNotesIcon } from './SubjectIcon'
 import { Icon, type IconName } from './Icon'
 import { SubjectIcon } from './SubjectIcon'
 import { resolveSubjectInfo } from '../../data/subjectInfo'
-import { modeForPath, MODE_HOME, type AppMode } from '../../lib/appMode'
+import { isPlanenPath, PLANEN_HOME, modeForPath, MODE_HOME, type AppMode } from '../../lib/appMode'
 import { UNTERRICHT_TIPS, KLAUSUR_TIPS, tipOfTheDay, type Tip } from '../../data/tips'
 
 // Seitenleiste für iPad und Desktop (Version C).
@@ -84,7 +84,7 @@ function useSidebar() {
     return (benutzt.length > 0 ? benutzt : faecher).slice(0, 3)
   }, [profile?.faecher, userNotes])
 
-  return { location, navigate, profile, mode, isActive, initials, zuletztBenutzt }
+  return { location, navigate, profile, mode, isActive, initials, zuletztBenutzt, inPlanen: isPlanenPath(location.pathname) }
 }
 
 // Hinweiskarte — im Querformat ist unter der Navigation Platz, der sonst leer
@@ -163,8 +163,10 @@ function SectionLabel({ children }: { children: string }) {
 
 // ── Schmale Variante (Tablet-Hochformat / kleinere Fenster) ─────────────────
 export function DesktopSidebar() {
-  const { navigate, mode, isActive, initials } = useSidebar()
-  const entries = mode === 'unterricht' ? UNTERRICHT_NAV : KLAUSUR_NAV
+  const { navigate, mode, isActive, initials, inPlanen } = useSidebar()
+  const entries = mode === 'unterricht'
+    ? UNTERRICHT_NAV
+    : inPlanen ? PLANEN_NAV : [...KLAUSUR_NAV, { label: 'Planen', path: PLANEN_HOME, icon: 'calendar' as IconName }]
 
   return (
     <aside
@@ -233,7 +235,8 @@ export function DesktopSidebar() {
 
 // ── Breite Variante (Desktop, iPad Querformat) ──────────────────────────────
 export function DesktopSidebarWide() {
-  const { navigate, profile, mode, isActive, initials, zuletztBenutzt } = useSidebar()
+  const { navigate, profile, mode, isActive, initials, zuletztBenutzt, inPlanen } = useSidebar()
+  const reducedMotion = useReducedMotion()
 
   return (
     <aside
@@ -314,23 +317,62 @@ export function DesktopSidebarWide() {
             <TipCard tip={tipOfTheDay(UNTERRICHT_TIPS)} />
           </>
         ) : (
-          <>
-            <SectionLabel>Lernen</SectionLabel>
-            <div className="flex flex-col gap-0.5">
-              {KLAUSUR_NAV.map((e) => (
-                <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
-              ))}
-            </div>
+          /* Klausurenmodus hat zwei Ebenen: die Lernwerkzeuge und, eine Ebene
+             tiefer, den Planen-Bereich. Beide zusammen waren zwölf Zeilen
+             untereinander — zu viel. Man steigt jetzt hinab und wieder herauf;
+             die Liste wechselt dabei, die Modusfarbe bleibt. */
+          <AnimatePresence mode="wait" initial={false}>
+            {inPlanen ? (
+              <motion.div
+                key="planen"
+                initial={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 14 }}
+                animate={reducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 14 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <button
+                  onClick={() => navigate(MODE_HOME.klausur)}
+                  className="w-full flex items-center gap-2 px-3.5 pt-4 pb-2 text-[13px] font-semibold text-text-primary press-sm"
+                >
+                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M7 1L1 7l6 6" />
+                  </svg>
+                  Klausurenmodus
+                </button>
+                <SectionLabel>Planen</SectionLabel>
+                <div className="flex flex-col gap-0.5">
+                  {PLANEN_NAV.map((e) => (
+                    <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="lernen"
+                initial={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -14 }}
+                animate={reducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -14 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <SectionLabel>Lernen</SectionLabel>
+                <div className="flex flex-col gap-0.5">
+                  {KLAUSUR_NAV.map((e) => (
+                    <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
+                  ))}
+                </div>
 
-            <SectionLabel>Planen</SectionLabel>
-            <div className="flex flex-col gap-0.5">
-              {PLANEN_NAV.map((e) => (
-                <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
-              ))}
-            </div>
+                <SectionLabel>Weiter</SectionLabel>
+                <SideRow
+                  entry={{ label: 'Planen', path: PLANEN_HOME, icon: 'calendar' }}
+                  active={false}
+                  onClick={() => navigate(PLANEN_HOME)}
+                />
 
-            <TipCard tip={tipOfTheDay(KLAUSUR_TIPS)} />
-          </>
+                <TipCard tip={tipOfTheDay(KLAUSUR_TIPS)} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         )}
       </nav>
     </aside>

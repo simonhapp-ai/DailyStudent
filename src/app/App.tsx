@@ -312,7 +312,8 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   if (location.pathname === '/agb') return <AGBScreen />
 
   // Only redirect to auth once Supabase has confirmed there's no valid session
-  if (!authLoading && !authUser) {
+  const designPreview = !IS_NATIVE && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && new URLSearchParams(window.location.search).get('vorschau') === '1'
+    if (!authLoading && !authUser && !designPreview) {
     if (location.pathname === '/') {
       // Native app cold start: consent → demo → login, once per device —
       // no marketing landing page, straight into the product. The URL bar
