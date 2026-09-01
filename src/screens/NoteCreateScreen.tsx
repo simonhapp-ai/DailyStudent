@@ -119,6 +119,40 @@ function getNextLessonDate(subjectId: string, stundenplan: { slots: { day: numbe
 
 // ── Component ────────────────────────────────────────────────────────────────
 
+// ── Entwurf einer angefangenen Notiz ──────────────────────────────────────
+// Eigener Schluessel, nicht Teil von lernapp_v1: Der Entwurf ist ein
+// Zwischenstand, keine gespeicherte Notiz, und soll das Schema der App nicht
+// anfassen. Er wird geloescht, sobald die Notiz gespeichert oder geleert wird.
+const DRAFT_KEY = 'lernapp_note_draft_v1'
+
+interface NoteDraft { title: string; blocks: NoteBlock[]; savedAt: number }
+
+function blockHasContent(b: NoteBlock): boolean {
+  if (b.type === 'text') return (b as TextBlock).content.trim().length > 0
+  if (b.type === 'photo') return ((b as PhotoBlock).attachments?.length ?? 0) > 0
+  if (b.type === 'drawing') return ((b as DrawingBlock).pages?.length ?? 0) > 0
+  return false
+}
+
+function loadDraft(): NoteDraft | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY)
+    if (!raw) return null
+    const d = JSON.parse(raw) as NoteDraft
+    // Aeltere Entwuerfe als ein Tag interessieren niemanden mehr.
+    if (Date.now() - (d.savedAt ?? 0) > 86_400_000) { localStorage.removeItem(DRAFT_KEY); return null }
+    return d
+  } catch { return null }
+}
+
+function saveDraft(d: NoteDraft) {
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)) } catch { /* Speicher voll — Entwurf ist verzichtbar */ }
+}
+
+function clearDraft() {
+  try { localStorage.removeItem(DRAFT_KEY) } catch { /* egal */ }
+}
+
 export function NoteCreateScreen() {
   const { id, folderId } = useParams<{ id?: string; folderId?: string }>()
   const navigate = useNavigate()
@@ -143,11 +177,32 @@ export function NoteCreateScreen() {
 
   const [title, setTitle] = useState(subjectFromUrl ? `${subjectFromUrl.name}: ` : '')
 
-  const [blocks, setBlocks] = useState<NoteBlock[]>(() => [
-    makeTextBlock('text-0'),
-    makePhotoBlock('photo-0'),
-    makeDrawingBlock('drawing-0'),
-  ])
+  const [blocks, setBlocks] = useState<NoteBlock[]>(() => {
+    // Angefangene Notiz wiederherstellen. Bis hierher ging alles verloren,
+    // sobald man versehentlich woanders hin tippte oder die App verliess —
+    // ohne Warnung, ohne Zwischenstand.
+    const draft = loadDraft()
+    if (draft?.blocks?.length) return draft.blocks
+    return [makeTextBlock('text-0'), makePhotoBlock('photo-0'), makeDrawingBlock('drawing-0')]
+  })
+
+  // Entwurf sichern, sobald sich etwas aendert — verzoegert, damit nicht bei
+  // jedem Tastendruck geschrieben wird.
+  useEffect(() => {
+    const hasContent = title.trim().length > 0 || blocks.some(blockHasContent)
+    if (!hasContent) { clearDraft(); return }
+    const id = setTimeout(() => saveDraft({ title, blocks, savedAt: Date.now() }), 600)
+    return () => clearTimeout(id)
+  }, [title, blocks])
+
+  // Beim Schliessen des Fensters warnen, solange etwas Ungespeichertes dasteht.
+  useEffect(() => {
+    const hasContent = title.trim().length > 0 || blocks.some(blockHasContent)
+    if (!hasContent) return
+    const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = '' }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [title, blocks])
 
   // Page menu (3-dot menu on each thumbnail)
   const [pageMenu, setPageMenu] = useState<{ blockId: string; pageId: string } | null>(null)
@@ -521,6 +576,7 @@ export function NoteCreateScreen() {
     blocks.some(b => (b.type === 'text' || b.type === 'photo' || b.type === 'drawing') && b.aiResult !== null)
 
   const doSave = (subjectId: string, resolvedFolderId: string, generatedNote?: GeneratedSmartNote) => {
+    clearDraft()
     const note = buildNote(subjectId, resolvedFolderId)
     saveNote(note, generatedNote ?? buildGeneratedNote())
     setShowSaveModal(false)
