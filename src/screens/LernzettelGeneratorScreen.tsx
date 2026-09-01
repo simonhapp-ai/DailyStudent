@@ -511,7 +511,7 @@ export function LernzettelGeneratorScreen() {
                     className="w-12 h-12 rounded-[16px] flex items-center justify-center mx-auto mb-4"
                     style={{ background: 'rgb(var(--fill-orange))' }}
                   >
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--fill-orange-on))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                       <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
                     </svg>
@@ -529,8 +529,7 @@ export function LernzettelGeneratorScreen() {
 
                   <button
                     onClick={() => { setShowNoNotesWarning(false); void handleGenerate() }}
-                    className="w-full py-3.5 rounded-[16px] text-white font-semibold text-[15px] mb-3"
-                    style={{ background: 'rgb(var(--fill-orange))' }}
+                    className="w-full h-12 rounded-pill bg-fill-orange text-fill-orange-on font-semibold text-[15px] mb-3 press"
                   >
                     Trotzdem generieren
                   </button>

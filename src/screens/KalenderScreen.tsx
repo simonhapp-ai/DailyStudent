@@ -1252,7 +1252,7 @@ function HausaufgabenWidget({ userNotes, completedHomeworkIds, standaloneHomewor
           shadow={allDone ? '0 4px 14px rgba(48,209,88,0.45)' : '0 4px 14px rgba(255,159,10,0.5)'}
         >
           {allDone ? (
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#0A2413" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 6L9 17l-5-5" />
             </svg>
           ) : (

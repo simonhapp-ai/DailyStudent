@@ -688,7 +688,7 @@ export function InsightsScreen() {
                     style={studied ? { background: '#34C759' } : { border: '1.5px solid var(--color-border)' }}
                   >
                     {studied && (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A2413" strokeWidth="3">
                         <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     )}

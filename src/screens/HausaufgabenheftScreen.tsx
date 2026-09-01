@@ -299,8 +299,7 @@ export function HausaufgabenheftScreen() {
                     </button>
                     <button
                       onClick={() => handleComplete(item.id)}
-                      className="px-3 py-1.5 rounded-pill text-[11px] font-bold text-white press-sm"
-                      style={{ background: '#34C759' }}
+                      className="px-3 py-1.5 rounded-pill text-[11px] font-bold bg-fill-green text-fill-green-on press-sm"
                     >
                       Ja, erledigt
                     </button>

@@ -530,7 +530,7 @@ export function ProfilScreen() {
               </p>
               <button
                 onClick={() => setShowProComingSoon(true)}
-                className="relative w-full py-3 rounded-card text-white text-[14px] font-semibold press transition-all overflow-hidden"
+                className="relative w-full py-3 rounded-card on-mint text-[14px] font-semibold press transition-all overflow-hidden"
                 style={{ background: '#34D399', animation: 'ea-glow 2.4s ease-in-out infinite' }}
               >
                 <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />

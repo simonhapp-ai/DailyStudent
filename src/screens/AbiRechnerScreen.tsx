@@ -635,7 +635,7 @@ function PruefungCard({
                     className="px-2.5 py-1 rounded-pill text-[11px] font-bold flex items-center gap-1 press-sm transition-all"
                     style={
                       active
-                        ? { background: '#34D399', color: 'white', boxShadow: '0 2px 8px rgba(52,211,153,0.4)' }
+                        ? { background: '#34D399', color: '#062017' }
                         : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-secondary))' }
                     }
                   >
