@@ -9,7 +9,6 @@ export interface ModusOption {
 }
 
 const MINT = '#34D399'
-const MINT_DARK = '#059669'
 
 // Functions (not plain objects) so AnimatePresence can re-evaluate the exiting card's
 // direction via `custom` after it's no longer part of the render tree — a static exit
@@ -93,7 +92,7 @@ export function ModusRegler({
                 <motion.div
                   layoutId="modus-regler-thumb"
                   className="absolute inset-0 rounded-full"
-                  style={{ background: `linear-gradient(145deg, ${MINT}, ${MINT_DARK})`, boxShadow: '0 2px 14px rgba(52,211,153,0.5)' }}
+                  style={{ background: `${MINT}`, boxShadow: '0 2px 14px rgba(52,211,153,0.5)' }}
                   transition={reduceMotion ? { duration: 0.01 } : { type: 'spring', duration: 0.4, bounce: 0.2 }}
                 />
               )}
@@ -130,7 +129,7 @@ export function ModusRegler({
           >
             <div
               className="w-14 h-14 rounded-card flex items-center justify-center mb-3"
-              style={{ background: `linear-gradient(145deg, ${MINT}, ${MINT_DARK})`, boxShadow: '0 4px 18px rgba(52,211,153,0.4)' }}
+              style={{ background: `${MINT}`, boxShadow: '0 4px 18px rgba(52,211,153,0.4)' }}
             >
               <span className="w-6 h-6" style={{ color: '#0a0a0f' }}>{active.icon}</span>
             </div>

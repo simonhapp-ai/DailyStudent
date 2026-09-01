@@ -220,7 +220,7 @@ export function ProfilAccountScreen() {
                   className="flex-1 py-3 rounded-icon text-white text-[14px] font-bold press-sm disabled:opacity-40 transition-all"
                   style={{
                     background: deleteInput.toLowerCase() === 'löschen'
-                      ? 'linear-gradient(135deg, rgb(var(--color-danger)), rgba(var(--color-danger),0.85))'
+                      ? 'rgb(var(--fill-red))'
                       : 'rgba(var(--color-danger),0.25)',
                     boxShadow: deleteInput.toLowerCase() === 'löschen' ? '0 4px 16px rgba(var(--color-danger),0.35)' : 'none',
                   }}

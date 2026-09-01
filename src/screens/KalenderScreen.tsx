@@ -322,7 +322,7 @@ export function KalenderScreen() {
                       onClick={() => setCalView(view)}
                       className="px-4 py-1.5 rounded-chip text-[12px] font-bold transition-all duration-200 press-sm"
                       style={calView === view ? {
-                        background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
+                        background: 'rgb(var(--color-accent))',
                         color: 'white',
                         boxShadow: '0 2px 8px rgba(var(--color-accent),0.35)',
                       } : { color: 'rgb(var(--color-text-muted))' }}
@@ -644,7 +644,7 @@ export function KalenderScreen() {
                               onClick={() => setRecurFreq(f)}
                               className="flex-1 py-1.5 rounded-chip text-[11px] font-bold transition-all press-sm"
                               style={active ? {
-                                background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.78))',
+                                background: 'rgb(var(--color-accent))',
                                 color: 'white',
                                 boxShadow: '0 2px 6px rgba(var(--color-accent),0.35)',
                               } : { color: 'rgb(var(--color-text-muted))', background: 'transparent' }}
@@ -681,7 +681,7 @@ export function KalenderScreen() {
                     style={{
                       background: addForm.type === 'klausur'
                         ? '#FF3B30'
-                        : 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
+                        : 'rgb(var(--color-accent))',
                       boxShadow: canAdd ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',
                     }}
                   >
@@ -697,7 +697,7 @@ export function KalenderScreen() {
             onClick={closeFab}
             className="fixed bottom-[100px] right-5 w-14 h-14 rounded-full flex items-center justify-center z-[46] press-sm"
             style={{
-              background: 'linear-gradient(145deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.75))',
+              background: 'rgb(var(--color-accent))',
               boxShadow: '0 8px 24px rgba(var(--color-accent),0.45), 0 2px 8px rgba(0,0,0,0.2)',
             }}
           >
@@ -728,11 +728,11 @@ export function KalenderScreen() {
             {/* Header */}
             <div
               className="px-5 py-4 flex items-center gap-3"
-              style={{ background: `linear-gradient(135deg, ${TYPE_CONFIG[selectedEntry.type].color}20, ${TYPE_CONFIG[selectedEntry.type].color}08)` }}
+              style={{ background: `${TYPE_CONFIG[selectedEntry.type].color}18` }}
             >
               <div
                 className="w-12 h-12 rounded-icon flex items-center justify-center text-2xl shrink-0"
-                style={{ background: `linear-gradient(135deg, ${TYPE_CONFIG[selectedEntry.type].color}35, ${TYPE_CONFIG[selectedEntry.type].color}15)` }}
+                style={{ background: `${TYPE_CONFIG[selectedEntry.type].color}28` }}
               >
                 <Icon name={TYPE_CONFIG[selectedEntry.type].icon} size={20} />
               </div>
@@ -1023,7 +1023,7 @@ function TwoDayView({ viewDate, todayStr, stundenplan, personalEntries, klausurt
                   const endMin = entry.endTime ? timeToMin(entry.endTime) : startMin + 60
                   const heightPx = Math.max(durToPx(Math.max(endMin - startMin, 15)), 24)
                   return (
-                    <div key={entry.id} className="absolute left-0.5 right-0.5 rounded-[7px] flex flex-col justify-center px-2 overflow-hidden cursor-pointer press-sm" style={{ top: toPx(entry.time), height: heightPx, background: `linear-gradient(135deg, ${entryColor}40, ${entryColor}25)`, borderLeft: `2.5px solid ${entryColor}` }} onClick={(e) => { e.stopPropagation(); onEntryPress(entry) }}>
+                    <div key={entry.id} className="absolute left-0.5 right-0.5 rounded-[7px] flex flex-col justify-center px-2 overflow-hidden cursor-pointer press-sm" style={{ top: toPx(entry.time), height: heightPx, background: `${entryColor}33`, borderLeft: `2.5px solid ${entryColor}` }} onClick={(e) => { e.stopPropagation(); onEntryPress(entry) }}>
                       <span className="text-[9px] font-bold truncate leading-tight" style={{ color: entryColor }}>{entry.title}</span>
                       {heightPx > 36 && entry.endTime && <span className="text-[7px] truncate" style={{ color: entryColor, opacity: 0.7 }}>{entry.time}–{entry.endTime}</span>}
                     </div>
@@ -1106,7 +1106,7 @@ function MonthView({ viewDate, todayStr, personalEntries, klausurtermine, onNavi
               <span
                 className="w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-semibold transition-all"
                 style={isToday ? {
-                  background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
+                  background: 'rgb(var(--color-accent))',
                   color: 'white',
                   boxShadow: '0 2px 6px rgba(var(--color-accent),0.4)',
                 } : isPast ? { color: 'rgb(var(--color-text-muted) / 0.4)' } : { color: 'rgb(var(--color-text-primary))' }}
@@ -1774,7 +1774,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                   <ChevronLeft />Zurück
                 </button>
                 {totalSlots > 0 && !addingSlot && (
-                  <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-on-accent text-[12px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 3px 10px rgba(var(--color-accent),0.35)' }}>
+                  <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-on-accent text-[12px] font-bold press-sm" style={{ background: 'rgb(var(--color-accent))', boxShadow: '0 3px 10px rgba(var(--color-accent),0.35)' }}>
                     Speichern · {totalSlots} Std
                   </button>
                 )}
@@ -1875,7 +1875,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               )}
 
               {totalSlots > 0 && !addingSlot && (
-                <button onClick={handleSave} className="w-full py-3 rounded-icon text-on-accent text-[14px] font-bold press-sm" style={{ background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))', boxShadow: '0 4px 16px rgba(var(--color-accent),0.4)' }}>
+                <button onClick={handleSave} className="w-full py-3 rounded-icon text-on-accent text-[14px] font-bold press-sm" style={{ background: 'rgb(var(--color-accent))', boxShadow: '0 4px 16px rgba(var(--color-accent),0.4)' }}>
                   Stundenplan speichern · {totalSlots} Stunde{totalSlots === 1 ? '' : 'n'}
                 </button>
               )}
