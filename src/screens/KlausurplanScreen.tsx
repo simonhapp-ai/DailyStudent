@@ -85,7 +85,7 @@ export function KlausurplanScreen() {
 
       <div>
         <p className="section-label mb-2">Fach</p>
-        <div className="grid grid-cols-2 xl:grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-2 gap-1.5">
           {faecher.map((id) => {
             const subj = resolveSubjectInfo(id, profile?.customFaecher)
             const active = subjectId === id
