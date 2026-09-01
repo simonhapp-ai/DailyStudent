@@ -263,7 +263,7 @@ function GradeColumn({
         <div key={idx}>
           {grades.length > 1 && (
             <div className="flex items-center justify-between px-0.5 mb-0.5">
-              <span className="text-[8px] text-text-muted/50 font-medium">Note {idx + 1}</span>
+              <span className="text-[11px] text-text-secondary font-medium">Note {idx + 1}</span>
               <button
                 onClick={() => onRemoveGrade(idx)}
                 className="w-4 h-4 rounded-full flex items-center justify-center press-sm"
