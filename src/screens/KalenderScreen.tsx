@@ -237,16 +237,13 @@ export function KalenderScreen() {
 
       {/* ── Header ──────────────────────────────────────────── */}
       <div className="px-4 lg:px-6 shrink-0" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
-        <div className="flex items-start justify-between">
-          <div>
-            <p className="text-[13px] text-text-muted">
-              {today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}
-            </p>
-            <h1 className="text-[28px] font-bold text-text-primary mt-0.5 leading-tight">
-              {getGreeting(profile?.name ?? 'Max')}
-            </h1>
-          </div>
-        </div>
+        {/* Gleicher Kopf wie in den fuenf anderen Planen-Rubriken: Der Titel nennt
+            den Bereich, die Leiste sagt, wo man darin steht. Die Begruessung
+            ruecht in die Unterzeile — sie bleibt, ohne die Reihe zu brechen. */}
+        <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
+        <p className="text-[13px] text-text-secondary mt-0.5">
+          {getGreeting(profile?.name ?? 'Max')} · {today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}
+        </p>
         {/* Planen-Leiste — Kalender ist die erste von sechs Rubriken. */}
         <PlanenBar className="mt-4" />
       </div>
@@ -362,13 +359,7 @@ export function KalenderScreen() {
                       openFab(todayStr, `${String(h).padStart(2, '0')}:00`)
                     }}
                     className="flex items-center gap-1.5 px-3.5 py-2 rounded-btn text-[12px] font-bold press-sm"
-                    style={{
-                      background: 'var(--grad-mode)',
-                      backgroundSize: '200% 200%',
-                      color: 'white',
-                      boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
-                      border: '1px solid rgb(var(--color-accent) / 0.6)',
-                    }}
+                    style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                   >
                     + Eintrag
                   </button>
@@ -426,12 +417,7 @@ export function KalenderScreen() {
                 <button
                   onClick={goToToday}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-btn text-white text-[12px] font-bold press-sm"
-                  style={{
-                    background: 'var(--grad-mode)',
-                    backgroundSize: '200% 200%',
-                    boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
-                    border: '1px solid rgb(var(--color-accent) / 0.6)',
-                  }}
+                  style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                 >
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                     <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" strokeLinecap="round" strokeLinejoin="round" />
@@ -626,7 +612,6 @@ export function KalenderScreen() {
                         style={active ? {
                           background: 'var(--grad-mode)',
                           color: 'white',
-                          boxShadow: '0 3px 10px rgba(124,58,237,0.38)',
                         } : {
                           color: 'rgb(var(--color-text-secondary))',
                           background: 'rgba(var(--color-border),0.35)',
@@ -892,7 +877,6 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
                 style={isToday ? {
                   background: 'var(--grad-mode)',
                   color: 'white',
-                  boxShadow: '0 0 14px 4px rgba(124,58,237,0.65), 0 2px 6px rgba(124,58,237,0.45)',
                   border: '1px solid rgb(var(--color-accent) / 0.6)',
                 } : isSelected ? {
                   border: '2px solid rgb(var(--color-accent))',
@@ -1345,7 +1329,6 @@ function StundenplanFullView({
           className="flex items-center gap-1.5 px-3.5 py-2 rounded-btn press-sm"
           style={{
             background: 'var(--grad-mode)',
-            boxShadow: '0 3px 10px rgba(124,58,237,0.35)',
           }}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -1822,7 +1805,6 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                       style={activeDay === i ? {
                         background: 'var(--grad-mode)',
                         borderColor: 'transparent',
-                        boxShadow: '0 2px 8px rgba(124,58,237,0.35)',
                       } : { background: 'rgb(var(--color-background))', borderColor: 'rgba(var(--color-border),0.6)' }}>
                       <span className={`text-[11px] font-semibold ${activeDay === i ? 'text-white/80' : 'text-text-muted'}`}>{d}</span>
                       <span className={`text-[12px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-text-primary' : 'text-text-muted/30'}`}>{count > 0 ? count : '·'}</span>
@@ -1895,7 +1877,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                   )}
                   <div className="flex gap-2">
                     <button onClick={() => { setAddingSlot(false); setNewSlot({ startTime: '08:00', endTime: '08:45', subjectId: '', room: '', isFreistunde: false }) }} className="flex-1 py-2 rounded-btn border border-border text-text-secondary text-sm font-medium hover:bg-surface-hover transition-colors">Abbrechen</button>
-                    <button onClick={commitSlot} disabled={!newSlot.subjectId && !newSlot.isFreistunde} className="flex-1 py-2 rounded-btn text-white text-sm font-bold disabled:opacity-40 active:scale-95 transition-all" style={{ background: '#7C3AED', boxShadow: '0 2px 8px rgba(124,58,237,0.35)' }}>Hinzufügen</button>
+                    <button onClick={commitSlot} disabled={!newSlot.subjectId && !newSlot.isFreistunde} className="flex-1 py-2 rounded-btn text-white text-sm font-bold disabled:opacity-40 active:scale-95 transition-all" style={{ background: 'var(--grad-mode)' }}>Hinzufügen</button>
                   </div>
                 </div>
               )}

@@ -1,35 +1,43 @@
 import { useState } from 'react'
-import { Icon } from '../components/ui/Icon'
-import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { topics } from '../data/mockData'
 import { PlanenBar } from '../components/ui/PlanenBar'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { EmptyState } from '../components/ui/EmptyState'
+import { Tag, type TagTone } from '../components/ui/Tag'
+import { Icon } from '../components/ui/Icon'
+
+// ── Klausurtermine (Planen, Rubrik 4) ─────────────────────────────────────
+//
+// Familie 1: ein Bestand mit einer Erfassung. Auf dem Telefon liegt das
+// Formular über der Liste und wird aufgeklappt; auf dem Schreibtisch steht es
+// dauerhaft als rechte Spalte daneben — dort ist Platz, und ein Klick weniger
+// ist ein Termin mehr, der wirklich eingetragen wird.
+//
+// Keine Bühne (Regel 1): Ein Termin ist ein Eintrag, keine Handlung, die jetzt
+// gleich passieren muss. Die Dringlichkeit steht als Marke an der Zeile.
 
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
-function CloseIcon({ size = 14 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-      <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-    </svg>
-  )
+/** Wie nah der Termin ist — als Stufe des bestehenden Tonvorrats, nicht als eigener Hexwert. */
+function fristTon(days: number): TagTone {
+  if (days <= 7) return 'red'
+  if (days <= 14) return 'orange'
+  return 'neutral'
 }
 
-function ChevronLeft({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-      <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
+function fristText(days: number): string {
+  if (days === 0) return 'Heute'
+  if (days === 1) return 'Morgen'
+  return `in ${days} Tagen`
 }
 
 export function KlausurplanScreen() {
   const { profile, addKlausurtermin, removeKlausurtermin } = useUser()
-  const navigate = useNavigate()
 
   const [addOpen, setAddOpen] = useState(false)
   const [subjectId, setSubjectId] = useState('')
@@ -60,254 +68,211 @@ export function KlausurplanScreen() {
   const faecher = profile?.faecher ?? []
   const subjectTopics = subjectId ? topics.filter((t) => t.subjectId === subjectId).map((t) => t.name) : []
 
-  return (
-    <div className="flex flex-col min-h-dvh bg-background pb-28">
-      {/* Header */}
-      <div
-        className="flex items-center gap-3 px-4 border-b border-border/40 shrink-0"
-        style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))', paddingBottom: 14 }}
-      >
+  // Das Formular ist auf dem Schreibtisch immer sichtbar, auf dem Telefon nur
+  // nach Tippen — dort kostet es sonst die halbe Liste.
+  const formular = (
+    <div className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-5 space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-[16px] font-semibold text-text-primary">Neue Klausur</p>
         <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
+          onClick={() => { setAddOpen(false); setSubjectId(''); setDate(''); setTopic('') }}
+          className="w-8 h-8 rounded-full bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-secondary press-sm lg:hidden"
+          aria-label="Abbrechen"
         >
-          <ChevronLeft />
-          Zurück
+          <Icon name="close" size={14} />
         </button>
-        <div className="flex-1">
-          <h1 className="text-[20px] font-bold text-text-primary">Klausurplan</h1>
-          {upcoming.length > 0 && (
-            <p className="text-[12px] text-text-muted">
-              {upcoming.length} anstehende Klausur{upcoming.length !== 1 ? 'en' : ''}
-            </p>
-          )}
+      </div>
+
+      <div>
+        <p className="section-label mb-2">Fach</p>
+        <div className="grid grid-cols-2 xl:grid-cols-3 gap-1.5">
+          {faecher.map((id) => {
+            const subj = resolveSubjectInfo(id, profile?.customFaecher)
+            const active = subjectId === id
+            return (
+              <button
+                key={id}
+                onClick={() => setSubjectId(id)}
+                className="flex items-center gap-2 px-2.5 h-11 rounded-btn border text-left press-sm transition-colors"
+                style={active
+                  ? { background: `${subj.color}1F`, borderColor: subj.color }
+                  : { borderColor: 'rgb(var(--color-border) / 0.6)' }}
+              >
+                <SubjectIcon subjectId={id} size="sm" className="!w-5 !h-5" />
+                <span className={`text-[12px] font-medium truncate leading-tight ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  {subj.name}
+                </span>
+              </button>
+            )
+          })}
         </div>
       </div>
 
-      <div className="px-4 pb-1">
-        <PlanenBar />
+      <div>
+        <p className="section-label mb-1.5">Datum</p>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          min={todayStr}
+          className="w-full h-11 bg-background border border-border rounded-btn px-3 text-[14px] text-text-primary focus:outline-none focus:border-accent transition-colors"
+        />
       </div>
 
-      <div className="px-4 pt-4 space-y-4 lg:px-6 lg:max-w-[760px]">
-
-        {/* ── Add section ──────────────────────────────────────── */}
-        {!addOpen ? (
-          <button
-            onClick={() => setAddOpen(true)}
-            className="w-full flex items-center gap-3 bg-surface border border-border/60 rounded-card px-5 py-4 text-left hover:bg-surface-hover active:scale-[0.99] transition-all duration-200"
-          >
-            <div
-              className="w-10 h-10 rounded-btn flex items-center justify-center shrink-0"
-              style={{ background: '#FF3B30' }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-              </svg>
-            </div>
-            <div className="flex-1">
-              <p className="text-text-primary font-semibold text-[15px]">Klausur eintragen</p>
-              <p className="text-text-muted text-[12px] mt-0.5">Fach, Datum &amp; Thema hinzufügen</p>
-            </div>
-            <svg className="text-text-muted shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        ) : (
-          <div className="bg-surface border border-border/60 rounded-card overflow-hidden">
-            <div className="flex items-center justify-between px-5 pt-4 pb-2">
-              <p className="text-[16px] font-bold text-text-primary">Neue Klausur</p>
+      <div>
+        <p className="section-label mb-1.5">Thema — optional</p>
+        {subjectTopics.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-2">
+            {subjectTopics.slice(0, 5).map((t) => (
               <button
-                onClick={() => { setAddOpen(false); setSubjectId(''); setDate(''); setTopic('') }}
-                className="w-8 h-8 rounded-full bg-surface-hover flex items-center justify-center text-text-muted press-sm"
+                key={t}
+                onClick={() => setTopic(topic === t ? '' : t)}
+                className="px-2.5 py-1.5 rounded-pill text-[12px] font-medium press-sm transition-colors"
+                style={topic === t
+                  ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
+                  : { background: 'rgb(120 120 128 / 0.12)', color: 'rgb(var(--color-text-secondary))' }}
               >
-                <CloseIcon />
+                {t.length > 25 ? t.slice(0, 25) + '…' : t}
               </button>
-            </div>
-
-            <div className="px-5 pb-5 space-y-4">
-              {/* Subject grid */}
-              <div>
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Fach</p>
-                <div className="grid grid-cols-3 gap-1.5">
-                  {faecher.map((id) => {
-                    const subj = resolveSubjectInfo(id, profile?.customFaecher)
-                    const active = subjectId === id
-                    return (
-                      <button
-                        key={id}
-                        onClick={() => setSubjectId(id)}
-                        className="flex items-center gap-2 p-2.5 rounded-btn border text-left transition-all press-sm"
-                        style={active
-                          ? { background: `${subj.color}18`, borderColor: subj.color }
-                          : { borderColor: 'rgba(var(--color-border),0.6)' }}
-                      >
-                        <SubjectIcon subjectId={id} size="sm" className="!w-5 !h-5" />
-                        <span
-                          className="text-[11px] font-semibold truncate leading-tight"
-                          style={{ color: active ? subj.color : 'rgb(var(--color-text-secondary))' }}
-                        >
-                          {subj.name}
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              {/* Date */}
-              <div>
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Datum</p>
-                <input
-                  type="date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  min={todayStr}
-                  className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[13px] text-text-primary focus:outline-none focus:border-accent transition-colors"
-                />
-              </div>
-
-              {/* Topic */}
-              <div>
-                <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-1.5">
-                  Thema <span className="text-text-muted/50 normal-case font-normal">(optional)</span>
-                </p>
-                {subjectTopics.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mb-2">
-                    {subjectTopics.slice(0, 5).map((t) => (
-                      <button
-                        key={t}
-                        onClick={() => setTopic(topic === t ? '' : t)}
-                        className="px-2.5 py-1 rounded-pill text-[11px] font-medium press-sm transition-all"
-                        style={topic === t
-                          ? { background: '#FF3B30', color: 'white' }
-                          : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }}
-                      >
-                        {t.length > 25 ? t.slice(0, 25) + '…' : t}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <input
-                  type="text"
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder={getTopicPlaceholder(subjectId)}
-                  className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[13px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
-                />
-              </div>
-
-              {/* Submit */}
-              <button
-                onClick={handleAdd}
-                disabled={!subjectId || !date}
-                className="w-full py-3 rounded-icon text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
-                style={{
-                  background: '#FF3B30',
-                  boxShadow: subjectId && date ? '0 4px 16px #FF3B3040' : 'none',
-                }}
-              >
-                Klausur eintragen
-              </button>
-            </div>
+            ))}
           </div>
         )}
+        <input
+          type="text"
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          placeholder={getTopicPlaceholder(subjectId)}
+          className="w-full h-11 bg-background border border-border rounded-btn px-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+        />
+      </div>
 
-        {/* ── Upcoming exams ───────────────────────────────────── */}
-        {upcoming.length > 0 && (
-          <section>
-            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">Anstehend</p>
-            <div className="space-y-2">
-              {upcoming.map((k) => {
-                const subj = resolveSubjectInfo(k.subjectId, profile?.customFaecher)
-                const days = daysLeft(k.date)
-                const badgeStyle = days === 0
-                  ? { bg: 'rgba(255,59,48,0.15)', color: '#FF3B30' }
-                  : days <= 7
-                  ? { bg: 'rgba(255,59,48,0.12)', color: '#FF3B30' }
-                  : days <= 14
-                  ? { bg: 'rgba(255,149,0,0.12)', color: '#FF9500' }
-                  : { bg: 'rgba(148,163,184,0.1)', color: '#94A3B8' }
-                return (
-                  <div
-                    key={`${k.subjectId}-${k.date}`}
-                    className="bg-surface border border-border/60 rounded-card px-4 py-3.5 flex items-center gap-3"
-                  >
-                    <SubjectIcon subjectId={k.subjectId} size="md" />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                        <p className="text-text-primary font-semibold text-[14px]">{subj?.name ?? k.subjectId}</p>
-                        <span
-                          className="px-2 py-0.5 rounded-pill text-[11px] font-bold shrink-0"
-                          style={{ background: badgeStyle.bg, color: badgeStyle.color }}
-                        >
-                          {days === 0 ? 'Heute!' : days === 1 ? 'Morgen' : `in ${days} Tagen`}
-                        </span>
-                      </div>
-                      <p className="text-text-muted text-[12px]">
-                        {new Date(k.date + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'long' })}
-                      </p>
-                      {k.topic && <p className="text-text-muted text-[11px] mt-0.5 truncate">{k.topic}</p>}
-                    </div>
-                    <button
-                      onClick={() => removeKlausurtermin(k.subjectId, k.date)}
-                      className="w-7 h-7 flex items-center justify-center rounded-full text-text-muted hover:text-text-primary hover:bg-danger/10 transition-colors shrink-0 press-sm"
-                    >
-                      <CloseIcon size={12} />
-                    </button>
-                  </div>
-                )
-              })}
-            </div>
-          </section>
-        )}
+      <button
+        onClick={handleAdd}
+        disabled={!subjectId || !date}
+        className="w-full h-12 rounded-pill text-[15px] font-semibold press disabled:opacity-40 transition-opacity"
+        style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+      >
+        Klausur eintragen
+      </button>
+    </div>
+  )
 
-        {/* ── Empty state ──────────────────────────────────────── */}
-        {upcoming.length === 0 && !addOpen && (
-          <div className="text-center py-12">
-            <div
-              className="w-16 h-16 rounded-card mx-auto mb-4 flex items-center justify-center text-3xl"
-              style={{ background: 'rgba(255,59,48,0.08)' }}
+  return (
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
+
+      <div className="px-4 lg:px-6" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
+        <p className="text-[13px] text-text-secondary mt-0.5">
+          {upcoming.length > 0
+            ? `${upcoming.length} ${upcoming.length === 1 ? 'Klausur steht an' : 'Klausuren stehen an'}`
+            : 'Deine Klausurtermine — sie speisen Countdown und Lernplan.'}
+        </p>
+        <PlanenBar className="mt-4" />
+      </div>
+
+      <div className="px-4 mt-5 lg:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-6 lg:items-start lg:max-w-[1120px]">
+
+        {/* ── Bestand ─────────────────────────────────────────── */}
+        <div className="space-y-4 lg:order-1">
+
+          {/* Auf dem Telefon führt ein Knopf ins Formular. Auf dem Schreibtisch
+              steht es rechts und dieser Knopf wäre eine Dopplung. */}
+          {!addOpen && (
+            <button
+              onClick={() => setAddOpen(true)}
+              className="w-full h-12 rounded-pill flex items-center justify-center gap-2 text-[15px] font-semibold press lg:hidden"
+              style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
             >
-              <Icon name="note" size={26} />
-            </div>
-            <p className="text-text-muted text-[14px]">Noch keine Klausuren eingetragen</p>
-            <p className="text-text-muted text-[12px] mt-1">Trag deine erste Klausur oben ein</p>
-          </div>
-        )}
+              <Icon name="plus" size={17} />
+              Klausur eintragen
+            </button>
+          )}
 
-        {/* ── Past exams ───────────────────────────────────────── */}
-        {past.length > 0 && (
-          <section>
-            <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-3">Vergangen</p>
-            <div className="space-y-2">
-              {past.map((k) => {
-                const subj = resolveSubjectInfo(k.subjectId, profile?.customFaecher)
-                return (
-                  <div
-                    key={`past-${k.subjectId}-${k.date}`}
-                    className="bg-surface border border-border/40 rounded-card px-4 py-3 flex items-center gap-3 opacity-55"
-                  >
-                    <SubjectIcon subjectId={k.subjectId} size="sm" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-text-secondary font-medium text-[13px]">{subj?.name ?? k.subjectId}</p>
-                      <p className="text-text-muted text-[11px]">
-                        {new Date(k.date + 'T00:00:00').toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
-                      </p>
-                      {k.topic && <p className="text-text-muted text-[11px] mt-0.5 truncate">{k.topic}</p>}
-                    </div>
-                    <button
-                      onClick={() => removeKlausurtermin(k.subjectId, k.date)}
-                      className="w-6 h-6 flex items-center justify-center text-text-muted/50 hover:text-text-primary hover:bg-danger/10 rounded-full transition-colors shrink-0"
-                    >
-                      <CloseIcon size={11} />
-                    </button>
-                  </div>
-                )
-              })}
-            </div>
-          </section>
-        )}
+          {addOpen && <div className="lg:hidden">{formular}</div>}
 
+          {upcoming.length === 0 ? (
+            <EmptyState
+              title="Noch keine Klausur eingetragen"
+              note="Trag den nächsten Termin ein — daraus entstehen der Countdown auf der Übersicht und die Tage, auf die der Lernplan den Stoff verteilt."
+            />
+          ) : (
+            <div>
+              <p className="section-label px-1 mb-2">Anstehend</p>
+              <ListGroup>
+                {upcoming.map((k) => {
+                  const subj = resolveSubjectInfo(k.subjectId, profile?.customFaecher)
+                  const days = daysLeft(k.date)
+                  return (
+                    <ListRow
+                      key={`${k.subjectId}-${k.date}`}
+                      leading={<SubjectIcon subjectId={k.subjectId} size="sm" className="!w-9 !h-9" />}
+                      title={
+                        <span className="flex items-center gap-2">
+                          <span className="truncate">{subj?.name ?? k.subjectId}</span>
+                          <Tag tone={fristTon(days)} size="sm">{fristText(days)}</Tag>
+                        </span>
+                      }
+                      subtitle={
+                        <span>
+                          {new Date(k.date + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'long' })}
+                          {k.topic ? ` · ${k.topic}` : ''}
+                        </span>
+                      }
+                      value={
+                        <button
+                          onClick={() => removeKlausurtermin(k.subjectId, k.date)}
+                          className="w-9 h-9 -mr-1.5 flex items-center justify-center rounded-full text-text-muted hover:text-text-primary transition-colors press-sm"
+                          aria-label="Termin löschen"
+                        >
+                          <Icon name="trash" size={16} />
+                        </button>
+                      }
+                    />
+                  )
+                })}
+              </ListGroup>
+            </div>
+          )}
+
+          {past.length > 0 && (
+            <div>
+              <p className="section-label px-1 mb-2">Vergangen</p>
+              <ListGroup>
+                {past.map((k) => {
+                  const subj = resolveSubjectInfo(k.subjectId, profile?.customFaecher)
+                  return (
+                    <ListRow
+                      key={`past-${k.subjectId}-${k.date}`}
+                      className="opacity-60"
+                      leading={<SubjectIcon subjectId={k.subjectId} size="sm" className="!w-9 !h-9" />}
+                      title={subj?.name ?? k.subjectId}
+                      subtitle={
+                        <span>
+                          {new Date(k.date + 'T00:00:00').toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
+                          {k.topic ? ` · ${k.topic}` : ''}
+                        </span>
+                      }
+                      value={
+                        <button
+                          onClick={() => removeKlausurtermin(k.subjectId, k.date)}
+                          className="w-9 h-9 -mr-1.5 flex items-center justify-center rounded-full text-text-muted hover:text-text-primary transition-colors press-sm"
+                          aria-label="Termin löschen"
+                        >
+                          <Icon name="trash" size={16} />
+                        </button>
+                      }
+                    />
+                  )
+                })}
+              </ListGroup>
+            </div>
+          )}
+        </div>
+
+        {/* ── Erfassung, rechte Spalte am Schreibtisch ─────────── */}
+        <div className="hidden lg:block lg:order-2 lg:sticky lg:top-6">
+          {formular}
+        </div>
       </div>
     </div>
   )

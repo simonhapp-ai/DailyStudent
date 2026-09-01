@@ -21,15 +21,15 @@ export function StundenplanScreen() {
 
   return (
     <div className="min-h-dvh bg-background pb-32">
-      <div className="px-5" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+      <div className="px-4 lg:px-6" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
+        <p className="text-[13px] text-text-secondary mt-0.5">
+          {hasSlots ? 'Dein Stundenplan — die Grundlage für Tagesplan und Lernplan.' : 'Stundenplan — noch nicht eingetragen.'}
+        </p>
+        <PlanenBar className="mt-4" />
       </div>
 
-      <div className="px-5 mt-4">
-        <PlanenBar />
-      </div>
-
-      <div className="px-5 mt-5 space-y-4 lg:px-6 lg:max-w-[980px]">
+      <div className="px-4 mt-5 space-y-4 lg:px-6 lg:max-w-[1180px]">
         {editing || !hasSlots ? (
           <>
             {hasSlots && (
@@ -50,20 +50,24 @@ export function StundenplanScreen() {
             />
           </>
         ) : (
-          <>
-            <StundenplanWeekWidget stundenplan={stundenplan!} onOpen={() => setEditing(true)} />
-            <p className="text-[13px] text-text-secondary leading-snug">
-              Dein Stundenplan speist den Tagesplan im Unterrichtsmodus, die Modus-Vorwahl
-              beim Öffnen der App und die freien Zeitfenster, in die der Lernplan seine
-              Einheiten legt.
-            </p>
-            <button
-              onClick={() => setEditing(true)}
-              className="w-full h-12 rounded-pill text-[16px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press"
-            >
-              Bearbeiten oder neu scannen
-            </button>
-          </>
+          <div className="space-y-4 lg:grid lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-6 lg:items-start lg:space-y-0">
+            <div className="lg:order-1">
+              <StundenplanWeekWidget stundenplan={stundenplan!} onOpen={() => setEditing(true)} />
+            </div>
+            <div className="space-y-3 lg:order-2">
+              <p className="text-[13px] text-text-secondary leading-relaxed">
+                Dein Stundenplan speist den Tagesplan im Unterrichtsmodus, die Modus-Vorwahl
+                beim Öffnen der App und die freien Zeitfenster, in die der Lernplan seine
+                Einheiten legt.
+              </p>
+              <button
+                onClick={() => setEditing(true)}
+                className="w-full h-12 rounded-pill text-[16px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press"
+              >
+                Bearbeiten oder neu scannen
+              </button>
+            </div>
+          </div>
         )}
 
         {!hasSlots && !editing && (

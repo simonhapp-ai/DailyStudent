@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Icon } from '../components/ui/Icon'
 import type { CSSProperties } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
@@ -655,17 +654,9 @@ function PruefungCard({
 
 // ── Main screen ───────────────────────────────────────────────────────────────
 
-function ChevronLeft({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-      <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
 
 export function AbiRechnerScreen() {
   const { profile, updateProfile, authUser } = useUser()
-  const navigate = useNavigate()
 
   const faecher = profile?.faecher ?? []
   const zielnote = profile?.zielnote
@@ -792,66 +783,38 @@ export function AbiRechnerScreen() {
 
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-28">
-      {/* Header */}
-      <div
-        className="flex items-center gap-3 px-4 border-b border-border/40"
-        style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))', paddingBottom: 14 }}
-      >
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
-        >
-          <ChevronLeft />
-          Zurück
-        </button>
-        <div className="flex-1">
-          <h1 className="text-[20px] font-bold text-text-primary">Noten Rechner</h1>
-          <p className="text-[12px] text-text-muted">
-            {isOberstufe
-              ? `Oberstufe · Q1–Q4${totalPunkte !== null ? ` · Ø ${totalPunkte.toFixed(1)} Pkt` : ''}`
-              : `${klasse}. Klasse · 1. & 2. Halbjahr${totalPunkte !== null ? ` · Ø ${totalPunkte.toFixed(1)} Pkt` : ''}`
-            }
-          </p>
-        </div>
-        {syncStatus && (
-          <div
-            className="px-2.5 py-1 rounded-pill text-[11px] font-bold flex items-center gap-1.5 shrink-0"
-            style={{
-              background: syncStatus === 'saved' ? 'rgba(52, 199, 89, 0.15)' : syncStatus === 'error' ? 'rgba(255, 59, 48, 0.15)' : 'rgba(124, 58, 237, 0.15)',
-              color: syncStatus === 'saved' ? '#34C759' : syncStatus === 'error' ? '#FF3B30' : '#7C3AED',
-            }}
-          >
-            {syncStatus === 'saving' && (
-              <>
-                <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'currentColor' }} />
-                Speichern...
-              </>
-            )}
-            {syncStatus === 'saved' && (
-              <>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 6L9 17l-5-5" />
-                </svg>
-                Gespeichert
-              </>
-            )}
-            {syncStatus === 'error' && (
-              <>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                  <circle cx="12" cy="12" r="10" />
-                </svg>
-                Fehler
-              </>
-            )}
+      {/* Kopf in der Planen-Form: Der Titel nennt die Rubrik, die Leiste sagt,
+          wo man darin steht. Keine Bühne — ein Rechner ist ein Werkzeug, keine
+          zeitkritische Handlung (Regel 1). */}
+      <div className="px-4 lg:px-6" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
+            <p className="text-[13px] text-text-secondary mt-0.5">
+              {isOberstufe
+                ? `Notenrechner · Q1–Q4${totalPunkte !== null ? ` · Ø ${totalPunkte.toFixed(1)} Punkte` : ''}`
+                : `Notenrechner · ${klasse}. Klasse${totalPunkte !== null ? ` · Ø ${totalPunkte.toFixed(1)} Punkte` : ''}`}
+            </p>
           </div>
-        )}
+          {/* Speicherstand ohne farbige Schrift: neutrale Fläche, Wort und
+              Zeichen tragen die Aussage. */}
+          {syncStatus && (
+            <span className="shrink-0 mt-2 px-2.5 py-1 rounded-pill text-[12px] font-medium flex items-center gap-1.5 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-secondary">
+              {syncStatus === 'saving' && <><span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse motion-reduce:animate-none" />Speichern…</>}
+              {syncStatus === 'saved' && <><Icon name="check" size={12} />Gespeichert</>}
+              {syncStatus === 'error' && <><Icon name="warning" size={12} />Nicht gespeichert</>}
+            </span>
+          )}
+        </div>
+        <PlanenBar className="mt-4" />
       </div>
 
-      <div className="px-4 pb-1">
-        <PlanenBar />
-      </div>
+      {/* Am Schreibtisch steht das Ergebnis rechts und bleibt beim Scrollen
+          stehen, während links eingetragen wird — sonst muss man nach jeder
+          Zahl nach oben scrollen, um zu sehen, was sie bewirkt hat. */}
+      <div className="px-4 pt-5 pb-8 space-y-4 lg:px-6 lg:max-w-[1180px] lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6 lg:items-start lg:space-y-0">
 
-      <div className="px-4 pt-4 pb-8 space-y-4 lg:px-6 lg:max-w-[1100px]">
+        <div className="space-y-4 lg:order-2 lg:sticky lg:top-6">
 
         {/* Summary card */}
         <div className="bg-surface border border-border/60 rounded-card p-5">
@@ -993,6 +956,10 @@ export function AbiRechnerScreen() {
             </div>
           </div>
         )}
+
+        </div>{/* Ende Ergebnis-Spalte */}
+
+        <div className="space-y-4 lg:order-1">
 
         {/* Halbjahr tab bar */}
         <div>
@@ -1138,6 +1105,7 @@ export function AbiRechnerScreen() {
           </div>
         </div>
 
+        </div>{/* Ende Arbeits-Spalte */}
       </div>
     </div>
   )
