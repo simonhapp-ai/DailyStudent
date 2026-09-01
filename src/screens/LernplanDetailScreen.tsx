@@ -485,8 +485,8 @@ export function LernplanDetailScreen() {
         <div className="no-print px-4 pt-6">
           <button
             onClick={addToCalendar}
-            className="w-full h-12 rounded-pill on-mint text-[14px] font-bold press-sm flex items-center justify-center gap-2"
-            style={{ background: '#34D399' }}
+            className="w-full h-12 rounded-pill text-on-accent text-[14px] font-bold press-sm flex items-center justify-center gap-2"
+            style={{ background: 'rgb(var(--color-accent))' }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />

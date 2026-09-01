@@ -216,7 +216,7 @@ export function FlashCardGeneratorScreen() {
                   <button
                     onClick={() => navigate('/profil/faecher')}
                     className="w-full h-12 rounded-pill font-semibold text-[15px] press"
-                    style={{ background: '#34D399', color: '#062017' }}
+                    style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
                   >
                     Fächer auswählen
                   </button>
@@ -257,7 +257,7 @@ export function FlashCardGeneratorScreen() {
                 {selectedNoteIds.length > 0 && (
                   <span
                     className="ml-2 px-1.5 py-0.5 rounded-full text-[11px] font-bold"
-                    style={{ background: '#34D399', color: '#062017' }}
+                    style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
                   >
                     {selectedNoteIds.length}
                   </span>
@@ -266,7 +266,7 @@ export function FlashCardGeneratorScreen() {
               {selectedNoteIds.length > 0 && (
                 <button
                   className="text-xs font-bold px-3 py-1.5 rounded-pill press-sm"
-                  style={{ background: '#34D399', color: '#062017' }}
+                  style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
                   onClick={() => setStep('method')}
                 >
                   Weiter
@@ -281,8 +281,8 @@ export function FlashCardGeneratorScreen() {
                 action={
                 <button
                   onClick={() => navigate('/unterricht')}
-                  className="w-full h-12 rounded-pill on-mint text-[15px] font-semibold press"
-                  style={{ background: '#34D399' }}
+                  className="w-full h-12 rounded-pill text-on-accent text-[15px] font-semibold press"
+                  style={{ background: 'rgb(var(--color-accent))' }}
                 >
                   Zum Unterrichtsmodus
                 </button>
@@ -311,7 +311,7 @@ export function FlashCardGeneratorScreen() {
                       >
                         {isSelected && (
                           <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                            <path d="M2 6l3 3 5-5" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M2 6l3 3 5-5" stroke="rgb(var(--color-on-accent))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         )}
                       </div>
@@ -349,7 +349,7 @@ export function FlashCardGeneratorScreen() {
                   key={m}
                   onClick={() => { setMethod(m); setError('') }}
                   className={`flex-1 py-2.5 rounded-btn text-[13px] font-semibold transition-all press-sm ${
-                    method === m ? 'on-mint' : 'text-text-muted'
+                    method === m ? 'text-on-accent' : 'text-text-muted'
                   }`}
                   style={method === m ? { background: '#34D399' } : {}}
                 >
@@ -369,7 +369,7 @@ export function FlashCardGeneratorScreen() {
                         key={n}
                         onClick={() => setCardCount(n)}
                         className={`flex-1 py-2.5 rounded-btn text-sm font-bold press-sm transition-all ${
-                          cardCount === n ? 'on-mint' : 'text-text-muted'
+                          cardCount === n ? 'text-on-accent' : 'text-text-muted'
                         }`}
                         style={
                           cardCount === n
@@ -394,7 +394,7 @@ export function FlashCardGeneratorScreen() {
                 <button
                   onClick={handleGenerateKI}
                   className="w-full py-3.5 rounded-icon font-bold text-[15px] press"
-                  style={{ background: '#34D399', color: '#062017' }}
+                  style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
                 >
                   {cardCount} Karten mit KI erstellen
                 </button>
@@ -468,8 +468,8 @@ export function FlashCardGeneratorScreen() {
                 <button
                   onClick={handleSaveManual}
                   disabled={validManualCount === 0}
-                  className="w-full py-3.5 rounded-icon on-mint font-bold text-[15px] press disabled:opacity-40"
-                  style={{ background: '#34D399' }}
+                  className="w-full py-3.5 rounded-icon text-on-accent font-bold text-[15px] press disabled:opacity-40"
+                  style={{ background: 'rgb(var(--color-accent))' }}
                 >
                   {validManualCount > 0 ? `${validManualCount} Karte${validManualCount !== 1 ? 'n' : ''} speichern` : 'Karten speichern'}
                 </button>
@@ -483,9 +483,9 @@ export function FlashCardGeneratorScreen() {
           <div className="flex flex-col items-center justify-center py-16 gap-5">
             <div
               className="w-16 h-16 rounded-card flex items-center justify-center"
-              style={{ background: '#34D399' }}
+              style={{ background: 'rgb(var(--color-accent))' }}
             >
-              <svg className="animate-spin" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2.5">
+              <svg className="animate-spin" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-on-accent))" strokeWidth="2.5">
                 <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
               </svg>
             </div>

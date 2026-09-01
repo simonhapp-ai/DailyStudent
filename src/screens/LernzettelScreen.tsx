@@ -230,7 +230,7 @@ export function LernzettelScreen() {
           {/* Subject badge */}
           <div className="flex items-center gap-2">
             <span
-              className="text-[11px] font-semibold px-2.5 py-1 rounded-full on-mint"
+              className="text-[11px] font-semibold px-2.5 py-1 rounded-full text-on-accent"
               style={{ background: info?.color ?? '#34D399' }}
             >
               {info?.name ?? activeLz.subjectName}
@@ -316,9 +316,9 @@ export function LernzettelScreen() {
             <div className="flex items-center gap-3">
               <div
                 className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0"
-                style={{ background: '#34D399' }}
+                style={{ background: 'rgb(var(--color-accent))' }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-on-accent))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="3" width="20" height="14" rx="2" />
                   <path d="M8 21h8M12 17v4" />
                 </svg>
@@ -350,9 +350,9 @@ export function LernzettelScreen() {
             <div className="flex items-center gap-3">
               <div
                 className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0"
-                style={{ background: '#34D399' }}
+                style={{ background: 'rgb(var(--color-accent))' }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#062017" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-on-accent))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
                 </svg>
               </div>
@@ -396,7 +396,7 @@ export function LernzettelScreen() {
         <button
           onClick={handleNew}
           className="w-full flex items-center justify-center gap-2 h-12 rounded-pill font-semibold text-[15px] press"
-          style={{ background: '#34D399', color: '#062017' }}
+          style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
         >
           <Icon name="plus" size={17} />
           Neuen Lernzettel erstellen

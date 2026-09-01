@@ -139,8 +139,8 @@ export function LearnModeScreen() {
               </Button>
               <button
                 onClick={handleKnown}
-                className="flex-1 py-3 rounded-card on-mint text-sm font-semibold press transition-opacity hover:opacity-90"
-                style={{ background: '#34D399' }}
+                className="flex-1 py-3 rounded-card text-on-accent text-sm font-semibold press transition-opacity hover:opacity-90"
+                style={{ background: 'rgb(var(--color-accent))' }}
               >
                 Weiß ich
               </button>

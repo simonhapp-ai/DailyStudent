@@ -83,7 +83,7 @@ export function LernplanListScreen() {
               <button
                 onClick={() => navigate(`/klausurmodus/lernplan/${aktiv.id}`)}
                 className="w-full h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
-                style={{ background: '#34D399', color: '#062017' }}
+                style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
               >
                 <Icon name="play" size={16} />
                 Weiterlernen
@@ -95,7 +95,7 @@ export function LernplanListScreen() {
         <button
           onClick={handleCreate}
           className="w-full flex items-center justify-center gap-2 h-12 rounded-pill font-semibold text-[15px] press"
-          style={{ background: '#34D399', color: '#062017' }}
+          style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
         >
           <Icon name="plus" size={17} />
           Neuen Lernplan erstellen

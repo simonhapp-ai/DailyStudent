@@ -200,7 +200,7 @@ export function ProbeklausurMenuScreen() {
                 <button
                   onClick={() => navigate(MODE_ROUTE[offen.mode], { state: { resume: offen } })}
                   className="h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
-                  style={{ background: '#34D399', color: '#062017' }}
+                  style={{ background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))' }}
                 >
                   <Icon name="play" size={16} />
                   Fortfahren
