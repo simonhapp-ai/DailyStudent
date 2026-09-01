@@ -58,9 +58,9 @@ export default {
       },
       borderRadius: {
         chip: '8px',
-        icon: '14px',
+        icon: '17px',
         card: '20px',
-        btn: '12px',
+        btn: '13px',
         pill: '999px',
         sheet: '28px',
       },

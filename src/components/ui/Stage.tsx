@@ -34,7 +34,7 @@ export function Stage({ eyebrow, title, note, progress, action, tone = 'unterric
       {/* Glow in der Modusfarbe — reine Fläche, nie Schrift */}
       <span
         aria-hidden
-        className="pointer-events-none absolute -right-16 -top-[70px] w-[200px] h-[200px] rounded-full opacity-50"
+        className="pointer-events-none absolute -right-20 -top-24 w-[280px] h-[280px] rounded-full opacity-80"
         style={{ background: `radial-gradient(circle, ${klausur ? '#34D399' : 'rgb(var(--color-accent))'}, transparent 70%)` }}
       />
       {eyebrow && <span className="relative text-[13px] text-white/70">{eyebrow}</span>}

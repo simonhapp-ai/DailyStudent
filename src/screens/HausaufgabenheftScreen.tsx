@@ -325,7 +325,7 @@ export function HausaufgabenheftScreen() {
         onClick={() => setShowAddForm((v) => !v)}
         className="fixed bottom-28 right-5 w-14 h-14 rounded-full flex items-center justify-center z-40 press transition-transform"
         style={{
-          background: '#7C3AED',
+          background: 'var(--grad-mode)',
           boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
         }}
       >

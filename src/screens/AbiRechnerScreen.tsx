@@ -477,7 +477,7 @@ function SubjectCard({
               className="px-2 py-0.5 rounded-pill text-[11px] font-bold transition-all press-sm"
               style={
                 active
-                  ? { background: '#7C3AED', color: 'white', boxShadow: '0 1px 6px rgba(124,58,237,0.35)' }
+                  ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
                   : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-muted))' }
               }
             >
@@ -504,7 +504,7 @@ function SubjectCard({
                   className="px-2 py-1 rounded-pill text-[11px] font-bold transition-all press-sm"
                   style={
                     active
-                      ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)' }
+                      ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
                       : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }
                   }
                 >
@@ -517,7 +517,7 @@ function SubjectCard({
               className="px-2 py-1 rounded-pill text-[11px] font-bold transition-all press-sm"
               style={
                 manualOpen
-                  ? { background: '#7C3AED', color: 'white', boxShadow: '0 2px 8px rgba(124,58,237,0.45)' }
+                  ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
                   : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }
               }
             >
@@ -1012,7 +1012,7 @@ export function AbiRechnerScreen() {
                     className="flex items-center gap-2 px-4 py-2.5 rounded-pill shrink-0 press-sm transition-all duration-200"
                     style={
                       isActive
-                        ? { background: '#7C3AED', color: 'white', boxShadow: '0 4px 16px rgba(124,58,237,0.55)' }
+                        ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
                         : { background: 'rgb(var(--color-surface))', border: '1.5px solid rgba(var(--color-border),1)', color: 'rgb(var(--color-text-secondary))' }
                     }
                   >

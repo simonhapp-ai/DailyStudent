@@ -17,8 +17,8 @@
   --grad-mode: linear-gradient(135deg, #7C3AED, #5B21B6);
   /* Die Bühne ist im Hellen eine hellere Fläche als im Dunkeln — vorher waren
      beide fast gleich dunkel, wodurch der Helligkeitswechsel ausblieb. */
-  --stage-bg:         linear-gradient(135deg, #5B21B6 0%, #7C3AED 100%);
-  --stage-bg-klausur: linear-gradient(135deg, #059669 0%, #34D399 100%);
+  --stage-bg:         linear-gradient(146deg, #17102B 0%, #2E1D63 100%);
+  --stage-bg-klausur: linear-gradient(146deg, #06251B 0%, #0C4C39 100%);
   --color-success:        52  199  89;   /* #34C759 — Apple Green, Default (light) — exact match, unchanged */
   --color-warning:        255 141  40;   /* #FF8D28 — Apple Orange, Default (light) */
   --color-danger:         255  56  60;   /* #FF383C — Apple Red, Default (light) */
@@ -134,8 +134,8 @@
   --ev-bg:         58  58  60;  --ev-on:        255 255 255;
 
   /* Bühne — dunkel die hellste Fläche des Screens (Rolle dreht sich um) */
-  --stage-bg:         linear-gradient(135deg, #3B1D82 0%, #6D28D9 100%);
-  --stage-bg-klausur: linear-gradient(135deg, #05593F 0%, #0E9B6E 100%);
+  --stage-bg:         linear-gradient(146deg, #241C3C 0%, #3E2C74 100%);
+  --stage-bg-klausur: linear-gradient(146deg, #0D3327 0%, #175944 100%);
 
   /* Dunkel wird Purple aufgehellt (#A78BFA) — Schrift darauf wird fast schwarz */
   --mode-on-purple: #FFFFFF;

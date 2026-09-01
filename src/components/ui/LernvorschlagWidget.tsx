@@ -162,7 +162,7 @@ function computeSuggestion(
 
   // 3. Klausur ≤ 3 days — has Lernzettel for subject
   if (nextExam && nextExam.days <= 3 && lernzettelFor(nextExam.subjectId) > 0) {
-    return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'critical',
+    return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'critical',
       title: `Lernzettel ${nextExamName} wiederholen`,
       subtitle: `${lernzettelFor(nextExam.subjectId)} Lernzettel verfügbar — letzter Check vor der Klausur.`,
       actionPath: '/klausurmodus/lernzettel', actionLabel: 'Lernzettel öffnen' }
@@ -194,7 +194,7 @@ function computeSuggestion(
 
   // 7. Klausur 4-7 days — no Lernzettel for subject
   if (nextExam && nextExam.days <= 7 && lernzettelFor(nextExam.subjectId) === 0 && notesFor(nextExam.subjectId) > 0) {
-    return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'normal',
+    return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'normal',
       title: `Lernzettel ${nextExamName} erstellen`,
       subtitle: `Klausur in ${nextExam.days} Tagen — du hast ${notesFor(nextExam.subjectId)} Notizen als Basis.`,
       actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -242,7 +242,7 @@ function computeSuggestion(
 
   // 13. Weakest subject 5-7 NP — no Lernzettel
   if (weakest && weakest.np < 8 && lernzettelFor(weakest.subjectId) === 0) {
-    return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'normal',
+    return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'normal',
       title: `Lernzettel ${weakest.name} erstellen`,
       subtitle: `Note ${weakest.np} NP — ein guter Lernzettel hilft dir, die Lücken zu schließen.`,
       actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -330,7 +330,7 @@ function computeSuggestion(
   // 23. No Klausur in next 14 days — productive suggestion
   if (!nextExam || nextExam.days > 14) {
     if (weakest) {
-      return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'low',
+      return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'low',
         title: `Nutze die Zeit: ${weakest.name}`,
         subtitle: `Keine Klausur in Sicht — perfekt um Schwächen aufzuholen.`,
         actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -355,7 +355,7 @@ function computeSuggestion(
 
   // 26. Has Lernzettel — suggest reviewing them
   if (lernzettel.length > 0) {
-    return { icon: <BookIcon />, gradient: '#5AC8FA', urgency: 'low',
+    return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'low',
       title: `Lernzettel wiederholen`,
       subtitle: `${lernzettel.length} Lernzettel verfügbar — kurze Wiederholung festigt das Wissen.`,
       actionPath: '/klausurmodus/lernzettel', actionLabel: 'Lernzettel öffnen' }
@@ -363,7 +363,7 @@ function computeSuggestion(
 
   // 27. No Klausurtermin set
   if (klausurtermine.length === 0) {
-    return { icon: <CalendarIcon />, gradient: '#5AC8FA', urgency: 'low',
+    return { icon: <CalendarIcon />, gradient: 'var(--grad-mode)', urgency: 'low',
       title: 'Klausurtermin eintragen',
       subtitle: 'Trage deine nächste Klausur ein — dann bekommst du gezielte Lernvorschläge.',
       actionPath: '/klausurmodus', actionLabel: 'Klausurmodus öffnen' }

@@ -33,9 +33,9 @@ const customPlusIcon = (
 )
 
 const sizeConfig: Record<Size, { cls: string; px: number; radius: number }> = {
-  sm: { cls: 'w-8 h-8', px: 14, radius: 10 },
-  md: { cls: 'w-10 h-10', px: 18, radius: 13 },
-  lg: { cls: 'w-14 h-14', px: 24, radius: 18 },
+  sm: { cls: 'w-8 h-8', px: 14, radius: 12 },
+  md: { cls: 'w-10 h-10', px: 18, radius: 15 },
+  lg: { cls: 'w-14 h-14', px: 24, radius: 21 },
 }
 
 const icons: Record<string, ReactNode> = {

@@ -156,7 +156,7 @@ function FixedBadges() {
 }
 
 function SmartRedirect() {
-  return <Navigate to={IS_DESKTOP ? '/dashboard' : '/unterricht'} replace />
+  return <Navigate to="/unterricht" replace />
 }
 
 // All routes extracted into a component so the route tree is always at the

@@ -16,7 +16,7 @@ import { getActiveStreak } from '../lib/streak'
 const AVATAR_BG_OPTIONS = [
   { id: 'purple', gradient: '#A78BFA' },
   { id: 'blue',   gradient: '#60A5FA' },
-  { id: 'teal',   gradient: '#5AC8FA' },
+  { id: 'teal',   gradient: 'var(--grad-mode)' },
   { id: 'green',  gradient: '#34D399' },
   { id: 'orange', gradient: '#FBBF24' },
   { id: 'pink',   gradient: '#F472B6' },
@@ -479,6 +479,41 @@ export function ProfilScreen() {
             onClick={() => navigate('/profil/coins')}
           />
         </ListGroup>
+
+        {/* ── Anpassen ────────────────────────────────────────────
+            Zweiter Weg in den Planen-Bereich. Kalender und Stundenplan sind
+            die beiden Dinge, die man einmal einrichtet und danach selten
+            anfasst — sie gehoeren deshalb auch hierher, nicht nur hinter den
+            Planen-Knopf im Klausurenmodus. */}
+        <div>
+          <h2 className="section-label mb-2">Anpassen</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => navigate('/kalender')}
+              className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-4 flex items-center gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
+            >
+              <span className="w-10 h-10 rounded-icon flex items-center justify-center shrink-0 text-white" style={{ background: 'var(--grad-mode)' }}>
+                <Icon name="calendar" size={19} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-semibold text-text-primary">Kalender</span>
+                <span className="block text-[13px] text-text-secondary truncate">Termine und Lernzeiten</span>
+              </span>
+            </button>
+            <button
+              onClick={() => navigate('/stundenplan')}
+              className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-4 flex items-center gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
+            >
+              <span className="w-10 h-10 rounded-icon flex items-center justify-center shrink-0 text-white" style={{ background: 'var(--grad-mode)' }}>
+                <Icon name="clock" size={19} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-semibold text-text-primary">Stundenplan</span>
+                <span className="block text-[13px] text-text-secondary truncate">Deine Wochenstunden</span>
+              </span>
+            </button>
+          </div>
+        </div>
 
         {/* ── Allgemein ──────────────────────────────────────────── */}
         <div>

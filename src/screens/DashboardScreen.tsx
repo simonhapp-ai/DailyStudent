@@ -191,7 +191,7 @@ function HeroLernplanCard({
         <div className="flex items-center gap-4">
           <div
             className="w-14 h-14 rounded-card flex items-center justify-center shrink-0"
-            style={{ background: '#A78BFA' }}
+            style={{ background: 'var(--grad-mode)' }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -350,7 +350,7 @@ function SchnellnotizCard({ onClick }: { onClick: () => void }) {
     <Card className="flex items-center gap-4 min-h-[120px]" onClick={onClick}>
       <div
         className="w-12 h-12 rounded-icon flex items-center justify-center shrink-0"
-        style={{ background: '#A78BFA' }}
+        style={{ background: 'var(--grad-mode)' }}
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />

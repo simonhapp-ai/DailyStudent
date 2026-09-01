@@ -2290,7 +2290,7 @@ export function DrawingCanvas({
                     style={{
                       height: 36, paddingInline: 18,
                       borderRadius: 12, border: 'none',
-                      background: '#7C3AED', color: 'white',
+                      background: 'var(--grad-mode)', color: 'white',
                       fontSize: 14, fontWeight: 700,
                       boxShadow: '0 4px 16px rgba(124,58,237,0.45)',
                       cursor: 'pointer',

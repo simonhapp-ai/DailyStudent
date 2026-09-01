@@ -398,7 +398,7 @@ export function LernzettelGeneratorScreen() {
                         className="w-full text-left press rounded-card border transition-all overflow-hidden"
                         style={
                           selected
-                            ? { borderColor: '#5AC8FA', background: 'rgba(90,200,250,0.08)' }
+                            ? { borderColor: 'rgb(var(--color-accent))', background: 'rgba(90,200,250,0.08)' }
                             : { borderColor: 'rgba(var(--color-border), 0.6)', background: 'rgb(var(--color-surface))' }
                         }
                       >
@@ -568,7 +568,7 @@ export function LernzettelGeneratorScreen() {
                 <div
                   key={i}
                   className="w-2 h-2 rounded-full animate-bounce"
-                  style={{ background: '#5AC8FA', animationDelay: `${i * 0.15}s` }}
+                  style={{ background: 'var(--grad-mode)', animationDelay: `${i * 0.15}s` }}
                 />
               ))}
             </div>

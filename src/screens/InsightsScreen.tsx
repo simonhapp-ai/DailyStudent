@@ -277,7 +277,7 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'weakness',
     icon: 'chart' as IconName,
-    accentColor: '#6366F1',
+    accentColor: 'rgb(var(--color-accent))',
     title: (ctx) => `${ctx.weakestName} verbessern`,
     text: () => '5 Karteikarten pro Tag fürs Schwachfach. Kleine, konsistente Einheiten schlagen Marathon-Lernen am Wochenende.',
     condition: (ctx) => ctx.weakestNP !== null && ctx.weakestNP < 13 && ctx.weakestName !== null,
@@ -340,7 +340,7 @@ const ALL_TIPS: TipDef[] = [
   {
     id: 'sleep',
     icon: 'moon' as IconName,
-    accentColor: '#6366F1',
+    accentColor: 'rgb(var(--color-accent))',
     title: () => 'Schlaf konsolidiert Wissen',
     text: () => 'Während du schläfst, schreibt dein Gehirn das Gelernte ins Langzeitgedächtnis. 8 Stunden vor der Klausur sind Gold wert.',
     condition: null,

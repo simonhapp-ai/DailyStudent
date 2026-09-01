@@ -354,7 +354,7 @@ export function KalenderScreen() {
                     }}
                     className="flex items-center gap-1.5 px-3.5 py-2 rounded-btn text-[12px] font-bold press-sm"
                     style={{
-                      background: '#7C3AED',
+                      background: 'var(--grad-mode)',
                       backgroundSize: '200% 200%',
                       color: 'white',
                       boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
@@ -418,7 +418,7 @@ export function KalenderScreen() {
                   onClick={goToToday}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-btn text-white text-[12px] font-bold press-sm"
                   style={{
-                    background: '#7C3AED',
+                    background: 'var(--grad-mode)',
                     backgroundSize: '200% 200%',
                     boxShadow: '0 0 16px 3px rgba(124,58,237,0.55), 0 3px 10px rgba(124,58,237,0.4)',
                     border: '1px solid rgba(159,95,250,0.5)',
@@ -615,7 +615,7 @@ export function KalenderScreen() {
                         onClick={() => setIsRecurring(val)}
                         className="flex-1 py-2.5 rounded-chip text-[12px] font-bold transition-all duration-200 press-sm"
                         style={active ? {
-                          background: '#7C3AED',
+                          background: 'var(--grad-mode)',
                           color: 'white',
                           boxShadow: '0 3px 10px rgba(124,58,237,0.38)',
                         } : {
@@ -881,7 +881,7 @@ function DateStrip({ viewDate, todayStr, onDaySelect, onPrevWeek, onNextWeek }: 
               <span
                 className="w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-bold transition-all"
                 style={isToday ? {
-                  background: '#7C3AED',
+                  background: 'var(--grad-mode)',
                   color: 'white',
                   boxShadow: '0 0 14px 4px rgba(124,58,237,0.65), 0 2px 6px rgba(124,58,237,0.45)',
                   border: '1px solid rgba(159,95,250,0.6)',
@@ -1331,7 +1331,7 @@ function StundenplanFullView({
           onClick={onEdit}
           className="flex items-center gap-1.5 px-3.5 py-2 rounded-btn press-sm"
           style={{
-            background: '#7C3AED',
+            background: 'var(--grad-mode)',
             boxShadow: '0 3px 10px rgba(124,58,237,0.35)',
           }}
         >
@@ -1807,7 +1807,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                     <button key={d} onClick={() => { setActiveDay(i); setAddingSlot(false) }}
                       className="flex-1 flex flex-col items-center py-2 rounded-btn transition-all duration-200 border"
                       style={activeDay === i ? {
-                        background: '#7C3AED',
+                        background: 'var(--grad-mode)',
                         borderColor: 'transparent',
                         boxShadow: '0 2px 8px rgba(124,58,237,0.35)',
                       } : { background: 'rgb(var(--color-background))', borderColor: 'rgba(var(--color-border),0.6)' }}>
