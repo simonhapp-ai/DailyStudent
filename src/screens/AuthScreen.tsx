@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Icon } from '../components/ui/Icon'
 import { Capacitor } from '@capacitor/core'
 import { Browser } from '@capacitor/browser'
 import { supabase } from '../lib/supabase'
@@ -29,6 +30,8 @@ export function AuthScreen() {
   const [appleLoading, setAppleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false)
+  const [resendState, setResendState] = useState<'idle' | 'sending' | 'sent'>('idle')
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
@@ -50,7 +53,10 @@ export function AuthScreen() {
       if (mode === 'signup') {
         const { error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
-        setSuccessMsg('Bestätigungs-E-Mail gesendet. Bitte prüfe dein Postfach.')
+        // Nach der Registrierung passiert erst einmal nichts Sichtbares — die
+        // Bestaetigungsmail entscheidet. Eine schmale gruene Zeile unter dem
+        // Formular hat das nicht getragen; hier uebernimmt ein eigener Zustand.
+        setAwaitingConfirmation(true)
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
@@ -144,6 +150,63 @@ export function AuthScreen() {
     setMode(m => m === 'login' ? 'signup' : 'login')
     setError(null)
     setSuccessMsg(null)
+  }
+
+  const handleResend = async () => {
+    setResendState('sending')
+    try {
+      await supabase.auth.resend({ type: 'signup', email })
+      setResendState('sent')
+    } catch {
+      setResendState('idle')
+      setError('Konnte nicht erneut senden. Versuch es in einer Minute noch einmal.')
+    }
+  }
+
+  // Warten auf die Bestaetigung — ein eigener Zustand statt einer Zeile unter
+  // dem Formular. Solange sie aussteht, kann man sich nicht anmelden, also hat
+  // das Formular hier nichts verloren.
+  if (awaitingConfirmation) {
+    return (
+      <div className="min-h-dvh bg-background flex flex-col items-center justify-center px-5 py-12">
+        <div className="w-full max-w-sm text-center">
+          <span
+            className="w-16 h-16 rounded-sheet mx-auto mb-6 flex items-center justify-center text-white"
+            style={{ background: 'var(--grad-mode)' }}
+          >
+            <Icon name="bell" size={28} />
+          </span>
+          <h1 className="text-[24px] font-bold text-text-primary">Prüf dein Postfach</h1>
+          <p className="text-[15px] text-text-secondary mt-2 leading-relaxed">
+            Wir haben eine Bestätigung an <span className="font-semibold text-text-primary">{email}</span> geschickt.
+            Öffne den Link darin, dann kannst du dich anmelden.
+          </p>
+          <p className="text-[13px] text-text-secondary mt-4 leading-relaxed">
+            Nichts angekommen? Schau im Spam-Ordner — sonst schick sie dir neu.
+          </p>
+
+          <button
+            onClick={() => void handleResend()}
+            disabled={resendState !== 'idle'}
+            className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold press mt-6 disabled:opacity-60"
+          >
+            {resendState === 'sending' ? 'Wird gesendet…'
+              : resendState === 'sent' ? 'Nochmal gesendet'
+              : 'E-Mail erneut senden'}
+          </button>
+          <button
+            onClick={() => { setAwaitingConfirmation(false); setMode('login'); setSuccessMsg(null) }}
+            className="w-full h-12 rounded-pill text-[15px] font-semibold text-text-primary press mt-2"
+          >
+            Zurück zur Anmeldung
+          </button>
+
+          {error && (
+            <p className="text-[13px] text-text-primary bg-fill-red text-fill-red-on rounded-btn px-3 py-2 mt-4">{error}</p>
+          )}
+        </div>
+      </div>
+    )
   }
 
   return (
