@@ -49,6 +49,17 @@ const MARKER_SIZES = [8, 12, 18, 26, 36, 50]
 const ERASER_SIZES = [8, 14, 22, 32, 44, 60]
 const DOT_VIS_SIZES = [3, 5, 8, 12, 17, 24]   // visual dot sizes in the picker
 
+// ── Zoom-Schreibfeld ──────────────────────────────────────────────────────
+// Der Streifen am unteren Rand ist KEINE zweite Zeichenflaeche, sondern eine
+// zweite ANSICHT auf dieselbe Seite: derselbe Strichbestand, nur vergroessert
+// und auf einen Ausschnitt beschnitten. Deshalb gibt es keinen zweiten
+// Speicher, keine Synchronisierung und keinen Sonderfall beim Rueckgaengig-
+// machen — Zeigereignisse werden nur durch eine andere Matrix gerechnet und
+// laufen dann durch denselben Pfad wie auf dem Blatt.
+const WB_ZOOM = 2.6
+const WB_HEIGHT = 148          // Hoehe des Streifens auf dem Bildschirm
+const WB_ADVANCE = 0.72        // Anteil der Fensterbreite, um den weitergerueckt wird
+
 const DEFAULT_COLORS = ['#111827', '#2563EB', '#DC2626', '#16A34A', '#7C3AED', '#F97316']
 const COLORS_KEY = 'sb_palette_v1'
 
@@ -469,6 +480,29 @@ export function DrawingCanvas({
 
   // Pen-only mode: fingers navigate (pan), only pencil draws
   const PEN_ONLY_KEY = 'sb_pen_only_v1'
+  // Der Streifen: an/aus plus die linke obere Ecke des gezeigten Ausschnitts
+  // in Seitenkoordinaten.
+  const [wb, setWb] = useState<{ on: boolean; x: number; y: number }>({ on: false, x: 0, y: 0 })
+  // Die Zeigerbehandlung laeuft ausserhalb des Renderns und braucht den
+  // aktuellen Ausschnitt — deshalb der Spiegel, gesetzt in einem Effekt statt
+  // waehrend des Renderns.
+  const wbRef = useRef(wb)
+  /** Setzt Zustand und Spiegel zusammen — die Zeigerbehandlung laeuft
+   *  ausserhalb des Renderns und braucht den aktuellen Ausschnitt sofort. */
+  const updateWb = useCallback((f: (v: { on: boolean; x: number; y: number }) => { on: boolean; x: number; y: number }) => {
+    const next = f(wbRef.current)
+    wbRef.current = next
+    setWb(next)
+  }, [])
+  const wbCanvasRef = useRef<HTMLCanvasElement>(null)
+  /** Breite des gezeigten Ausschnitts in Seitenkoordinaten. Liegt im Zustand,
+   *  weil das Rechteck auf dem Blatt sie beim Rendern braucht — aus dem Ref
+   *  gelesen waere sie beim ersten Bild noch nicht da. */
+  const [wbFensterB, setWbFensterB] = useState(240)
+  const wbWrapRef = useRef<HTMLDivElement>(null)
+  // Sagt getXY, auf welcher Flaeche gerade gezeichnet wird.
+  const drawSurfaceRef = useRef<'page' | 'wb'>('page')
+
   const [penOnlyMode, setPenOnlyMode] = useState(() => localStorage.getItem(PEN_ONLY_KEY) === '1')
   const penOnlyModeRef = useRef(penOnlyMode)
   useEffect(() => { penOnlyModeRef.current = penOnlyMode }, [penOnlyMode])
@@ -956,6 +990,18 @@ export function DrawingCanvas({
   // ── Pointer events (drawing) ──────────────────────────────────────────────
 
   const getXY = (e: React.PointerEvent<HTMLCanvasElement>): number[] => {
+    // Im Streifen gilt eine andere Matrix: fester Zoom, verschobener Ursprung.
+    // Alles danach rechnet weiter in Seitenkoordinaten, als waere nichts
+    // geschehen — das ist der ganze Trick.
+    if (drawSurfaceRef.current === 'wb') {
+      const rect = e.currentTarget.getBoundingClientRect()
+      const w = wbRef.current
+      return [
+        w.x + (e.clientX - rect.left) / WB_ZOOM,
+        w.y + (e.clientY - rect.top) / WB_ZOOM,
+        e.pressure || 0.5,
+      ]
+    }
     const rect = fgCanvasRef.current!.getBoundingClientRect()
     const scale = viewTransformRef.current.scale
     return [
@@ -964,6 +1010,31 @@ export function DrawingCanvas({
       e.pressure || 0.5,
     ]
   }
+
+  /** Zeichnet den Streifen neu — Bestand plus, falls vorhanden, den laufenden Strich. */
+  const redrawWriteBox = useCallback(() => {
+    const c = wbCanvasRef.current
+    if (!c) return
+    const ctx = c.getContext('2d')
+    if (!ctx) return
+    const dpr = window.devicePixelRatio || 1
+    const cssW = c.clientWidth, cssH = c.clientHeight
+    if (c.width !== cssW * dpr || c.height !== cssH * dpr) {
+      c.width = cssW * dpr
+      c.height = cssH * dpr
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    ctx.clearRect(0, 0, cssW, cssH)
+    ctx.save()
+    ctx.scale(WB_ZOOM, WB_ZOOM)
+    ctx.translate(-wbRef.current.x, -wbRef.current.y)
+    for (const st of strokesRef.current) paintStrokeRecord(ctx, st)
+    const act = activeRef.current
+    if (act && act.tool !== 'eraser') {
+      paintStroke(ctx, act.points, act.tool, act.colorHex, act.size, act.penType)
+    }
+    ctx.restore()
+  }, [])
 
   const handleDeleteSelection = () => {
     const sel = selectionRef.current
@@ -1150,6 +1221,13 @@ export function DrawingCanvas({
     }
   }
 
+  useEffect(() => {
+    if (!wb.on) return
+    redrawWriteBox()
+    const c = wbCanvasRef.current
+    if (c) setWbFensterB(c.clientWidth / WB_ZOOM)
+  }, [wb, redrawWriteBox])
+
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (tool === 'eraser') {
       const rect = fgCanvasRef.current!.getBoundingClientRect()
@@ -1231,11 +1309,31 @@ export function DrawingCanvas({
       return
     }
 
+    if (wbRef.current.on) redrawWriteBox()
+
     const fg = fgCanvasRef.current; if (!fg) return
     const ctx = fg.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
     ctx.clearRect(0, 0, w, h)
     paintStroke(ctx, activeRef.current.points, activeRef.current.tool, activeRef.current.colorHex, activeRef.current.size, activeRef.current.penType)
+  }
+
+  /** Rueckt den Ausschnitt nach rechts; am Zeilenende in die naechste Zeile. */
+  const naechsterAbschnitt = () => {
+    const c = wbCanvasRef.current
+    const { w: seiteB } = getCSS()
+    const fensterB = (c?.clientWidth ?? 600) / WB_ZOOM
+    const zeilenH = WB_HEIGHT / WB_ZOOM
+    updateWb((v) => {
+      const naechstesX = v.x + fensterB * WB_ADVANCE
+      if (naechstesX + fensterB <= seiteB) return { ...v, x: naechstesX }
+      return { ...v, x: 0, y: v.y + zeilenH * 0.9 }
+    })
+  }
+
+  const naechsteZeile = () => {
+    const zeilenH = WB_HEIGHT / WB_ZOOM
+    updateWb((v) => ({ ...v, x: 0, y: v.y + zeilenH * 0.9 }))
   }
 
   const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -1334,6 +1432,19 @@ export function DrawingCanvas({
     redoStackRef.current = []
     strokesRef.current = [...strokesRef.current, stroke]
     updateHistoryState(); exportAndNotify(); notifyPagesChanged()
+
+    // Im Streifen: neu zeichnen und mitwandern, sobald man sich dem rechten
+    // Rand naehert. Von Hand nachschieben zu muessen waere der haeufigste
+    // Handgriff ueberhaupt.
+    if (wbRef.current.on) {
+      redrawWriteBox()
+      const c = wbCanvasRef.current
+      if (c) {
+        const fensterBreite = c.clientWidth / WB_ZOOM
+        const letzterX = Math.max(...stroke.points.map((pt) => pt[0]))
+        if (letzterX > wbRef.current.x + fensterBreite * 0.82) naechsterAbschnitt()
+      }
+    }
   }
 
   const onPointerLeave = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -2011,6 +2122,25 @@ export function DrawingCanvas({
         )}
         <input ref={canvasImgInputRef} type="file" accept="image/*" className="hidden" onChange={handleCanvasImageUpload} />
 
+        {/* Zoom-Schreibfeld — nur im Vollbild sinnvoll, sonst fehlt die Hoehe. */}
+        {isFullscreen && (
+          <button
+            onClick={() => updateWb((v) => ({ ...v, on: !v.on }))}
+            aria-pressed={wb.on}
+            className="flex items-center justify-center w-11 h-11 rounded-btn press-sm shrink-0 transition-colors"
+            style={wb.on
+              ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
+              : { color: 'rgb(var(--color-text-muted))' }}
+            title="Zoom-Schreibfeld"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2.5" y="8.5" width="19" height="7" rx="1.5" />
+              <path d="M6 11.5v1M9 10.5v3M12 11.5v1M15 10.5v3M18 11.5v1" />
+            </svg>
+          </button>
+        )}
+
         {/* ── Prominent separator ── */}
         <div className="w-px h-7 mx-2 shrink-0" style={{ background: 'rgba(0,0,0,0.12)' }} />
 
@@ -2040,6 +2170,52 @@ export function DrawingCanvas({
 
         </div>
       </div>
+
+      {/* ── Zoom-Schreibfeld ──────────────────────────────────────────
+          Man schreibt darin gross, auf dem Blatt landet es klein und sauber.
+          In Goodnotes ist das der Grund, warum Handschrift ordentlich
+          aussieht — und im Unterricht der groesste einzelne Gewinn.
+
+          Steht ausserhalb der Zoom-Matrix des Blattes: Der Streifen soll
+          seine eigene Vergroesserung behalten, egal wie weit die Seite selbst
+          gezoomt ist. */}
+      {isFullscreen && wb.on && (
+        <div
+          ref={wbWrapRef}
+          className="order-last shrink-0 border-t border-border/40 bg-surface"
+          style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        >
+          <div className="flex items-center gap-2 px-3 py-1.5">
+            <span className="section-label">Zoom-Schreibfeld</span>
+            <div className="flex-1" />
+            <button
+              onClick={naechsteZeile}
+              className="h-8 px-3 rounded-pill text-[12px] font-semibold bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary press-sm"
+            >
+              Nächste Zeile
+            </button>
+            <button
+              onClick={() => updateWb((v) => ({ ...v, on: false }))}
+              aria-label="Schreibfeld schließen"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-text-secondary press-sm tap-44"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <canvas
+            ref={wbCanvasRef}
+            className="w-full block bg-white"
+            style={{ height: WB_HEIGHT, touchAction: 'none', cursor: 'crosshair' }}
+            onPointerDown={(e) => { drawSurfaceRef.current = 'wb'; onPointerDown(e) }}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerLeave}
+            onPointerCancel={onPointerLeave}
+          />
+        </div>
+      )}
 
       {/* ── Canvas area ── */}
       {isFullscreen ? (
@@ -2108,13 +2284,29 @@ export function DrawingCanvas({
                   pointerEvents: tool === 'select' ? 'none' : 'auto',
                   touchAction: 'none',
                 }}
-                onPointerDown={onPointerDown}
+                onPointerDown={(e) => { drawSurfaceRef.current = 'page'; onPointerDown(e) }}
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}
                 onPointerLeave={onPointerLeave}
                 onPointerCancel={onPointerLeave}
                 onDoubleClick={(e) => e.preventDefault()}
               />
+
+              {/* Ausschnitt des Zoom-Schreibfelds — zeigt auf dem Blatt, wohin
+                  gerade geschrieben wird. Ohne diese Markierung verliert man
+                  im Streifen sofort den Bezug zur Seite. */}
+              {wb.on && (
+                  <div
+                    className="absolute pointer-events-none rounded-[3px]"
+                    style={{
+                      zIndex: 5,
+                      left: wb.x, top: wb.y,
+                      width: wbFensterB, height: WB_HEIGHT / WB_ZOOM,
+                      border: '1.5px solid rgb(var(--color-accent))',
+                      background: 'rgb(var(--color-accent) / 0.07)',
+                    }}
+                  />
+              )}
 
               {/* Eraser circle cursor */}
               {tool === 'eraser' && eraserCursorPos && (() => {
