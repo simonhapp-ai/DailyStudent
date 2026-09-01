@@ -83,7 +83,7 @@ export function LernplanListScreen() {
               <button
                 onClick={() => navigate(`/klausurmodus/lernplan/${aktiv.id}`)}
                 className="w-full h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
-                style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+                style={{ background: '#FFFFFF', color: '#1B1B1F' }}
               >
                 <Icon name="play" size={16} />
                 Weiterlernen

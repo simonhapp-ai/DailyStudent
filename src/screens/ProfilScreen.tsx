@@ -1,4 +1,5 @@
 import { useUser } from '../context/UserContext'
+import { Tag } from '../components/ui/Tag'
 import { Metric, MetricRow } from '../components/ui/Metric'
 import type { AppTheme } from '../context/UserContext'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
@@ -275,11 +276,11 @@ export function ProfilScreen() {
             the page instead (see that section, right above the footer) — Simon's
             explicit placement call, 31.07.2026. This normal-state version is
             unchanged and simply doesn't render during beta; no code removed. */}
+        {/* Karte auf der eigenen Fläche statt auf einem blassen Blau, das sonst
+            nirgends in der App vorkommt. Die Modusfarbe steht im Knopf, nicht als
+            Tönung über der ganzen Karte. */}
         {!isPro && appConfig.proPurchasesEnabled && (
-          <div
-            className="rounded-card p-5 border border-accent/20"
-            style={{ background: 'linear-gradient(140deg, rgba(0,122,255,0.08) 0%, rgba(0,122,255,0.02) 100%)' }}
-          >
+          <div className="bg-surface rounded-card p-5 border border-border/60 shadow-card-adaptive">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <p className="text-text-primary font-bold text-[17px]">Pro freischalten</p>
@@ -308,9 +309,12 @@ export function ProfilScreen() {
             {/* Platform-aware teaser — the authoritative check (RevenueCat
                 trial eligibility on iOS) happens once ProModal opens; this is
                 just marketing copy pointing at whichever offer applies. */}
-            <p className="text-[12px] font-semibold mb-3" style={{ color: '#34D399' }}>
-              {Capacitor.isNativePlatform() ? '1 Woche kostenlos beim Monatsabo' : '20% Rabatt auf deinen ersten Kauf'}
-            </p>
+            {/* Das Angebot ist eine Marke, keine farbige Schrift. */}
+            <div className="mb-3">
+              <Tag tone="green" size="sm">
+                {Capacitor.isNativePlatform() ? '1 Woche kostenlos beim Monatsabo' : '20% Rabatt auf deinen ersten Kauf'}
+              </Tag>
+            </div>
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}
@@ -338,15 +342,15 @@ export function ProfilScreen() {
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
                   <div
-                    className="w-10 h-10 rounded-btn flex items-center justify-center text-[20px] shrink-0"
-                    style={{ background: '#FFD700' }}
+                    className="w-10 h-10 rounded-btn flex items-center justify-center shrink-0 text-white"
+                    style={{ background: 'var(--grad-mode)' }}
                   >
                     <Icon name="gift" size={22} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
-                      <span className="badge-pro-gold px-2.5 py-0.5">Nur kurze Zeit</span>
+                      <Tag size="sm">Nur kurze Zeit</Tag>
                     </div>
                     <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
                   </div>
@@ -364,7 +368,7 @@ export function ProfilScreen() {
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${Math.min(100, (referralCount / 5) * 100)}%`,
-                      background: 'linear-gradient(90deg, #C8860A, #F5C842, #FFD700)',
+                      background: 'var(--grad-mode)',
                     }}
                   />
                 </div>
@@ -373,7 +377,7 @@ export function ProfilScreen() {
                     <span
                       key={n}
                       className="text-[11px] font-medium"
-                      style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
+                      style={{ color: referralCount >= n ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))' }}
                     >
                       {n === 5 ? <Icon name="gift" size={13} /> : `${n}`}
                     </span>
@@ -400,8 +404,7 @@ export function ProfilScreen() {
                     <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
                     <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
                     {copyToast ? (
-                      <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
-                        style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>
+                      <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center bg-fill-green text-fill-green-on">
                         Kopiert
                       </div>
                     ) : (

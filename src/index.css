@@ -568,21 +568,22 @@ textarea::placeholder {
   background: linear-gradient(
     105deg,
     transparent 25%,
-    rgba(255,255,255,0.55) 50%,
+    rgba(255,255,255,0.32) 50%,
     transparent 75%
   );
   background-size: 200% 100%;
   animation: gold-shimmer 10s infinite ease-in-out;
 }
 
-/* ── Referral copy button — gold shimmer ────────────────────── */
+/* ── Empfehlungs-Knopf ───────────────────────────────────────
+   Gold gehoert dem Pro-Abzeichen. Das Einladen ist kein Kauf, sondern ein
+   Gratis-Mechanismus — also traegt der Knopf die Modusfarbe. Der Schimmer
+   bleibt, weil er die Aufmerksamkeit lenkt, ohne eine zweite Farbe zu setzen. */
 .btn-copy-shimmer {
   position: relative;
   overflow: hidden;
-  color: #3B1F00;
-  background: linear-gradient(135deg, #C8860A 0%, #F5C842 35%, #FFD700 50%, #D4AF37 65%, #C07700 100%);
-  box-shadow: 0 1px 6px rgba(200,134,10,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
-  text-shadow: 0 1px 1px rgba(255,255,255,0.2);
+  color: #FFFFFF;
+  background: var(--grad-mode);
 }
 
 .btn-copy-shimmer::after {
@@ -592,7 +593,7 @@ textarea::placeholder {
   background: linear-gradient(
     105deg,
     transparent 25%,
-    rgba(255,255,255,0.55) 50%,
+    rgba(255,255,255,0.32) 50%,
     transparent 75%
   );
   background-size: 200% 100%;
