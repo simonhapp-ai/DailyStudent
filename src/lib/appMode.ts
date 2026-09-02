@@ -95,3 +95,29 @@ export function isSchoolTimeNow(slots: StundenplanSlot[] | undefined, now = new 
   if (starts.length === 0 || ends.length === 0) return false
   return minutes >= Math.min(...starts) && minutes <= Math.max(...ends)
 }
+
+
+// ── Blende beim Moduswechsel ──────────────────────────────────────────────
+//
+// Der Wechsel zwischen Unterricht und Klausur tauscht Farbe, Navigation und
+// Inhalt gleichzeitig aus. Ohne Uebergang wirkt das wie ein Sprung in eine
+// andere App. Eine kurze Verdunklung deckt den Austausch ab und macht aus zwei
+// Bildern eine Bewegung.
+//
+// Nur beim ausdruecklichen Moduswechsel — nicht bei jedem Routenwechsel; dafuer
+// gibt es die dezente Ueberblendung. Deshalb ein eigenes Signal statt einer
+// Ableitung aus dem Pfad: Ein Wechsel per Zurueck-Taste oder Verweis soll nicht
+// den ganzen Bildschirm verdunkeln, sondern nur der bewusste Griff zur Leiste.
+type Zuhoerer = () => void
+const zuhoerer = new Set<Zuhoerer>()
+
+/** Loest die Blende aus. Wird von den Modus-Schaltern gerufen. */
+export function blendeModusWechsel() {
+  zuhoerer.forEach((f) => f())
+}
+
+/** Meldet sich fuer die Blende an; gibt die Abmeldung zurueck. */
+export function aufModusWechsel(f: Zuhoerer): () => void {
+  zuhoerer.add(f)
+  return () => { zuhoerer.delete(f) }
+}

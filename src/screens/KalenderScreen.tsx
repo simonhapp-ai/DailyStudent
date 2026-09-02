@@ -9,6 +9,7 @@ import type { StundenplanSlot, Stundenplan } from '../types'
 import { parseStundenplanFromImage } from '../lib/groq'
 import { StundenplanPill } from '../components/ui/StundenplanPill'
 import { PlanenBar } from '../components/ui/PlanenBar'
+import { ZurueckZeile } from '../components/ui/ZurueckZeile'
 
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -233,6 +234,7 @@ export function KalenderScreen() {
         {/* Gleicher Kopf wie in den fuenf anderen Planen-Rubriken: Der Titel nennt
             den Bereich, die Leiste sagt, wo man darin steht. Die Begruessung
             ruecht in die Unterzeile — sie bleibt, ohne die Reihe zu brechen. */}
+        <ZurueckZeile label="Klausurenmodus" ziel="/klausurmodus" />
         <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
         <p className="text-[13px] text-text-secondary mt-0.5">
           {getGreeting(profile?.name ?? 'Max')} · {today.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })}

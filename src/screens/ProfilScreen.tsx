@@ -13,6 +13,7 @@ import { purchasePlan } from '../lib/revenuecat'
 import { ProModal, WELCOME_COUPON_ID } from '../components/ui/ProModal'
 import { getActiveStreak } from '../lib/streak'
 import { bundeslandName } from '../data/bundeslaender'
+import { ZurueckZeile } from '../components/ui/ZurueckZeile'
 
 const AVATAR_BG_OPTIONS = [
   { id: 'purple', gradient: '#A78BFA' },
@@ -203,6 +204,7 @@ export function ProfilScreen() {
 
       {/* ── Header ─────────────────────────────────────────────── */}
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <ZurueckZeile />
         <h1 className="text-[28px] font-bold text-text-primary">Profil</h1>
       </div>
 

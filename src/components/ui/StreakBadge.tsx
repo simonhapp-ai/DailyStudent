@@ -21,7 +21,8 @@ export function StreakBadge({ inline = false }: { inline?: boolean }) {
       location.pathname.startsWith('/profil') ||
       location.pathname === '/landing' ||
       location.pathname.startsWith('/auth') ||
-      segments[0] === 'unterricht'
+      segments[0] === 'unterricht' ||
+      location.pathname === '/klausurmodus'
     )
   ) return null
 

@@ -1,7 +1,8 @@
+import { useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { recenterScreen } from '../../lib/nativeBridge'
-import { modeForPath, MODE_HOME, isPlanenPath, PLANEN_HOME, type AppMode } from '../../lib/appMode'
+import { modeForPath, MODE_HOME, isPlanenPath, PLANEN_HOME, blendeModusWechsel, type AppMode } from '../../lib/appMode'
 
 // Zwei Modi statt vier Tabs (Version C).
 //
@@ -19,9 +20,13 @@ const MODES: Array<{ mode: AppMode; label: string; fill: string; on: string }> =
   { mode: 'klausur', label: 'Klausur', fill: 'linear-gradient(135deg, #34D399, #059669)', on: '#FFFFFF' },
 ]
 
+/** Zeitfenster, in dem ein zweiter Tipp als Doppeltipp zaehlt. */
+const DOPPELTIPP_MS = 350
+
 export function BottomNav() {
   const location = useLocation()
   const navigate = useNavigate()
+  const letzterTipp = useRef(0)
   const reducedMotion = useReducedMotion()
   const current = modeForPath(location.pathname)
 
@@ -49,15 +54,23 @@ export function BottomNav() {
                 // Immer neu zentrieren — deckt sowohl das erneute Tippen auf den
                 // bereits aktiven Modus ab (der Pfad ändert sich nicht, der
                 // app-weite Route-Effect feuert also nicht) als auch den Wechsel.
-                recenterScreen()
-                if (!active) { navigate(MODE_HOME[mode]); return }
-                // Nochmal auf den bereits aktiven Klausurenmodus tippen fuehrt
-                // ins Planen — sonst muss man dafuer jedes Mal an den oberen
-                // Bildschirmrand greifen. Ist man schon dort, bleibt es beim
-                // Hochscrollen (natives Verhalten einer Tableiste).
-                if (mode === 'klausur' && !isPlanenPath(location.pathname)) {
+                if (!active) { blendeModusWechsel(); recenterScreen(); navigate(MODE_HOME[mode]); return }
+
+                // Ein SCHNELLER Doppeltipp auf den bereits aktiven
+                // Klausurenmodus fuehrt ins Planen — sonst muss man dafuer
+                // jedes Mal an den oberen Bildschirmrand greifen. Entscheidend
+                // ist das Zeitfenster: Ohne es waere jeder zweite Tipp
+                // irgendwann ein Sprung, auch Minuten spaeter, und das
+                // Hochscrollen des aktiven Tabs waere nicht mehr erreichbar.
+                const jetzt = Date.now()
+                const schnell = jetzt - letzterTipp.current < DOPPELTIPP_MS
+                letzterTipp.current = jetzt
+
+                if (schnell && mode === 'klausur' && !isPlanenPath(location.pathname)) {
                   navigate(PLANEN_HOME)
+                  return
                 }
+                recenterScreen()
               }}
               aria-current={active ? 'page' : undefined}
               className="flex-1 relative flex items-center justify-center rounded-full h-[46px] px-3 press-grow"

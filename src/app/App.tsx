@@ -88,6 +88,7 @@ import { CookieBanner } from '../components/ui/CookieBanner'
 import { analyticsAllowed, hasConsent, saveConsent } from '../lib/consent'
 import { Capacitor } from '@capacitor/core'
 import { IST_TELEFON } from '../lib/geraet'
+import { ModusBlende } from '../components/ui/ModusBlende'
 
 function ThemeApplier() {
   // Erscheinungsbild.
@@ -414,6 +415,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
         {!hideNav && <FixedBadges />}
         <XpToast />
         <AttachmentToast />
+        <ModusBlende />
       </div>
     )
   }
@@ -431,6 +433,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
       {!hideNav && <StreakBadge />}
       <XpToast />
       <AttachmentToast />
+      <ModusBlende />
     </div>
   )
 }

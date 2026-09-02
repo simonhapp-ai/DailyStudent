@@ -3,6 +3,7 @@ import { useUser } from '../context/UserContext'
 import { PlanenBar } from '../components/ui/PlanenBar'
 import { EmptyState } from '../components/ui/EmptyState'
 import { StundenplanWeekWidget, StundenplanSetupWidget } from './KalenderScreen'
+import { ZurueckZeile } from '../components/ui/ZurueckZeile'
 
 // Stundenplan als eigene Rubrik unter Planen (Version C).
 //
@@ -22,6 +23,7 @@ export function StundenplanScreen() {
   return (
     <div className="min-h-dvh bg-background pb-32">
       <div className="px-4 lg:px-6" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <ZurueckZeile label="Klausurenmodus" ziel="/klausurmodus" />
         <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
         <p className="text-[13px] text-text-secondary mt-0.5">
           {hasSlots ? 'Dein Stundenplan — die Grundlage für Tagesplan und Lernplan.' : 'Stundenplan — noch nicht eingetragen.'}

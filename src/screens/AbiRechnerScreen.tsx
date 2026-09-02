@@ -6,6 +6,7 @@ import { resolveSubjectInfo } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import type { AbiGradeEntry, AbiHalbjahr, AbiPruefung } from '../types'
 import { PlanenBar } from '../components/ui/PlanenBar'
+import { ZurueckZeile } from '../components/ui/ZurueckZeile'
 
 // ── Internal helpers ──────────────────────────────────────────────────────────
 
@@ -789,6 +790,7 @@ export function AbiRechnerScreen() {
       <div className="px-4 lg:px-6" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
+            <ZurueckZeile label="Klausurenmodus" ziel="/klausurmodus" />
             <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
             <p className="text-[13px] text-text-secondary mt-0.5">
               {isOberstufe

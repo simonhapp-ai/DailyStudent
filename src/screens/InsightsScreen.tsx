@@ -9,6 +9,7 @@ import { endnoteForEntry } from './AbiRechnerScreen'
 import { getActiveStreak } from '../lib/streak'
 import type { AbiHalbjahr } from '../types'
 import { npMarke } from '../lib/afb'
+import { ZurueckZeile } from '../components/ui/ZurueckZeile'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -532,6 +533,7 @@ export function InsightsScreen() {
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <ZurueckZeile label="Klausurenmodus" ziel="/klausurmodus" />
         <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
         {/* Die Planen-Leiste ersetzt den Zurück-Knopf: Sie IST die Navigation dieses
             Bereichs. Zurück in den Klausurenmodus führt die Modus-Leiste unten. */}

@@ -7,6 +7,7 @@ import { PlanenBar } from '../components/ui/PlanenBar'
 import { ListGroup } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Tag, type TagTone } from '../components/ui/Tag'
+import { ZurueckZeile } from '../components/ui/ZurueckZeile'
 
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -217,6 +218,7 @@ export function HausaufgabenheftScreen() {
     <div className="flex flex-col bg-background min-h-dvh pb-28">
 
       <div className="px-4 lg:px-6" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <ZurueckZeile label="Klausurenmodus" ziel="/klausurmodus" />
         <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
         <p className="text-[13px] text-text-secondary mt-0.5">
           {pending.length > 0

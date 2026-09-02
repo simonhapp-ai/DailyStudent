@@ -8,6 +8,7 @@ import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Tag, type TagTone } from '../components/ui/Tag'
 import { Icon } from '../components/ui/Icon'
+import { ZurueckZeile } from '../components/ui/ZurueckZeile'
 
 // ── Klausurtermine (Planen, Rubrik 4) ─────────────────────────────────────
 //
@@ -161,6 +162,7 @@ export function KlausurplanScreen() {
     <div className="flex flex-col min-h-dvh bg-background pb-28">
 
       <div className="px-4 lg:px-6" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <ZurueckZeile label="Klausurenmodus" ziel="/klausurmodus" />
         <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
         <p className="text-[13px] text-text-secondary mt-0.5">
           {upcoming.length > 0
