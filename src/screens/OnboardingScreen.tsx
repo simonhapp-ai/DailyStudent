@@ -165,8 +165,16 @@ export function OnboardingScreen() {
     )
   }
 
+  // svh statt dvh: dvh ist die DYNAMISCHE Fensterhoehe und aendert sich,
+  // waehrend die Leiste des Browsers beim Scrollen ein- und ausfaehrt. Sitzt ein
+  // so bemessener Kasten in einer Seite, die selbst scrollt, entsteht eine
+  // Schaukel: Scrollen laesst die Leiste verschwinden, dadurch waechst dvh,
+  // dadurch aendert sich die Hoehe, dadurch faehrt die Leiste wieder heraus. Der
+  // Screen ruettelt dann von selbst auf und ab, hoert beim Antippen auf und
+  // faengt oben wieder an. svh ist der feste Wert (Leiste sichtbar) und
+  // schaukelt nicht.
   return (
-    <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto">
+    <div className="flex flex-col min-h-[100svh] bg-background max-w-lg mx-auto">
       {/* Progress bar */}
       {step > 1 && (
         <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
@@ -311,7 +319,7 @@ export function OnboardingScreen() {
 
 function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
-    <div className="flex flex-col justify-between min-h-[calc(100dvh-80px)]">
+    <div className="flex flex-col justify-between min-h-[calc(100svh-80px)]">
       <div className="flex-1 flex flex-col justify-center">
         {/* Volle Modusfarbe mit weissem Zeichen — dasselbe Muster wie ueberall
             sonst in der App, statt eines blassen Zeichens auf blasser Flaeche. */}
@@ -1291,7 +1299,7 @@ function StepStundenplan({
   // ── CHOOSE MODE ─────────────────────────────────────────────
   if (mode === 'choose') {
     return (
-      <div className="flex flex-col min-h-[calc(100dvh-80px)]">
+      <div className="flex flex-col min-h-[calc(100svh-80px)]">
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-text-primary mb-1">Dein Stundenplan</h2>
           <p className="text-text-muted text-sm mb-8">
@@ -1341,7 +1349,7 @@ function StepStundenplan({
   // ── SCAN MODE ───────────────────────────────────────────────
   if (mode === 'scan') {
     return (
-      <div className="flex flex-col min-h-[calc(100dvh-80px)]">
+      <div className="flex flex-col min-h-[calc(100svh-80px)]">
         <div className="flex-1">
           <button
             onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
@@ -1485,7 +1493,7 @@ function StepStundenplan({
 
   // ── MANUAL MODE ─────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-[calc(100dvh-80px)]">
+    <div className="flex flex-col min-h-[calc(100svh-80px)]">
       <div className="flex-1">
         <button
           onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }}
