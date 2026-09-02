@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
 import { recenterScreen } from '../../lib/nativeBridge'
 import { modeForPath, MODE_HOME, PLANEN_HOME, type AppMode } from '../../lib/appMode'
 
@@ -27,7 +26,6 @@ export function BottomNav() {
   const location = useLocation()
   const navigate = useNavigate()
   const letzterTipp = useRef(0)
-  const reducedMotion = useReducedMotion()
   const current = modeForPath(location.pathname)
 
   return (
@@ -84,14 +82,18 @@ export function BottomNav() {
               aria-current={active ? 'page' : undefined}
               className="flex-1 relative flex items-center justify-center rounded-full h-[46px] px-3 press-grow"
             >
-              {active && (
-                <motion.div
-                  layoutId={reducedMotion ? undefined : 'nav-mode'}
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: fill }}
-                  transition={{ type: 'spring', duration: 0.32, bounce: 0.18 }}
-                />
-              )}
+              {/* Die Fuellung lag frueher auf einem einzigen Element, das per
+                  layoutId zwischen den beiden Haelften wanderte. Bei jedem
+                  Routenwechsel misst framer-motion dessen Lage neu — stimmte
+                  die gespeicherte Lage nicht mehr, flog die Pille sichtbar an
+                  ihren Platz, auch wenn sich der Modus gar nicht geaendert
+                  hatte. Jetzt hat jede Haelfte ihre eigene Fuellung und blendet
+                  auf; da wandert nichts, also kann auch nichts fehlfliegen. */}
+              <span
+                aria-hidden
+                className="absolute inset-0 rounded-full transition-opacity duration-200 ease-out motion-reduce:transition-none"
+                style={{ background: fill, opacity: active ? 1 : 0 }}
+              />
               <span
                 className="relative z-10 whitespace-nowrap text-[16px]"
                 style={{

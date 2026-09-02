@@ -1333,11 +1333,15 @@ function StepStundenplan({
               </svg>
             </button>
           </div>
-        </div>
-        <div className="pt-6">
+
+          {/* Der Ueberspringen-Weg stand ganz unten am Rand des Kastens und war
+              nur durch Scrollen erreichbar — ohne irgendein Zeichen, dass dort
+              noch etwas kommt. Ein Schritt, der ausdruecklich optional ist,
+              darf seinen Ausweg nicht verstecken. Jetzt direkt unter den zwei
+              Karten. */}
           <button
             onClick={onNext}
-            className="w-full py-3 text-sm text-text-muted hover:text-text-secondary transition-colors"
+            className="w-full mt-5 h-12 rounded-pill text-[15px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press"
           >
             Jetzt überspringen
           </button>
