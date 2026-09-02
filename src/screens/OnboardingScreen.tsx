@@ -8,7 +8,7 @@ import { useUser } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
 import { callHandleReferral } from '../lib/referral'
 import type { StundenplanSlot } from '../types'
-import { SUBJECT_INFO, SUBJECT_GROUPS, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
+import { SUBJECT_INFO, SUBJECT_GROUPS, resolveSubjectInfo, getTopicPlaceholder, subjectInfo } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 import { parseStundenplanFromImage } from '../lib/groq'
 import { Tag } from '../components/ui/Tag'
@@ -1072,7 +1072,7 @@ function StepFaecher({
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {group.ids.map((id) => {
-                  const subject = SUBJECT_INFO[id]
+                  const subject = subjectInfo(id)
                   const active = selected.includes(id)
                   const isLK = lkFaecher.includes(id)
                   return (
@@ -1256,7 +1256,11 @@ function StepStundenplan({
   const [fromAI, setFromAI] = useState(false)
   const [mismatchData, setMismatchData] = useState<{ slots: StundenplanSlot[]; additionalSubjectIds: string[] } | null>(null)
 
-  const profileSubjects = faecher.map((id) => ({ id, ...resolveSubjectInfo(id, customFaecher) }))
+  // Eigene Faecher gehoeren dazu. Vorher stand hier nur `faecher` — die festen
+  // Faecher —, und selbst angelegte tauchten nicht auf. Wer als Studierender
+  // ausschliesslich eigene Faecher hat, sah eine leere Liste.
+  const alleIds = [...faecher, ...customFaecher.map((cf) => cf.id)]
+  const profileSubjects = alleIds.map((id) => ({ id, ...resolveSubjectInfo(id, customFaecher) }))
 
   const daySlots = slots
     .filter((s) => s.day === activeDay)
@@ -1440,7 +1444,7 @@ function StepStundenplan({
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {mismatchData.additionalSubjectIds.map((id) => {
-                    const subj = SUBJECT_INFO[id]
+                    const subj = subjectInfo(id)
                     return (
                       <div
                         key={id}
@@ -1564,7 +1568,7 @@ function StepStundenplan({
         {/* Slot list */}
         <div className="space-y-2 mb-3">
           {daySlots.map((slot) => {
-            const subj = SUBJECT_INFO[slot.subjectId]
+            const subj = subjectInfo(slot.subjectId)
             const name = slot.isFreistunde ? 'Freistunde' : (subj?.name ?? slot.subjectId)
             const iconBg = slot.isFreistunde ? 'rgba(148,163,184,0.18)' : `${subj?.color ?? '#7C3AED'}22`
             return (
@@ -1636,7 +1640,12 @@ function StepStundenplan({
 
             {/* Subject picker */}
             <p className="section-label">Fach</p>
-            <div className="grid grid-cols-3 gap-1.5">
+            {/* Vorher drei feste Spalten: Ein Fach wie „Betriebswirtschafts-
+                lehre" wurde darin zu „Betrie…". Eigene Faecher tragen oft lange
+                Namen, und der Nutzer soll genau den lesen, den er getippt hat.
+                Jetzt fliessen die Chips und nehmen sich die Breite, die sie
+                brauchen. */}
+            <div className="flex flex-wrap gap-1.5">
               {profileSubjects.map((s) => (
                 <button
                   key={s.id}
@@ -1648,7 +1657,7 @@ function StepStundenplan({
                   }`}
                 >
                   <SubjectIcon subjectId={s.id} size="sm" className="!w-5 !h-5" />
-                  <span className={`text-[11px] font-medium leading-tight truncate ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>
+                  <span className={`text-[12px] font-medium leading-tight ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {s.name}
                   </span>
                 </button>
@@ -1662,7 +1671,7 @@ function StepStundenplan({
                 }`}
               >
                 <span className="shrink-0 text-text-secondary"><Icon name="coffee" size={15} /></span>
-                <span className={`text-[11px] font-medium leading-tight truncate ${newSlot.isFreistunde ? 'text-text-primary' : 'text-text-secondary'}`}>
+                <span className={`text-[12px] font-medium leading-tight ${newSlot.isFreistunde ? 'text-text-primary' : 'text-text-secondary'}`}>
                   Freistunde
                 </span>
               </button>
@@ -1734,7 +1743,9 @@ function StepKlausur({
   date: string; setDate: (v: string) => void
   topic: string; setTopic: (v: string) => void
 }) {
-  const available = faecher.map((id) => ({ id, ...resolveSubjectInfo(id, customFaecher) }))
+  // Dieselbe Stelle wie im Stundenplan-Schritt: eigene Faecher fehlten.
+  const available = [...faecher, ...customFaecher.map((cf) => cf.id)]
+    .map((id) => ({ id, ...resolveSubjectInfo(id, customFaecher) }))
   const subjectTopics = subject
     ? topics.filter((t) => t.subjectId === subject).map((t) => t.name)
     : []

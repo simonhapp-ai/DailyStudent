@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser, type EntryType, type PersonalEntry } from '../context/UserContext'
-import { SUBJECT_INFO, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
+import { resolveSubjectInfo, getTopicPlaceholder, subjectInfo } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { topics } from '../data/mockData'
 import type { StundenplanSlot, Stundenplan } from '../types'
@@ -871,7 +871,7 @@ function TwoDayView({ dayCount = 2, viewDate, todayStr, stundenplan, personalEnt
 
                 {/* Klausur banner */}
                 {dayKlausur.map((k) => {
-                  const subj = SUBJECT_INFO[k.subjectId]
+                  const subj = subjectInfo(k.subjectId)
                   return (
                     <div key={k.subjectId} className="absolute left-0.5 right-0.5 rounded-[5px] flex items-center px-1.5 overflow-hidden" style={{ top: 3, height: 15, backgroundColor: '#FF3B3018', borderLeft: '2px solid #FF3B30' }} onClick={(e) => e.stopPropagation()}>
                       <span className="text-[7px] font-bold truncate" style={{ color: '#FF3B30' }}>{subj?.name?.slice(0, 6) ?? 'Klausur'}</span>
@@ -1163,7 +1163,7 @@ function KlausurFormFields({
         <p className="section-label mb-2">Fach</p>
         <div className="grid grid-cols-3 gap-1.5">
           {faecher.map((id) => {
-            const subj = SUBJECT_INFO[id]
+            const subj = subjectInfo(id)
             if (!subj) return null
             const active = subjectId === id
             return (
@@ -1384,7 +1384,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               {daySlots.length > 0 && (
                 <div className="space-y-1.5">
                   {daySlots.map((slot) => {
-                    const subj = SUBJECT_INFO[slot.subjectId]
+                    const subj = subjectInfo(slot.subjectId)
                     const name = slot.isFreistunde ? 'Freistunde' : (subj?.name ?? slot.subjectId)
                     return (
                       <div key={slot.id} className="bg-background border border-border/60 rounded-btn p-3 flex items-center gap-2.5 animate-fade-in">

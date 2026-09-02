@@ -29,6 +29,7 @@ import { localizeNoteAttachments, deleteAttachmentsForNotes, deleteAttachment, m
 import { initRevenueCat, logOutRevenueCat } from '../lib/revenuecat'
 import { collectFolderAndDescendants } from '../lib/folders'
 import { onboardingErzwungen, onboardingFreigeben } from '../lib/onboarding'
+import { registerCustomFaecher } from '../data/subjectInfo'
 
 export interface StandaloneHomeworkItem {
   id: string
@@ -637,6 +638,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [generatedFlashCards, setGeneratedFlashCards] = useState<FlashCard[]>(stored.generatedFlashCards ?? [])
   const [completedHomeworkIds, setCompletedHomeworkIds] = useState<string[]>(stored.completedHomeworkIds ?? [])
   const [standaloneHomework, setStandaloneHomework] = useState<StandaloneHomeworkItem[]>(stored.standaloneHomework ?? [])
+  // Eigene Faecher app-weit bekannt machen. Ohne das schlug jede Stelle, die
+  // ein Fach nachschlaegt, nur in der festen Tabelle nach — und zeigte bei
+  // eigenen Faechern deren Kennung statt des Namens.
+  useEffect(() => {
+    registerCustomFaecher(profile?.customFaecher)
+  }, [profile?.customFaecher])
+
   const [appStats, setAppStats] = useState<AppStats>(mitVorgaben(stored.appStats))
   const [erzwungen, setErzwungen] = useState(onboardingErzwungen)
   const [kcCache, setKcCache] = useState<Record<string, KcSubjectData>>({})

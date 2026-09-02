@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { subjectInfo } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { getActiveStreak } from '../lib/streak'
 import { StreakInfoSheet } from '../components/ui/StreakInfoSheet'
@@ -437,7 +437,7 @@ export function DashboardScreen() {
 
   const nextExam = useMemo(() => {
     const upcoming = (profile?.klausurtermine ?? [])
-      .map(k => ({ ...k, days: daysUntil(k.date), info: SUBJECT_INFO[k.subjectId] }))
+      .map(k => ({ ...k, days: daysUntil(k.date), info: subjectInfo(k.subjectId) }))
       .filter(k => k.days >= 0 && k.info)
       .sort((a, b) => a.days - b.days)
     return upcoming[0] ?? null
@@ -594,7 +594,7 @@ export function DashboardScreen() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-x-3 gap-y-6 pt-1 pb-2 px-1">
               {recentNotes.map((note) => {
-                const info = note.subjectId ? SUBJECT_INFO[note.subjectId] : null
+                const info = note.subjectId ? subjectInfo(note.subjectId) : null
                 const notePath = note.subjectId ? `/unterricht/${note.subjectId}/${note.id}` : `/unterricht/ohne-fach/${note.id}`
                 return (
                   <button key={note.id} onClick={() => navigate(notePath)} className="relative block text-left press-sm" style={{ minHeight: 128 }}>

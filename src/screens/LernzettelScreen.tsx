@@ -8,7 +8,7 @@ import { Header } from '../components/ui/Header'
 import { ProModal } from '../components/ui/ProModal'
 import { RichText } from '../components/ui/RichText'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { subjectInfo } from '../data/subjectInfo'
 import { Dialog } from '../components/ui/Dialog'
 import type { Lernzettel } from '../types'
 import { Icon } from '../components/ui/Icon'
@@ -218,7 +218,7 @@ export function LernzettelScreen() {
 
   // ── DETAIL VIEW ────────────────────────────────────────────
   if (view === 'detail' && activeLz) {
-    const info = SUBJECT_INFO[activeLz.subjectId]
+    const info = subjectInfo(activeLz.subjectId)
     return (
       <div className="flex flex-col min-h-dvh bg-background pb-28">
         <Header
@@ -420,7 +420,7 @@ export function LernzettelScreen() {
               <LernzettelRow
                 key={lz.id}
                 lz={lz}
-                info={SUBJECT_INFO[lz.subjectId]}
+                info={subjectInfo(lz.subjectId)}
                 isOpen={openRowId === lz.id}
                 onOpenChange={(open) => setRowOpen(lz.id, open)}
                 onSelect={() => handleOpenDetail(lz)}

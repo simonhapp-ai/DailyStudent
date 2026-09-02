@@ -1,6 +1,6 @@
 import type { CSSProperties, MouseEvent } from 'react'
 import type { StundenplanSlot } from '../../types'
-import { SUBJECT_INFO } from '../../data/subjectInfo'
+import { subjectInfo } from '../../data/subjectInfo'
 import { SubjectIcon } from './SubjectIcon'
 import { Icon } from './Icon'
 
@@ -30,7 +30,7 @@ export function StundenplanPill({ slot, variant, isCurrent, isPast, isNext, styl
     return <FreistundeBlock variant={variant} style={style} onClick={onClick} />
   }
 
-  const subj = SUBJECT_INFO[slot.subjectId]
+  const subj = subjectInfo(slot.subjectId)
   const color = subj?.color ?? '#7C3AED'
   const name = subj?.name ?? slot.subjectId
   const accent = isCurrent ? '#30D158' : color

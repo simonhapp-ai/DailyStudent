@@ -7,7 +7,7 @@ import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Icon } from '../components/ui/Icon'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { subjectInfo } from '../data/subjectInfo'
 import type { Lernplan, LernplanType } from '../types'
 import { zurueckZiel } from '../lib/appMode'
 
@@ -78,7 +78,7 @@ export function LernplanListScreen() {
                 // Zwei Einheiten im selben Fach an einem Tag sind normal —
                 // ohne Entdoppeln stand dann „Mathematik · Mathematik".
                 ? `Als Nächstes: ${[...new Set(aktivTag.sessions
-                    .map((s) => SUBJECT_INFO[s.subjectId]?.name ?? s.subjectId))]
+                    .map((s) => subjectInfo(s.subjectId)?.name ?? s.subjectId))]
                     .join(' · ')}`
                 : 'Als Nächstes: freier Tag'
             }

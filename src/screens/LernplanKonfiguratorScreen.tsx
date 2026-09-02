@@ -7,7 +7,7 @@ import { extractTopicsFromImage } from '../lib/groq'
 import { buildKcPromptContext } from '../data/kcLoader'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
-import { SUBJECT_INFO, getTopicPlaceholder, getTopicsPlaceholder } from '../data/subjectInfo'
+import { getTopicPlaceholder, getTopicsPlaceholder, subjectInfo } from '../data/subjectInfo'
 import { ProModal } from '../components/ui/ProModal'
 import type { LernplanType, LernplanBlockedTime, Lernplan, LernplanGeneratorInput, LernMethode } from '../types'
 import { zurueckZiel } from '../lib/appMode'
@@ -169,14 +169,14 @@ export function LernplanKonfiguratorScreen() {
       for (const subjectId of subjectIds) {
         const kc = getKc(subjectId)
         if (kc) {
-          kcParts.push(`[${SUBJECT_INFO[subjectId]?.name ?? subjectId}]\n${buildKcPromptContext(kc, 'oberstufe')}`)
+          kcParts.push(`[${subjectInfo(subjectId)?.name ?? subjectId}]\n${buildKcPromptContext(kc, 'oberstufe')}`)
         }
         const subjectSmartNotes = userNotes
           .filter((n) => n.subjectId === subjectId)
           .map((n) => generatedNotes[n.id])
           .filter(Boolean)
         if (subjectSmartNotes.length > 0) {
-          const subjectName = SUBJECT_INFO[subjectId]?.name ?? subjectId
+          const subjectName = subjectInfo(subjectId)?.name ?? subjectId
           const lines = subjectSmartNotes.map((gn) => {
             const parts: string[] = []
             if (gn.summary) parts.push(gn.summary)
@@ -194,14 +194,14 @@ export function LernplanKonfiguratorScreen() {
         planDurationDays,
         klausurtermine: selectedTermine.map((k) => ({
           subjectId: k.subjectId,
-          subjectName: SUBJECT_INFO[k.subjectId]?.name ?? k.subjectId,
+          subjectName: subjectInfo(k.subjectId)?.name ?? k.subjectId,
           date: k.date,
           topic: examChecklists[`${k.subjectId}|${k.date}`]?.[0] ?? k.topic,
           isLK: lkFaecher.includes(k.subjectId),
         })),
         examChecklists: selectedTermine.map((k) => ({
           subjectId: k.subjectId,
-          subjectName: SUBJECT_INFO[k.subjectId]?.name ?? k.subjectId,
+          subjectName: subjectInfo(k.subjectId)?.name ?? k.subjectId,
           date: k.date,
           topics: examChecklists[`${k.subjectId}|${k.date}`] ?? [],
           isLK: lkFaecher.includes(k.subjectId),
@@ -591,7 +591,7 @@ function StepKlausurtermine({
         {sorted.map((k) => {
           const key = `${k.subjectId}|${k.date}`
           const active = selectedKeys.includes(key)
-          const subj = SUBJECT_INFO[k.subjectId]
+          const subj = subjectInfo(k.subjectId)
           const days = daysUntil(k.date)
           const topics = examChecklists[key] ?? []
           const isScanning = scanning === key
@@ -1010,7 +1010,7 @@ function StepLernkapazitaet({
           <p className="text-[12px] text-text-muted mb-3">LK-Fächer erhalten im Plan ~40% mehr Lernzeit.</p>
           <div className="flex flex-wrap gap-2">
             {selectedSubjectIds.map((id) => {
-              const subj = SUBJECT_INFO[id]
+              const subj = subjectInfo(id)
               const isLK = lkFaecher.includes(id)
               return (
                 <button
@@ -1120,7 +1120,7 @@ function StepSchwerpunkte({
 
       <div className="space-y-4">
         {subjectIds.map((id) => {
-          const subj = SUBJECT_INFO[id]
+          const subj = subjectInfo(id)
           return (
             <div key={id} className="bg-surface border border-border/60 rounded-card p-4">
               <div className="flex items-center gap-2 mb-3">
@@ -1193,7 +1193,7 @@ function StepZusammenfassung({
           icon="book"
           label="Klausuren"
           value={selectedTermine.map((k) => {
-            const name = SUBJECT_INFO[k.subjectId]?.name ?? k.subjectId
+            const name = subjectInfo(k.subjectId)?.name ?? k.subjectId
             const count = (examChecklists[`${k.subjectId}|${k.date}`] ?? []).length
             return `${name} (${count} Thema${count !== 1 ? 'en' : ''})`
           }).join(', ')}
@@ -1207,7 +1207,7 @@ function StepZusammenfassung({
           <SummaryRow
             icon="star"
             label="Leistungskurse"
-            value={lkFaecher.map((id) => SUBJECT_INFO[id]?.name ?? id).join(', ')}
+            value={lkFaecher.map((id) => subjectInfo(id)?.name ?? id).join(', ')}
           />
         )}
         {blockedTimes.length > 0 && (

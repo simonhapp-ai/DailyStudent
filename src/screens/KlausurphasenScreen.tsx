@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { subjectInfo } from '../data/subjectInfo'
 import { Icon } from '../components/ui/Icon'
 import { Stage } from '../components/ui/Stage'
 import { Metric, MetricRow } from '../components/ui/Metric'
@@ -57,7 +57,7 @@ export function KlausurphasenScreen() {
   // Next upcoming exam
   const nextExam = useMemo(() => {
     const upcoming = (profile?.klausurtermine ?? [])
-      .map((k) => ({ ...k, days: daysUntil(k.date), info: SUBJECT_INFO[k.subjectId] }))
+      .map((k) => ({ ...k, days: daysUntil(k.date), info: subjectInfo(k.subjectId) }))
       .filter((k) => k.days > 0 && k.info)
       .sort((a, b) => a.days - b.days)
     return upcoming[0] ?? null

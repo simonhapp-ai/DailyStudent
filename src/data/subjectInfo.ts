@@ -97,14 +97,55 @@ export const SUBJECT_INFO: Record<string, { name: string; icon: string; color: s
 
 // Resolves subject display info for both standard and user-created custom subjects.
 // Falls back to icon 📚 and accent color for custom IDs not in SUBJECT_INFO.
+// ── Eigene Faecher ────────────────────────────────────────────────────────
+//
+// Selbst angelegte Faecher stehen nicht in SUBJECT_INFO — sie gehoeren dem
+// Nutzer und entstehen erst zur Laufzeit. Wer sie nachschlagen wollte, musste
+// die Liste bis zur Fundstelle durchreichen; wo das nicht geschah, erschien
+// statt des Namens die Kennung des Fachs, also eine Zeichenfolge wie
+// „custom_1735…". Fuer Studierende, die ausschliesslich eigene Faecher haben,
+// betraf das fast jede Anzeige.
+//
+// Deshalb ein Verzeichnis an EINER Stelle: UserContext meldet die Liste beim
+// Laden des Profils an, jede Nachschlagestelle fragt subjectInfo() und bekommt
+// eigene Faecher genauso beantwortet wie feste. Gleichbehandlung, ohne dass
+// jede Stelle davon wissen muss.
+let eigeneFaecher: Array<{ id: string; name: string; icon?: string }> = []
+
+/** Meldet die eigenen Faecher des Nutzers an. Wird vom UserContext gerufen. */
+export function registerCustomFaecher(liste: Array<{ id: string; name: string; icon?: string }> | undefined) {
+  eigeneFaecher = liste ?? []
+}
+
+/**
+ * Ein Fach nachschlagen — festes oder eigenes.
+ *
+ * Gibt immer etwas zurueck, so wie der fruehere Direktzugriff auf SUBJECT_INFO
+ * es den Aufrufern versprochen hat. Dieses Versprechen war unwahr: Ein
+ * Record-Zugriff liefert auch `undefined`, und genau das ist bei eigenen
+ * Faechern passiert — mehrere Stellen haetten dabei abgestuerzt. Jetzt bleibt
+ * im aeussersten Fall die Kennung als Name stehen, statt dass die Anzeige
+ * auseinanderfaellt.
+ */
+export function subjectInfo(id: string | undefined | null): { name: string; icon: string; color: string } {
+  if (!id) return { name: '', icon: '📚', color: G.cst }
+  if (SUBJECT_INFO[id]) return SUBJECT_INFO[id]
+  const eigen = eigeneFaecher.find((cf) => cf.id === id)
+  return eigen
+    ? { name: eigen.name, icon: eigen.icon ?? '📚', color: G.cst }
+    : { name: id, icon: '📚', color: G.cst }
+}
+
 export function resolveSubjectInfo(
   id: string,
   customFaecher?: Array<{ id: string; name: string; icon?: string }>,
 ): { name: string; icon: string; color: string } {
   if (SUBJECT_INFO[id]) return SUBJECT_INFO[id]
+  // Erst die mitgegebene Liste (das Onboarding hat noch kein Profil), dann das
+  // Verzeichnis.
   const custom = customFaecher?.find((cf) => cf.id === id)
   if (custom) return { name: custom.name, icon: custom.icon ?? '📚', color: G.cst }
-  return { name: id, icon: '📚', color: G.cst }
+  return subjectInfo(id)
 }
 
 export const SUBJECT_TOPIC_EXAMPLES: Record<string, [string, string]> = {

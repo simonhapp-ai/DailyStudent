@@ -3,7 +3,7 @@ import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO, SUBJECT_GROUPS } from '../data/subjectInfo'
+import { SUBJECT_GROUPS, subjectInfo } from '../data/subjectInfo'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { zurueckZiel } from '../lib/appMode'
 
@@ -102,7 +102,7 @@ export function FaecherEditScreen() {
   }
 
   const confirmSubject = confirmDelete
-    ? (SUBJECT_INFO[confirmDelete] ?? { name: confirmDelete, color: '#7C3AED' })
+    ? (subjectInfo(confirmDelete) ?? { name: confirmDelete, color: '#7C3AED' })
     : null
 
   const hasCustom = localCustomFaecher.length > 0
@@ -274,7 +274,7 @@ export function FaecherEditScreen() {
               </p>
               <div className="grid grid-cols-2 gap-2">
                 {group.ids.map((id) => {
-                  const subject = SUBJECT_INFO[id]
+                  const subject = subjectInfo(id)
                   const active = selectedFaecher.includes(id)
                   const isExisting = profile.faecher.includes(id)
                   const markedForDelete = isExisting && !active

@@ -9,7 +9,7 @@ import { useUser } from '../context/UserContext'
 import { explainKeyword, extractTextFromImage, generateFlashcards, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
 import { getAttachment, useResolvedAttachments, hasLocalOnlyAttachments, transferNoteAttachmentsToCloud } from '../lib/noteStorage'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { subjectInfo } from '../data/subjectInfo'
 import type { FlashCard, GeneratedSmartNote, UserNote } from '../types'
 import { EmptyState } from '../components/ui/EmptyState'
 import { zurueckZiel } from '../lib/appMode'
@@ -50,7 +50,7 @@ export function SmartNotesScreen() {
   const navigate = useNavigate()
   const { generatedNotes, userNotes, completedHomeworkIds, saveGeneratedNote, updateUserNote, deleteUserNote, saveFlashCards, getKc, authUser } = useUser()
 
-  const subject = SUBJECT_INFO[id ?? '']
+  const subject = subjectInfo(id ?? '')
   const userNote = userNotes.find((n) => n.id === lessonId)
 
   const lessonTitle = userNote?.title ?? 'Notiz'

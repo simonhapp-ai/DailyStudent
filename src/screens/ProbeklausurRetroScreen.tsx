@@ -5,7 +5,7 @@ import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { BottomSheet } from '../components/ui/BottomSheet'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { subjectInfo } from '../data/subjectInfo'
 import type { SavedProbeklausur } from '../types'
 import { zurueckZiel } from '../lib/appMode'
 
@@ -125,7 +125,7 @@ export function ProbeklausurRetroScreen() {
 
   // ── DETAIL VIEW ──────────────────────────────────────────────────────
   if (view === 'detail' && active) {
-    const info = SUBJECT_INFO[active.subjectId]
+    const info = subjectInfo(active.subjectId)
     const avgAFB = (afb: 'I' | 'II' | 'III') => {
       const tasks = active.taskResults.filter((t) => t.afb === afb)
       if (tasks.length === 0) return null
@@ -278,7 +278,7 @@ export function ProbeklausurRetroScreen() {
                 key={pk.id}
                 leading={<SubjectIcon subjectId={pk.subjectId} size="md" />}
                 title={pk.topic}
-                subtitle={`${SUBJECT_INFO[pk.subjectId]?.name ?? pk.subjectName} · ${MODE_LABELS[pk.mode]} · ${formatDate(pk.completedAt)}`}
+                subtitle={`${subjectInfo(pk.subjectId)?.name ?? pk.subjectName} · ${MODE_LABELS[pk.mode]} · ${formatDate(pk.completedAt)}`}
                 value={
                   <span
                     className="px-2.5 py-1 rounded-pill text-[12px] font-bold tabular-nums"

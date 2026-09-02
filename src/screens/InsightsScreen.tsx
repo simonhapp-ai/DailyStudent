@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO, getSubjectOnColor } from '../data/subjectInfo'
+import { getSubjectOnColor, subjectInfo } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { PlanenBar } from '../components/ui/PlanenBar'
 import { endnoteForEntry } from './AbiRechnerScreen'
@@ -92,7 +92,7 @@ interface ChartLine {
 
 function buildChartLines(halbjahre: AbiHalbjahr[], faecher: string[]): ChartLine[] {
   return faecher.flatMap((subjectId) => {
-    const info = SUBJECT_INFO[subjectId]
+    const info = subjectInfo(subjectId)
     if (!info) return []
     const data = QUARTERS.map((q) => {
       const hj = halbjahre.find((h) => h.label === q)
@@ -439,7 +439,7 @@ export function InsightsScreen() {
       faecher
         .map((subjectId) => ({
           subjectId,
-          info: SUBJECT_INFO[subjectId],
+          info: subjectInfo(subjectId),
           ...getCurrentNP(subjectId, halbjahre),
         }))
         .filter((s) => s.info),
@@ -470,7 +470,7 @@ export function InsightsScreen() {
   const upcomingExams = useMemo(
     () =>
       (profile?.klausurtermine ?? [])
-        .map((k) => ({ ...k, days: daysUntil(k.date), info: SUBJECT_INFO[k.subjectId] }))
+        .map((k) => ({ ...k, days: daysUntil(k.date), info: subjectInfo(k.subjectId) }))
         .filter((k) => k.days > 0 && k.info)
         .sort((a, b) => a.days - b.days)
         .slice(0, 5),

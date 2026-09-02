@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
-import { SUBJECT_INFO } from '../../data/subjectInfo'
+import { subjectInfo } from '../../data/subjectInfo'
 import { endnoteForEntry } from '../../screens/AbiRechnerScreen'
 
 interface Suggestion {
@@ -83,7 +83,7 @@ function computeSuggestion(
     .filter((k) => k.days >= 0)
     .sort((a, b) => a.days - b.days)
   const nextExam = upcomingExams[0] ?? null
-  const nextExamInfo = nextExam ? SUBJECT_INFO[nextExam.subjectId] : null
+  const nextExamInfo = nextExam ? subjectInfo(nextExam.subjectId) : null
   const nextExamName = nextExamInfo?.name ?? nextExam?.subjectId ?? null
 
   // Subject material counts
@@ -97,7 +97,7 @@ function computeSuggestion(
   const halbjahre = profile.abiHalbjahre ?? []
   let weakest: { subjectId: string; name: string; np: number } | null = null
   for (const subjectId of faecher) {
-    const info = SUBJECT_INFO[subjectId]
+    const info = subjectInfo(subjectId)
     if (!info) continue
     for (const q of ['Q4', 'Q3', 'Q2', 'Q1', '2. Halbjahr', '1. Halbjahr']) {
       const hj = halbjahre.find((h) => h.label === q)
@@ -251,7 +251,7 @@ function computeSuggestion(
 
   // 14. Two or more weak subjects (< 8 NP)
   if (weakSubjects.length >= 2) {
-    const names = weakSubjects.slice(0, 2).map((sid) => SUBJECT_INFO[sid]?.name ?? sid)
+    const names = weakSubjects.slice(0, 2).map((sid) => subjectInfo(sid)?.name ?? sid)
     return { icon: <AlertIcon />, signal: '#FF9500', urgency: 'normal',
       title: `${names[0]} oder ${names[1]} stärken?`,
       subtitle: `Du hast ${weakSubjects.length} Fächer unter 8 Punkten — wo willst du anfangen?`,
@@ -301,7 +301,7 @@ function computeSuggestion(
 
   // 20. Trend down — last 2 exams declining
   if (trendDown && lastTwo.length === 2) {
-    const lastSubj = SUBJECT_INFO[lastTwo[1].subjectId]?.name ?? lastTwo[1].subjectId
+    const lastSubj = subjectInfo(lastTwo[1].subjectId)?.name ?? lastTwo[1].subjectId
     return { icon: <AlertIcon />, signal: '#FF9500', urgency: 'normal',
       title: `Grundlagen ${lastSubj} wiederholen`,
       subtitle: `Deine letzten 2 Probeklausuren zeigen einen Abwärtstrend — fokussiere AFB I.`,
@@ -311,7 +311,7 @@ function computeSuggestion(
   // 21. Last Probeklausur very low (< 6 NP)
   const lastPk = [...savedProbeklausuren].slice(-1)[0]
   if (lastPk && lastPk.totalNP < 6) {
-    const lastSubj = SUBJECT_INFO[lastPk.subjectId]?.name ?? lastPk.subjectId
+    const lastSubj = subjectInfo(lastPk.subjectId)?.name ?? lastPk.subjectId
     return { icon: <BookIcon />, signal: '#FF9500', urgency: 'normal',
       title: `Lücken in ${lastSubj}`,
       subtitle: `Letzte Probeklausur: ${lastPk.totalNP} NP — Lernzettel erstellen und Grundlagen wiederholen.`,
@@ -321,7 +321,7 @@ function computeSuggestion(
   // 22. Subject with > 10 Smart Notes — suggest Probeklausur
   const richSubject = faecher.find((sid) => notesFor(sid) > 10)
   if (richSubject) {
-    const subj = SUBJECT_INFO[richSubject]?.name ?? richSubject
+    const subj = subjectInfo(richSubject)?.name ?? richSubject
     return { icon: <ClipboardIcon />, signal: '#0891B2', urgency: 'low',
       title: `Probeklausur ${subj}`,
       subtitle: `Du hast ${notesFor(richSubject)} Smart Notes — teste dein Wissen mit einer Probeklausur.`,

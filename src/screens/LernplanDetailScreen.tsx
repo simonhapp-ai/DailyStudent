@@ -3,7 +3,7 @@ import { Stage } from '../components/ui/Stage'
 import { Metric, MetricRow } from '../components/ui/Metric'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useUser, type PersonalEntry } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { subjectInfo } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { ProModal } from '../components/ui/ProModal'
 import { Dialog } from '../components/ui/Dialog'
@@ -259,7 +259,7 @@ export function LernplanDetailScreen() {
               time: minToTime(start),
               endTime: minToTime(end),
               lernplanId: plan.id,
-              color: SUBJECT_INFO[session.subjectId]?.color ?? '#34C759',
+              color: subjectInfo(session.subjectId)?.color ?? '#34C759',
             })
             gapCursor = end + BUFFER
             return
@@ -285,11 +285,11 @@ export function LernplanDetailScreen() {
     let suffix: string
     if (plan.planType === 'einzel' && plan.examSchedule.length === 1) {
       const exam = plan.examSchedule[0]
-      const info = SUBJECT_INFO[exam.subjectId]
+      const info = subjectInfo(exam.subjectId)
       const abbrev = info?.name?.slice(0, 3) ?? exam.subjectId
       suffix = exam.topic ? `${abbrev} ${exam.topic}` : abbrev
     } else {
-      const abbrevs = [...new Set(plan.examSchedule.map((e) => SUBJECT_INFO[e.subjectId]?.name?.slice(0, 3) ?? e.subjectId))]
+      const abbrevs = [...new Set(plan.examSchedule.map((e) => subjectInfo(e.subjectId)?.name?.slice(0, 3) ?? e.subjectId))]
       suffix = abbrevs.join(', ')
     }
     setDocumentTitle(`Lernapp – ${planTypeLabel} – ${suffix}`)
