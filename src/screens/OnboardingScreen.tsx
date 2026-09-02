@@ -11,6 +11,7 @@ import type { StundenplanSlot } from '../types'
 import { SUBJECT_INFO, SUBJECT_GROUPS, resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 import { parseStundenplanFromImage } from '../lib/groq'
+import { Tag } from '../components/ui/Tag'
 
 const BUNDESLAENDER = [
   { id: 'by', name: 'Bayern' },
@@ -311,7 +312,12 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col justify-between min-h-[calc(100dvh-80px)]">
       <div className="flex-1 flex flex-col justify-center">
-        <div className="w-16 h-16 rounded-card bg-accent-soft flex items-center justify-center text-3xl mb-8">
+        {/* Volle Modusfarbe mit weissem Zeichen — dasselbe Muster wie ueberall
+            sonst in der App, statt eines blassen Zeichens auf blasser Flaeche. */}
+        <div
+          className="w-16 h-16 rounded-card flex items-center justify-center mb-8"
+          style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+        >
           <Icon name="cap" size={30} />
         </div>
         <h1 className="text-4xl font-bold text-text-primary leading-tight mb-4">
@@ -328,17 +334,25 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
             { icon: 'clipboard' as IconName, text: 'Probeklausuren genau wie im Unterricht (AFB I–III)' },
             { icon: 'target' as IconName, text: 'KI-Feedback wie vom Lehrer — mit Erwartungshorizont' },
           ].map((item, i) => (
-            <div key={i} className="flex items-start gap-3">
-              <span className="shrink-0 text-text-secondary"><Icon name={item.icon} size={19} /></span>
-              <p className="text-text-secondary text-sm leading-relaxed">{item.text}</p>
+            /* Die Zeichen standen nackt und grau neben dem Text und lasen sich
+               eher als Rauschen denn als Hinweis. Kachel wie im Rest der App. */
+            <div key={i} className="flex items-center gap-3">
+              <span
+                className="w-9 h-9 rounded-icon flex items-center justify-center shrink-0"
+                style={{ background: 'var(--color-accent-soft)', color: 'rgb(var(--color-accent))' }}
+              >
+                <Icon name={item.icon} size={18} />
+              </span>
+              <p className="text-text-primary text-[14px] leading-snug">{item.text}</p>
             </div>
           ))}
         </div>
 
-        <div className="rounded-card px-4 py-3.5 mb-8" style={{ background: 'rgba(255,159,10,0.08)', border: '1px solid rgba(255,159,10,0.2)' }}>
-          <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: '#FF9F0A' }}>
-            Beta-Hinweis
-          </p>
+        {/* War ein beiger Kasten mit oranger Schrift — eine Farbe, die sonst
+            nirgends im Erscheinungsbild vorkommt, und farbige Schrift dazu. Der
+            Hinweis traegt sein Signal jetzt in der Marke, der Text ist normal. */}
+        <div className="rounded-card px-4 py-3.5 mb-8 bg-surface border border-border/60">
+          <Tag tone="orange" size="sm" className="mb-2">Beta</Tag>
           <p className="text-text-secondary text-[13px] leading-relaxed">
             Die App funktioniert vor allem für Oberstufenschüler richtig gut. Für Studierende und die Mittelstufe ist sie nutzbar, aber noch nicht perfekt — sobald die Beta endet, wird sie für alle besser.
           </p>
@@ -580,17 +594,24 @@ function StepPersonal({
       <h2 className="text-2xl font-bold text-text-primary mb-1">Hallo! Wie heißt du?</h2>
       <p className="text-text-muted text-sm mb-6">Dein Name personalisiert die App für dich.</p>
 
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Dein Vorname"
-        autoFocus
-        className="w-full bg-surface border border-border rounded-card px-4 py-4 text-text-primary text-lg placeholder-text-muted mb-6 focus:outline-none focus:border-accent transition-colors"
-      />
+      {/* Solange nichts drinsteht, laeuft alle gut vier Sekunden ein Lichtstrahl
+          um das Feld. Beim Durchspielen ging es unter: Man tippt zuerst auf die
+          Knoepfe darunter und uebersieht, dass hier noch etwas fehlt. Der Ring
+          liegt auf einer Huelle statt auf dem Feld selbst — Eingabefelder
+          zeichnen kein ::after. Er hoert auf, sobald etwas im Feld steht. */}
+      <div className={`rounded-card mb-6 ${name.trim() ? '' : 'glanz-lauf glanz-lila glanz-warten'}`}>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Dein Vorname"
+          autoFocus
+          className="w-full bg-surface border border-border rounded-card px-4 py-4 text-text-primary text-lg placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+        />
+      </div>
 
       {/* Schüler / Student picker */}
-      <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Ich bin …</p>
+      <p className="section-label mb-3">Ich bin …</p>
       <div className="grid grid-cols-2 gap-2 mb-8">
         {([
           { id: 'schüler' as const, icon: 'book' as IconName, label: 'Schüler', desc: 'Klasse 5–13, Gymnasium etc.' },
@@ -605,7 +626,18 @@ function StepPersonal({
                 : 'bg-surface border-border hover:bg-surface-hover'
             }`}
           >
-            <p className="mb-1.5 flex justify-center text-text-primary"><Icon name={icon} size={24} /></p>
+            {/* Das Zeichen sass nackt und mittig ueber der Beschriftung und trug
+                immer die Schriftfarbe — auf der ausgewaehlten, lila gefuellten
+                Karte also Schwarz auf Lila. Jetzt eine Kachel wie ueberall
+                sonst, links, mit weissem Zeichen. */}
+            <span
+              className="w-11 h-11 rounded-icon flex items-center justify-center mb-2.5"
+              style={userType === id
+                ? { background: 'rgb(255 255 255 / 0.18)', color: '#FFFFFF' }
+                : { background: 'var(--grad-mode)', color: '#FFFFFF' }}
+            >
+              <Icon name={icon} size={22} />
+            </span>
             <p className={`text-[15px] font-bold ${userType === id ? 'text-white' : 'text-text-primary'}`}>{label}</p>
             <p className={`text-[11px] mt-0.5 ${userType === id ? 'text-white/80' : 'text-text-muted'}`}>{desc}</p>
           </button>
@@ -629,7 +661,7 @@ function StepPersonal({
       {/* Schüler: G8/G9 + class + Schulform */}
       {userType === 'schüler' && (
         <>
-          <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">
+          <p className="section-label mb-3">
             Gymnasialsystem
           </p>
           <div className="grid grid-cols-2 gap-2 mb-8">
@@ -655,7 +687,7 @@ function StepPersonal({
           {/* Class picker — shown after G8/G9 selected */}
           {schultyp !== '' && (
             <>
-              <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Klasse</p>
+              <p className="section-label mb-3">Klasse</p>
 
               {/* Mittelstufe collapsible */}
               <div className="mb-2">
@@ -732,7 +764,7 @@ function StepPersonal({
           )}
 
           {/* Schulform */}
-          <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Schulform</p>
+          <p className="section-label mb-3">Schulform</p>
           <div className="grid grid-cols-3 gap-2">
             {SCHULFORMEN_SCHUELER.map((sf) => (
               <button
@@ -1688,7 +1720,7 @@ function StepKlausur({
         Wir erstellen direkt einen Countdown und Lernvorschläge für dich.
       </p>
 
-      <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Fach</p>
+      <p className="section-label mb-3">Fach</p>
       <div className="flex flex-col gap-2 mb-6">
         {available.map((s) => (
           <button
@@ -1708,7 +1740,7 @@ function StepKlausur({
 
       {subject && (
         <>
-          <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Datum</p>
+          <p className="section-label mb-3">Datum</p>
           <input
             type="date"
             value={date}
@@ -1717,7 +1749,7 @@ function StepKlausur({
             className="w-full bg-surface border border-border rounded-card px-4 py-3.5 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors mb-6"
           />
 
-          <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Thema (optional)</p>
+          <p className="section-label mb-3">Thema (optional)</p>
           {subjectTopics.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-3">
               {subjectTopics.slice(0, 6).map((t) => (

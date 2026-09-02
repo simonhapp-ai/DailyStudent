@@ -752,3 +752,41 @@ textarea::placeholder {
     to        { opacity: 0; }
   }
 }
+
+/* Lila statt Mint — fuer das Namensfeld im Onboarding. Die Farbe haengt nicht
+   am Akzent-Token, weil der Strahl auch dort laufen koennen soll, wo kein Modus
+   gesetzt ist. Hell dunkler, dunkel heller, aus demselben Grund wie beim Mint:
+   sonst traegt er auf der jeweiligen Flaeche nicht. */
+.glanz-lila            { --glanz-farbe: 124  58 237; }
+.dark .glanz-lila      { --glanz-farbe: 167 139 250; }
+
+/* Wartende Fassung: Der Strahl laeuft alle gut vier Sekunden einmal herum,
+   solange das Feld leer ist.
+   Der Planen-Strahl sagt „das hier ist umgezogen, sieh einmal hin" — das ist
+   ein Ereignis, also laeuft er einmal. Hier ist die Aussage eine andere:
+   „das wartet noch auf dich". Das ist ein Zustand, und ein Zustand, der sich
+   einmal beim Erscheinen meldet, wird genau von dem uebersehen, der gerade
+   woanders hinsieht — also wiederholt er sich, bis der Zustand endet.
+   Aufhoeren tut er nicht durch einen Zaehler, sondern dadurch, dass die Klasse
+   verschwindet, sobald etwas im Feld steht. */
+.glanz-warten::after {
+  animation: glanz-warten 4.2s linear infinite;
+}
+
+@keyframes glanz-warten {
+  0%   { --glanz-winkel: 180deg; opacity: 1; }
+  21%  {                         opacity: 1; }
+  24%  { --glanz-winkel: 720deg; opacity: 0; }
+  100% { --glanz-winkel: 720deg; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glanz-warten::after {
+    animation: glanz-ruhig-warten 4.2s ease infinite;
+  }
+
+  @keyframes glanz-ruhig-warten {
+    0%, 14% { opacity: 1; }
+    26%, 100% { opacity: 0; }
+  }
+}
