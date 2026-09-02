@@ -16,6 +16,7 @@ import { resolveSubjectInfo, sortSubjectsByGroup } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
 import { bundeslandName } from '../data/bundeslaender'
 import type { StundenplanSlot } from '../types'
+import { StreakBadge } from '../components/ui/StreakBadge'
 
 const grossAnfang = (w: string) => w.charAt(0).toUpperCase() + w.slice(1)
 
@@ -352,10 +353,16 @@ export function UnterrichtScreen() {
             {profile?.bundesland ? ` · ${bundeslandName(profile.bundesland)}` : ''}
           </p>
         </div>
+        {/* Streak und Profil in einer Reihe. Die Streak-Pille lag vorher fest
+            in der oberen rechten Ecke und damit auf dem Telefon genau ueber
+            diesem Knopf. Nebeneinander koennen sie sich nicht mehr treffen,
+            egal wie die Kopfzeile waechst. */}
+        <div className="shrink-0 flex items-center gap-2 mt-1">
+        <StreakBadge inline />
         <button
           onClick={() => navigate('/profil')}
           aria-label="Profil und Einstellungen"
-          className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold press mt-1"
+          className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold press-grow"
           style={{ background: 'var(--stage-bg)' }}
         >
           {(profile?.name ?? '')
@@ -365,6 +372,7 @@ export function UnterrichtScreen() {
             .map((w) => w[0]?.toUpperCase() ?? '')
             .join('') || '·'}
         </button>
+        </div>
       </div>
 
       {profileSubjects.length === 0 ? (

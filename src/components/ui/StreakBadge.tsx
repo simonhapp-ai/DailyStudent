@@ -13,11 +13,16 @@ export function StreakBadge({ inline = false }: { inline?: boolean }) {
   const segments = location.pathname.split('/').filter(Boolean)
   // Hide on /profil, /landing, /auth, and everywhere under /unterricht except the home screen
   // itself (note creation + folder/lesson/smart-notes views all have their own top-right buttons)
+  // Auf dem Unterrichts-Start steht die Pille seit Neuestem in der Kopfzeile
+  // neben dem Profil-Knopf — dort, wo die feste Fassung genau auf ihm lag.
+  // `inline` ist der Aufruf von dort und darf deshalb nie ausgeblendet werden.
   if (
-    location.pathname.startsWith('/profil') ||
-    location.pathname === '/landing' ||
-    location.pathname.startsWith('/auth') ||
-    (segments[0] === 'unterricht' && segments.length > 1)
+    !inline && (
+      location.pathname.startsWith('/profil') ||
+      location.pathname === '/landing' ||
+      location.pathname.startsWith('/auth') ||
+      segments[0] === 'unterricht'
+    )
   ) return null
 
   const streak = getActiveStreak(appStats.streak ?? 0, appStats.lastStudyDate ?? null)
