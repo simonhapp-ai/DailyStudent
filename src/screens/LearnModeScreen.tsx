@@ -46,10 +46,18 @@ export function LearnModeScreen() {
     const subjectId = cards[0]?.subjectId ?? ''
     const info = resolveSubjectInfo(subjectId, profile?.customFaecher)
     const note = userNotes.find((n) => n.id === noteId)
+    // Selbst getippte Saetze haengen an keiner Notiz — ihre Kennung faengt mit
+    // „manual-" an. Ohne eigenen Namen hiessen sie alle „Notiz", und wer drei
+    // davon angelegt hatte, unterschied sie nur noch an der Kartenzahl.
+    const selbstGetippt = noteId.startsWith('manual-')
+    const datum = cards[0]?.createdAt
+      ? new Date(cards[0].createdAt).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' })
+      : ''
     return {
       noteId,
       cards,
-      noteTitle: note?.title ?? 'Notiz',
+      noteTitle: note?.title
+        ?? (selbstGetippt ? `Eigene Karten${datum ? ` · ${datum}` : ''}` : 'Ohne Notiz'),
       subjectId,
       subjectName: info.name,
       subjectColor: info.color,

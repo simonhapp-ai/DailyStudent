@@ -74,8 +74,10 @@ export function LernplanListScreen() {
             progress={aktivFortschritt.anteil}
             note={
               aktivTag.sessions?.length
-                ? `Als Nächstes: ${aktivTag.sessions
-                    .map((s) => SUBJECT_INFO[s.subjectId]?.name ?? s.subjectId)
+                // Zwei Einheiten im selben Fach an einem Tag sind normal —
+                // ohne Entdoppeln stand dann „Mathematik · Mathematik".
+                ? `Als Nächstes: ${[...new Set(aktivTag.sessions
+                    .map((s) => SUBJECT_INFO[s.subjectId]?.name ?? s.subjectId))]
                     .join(' · ')}`
                 : 'Als Nächstes: freier Tag'
             }
