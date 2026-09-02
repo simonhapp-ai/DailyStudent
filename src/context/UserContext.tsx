@@ -392,6 +392,18 @@ export function generateKcFolders(profile: UserProfile): UserFolder[] {
 
 const UserContext = createContext<UserContextValue | null>(null)
 
+/**
+ * Gespeicherte Kennzahlen auf das heutige Feld-Set bringen.
+ *
+ * Ein Datensatz aus einer aelteren Fassung kennt neuere Felder nicht. Ohne
+ * Auffuellen ist dann z. B. `examScores` undefined, und jede Stelle, die
+ * darauf `.length` liest, wirft — im Klausurenmodus fuehrte das zum
+ * Fehlerbildschirm statt zur Uebersicht.
+ */
+function mitVorgaben(gespeichert: AppStats | undefined | null): AppStats {
+  return { ...DEFAULT_APP_STATS, ...(gespeichert ?? {}) }
+}
+
 export function UserProvider({ children }: { children: ReactNode }) {
   const stored = loadStorage()
 
@@ -458,7 +470,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           setGeneratedFlashCards(s.generatedFlashCards ?? [])
           setCompletedHomeworkIds(s.completedHomeworkIds ?? [])
           setStandaloneHomework(s.standaloneHomework ?? [])
-          setAppStats(s.appStats ?? DEFAULT_APP_STATS)
+          setAppStats(mitVorgaben(s.appStats))
           setLernzettel(s.lernzettel ?? [])
           setSavedProbeklausuren(s.savedProbeklausuren ?? [])
           setInProgressProbeklausuren(s.inProgressProbeklausuren ?? [])
@@ -586,7 +598,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                   profile: s.profile,
                   theme: s.theme ?? 'dark',
                   isPro: s.isPro ?? false,
-                  appStats: s.appStats ?? DEFAULT_APP_STATS,
+                  appStats: mitVorgaben(s.appStats),
                   userFolders: s.userFolders ?? [],
                   userNotes: s.userNotes ?? [],
                   generatedNotes: s.generatedNotes ?? {},
@@ -624,7 +636,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [generatedFlashCards, setGeneratedFlashCards] = useState<FlashCard[]>(stored.generatedFlashCards ?? [])
   const [completedHomeworkIds, setCompletedHomeworkIds] = useState<string[]>(stored.completedHomeworkIds ?? [])
   const [standaloneHomework, setStandaloneHomework] = useState<StandaloneHomeworkItem[]>(stored.standaloneHomework ?? [])
-  const [appStats, setAppStats] = useState<AppStats>(stored.appStats ?? DEFAULT_APP_STATS)
+  const [appStats, setAppStats] = useState<AppStats>(mitVorgaben(stored.appStats))
   const [kcCache, setKcCache] = useState<Record<string, KcSubjectData>>({})
   const [kcFallbacks, setKcFallbacks] = useState<string[]>([])
   const [syncQueueStatus, setSyncQueueStatus] = useState({ pending: 0, failed: 0 })
@@ -659,7 +671,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const showCoinToast = (amount: number, action?: string) => {
     if (amount <= 0) return
-    const nachher = (loadStorage().appStats ?? DEFAULT_APP_STATS).coins ?? 0
+    const nachher = mitVorgaben(loadStorage().appStats).coins ?? 0
     setXpToast({ betrag: amount, vorher: Math.max(0, nachher - amount), nachher, action })
   }
 
@@ -761,7 +773,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (!isProNow) return
     const thisMonth = new Date().toISOString().slice(0, 7)
     const cooldownKey = `FREE_FREEZE:${thisMonth}`
-    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const current = mitVorgaben(loadStorage().appStats)
     if ((current.cooldowns ?? []).includes(cooldownKey)) return
     monthlyFreezeGrantedRef.current = true
     const updated: AppStats = {
@@ -1080,7 +1092,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const recordStudyDay = (): number => {
     const today = new Date().toISOString().slice(0, 10)
-    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const current = mitVorgaben(loadStorage().appStats)
     if (current.lastStudyDate === today) return 0
 
     const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10)
@@ -1141,7 +1153,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) {
       const result = await buyStreakFreezeRemote(authUser.id, FREEZE_COST)
       if (result) {
-        const updated: AppStats = { ...(loadStorage().appStats ?? DEFAULT_APP_STATS), coins: result.coins, streakFreezes: result.streakFreezes }
+        const updated: AppStats = { ...mitVorgaben(loadStorage().appStats), coins: result.coins, streakFreezes: result.streakFreezes }
         setAppStats(updated)
         saveStorage({ ...loadStorage(), appStats: updated })
         return result.success
@@ -1149,7 +1161,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       // RPC unreachable (offline) — fall through to local-only optimistic path below
     }
 
-    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const current = mitVorgaben(loadStorage().appStats)
     if ((current.coins ?? 0) < FREEZE_COST) return false
     const updated: AppStats = {
       ...current,
@@ -1178,7 +1190,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     const cooldownKey = `DISCOUNT_${tier}:USED`
     const result = await redeemDiscountRemote(authUser.id, cost, cooldownKey)
     if (!result) return null
-    const updated: AppStats = { ...(loadStorage().appStats ?? DEFAULT_APP_STATS), coins: result.coins, cooldowns: result.cooldowns }
+    const updated: AppStats = { ...mitVorgaben(loadStorage().appStats), coins: result.coins, cooldowns: result.cooldowns }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })
     return result.success ? couponId : null
@@ -1186,7 +1198,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   // Dev-only: directly set coin balance (used by ProfilScreen slider)
   const debugSetCoins = (amount: number) => {
-    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const current = mitVorgaben(loadStorage().appStats)
     const updated: AppStats = { ...current, coins: Math.max(0, Math.min(6000, amount)) }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })
@@ -1208,7 +1220,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) {
       const result = await grantCoinsRemote(authUser.id, amount, cooldownKey)
       if (result) {
-        const updated: AppStats = { ...(loadStorage().appStats ?? DEFAULT_APP_STATS), coins: result.coins, cooldowns: result.cooldowns }
+        const updated: AppStats = { ...mitVorgaben(loadStorage().appStats), coins: result.coins, cooldowns: result.cooldowns }
         setAppStats(updated)
         saveStorage({ ...loadStorage(), appStats: updated })
         return result.granted
@@ -1216,7 +1228,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       // RPC unreachable (offline) — fall through to local-only optimistic path below
     }
 
-    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const current = mitVorgaben(loadStorage().appStats)
     if ((current.cooldowns ?? []).includes(cooldownKey)) return 0
     const updated: AppStats = {
       ...current,
@@ -1230,7 +1242,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const recordExam = (score: ExamScoreRecord) => {
-    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const current = mitVorgaben(loadStorage().appStats)
     const updated: AppStats = {
       ...current,
       examCount: current.examCount + 1,
@@ -1243,7 +1255,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   }
 
   const incrementScanCount = () => {
-    const current = loadStorage().appStats ?? DEFAULT_APP_STATS
+    const current = mitVorgaben(loadStorage().appStats)
     const updated: AppStats = { ...current, scanCount: current.scanCount + 1 }
     setAppStats(updated)
     saveStorage({ ...loadStorage(), appStats: updated })

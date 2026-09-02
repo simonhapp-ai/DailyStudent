@@ -667,23 +667,40 @@ textarea::placeholder {
 }
 
 /* ── Lichtlauf um die Planen-Pille ────────────────────────────────────────
-   Beim Betreten des Klausurenmodus laeuft einmal ein Strahl am Rand entlang:
-   Mint, in der Mitte weiss, eine Sekunde, linear — gleichmaessige Bewegung
-   traegt kein Beschleunigen. Kein Zustand und kein Timer dahinter: Das Element
-   wird beim Moduswechsel neu aufgebaut, die Animation laeuft dadurch von selbst
-   genau einmal. Als CSS-Animation, damit sie nicht auf dem Hauptstrang liegt,
-   auf dem in diesem Moment der Moduswechsel gerendert wird.
+   Beim Betreten des Klausurenmodus laeuft einmal ein Strahl am Rand entlang.
 
-   Der Strahl liegt in einem Ring: Eine Kegelverlauf-Flaeche wird auf die
-   Randstaerke maskiert, sodass nur der Rand leuchtet und der Inhalt frei bleibt. */
+   Bahn: eineinhalb Umrundungen in einer Sekunde, unten in der Mitte los, oben
+   in der Mitte Schluss. Ein Kegelverlauf beginnt bei 0 Grad oben und dreht im
+   Uhrzeigersinn — unten ist also 180 Grad, und 180 + 540 landet wieder oben.
+   Linear, weil gleichmaessige Bewegung kein Beschleunigen traegt (Emil
+   Kowalski: linear nur fuer konstante Bewegung, sonst ease-out).
+
+   Der Strahl liegt in einem Ring: Die Verlaufsflaeche wird auf die Randstaerke
+   maskiert, sodass nur der Rand leuchtet und der Inhalt frei bleibt.
+
+   Farbe fest verdrahtet statt ueber --color-accent: Die Seitenleiste liegt
+   ausserhalb des Modus-Bereichs (sie zeigt bewusst beide Modi), dort waere der
+   Akzent das Lila des Unterrichtsmodus. Auf Weiss traegt das helle Mint kaum,
+   auf Schwarz leuchtet das dunkle nicht — daher je Erscheinungsbild ein
+   eigener Ton, mit weissem Kern als gemeinsamer Spitze.
+
+   Kein Zustand und kein Timer dahinter: Das Element wird beim Moduswechsel
+   ohnehin neu aufgebaut, die Animation laeuft dadurch von selbst genau einmal.
+   Als CSS-Animation, damit sie nicht auf dem Strang liegt, auf dem in diesem
+   Moment der Moduswechsel gerendert wird. */
 @property --glanz-winkel {
   syntax: '<angle>';
   inherits: false;
-  initial-value: 0deg;
+  initial-value: 180deg;
 }
 
 .glanz-lauf {
   position: relative;
+  --glanz-farbe: 5 150 105;   /* dunkles Mint — traegt auf weisser Flaeche */
+}
+
+.dark .glanz-lauf {
+  --glanz-farbe: 52 211 153;  /* helles Mint — leuchtet auf dunkler Flaeche */
 }
 
 .glanz-lauf::after {
@@ -691,18 +708,20 @@ textarea::placeholder {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1.5px;
+  padding: 3px;               /* Ringstaerke */
   pointer-events: none;
   background: conic-gradient(
     from var(--glanz-winkel),
-    transparent 0deg,
-    transparent 286deg,
-    rgba(52, 211, 153, 0.32) 322deg,
-    rgba(209, 255, 238, 0.92) 344deg,
-    #ffffff 350deg,
-    rgba(52, 211, 153, 0.32) 357deg,
-    transparent 360deg
+    #ffffff 0deg,                              /* Kopf */
+    rgb(var(--glanz-farbe) / 0.55) 7deg,
+    transparent 15deg,                         /* davor: nichts */
+    transparent 298deg,
+    rgb(var(--glanz-farbe) / 0.22) 316deg,     /* Schweif, waechst zum Kopf hin */
+    rgb(var(--glanz-farbe) / 0.62) 338deg,
+    rgb(var(--glanz-farbe)) 352deg,
+    #ffffff 360deg
   );
+  filter: drop-shadow(0 0 5px rgb(var(--glanz-farbe) / 0.7));
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
@@ -715,16 +734,16 @@ textarea::placeholder {
 }
 
 @keyframes glanz-umlauf {
-  from { --glanz-winkel: 0deg;   opacity: 1; }
-  82%  {                         opacity: 1; }
-  to   { --glanz-winkel: 360deg; opacity: 0; }
+  from { --glanz-winkel: 180deg; opacity: 1; }
+  90%  {                         opacity: 1; }
+  to   { --glanz-winkel: 720deg; opacity: 0; }
 }
 
 /* Bei reduzierter Bewegung bleibt die Aussage („hier liegt Planen"), aber ohne
    Umlauf: Der Rand leuchtet einmal auf und wieder ab. */
 @media (prefers-reduced-motion: reduce) {
   .glanz-lauf::after {
-    background: rgba(52, 211, 153, 0.75);
+    background: rgb(var(--glanz-farbe) / 0.85);
     animation: glanz-ruhig 1s ease 1 both;
   }
 

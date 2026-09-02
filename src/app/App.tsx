@@ -130,6 +130,21 @@ function ThemeApplier() {
 const IS_DESKTOP = !IST_TELEFON
 const IS_NATIVE = Capacitor.isNativePlatform()
 
+const DESIGN_VORSCHAU = (() => {
+  if (IS_NATIVE) return false
+  if (!/^(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3})$/.test(window.location.hostname)) return false
+  try {
+    if (new URLSearchParams(window.location.search).get('vorschau') === '1') {
+      sessionStorage.setItem('vorschau', '1')
+      return true
+    }
+    return sessionStorage.getItem('vorschau') === '1'
+  } catch {
+    return false
+  }
+})()
+
+
 // Web-only signal for the landing page: has this browser touched the app
 // before (previous account data, prior cookie consent, or already seen the
 // demo)? If so, dailystudent.de should skip straight to login instead of
@@ -325,7 +340,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   if (location.pathname === '/agb') return <AGBScreen />
 
   // Only redirect to auth once Supabase has confirmed there's no valid session
-  const designPreview = !IS_NATIVE && /^(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3})$/.test(window.location.hostname) && new URLSearchParams(window.location.search).get('vorschau') === '1'
+  const designPreview = DESIGN_VORSCHAU
     if (!authLoading && !authUser && !designPreview) {
     if (location.pathname === '/') {
       // Native app cold start: consent → demo → login, once per device —
