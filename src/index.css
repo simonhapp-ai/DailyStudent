@@ -795,7 +795,12 @@ textarea::placeholder {
    Die uebliche Konvention ist das Gegenteil (Knoepfe sinken beim Druecken um
    ein paar Prozent ein). Fuer die Navigation hat Simon ausdruecklich das
    Wachsen gewaehlt: Diese Flaechen sind Ziele, keine Ausloeser — sie sollen
-   beim Antippen entgegenkommen. Dezent, damit das Layout ruhig bleibt. */
+   beim Antippen entgegenkommen. Dezent, damit das Layout ruhig bleibt.
+
+   Simon will das eine Weile ausprobieren. Zum Umschwenken auf die uebliche
+   Richtung reichen zwei Werte: unten 1.045 -> 0.97 und beim .nav-btn 1.1 ->
+   1.04 (dort muss der Wert unter dem Hover-Mass 1.08 liegen, damit der Knopf
+   beim Druecken auch am Schreibtisch sichtbar nachgibt). */
 .press-grow {
   transition: transform 170ms cubic-bezier(0.23, 1, 0.32, 1);
 }
