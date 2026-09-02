@@ -868,3 +868,18 @@ textarea::placeholder {
 @media (prefers-reduced-motion: reduce) {
   .schritt-wechsel { animation-name: none; }
 }
+
+/* Bildwechsel in der Demo — wie der Schrittwechsel im Onboarding bewusst OHNE
+   animation-fill-mode: Der Grundzustand ist sichtbar. */
+@keyframes bild-ein {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.bild-wechsel {
+  animation: bild-ein 320ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bild-wechsel { animation-name: none; }
+}

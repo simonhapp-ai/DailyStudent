@@ -141,19 +141,18 @@ export function DemoScreen() {
             ))}
           </div>
 
-          {/* Der Inhalt — je Bild ein anderer */}
+          {/* Der Inhalt — je Bild ein anderer.
+              Lief ueber AnimatePresence mit mode="wait": Das naechste Bild wird
+              dort erst eingehaengt, wenn die Ausblendung des vorherigen ihr Ende
+              MELDET. Bleibt die Meldung aus, bleibt die Buehne leer — genau so
+              gesehen: dunkle Flaeche, Regler oben, darin nichts. Jetzt eine
+              CSS-Animation ohne Fuellmodus: Laeuft sie, blendet das Bild herein;
+              laeuft sie nicht, ist es sofort da. Dieselbe Regel wie beim
+              Screenwechsel und im Onboarding. */}
           <div className="relative" style={{ minHeight: 168 }}>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={beat}
-                initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, y: -10 }}
-                transition={reducedMotion ? { duration: 0 } : { duration: 0.32, ease: [0.23, 1, 0.32, 1] }}
-              >
-                <BeatContent beat={beat} accent={accent} />
-              </motion.div>
-            </AnimatePresence>
+            <div key={beat} className="bild-wechsel">
+              <BeatContent beat={beat} accent={accent} />
+            </div>
           </div>
         </motion.div>
 
