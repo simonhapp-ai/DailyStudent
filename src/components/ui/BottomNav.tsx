@@ -54,7 +54,19 @@ export function BottomNav() {
                 // Immer neu zentrieren — deckt sowohl das erneute Tippen auf den
                 // bereits aktiven Modus ab (der Pfad ändert sich nicht, der
                 // app-weite Route-Effect feuert also nicht) als auch den Wechsel.
-                if (!active) { navigate(MODE_HOME[mode]); return }
+                if (!active) {
+                  // Zuruecksetzen VOR dem Wechsel, nicht als Reaktion darauf.
+                  // Der Effekt am Layout laeuft erst, wenn React den neuen Baum
+                  // committet — gemessen war der Pfad da laengst gewechselt,
+                  // die Seite stand aber noch auf der alten Hoehe und der alten
+                  // Position. Man sah also den alten Screen unten kleben und
+                  // dann einen Sprung. Hier ist der alte Screen noch da und
+                  // laesst sich verlustfrei nach oben setzen; der neue beginnt
+                  // dadurch bereits oben.
+                  recenterScreen(false)
+                  navigate(MODE_HOME[mode])
+                  return
+                }
 
                 // Ein SCHNELLER Doppeltipp auf den bereits aktiven
                 // Klausurenmodus fuehrt ins Planen — sonst muss man dafuer
@@ -67,6 +79,7 @@ export function BottomNav() {
                 letzterTipp.current = jetzt
 
                 if (schnell && mode === 'klausur' && !isPlanenPath(location.pathname)) {
+                  recenterScreen(false)
                   navigate(PLANEN_HOME)
                   return
                 }
