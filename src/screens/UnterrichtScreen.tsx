@@ -14,6 +14,9 @@ import { EmptyState } from '../components/ui/EmptyState'
 import { currentSlot, nextSlot, todaysSlots } from '../lib/appMode'
 import { resolveSubjectInfo, sortSubjectsByGroup } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
+import { bundeslandName } from '../data/bundeslaender'
+
+const grossAnfang = (w: string) => w.charAt(0).toUpperCase() + w.slice(1)
 
 export function UnterrichtScreen() {
   const navigate = useNavigate()
@@ -342,7 +345,10 @@ export function UnterrichtScreen() {
         <div className="min-w-0">
           <h1 className="text-[28px] font-bold text-text-primary">Unterricht</h1>
           <p className="text-[13px] text-text-muted mt-0.5">
-            {profile?.schulform ?? 'Gymnasium'}{profile?.bundesland ? ` · ${profile.bundesland}` : ''}
+            {/* Kleingeschriebene Schulform und rohes Laenderkuerzel lasen sich
+                wie ein Datenbankfeld. */}
+            {grossAnfang(profile?.schulform ?? 'Gymnasium')}
+            {profile?.bundesland ? ` · ${bundeslandName(profile.bundesland)}` : ''}
           </p>
         </div>
         <button

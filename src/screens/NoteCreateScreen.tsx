@@ -1707,7 +1707,9 @@ export function NoteCreateScreen() {
       )}
 
       {/* SCROLLABLE ZONE */}
-      <div className="flex-1 overflow-y-auto">
+      {/* Eine Notiz ist Text — ueber die volle Breite eines Schreibtischs
+          liest sie sich nicht. Gleiche Lesebreite wie die fertige Smart Note. */}
+      <div className="flex-1 overflow-y-auto lg:px-6 lg:max-w-[920px] lg:w-full">
 
         {/* Title */}
         <input
