@@ -33,7 +33,7 @@ export function BetaPausedScreen({ title }: BetaPausedScreenProps) {
       </button>
       <button
         onClick={() => navigate('/klausurmodus/probeklausur')}
-        className="text-text-muted text-[13px] font-medium press-sm"
+        className="text-text-primary text-[13px] font-medium press-sm"
       >
         Zurück
       </button>

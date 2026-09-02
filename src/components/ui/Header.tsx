@@ -24,7 +24,7 @@ export function Header({ title, subtitle, showBack, onBack, right }: HeaderProps
           <button
             onClick={() => onBack ? onBack() : navigate(-1)}
             className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 mr-1 px-2 py-1.5 rounded-btn"
-            style={{ color: 'rgb(var(--color-accent))' }}
+            style={{ color: 'rgb(var(--color-text-primary))' }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />

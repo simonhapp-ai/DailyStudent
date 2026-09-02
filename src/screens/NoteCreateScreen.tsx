@@ -1912,7 +1912,7 @@ export function NoteCreateScreen() {
                 onClick={() => {
                   setShowCancelConfirm(false)
                 }}
-                className="w-full h-12 rounded-pill bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
+                className="w-full h-12 rounded-pill bg-surface-hover text-text-primary text-sm font-semibold hover:bg-border transition-all active:scale-95"
               >
                 Zurück
               </button>

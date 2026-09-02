@@ -302,7 +302,7 @@ export function TwoFactorSetupScreen() {
 
             <button
               onClick={() => { setStep('qr'); setCode(''); setError(null) }}
-              className="w-full text-center text-[13px] text-text-muted py-2 hover:text-text-primary transition-colors"
+              className="w-full text-center text-[13px] text-text-primary py-2 transition-colors"
             >
               Zurück zum QR-Code
             </button>

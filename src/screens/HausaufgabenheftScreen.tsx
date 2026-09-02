@@ -300,7 +300,7 @@ export function HausaufgabenheftScreen() {
                           <span className="text-[13px] text-text-secondary flex-1">Wirklich fertig?</span>
                           <button
                             onClick={() => setConfirmingId(null)}
-                            className="px-3 h-9 rounded-pill text-[13px] font-medium text-text-secondary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm"
+                            className="px-3 h-9 rounded-pill text-[13px] font-medium text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm"
                           >
                             Zurück
                           </button>

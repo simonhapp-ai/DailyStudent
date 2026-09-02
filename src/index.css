@@ -770,7 +770,16 @@ textarea::placeholder {
    Aufhoeren tut er nicht durch einen Zaehler, sondern dadurch, dass die Klasse
    verschwindet, sobald etwas im Feld steht. */
 .glanz-warten::after {
-  animation: glanz-warten 4.2s linear infinite;
+  /* Vier Durchlaeufe statt endlos, und ohne den weichen Schein.
+     Der Strahl zeichnet einen Kegelverlauf durch eine Maske — das laesst sich
+     nicht auf die Grafikeinheit auslagern, jedes Bild wird neu gemalt. Einmal
+     eine Sekunde lang ist das gleichgueltig; dauerhaft auf einem Screen, den
+     man scrollt, konkurriert es mit dem Scrollen selbst und ruckelt auf dem
+     Telefon. Der Schein kostet dabei am meisten, weil er das fertige Bild noch
+     einmal weichzeichnet. Nach gut siebzehn Sekunden hat der Hinweis seine
+     Aufgabe erledigt. */
+  filter: none;
+  animation: glanz-warten 4.2s linear 4;
 }
 
 @keyframes glanz-warten {
@@ -782,7 +791,7 @@ textarea::placeholder {
 
 @media (prefers-reduced-motion: reduce) {
   .glanz-warten::after {
-    animation: glanz-ruhig-warten 4.2s ease infinite;
+    animation: glanz-ruhig-warten 4.2s ease 4;
   }
 
   @keyframes glanz-ruhig-warten {

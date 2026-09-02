@@ -258,7 +258,7 @@ export function AuthScreen() {
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Link senden'}
             </button>
             <button type="button" onClick={() => { setMode('login'); setError(null); setSuccessMsg(null) }}
-              className="w-full text-xs text-muted text-center mt-1 hover:text-foreground transition-colors">
+              className="w-full text-xs text-text-primary text-center mt-1 transition-colors">
               ← Zurück zur Anmeldung
             </button>
           </form>
