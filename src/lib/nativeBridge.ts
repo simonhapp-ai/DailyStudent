@@ -27,11 +27,48 @@ export function notifyNativeTheme(isDark: boolean) {
  *   sofort richtig sitzen, sonst sieht man ihn erst an der alten Stelle und
  *   dann nach oben rutschen.
  */
+/** Laeuft gerade eine Sperre? Verhindert, dass ein zweiter Aufruf sie festhaelt. */
+let gesperrt = false
+
 export function recenterScreen(animiert = true) {
   const bridge = getHandler('recenterBridge')
   if (bridge) {
     bridge.postMessage(null)
-  } else {
-    window.scrollTo({ top: 0, behavior: animiert ? 'smooth' : 'auto' })
+    return
   }
+
+  if (animiert) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    return
+  }
+
+  // Eine Wischbewegung gleitet nach dem Loslassen weiter. Tippt man waehrend
+  // dieses Nachlaufs auf die Leiste, ueberschreibt die laufende Bewegung ein
+  // blosses scrollTo(0) — die Seite rutscht wieder dorthin zurueck, wo der
+  // Schwung sie hintraegt. Ganz unten faellt das nicht auf: Dort ist die
+  // Bewegung schon an ihre Grenze gestossen und steht.
+  //
+  // Genau dieses Problem ist fuer die native Seite oben im Kommentar der
+  // Bruecke beschrieben; im Web gilt es genauso. Kurzes Sperren des Scrollens
+  // beendet den Nachlauf, danach bleibt die Seite oben.
+  //
+  // Zurueckgesetzt wird ueber zwei Wege, die beide dasselbe tun: Bleibt einer
+  // aus — im Hintergrund laufen Animationsbilder nicht —, greift der andere.
+  // Eine Seite, die sich nicht mehr scrollen laesst, waere schlimmer als ein
+  // Nachlauf.
+  const wurzel = document.documentElement
+  wurzel.scrollTop = 0
+  window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior })
+
+  // Nur einmal gleichzeitig sperren. Der Wechsel loest zwei Aufrufe aus — einen
+  // im Klick, einen nach dem Routenwechsel. Wuerde der zweite den aktuellen
+  // Wert sichern, sicherte er das 'hidden' des ersten und stellte es danach
+  // dauerhaft wieder her: Die Seite liesse sich nie wieder scrollen. Genau das
+  // ist beim Testen passiert.
+  if (gesperrt) return
+  gesperrt = true
+  const loesen = () => { wurzel.style.overflowY = ''; gesperrt = false }
+  wurzel.style.overflowY = 'hidden'
+  requestAnimationFrame(loesen)
+  setTimeout(loesen, 60)
 }
