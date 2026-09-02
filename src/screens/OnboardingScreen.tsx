@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { useReducedMotion } from 'framer-motion'
 import { Button } from '../components/ui/Button'
 import { useUser } from '../context/UserContext'
 import { type UserProfile } from '../context/UserContext'
@@ -34,19 +34,10 @@ const BUNDESLAENDER = [
 
 const SCHULFORMEN_SCHUELER = ['Gymnasium', 'Gesamtschule', 'FOS']
 
-const E = [0.23, 1, 0.32, 1] as const
 
 // Forward = incoming step slides in from the right, outgoing exits left.
 // Back = reversed. Keeps the wizard's direction spatially consistent.
 // Reduced motion keeps the opacity fade but drops the horizontal movement.
-function getStepVariants(reduceMotion: boolean) {
-  return {
-    enter: (dir: 1 | -1) => ({ opacity: 0, x: reduceMotion ? 0 : dir * 24 }),
-    center: { opacity: 1, x: 0 },
-    exit: (dir: 1 | -1) => ({ opacity: 0, x: reduceMotion ? 0 : dir * -24 }),
-  }
-}
-
 type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 export function OnboardingScreen() {
@@ -200,17 +191,23 @@ export function OnboardingScreen() {
         </button>
       )}
 
-      {/* Step content */}
+      {/* Schrittinhalt.
+          Lief ueber AnimatePresence mit mode="wait": Der naechste Schritt wird
+          dort erst eingehaengt, wenn die Ausblendung des vorherigen ihr Ende
+          MELDET. Bleibt diese Meldung aus, laeuft der Zaehler weiter, waehrend
+          der Bildschirm auf dem alten Schritt stehen bleibt — genau so
+          gemessen: neun Mal „Weiter", der Fuss-Knopf wechselte, der Inhalt
+          nicht. Man tippt dann gegen eine Wand.
+          Jetzt eine CSS-Animation ohne Fuellmodus. Der Grundzustand ist
+          sichtbar: Laeuft sie, blendet der Schritt herein; laeuft sie nicht,
+          ist er einfach sofort da. Dieselbe Regel wie beim Screenwechsel und
+          beim Eintragskasten im Kalender. */}
       <div className="flex-1 px-6 pt-20 pb-10 overflow-hidden">
-        <AnimatePresence mode="wait" custom={direction} initial={false}>
-          <motion.div
+        <div>
+          <div
             key={step}
-            custom={direction}
-            variants={getStepVariants(!!reduceMotion)}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.2, ease: E }}
+            className="schritt-wechsel"
+            style={{ ['--schritt-x' as string]: reduceMotion ? '0px' : `${direction * 24}px` }}
           >
             {step === 1 && <StepWelcome onNext={next} />}
             {step === 2 && (
@@ -259,8 +256,8 @@ export function OnboardingScreen() {
                 topic={klausurTopic} setTopic={setKlausurTopic}
               />
             )}
-          </motion.div>
-        </AnimatePresence>
+          </div>
+        </div>
       </div>
 
       {/* Footer CTA — step 7 (Stundenplan) manages its own footer */}
@@ -285,10 +282,14 @@ export function OnboardingScreen() {
               )}
               {/* Referral teaser */}
               <div
-                className="rounded-icon p-4 flex items-center gap-3"
-                style={{ background: 'rgba(255,185,0,0.08)', border: '1px solid rgba(255,185,0,0.2)' }}
+                // War beige mit goldenem Rand — eine Farbe, die sonst nirgends
+                // im Erscheinungsbild vorkommt. Jetzt eine Flaeche wie jede
+                // andere; das Gold sitzt im Zeichen, wo es hingehoert.
+                className="rounded-card p-4 flex items-center gap-3 bg-surface border border-border/60"
               >
-                <span className="shrink-0 text-text-primary"><Icon name="gift" size={21} /></span>
+                <span className="w-10 h-10 rounded-icon shrink-0 flex items-center justify-center badge-pro-gold">
+                  <Icon name="gift" size={19} />
+                </span>
                 <div>
                   <p className="text-text-primary font-semibold text-[13px]">
                     14 Tage Pro — kostenlos
