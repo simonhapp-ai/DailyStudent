@@ -139,11 +139,7 @@ function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => v
             aria-selected={active}
             onClick={() => onPick(m)}
             className="relative flex-1 h-9 rounded-pill text-[14px] font-semibold press-sm transition-colors"
-            style={{
-              color: active
-                ? '#FFFFFF'
-                : 'rgb(var(--color-text-secondary))',
-            }}
+            style={{ color: active ? '#FFFFFF' : 'rgb(var(--color-text-primary))' }}
           >
             {m === 'unterricht' ? 'Unterricht' : 'Klausur'}
           </button>
@@ -200,10 +196,12 @@ export function DesktopSidebar() {
               style={
                 active
                   ? {
-                      background: m === 'unterricht' ? '#7C3AED' : '#34D399',
+                      background: m === 'unterricht'
+                        ? 'linear-gradient(135deg, #8B5CF6, #7C3AED)'
+                        : 'linear-gradient(135deg, #34D399, #10B981)',
                       color: '#FFFFFF',
                     }
-                  : { color: 'rgb(var(--color-text-primary) / 0.55)' }
+                  : { color: 'rgb(var(--color-text-primary))' }
               }
             >
               {m === 'unterricht' ? 'Unt.' : 'Kla.'}
@@ -221,7 +219,7 @@ export function DesktopSidebar() {
               onClick={() => navigate(e.path)}
               title={e.label}
               className={`w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-btn press-sm nav-btn ${active ? 'nav-active' : ''}`}
-              style={{ color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))' }}
+              style={{ color: 'rgb(var(--color-text-primary))' }}
             >
               <Icon name={e.icon} size={20} />
               <span className="text-[11px] leading-none tracking-tight truncate w-full text-center">{e.label}</span>
@@ -384,10 +382,7 @@ function SideRow({ entry, active, onClick }: { entry: NavEntry; active: boolean;
     <button
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-3 py-2 rounded-btn press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
-      style={{
-        color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-secondary))',
-        fontWeight: active ? 600 : 500,
-      }}
+      style={{ color: 'rgb(var(--color-text-primary))', fontWeight: active ? 600 : 500 }}
     >
       {/* Schnellnotizen traegt sein eigenes Zeichen — dasselbe wie im
           Unterrichtsmodus, damit man dieselbe Sache nicht zweimal

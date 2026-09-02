@@ -6,7 +6,8 @@ import { endnoteForEntry } from '../../screens/AbiRechnerScreen'
 
 interface Suggestion {
   icon: React.ReactNode
-  gradient: string
+  /** Signalton des Vorschlags, oder 'mode' für die Farbe des aktuellen Modus. */
+  signal: string
   title: string
   subtitle: string
   actionPath: string
@@ -30,31 +31,31 @@ function daysUntil(dateStr: string): number {
 }
 
 function BookIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
 }
 function BoltIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
 }
 function StarIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
 }
 function CardIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
 }
 function ClipboardIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
 }
 function CameraIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
 }
 function CalendarIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
 }
 function TrophyIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-1a2 2 0 012-2h16a2 2 0 012 2v1a2 2 0 01-2 2h-2"/><rect x="6" y="18" width="12" height="4"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-1a2 2 0 012-2h16a2 2 0 012 2v1a2 2 0 01-2 2h-2"/><rect x="6" y="18" width="12" height="4"/></svg>
 }
 function AlertIcon() {
-  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17" strokeWidth="3"/></svg>
+  return <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17" strokeWidth="3"/></svg>
 }
 
 function computeSuggestion(
@@ -143,7 +144,7 @@ function computeSuggestion(
 
   // 1. Klausur critical ≤ 3 days — no Probeklausur for that subject yet
   if (nextExam && nextExam.days <= 3 && probeklausurenFor(nextExam.subjectId).length === 0) {
-    return { icon: <AlertIcon />, gradient: '#FF3B30', urgency: 'critical',
+    return { icon: <AlertIcon />, signal: '#FF3B30', urgency: 'critical',
       title: `Probeklausur ${nextExamName}`,
       subtitle: `Klausur in ${nextExam.days === 0 ? 'heute' : `${nextExam.days} Tag${nextExam.days === 1 ? '' : 'en'}`} — noch keine Übungsklausur!`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Jetzt starten' }
@@ -153,7 +154,7 @@ function computeSuggestion(
   if (nextExam && nextExam.days <= 3) {
     const lastPk = probeklausurenFor(nextExam.subjectId).slice(-1)[0]
     if (lastPk && lastPk.totalNP < 8) {
-      return { icon: <AlertIcon />, gradient: '#FF9500', urgency: 'critical',
+      return { icon: <AlertIcon />, signal: '#FF9500', urgency: 'critical',
         title: `Nochmal ${nextExamName}`,
         subtitle: `Du warst bei ${lastPk.totalNP} NP — eine weitere Probeklausur lohnt sich.`,
         actionPath: '/klausurmodus/probeklausur', actionLabel: 'Probeklausur' }
@@ -162,7 +163,7 @@ function computeSuggestion(
 
   // 3. Klausur ≤ 3 days — has Lernzettel for subject
   if (nextExam && nextExam.days <= 3 && lernzettelFor(nextExam.subjectId) > 0) {
-    return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'critical',
+    return { icon: <BookIcon />, signal: 'mode', urgency: 'critical',
       title: `Lernzettel ${nextExamName} wiederholen`,
       subtitle: `${lernzettelFor(nextExam.subjectId)} Lernzettel verfügbar — letzter Check vor der Klausur.`,
       actionPath: '/klausurmodus/lernzettel', actionLabel: 'Lernzettel öffnen' }
@@ -170,7 +171,7 @@ function computeSuggestion(
 
   // 4. Klausur ≤ 3 days — has flashcards for subject
   if (nextExam && nextExam.days <= 3 && flashFor(nextExam.subjectId) > 0) {
-    return { icon: <CardIcon />, gradient: '#7C3AED', urgency: 'critical',
+    return { icon: <CardIcon />, signal: '#7C3AED', urgency: 'critical',
       title: `Karteikarten-Sprint: ${nextExamName}`,
       subtitle: `${flashFor(nextExam.subjectId)} Karten — perfekt für die letzten Stunden.`,
       actionPath: '/klausurmodus/lernen', actionLabel: 'Lernen starten' }
@@ -178,7 +179,7 @@ function computeSuggestion(
 
   // 5. Klausur ≤ 3 days — no materials at all
   if (nextExam && nextExam.days <= 3) {
-    return { icon: <CameraIcon />, gradient: '#FF3B30', urgency: 'critical',
+    return { icon: <CameraIcon />, signal: '#FF3B30', urgency: 'critical',
       title: `Smart Note zu ${nextExamName} erfassen`,
       subtitle: `Klausur in ${nextExam.days} Tag${nextExam.days === 1 ? '' : 'en'} — scanne deine Unterlagen.`,
       actionPath: '/unterricht', actionLabel: 'Unterricht öffnen' }
@@ -186,7 +187,7 @@ function computeSuggestion(
 
   // 6. Active Lernplan with session today
   if (hasTodaySession) {
-    return { icon: <CalendarIcon />, gradient: '#FFD060', urgency: 'normal',
+    return { icon: <CalendarIcon />, signal: '#FFD060', urgency: 'normal',
       title: 'Heutiger Lernplan wartet',
       subtitle: 'Du hast heute eine geplante Lernsession — starte jetzt.',
       actionPath: '/klausurmodus/lernplan', actionLabel: 'Lernplan öffnen' }
@@ -194,7 +195,7 @@ function computeSuggestion(
 
   // 7. Klausur 4-7 days — no Lernzettel for subject
   if (nextExam && nextExam.days <= 7 && lernzettelFor(nextExam.subjectId) === 0 && notesFor(nextExam.subjectId) > 0) {
-    return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'normal',
+    return { icon: <BookIcon />, signal: 'mode', urgency: 'normal',
       title: `Lernzettel ${nextExamName} erstellen`,
       subtitle: `Klausur in ${nextExam.days} Tagen — du hast ${notesFor(nextExam.subjectId)} Notizen als Basis.`,
       actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -202,7 +203,7 @@ function computeSuggestion(
 
   // 8. Klausur 4-7 days — has notes, no flashcards
   if (nextExam && nextExam.days <= 7 && flashFor(nextExam.subjectId) === 0 && notesFor(nextExam.subjectId) > 0) {
-    return { icon: <CardIcon />, gradient: '#7C3AED', urgency: 'normal',
+    return { icon: <CardIcon />, signal: '#7C3AED', urgency: 'normal',
       title: `Karteikarten aus ${notesFor(nextExam.subjectId)} Notizen`,
       subtitle: `${nextExamName} in ${nextExam.days} Tagen — Karteikarten helfen bei der Wiederholung.`,
       actionPath: '/klausurmodus/karteikarten/neu', actionLabel: 'Karteikarten erstellen' }
@@ -210,7 +211,7 @@ function computeSuggestion(
 
   // 9. Klausur 4-7 days — no Lernplan yet
   if (nextExam && nextExam.days <= 7 && !activePlan) {
-    return { icon: <CalendarIcon />, gradient: '#FFD060', urgency: 'normal',
+    return { icon: <CalendarIcon />, signal: '#FFD060', urgency: 'normal',
       title: `Lernplan für ${nextExam.days} Tage`,
       subtitle: `Klausur ${nextExamName} — strukturiere deine Vorbereitung mit einem Lernplan.`,
       actionPath: '/klausurmodus/lernplan/neu', actionLabel: 'Lernplan erstellen' }
@@ -218,7 +219,7 @@ function computeSuggestion(
 
   // 10. Klausur 4-7 days — good streak, suggest Probeklausur
   if (nextExam && nextExam.days <= 7 && streak >= 3) {
-    return { icon: <BoltIcon />, gradient: '#0891B2', urgency: 'normal',
+    return { icon: <BoltIcon />, signal: '#0891B2', urgency: 'normal',
       title: `Weiter so! Probeklausur ${nextExamName}`,
       subtitle: `${streak} Tage Streak — du bist in der Spur. Teste dein Wissen.`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Probeklausur starten' }
@@ -226,7 +227,7 @@ function computeSuggestion(
 
   // 11. Weakest subject < 5 NP — no Smart Notes
   if (weakest && weakest.np < 5 && notesFor(weakest.subjectId) === 0) {
-    return { icon: <CameraIcon />, gradient: '#FF3B30', urgency: 'normal',
+    return { icon: <CameraIcon />, signal: '#FF3B30', urgency: 'normal',
       title: `${weakest.name} stärken — 0 Notizen`,
       subtitle: `Note ${weakest.np} NP — scanne deine Hefte für KI-Hilfe.`,
       actionPath: '/unterricht', actionLabel: 'Unterricht öffnen' }
@@ -234,7 +235,7 @@ function computeSuggestion(
 
   // 12. Weakest subject < 5 NP — has Smart Notes, do AFB
   if (weakest && weakest.np < 5) {
-    return { icon: <AlertIcon />, gradient: '#FF9500', urgency: 'normal',
+    return { icon: <AlertIcon />, signal: '#FF9500', urgency: 'normal',
       title: `AFB-Training: ${weakest.name}`,
       subtitle: `Note ${weakest.np} NP — gezieltes AFB I/II/III Training gegen deine Lücken.`,
       actionPath: '/klausurmodus/probeklausur/afb-trainer', actionLabel: 'AFB-Trainer starten' }
@@ -242,7 +243,7 @@ function computeSuggestion(
 
   // 13. Weakest subject 5-7 NP — no Lernzettel
   if (weakest && weakest.np < 8 && lernzettelFor(weakest.subjectId) === 0) {
-    return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'normal',
+    return { icon: <BookIcon />, signal: 'mode', urgency: 'normal',
       title: `Lernzettel ${weakest.name} erstellen`,
       subtitle: `Note ${weakest.np} NP — ein guter Lernzettel hilft dir, die Lücken zu schließen.`,
       actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -251,7 +252,7 @@ function computeSuggestion(
   // 14. Two or more weak subjects (< 8 NP)
   if (weakSubjects.length >= 2) {
     const names = weakSubjects.slice(0, 2).map((sid) => SUBJECT_INFO[sid]?.name ?? sid)
-    return { icon: <AlertIcon />, gradient: '#FF9500', urgency: 'normal',
+    return { icon: <AlertIcon />, signal: '#FF9500', urgency: 'normal',
       title: `${names[0]} oder ${names[1]} stärken?`,
       subtitle: `Du hast ${weakSubjects.length} Fächer unter 8 Punkten — wo willst du anfangen?`,
       actionPath: '/klausurmodus', actionLabel: 'Lernmethoden wählen' }
@@ -259,7 +260,7 @@ function computeSuggestion(
 
   // 15. Studied today — positive reinforcement
   if (studiedToday && nextExam) {
-    return { icon: <TrophyIcon />, gradient: '#34C759', urgency: 'low',
+    return { icon: <TrophyIcon />, signal: '#34C759', urgency: 'low',
       title: 'Gut gemacht heute!',
       subtitle: `Noch ${nextExam.days} Tag${nextExam.days === 1 ? '' : 'en'} bis ${nextExamName} — du bist auf Kurs.`,
       actionPath: '/insights', actionLabel: 'Fortschritt ansehen' }
@@ -267,7 +268,7 @@ function computeSuggestion(
 
   // 16. 7+ day streak
   if (streak >= 7) {
-    return { icon: <TrophyIcon />, gradient: '#FFD060', urgency: 'low',
+    return { icon: <TrophyIcon />, signal: '#FFD060', urgency: 'low',
       title: `${streak} Tage Streak!`,
       subtitle: 'Bemerkenswerte Kontinuität — bleib am Ball.',
       actionPath: '/insights', actionLabel: 'Statistiken ansehen' }
@@ -275,7 +276,7 @@ function computeSuggestion(
 
   // 17. 2 days since last study
   if (daysSinceStudy === 2) {
-    return { icon: <BoltIcon />, gradient: '#FF9500', urgency: 'normal',
+    return { icon: <BoltIcon />, signal: '#FF9500', urgency: 'normal',
       title: '2 Tage Pause',
       subtitle: '15 Minuten reichen heute — Probeklausur oder Karteikarten.',
       actionPath: '/klausurmodus', actionLabel: 'Jetzt lernen' }
@@ -283,7 +284,7 @@ function computeSuggestion(
 
   // 18. 3+ days gap — streak broken
   if (daysSinceStudy >= 3 && appStats.streak > 0) {
-    return { icon: <BoltIcon />, gradient: '#FF3B30', urgency: 'normal',
+    return { icon: <BoltIcon />, signal: '#FF3B30', urgency: 'normal',
       title: 'Streak unterbrochen',
       subtitle: `${daysSinceStudy} Tage Pause — starte neu mit einer kurzen Probeklausur.`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Streak wiederbeleben' }
@@ -292,7 +293,7 @@ function computeSuggestion(
   // 19. Flashcards available — not studied in 3 days
   const totalFlash = flashCards.length
   if (totalFlash >= 5 && daysSinceStudy >= 3) {
-    return { icon: <CardIcon />, gradient: '#7C3AED', urgency: 'normal',
+    return { icon: <CardIcon />, signal: '#7C3AED', urgency: 'normal',
       title: `${totalFlash} Karteikarten warten`,
       subtitle: 'Deine Karteikarten wurden zuletzt vor einigen Tagen gelernt.',
       actionPath: '/klausurmodus/lernen', actionLabel: 'Jetzt lernen' }
@@ -301,7 +302,7 @@ function computeSuggestion(
   // 20. Trend down — last 2 exams declining
   if (trendDown && lastTwo.length === 2) {
     const lastSubj = SUBJECT_INFO[lastTwo[1].subjectId]?.name ?? lastTwo[1].subjectId
-    return { icon: <AlertIcon />, gradient: '#FF9500', urgency: 'normal',
+    return { icon: <AlertIcon />, signal: '#FF9500', urgency: 'normal',
       title: `Grundlagen ${lastSubj} wiederholen`,
       subtitle: `Deine letzten 2 Probeklausuren zeigen einen Abwärtstrend — fokussiere AFB I.`,
       actionPath: '/klausurmodus/probeklausur/afb-trainer', actionLabel: 'AFB I Trainer' }
@@ -311,7 +312,7 @@ function computeSuggestion(
   const lastPk = [...savedProbeklausuren].slice(-1)[0]
   if (lastPk && lastPk.totalNP < 6) {
     const lastSubj = SUBJECT_INFO[lastPk.subjectId]?.name ?? lastPk.subjectId
-    return { icon: <BookIcon />, gradient: '#FF9500', urgency: 'normal',
+    return { icon: <BookIcon />, signal: '#FF9500', urgency: 'normal',
       title: `Lücken in ${lastSubj}`,
       subtitle: `Letzte Probeklausur: ${lastPk.totalNP} NP — Lernzettel erstellen und Grundlagen wiederholen.`,
       actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -321,7 +322,7 @@ function computeSuggestion(
   const richSubject = faecher.find((sid) => notesFor(sid) > 10)
   if (richSubject) {
     const subj = SUBJECT_INFO[richSubject]?.name ?? richSubject
-    return { icon: <ClipboardIcon />, gradient: '#0891B2', urgency: 'low',
+    return { icon: <ClipboardIcon />, signal: '#0891B2', urgency: 'low',
       title: `Probeklausur ${subj}`,
       subtitle: `Du hast ${notesFor(richSubject)} Smart Notes — teste dein Wissen mit einer Probeklausur.`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Probeklausur starten' }
@@ -330,7 +331,7 @@ function computeSuggestion(
   // 23. No Klausur in next 14 days — productive suggestion
   if (!nextExam || nextExam.days > 14) {
     if (weakest) {
-      return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'low',
+      return { icon: <BookIcon />, signal: 'mode', urgency: 'low',
         title: `Nutze die Zeit: ${weakest.name}`,
         subtitle: `Keine Klausur in Sicht — perfekt um Schwächen aufzuholen.`,
         actionPath: '/klausurmodus/lernzettel/neu', actionLabel: 'Lernzettel erstellen' }
@@ -339,7 +340,7 @@ function computeSuggestion(
 
   // 24. Above Zielnote — positive
   if (gesamtnote !== null && zielnote !== null && gesamtnote <= zielnote - 0.4) {
-    return { icon: <TrophyIcon />, gradient: '#34C759', urgency: 'low',
+    return { icon: <TrophyIcon />, signal: '#34C759', urgency: 'low',
       title: 'Du liegst über deiner Zielnote!',
       subtitle: `Schnitt ${profile.abiGesamtnote} · Ziel ${profile.zielnote} — weiter so.`,
       actionPath: '/abi-rechner', actionLabel: 'Noten ansehen' }
@@ -347,7 +348,7 @@ function computeSuggestion(
 
   // 25. Below Zielnote
   if (gesamtnote !== null && zielnote !== null && gesamtnote >= zielnote + 0.4) {
-    return { icon: <StarIcon />, gradient: '#7C3AED', urgency: 'low',
+    return { icon: <StarIcon />, signal: '#7C3AED', urgency: 'low',
       title: `Zielnote ${profile.zielnote} ist erreichbar`,
       subtitle: `Aktueller Schnitt: ${profile.abiGesamtnote} — noch ${(gesamtnote - zielnote).toFixed(1)} Notenpunkte aufholen.`,
       actionPath: '/abi-rechner', actionLabel: 'Rechner öffnen' }
@@ -355,7 +356,7 @@ function computeSuggestion(
 
   // 26. Has Lernzettel — suggest reviewing them
   if (lernzettel.length > 0) {
-    return { icon: <BookIcon />, gradient: 'var(--grad-mode)', urgency: 'low',
+    return { icon: <BookIcon />, signal: 'mode', urgency: 'low',
       title: `Lernzettel wiederholen`,
       subtitle: `${lernzettel.length} Lernzettel verfügbar — kurze Wiederholung festigt das Wissen.`,
       actionPath: '/klausurmodus/lernzettel', actionLabel: 'Lernzettel öffnen' }
@@ -363,7 +364,7 @@ function computeSuggestion(
 
   // 27. No Klausurtermin set
   if (klausurtermine.length === 0) {
-    return { icon: <CalendarIcon />, gradient: 'var(--grad-mode)', urgency: 'low',
+    return { icon: <CalendarIcon />, signal: 'mode', urgency: 'low',
       title: 'Klausurtermin eintragen',
       subtitle: 'Trage deine nächste Klausur ein — dann bekommst du gezielte Lernvorschläge.',
       actionPath: '/klausurmodus', actionLabel: 'Klausurmodus öffnen' }
@@ -371,7 +372,7 @@ function computeSuggestion(
 
   // 28. Yesterday — keep streak
   if (daysSinceStudy === 1 && nextExam) {
-    return { icon: <BoltIcon />, gradient: '#FF9F0A', urgency: 'low',
+    return { icon: <BoltIcon />, signal: '#FF9F0A', urgency: 'low',
       title: `Streak halten: ${streak} Tag${streak === 1 ? '' : 'e'}`,
       subtitle: `${nextExamName} in ${nextExam.days} Tagen — heute weiterlernen.`,
       actionPath: '/klausurmodus', actionLabel: 'Lernen starten' }
@@ -379,7 +380,7 @@ function computeSuggestion(
 
   // 29. 0 Smart Notes total
   if (totalNotes === 0) {
-    return { icon: <CameraIcon />, gradient: '#7C3AED', urgency: 'low',
+    return { icon: <CameraIcon />, signal: '#7C3AED', urgency: 'low',
       title: 'Erste Smart Note erfassen',
       subtitle: 'Scanne deine Unterlagen — die KI erstellt daraus Lernmaterial.',
       actionPath: '/unterricht', actionLabel: 'Unterricht öffnen' }
@@ -387,13 +388,21 @@ function computeSuggestion(
 
   // 30. Fallback — suggest Probeklausur for next subject
   if (nextExam) {
-    return { icon: <ClipboardIcon />, gradient: '#0891B2', urgency: 'low',
+    return { icon: <ClipboardIcon />, signal: '#0891B2', urgency: 'low',
       title: `Probeklausur ${nextExamName}`,
       subtitle: `${nextExam.days} Tag${nextExam.days === 1 ? '' : 'e'} bis zur Klausur — Wissen testen.`,
       actionPath: '/klausurmodus/probeklausur', actionLabel: 'Probeklausur starten' }
   }
 
   return null
+}
+
+/** Tönung und Zeichenfarbe einer Vorschlagskachel. Nie eine volle Signalfläche:
+ *  Weiss darauf trägt je nach Ton nur 1,9:1. */
+function tonFlaeche(signal: string) {
+  return signal === 'mode'
+    ? { background: 'var(--color-accent-soft)', color: 'rgb(var(--color-accent))' }
+    : { background: `${signal}22`, color: signal }
 }
 
 export function LernvorschlagWidget() {
@@ -415,9 +424,11 @@ export function LernvorschlagWidget() {
       onClick={() => navigate(suggestion.actionPath)}
       className={`w-full bg-surface rounded-card shadow-card-adaptive border ${urgencyBorder} p-4 text-left press flex items-start gap-3.5`}
     >
+      {/* Signalton als Tönung mit farbigem Zeichen — auf der vollen Fläche
+          trug Weiss je nach Ton nur 1,9:1. */}
       <div
         className="w-12 h-12 rounded-icon flex items-center justify-center shrink-0"
-        style={{ background: suggestion.gradient }}
+        style={tonFlaeche(suggestion.signal)}
       >
         {suggestion.icon}
       </div>
@@ -427,7 +438,7 @@ export function LernvorschlagWidget() {
         <div className="mt-2.5 inline-flex items-center gap-1">
           <span
             className="text-[12px] font-semibold px-3 py-1 rounded-pill"
-            style={{ background: suggestion.gradient, color: 'white' }}
+            style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
           >
             {suggestion.actionLabel}
           </span>

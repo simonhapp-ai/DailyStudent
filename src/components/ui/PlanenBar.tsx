@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom'
+import { IST_TELEFON } from '../../lib/geraet'
 
 // Planen-Leiste (Version C) — sechs Rubriken in einem festen Raster.
 //
@@ -26,8 +27,13 @@ export function PlanenBar({ className = '' }: { className?: string }) {
   const location = useLocation()
   const navigate = useNavigate()
 
+  // Nur auf dem Telefon. Am Schreibtisch fuehrt die Seitenleiste dieselben sechs
+  // Rubriken — vorher hing es an der Fensterbreite, ob beides gleichzeitig zu
+  // sehen war: unter 1024 px erschienen die Pillen zusaetzlich zur Leiste.
+  if (!IST_TELEFON) return null
+
   return (
-    <div className={`grid grid-cols-3 gap-2 lg:hidden ${className}`}>
+    <div className={`grid grid-cols-3 gap-2 ${className}`}>
       {RUBRIKEN.map(({ label, path }) => {
         const active = location.pathname.startsWith(path)
         return (

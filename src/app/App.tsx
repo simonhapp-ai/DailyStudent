@@ -87,6 +87,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { CookieBanner } from '../components/ui/CookieBanner'
 import { analyticsAllowed, hasConsent, saveConsent } from '../lib/consent'
 import { Capacitor } from '@capacitor/core'
+import { IST_TELEFON } from '../lib/geraet'
 
 function ThemeApplier() {
   // Erscheinungsbild.
@@ -126,7 +127,7 @@ function ThemeApplier() {
 // User-Agent based: phones have "iPhone"/"iPod" or "Android" + "Mobile" in UA.
 // iPads (all versions), Android tablets, and desktops do NOT match → desktop.
 // Also works in Chrome DevTools device simulation (DevTools changes the UA).
-const IS_DESKTOP = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
+const IS_DESKTOP = !IST_TELEFON
 const IS_NATIVE = Capacitor.isNativePlatform()
 
 // Web-only signal for the landing page: has this browser touched the app
