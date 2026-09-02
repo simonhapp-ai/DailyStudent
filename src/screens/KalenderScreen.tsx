@@ -17,10 +17,14 @@ const DAY_LABELS = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
 const MONTHS_DE = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
 const MONTHS_SHORT = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
 
-const TYPE_CONFIG: Record<EntryType, { label: string; icon: IconName; color: string; grad: string }> = {
-  lerneinheit: { label: 'Lernzeit',  icon: 'book',     color: '#34C759', grad: '#34C759' },
-  termin:      { label: 'Termin',    icon: 'calendar', color: '#007AFF', grad: '#007AFF' },
-  erinnerung:  { label: 'Sonstiges', icon: 'bell',     color: '#FF9500', grad: '#FF9500' },
+// Die drei Eintragsarten trugen freie iOS-Systemfarben. Jetzt tragen sie die
+// Signalwerte des eigenen Systems — samt der Gegenfarbe, die dort schon
+// festgelegt ist: Auf Gruen und Blau traegt Weiss, auf Orange nicht.
+// Als Hexwerte, weil die Toenungen unten mit Alpha-Suffix arbeiten (`${color}18`).
+const TYPE_CONFIG: Record<EntryType, { label: string; icon: IconName; color: string; grad: string; on: string }> = {
+  lerneinheit: { label: 'Lernzeit',  icon: 'book',     color: '#008932', grad: '#008932', on: '#FFFFFF' },
+  termin:      { label: 'Termin',    icon: 'calendar', color: '#1E6EF4', grad: '#1E6EF4', on: '#FFFFFF' },
+  erinnerung:  { label: 'Sonstiges', icon: 'bell',     color: '#FF8D28', grad: '#FF8D28', on: '#1B1B1F' },
 }
 
 const PX_PER_HOUR = 56
@@ -125,7 +129,7 @@ function CloseIcon({ size = 14 }: { size?: number }) {
 // ─── Main Screen ─────────────────────────────────────────────────────────────
 
 export function KalenderScreen() {
-  const { profile, personalEntries, addEntry, removeEntry, updateProfile, addKlausurtermin } = useUser()
+  const { profile, personalEntries, addEntry, removeEntry, addKlausurtermin } = useUser()
   const navigate = useNavigate()
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const todayStr = toDateStr(today)
@@ -155,7 +159,9 @@ export function KalenderScreen() {
   // Add-entry modal (FAB)
   type FormType = EntryType | 'klausur'
   const [fabOpen,     setFabOpen]     = useState(false)
-  const [fabAnimated, setFabAnimated] = useState(false)
+  // Nur noch fuer das Ausblenden. Das Einblenden laeuft ueber die Klasse
+  // .fab-in als Keyframe und braucht keinen Zustand.
+  const [fabAnimated, setFabAnimated] = useState(true)
   const [addForm, setAddForm] = useState<{ title: string; type: FormType; date: string; time: string; endTime: string; klausurSubjectId: string; klausurTopic: string }>({
     title: '', type: 'termin', date: todayStr, time: '', endTime: '', klausurSubjectId: '', klausurTopic: '',
   })
@@ -169,8 +175,6 @@ export function KalenderScreen() {
   const [detailAnimated, setDetailAnimated] = useState(false)
 
   // Stundenplan views
-  const [spViewOpen, setSpViewOpen] = useState(false)
-  const [spEditOpen, setSpEditOpen] = useState(false)
 
 
   // ── FAB open/close ──────────────────────────────────────────
@@ -180,14 +184,15 @@ export function KalenderScreen() {
     setIsRecurring(false)
     setRecurFreq('weekly')
     setRecurEnd(toDateStr(addDays(new Date(), 90)))
+    setFabAnimated(true)
     setFabOpen(true)
-    requestAnimationFrame(() => requestAnimationFrame(() => setFabAnimated(true)))
   }
 
   const closeFab = () => {
     setFabAnimated(false)
     setTimeout(() => setFabOpen(false), 220)
   }
+
 
   const handleAdd = () => {
     if (addForm.type === 'klausur') {
@@ -384,18 +389,25 @@ export function KalenderScreen() {
 
           {/* Modal card — top-anchored so keyboard doesn't push it */}
           <div
-            className="fixed z-[45] bg-surface rounded-card shadow-float overflow-hidden"
+            className="fixed z-[45] bg-surface rounded-card shadow-float overflow-hidden fab-in"
             style={{
+              // Am Schreibtisch war der Kasten so breit wie das Fenster — ein
+              // Formular mit vier Feldern ueber 1200 px liest sich nicht.
               top: 'max(60px, calc(env(safe-area-inset-top, 0px) + 52px))',
               left: 16,
               right: 16,
+              maxWidth: 560,
+              marginLeft: 'auto',
+              marginRight: 'auto',
               maxHeight: 'calc(100dvh - 180px)',
               overflowY: 'auto',
               WebkitOverflowScrolling: 'touch',
               transformOrigin: 'bottom right',
-              transform: fabAnimated ? 'scale(1)' : 'scale(0.12)',
-              opacity: fabAnimated ? 1 : 0,
-              transition: 'transform 0.28s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease',
+              ...(fabAnimated ? {} : {
+                transform: 'scale(0.12)',
+                opacity: 0,
+                transition: 'transform 0.2s ease, opacity 0.2s ease',
+              }),
             }}
           >
             {/* Modal header */}
@@ -417,7 +429,7 @@ export function KalenderScreen() {
                       key={type}
                       onClick={() => setAddForm((f) => ({ ...f, type }))}
                       className="py-2.5 rounded-btn text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
-                      style={active ? { background: cfg.grad, borderColor: 'transparent', color: 'white', boxShadow: `0 4px 12px ${cfg.color}50` } : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-secondary))' }}
+                      style={active ? { background: cfg.grad, borderColor: 'transparent', color: cfg.on } : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-primary))' }}
                     >
                       <Icon name={cfg.icon} size={15} />
                       <span>{cfg.label}</span>
@@ -430,7 +442,7 @@ export function KalenderScreen() {
                     <button
                       onClick={() => setAddForm((f) => ({ ...f, type: 'klausur' }))}
                       className="py-2.5 rounded-btn text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
-                      style={active ? { background: '#FF3B30', borderColor: 'transparent', color: 'white', boxShadow: '0 4px 12px #FF3B3050' } : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-secondary))' }}
+                      style={active ? { background: '#FF152D', borderColor: 'transparent', color: '#FFFFFF' } : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-primary))' }}
                     >
                       <span className="text-text-secondary"><Icon name="note" size={15} /></span>
                       <span>Klausur</span>
@@ -705,48 +717,10 @@ export function KalenderScreen() {
         </>
       )}
 
-      {/* ══════════════════════════════════════════════════════════
-          Stundenplan Full View Overlay
-         ══════════════════════════════════════════════════════════ */}
-      {spViewOpen && (
-        <StundenplanFullView
-          stundenplan={profile!.stundenplan!}
-          onClose={() => setSpViewOpen(false)}
-          onEdit={() => setSpEditOpen(true)}
-        />
-      )}
-
-      {/* ══════════════════════════════════════════════════════════
-          Stundenplan Edit Overlay (full screen)
-         ══════════════════════════════════════════════════════════ */}
-      {spEditOpen && (
-        <div className="fixed inset-0 z-[62] bg-background flex flex-col">
-          {/* Edit header */}
-          <div
-            className="flex items-center gap-3 px-5 border-b border-border/40 shrink-0"
-            style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))', paddingBottom: 14 }}
-          >
-            <button
-              onClick={() => setSpEditOpen(false)}
-              className="w-9 h-9 rounded-full bg-surface-hover flex items-center justify-center text-text-muted press-sm shrink-0"
-            >
-              <CloseIcon />
-            </button>
-            <h1 className="text-[18px] font-bold text-text-primary flex-1">Stundenplan bearbeiten</h1>
-          </div>
-          {/* Reuse setup widget in edit mode */}
-          <div className="flex-1 overflow-y-auto px-5 pt-4 pb-10">
-            <StundenplanSetupWidget
-              faecher={profile?.faecher ?? []}
-              initialSlots={profile?.stundenplan?.slots}
-              onSave={(slots) => {
-                updateProfile({ stundenplan: { slots, createdAt: new Date().toISOString() } })
-                setSpEditOpen(false)
-              }}
-            />
-          </div>
-        </div>
-      )}
+      {/* Die beiden Stundenplan-Overlays lagen hier, weil der Kalender-Screen
+          den Stundenplan als Kachel mitfuehrte. Die Kachel ist weg, die Rubrik
+          „Stundenplan" hat ihren eigenen Screen — die Overlays waren danach von
+          nirgends mehr erreichbar. */}
     </div>
   )
 }
@@ -1116,96 +1090,6 @@ function AppIconPill({ tone = 'neutral', children }: { tone?: PillTone; children
 
 // ─── Stundenplan Mini Widget ──────────────────────────────────────────────────
 
-const SP_DAYS = ['Mo', 'Di', 'Mi', 'Do', 'Fr'] as const
-
-// ─── Stundenplan Full View ────────────────────────────────────────────────────
-
-function StundenplanFullView({
-  stundenplan,
-  onClose,
-  onEdit,
-}: {
-  stundenplan: Stundenplan
-  onClose: () => void
-  onEdit: () => void
-}) {
-  const byDay = SP_DAYS.map((_, i) =>
-    stundenplan.slots.filter((s) => s.day === i).sort((a, b) => a.startTime.localeCompare(b.startTime))
-  )
-
-  return (
-    <div className="fixed inset-0 z-[60] bg-background flex flex-col">
-      {/* Header */}
-      <div
-        className="flex items-center gap-3 px-5 border-b border-border/40 shrink-0"
-        style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))', paddingBottom: 14 }}
-      >
-        <button
-          onClick={onClose}
-          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
-        >
-          <ChevronLeft />
-          Zurück
-        </button>
-        <h1 className="text-[20px] font-bold text-text-primary flex-1">Stundenplan</h1>
-        <button
-          onClick={onEdit}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-btn press-sm"
-          style={{
-            background: 'var(--grad-mode)',
-          }}
-        >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span className="text-white text-[12px] font-bold">Bearbeiten</span>
-        </button>
-      </div>
-
-      {/* 5-column Stundenplan */}
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-10">
-        {/* Day header row */}
-        <div className="grid grid-cols-5 gap-2 mb-3">
-          {SP_DAYS.map((d, i) => {
-            const count = byDay[i].length
-            return (
-              <div key={d} className="flex flex-col items-center">
-                <span className="text-[11px] font-bold text-text-primary">{d}</span>
-                <span className="text-[9px] text-text-muted">{count} Std</span>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Divider */}
-        <div className="h-px bg-border/40 mb-3" />
-
-        {/* Columns — one row per "time slot layer", all days side by side */}
-        <div className="grid grid-cols-5 gap-2">
-          {SP_DAYS.map((_, dayIdx) => (
-            <div key={dayIdx} className="flex flex-col gap-2">
-              {byDay[dayIdx].length === 0 ? (
-                <div className="rounded-btn p-2 flex items-center justify-center" style={{ background: 'rgb(var(--color-border) / 0.12)', minHeight: 48 }}>
-                  <span className="text-[9px] text-text-muted/50">–</span>
-                </div>
-              ) : (
-                byDay[dayIdx].map((slot) => <StundenplanPill key={slot.id} slot={slot} variant="stack" />)
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Slot count summary */}
-        <div className="mt-4 pt-3 border-t border-border/30 flex items-center justify-center gap-1.5">
-          <span className="text-[11px] text-text-muted">
-            {stundenplan.slots.length} Stunden gesamt · erstellt {new Date(stundenplan.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: 'long' })}
-          </span>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 // ─── Stundenplan Week Widget (full-width) ────────────────────────────────────
 
