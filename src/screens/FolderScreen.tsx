@@ -159,7 +159,7 @@ export function FolderScreen() {
         </div>
       )}
 
-      <div className="px-5 mt-2 space-y-2.5">
+      <div className="px-5 mt-2 space-y-2.5 lg:px-6 lg:max-w-[860px]">
         {/* Subfolders */}
         {subFolders.length > 0 && (
           <div className="space-y-2">
@@ -255,7 +255,7 @@ export function FolderScreen() {
       )}
 
       {/* FAB + pills — stacked column, anchored bottom-right */}
-      <div className="fixed bottom-28 right-5 flex flex-col items-end gap-3 z-40">
+      <div className="fixed bottom-28 right-5 lg:bottom-8 lg:right-8 flex flex-col items-end gap-3 z-40">
 
         {/* Neuer Ordner pill — appears second (80 ms delay) */}
         {!isNoSubject && (

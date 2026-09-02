@@ -59,7 +59,7 @@ export function LessonScreen() {
         }
       />
 
-      <div className="px-5 mt-2 space-y-3">
+      <div className="px-5 mt-2 space-y-3 lg:px-6 lg:max-w-[860px]">
         {tageBisKlausur !== null && (
           <div className="flex items-center gap-2">
             <Tag tone={tageBisKlausur <= 3 ? 'red' : tageBisKlausur <= 7 ? 'orange' : 'neutral'}>
@@ -128,7 +128,7 @@ export function LessonScreen() {
         <button
           onClick={() => navigate(`/unterricht/${id}/neue-notiz`)}
           aria-label="Neue Notiz"
-          className="fixed bottom-28 right-5 w-14 h-14 rounded-full btn-mode flex items-center justify-center press"
+          className="fixed bottom-28 right-5 lg:bottom-8 lg:right-8 w-14 h-14 rounded-full btn-mode flex items-center justify-center press"
           style={{ boxShadow: '0 6px 16px rgba(0,0,0,.18)' }}
         >
           <Icon name="plus" size={24} />

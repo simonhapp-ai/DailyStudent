@@ -4,6 +4,7 @@ import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import { RichText } from '../components/ui/RichText'
 import { Icon, type IconName } from '../components/ui/Icon'
+import { Tag } from '../components/ui/Tag'
 import { useUser } from '../context/UserContext'
 import { explainKeyword, extractTextFromImage, generateFlashcards, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
@@ -251,7 +252,7 @@ export function SmartNotesScreen() {
           </button>
         </div>
 
-        <div className="px-4 pt-4 space-y-4">
+        <div className="px-4 pt-4 space-y-4 lg:px-6 lg:max-w-[900px]">
           {/* Title */}
           <input
             type="text"
@@ -382,7 +383,7 @@ export function SmartNotesScreen() {
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-24">
       <Header
-        title="Smart Notes"
+        title="Smart Note"
         subtitle={lessonTitle}
         showBack
         right={
@@ -415,7 +416,7 @@ export function SmartNotesScreen() {
         }
       />
 
-      <div className="px-4 space-y-3 mt-1">
+      <div className="px-4 space-y-3 mt-1 lg:px-6 lg:max-w-[900px]">
 
         {/* Fotos */}
         {photos.length > 0 && (
@@ -548,12 +549,10 @@ export function SmartNotesScreen() {
                   <div key={hwId} className="bg-background border border-border rounded-card px-3 py-2.5 space-y-1">
                     <div className="flex items-start justify-between gap-2">
                       <p className={`text-sm leading-snug flex-1 ${isDone ? 'line-through text-text-muted' : 'text-text-primary'}`}>
-                        {hw.description}
+                        {hw.description?.trim() || 'Ohne Beschreibung'}
                       </p>
                       {isDone && (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0" style={{ backgroundColor: 'rgba(48,209,88,0.12)', color: '#30D158' }}>
-                          Erledigt
-                        </span>
+                        <Tag tone="green" size="sm" className="whitespace-nowrap shrink-0">Erledigt</Tag>
                       )}
                     </div>
                     {hw.dueDate && (
@@ -562,7 +561,7 @@ export function SmartNotesScreen() {
                       </p>
                     )}
                     {hw.aiHelp && (
-                      <div className="mt-1.5 px-3 py-2 rounded-btn" style={{ backgroundColor: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.15)' }}>
+                      <div className="mt-1.5 px-3 py-2 rounded-btn" style={{ background: 'var(--color-accent-soft)', border: '1px solid rgb(var(--color-accent) / 0.18)' }}>
                         <p className="text-xs font-semibold text-text-primary mb-0.5">KI-Hilfe</p>
                         <p className="text-xs text-text-secondary leading-relaxed">{hw.aiHelp}</p>
                       </div>

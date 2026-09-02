@@ -81,6 +81,14 @@ export function FlashCardGeneratorScreen() {
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     : []
 
+  // Ein Fach kann nur Karteikarten liefern, wenn es analysierte Notizen hat.
+  const faecherNachMaterial = availableSubjects.map((subject) => ({
+    subject,
+    noteCount: userNotes.filter((n) => n.subjectId === subject.id && generatedNotes[n.id]).length,
+  }))
+  const mitMaterial = faecherNachMaterial.filter((f) => f.noteCount > 0)
+  const ohneMaterial = faecherNachMaterial.filter((f) => f.noteCount === 0)
+
   const selectedSubject = selectedSubjectId
     ? resolveSubjectInfo(selectedSubjectId, profile?.customFaecher)
     : null
@@ -207,7 +215,7 @@ export function FlashCardGeneratorScreen() {
         {/* ── Step 1: Fach wählen ────────────────────────────────── */}
         {step === 'fach' && (
           <div className="space-y-2">
-            <p className="section-label px-1">Für welches Fach?</p>
+            {mitMaterial.length > 0 && <p className="section-label px-1">Für welches Fach?</p>}
             {availableSubjects.length === 0 ? (
               <EmptyState
                 title="Keine Fächer ausgewählt"
@@ -223,27 +231,49 @@ export function FlashCardGeneratorScreen() {
                 }
               />
             ) : (
-              <ListGroup>
-                {availableSubjects.map((subject) => {
-                  const noteCount = userNotes.filter(
-                    (n) => n.subjectId === subject.id && generatedNotes[n.id]
-                  ).length
-                  return (
-                    <ListRow
-                      key={subject.id}
-                      leading={<SubjectIcon subjectId={subject.id} size="md" />}
-                      title={subject.name}
-                      subtitle={
-                        noteCount > 0
-                          ? `${noteCount} analysierte Notiz${noteCount > 1 ? 'en' : ''}`
-                          : 'Noch keine analysierten Notizen'
-                      }
-                      chevron
-                      onClick={() => handleSelectSubject(subject.id)}
-                    />
-                  )
-                })}
-              </ListGroup>
+              <>
+                {/* Faecher MIT Material zuerst. Vorher standen alle acht in einer
+                    Reihe, auch die ohne eine einzige analysierte Notiz — jede
+                    davon fuehrte in einen leeren zweiten Schritt. Eine Zeile, die
+                    sich anbieten laesst, muss auch irgendwohin fuehren. */}
+                {mitMaterial.length > 0 && (
+                  <ListGroup>
+                    {mitMaterial.map(({ subject, noteCount }) => (
+                      <ListRow
+                        key={subject.id}
+                        leading={<SubjectIcon subjectId={subject.id} size="md" />}
+                        title={subject.name}
+                        subtitle={`${noteCount} analysierte Notiz${noteCount > 1 ? 'en' : ''}`}
+                        chevron
+                        onClick={() => handleSelectSubject(subject.id)}
+                      />
+                    ))}
+                  </ListGroup>
+                )}
+
+                {ohneMaterial.length > 0 && (
+                  <div className="pt-3">
+                    <p className="section-label px-1 mb-2">Noch ohne Material</p>
+                    <ListGroup>
+                      {ohneMaterial.map(({ subject }) => (
+                        <ListRow
+                          key={subject.id}
+                          className="opacity-70"
+                          leading={<SubjectIcon subjectId={subject.id} size="md" />}
+                          title={subject.name}
+                          subtitle="Erst eine Notiz analysieren lassen"
+                          chevron
+                          onClick={() => navigate(`/unterricht/${subject.id}`)}
+                        />
+                      ))}
+                    </ListGroup>
+                    <p className="text-[12px] text-text-secondary mt-2 px-1 leading-relaxed">
+                      Karteikarten entstehen aus deinen eigenen Notizen. Tippe ein Fach an,
+                      um dort eine anzulegen.
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
