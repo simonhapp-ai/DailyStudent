@@ -64,7 +64,7 @@ export function ImpressumScreen() {
         <p className="text-text-muted text-[13px] mt-0.5">Angaben gem. § 5 TMG</p>
       </div>
 
-      <div className="px-4 mt-5 space-y-3">
+      <div className="px-4 mt-5 space-y-3 lg:px-6 lg:max-w-[760px]">
         {SECTIONS.map((section) => (
           <div key={section.title} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
             <div className="px-4 py-3 border-b border-border/40">

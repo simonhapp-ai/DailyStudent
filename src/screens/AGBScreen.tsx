@@ -8,7 +8,7 @@ export function AGBScreen() {
     <div className="flex flex-col min-h-dvh bg-background pb-28">
       <Header title="Nutzungsbedingungen" subtitle="Terms and Conditions" onBack={() => navigate(-1)} />
 
-      <div className="px-4 mt-4 space-y-6 text-[13px] text-text-secondary leading-relaxed">
+      <div className="px-4 mt-4 space-y-6 text-[13px] text-text-secondary leading-relaxed lg:px-6 lg:max-w-[760px]">
 
         {/* Meta */}
         <div className="bg-surface border border-border/60 rounded-card p-4 shadow-card-adaptive">

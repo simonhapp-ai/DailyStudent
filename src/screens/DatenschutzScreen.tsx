@@ -78,7 +78,7 @@ export function DatenschutzScreen() {
         <p className="text-text-muted text-[13px] mt-0.5">Datenschutzerklärung gem. DSGVO · Stand: Juni 2026</p>
       </div>
 
-      <div className="px-4 mt-5 space-y-3">
+      <div className="px-4 mt-5 space-y-3 lg:px-6 lg:max-w-[760px]">
 
         {/* ── Abschnitte ───────────────────────────────────────── */}
         {DATENSCHUTZ_SECTIONS.map((s) => (

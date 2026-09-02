@@ -387,7 +387,8 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
     location.pathname === '/klausurmodus/blurting' ||
     location.pathname.endsWith('/neue-notiz') ||
     location.pathname.startsWith('/klausurmodus/probeklausur/') ||
-    location.pathname.startsWith('/klausurmodus/lernplan/')
+    location.pathname.startsWith('/klausurmodus/lernplan/') ||
+    location.pathname === '/schreibblock'
 
   // ── Desktop / iPad layout (UA-based: not iPhone / Android phone) ────────────
   // sidebar uses CSS breakpoints internally for icon-only (md:) vs wide (lg:)
@@ -395,8 +396,12 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   if (IS_DESKTOP) {
     return (
       <div className="flex h-dvh bg-background overflow-hidden">
-        <DesktopSidebar />
-        <DesktopSidebarWide />
+        {/* Der Schreibblock nimmt auch am Schreibtisch die ganze Flaeche. Auf
+            dem Telefon war er das laengst; am iPad — dem Geraet, fuer das er
+            gedacht ist — stand die Seitenleiste noch daneben und nahm dem
+            Papier ein Viertel der Breite. */}
+        {!hideNav && <DesktopSidebar />}
+        {!hideNav && <DesktopSidebarWide />}
         <main
           ref={desktopMainRef}
           className={`flex-1 overflow-y-auto relative ${modeForPath(location.pathname) === 'klausur' ? 'mode-klausur' : ''}`}
@@ -406,7 +411,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
           </RouteFade>
           <SyncErrorBanner />
         </main>
-        <FixedBadges />
+        {!hideNav && <FixedBadges />}
         <XpToast />
         <AttachmentToast />
       </div>
@@ -423,7 +428,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
       </div>
       {!hideNav && <BottomNav />}
       <SyncErrorBanner />
-      <StreakBadge />
+      {!hideNav && <StreakBadge />}
       <XpToast />
       <AttachmentToast />
     </div>
