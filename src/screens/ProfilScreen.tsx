@@ -542,7 +542,7 @@ export function ProfilScreen() {
               </span>
               <span className="min-w-0">
                 <span className="block text-[15px] font-semibold text-text-primary">Stundenplan</span>
-                <span className="block text-[13px] text-text-secondary truncate">Wochenstunden</span>
+                <span className="block text-[13px] text-text-secondary truncate">Deine Woche</span>
               </span>
             </button>
           </div>

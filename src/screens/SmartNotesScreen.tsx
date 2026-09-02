@@ -11,6 +11,7 @@ import { pdfToImages } from '../lib/pdf'
 import { getAttachment, useResolvedAttachments, hasLocalOnlyAttachments, transferNoteAttachmentsToCloud } from '../lib/noteStorage'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { FlashCard, GeneratedSmartNote, UserNote } from '../types'
+import { EmptyState } from '../components/ui/EmptyState'
 
 function CollapsibleSection({
   title, icon, children, badge, defaultOpen = true,
@@ -223,8 +224,29 @@ export function SmartNotesScreen() {
   const resolvedEditAttachments = useResolvedAttachments(editAttachments)
 
   // ── Guard ────────────────────────────────────────────────────────────────
+  // War ein grauer Satz auf leerer Flaeche, ohne Weg zurueck. Wer ueber einen
+  // alten Link hier landet, stand fest.
   if (!userNote) {
-    return <div className="p-4 text-text-secondary">Notiz nicht gefunden.</div>
+    return (
+      <div className="flex flex-col min-h-dvh bg-background">
+        <Header title="Smart Note" showBack />
+        <div className="px-4 mt-6 lg:px-6 lg:max-w-[560px]">
+          <EmptyState
+            title="Diese Notiz gibt es nicht mehr"
+            note="Sie wurde gelöscht, oder der Link stammt aus einer älteren Fassung."
+            action={
+              <button
+                onClick={() => navigate(id ? `/unterricht/${id}` : '/unterricht')}
+                className="w-full h-12 rounded-pill text-[15px] font-semibold press"
+                style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+              >
+                Zurück zum Fach
+              </button>
+            }
+          />
+        </div>
+      </div>
+    )
   }
 
   // ── Edit mode ────────────────────────────────────────────────────────────
