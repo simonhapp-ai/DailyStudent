@@ -767,7 +767,7 @@ export function NoteCreateScreen() {
                   key={i}
                   onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${kw}` : kw })}
                   className="shrink-0 px-2.5 py-1 rounded-pill text-[11px] font-medium border border-dashed active:scale-95 transition-all"
-                  style={{ borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+                  style={{ borderColor: 'rgb(var(--color-accent) / 0.4)', color: 'rgb(var(--color-accent))' }}
                 >
                   + {kw}
                 </button>
@@ -809,7 +809,7 @@ export function NoteCreateScreen() {
 
         {/* Rich text block AI result */}
         {block.textAiResult && (
-          <div className="border-t border-border divide-y divide-border/40" style={{ background: 'rgba(var(--color-accent),0.015)' }}>
+          <div className="border-t border-border divide-y divide-border/40" style={{ background: 'rgb(var(--color-accent) / 0.015)' }}>
 
             {/* KC-Tiefe progress */}
             {block.textAiResult.kcTiefeTotal > 0 && (
@@ -829,7 +829,7 @@ export function NoteCreateScreen() {
                         className="flex-1 h-1.5 rounded-full transition-all"
                         style={{
                           background: i < activeIdx
-                            ? 'rgba(var(--color-accent),0.4)'
+                            ? 'rgb(var(--color-accent) / 0.4)'
                             : i === activeIdx
                             ? 'rgb(var(--color-accent))'
                             : 'rgb(var(--color-border))',
@@ -932,7 +932,7 @@ export function NoteCreateScreen() {
                       key={i}
                       onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${p}` : p })}
                       className="px-2.5 py-1 rounded-pill text-[11px] font-medium border border-dashed active:scale-95 transition-all hover:opacity-80"
-                      style={{ borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+                      style={{ borderColor: 'rgb(var(--color-accent) / 0.4)', color: 'rgb(var(--color-accent))' }}
                     >
                       + {p}
                     </button>
@@ -1337,7 +1337,7 @@ export function NoteCreateScreen() {
               style={{
                 width: 68, height: 96,
                 background: 'rgb(var(--color-surface))',
-                border: '1.5px dashed rgba(var(--color-border),0.7)',
+                border: '1.5px dashed rgb(var(--color-border) / 0.7)',
               }}
               title="Neue Seite im Schreibblock"
             >
@@ -1347,8 +1347,8 @@ export function NoteCreateScreen() {
                   position: 'absolute',
                   left: 10, top: 6, right: 4, bottom: 10,
                   borderRadius: 5,
-                  background: 'rgba(var(--color-border),0.18)',
-                  border: '1px solid rgba(var(--color-border),0.35)',
+                  background: 'rgb(var(--color-border) / 0.18)',
+                  border: '1px solid rgb(var(--color-border) / 0.35)',
                 }}
               />
               {/* Main page face */}
@@ -1358,7 +1358,7 @@ export function NoteCreateScreen() {
                   left: 6, top: 10, right: 8, bottom: 6,
                   borderRadius: 5,
                   background: 'rgb(var(--color-surface))',
-                  border: '1.2px solid rgba(var(--color-border),0.5)',
+                  border: '1.2px solid rgb(var(--color-border) / 0.5)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1366,7 +1366,7 @@ export function NoteCreateScreen() {
               >
                 <div style={{
                   width: 20, height: 20, borderRadius: '50%',
-                  background: 'rgba(var(--color-accent),0.15)',
+                  background: 'rgb(var(--color-accent) / 0.15)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-accent))" strokeWidth="2.8" strokeLinecap="round">
@@ -1425,7 +1425,7 @@ export function NoteCreateScreen() {
             <button
               onClick={openCanvas}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[11px] font-semibold press-sm"
-              style={{ background: 'rgba(var(--color-accent),0.1)', border: '1px solid rgba(var(--color-accent),0.3)', color: 'rgb(var(--color-accent))' }}
+              style={{ background: 'rgb(var(--color-accent) / 0.1)', border: '1px solid rgb(var(--color-accent) / 0.3)', color: 'rgb(var(--color-accent))' }}
             >
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
@@ -1487,7 +1487,7 @@ export function NoteCreateScreen() {
                     <div className="flex flex-wrap gap-1.5">
                       {block.aiResult.keywords.map((k) => (
                         <span key={k} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold"
-                          style={{ background: 'rgba(var(--color-accent),0.1)', color: 'rgb(var(--color-accent))' }}>{k}</span>
+                          style={{ background: 'rgb(var(--color-accent) / 0.1)', color: 'rgb(var(--color-accent))' }}>{k}</span>
                       ))}
                     </div>
                   </div>
@@ -1539,7 +1539,7 @@ export function NoteCreateScreen() {
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-[11px] font-semibold border transition-all press-sm"
                 style={block.subjectId === s.id
                   ? { backgroundColor: s.color, borderColor: 'transparent', color: 'white' }
-                  : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
+                  : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-secondary))' }}
               >
                 <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
                     {s.name}
@@ -1583,7 +1583,7 @@ export function NoteCreateScreen() {
                 className="flex items-center gap-1 px-2.5 py-2 rounded-card text-[11px] font-semibold border transition-all press-sm whitespace-nowrap shrink-0"
                 style={block.dueDate === nextLesson
                   ? { background: 'rgb(var(--color-accent))', borderColor: 'transparent', color: 'white' }
-                  : { borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+                  : { borderColor: 'rgb(var(--color-accent) / 0.4)', color: 'rgb(var(--color-accent))' }}
               >
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round" />

@@ -171,7 +171,7 @@ export function DesktopSidebar() {
         width: '76px',
         backdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
         WebkitBackdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
-        backgroundColor: 'rgba(var(--color-surface), 0.96)',
+        backgroundColor: 'rgb(var(--color-surface) / 0.96)',
       }}
     >
       <button
@@ -243,7 +243,7 @@ export function DesktopSidebarWide() {
         width: '272px',
         backdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
         WebkitBackdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
-        backgroundColor: 'rgba(var(--color-surface), 0.96)',
+        backgroundColor: 'rgb(var(--color-surface) / 0.96)',
       }}
     >
       {/* Identität — die ganze Zeile ist antippbar und führt ins Profil */}

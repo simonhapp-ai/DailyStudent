@@ -244,8 +244,8 @@ export function DrawingCanvasScreen() {
         style={{
           backdropFilter: 'saturate(180%) blur(28px)',
           WebkitBackdropFilter: 'saturate(180%) blur(28px)',
-          backgroundColor: 'rgba(var(--color-surface), 0.95)',
-          borderTop: '0.5px solid rgba(var(--color-border), 0.4)',
+          backgroundColor: 'rgb(var(--color-surface) / 0.95)',
+          borderTop: '0.5px solid rgb(var(--color-border) / 0.4)',
           paddingBottom: 'max(0.625rem, env(safe-area-inset-bottom, 0px))',
           paddingTop: 6,
         }}
@@ -263,7 +263,7 @@ export function DrawingCanvasScreen() {
             >
               <div
                 className="px-2 py-1.5 rounded-btn"
-                style={{ background: item.path === null ? 'rgba(124,58,237,0.12)' : 'rgba(var(--color-border), 0.22)' }}
+                style={{ background: item.path === null ? 'rgba(124,58,237,0.12)' : 'rgb(var(--color-border) / 0.22)' }}
               >
                 <div style={{ color: item.path === null ? '#7C3AED' : undefined }}>
                   {item.icon}
@@ -288,7 +288,7 @@ export function DrawingCanvasScreen() {
             className="relative max-w-lg mx-auto w-full z-10"
             style={{
               background: 'rgb(var(--color-surface))',
-              borderTop: '0.5px solid rgba(var(--color-border), 0.5)',
+              borderTop: '0.5px solid rgb(var(--color-border) / 0.5)',
               borderRadius: '20px 20px 0 0',
             }}
           >

@@ -475,7 +475,7 @@ export function LernzettelScreen() {
                 {appConfig.proPurchasesEnabled ? (
                   <span className="badge-pro-gold gap-1" style={{ padding: '2px 7px', fontSize: '10px' }}><Icon name="sparkle" size={9} filled />PRO</span>
                 ) : (
-                  <span style={{ padding: '2px 7px', fontSize: '10px', fontWeight: 700, borderRadius: '999px', background: 'rgba(var(--color-border), 0.5)', color: 'rgb(var(--color-text-muted))' }}>Vorschau</span>
+                  <span style={{ padding: '2px 7px', fontSize: '10px', fontWeight: 700, borderRadius: '999px', background: 'rgb(var(--color-border) / 0.5)', color: 'rgb(var(--color-text-muted))' }}>Vorschau</span>
                 )}
               </div>
 

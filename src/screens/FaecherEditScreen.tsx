@@ -185,8 +185,8 @@ export function FaecherEditScreen() {
                       key={cf.id}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill"
                       style={{
-                        background: 'rgba(var(--color-accent), 0.1)',
-                        border: '1px solid rgba(var(--color-accent), 0.25)',
+                        background: 'rgb(var(--color-accent) / 0.1)',
+                        border: '1px solid rgb(var(--color-accent) / 0.25)',
                       }}
                     >
                       <span className="text-[13px] font-semibold text-text-primary">{cf.name}</span>

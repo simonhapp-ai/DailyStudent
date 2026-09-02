@@ -173,7 +173,7 @@ export function ProfilAccountScreen() {
             <div className="px-5 pt-6 pb-5">
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-                style={{ background: 'rgba(var(--color-danger), 0.1)' }}
+                style={{ background: 'rgb(var(--color-danger) / 0.1)' }}
               >
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-danger))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -188,7 +188,7 @@ export function ProfilAccountScreen() {
               </p>
 
               {deleteError && (
-                <div className="rounded-btn px-3 py-2.5 mb-4 border" style={{ background: 'rgba(var(--color-danger),0.08)', borderColor: 'rgba(var(--color-danger),0.2)' }}>
+                <div className="rounded-btn px-3 py-2.5 mb-4 border" style={{ background: 'rgb(var(--color-danger) / 0.08)', borderColor: 'rgb(var(--color-danger) / 0.2)' }}>
                   <p className="text-[12px] leading-snug" style={{ color: 'rgb(var(--color-danger))' }}>{deleteError}</p>
                 </div>
               )}
@@ -203,7 +203,7 @@ export function ProfilAccountScreen() {
                 placeholder="löschen"
                 autoFocus
                 className="w-full bg-background border rounded-btn px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none mb-4"
-                style={{ borderColor: deleteInput.toLowerCase() === 'löschen' ? 'rgba(var(--color-danger),0.6)' : 'rgba(var(--color-border),0.8)' }}
+                style={{ borderColor: deleteInput.toLowerCase() === 'löschen' ? 'rgb(var(--color-danger) / 0.6)' : 'rgb(var(--color-border) / 0.8)' }}
               />
 
               <div className="flex gap-2">
@@ -221,8 +221,8 @@ export function ProfilAccountScreen() {
                   style={{
                     background: deleteInput.toLowerCase() === 'löschen'
                       ? 'rgb(var(--fill-red))'
-                      : 'rgba(var(--color-danger),0.25)',
-                    boxShadow: deleteInput.toLowerCase() === 'löschen' ? '0 4px 16px rgba(var(--color-danger),0.35)' : 'none',
+                      : 'rgb(var(--color-danger) / 0.25)',
+                    boxShadow: deleteInput.toLowerCase() === 'löschen' ? '0 4px 16px rgb(var(--color-danger) / 0.35)' : 'none',
                   }}
                 >
                   {deleting ? 'Wird gelöscht…' : 'Endgültig löschen'}

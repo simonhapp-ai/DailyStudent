@@ -398,7 +398,7 @@ function GradeSlider({ value, onChange }: { value: string; onChange: (v: string)
         className="px-5 pt-6 pb-5 text-center"
         style={{
           background: hasValue
-            ? 'linear-gradient(180deg, rgba(var(--color-accent), 0.08) 0%, transparent 100%)'
+            ? 'linear-gradient(180deg, rgb(var(--color-accent) / 0.08) 0%, transparent 100%)'
             : undefined,
         }}
       >
@@ -615,7 +615,7 @@ function StepPersonal({
       {/* Student confirmation — no G8/G9 needed */}
       {userType === 'student' && (
         <div className="rounded-card px-4 py-3.5 flex items-center gap-3 mb-2"
-          style={{ background: 'rgba(var(--color-accent), 0.08)', border: '1px solid rgba(var(--color-accent), 0.2)' }}
+          style={{ background: 'rgb(var(--color-accent) / 0.08)', border: '1px solid rgb(var(--color-accent) / 0.2)' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
@@ -985,7 +985,7 @@ function StepFaecher({
               <div
                 key={cf.id}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill"
-                style={{ background: 'rgba(var(--color-accent), 0.1)', border: '1px solid rgba(var(--color-accent), 0.25)' }}
+                style={{ background: 'rgb(var(--color-accent) / 0.1)', border: '1px solid rgb(var(--color-accent) / 0.25)' }}
               >
                 <span className="text-[13px] font-semibold text-text-primary">{cf.name}</span>
                 <button
@@ -1350,7 +1350,7 @@ function StepStundenplan({
           {/* ERROR */}
           {scanPhase === 'error' && (
             <div className="space-y-3">
-              <div className="rounded-card p-5" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
+              <div className="rounded-card p-5" style={{ background: 'rgb(var(--color-danger) / 0.08)', border: '1px solid rgb(var(--color-danger) / 0.25)' }}>
                 <p className="text-text-primary font-semibold text-[15px] mb-1">Erkennung fehlgeschlagen</p>
                 <p className="text-text-muted text-[13px] leading-relaxed">{scanError}</p>
               </div>
@@ -1465,7 +1465,7 @@ function StepStundenplan({
         </button>
 
         {fromAI && totalSlots > 0 && (
-          <div className="mb-5 rounded-icon px-4 py-3 flex items-center gap-2.5" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.25)' }}>
+          <div className="mb-5 rounded-icon px-4 py-3 flex items-center gap-2.5" style={{ background: 'rgb(var(--color-success) / 0.08)', border: '1px solid rgb(var(--color-success) / 0.25)' }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
               <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
@@ -1725,7 +1725,7 @@ function StepKlausur({
                   key={t}
                   onClick={() => setTopic(topic === t ? '' : t)}
                   className="px-3 py-1.5 rounded-pill text-[12px] font-medium transition-all press-sm"
-                  style={topic === t ? { background: 'rgb(var(--color-accent))', color: 'white' } : { background: 'rgba(var(--color-border),0.5)', color: 'rgb(var(--color-text-secondary))' }}
+                  style={topic === t ? { background: 'rgb(var(--color-accent))', color: 'white' } : { background: 'rgb(var(--color-border) / 0.5)', color: 'rgb(var(--color-text-secondary))' }}
                 >
                   {t.length > 30 ? t.slice(0, 30) + '…' : t}
                 </button>

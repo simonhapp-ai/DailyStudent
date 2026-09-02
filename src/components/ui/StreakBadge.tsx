@@ -26,8 +26,8 @@ export function StreakBadge({ inline = false }: { inline?: boolean }) {
   const pillStyle: React.CSSProperties = {
     padding: '5px 10px 5px 8px',
     borderRadius: '20px',
-    background: 'rgba(var(--color-surface), 0.92)',
-    border: '1px solid rgba(var(--color-border), 0.7)',
+    background: 'rgb(var(--color-surface) / 0.92)',
+    border: '1px solid rgb(var(--color-border) / 0.7)',
     backdropFilter: 'blur(var(--material-blur-thin))',
     WebkitBackdropFilter: 'blur(var(--material-blur-thin))',
     ...(!inline && {

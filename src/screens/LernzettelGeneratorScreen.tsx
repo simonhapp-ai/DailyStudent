@@ -399,7 +399,7 @@ export function LernzettelGeneratorScreen() {
                         style={
                           selected
                             ? { borderColor: 'rgb(var(--color-accent))', background: 'rgba(90,200,250,0.08)' }
-                            : { borderColor: 'rgba(var(--color-border), 0.6)', background: 'rgb(var(--color-surface))' }
+                            : { borderColor: 'rgb(var(--color-border) / 0.6)', background: 'rgb(var(--color-surface))' }
                         }
                       >
                         <div className="p-4 flex items-start gap-3">

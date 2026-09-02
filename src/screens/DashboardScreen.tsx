@@ -139,7 +139,7 @@ function ErsteSchritteCard({ tasks, onDismiss }: { tasks: ErsteSchritteTask[]; o
         </div>
       </div>
 
-      <div className="h-2 rounded-pill overflow-hidden mb-3" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
+      <div className="h-2 rounded-pill overflow-hidden mb-3" style={{ background: 'rgb(var(--color-border) / 0.5)' }}>
         <div className="h-full rounded-pill transition-all duration-500 bg-accent" style={{ width: `${pct}%` }} />
       </div>
 
@@ -538,7 +538,7 @@ export function DashboardScreen() {
           {upcomingExamsCount > 0 && (
             <span
               className="shrink-0 flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-pill whitespace-nowrap"
-              style={{ background: 'rgba(var(--color-accent), 0.1)', color: 'rgb(var(--color-accent))' }}
+              style={{ background: 'rgb(var(--color-accent) / 0.1)', color: 'rgb(var(--color-accent))' }}
             >
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--grad-mode)' }} />
               {upcomingExamsCount} Klausur{upcomingExamsCount === 1 ? '' : 'en'} in Sicht

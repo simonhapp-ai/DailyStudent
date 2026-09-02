@@ -1218,7 +1218,7 @@ function StepZusammenfassung({
       </div>
 
       {genError && (
-        <div className="mb-4 p-3 rounded-icon text-text-primary text-[13px]" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
+        <div className="mb-4 p-3 rounded-icon text-text-primary text-[13px]" style={{ background: 'rgb(var(--color-danger) / 0.08)', border: '1px solid rgb(var(--color-danger) / 0.2)' }}>
           {genError}
         </div>
       )}

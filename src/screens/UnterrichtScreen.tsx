@@ -840,7 +840,7 @@ export function UnterrichtScreen() {
               />
             </div>
             <div className="flex gap-3 mb-5">
-              <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.2)' }}>
+              <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgb(var(--color-success) / 0.08)', border: '1px solid rgb(var(--color-success) / 0.2)' }}>
                 <p className="text-text-primary font-bold text-[18px]">{importSucceeded}</p>
                 <p className="text-text-muted text-[11px]">Erstellt</p>
               </div>
@@ -851,7 +851,7 @@ export function UnterrichtScreen() {
                 <p className="text-text-muted text-[11px]">Ausstehend</p>
               </div>
               {importFailed > 0 && (
-                <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
+                <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgb(var(--color-danger) / 0.08)', border: '1px solid rgb(var(--color-danger) / 0.2)' }}>
                   <p className="text-text-primary font-bold text-[18px]">{importFailed}</p>
                   <p className="text-text-muted text-[11px]">Fehler</p>
                 </div>
@@ -870,7 +870,7 @@ export function UnterrichtScreen() {
             <div className="flex flex-col items-center py-4 mb-5">
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center mb-3"
-                style={{ background: importSucceeded > 0 ? 'rgba(var(--color-success),0.12)' : 'rgba(var(--color-border),0.3)' }}
+                style={{ background: importSucceeded > 0 ? 'rgb(var(--color-success) / 0.12)' : 'rgb(var(--color-border) / 0.3)' }}
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className={importSucceeded > 0 ? 'text-text-primary' : 'text-text-muted'}>
                   <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
@@ -911,7 +911,7 @@ export function UnterrichtScreen() {
               onClick={() => folderActionsFor && openDeleteConfirm(folderActionsFor)}
               className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
             >
-              <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(var(--color-danger),0.1)' }}>
+              <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgb(var(--color-danger) / 0.1)' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgb(var(--color-danger))' }}>
                   <polyline points="3 6 5 6 21 6" />
                   <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />

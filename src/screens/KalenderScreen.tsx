@@ -280,7 +280,7 @@ export function KalenderScreen() {
                         background: 'var(--grad-mode)',
                         color: 'rgb(var(--color-on-accent))',
                       } : {
-                        background: 'rgba(var(--color-border), 0.5)',
+                        background: 'rgb(var(--color-border) / 0.5)',
                         color: 'rgb(var(--color-text-muted))',
                       }}
                     >
@@ -417,7 +417,7 @@ export function KalenderScreen() {
                       key={type}
                       onClick={() => setAddForm((f) => ({ ...f, type }))}
                       className="py-2.5 rounded-btn text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
-                      style={active ? { background: cfg.grad, borderColor: 'transparent', color: 'white', boxShadow: `0 4px 12px ${cfg.color}50` } : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
+                      style={active ? { background: cfg.grad, borderColor: 'transparent', color: 'white', boxShadow: `0 4px 12px ${cfg.color}50` } : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-secondary))' }}
                     >
                       <Icon name={cfg.icon} size={15} />
                       <span>{cfg.label}</span>
@@ -430,7 +430,7 @@ export function KalenderScreen() {
                     <button
                       onClick={() => setAddForm((f) => ({ ...f, type: 'klausur' }))}
                       className="py-2.5 rounded-btn text-[11px] font-bold flex flex-col items-center justify-center gap-0.5 border transition-all duration-200 press-sm"
-                      style={active ? { background: '#FF3B30', borderColor: 'transparent', color: 'white', boxShadow: '0 4px 12px #FF3B3050' } : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
+                      style={active ? { background: '#FF3B30', borderColor: 'transparent', color: 'white', boxShadow: '0 4px 12px #FF3B3050' } : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-secondary))' }}
                     >
                       <span className="text-text-secondary"><Icon name="note" size={15} /></span>
                       <span>Klausur</span>
@@ -518,7 +518,7 @@ export function KalenderScreen() {
                           color: 'white',
                         } : {
                           color: 'rgb(var(--color-text-secondary))',
-                          background: 'rgba(var(--color-border),0.35)',
+                          background: 'rgb(var(--color-border) / 0.35)',
                         }}
                       >
                         <span className="inline-flex items-center gap-1.5"><Icon name={val ? 'repeat' : 'pin'} size={13} />{val ? 'Wiederkehrend' : 'Einmalig'}</span>
@@ -544,7 +544,7 @@ export function KalenderScreen() {
                               style={active ? {
                                 background: 'var(--grad-mode)',
                                 color: 'white',
-                                boxShadow: '0 2px 6px rgba(var(--color-accent),0.35)',
+                                boxShadow: '0 2px 6px rgb(var(--color-accent) / 0.35)',
                               } : { color: 'rgb(var(--color-text-muted))', background: 'transparent' }}
                             >
                               {label}
@@ -580,7 +580,7 @@ export function KalenderScreen() {
                       background: addForm.type === 'klausur'
                         ? '#FF3B30'
                         : 'rgb(var(--color-accent))',
-                      boxShadow: canAdd ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',
+                      boxShadow: canAdd ? '0 4px 16px rgb(var(--color-accent) / 0.4)' : 'none',
                     }}
                   >
                     {addForm.type === 'klausur' ? 'Klausur eintragen' : isRecurring ? 'Wiederkehrend speichern' : 'Hinzufügen'}
@@ -596,7 +596,7 @@ export function KalenderScreen() {
             className="fixed bottom-[100px] right-5 w-14 h-14 rounded-full flex items-center justify-center z-[46] press-sm"
             style={{
               background: 'var(--grad-mode)',
-              boxShadow: '0 8px 24px rgba(var(--color-accent),0.45), 0 2px 8px rgba(0,0,0,0.2)',
+              boxShadow: '0 8px 24px rgb(var(--color-accent) / 0.45), 0 2px 8px rgba(0,0,0,0.2)',
             }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -679,7 +679,7 @@ export function KalenderScreen() {
                 <button
                   onClick={() => { closeDetail(); navigate(`/klausurmodus/lernplan/${selectedEntry.lernplanId}`) }}
                   className="w-full py-3 rounded-btn text-[14px] font-bold transition-all press-sm flex items-center justify-center gap-2"
-                  style={{ background: 'rgba(var(--color-accent), 0.10)', color: 'rgb(var(--color-accent))' }}
+                  style={{ background: 'rgb(var(--color-accent) / 0.10)', color: 'rgb(var(--color-accent))' }}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -693,9 +693,9 @@ export function KalenderScreen() {
                 onClick={() => { removeEntry(selectedEntry.id); closeDetail() }}
                 className="w-full py-3 rounded-btn border text-[14px] font-bold transition-all press-sm mt-1"
                 style={{
-                  borderColor: 'rgba(var(--color-danger), 0.3)',
+                  borderColor: 'rgb(var(--color-danger) / 0.3)',
                   color: 'rgb(var(--color-danger))',
-                  background: 'rgba(var(--color-danger), 0.05)',
+                  background: 'rgb(var(--color-danger) / 0.05)',
                 }}
               >
                 Eintrag löschen
@@ -1013,7 +1013,7 @@ function MonthView({ viewDate, todayStr, personalEntries, klausurtermine, onNavi
                 style={isToday ? {
                   background: 'var(--grad-mode)',
                   color: 'white',
-                  boxShadow: '0 2px 6px rgba(var(--color-accent),0.4)',
+                  boxShadow: '0 2px 6px rgb(var(--color-accent) / 0.4)',
                 } : isPast ? { color: 'rgb(var(--color-text-muted) / 0.4)' } : { color: 'rgb(var(--color-text-primary))' }}
               >
                 {day}
@@ -1065,7 +1065,7 @@ function YearView({ viewDate, todayStr, personalEntries, klausurtermine, onNavig
           while (cells.length % 7 !== 0) cells.push(null)
 
           return (
-            <button key={m} onClick={() => onMonthPress(new Date(year, m, 1))} className="bg-background rounded-btn p-2 border text-left press-sm" style={{ borderColor: isCurrent ? 'rgba(var(--color-accent),0.6)' : 'rgba(var(--color-border),0.3)', boxShadow: isCurrent ? '0 0 0 1px rgba(var(--color-accent),0.2)' : 'none' }}>
+            <button key={m} onClick={() => onMonthPress(new Date(year, m, 1))} className="bg-background rounded-btn p-2 border text-left press-sm" style={{ borderColor: isCurrent ? 'rgb(var(--color-accent) / 0.6)' : 'rgb(var(--color-border) / 0.3)', boxShadow: isCurrent ? '0 0 0 1px rgb(var(--color-accent) / 0.2)' : 'none' }}>
               <p className="text-[9px] font-bold mb-1 text-center" style={{ color: isCurrent ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-secondary))' }}>{MONTHS_SHORT[m]}</p>
               <div className="grid grid-cols-7 gap-y-px">
                 {['M','D','M','D','F','S','S'].map((l, i) => <div key={i} className="text-center text-[4px] text-text-muted/30">{l}</div>)}
@@ -1075,7 +1075,7 @@ function YearView({ viewDate, todayStr, personalEntries, klausurtermine, onNavig
                   const isToday = dateStr === todayStr
                   const hasEvt  = personalEntries.some((e) => e.date === dateStr) || klausurtermine.some((k) => k.date === dateStr)
                   return (
-                    <div key={idx} className="flex items-center justify-center aspect-square rounded-[2px]" style={{ background: isToday ? 'rgb(var(--color-accent))' : hasEvt ? 'rgba(var(--color-accent),0.2)' : 'transparent' }}>
+                    <div key={idx} className="flex items-center justify-center aspect-square rounded-[2px]" style={{ background: isToday ? 'rgb(var(--color-accent))' : hasEvt ? 'rgb(var(--color-accent) / 0.2)' : 'transparent' }}>
                       <span className="text-[5px] font-medium leading-none" style={{ color: isToday ? 'white' : hasEvt ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted) / 0.5)' }}>{day}</span>
                     </div>
                   )
@@ -1186,7 +1186,7 @@ function StundenplanFullView({
           {SP_DAYS.map((_, dayIdx) => (
             <div key={dayIdx} className="flex flex-col gap-2">
               {byDay[dayIdx].length === 0 ? (
-                <div className="rounded-btn p-2 flex items-center justify-center" style={{ background: 'rgba(var(--color-border),0.12)', minHeight: 48 }}>
+                <div className="rounded-btn p-2 flex items-center justify-center" style={{ background: 'rgb(var(--color-border) / 0.12)', minHeight: 48 }}>
                   <span className="text-[9px] text-text-muted/50">–</span>
                 </div>
               ) : (
@@ -1285,7 +1285,7 @@ function KlausurFormFields({
                 key={id}
                 onClick={() => onSubjectId(id)}
                 className="flex items-center gap-1.5 p-2.5 rounded-btn border text-left transition-all press-sm"
-                style={active ? { background: `${subj.color}18`, borderColor: subj.color } : { borderColor: 'rgba(var(--color-border),0.6)', background: 'transparent' }}
+                style={active ? { background: `${subj.color}18`, borderColor: subj.color } : { borderColor: 'rgb(var(--color-border) / 0.6)', background: 'transparent' }}
               >
                 <SubjectIcon subjectId={id} size="sm" className="!w-5 !h-5" />
                 <span className="text-[11px] font-semibold truncate leading-tight" style={{ color: active ? subj.color : 'rgb(var(--color-text-secondary))' }}>{subj.name}</span>
@@ -1317,7 +1317,7 @@ function KlausurFormFields({
                 className="px-2.5 py-1 rounded-pill text-[11px] font-medium press-sm transition-all"
                 style={topic === t
                   ? { background: '#FF3B30', color: 'white' }
-                  : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }
+                  : { background: 'rgb(var(--color-border) / 0.4)', color: 'rgb(var(--color-text-secondary))' }
                 }
               >
                 {t.length > 28 ? t.slice(0, 28) + '…' : t}
@@ -1446,7 +1446,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               )}
               {scanPhase === 'error' && (
                 <div className="space-y-2">
-                  <div className="rounded-icon p-4" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
+                  <div className="rounded-icon p-4" style={{ background: 'rgb(var(--color-danger) / 0.08)', border: '1px solid rgb(var(--color-danger) / 0.25)' }}>
                     <p className="text-text-primary font-semibold text-[14px] mb-1">Erkennung fehlgeschlagen</p>
                     <p className="text-text-muted text-[12px] leading-relaxed">{scanError}</p>
                   </div>
@@ -1465,14 +1465,14 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                   <ChevronLeft />Zurück
                 </button>
                 {totalSlots > 0 && !addingSlot && (
-                  <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-on-accent text-[12px] font-bold press-sm" style={{ background: 'rgb(var(--color-accent))', boxShadow: '0 3px 10px rgba(var(--color-accent),0.35)' }}>
+                  <button onClick={handleSave} className="px-3.5 py-1.5 rounded-pill text-on-accent text-[12px] font-bold press-sm" style={{ background: 'rgb(var(--color-accent))', boxShadow: '0 3px 10px rgb(var(--color-accent) / 0.35)' }}>
                     Speichern · {totalSlots} Std
                   </button>
                 )}
               </div>
 
               {fromAI && totalSlots > 0 && (
-                <div className="rounded-btn px-3 py-2.5 flex items-center gap-2" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.25)' }}>
+                <div className="rounded-btn px-3 py-2.5 flex items-center gap-2" style={{ background: 'rgb(var(--color-success) / 0.08)', border: '1px solid rgb(var(--color-success) / 0.25)' }}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   <p className="text-[12px] font-medium text-text-primary">{totalSlots} Stunden erkannt — prüfen &amp; anpassen</p>
                 </div>
@@ -1487,7 +1487,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                       style={activeDay === i ? {
                         background: 'var(--grad-mode)',
                         borderColor: 'transparent',
-                      } : { background: 'rgb(var(--color-background))', borderColor: 'rgba(var(--color-border),0.6)' }}>
+                      } : { background: 'rgb(var(--color-background))', borderColor: 'rgb(var(--color-border) / 0.6)' }}>
                       <span className={`text-[11px] font-semibold ${activeDay === i ? 'text-white/80' : 'text-text-muted'}`}>{d}</span>
                       <span className={`text-[12px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-text-primary' : 'text-text-muted/30'}`}>{count > 0 ? count : '·'}</span>
                     </button>
@@ -1565,7 +1565,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
               )}
 
               {totalSlots > 0 && !addingSlot && (
-                <button onClick={handleSave} className="w-full py-3 rounded-icon text-on-accent text-[14px] font-bold press-sm" style={{ background: 'rgb(var(--color-accent))', boxShadow: '0 4px 16px rgba(var(--color-accent),0.4)' }}>
+                <button onClick={handleSave} className="w-full py-3 rounded-icon text-on-accent text-[14px] font-bold press-sm" style={{ background: 'rgb(var(--color-accent))', boxShadow: '0 4px 16px rgb(var(--color-accent) / 0.4)' }}>
                   Stundenplan speichern · {totalSlots} Stunde{totalSlots === 1 ? '' : 'n'}
                 </button>
               )}
@@ -1574,7 +1574,7 @@ export function StundenplanSetupWidget({ faecher, onSave, initialSlots }: { faec
                 <button
                   onClick={() => { setMode('scan'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
                   className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-pill text-[13px] font-bold press-sm"
-                  style={{ background: 'rgba(var(--color-accent), 0.1)', color: 'rgb(var(--color-accent))' }}
+                  style={{ background: 'rgb(var(--color-accent) / 0.1)', color: 'rgb(var(--color-accent))' }}
                 >
                   <span className="shrink-0 text-text-secondary"><Icon name="camera" size={14} /></span>
                   Mit KI Scannen

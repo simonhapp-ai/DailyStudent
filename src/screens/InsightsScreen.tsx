@@ -396,7 +396,7 @@ function SubjectBarChart({ items }: { items: BarItem[] }) {
                 />
               </div>
               {/* Baseline */}
-              <div className="w-full h-px" style={{ background: 'rgba(var(--color-border), 0.7)' }} />
+              <div className="w-full h-px" style={{ background: 'rgb(var(--color-border) / 0.7)' }} />
               {/* Subject icon + grade label */}
               <SubjectIcon subjectId={s.subjectId} size="sm" className="mt-1.5 !w-6 !h-6" />
               <span className="text-[11px] font-semibold mt-0.5" style={{ color: c }}>

@@ -280,8 +280,8 @@ export function ProfilScreen() {
                     className="w-10 h-10 rounded-btn flex items-center justify-center text-[22px] press-sm transition-all"
                     style={{
                       background: avatarEmoji === emoji
-                        ? 'rgba(var(--color-accent), 0.15)'
-                        : 'rgba(var(--color-border), 0.4)',
+                        ? 'rgb(var(--color-accent) / 0.15)'
+                        : 'rgb(var(--color-border) / 0.4)',
                       outline: avatarEmoji === emoji ? '2px solid rgb(var(--color-accent))' : '2px solid transparent',
                     }}
                   >

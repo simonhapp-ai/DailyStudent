@@ -564,7 +564,7 @@ textarea::placeholder {
 }
 
 .nav-active {
-  background: rgba(var(--color-text-primary), 0.08);
+  background: rgb(var(--color-text-primary) / 0.08);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -572,10 +572,10 @@ textarea::placeholder {
     transform: scale(1.08);
   }
   .nav-btn:not(.nav-active):hover {
-    background: rgba(var(--color-text-primary), 0.06);
+    background: rgb(var(--color-text-primary) / 0.06);
   }
   .nav-btn.nav-active:hover {
-    background: rgba(var(--color-text-primary), 0.13);
+    background: rgb(var(--color-text-primary) / 0.13);
   }
 }
 

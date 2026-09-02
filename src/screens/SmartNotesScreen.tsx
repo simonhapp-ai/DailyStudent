@@ -821,7 +821,7 @@ export function SmartNotesScreen() {
           >
             <div className="px-5 pt-5 pb-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-icon mx-auto mb-4"
-                style={{ background: 'rgba(var(--color-danger), 0.12)' }}>
+                style={{ background: 'rgb(var(--color-danger) / 0.12)' }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgb(var(--color-danger))' }}>
                   <polyline points="3 6 5 6 21 6" />

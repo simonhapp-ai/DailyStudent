@@ -54,7 +54,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
               key={m.days}
               className="rounded-btn py-2.5 text-center"
               style={{
-                background: streak >= m.days ? 'rgba(52,211,153,0.12)' : 'rgba(var(--color-border), 0.4)',
+                background: streak >= m.days ? 'rgba(52,211,153,0.12)' : 'rgb(var(--color-border) / 0.4)',
               }}
             >
               <p className="text-[15px] font-black tabular-nums" style={{ color: streak >= m.days ? '#059669' : 'rgb(var(--color-text-muted))' }}>

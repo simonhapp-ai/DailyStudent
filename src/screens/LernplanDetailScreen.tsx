@@ -43,9 +43,9 @@ const DAY_TYPE_LABELS: Record<LernDayType, string> = {
 }
 
 const DAY_TYPE_COLORS: Record<LernDayType, string> = {
-  lern: 'rgba(var(--color-accent), 0.12)',
-  pause: 'rgba(var(--color-border), 0.6)',
-  klausur: 'rgba(var(--color-danger), 0.12)',
+  lern: 'rgb(var(--color-accent) / 0.12)',
+  pause: 'rgb(var(--color-border) / 0.6)',
+  klausur: 'rgb(var(--color-danger) / 0.12)',
   puffer: 'rgba(255, 149, 0, 0.12)',
 }
 
@@ -488,7 +488,7 @@ export function LernplanDetailScreen() {
 
                 {/* Exam banner */}
                 {day.dayType === 'klausur' && (
-                  <div className="mx-4 mb-4 p-3 rounded-icon flex items-center gap-2" style={{ background: 'rgba(var(--color-danger),0.10)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
+                  <div className="mx-4 mb-4 p-3 rounded-icon flex items-center gap-2" style={{ background: 'rgb(var(--color-danger) / 0.10)', border: '1px solid rgb(var(--color-danger) / 0.25)' }}>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
                       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                       <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
@@ -499,7 +499,7 @@ export function LernplanDetailScreen() {
 
                 {/* Pause banner */}
                 {day.dayType === 'pause' && (
-                  <div className="mx-4 mb-4 p-3 rounded-icon" style={{ background: 'rgba(var(--color-border),0.3)' }}>
+                  <div className="mx-4 mb-4 p-3 rounded-icon" style={{ background: 'rgb(var(--color-border) / 0.3)' }}>
                     <p className="text-text-muted text-[13px] text-center flex items-center justify-center gap-1.5"><Icon name="coffee" size={14} />Erholungstag — keine Lernaufgaben</p>
                   </div>
                 )}

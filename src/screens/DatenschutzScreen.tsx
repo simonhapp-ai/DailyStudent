@@ -158,9 +158,9 @@ export function DatenschutzScreen() {
             onClick={openConfirm}
             className="w-full h-12 rounded-pill border press-sm transition-all text-[15px] font-bold"
             style={{
-              borderColor: 'rgba(var(--color-danger), 0.35)',
+              borderColor: 'rgb(var(--color-danger) / 0.35)',
               color: 'rgb(var(--color-danger))',
-              background: 'rgba(var(--color-danger), 0.05)',
+              background: 'rgb(var(--color-danger) / 0.05)',
             }}
           >
             Account & alle Daten löschen
@@ -181,7 +181,7 @@ export function DatenschutzScreen() {
 
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-                style={{ background: 'rgba(var(--color-danger), 0.1)' }}
+                style={{ background: 'rgb(var(--color-danger) / 0.1)' }}
               >
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-danger))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -222,8 +222,8 @@ export function DatenschutzScreen() {
                 className="w-full bg-background border rounded-btn px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none transition-colors mb-4"
                 style={{
                   borderColor: canDelete
-                    ? 'rgba(var(--color-danger), 0.6)'
-                    : 'rgba(var(--color-border), 0.8)',
+                    ? 'rgb(var(--color-danger) / 0.6)'
+                    : 'rgb(var(--color-border) / 0.8)',
                 }}
               />
 
@@ -242,8 +242,8 @@ export function DatenschutzScreen() {
                   style={{
                     background: canDelete
                       ? 'rgb(var(--fill-red))'
-                      : 'rgba(var(--color-danger), 0.25)',
-                    boxShadow: canDelete ? '0 4px 16px rgba(var(--color-danger),0.35)' : 'none',
+                      : 'rgb(var(--color-danger) / 0.25)',
+                    boxShadow: canDelete ? '0 4px 16px rgb(var(--color-danger) / 0.35)' : 'none',
                   }}
                 >
                   {deleting ? 'Wird gelöscht…' : 'Endgültig löschen'}

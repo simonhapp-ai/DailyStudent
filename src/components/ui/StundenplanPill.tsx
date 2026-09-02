@@ -90,7 +90,7 @@ export function StundenplanPill({ slot, variant, isCurrent, isPast, isNext, styl
         <span className="text-[11px] font-bold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(52,199,89,0.18)', color: '#30D158' }}>Jetzt</span>
       )}
       {isNext && !isCurrent && (
-        <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: 'rgba(var(--color-accent), 0.12)', color: 'rgb(var(--color-accent))' }}>Nächste</span>
+        <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full" style={{ background: 'rgb(var(--color-accent) / 0.12)', color: 'rgb(var(--color-accent))' }}>Nächste</span>
       )}
     </div>
   )

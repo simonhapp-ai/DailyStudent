@@ -77,10 +77,10 @@ export function BundeslandScreen() {
                   onClick={() => { setBundeslandId(bl.id); setSaved(false) }}
                   className={`py-2.5 px-1 rounded-btn text-center press-sm transition-all duration-200 border ${active ? 'text-text-primary' : 'text-text-secondary'}`}
                   style={active ? {
-                    background: 'rgba(var(--color-accent),0.08)',
-                    borderColor: 'rgba(var(--color-accent),0.5)',
+                    background: 'rgb(var(--color-accent) / 0.08)',
+                    borderColor: 'rgb(var(--color-accent) / 0.5)',
                   } : {
-                    borderColor: 'rgba(var(--color-border),0.6)',
+                    borderColor: 'rgb(var(--color-border) / 0.6)',
                     background: 'rgb(var(--color-surface))',
                   }}
                 >
@@ -102,7 +102,7 @@ export function BundeslandScreen() {
                   key={sf}
                   onClick={() => { setSchulform(sf); setSaved(false) }}
                   className={`w-full flex items-center justify-between px-4 py-3.5 press-sm transition-all ${i < SCHULFORMEN.length - 1 ? 'border-b border-border/50' : ''}`}
-                  style={active ? { background: 'rgba(var(--color-accent),0.06)' } : {}}
+                  style={active ? { background: 'rgb(var(--color-accent) / 0.06)' } : {}}
                 >
                   <span className={`text-[15px] font-medium ${active ? 'text-text-primary' : 'text-text-primary'}`}>{sf}</span>
                   {active && (
@@ -132,10 +132,10 @@ export function BundeslandScreen() {
                     onClick={() => { setSchultyp(id); setSaved(false) }}
                     className="py-3.5 px-4 rounded-icon border press-sm transition-all text-left"
                     style={active ? {
-                      background: 'rgba(var(--color-accent),0.08)',
-                      borderColor: 'rgba(var(--color-accent),0.5)',
+                      background: 'rgb(var(--color-accent) / 0.08)',
+                      borderColor: 'rgb(var(--color-accent) / 0.5)',
                     } : {
-                      borderColor: 'rgba(var(--color-border),0.6)',
+                      borderColor: 'rgb(var(--color-border) / 0.6)',
                       background: 'rgb(var(--color-surface))',
                     }}
                   >
@@ -155,7 +155,7 @@ export function BundeslandScreen() {
           className="w-full h-12 rounded-pill text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
           style={{
             background: 'var(--grad-mode)',
-            boxShadow: changed && !saved ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',
+            boxShadow: changed && !saved ? '0 4px 16px rgb(var(--color-accent) / 0.4)' : 'none',
           }}
         >
           {saved ? 'Gespeichert' : error ? 'Fehler' : 'Speichern'}

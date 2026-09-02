@@ -161,7 +161,7 @@ function GradePicker({
             style={
               isSelected
                 ? { background: `${color}22`, color, border: `2px solid ${color}`, fontWeight: 800, fontSize: 14, boxShadow: `0 2px 8px ${color}40` }
-                : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-secondary))', border: '1.5px solid transparent', fontWeight: 600, fontSize: 13 }
+                : { background: 'rgb(var(--color-border) / 0.35)', color: 'rgb(var(--color-text-secondary))', border: '1.5px solid transparent', fontWeight: 600, fontSize: 13 }
             }
           >
             {i}
@@ -266,7 +266,7 @@ function GradeColumn({
               <button
                 onClick={() => onRemoveGrade(idx)}
                 className="w-4 h-4 rounded-full flex items-center justify-center press-sm"
-                style={{ background: 'rgba(var(--color-border),0.55)' }}
+                style={{ background: 'rgb(var(--color-border) / 0.55)' }}
               >
                 <span className="text-[11px] text-text-muted leading-none">×</span>
               </button>
@@ -284,9 +284,9 @@ function GradeColumn({
         onClick={onAddGrade}
         className="w-full py-1.5 rounded-chip text-[11px] font-bold press-sm"
         style={{
-          background: 'rgba(var(--color-accent),0.07)',
+          background: 'rgb(var(--color-accent) / 0.07)',
           color: 'rgb(var(--color-accent))',
-          border: '1px dashed rgba(var(--color-accent),0.3)',
+          border: '1px dashed rgb(var(--color-accent) / 0.3)',
         }}
       >
         + Note
@@ -379,8 +379,8 @@ function SubjectCard({
             className="px-2 py-0.5 rounded-pill text-[11px] font-bold transition-all press-sm"
             style={
               entry.notBelegt
-                ? { background: 'rgba(var(--color-danger),0.15)', color: 'rgb(var(--color-danger))', border: '1px solid rgba(var(--color-danger),0.3)' }
-                : { background: 'rgba(var(--color-border),0.3)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
+                ? { background: 'rgb(var(--color-danger) / 0.15)', color: 'rgb(var(--color-danger))', border: '1px solid rgb(var(--color-danger) / 0.3)' }
+                : { background: 'rgb(var(--color-border) / 0.3)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
             }
           >
             {entry.notBelegt ? 'Nicht belegt' : '— Nicht belegt'}
@@ -397,7 +397,7 @@ function SubjectCard({
               style={
                 entry.isLK
                   ? { background: 'var(--grad-mode)', color: '#FFFFFF', border: '1px solid transparent' }
-                  : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
+                  : { background: 'rgb(var(--color-border) / 0.4)', color: 'rgb(var(--color-text-muted))', border: '1px solid transparent' }
               }
             >
               LK 2×
@@ -477,7 +477,7 @@ function SubjectCard({
               style={
                 active
                   ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
-                  : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-muted))' }
+                  : { background: 'rgb(var(--color-border) / 0.35)', color: 'rgb(var(--color-text-muted))' }
               }
             >
               {label}
@@ -504,7 +504,7 @@ function SubjectCard({
                   style={
                     active
                       ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
-                      : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }
+                      : { background: 'rgb(var(--color-border) / 0.4)', color: 'rgb(var(--color-text-secondary))' }
                   }
                 >
                   {label}
@@ -517,7 +517,7 @@ function SubjectCard({
               style={
                 manualOpen
                   ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
-                  : { background: 'rgba(var(--color-border),0.4)', color: 'rgb(var(--color-text-secondary))' }
+                  : { background: 'rgb(var(--color-border) / 0.4)', color: 'rgb(var(--color-text-secondary))' }
               }
             >
               Manuell
@@ -586,7 +586,7 @@ function PruefungCard({
           {pruefung.subjectId ? (
             <SubjectIcon subjectId={pruefung.subjectId} size="sm" />
           ) : (
-            <div className="w-8 h-8 rounded-btn flex items-center justify-center text-[13px] font-bold text-text-muted shrink-0" style={{ background: 'rgba(var(--color-border),0.4)' }}>
+            <div className="w-8 h-8 rounded-btn flex items-center justify-center text-[13px] font-bold text-text-muted shrink-0" style={{ background: 'rgb(var(--color-border) / 0.4)' }}>
               {index + 1}
             </div>
           )}
@@ -630,7 +630,7 @@ function PruefungCard({
                     style={
                       active
                         ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
-                        : { background: 'rgba(var(--color-border),0.35)', color: 'rgb(var(--color-text-secondary))' }
+                        : { background: 'rgb(var(--color-border) / 0.35)', color: 'rgb(var(--color-text-secondary))' }
                     }
                   >
                     <SubjectIcon subjectId={sid} size="sm" className="!w-4 !h-4" />{info.name}
@@ -887,7 +887,7 @@ export function AbiRechnerScreen() {
                         key={hj.id}
                         className="text-[11px] font-semibold px-2 py-0.5 rounded-pill"
                         style={{
-                          background: note ? `${noteColorAbi(note)}18` : 'rgba(var(--color-border),0.3)',
+                          background: note ? `${noteColorAbi(note)}18` : 'rgb(var(--color-border) / 0.3)',
                           color: note ? noteColorAbi(note) : 'rgb(var(--color-text-muted))',
                         }}
                       >
@@ -908,7 +908,7 @@ export function AbiRechnerScreen() {
             <div className="flex items-center gap-4">
               <div
                 className="w-12 h-12 rounded-icon flex items-center justify-center text-2xl shrink-0"
-                style={{ background: 'rgba(var(--color-accent),0.1)' }}
+                style={{ background: 'rgb(var(--color-accent) / 0.1)' }}
               >
                 <Icon name="cap" size={28} />
               </div>
@@ -980,7 +980,7 @@ export function AbiRechnerScreen() {
                     style={
                       isActive
                         ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
-                        : { background: 'rgb(var(--color-surface))', border: '1.5px solid rgba(var(--color-border),1)', color: 'rgb(var(--color-text-secondary))' }
+                        : { background: 'rgb(var(--color-surface))', border: '1.5px solid rgb(var(--color-border) / 1)', color: 'rgb(var(--color-text-secondary))' }
                     }
                   >
                     <span className="text-[13px] font-bold">{hj.label}</span>
