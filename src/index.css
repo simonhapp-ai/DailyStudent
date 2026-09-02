@@ -790,3 +790,30 @@ textarea::placeholder {
     26%, 100% { opacity: 0; }
   }
 }
+
+/* Auf Druck etwas groesser statt kleiner.
+   Die uebliche Konvention ist das Gegenteil (Knoepfe sinken beim Druecken um
+   ein paar Prozent ein). Fuer die Navigation hat Simon ausdruecklich das
+   Wachsen gewaehlt: Diese Flaechen sind Ziele, keine Ausloeser — sie sollen
+   beim Antippen entgegenkommen. Dezent, damit das Layout ruhig bleibt. */
+.press-grow {
+  transition: transform 170ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.press-grow:active {
+  transform: scale(1.045);
+}
+
+/* Die Eintraege der Seitenleiste tragen bereits ein Wachsen beim Zeigen
+   (1.08). Der Druck muss darueber hinausgehen, sonst schrumpfte der Knopf am
+   Schreibtisch genau dann, wenn er wachsen soll. */
+.nav-btn:active {
+  transform: scale(1.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press-grow:active,
+  .nav-btn:active {
+    transform: none;
+  }
+}

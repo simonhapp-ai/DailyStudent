@@ -177,7 +177,7 @@ export function DesktopSidebar() {
       <button
         onClick={() => navigate('/profil')}
         title="Profil und Einstellungen"
-        className="mx-auto mt-6 mb-4 w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold press shrink-0"
+        className="mx-auto mt-6 mb-4 w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold press-grow shrink-0"
         style={{ background: 'var(--stage-bg)' }}
       >
         {initials}
@@ -249,7 +249,7 @@ export function DesktopSidebarWide() {
       {/* Identität — die ganze Zeile ist antippbar und führt ins Profil */}
       <button
         onClick={() => navigate('/profil')}
-        className="flex items-center gap-3 px-4 pt-6 pb-4 press-sm text-left"
+        className="flex items-center gap-3 px-4 pt-6 pb-4 press-grow text-left"
       >
         <span
           className="w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold shrink-0"

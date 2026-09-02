@@ -41,7 +41,7 @@ export function PlanenBar({ className = '' }: { className?: string }) {
             key={path}
             onClick={() => { if (!active) navigate(path) }}
             aria-current={active ? 'page' : undefined}
-            className={`w-full h-9 px-2 rounded-pill text-[12.5px] font-semibold truncate press-sm transition-colors ${
+            className={`w-full h-9 px-2 rounded-pill text-[12.5px] font-semibold truncate press-grow transition-colors ${
               active ? 'btn-mode' : 'bg-surface text-text-primary hover:bg-surface-hover'
             }`}
           >

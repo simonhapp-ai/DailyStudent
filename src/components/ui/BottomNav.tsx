@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { recenterScreen } from '../../lib/nativeBridge'
-import { modeForPath, MODE_HOME, type AppMode } from '../../lib/appMode'
+import { modeForPath, MODE_HOME, isPlanenPath, PLANEN_HOME, type AppMode } from '../../lib/appMode'
 
 // Zwei Modi statt vier Tabs (Version C).
 //
@@ -50,10 +50,17 @@ export function BottomNav() {
                 // bereits aktiven Modus ab (der Pfad ändert sich nicht, der
                 // app-weite Route-Effect feuert also nicht) als auch den Wechsel.
                 recenterScreen()
-                if (!active) navigate(MODE_HOME[mode])
+                if (!active) { navigate(MODE_HOME[mode]); return }
+                // Nochmal auf den bereits aktiven Klausurenmodus tippen fuehrt
+                // ins Planen — sonst muss man dafuer jedes Mal an den oberen
+                // Bildschirmrand greifen. Ist man schon dort, bleibt es beim
+                // Hochscrollen (natives Verhalten einer Tableiste).
+                if (mode === 'klausur' && !isPlanenPath(location.pathname)) {
+                  navigate(PLANEN_HOME)
+                }
               }}
               aria-current={active ? 'page' : undefined}
-              className="flex-1 relative flex items-center justify-center rounded-full h-[46px] px-3"
+              className="flex-1 relative flex items-center justify-center rounded-full h-[46px] px-3 press-grow"
             >
               {active && (
                 <motion.div

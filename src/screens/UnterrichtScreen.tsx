@@ -15,6 +15,7 @@ import { currentSlot, nextSlot, todaysSlots } from '../lib/appMode'
 import { resolveSubjectInfo, sortSubjectsByGroup } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
 import { bundeslandName } from '../data/bundeslaender'
+import type { StundenplanSlot } from '../types'
 
 const grossAnfang = (w: string) => w.charAt(0).toUpperCase() + w.slice(1)
 
@@ -431,11 +432,10 @@ export function UnterrichtScreen() {
                   className="h-12 rounded-pill bg-white text-[#1B1B1F] text-[15px] font-semibold press flex items-center justify-center gap-2 px-3"
                 >
                   <Icon name="note" size={17} />
-                  <span className="truncate">
-                    {laufendeStunde && !laufendeStunde.isFreistunde && laufendeStunde.subjectId
-                      ? resolveSubjectInfo(laufendeStunde.subjectId, profile?.customFaecher).name
-                      : 'Schnellnotiz'}
-                  </span>
+                  {/* Steht hier das Fach, liest es sich neben „Importieren" wie
+                      eine zweite Quelle statt wie eine Handlung. Das Fach wird
+                      weiterhin vorgelegt — es steht schon in der Zeile darueber. */}
+                  <span className="truncate">Neue Notiz</span>
                 </button>
                 <button
                   onClick={() => importRef.current?.click()}
@@ -580,22 +580,15 @@ export function UnterrichtScreen() {
             </svg>
           </button>
 
-          {/* Der Tag als eine Zeile. Im Hochformat steht er unter den Aufgaben,
+          {/* Der Tag als Weg. Im Hochformat steht er unter den Aufgaben,
               im Querformat füllt er die rechte Spalte, die sonst leer bliebe. */}
           {heuteSlots.length > 0 && (
-            <div className="bg-surface rounded-card p-4">
-              <p className="section-label">
-                Stundenplan heute
-              </p>
-              <p className="text-[16px] font-semibold text-text-primary mt-1.5 leading-snug">
-                {heuteSlots
-                  .map((sl) => sl.isFreistunde ? 'frei' : resolveSubjectInfo(sl.subjectId, profile?.customFaecher).name)
-                  .join(' · ')}
-              </p>
-              <p className="text-[13px] text-text-secondary mt-0.5">
-                Schulschluss {heuteSlots[heuteSlots.length - 1].endTime}
-              </p>
-            </div>
+            <Tagesweg
+              slots={heuteSlots}
+              laufend={laufendeStunde}
+              naechste={naechsteStunde}
+              customFaecher={profile?.customFaecher}
+            />
           )}
             </div>
 
@@ -1079,5 +1072,148 @@ function AddFolderGridItem({ onClick }: { onClick: () => void }) {
       <p className="text-[11px] font-semibold text-text-primary text-center">Neuer Ordner</p>
       <p className="text-[11px] text-transparent select-none">·</p>
     </button>
+  )
+}
+
+// ── Tagesweg ──────────────────────────────────────────────────────────────
+//
+// Der Stundenplan des Tages war eine Aufzaehlung: „Mathematik · Biologie ·
+// Englisch, Schulschluss 12:15". Das sagt, WAS ansteht, aber nicht, WO man
+// gerade ist — und genau das ist die Frage, die man sich waehrend der Schule
+// stellt.
+//
+// Jetzt ein Weg: die Stunden als versetzte Stationen an einer Linie, die sich
+// bis zum jetzigen Zeitpunkt einfaerbt. Vergangenes ist gedimmt, die laufende
+// Stunde traegt einen Ring in der Modusfarbe, Kommendes steht normal da.
+//
+// Die Stationen liegen in gleich breiten Spalten statt zeitproportional: Bei
+// zeitgenauer Platzierung ruecken zwei aufeinanderfolgende Stunden so dicht
+// zusammen, dass sich ihre Zeichen ueberlappen. Der Fortschritt rechnet
+// deshalb ebenfalls in Spalten — Linie und Stationen sagen so dasselbe.
+function Tagesweg({
+  slots, laufend, naechste, customFaecher,
+}: {
+  slots: StundenplanSlot[]
+  laufend: StundenplanSlot | null | undefined
+  naechste: StundenplanSlot | null | undefined
+  customFaecher?: Array<{ id: string; name: string; icon?: string }>
+}) {
+  const inMinuten = (zeit: string) => {
+    const [h, m] = zeit.split(':').map(Number)
+    return h * 60 + (m || 0)
+  }
+
+  const jetzt = (() => {
+    const d = new Date()
+    return d.getHours() * 60 + d.getMinutes()
+  })()
+
+  // Anteil des Tages, in Spalten gerechnet: Jede Stunde belegt ein gleich
+  // breites Stueck, innerhalb der laufenden Stunde wird anteilig gefuellt.
+  const anteil = (() => {
+    const n = slots.length
+    if (n === 0) return 0
+    if (jetzt < inMinuten(slots[0].startTime)) return 0
+    for (let i = 0; i < n; i++) {
+      const von = inMinuten(slots[i].startTime)
+      const bis = inMinuten(slots[i].endTime)
+      if (jetzt < von) return i / n                     // Pause davor
+      if (jetzt <= bis) {
+        const dauer = Math.max(1, bis - von)
+        return (i + (jetzt - von) / dauer) / n          // mitten in der Stunde
+      }
+    }
+    return 1
+  })()
+
+
+  const schluss = slots[slots.length - 1].endTime
+
+  return (
+    <div className="bg-surface rounded-card p-4">
+      <p className="section-label">Dein Tag</p>
+      <p className="text-[16px] font-semibold text-text-primary mt-1.5 leading-snug">
+        {laufend
+          ? (laufend.isFreistunde
+              ? `Freistunde bis ${laufend.endTime}`
+              : `${resolveSubjectInfo(laufend.subjectId, customFaecher).name} bis ${laufend.endTime}`)
+          : naechste
+            ? `Gleich ${naechste.isFreistunde ? 'frei' : resolveSubjectInfo(naechste.subjectId, customFaecher).name} um ${naechste.startTime}`
+            : `Schulschluss ${schluss}`}
+      </p>
+
+      <div className="relative mt-4" style={{ height: 132 }}>
+        {/* Der Weg */}
+        <div className="absolute left-1 right-1 top-1/2 -translate-y-1/2 h-[3px] rounded-pill bg-[rgb(120,120,128)]/[0.18] dark:bg-[rgb(120,120,128)]/[0.32]" />
+        <div
+          className="absolute left-1 top-1/2 -translate-y-1/2 h-[3px] rounded-pill transition-[width] duration-[420ms] ease-[cubic-bezier(.23,1,.32,1)] motion-reduce:transition-none"
+          style={{ width: `calc((100% - 8px) * ${anteil})`, background: 'var(--grad-mode)' }}
+        />
+
+        {/* Die Stationen */}
+        <div className="absolute inset-0 flex">
+          {slots.map((slot, i) => {
+            const oben = i % 2 === 0
+            const vorbei = jetzt > inMinuten(slot.endTime)
+            const istJetzt = laufend?.id === slot.id
+            const info = slot.isFreistunde ? null : resolveSubjectInfo(slot.subjectId, customFaecher)
+            return (
+              <div key={slot.id} className="flex-1 relative flex items-center justify-center">
+                {/* Steg von der Linie zur Station */}
+                <span
+                  className={`absolute left-1/2 -translate-x-1/2 w-[2px] bg-[rgb(120,120,128)]/[0.28] ${oben ? 'bottom-1/2 h-4' : 'top-1/2 h-4'}`}
+                  aria-hidden
+                />
+                {/* Punkt auf der Linie */}
+                <span
+                  className="absolute w-2 h-2 rounded-full ring-2 ring-surface"
+                  style={{ background: vorbei || istJetzt ? 'rgb(var(--color-accent))' : 'rgb(120 120 128 / 0.5)' }}
+                  aria-hidden
+                />
+                {/* Station */}
+                <div
+                  className={`absolute flex flex-col items-center gap-1 ${oben ? 'bottom-1/2 mb-4' : 'top-1/2 mt-4'}`}
+                  style={{ opacity: vorbei && !istJetzt ? 0.45 : 1 }}
+                >
+                  {slot.isFreistunde ? (
+                    <span className="w-8 h-8 rounded-icon bg-[rgb(120,120,128)]/[0.14] dark:bg-[rgb(120,120,128)]/[0.26] flex items-center justify-center text-text-secondary">
+                      <Icon name="coffee" size={16} />
+                    </span>
+                  ) : (
+                    <span
+                      className="rounded-icon"
+                      style={istJetzt
+                        ? { boxShadow: '0 0 0 2px rgb(var(--color-accent))', borderRadius: 12 }
+                        : undefined}
+                    >
+                      <SubjectIcon subjectId={slot.subjectId} size="sm" className="!w-8 !h-8" />
+                    </span>
+                  )}
+                  <span className="text-[11px] tabular-nums text-text-secondary leading-none">
+                    {slot.startTime}
+                  </span>
+                </div>
+                <span className="sr-only">
+                  {info?.name ?? 'Freistunde'} um {slot.startTime}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Wo du gerade bist */}
+        {anteil > 0 && anteil < 1 && (
+          <span
+            className="absolute top-1/2 w-3.5 h-3.5 rounded-full -translate-x-1/2 -translate-y-1/2 ring-[3px] ring-surface"
+            style={{ left: `calc(4px + (100% - 8px) * ${anteil})`, background: 'rgb(var(--color-accent))' }}
+            aria-hidden
+          />
+        )}
+      </div>
+
+      <p className="text-[13px] text-text-secondary mt-1">
+        Schulschluss {schluss}
+      </p>
+    </div>
   )
 }
