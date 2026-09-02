@@ -25,6 +25,7 @@ export function ReferralPill() {
       aria-label={`Freunde einladen: ${referralCount} von 5`}
       className="flex items-center gap-1.5 select-none press-sm"
       style={{
+        color: '#FFFFFF',
         padding: '5px 10px 5px 8px',
         borderRadius: '20px',
         background: 'rgba(10,10,10,0.88)',

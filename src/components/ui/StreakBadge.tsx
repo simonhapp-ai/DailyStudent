@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { getActiveStreak } from '../../lib/streak'
 import { StreakInfoSheet } from './StreakInfoSheet'
-import { Icon } from './Icon'
 
 // inline=true: no fixed positioning — use inside a FixedBadges container
 export function StreakBadge({ inline = false }: { inline?: boolean }) {
@@ -47,7 +46,7 @@ export function StreakBadge({ inline = false }: { inline?: boolean }) {
         className={`${inline ? '' : 'fixed z-40 '}flex items-center gap-1.5 select-none press-sm`}
         style={pillStyle}
       >
-        <Icon name="flame" size={15} filled />
+        <span aria-hidden className="leading-none" style={{ fontSize: 15 }}>🔥</span>
         <span
           className="font-bold tabular-nums leading-none"
           style={{ color: 'rgb(var(--color-text-primary))', fontSize: '13px' }}
