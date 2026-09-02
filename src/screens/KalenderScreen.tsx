@@ -1027,7 +1027,7 @@ function YearView({ viewDate, todayStr, personalEntries, klausurtermine, onNavig
         <button onClick={() => onNavigate(1)}  className="w-9 h-9 flex items-center justify-center rounded-full bg-surface-hover border border-border/30 shadow-sm text-text-secondary press-sm"><ChevronRight /></button>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 px-3 py-2">
+      <div className="grid grid-cols-2 min-[420px]:grid-cols-3 gap-2 px-3 py-2">
         {Array.from({ length: 12 }, (_, m) => {
           const days = getDaysInMonth(year, m)
           const off  = firstDayOffset(year, m)
@@ -1040,9 +1040,9 @@ function YearView({ viewDate, todayStr, personalEntries, klausurtermine, onNavig
 
           return (
             <button key={m} onClick={() => onMonthPress(new Date(year, m, 1))} className="bg-background rounded-btn p-2 border text-left press-sm" style={{ borderColor: isCurrent ? 'rgb(var(--color-accent) / 0.6)' : 'rgb(var(--color-border) / 0.3)', boxShadow: isCurrent ? '0 0 0 1px rgb(var(--color-accent) / 0.2)' : 'none' }}>
-              <p className="text-[9px] font-bold mb-1 text-center" style={{ color: isCurrent ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-secondary))' }}>{MONTHS_SHORT[m]}</p>
-              <div className="grid grid-cols-7 gap-y-px">
-                {['M','D','M','D','F','S','S'].map((l, i) => <div key={i} className="text-center text-[4px] text-text-muted/30">{l}</div>)}
+              <p className="text-[12px] font-semibold mb-1.5 text-center" style={{ color: isCurrent ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-primary))' }}>{MONTHS_SHORT[m]}</p>
+              <div className="grid grid-cols-7 gap-y-0.5">
+                {['M','D','M','D','F','S','S'].map((l, i) => <div key={i} className="text-center text-[9px] text-text-muted">{l}</div>)}
                 {cells.map((day, idx) => {
                   if (!day) return <div key={idx} className="aspect-square" />
                   const dateStr = `${year}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
@@ -1050,7 +1050,7 @@ function YearView({ viewDate, todayStr, personalEntries, klausurtermine, onNavig
                   const hasEvt  = personalEntries.some((e) => e.date === dateStr) || klausurtermine.some((k) => k.date === dateStr)
                   return (
                     <div key={idx} className="flex items-center justify-center aspect-square rounded-[2px]" style={{ background: isToday ? 'rgb(var(--color-accent))' : hasEvt ? 'rgb(var(--color-accent) / 0.2)' : 'transparent' }}>
-                      <span className="text-[5px] font-medium leading-none" style={{ color: isToday ? 'white' : hasEvt ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted) / 0.5)' }}>{day}</span>
+                      <span className="text-[10px] font-medium leading-none tabular-nums" style={{ color: isToday ? '#FFFFFF' : hasEvt ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-secondary))' }}>{day}</span>
                     </div>
                   )
                 })}
