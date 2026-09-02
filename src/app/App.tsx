@@ -2,7 +2,6 @@ import { Component, useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { modeForPath } from '../lib/appMode'
 import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
 
 class ErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
   state = { error: null }
@@ -255,14 +254,22 @@ function AppRoutes() {
 // Screen während der Übergangsdauer). Deckt sich gut mit dem bestehenden
 // Scroll-Reset-Effect (App.tsx, useEffect auf location.pathname): der neue
 // Screen ist schon oben gescrollt, bevor er sichtbar einblendet.
+// Sanfter Wechsel zwischen Screens.
+//
+// Lief vorher ueber framer-motion mit `initial: opacity 0`. Das setzt den
+// Screen beim Einhaengen auf unsichtbar und verlaesst sich darauf, dass ein
+// Animationsbild ihn wieder hochholt. Bleibt dieses Bild aus — weil der Screen
+// beim ersten Zeichnen viel zu rechnen hat, das Geraet langsam ist oder der
+// Tab im Hintergrund liegt —, steht der Screen dauerhaft auf Deckkraft 0: Man
+// landet auf einer leeren Flaeche. Genau das war beim Wechsel in den
+// Klausurenmodus zu sehen, dem schwereren der beiden Screens.
+//
+// Als CSS-Animation ohne Fuellmodus ist der Grundzustand sichtbar. Laeuft die
+// Animation, blendet sie von 0 auf 1; laeuft sie nicht, ist der Screen einfach
+// sofort da. Der schlechteste Fall ist damit „kein Uebergang" statt „nichts zu
+// sehen".
 function RouteFade({ children, routeKey }: { children: ReactNode; routeKey: string }) {
-  const reducedMotion = useReducedMotion()
-  if (reducedMotion) return <>{children}</>
-  return (
-    <motion.div key={routeKey} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.18, ease: 'easeOut' }}>
-      {children}
-    </motion.div>
-  )
+  return <div key={routeKey} className="route-fade">{children}</div>
 }
 
 function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onConsentGiven: (analytics: boolean) => void }) {

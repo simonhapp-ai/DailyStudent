@@ -823,3 +823,20 @@ textarea::placeholder {
   }
 }
 
+
+/* Screenwechsel — sanft, aber nie auf Kosten der Sichtbarkeit.
+   Bewusst OHNE animation-fill-mode: Der Grundzustand ist damit sichtbar. Laeuft
+   die Animation nicht (langsames Geraet, Tab im Hintergrund, erster schwerer
+   Aufbau), ist der Screen einfach sofort da statt dauerhaft durchsichtig. */
+@keyframes route-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.route-fade {
+  animation: route-fade 180ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-fade { animation: none; }
+}
