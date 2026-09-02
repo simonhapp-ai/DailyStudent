@@ -93,6 +93,16 @@ const DEFAULT_APP_CONFIG: AppConfig = {
 // OAuth flow, so both need to be covered for the bypass to be reliable.
 const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
 
+/** Was der XP-Toast zum Zeichnen braucht. */
+export interface XpToastDaten {
+  betrag: number
+  /** XP-Stand vor der Gutschrift — der Balken laeuft von hier los. */
+  vorher: number
+  nachher: number
+  /** Schluessel aus COIN_VALUES, fuer die Beschriftung. */
+  action?: string
+}
+
 export const COIN_VALUES = {
   // Anwesenheit ist keine Leistung: Der taegliche Login-Bonus ist auf 0
   // gesetzt, statt den Schluessel zu entfernen — so bleiben bestehende
@@ -216,9 +226,8 @@ interface UserContextValue {
   redeemDiscount: (tier: '15' | '30') => Promise<string | null>
   debugSetCoins: (amount: number) => void
   incrementScanCount: () => void
-  coinToastVisible: boolean
-  coinToastAmount: number
-  showCoinToast: (amount: number) => void
+  xpToast: XpToastDaten | null
+  showCoinToast: (amount: number, action?: string) => void
   hideCoinToast: () => void
   localAttachmentToastVisible: boolean
   showLocalAttachmentToast: () => void
@@ -642,16 +651,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [trialEndsAt, setTrialEndsAt] = useState<string | null>(null)
   const [subscriptionSource, setSubscriptionSource] = useState<'stripe' | 'apple' | null>(null)
 
-  const [coinToastVisible, setCoinToastVisible] = useState(false)
-  const [coinToastAmount, setCoinToastAmount] = useState(0)
+  // Der Toast zeigt einen Balken, der von vorher nach nachher laeuft — dafuer
+  // reicht der Betrag allein nicht, er braucht den Stand davor. Der wird hier
+  // aus dem aktuellen Stand zurueckgerechnet: Zum Zeitpunkt des Aufrufs sind
+  // die XP bereits gutgeschrieben.
+  const [xpToast, setXpToast] = useState<XpToastDaten | null>(null)
 
-  const showCoinToast = (amount: number) => {
+  const showCoinToast = (amount: number, action?: string) => {
     if (amount <= 0) return
-    setCoinToastAmount(amount)
-    setCoinToastVisible(true)
+    const nachher = (loadStorage().appStats ?? DEFAULT_APP_STATS).coins ?? 0
+    setXpToast({ betrag: amount, vorher: Math.max(0, nachher - amount), nachher, action })
   }
 
-  const hideCoinToast = () => setCoinToastVisible(false)
+  const hideCoinToast = () => setXpToast(null)
 
   const [localAttachmentToastVisible, setLocalAttachmentToastVisible] = useState(false)
   const showLocalAttachmentToast = () => setLocalAttachmentToastVisible(true)
@@ -985,7 +997,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     recordExam({ id: pk.id, date: pk.completedAt, subjectId: pk.subjectId, gradeLabel: pk.gradeLabel, totalNP: pk.totalNP, source: 'probeklausur' })
     // Only mode 2 (Vollständige 90-Min-Klausur) earns coins
     if (pk.mode === 2) {
-      void addCoins('PROBEKLAUSUR').then((coinGain) => { if (coinGain > 0) showCoinToast(coinGain) })
+      void addCoins('PROBEKLAUSUR').then((coinGain) => { if (coinGain > 0) showCoinToast(coinGain, 'PROBEKLAUSUR') })
     }
     if (authUser) void syncProbeklausur(authUser.id, pk)
   }
@@ -1090,7 +1102,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
       newStreak = current.streak + 1
       streakFreezes -= 1
       freezeUsedDates = [...freezeUsedDates.slice(-6), yesterday]
-      showCoinToast(0) // toast suppressed but we could show freeze notification later
     } else {
       // Streak broken
       newStreak = 1
@@ -1381,8 +1392,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         redeemDiscount,
         debugSetCoins,
         incrementScanCount,
-        coinToastVisible,
-        coinToastAmount,
+        xpToast,
         showCoinToast,
         hideCoinToast,
         localAttachmentToastVisible,

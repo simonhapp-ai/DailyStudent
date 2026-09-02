@@ -7,6 +7,7 @@ import { getActiveStreak } from '../lib/streak'
 import {
   RAENGE, rangFuer, naechsterRang, rangFortschritt, xpBisNaechster,
   FREEZE_PRO_TAGE, FREEZE_MAX, verdienteFreezes,
+  XP_AKTIONEN, etappeFuer, ETAPPE_XP,
 } from '../lib/xp'
 
 // ── Rang ──────────────────────────────────────────────────────────────────
@@ -19,14 +20,6 @@ import {
 // Genau das zeigt der Screen — keine Währung, keine Kachel-Landschaft, eine
 // Liste.
 
-const AKTIONEN: { key: string; label: string; xp: number; icon: IconName }[] = [
-  { key: 'SMART_NOTE',        label: 'Notiz analysieren lassen', xp: 5,  icon: 'camera' },
-  { key: 'FLASHCARD_LEARNED', label: 'Karteikarten lernen',      xp: 10, icon: 'cards' },
-  { key: 'BLURTING',          label: 'Blurting abschließen',     xp: 10, icon: 'bulb' },
-  { key: 'LERNPLAN_DAY',      label: 'Lernplan-Tag erledigen',   xp: 15, icon: 'calendar' },
-  { key: 'LERNZETTEL',        label: 'Lernzettel erstellen',     xp: 20, icon: 'document' },
-  { key: 'PROBEKLAUSUR',      label: 'Probeklausur schreiben',   xp: 50, icon: 'clipboard' },
-]
 
 export function ProfilCoinsScreen() {
   const navigate = useNavigate()
@@ -37,6 +30,7 @@ export function ProfilCoinsScreen() {
   const naechster = naechsterRang(xp)
   const anteil = rangFortschritt(xp)
   const fehlend = xpBisNaechster(xp)
+  const etappe = etappeFuer(xp)
 
   const today = new Date().toISOString().slice(0, 10)
   const cooldowns = appStats.cooldowns ?? []
@@ -93,6 +87,28 @@ export function ProfilCoinsScreen() {
               ? `Noch ${fehlend} XP bis „${naechster.label}“`
               : 'Höchste Stufe erreicht.'}
           </p>
+
+          {/* Die laufende Etappe — dieselbe Einteilung, die der Toast beim
+              Verdienen zeigt. Stuende sie nur dort, gaebe es die Etappe nur in
+              einer Meldung, die nach drei Sekunden weg ist. */}
+          <div className="mt-4 pt-4 border-t border-border/60">
+            <div className="flex items-baseline justify-between gap-3">
+              <p className="text-[13px] text-text-primary">
+                {etappe.gesamt
+                  ? `Etappe ${etappe.nummer} von ${etappe.gesamt}`
+                  : `Etappe ${etappe.nummer}`}
+              </p>
+              <p className="text-[12px] text-text-secondary tabular-nums">
+                {xp - etappe.von} von {ETAPPE_XP} XP
+              </p>
+            </div>
+            <div className="h-2 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] overflow-hidden mt-2">
+              <div
+                className="h-full rounded-pill transition-[width] duration-[280ms] ease-[cubic-bezier(.23,1,.32,1)]"
+                style={{ width: `${etappe.anteil * 100}%`, background: 'var(--grad-mode)' }}
+              />
+            </div>
+          </div>
         </div>
 
         {/* ── Streak-Schutz ─────────────────────────────────────
@@ -128,14 +144,14 @@ export function ProfilCoinsScreen() {
         <div>
           <p className="section-label px-1 mb-2">Wofür es XP gibt</p>
           <ListGroup>
-            {AKTIONEN.map((a) => {
+            {XP_AKTIONEN.map((a) => {
               const heuteSchon = cooldowns.includes(`${a.key}:${today}`)
               return (
                 <ListRow
                   key={a.key}
                   leading={
                     <span className="w-9 h-9 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-primary shrink-0">
-                      <Icon name={a.icon} size={17} />
+                      <Icon name={a.icon as IconName} size={17} />
                     </span>
                   }
                   title={<span className="text-[15px] font-normal">{a.label}</span>}

@@ -12,7 +12,7 @@ const PRO_TOGGLE_ALLOWLIST = [
 
 export function ProfilDevToolsScreen() {
   const navigate = useNavigate()
-  const { authUser, isPro, setIsPro, appStats, debugSetCoins } = useUser()
+  const { authUser, isPro, setIsPro, appStats, debugSetCoins, showCoinToast } = useUser()
   const [proToast, setProToast] = useState(false)
 
   const handleProToggle = () => {
@@ -93,6 +93,31 @@ export function ProfilDevToolsScreen() {
                   {v}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Der XP-Toast erscheint sonst nur beim echten Verdienen, also
+              hoechstens sechsmal am Tag — zum Ansehen einer Aenderung daran
+              waere das unbrauchbar. Die zweite Schaltflaeche trifft absichtlich
+              eine Etappengrenze, weil der Balken dort einen anderen Weg nimmt. */}
+          <div className="bg-surface rounded-card border border-border/60 p-4">
+            <p className="text-[15px] font-semibold text-text-primary">XP-Toast ansehen</p>
+            <p className="text-[12px] text-text-secondary mt-0.5 mb-3">
+              Schreibt keine XP gut — zeigt nur die Meldung.
+            </p>
+            <div className="flex gap-2">
+              <button
+                onClick={() => showCoinToast(10, 'BLURTING')}
+                className="flex-1 h-11 rounded-pill text-[14px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm"
+              >
+                +10 XP
+              </button>
+              <button
+                onClick={() => showCoinToast(50, 'PROBEKLAUSUR')}
+                className="flex-1 h-11 rounded-pill text-[14px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm"
+              >
+                +50 XP
+              </button>
             </div>
           </div>
 

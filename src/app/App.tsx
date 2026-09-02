@@ -28,7 +28,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: string |
 import { BottomNav } from '../components/ui/BottomNav'
 import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSidebar'
 import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
-import { CoinToast } from '../components/ui/CoinToast'
+import { XpToast } from '../components/ui/XpToast'
 import { AttachmentToast } from '../components/ui/AttachmentToast'
 import { StreakBadge } from '../components/ui/StreakBadge'
 import { ReferralPill } from '../components/ui/ReferralPill'
@@ -392,7 +392,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
           <SyncErrorBanner />
         </main>
         <FixedBadges />
-        <CoinToast />
+        <XpToast />
         <AttachmentToast />
       </div>
     )
@@ -409,7 +409,7 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
       {!hideNav && <BottomNav />}
       <SyncErrorBanner />
       <StreakBadge />
-      <CoinToast />
+      <XpToast />
       <AttachmentToast />
     </div>
   )

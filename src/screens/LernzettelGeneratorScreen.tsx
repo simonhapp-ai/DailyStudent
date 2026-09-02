@@ -175,7 +175,7 @@ export function LernzettelGeneratorScreen() {
       saveLernzettel(lz)
       recordStudyDay()
       const gain = await addCoins('LERNZETTEL')
-      if (gain > 0) showCoinToast(gain)
+      if (gain > 0) showCoinToast(gain, 'LERNZETTEL')
       navigate('/klausurmodus/lernzettel', { replace: true })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Fehler beim Generieren')

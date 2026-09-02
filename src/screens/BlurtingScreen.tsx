@@ -275,7 +275,7 @@ export function BlurtingScreen() {
       setPhase('feedback')
       recordStudyDay()
       const gain = await addCoins('BLURTING')
-      if (gain > 0) showCoinToast(gain)
+      if (gain > 0) showCoinToast(gain, 'BLURTING')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unbekannter Fehler')
       setPhase('write')

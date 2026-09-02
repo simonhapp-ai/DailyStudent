@@ -582,7 +582,7 @@ export function NoteCreateScreen() {
     setShowSaveModal(false)
     recordStudyDay()
     void addCoins('SMART_NOTE').then((gain) => {
-      if (gain > 0) showCoinToast(gain)
+      if (gain > 0) showCoinToast(gain, 'SMART_NOTE')
       if (noteHasPhotos(note)) setTimeout(showLocalAttachmentToast, gain > 0 ? 2100 : 0)
     })
     if (resolvedFolderId && subjectId) navigate(`/unterricht/${subjectId}/ordner/${resolvedFolderId}`, { replace: true })
