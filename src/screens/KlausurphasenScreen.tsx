@@ -115,7 +115,7 @@ export function KlausurphasenScreen() {
         </div>
         <button
           onClick={() => navigate('/kalender')}
-          className="shrink-0 h-11 pl-4 pr-3 rounded-pill text-[15px] font-semibold text-text-primary bg-surface border border-border/60 press mt-1 flex items-center gap-1.5"
+          className="glanz-lauf shrink-0 h-11 pl-4 pr-3 rounded-pill text-[15px] font-semibold text-text-primary bg-surface border border-border/60 press mt-1 flex items-center gap-1.5"
         >
           Planen
           <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"

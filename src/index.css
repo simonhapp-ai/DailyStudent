@@ -665,3 +665,71 @@ textarea::placeholder {
 @media (prefers-reduced-motion: reduce) {
   .fab-in { animation-duration: 0.01ms; }
 }
+
+/* ── Lichtlauf um die Planen-Pille ────────────────────────────────────────
+   Beim Betreten des Klausurenmodus laeuft einmal ein Strahl am Rand entlang:
+   Mint, in der Mitte weiss, eine Sekunde, linear — gleichmaessige Bewegung
+   traegt kein Beschleunigen. Kein Zustand und kein Timer dahinter: Das Element
+   wird beim Moduswechsel neu aufgebaut, die Animation laeuft dadurch von selbst
+   genau einmal. Als CSS-Animation, damit sie nicht auf dem Hauptstrang liegt,
+   auf dem in diesem Moment der Moduswechsel gerendert wird.
+
+   Der Strahl liegt in einem Ring: Eine Kegelverlauf-Flaeche wird auf die
+   Randstaerke maskiert, sodass nur der Rand leuchtet und der Inhalt frei bleibt. */
+@property --glanz-winkel {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.glanz-lauf {
+  position: relative;
+}
+
+.glanz-lauf::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--glanz-winkel),
+    transparent 0deg,
+    transparent 286deg,
+    rgba(52, 211, 153, 0.32) 322deg,
+    rgba(209, 255, 238, 0.92) 344deg,
+    #ffffff 350deg,
+    rgba(52, 211, 153, 0.32) 357deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: glanz-umlauf 1s linear 1 both;
+}
+
+@keyframes glanz-umlauf {
+  from { --glanz-winkel: 0deg;   opacity: 1; }
+  82%  {                         opacity: 1; }
+  to   { --glanz-winkel: 360deg; opacity: 0; }
+}
+
+/* Bei reduzierter Bewegung bleibt die Aussage („hier liegt Planen"), aber ohne
+   Umlauf: Der Rand leuchtet einmal auf und wieder ab. */
+@media (prefers-reduced-motion: reduce) {
+  .glanz-lauf::after {
+    background: rgba(52, 211, 153, 0.75);
+    animation: glanz-ruhig 1s ease 1 both;
+  }
+
+  @keyframes glanz-ruhig {
+    from, 45% { opacity: 1; }
+    to        { opacity: 0; }
+  }
+}

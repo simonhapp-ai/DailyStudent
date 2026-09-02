@@ -206,7 +206,10 @@ export function ProfilScreen() {
         <h1 className="text-[28px] font-bold text-text-primary">Profil</h1>
       </div>
 
-      <div className="px-4 lg:px-6 mt-5 space-y-5 lg:max-w-[760px]">
+      <div className="px-4 lg:px-6 mt-5 lg:max-w-[1180px] lg:grid lg:grid-cols-2 lg:gap-6 lg:items-start">
+
+        {/* Linke Spalte — wer du bist und wo du stehst */}
+        <div className="space-y-5">
 
         {/* ── User card ──────────────────────────────────────────── */}
         <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
@@ -505,6 +508,11 @@ export function ProfilScreen() {
           />
         </ListGroup>
 
+        </div>
+
+        {/* Rechte Spalte — die Wege zu den Einstellungen */}
+        <div className="space-y-5 mt-5 lg:mt-0">
+
         {/* ── Anpassen ────────────────────────────────────────────
             Zweiter Weg in den Planen-Bereich. Kalender und Stundenplan sind
             die beiden Dinge, die man einmal einrichtet und danach selten
@@ -676,6 +684,7 @@ export function ProfilScreen() {
           DailyStudent <span className="text-text-muted/30">·</span> Beta
         </p>
 
+        </div>
       </div>
 
       {/* Same shiny-mint keyframes as the Landing Page's Early Access button —

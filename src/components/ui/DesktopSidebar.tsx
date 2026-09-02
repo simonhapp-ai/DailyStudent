@@ -361,10 +361,14 @@ export function DesktopSidebarWide() {
                 </div>
 
                 <SectionLabel>Weiter</SectionLabel>
+                {/* Beim Betreten des Klausurenmodus laeuft einmal ein Lichtstrahl
+                    am Rand entlang — Planen liegt seit Version C hinter dieser
+                    einen Zeile, das darf man beim Ankommen kurz sehen. */}
                 <SideRow
                   entry={{ label: 'Planen', path: PLANEN_HOME, icon: 'calendar' }}
                   active={false}
                   onClick={() => navigate(PLANEN_HOME)}
+                  className="glanz-lauf"
                 />
 
                 <TipCard tip={tipOfTheDay(KLAUSUR_TIPS)} />
@@ -377,11 +381,11 @@ export function DesktopSidebarWide() {
   )
 }
 
-function SideRow({ entry, active, onClick }: { entry: NavEntry; active: boolean; onClick: () => void }) {
+function SideRow({ entry, active, onClick, className = '' }: { entry: NavEntry; active: boolean; onClick: () => void; className?: string }) {
   return (
     <button
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-3 py-2 rounded-btn press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
+      className={`w-full flex items-center gap-3 px-3 py-2 rounded-btn press-sm text-left nav-btn ${active ? 'nav-active' : ''} ${className}`}
       style={{ color: 'rgb(var(--color-text-primary))', fontWeight: active ? 600 : 500 }}
     >
       {/* Schnellnotizen traegt sein eigenes Zeichen — dasselbe wie im
