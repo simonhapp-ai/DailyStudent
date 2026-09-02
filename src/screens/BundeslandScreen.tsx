@@ -44,8 +44,15 @@ export function BundeslandScreen() {
     }
   }
 
+  // pb-28 statt pb-10: Die untere Leiste liegt fest ueber dem Inhalt und ist
+  // mitsamt sicherem Bereich rund 80 px hoch. Mit 40 px Platz endete der
+  // Speichern-Knopf darunter — nicht nur verdeckt, sondern gar nicht
+  // erreichbar, weil sich nicht weiter scrollen liess. Jetzt reicht die Flaeche
+  // darueber hinaus: Die Leiste verdeckt den Knopf nur, wenn sie gerade darueber
+  // liegt, und ein Stueck Scrollen bringt ihn hervor. Dieselbe Aenderung in den
+  // sieben anderen Screens mit demselben Mass.
   return (
-    <div className="flex flex-col min-h-dvh bg-background pb-10">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}

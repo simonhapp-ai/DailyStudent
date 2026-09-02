@@ -331,12 +331,15 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
   // ihn beim ersten Oeffnen gar nicht. Genau der Screen, der als erster den
   // Ton setzt.
   //
-  // Jetzt oben beginnend statt zentriert, mit knapperen Abstaenden, und der
-  // Knopf sitzt fest am unteren Ende der Flaeche. Der Kopfbereich bleibt
-  // unveraendert — der Balken steht auf allen Schritten gleich hoch.
+  // Jetzt oben beginnend statt zentriert, mit knapperen Abstaenden, und alles
+  // dicht gestapelt bis zum Knopf. Kein Strecken auf die volle Hoehe: Der Knopf
+  // haengt sonst am unteren Rand, und auf kleineren Geraeten faellt genau er
+  // wieder heraus. So steht er direkt unter dem Inhalt und ist ueberall sofort
+  // zu sehen; der freie Platz bleibt darunter. Der Kopfbereich ist unveraendert
+  // — der Balken steht auf allen Schritten gleich hoch.
   return (
-    <div className="flex flex-col min-h-[calc(100svh-140px)]">
-      <div className="flex-1 flex flex-col">
+    <div className="flex flex-col">
+      <div>
         <div
           className="w-14 h-14 rounded-card flex items-center justify-center mb-5"
           style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
@@ -369,9 +372,7 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
           ))}
         </div>
 
-        {/* Der Hinweis sinkt an das untere Ende der Flaeche, damit der freie
-            Platz zwischen Inhalt und Knopf nicht als Loch dasteht. */}
-        <div className="rounded-card px-3.5 py-3 bg-surface border border-border/60 mt-auto">
+        <div className="rounded-card px-3.5 py-3 bg-surface border border-border/60">
           <Tag tone="orange" size="sm" className="mb-1.5">Beta</Tag>
           <p className="text-text-secondary text-[12.5px] leading-snug">
             Am besten für die Oberstufe. Für Studierende und die Mittelstufe nutzbar,

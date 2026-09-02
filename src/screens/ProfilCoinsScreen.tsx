@@ -40,7 +40,7 @@ export function ProfilCoinsScreen() {
   const bisFreeze = FREEZE_PRO_TAGE - (streak % FREEZE_PRO_TAGE)
 
   return (
-    <div className="flex flex-col min-h-dvh bg-background pb-10">
+    <div className="flex flex-col min-h-dvh bg-background pb-28">
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
