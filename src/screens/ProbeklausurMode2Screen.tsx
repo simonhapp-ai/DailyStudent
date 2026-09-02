@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { WorkingState } from '../components/ui/EmptyState'
+import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode2Exam, correctExam } from '../lib/gemini'
@@ -8,6 +12,7 @@ import { BottomSheet } from '../components/ui/BottomSheet'
 import { ProModal } from '../components/ui/ProModal'
 import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
+import { AFB_PILL, npMarke } from '../lib/afb'
 
 interface ProbeklausurPrefill {
   subjectId: string
@@ -18,27 +23,15 @@ interface ProbeklausurPrefill {
 
 // ── Shared helpers (same as Mode 1, duplicated to keep screens self-contained)
 
-const AFB_COLORS: Record<string, string> = {
-  I:   'bg-blue-500/15 text-blue-400',
-  II:  'bg-amber-500/15 text-amber-400',
-  III: 'bg-purple-500/15 text-purple-400',
-}
-const ACCENT = 'linear-gradient(145deg, #0891B2, #065666)'
-const ACCENT_SOLID = '#0891B2'
+const ACCENT = 'var(--grad-mode)'
+const ACCENT_SOLID = 'rgb(var(--color-accent))'
 
-function npColor(np: number): string {
-  if (np >= 13) return '#34D399'
-  if (np >= 10) return '#60A5FA'
-  if (np >= 7)  return '#FACC15'
-  if (np >= 4)  return '#FB923C'
-  return '#F87171'
-}
 
 function MaterialCard({ m }: { m: GeneratedExam['materials'][0] }) {
   return (
-    <div className="bg-background rounded-[14px] border border-border/60 p-4 mb-3">
+    <div className="bg-background rounded-icon border border-border/60 p-4 mb-3">
       <div className="flex items-center gap-2 mb-2">
-        <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-accent/15 text-accent">{m.id}</span>
+        <span className="px-2 py-0.5 rounded-chip text-[11px] font-bold bg-accent/15 text-text-primary">{m.id}</span>
         <p className="text-text-secondary text-[12px] font-semibold">{m.title}</p>
       </div>
       <p className="text-text-primary text-[13px] whitespace-pre-wrap leading-relaxed font-mono">{m.content}</p>
@@ -50,10 +43,10 @@ function TaskAnswerCard({
   task, answer, onChange, index,
 }: { task: GeneratedExam['tasks'][0]; answer: string; onChange: (v: string) => void; index: number }) {
   return (
-    <div className="bg-background rounded-[14px] border border-border/60 p-4 mb-3">
+    <div className="bg-background rounded-icon border border-border/60 p-4 mb-3">
       <div className="flex items-center gap-2 mb-2.5">
         <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
-        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+        <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_PILL}`}>AFB {task.afb}</span>
         {task.materialRefs.length > 0 && (
           <span className="text-text-muted text-[11px]">· {task.materialRefs.join(', ')}</span>
         )}
@@ -65,7 +58,7 @@ function TaskAnswerCard({
         onChange={(e) => onChange(e.target.value)}
         placeholder={`Antwort zu Aufgabe ${task.label}…`}
         rows={index === 0 ? 8 : 6}
-        className="w-full bg-surface rounded-[12px] border border-border p-3 text-[13px] text-text-primary placeholder-text-muted resize-none focus:outline-none focus:border-accent transition-colors"
+        className="w-full bg-surface rounded-btn border border-border p-3 text-[13px] text-text-primary placeholder-text-muted resize-none focus:outline-none focus:border-accent transition-colors"
       />
     </div>
   )
@@ -76,17 +69,20 @@ function CorrectionCard({
 }: { task: GeneratedExam['tasks'][0]; correction: ExamCorrection['taskCorrections'][0] }) {
   const [open, setOpen] = useState(true)
   return (
-    <div className="bg-background rounded-[14px] border border-border/60 mb-3 overflow-hidden">
+    <div className="bg-background rounded-icon border border-border/60 mb-3 overflow-hidden">
       <button
         onClick={() => setOpen((o) => !o)}
         className="w-full flex items-center justify-between px-4 py-3 press-sm"
       >
         <div className="flex items-center gap-2">
           <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufg. {task.label}</span>
-          <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+          <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_PILL}`}>AFB {task.afb}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[14px] font-bold" style={{ color: npColor(correction.scoreNP) }}>
+          <span
+            className="text-[12px] font-semibold px-2 py-0.5 rounded-pill tabular-nums"
+            style={npMarke(correction.scoreNP)}
+          >
             {correction.scoreNP}/15 NP
           </span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -99,19 +95,19 @@ function CorrectionCard({
         <div className="px-4 pb-4 space-y-3 border-t border-border/40 pt-3">
           {correction.errors.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold text-danger mb-1.5 uppercase tracking-wide">Fehler</p>
+              <p className="text-[11px] font-bold text-text-primary mb-1.5 uppercase tracking-wide">Fehler</p>
               {correction.errors.map((e, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {e}</p>)}
             </div>
           )}
           {correction.gaps.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold text-warning mb-1.5 uppercase tracking-wide">Lücken</p>
+              <p className="text-[11px] font-bold text-text-secondary mb-1.5 uppercase tracking-wide">Lücken</p>
               {correction.gaps.map((g, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {g}</p>)}
             </div>
           )}
           {correction.formulationHelp.length > 0 && (
             <div>
-              <p className="text-[11px] font-bold text-accent mb-1.5 uppercase tracking-wide">Formulierungshilfen</p>
+              <p className="text-[11px] font-bold text-text-primary mb-1.5 uppercase tracking-wide">Formulierungshilfen</p>
               {correction.formulationHelp.map((f, i) => <p key={i} className="text-[13px] text-text-secondary mb-1">· {f}</p>)}
             </div>
           )}
@@ -280,7 +276,7 @@ export function ProbeklausurMode2Screen() {
               if (phase === 'exam') { setShowExitWarning(true); return }
               navigate(-1)
             }}
-            className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+            className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
               <path d="M15 18l-6-6 6-6" />
@@ -302,15 +298,15 @@ export function ProbeklausurMode2Screen() {
           {phase === 'exam' && (
             <button
               onClick={() => timer.running ? timer.pause() : timer.start()}
-              className="flex items-center gap-2 bg-surface border border-border rounded-[12px] px-3 py-2 press-sm"
+              className="flex items-center gap-2 bg-surface border border-border rounded-btn px-3 py-2 press-sm"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                style={{ color: timer.isWarning ? '#F87171' : ACCENT_SOLID }}>
+                style={{ color: timer.isWarning ? 'rgb(var(--fill-red))' : ACCENT_SOLID }}>
                 <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" strokeLinecap="round" />
               </svg>
               <span
                 className="text-[14px] font-mono font-bold"
-                style={{ color: timer.isWarning ? '#F87171' : 'inherit' }}
+                style={{ color: timer.isWarning ? 'rgb(var(--fill-red))' : 'inherit' }}
               >
                 {timer.display}
               </span>
@@ -324,8 +320,8 @@ export function ProbeklausurMode2Screen() {
           )}
 
           {phase === 'result' && correction && (
-            <div className="px-3 py-1 rounded-pill text-white text-[13px] font-bold"
-              style={{ backgroundColor: npColor(correction.totalNP) }}>
+            <div className="px-3 py-1 rounded-pill text-[13px] font-bold tabular-nums"
+              style={npMarke(correction.totalNP)}>
               {correction.totalNP}/15 NP
             </div>
           )}
@@ -334,16 +330,16 @@ export function ProbeklausurMode2Screen() {
 
       {/* Timer expired banner */}
       {showTimerExpiredBanner && (
-        <div className="mx-4 mt-3 bg-danger/15 border border-danger/40 rounded-[14px] px-4 py-3 flex items-center justify-between">
-          <p className="text-danger text-[13px] font-semibold">Zeit abgelaufen! Jetzt abgeben.</p>
-          <button onClick={handleSubmit} className="text-danger text-[13px] font-bold underline press-sm">
+        <div className="mx-4 mt-3 bg-danger/15 border border-danger/40 rounded-icon px-4 py-3 flex items-center justify-between">
+          <p className="text-text-primary text-[13px] font-semibold">Zeit abgelaufen! Jetzt abgeben.</p>
+          <button onClick={handleSubmit} className="text-text-primary text-[13px] font-bold underline press-sm">
             Abgeben
           </button>
         </div>
       )}
 
       {/* Content */}
-      <div className="flex-1 px-4 py-5 overflow-y-auto">
+      <div className="flex-1 px-4 py-5 overflow-y-auto lg:px-6 lg:max-w-[880px] lg:w-full">
 
         {/* SETUP */}
         {phase === 'setup' && (
@@ -360,7 +356,8 @@ export function ProbeklausurMode2Screen() {
                     }`}
                     style={subjectId === s.id ? { background: ACCENT } : undefined}
                   >
-                    {s.icon} {s.name}
+                    <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
+                    {s.name}
                   </button>
                 ))}
               </div>
@@ -373,7 +370,7 @@ export function ProbeklausurMode2Screen() {
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder={getTopicPlaceholder(subjectId)}
-                className="w-full bg-surface border border-border rounded-[14px] px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent"
+                className="w-full bg-surface border border-border rounded-icon px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent"
               />
               {subjectTopics.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-2.5">
@@ -388,39 +385,33 @@ export function ProbeklausurMode2Screen() {
             </div>
 
             {/* What to expect */}
-            <div className="bg-surface rounded-[14px] border border-border/60 p-4 space-y-2.5">
+            <div className="bg-surface rounded-icon border border-border/60 p-4 space-y-2.5">
               <p className="text-text-secondary text-[12px] font-bold">Was erwartet dich:</p>
-              {[
-                { icon: '⏱', text: '90-Minuten-Countdown startet automatisch' },
-                { icon: '📋', text: '3–5 Teilaufgaben mit AFB I→II→III Progression' },
-                { icon: '📊', text: '2–3 Materialien (Tabellen, Diagramme, Texte)' },
-                { icon: '🤖', text: 'KI-Korrektur mit Fehlern, Lücken & Note' },
-              ].map(({ icon, text }) => (
+              {([
+                { icon: 'clock',     text: '90-Minuten-Countdown startet automatisch' },
+                { icon: 'clipboard', text: '3–5 Teilaufgaben mit AFB I→II→III Progression' },
+                { icon: 'chart',     text: '2–3 Materialien (Tabellen, Diagramme, Texte)' },
+                { icon: 'sparkle',   text: 'KI-Korrektur mit Fehlern, Lücken & Note' },
+              ] as { icon: IconName; text: string }[]).map(({ icon, text }) => (
                 <div key={text} className="flex items-start gap-2.5">
-                  <span className="text-[14px]">{icon}</span>
+                  <span className="text-text-secondary shrink-0 mt-0.5"><Icon name={icon} size={14} /></span>
                   <p className="text-text-secondary text-[12px]">{text}</p>
                 </div>
               ))}
             </div>
 
             {error && (
-              <div className="bg-danger/10 border border-danger/30 rounded-[14px] p-4">
-                <p className="text-danger text-[13px] font-semibold mb-1">Fehler</p>
-                <p className="text-danger/80 text-[12px]">{error}</p>
-              </div>
+              <Banner tone="danger">
+                <span className="font-semibold">Fehler</span>
+                <span className="block text-text-secondary mt-0.5">{error}</span>
+              </Banner>
             )}
           </div>
         )}
 
         {/* LOADING */}
         {(phase === 'loading' || phase === 'correcting') && (
-          <div className="flex flex-col items-center justify-center h-64 gap-4">
-            <div className="w-10 h-10 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
-            <p className="text-text-muted text-[14px]">
-              {phase === 'loading' ? 'KI generiert die Klausur…' : 'KI korrigiert alle Aufgaben…'}
-            </p>
-            <p className="text-text-muted text-[12px]">Das kann 10–20 Sekunden dauern</p>
-          </div>
+          <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert die Klausur…' : 'KI korrigiert alle Aufgaben…'} note="Das kann 10–20 Sekunden dauern" />
         )}
 
         {/* EXAM */}
@@ -457,9 +448,7 @@ export function ProbeklausurMode2Screen() {
             ))}
 
             {error && (
-              <div className="bg-danger/10 border border-danger/30 rounded-[14px] p-4 mb-3">
-                <p className="text-danger text-[13px]">{error}</p>
-              </div>
+              <Banner tone="danger" className="mb-3">{error}</Banner>
             )}
           </div>
         )}
@@ -467,7 +456,7 @@ export function ProbeklausurMode2Screen() {
         {/* RESULT */}
         {phase === 'result' && exam && correction && (
           <div>
-            <div className="rounded-[18px] p-5 mb-4 text-center" style={{ background: ACCENT }}>
+            <div className="rounded-card p-5 mb-4 text-center" style={{ background: ACCENT }}>
               <p className="text-white/70 text-[12px] font-semibold uppercase tracking-wide mb-1">Ergebnis</p>
               <p className="text-white text-[48px] font-black leading-none">{correction.totalNP}</p>
               <p className="text-white/80 text-[13px] mt-1">von 15 Notenpunkten · {correction.gradeLabel}</p>
@@ -476,7 +465,7 @@ export function ProbeklausurMode2Screen() {
             {isPro ? (
               <>
                 {correction.overallJustification && (
-                  <div className="bg-surface rounded-[14px] border border-border/60 p-4 mb-4">
+                  <div className="bg-surface rounded-icon border border-border/60 p-4 mb-4">
                     <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-1.5">Gesamtbewertung</p>
                     <p className="text-text-secondary text-[13px] leading-relaxed">{correction.overallJustification}</p>
                   </div>
@@ -489,11 +478,11 @@ export function ProbeklausurMode2Screen() {
                 })}
               </>
             ) : (
-              <div className="mt-2 rounded-[18px] border border-accent/20 overflow-hidden" style={{ background: 'rgba(124,58,237,0.04)' }}>
+              <div className="mt-2 rounded-card border border-accent/20 overflow-hidden" style={{ background: 'var(--color-accent-soft)' }}>
                 <div className="p-5 space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-[14px] flex items-center justify-center shrink-0" style={{ background: 'rgba(124,58,237,0.15)' }}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="w-10 h-10 rounded-icon flex items-center justify-center shrink-0" style={{ background: 'rgb(var(--color-accent) / 0.16)' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-accent))" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                       </svg>
                     </div>
@@ -504,13 +493,13 @@ export function ProbeklausurMode2Screen() {
                   </div>
                   <div className="space-y-2">
                     {[
-                      { icon: '🔴', label: 'Fehleranalyse', desc: 'Konkrete Fehler in deiner Antwort' },
-                      { icon: '🟡', label: 'Lücken', desc: 'Welche Inhalte noch gefehlt haben' },
-                      { icon: '💬', label: 'Formulierungshilfen', desc: 'Bessere Formulierungen für die Klausur' },
-                      { icon: '📊', label: 'Gesamtbewertung', desc: 'Detailliertes Fazit der KI pro Aufgabe' },
+                      { icon: 'warning'   as IconName, label: 'Fehleranalyse', desc: 'Konkrete Fehler in deiner Antwort' },
+                      { icon: 'target'    as IconName, label: 'Lücken', desc: 'Welche Inhalte noch gefehlt haben' },
+                      { icon: 'speech'    as IconName, label: 'Formulierungshilfen', desc: 'Bessere Formulierungen für die Klausur' },
+                      { icon: 'chart'     as IconName, label: 'Gesamtbewertung', desc: 'Detailliertes Fazit der KI pro Aufgabe' },
                     ].map(item => (
-                      <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-[12px]" style={{ background: 'var(--color-surface)' }}>
-                        <span className="text-[15px]">{item.icon}</span>
+                      <div key={item.label} className="flex items-center gap-3 px-3 py-2.5 rounded-btn" style={{ background: 'var(--color-surface)' }}>
+                        <span className="text-text-secondary shrink-0"><Icon name={item.icon} size={16} /></span>
                         <div className="flex-1 min-w-0">
                           <p className="text-[13px] font-semibold text-text-primary">{item.label}</p>
                           <p className="text-[11px] text-text-muted">{item.desc}</p>
@@ -523,8 +512,8 @@ export function ProbeklausurMode2Screen() {
                   </div>
                   <button
                     onClick={() => setShowProModal(true)}
-                    className="w-full py-3 rounded-[14px] text-white text-[14px] font-bold press-sm"
-                    style={{ background: 'linear-gradient(135deg, #7C3AED, #6D28D9)' }}
+                    className="w-full py-3 rounded-icon text-on-accent text-[14px] font-bold press-sm"
+                    style={{ background: 'var(--grad-mode)' }}
                   >
                     Pro freischalten · €5/Mo
                   </button>
@@ -542,7 +531,7 @@ export function ProbeklausurMode2Screen() {
           <button
             onClick={handleGenerate}
             disabled={!subjectId || !topic.trim()}
-            className="w-full py-4 rounded-[16px] text-white text-[15px] font-bold press disabled:opacity-40"
+            className="w-full h-12 rounded-pill text-white text-[15px] font-bold press disabled:opacity-40"
             style={{ background: ACCENT }}
           >
             Klausur starten
@@ -551,7 +540,7 @@ export function ProbeklausurMode2Screen() {
         {phase === 'exam' && (
           <button
             onClick={handleSubmit}
-            className="w-full py-4 rounded-[16px] text-white text-[15px] font-bold press"
+            className="w-full h-12 rounded-pill text-white text-[15px] font-bold press"
             style={{ background: ACCENT }}
           >
             Abgeben & korrigieren lassen
@@ -561,13 +550,13 @@ export function ProbeklausurMode2Screen() {
           <div className="flex gap-3">
             <button
               onClick={() => { setPhase('setup'); setExam(null); setCorrection(null); timer.reset() }}
-              className="flex-1 py-4 rounded-[16px] text-text-primary text-[15px] font-bold bg-surface border border-border press"
+              className="flex-1 py-4 rounded-card text-text-primary text-[15px] font-bold bg-surface border border-border press"
             >
               Neue Klausur
             </button>
             <button
               onClick={() => navigate(-1)}
-              className="flex-1 py-4 rounded-[16px] text-white text-[15px] font-bold press"
+              className="flex-1 py-4 rounded-card text-white text-[15px] font-bold press"
               style={{ background: ACCENT }}
             >
               Menü
@@ -579,7 +568,7 @@ export function ProbeklausurMode2Screen() {
       <BottomSheet isOpen={showExitWarning} onClose={() => setShowExitWarning(false)}>
         <div className="px-5 pb-2 space-y-3">
           <div className="flex flex-col items-center text-center gap-2 pt-2 pb-1">
-            <div className="w-12 h-12 rounded-[16px] flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #FF453A, #C0392B)' }}>
+            <div className="w-12 h-12 rounded-card flex items-center justify-center" style={{ background: 'rgb(var(--fill-red))' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                 <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
@@ -588,10 +577,10 @@ export function ProbeklausurMode2Screen() {
             <p className="text-[18px] font-bold text-text-primary">Klausur verlassen?</p>
             <p className="text-[13px] text-text-secondary leading-snug">Du verlässt gerade eine laufende Klausur.<br />Deine Antworten gehen verloren.</p>
           </div>
-          <button onClick={handlePause} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press">
+          <button onClick={handlePause} className="w-full h-12 rounded-pill font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press">
             Klausur pausieren — Fortschritt gespeichert
           </button>
-          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full py-3.5 rounded-[16px] font-semibold text-[15px] text-white press mb-2" style={{ background: 'linear-gradient(145deg, #FF453A, #C0392B)' }}>
+          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full h-12 rounded-pill font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
             Klausur beenden (Fortschritt gelöscht)
           </button>
         </div>

@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
-import { Badge } from '../components/ui/Badge'
+import { Icon } from '../components/ui/Icon'
+import { Tag } from '../components/ui/Tag'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { EmptyState } from '../components/ui/EmptyState'
 import { useUser } from '../context/UserContext'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { subjects } from '../data/mockData'
@@ -28,9 +31,9 @@ function FolderBreadcrumb({ parts, className = 'mb-4' }: { parts: string[]; clas
     <div className={`flex items-center gap-1.5 flex-wrap ${className}`}>
       {parts.map((part, i) => (
         <div key={i} className="flex items-center gap-1.5">
-          <span className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold ${
+          <span className={`px-2.5 py-1 rounded-chip text-[11px] font-semibold ${
             i === parts.length - 1
-              ? 'bg-accent/10 text-accent'
+              ? 'btn-mode'
               : 'bg-surface-hover border border-border/60 text-text-muted'
           }`}>
             {part}
@@ -156,85 +159,90 @@ export function FolderScreen() {
         </div>
       )}
 
-      <div className="px-5 mt-2 space-y-2.5">
+      <div className="px-5 mt-2 space-y-2.5 lg:px-6 lg:max-w-[860px]">
         {/* Subfolders */}
         {subFolders.length > 0 && (
           <div className="space-y-2">
-            <p className="section-label pt-1">Unterordner</p>
-            {subFolders.map((sub) => {
-              const subNoteCount = userNotes.filter((n) => n.folderId === sub.id).length
-              return (
-                <button
-                  key={sub.id}
-                  onClick={() => navigate(subFolderUrl(sub.id))}
-                  className="w-full bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-3.5 text-left press transition-all duration-150 flex items-center gap-3"
-                >
-                  <div className="w-9 h-9 rounded-[11px] flex items-center justify-center shrink-0 icon-accent">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-accent">
-                      <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-medium text-text-primary truncate">{sub.name}</p>
-                    <p className="text-text-muted text-[12px] mt-0.5">
-                      {subNoteCount === 0 ? 'Noch keine Notizen' : `${subNoteCount} ${subNoteCount === 1 ? 'Notiz' : 'Notizen'}`}
-                    </p>
-                  </div>
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
-                    <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </button>
-              )
-            })}
+            <p className="section-label px-1 pt-1">Unterordner</p>
+            <ListGroup>
+              {subFolders.map((sub) => {
+                const subNoteCount = userNotes.filter((n) => n.folderId === sub.id).length
+                return (
+                  <ListRow
+                    key={sub.id}
+                    leading={
+                      <span className="w-11 h-11 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center shrink-0 text-text-secondary">
+                        <Icon name="folder" size={19} />
+                      </span>
+                    }
+                    title={sub.name}
+                    subtitle={subNoteCount === 0 ? 'Noch keine Notizen' : `${subNoteCount} ${subNoteCount === 1 ? 'Notiz' : 'Notizen'}`}
+                    chevron
+                    onClick={() => navigate(subFolderUrl(sub.id))}
+                  />
+                )
+              })}
+            </ListGroup>
           </div>
         )}
 
         {subFolders.length > 0 && folderNotes.length > 0 && (
-          <p className="section-label pt-1">Notizen</p>
+          <p className="section-label px-1 pt-1">Notizen</p>
         )}
 
         {/* Notes */}
-        {folderNotes.map((note) => (
-          <button
-            key={note.id}
-            onClick={() => navigate(noteDetailUrl(note.id))}
-            className="w-full bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 text-left press transition-all duration-150 flex items-start gap-4"
-          >
-            <div className="flex flex-col items-center gap-1.5 shrink-0 text-center min-w-[42px] pt-0.5">
-              <span className="text-[11px] text-text-muted font-medium">
-                {new Date(note.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: 'short' })}
-              </span>
-              <div className="w-2 h-2 rounded-full bg-accent" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-text-primary font-semibold text-[15px]">{note.title}</p>
-                {(note.attachments?.length ?? 0) > 0 && (
-                  <Badge color="muted">{note.attachments!.length === 1 ? 'Foto' : `${note.attachments!.length} Fotos`}</Badge>
-                )}
-                {note.content && <Badge color="accent">Notiz</Badge>}
-                {(note.homeworkItems?.length ?? 0) > 0 && (
-                  <Badge color="warning">{note.homeworkItems!.length === 1 ? 'Hausaufgabe' : `${note.homeworkItems!.length} Hausaufgaben`}</Badge>
-                )}
-              </div>
-              {note.content ? (
-                <p className="text-text-muted text-[13px] mt-1 truncate">{note.content}</p>
-              ) : (
-                <p className="text-text-muted text-[13px] mt-1">Eigene Notiz</p>
-              )}
-            </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0 mt-1">
-              <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        ))}
+        {folderNotes.length > 0 && (
+          <ListGroup>
+            {folderNotes.map((note) => (
+              <ListRow
+                key={note.id}
+                leading={
+                  <span className="w-11 h-11 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex flex-col items-center justify-center shrink-0 leading-none">
+                    <span className="text-[15px] font-bold text-text-primary tabular-nums">
+                      {new Date(note.createdAt).getDate()}
+                    </span>
+                    <span className="text-[11px] font-semibold uppercase text-text-secondary mt-0.5">
+                      {new Date(note.createdAt).toLocaleDateString('de-DE', { month: 'short' })}
+                    </span>
+                  </span>
+                }
+                title={
+                  <span className="flex items-center gap-2 flex-wrap">
+                    <span className="truncate">{note.title}</span>
+                    {(note.homeworkItems?.length ?? 0) > 0 && (
+                      <Tag tone="orange" size="sm">
+                        {note.homeworkItems!.length === 1 ? 'Hausaufgabe' : `${note.homeworkItems!.length} Hausaufgaben`}
+                      </Tag>
+                    )}
+                  </span>
+                }
+                subtitle={
+                  note.content
+                    ? note.content
+                    : (note.attachments?.length ?? 0) > 0
+                      ? `${note.attachments!.length} ${note.attachments!.length === 1 ? 'Foto' : 'Fotos'}`
+                      : 'Eigene Notiz'
+                }
+                value={
+                  (note.attachments?.length ?? 0) > 0 ? (
+                    <span className="text-text-secondary flex items-center gap-1">
+                      <Icon name="image" size={15} />
+                      {note.attachments!.length}
+                    </span>
+                  ) : undefined
+                }
+                chevron
+                onClick={() => navigate(noteDetailUrl(note.id))}
+              />
+            ))}
+          </ListGroup>
+        )}
 
         {isEmpty && (
-          <div className="text-center py-16">
-            <p className="text-[40px] mb-4">📂</p>
-            <p className="text-[16px] font-semibold text-text-secondary mb-1">Noch leer</p>
-            <p className="text-[13px] text-text-muted">Tippe auf „+" um zu beginnen.</p>
-          </div>
+          <EmptyState
+            title="Noch leer"
+            note="Leg hier deine erste Notiz an oder teile den Ordner weiter in Unterordner auf."
+          />
         )}
       </div>
 
@@ -247,7 +255,7 @@ export function FolderScreen() {
       )}
 
       {/* FAB + pills — stacked column, anchored bottom-right */}
-      <div className="fixed bottom-28 right-5 flex flex-col items-end gap-3 z-40">
+      <div className="fixed bottom-28 right-5 lg:bottom-8 lg:right-8 flex flex-col items-end gap-3 z-40">
 
         {/* Neuer Ordner pill — appears second (80 ms delay) */}
         {!isNoSubject && (
@@ -262,7 +270,7 @@ export function FolderScreen() {
                 : 'opacity-0 translate-y-4 scale-90 pointer-events-none'
               }`}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent shrink-0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary shrink-0">
               <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
               <path d="M12 11v6M9 14h6" strokeLinecap="round" />
             </svg>
@@ -274,7 +282,7 @@ export function FolderScreen() {
         <button
           onClick={() => { setFabOpen(false); navigate(newNoteUrl) }}
           style={{ transitionDelay: fabOpen ? '40ms' : '0ms' }}
-          className={`flex items-center gap-2.5 grad-accent rounded-full pl-4 pr-5 py-3
+          className={`flex items-center gap-2.5 btn-mode rounded-full pl-4 pr-5 py-3
             shadow-float whitespace-nowrap press
             transition-all duration-300 ease-out
             ${fabOpen
@@ -291,7 +299,7 @@ export function FolderScreen() {
         {/* The + bubble — shrinks to nothing when open */}
         <button
           onClick={() => isNoSubject ? navigate(newNoteUrl) : setFabOpen((o) => !o)}
-          className={`w-14 h-14 rounded-full grad-accent shadow-float
+          className={`w-14 h-14 rounded-full btn-mode
             flex items-center justify-center press
             transition-all duration-200 ease-in-out
             ${fabOpen ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100 scale-100'}`}
@@ -319,8 +327,8 @@ export function FolderScreen() {
           <button
             onClick={createFolder}
             disabled={!newFolderName.trim()}
-            className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
-              newFolderName.trim() ? 'bg-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+            className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
+              newFolderName.trim() ? 'btn-mode hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
             Ordner erstellen
@@ -346,7 +354,7 @@ export function FolderScreen() {
             </button>
             <button
               onClick={confirmDelete}
-              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-danger/10 text-danger border border-danger/20 hover:bg-danger/15 transition-colors press"
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] hover:opacity-90 transition-colors press"
             >
               Löschen
             </button>

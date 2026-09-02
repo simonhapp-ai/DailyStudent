@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
+import { WorkingState } from '../components/ui/EmptyState'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { evaluateBlurting } from '../lib/groq'
 import { subjects, topics } from '../data/mockData'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { Dialog } from '../components/ui/Dialog'
 import type { GeneratedSmartNote } from '../types'
 import type { UserNote } from '../types'
 
@@ -74,7 +78,6 @@ function getSpeechRecognitionCtor(): (new () => MinimalSpeechRecognition) | null
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const BLURTING_GRADIENT = 'linear-gradient(145deg, #DB2777, #9D174D)'
 const MIN_WORDS = 20
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -117,6 +120,7 @@ export function BlurtingScreen() {
   const [selected, setSelected] = useState<SelectedTopic | null>(null)
   const [text, setText] = useState('')
   const [result, setResult] = useState<BlurtingResult | null>(null)
+  const [confirmDiscard, setConfirmDiscard] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // ── Voice dictation ──────────────────────────────────────────────────────
@@ -271,7 +275,7 @@ export function BlurtingScreen() {
       setPhase('feedback')
       recordStudyDay()
       const gain = await addCoins('BLURTING')
-      if (gain > 0) showCoinToast(gain)
+      if (gain > 0) showCoinToast(gain, 'BLURTING')
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unbekannter Fehler')
       setPhase('write')
@@ -279,7 +283,7 @@ export function BlurtingScreen() {
   }
 
   function handleCancelWrite() {
-    if (text.trim() && !window.confirm('Deinen bisherigen Text verwerfen?')) return
+    if (text.trim()) { setConfirmDiscard(true); return }
     setPhase('setup')
   }
 
@@ -315,7 +319,7 @@ export function BlurtingScreen() {
           >
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+              className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -340,7 +344,7 @@ export function BlurtingScreen() {
               {profileSubjects.length === 0 ? (
                 <p className="text-text-muted text-[13px] px-1">Keine Fächer im Profil gefunden.</p>
               ) : (
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-2">
                   {profileSubjects.map((subj) => (
                     <SubjectSquare
                       key={subj.id}
@@ -364,42 +368,44 @@ export function BlurtingScreen() {
                     </p>
                   )}
 
-                  {notesForSelected.map((item) => {
-                    const isActive = noteSelection.kind === 'note' && noteSelection.item.id === item.id
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => setNoteSelection({ kind: 'note', item })}
-                        className="w-full bg-surface rounded-[16px] border shadow-card-adaptive p-4 text-left press flex items-start gap-3 transition-colors"
-                        style={{ borderColor: isActive ? selectedSubject.color : 'rgb(var(--color-border) / 0.6)' }}
-                      >
-                        <div className="w-1 shrink-0 rounded-full self-stretch" style={{ background: selectedSubject.color }} />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between gap-2 mb-1">
-                            <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-pill" style={{ background: `${selectedSubject.color}18`, color: selectedSubject.color }}>
-                              {item.isGenerated ? 'Smart Note' : 'Eigene Notiz'}
-                            </span>
-                            <span className="text-text-muted text-[11px] shrink-0">{formatDate(item.date)}</span>
-                          </div>
-                          <p className="text-text-primary text-[14px] font-bold leading-snug">{item.title}</p>
-                          {item.preview && <p className="text-text-muted text-[12px] mt-1 leading-snug line-clamp-2">{item.preview}</p>}
-                        </div>
-                        {isActive && (
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={selectedSubject.color} strokeWidth="2.5" className="shrink-0 mt-1">
-                            <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        )}
-                      </button>
-                    )
-                  })}
+                  <ListGroup>
+                    {notesForSelected.map((item) => {
+                      const isActive = noteSelection.kind === 'note' && noteSelection.item.id === item.id
+                      return (
+                        <ListRow
+                          key={item.id}
+                          leading={<SubjectIcon subjectId={selectedSubjectId} size="md" />}
+                          title={item.title}
+                          subtitle={
+                            item.preview
+                              ? `${item.isGenerated ? 'Smart Note' : 'Eigene Notiz'} · ${item.preview}`
+                              : `${item.isGenerated ? 'Smart Note' : 'Eigene Notiz'} · ${formatDate(item.date)}`
+                          }
+                          value={
+                            isActive ? (
+                              <span
+                                className="w-6 h-6 rounded-full flex items-center justify-center"
+                                style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+                              >
+                                <Icon name="check" size={14} />
+                              </span>
+                            ) : (
+                              <span className="text-[13px] text-text-secondary">{formatDate(item.date)}</span>
+                            )
+                          }
+                          onClick={() => setNoteSelection({ kind: 'note', item })}
+                        />
+                      )
+                    })}
+                  </ListGroup>
 
                   {notesForSelected.length > 1 && (
                     <button
                       onClick={() => setNoteSelection({ kind: 'all' })}
-                      className="w-full bg-surface rounded-[16px] border p-4 text-left press flex items-center gap-3 transition-colors"
+                      className="w-full bg-surface rounded-card border p-4 text-left press flex items-center gap-3 transition-colors"
                       style={{ borderColor: noteSelection.kind === 'all' ? selectedSubject.color : 'rgb(var(--color-border) / 0.6)' }}
                     >
-                      <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: `${selectedSubject.color}15` }}>
+                      <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: `${selectedSubject.color}15` }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ color: selectedSubject.color }}>
                           <path d="M4 6h16M4 12h16M4 18h16" strokeLinecap="round" />
                         </svg>
@@ -418,10 +424,10 @@ export function BlurtingScreen() {
 
                   <button
                     onClick={() => setNoteSelection({ kind: 'none' })}
-                    className="w-full bg-surface rounded-[16px] border p-4 text-left press flex items-center gap-3 transition-colors"
+                    className="w-full bg-surface rounded-card border p-4 text-left press flex items-center gap-3 transition-colors"
                     style={{ borderColor: noteSelection.kind === 'none' ? 'rgb(var(--color-text-muted))' : 'rgb(var(--color-border) / 0.6)', borderStyle: 'dashed' }}
                   >
-                    <div className="w-9 h-9 rounded-[10px] bg-surface-hover flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-btn bg-surface-hover flex items-center justify-center shrink-0">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
                         <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                       </svg>
@@ -466,13 +472,11 @@ export function BlurtingScreen() {
             <button
               onClick={handleOpenWrite}
               disabled={!selectedSubjectId}
-              className="w-full py-4 rounded-card text-white text-[15px] font-semibold press disabled:opacity-40 transition-opacity flex items-center justify-center gap-2"
-              style={{ background: BLURTING_GRADIENT }}
+              className="w-full h-12 rounded-pill text-[15px] font-semibold press disabled:opacity-40 transition-opacity flex items-center justify-center gap-2"
+              style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
             >
+              <Icon name="pencil" size={16} />
               Leere Seite öffnen
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
             </button>
           </div>
         </>
@@ -510,13 +514,13 @@ export function BlurtingScreen() {
             />
           </div>
 
-          {error && <p className="px-4 pb-2 text-[13px] text-center" style={{ color: '#F87171' }}>{error}</p>}
+          {error && <p className="px-4 pb-2 text-[13px] text-center" style={{ color: 'rgb(var(--fill-red))' }}>{error}</p>}
           {micError && <p className="px-4 pb-2 text-[12px] text-center text-text-muted">{micError}</p>}
 
           <div className="px-5 pb-10 pt-1 shrink-0 space-y-3">
             <div className="flex items-center justify-between text-[12px]">
-              <span style={{ color: wordCount >= MIN_WORDS ? '#34D399' : 'rgb(var(--color-text-muted))' }}>
-                {wordCount} von {MIN_WORDS} Wörtern {wordCount >= MIN_WORDS ? '✓' : ''}
+              <span className={wordCount >= MIN_WORDS ? 'font-semibold text-text-primary' : 'text-text-muted'}>
+                {wordCount} von {MIN_WORDS} Wörtern
               </span>
               <span className="text-text-muted">ca. {estimatedMinutes} Min</span>
             </div>
@@ -558,8 +562,8 @@ export function BlurtingScreen() {
               <button
                 onClick={handleAuswerten}
                 disabled={!text.trim() || wordCount < MIN_WORDS}
-                className="flex-1 py-4 rounded-card text-white text-[15px] font-semibold press disabled:opacity-40 transition-opacity"
-                style={{ background: BLURTING_GRADIENT }}
+                className="flex-1 h-12 rounded-pill text-[15px] font-semibold press disabled:opacity-40 transition-opacity"
+                style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
               >
                 Auswerten
               </button>
@@ -570,13 +574,12 @@ export function BlurtingScreen() {
 
       {/* ── Phase: Loading ──────────────────────────────────────────────── */}
       {phase === 'loading' && (
-        <div className="flex-1 flex flex-col items-center justify-center gap-4 px-8">
-          <div className="w-14 h-14 rounded-[16px] flex items-center justify-center" style={{ background: BLURTING_GRADIENT }}>
-            <svg className="animate-spin" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round">
-              <path d="M21 12a9 9 0 11-6.219-8.56" />
-            </svg>
-          </div>
-          <p className="text-text-secondary text-[15px] text-center">KI analysiert dein Blurting...</p>
+        <div className="flex-1 flex flex-col justify-center px-5">
+          <WorkingState
+            tone="klausur"
+            title="KI vergleicht mit deiner Notiz"
+            note="Gleich siehst du, was drin war und was gefehlt hat."
+          />
         </div>
       )}
 
@@ -587,7 +590,7 @@ export function BlurtingScreen() {
             className="flex items-center justify-between px-4 shrink-0"
             style={{ paddingTop: 'max(54px, calc(env(safe-area-inset-top, 0px) + 16px))', paddingBottom: '12px' }}
           >
-            <button onClick={handleNewTopic} className="text-accent text-[14px] font-medium press-sm">
+            <button onClick={handleNewTopic} className="text-text-primary text-[14px] font-medium press-sm">
               Neues Thema
             </button>
             {selectedSubject && selected && <TopicPill label={selected.title} color={selectedSubject.color} />}
@@ -596,30 +599,38 @@ export function BlurtingScreen() {
           <div className="flex-1 overflow-y-auto px-4 pt-3 pb-4 space-y-3">
             {result.correct.length > 0 && (
               <div className="animate-fade-in" style={{ animationDelay: '0ms' }}>
-                <FeedbackSection icon="✅" title="Das hattest du drin" items={result.correct}
-                  color="#22C55E" borderColor="rgba(34,197,94,0.2)" bg="rgba(34,197,94,0.07)" />
+                <FeedbackSection icon="check" title="Das hattest du drin" items={result.correct} tone="green" />
               </div>
             )}
             {result.forgotten.length > 0 && (
               <div className="animate-fade-in" style={{ animationDelay: '60ms' }}>
-                <FeedbackSection icon="❓" title="Das hast du vergessen" items={result.forgotten}
-                  color="#F59E0B" borderColor="rgba(245,158,11,0.2)" bg="rgba(245,158,11,0.07)" />
+                <FeedbackSection icon="target" title="Das hast du vergessen" items={result.forgotten} tone="orange" />
               </div>
             )}
             {result.corrections.length > 0 && (
               <div className="animate-fade-in" style={{ animationDelay: '120ms' }}>
-                <FeedbackSection icon="💡" title="Kleine Korrekturen" items={result.corrections}
-                  color="#60A5FA" borderColor="rgba(96,165,250,0.2)" bg="rgba(96,165,250,0.07)" />
+                <FeedbackSection icon="bulb" title="Kleine Korrekturen" items={result.corrections} tone="blue" />
               </div>
             )}
           </div>
           <div className="px-4 pb-10 shrink-0">
-            <button onClick={handleRetry} className="w-full py-4 rounded-card text-white text-[15px] font-semibold press" style={{ background: BLURTING_GRADIENT }}>
+            <button onClick={handleRetry} className="w-full h-12 rounded-pill text-[15px] font-semibold press" style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}>
               Nochmal versuchen
             </button>
           </div>
         </>
       )}
+
+      <Dialog
+        open={confirmDiscard}
+        title="Text verwerfen?"
+        message="Was du bisher geschrieben hast, geht dabei verloren."
+        confirmLabel="Verwerfen"
+        cancelLabel="Weiterschreiben"
+        destructive
+        onConfirm={() => { setConfirmDiscard(false); setText(''); setPhase('setup') }}
+        onCancel={() => setConfirmDiscard(false)}
+      />
     </div>
   )
 }
@@ -638,6 +649,13 @@ function TopicPill({ label, color }: { label: string; color: string }) {
   )
 }
 
+// Fachauswahl als Zeile mit fester Hoehe, nicht als Quadrat.
+//
+// aspect-square hat auf dem Telefon funktioniert und auf dem Schreibtisch alles
+// zerrissen: In einem vierspaltigen Raster ueber 1600 px wurde jede Kachel rund
+// 380 px hoch, und acht Faecher fuellten zwei Bildschirme. Eine feste Hoehe
+// haelt die Auswahl auf jeder Breite gleich kompakt; nur die Anzahl der Spalten
+// waechst mit dem Platz.
 function SubjectSquare({
   subject, noteCount, selected, onTap,
 }: {
@@ -649,21 +667,25 @@ function SubjectSquare({
   return (
     <button
       onClick={onTap}
-      className="aspect-square bg-surface rounded-[16px] border shadow-card-adaptive flex flex-col items-center justify-center gap-1.5 p-2 press relative overflow-hidden transition-colors"
+      aria-pressed={selected}
+      className="relative h-[60px] bg-surface rounded-card border flex items-center gap-2.5 px-3 text-left press-sm transition-colors"
       style={{
-        borderColor: selected ? subject.color : 'rgb(var(--color-border) / 0.6)',
+        borderColor: selected ? 'rgb(var(--color-accent))' : 'rgb(var(--color-border) / 0.6)',
         borderWidth: selected ? '2px' : '1px',
-        background: selected ? `${subject.color}0F` : undefined,
+        background: selected ? 'var(--color-accent-soft)' : undefined,
       }}
     >
       <SubjectIcon subjectId={subject.id} size="sm" />
-      <p className="text-text-secondary text-[10px] font-semibold text-center leading-tight w-full px-0.5" style={{ wordBreak: 'break-word', hyphens: 'auto' }}>
+      <span className="flex-1 min-w-0 text-[13px] font-semibold text-text-primary leading-tight line-clamp-2">
         {subject.name}
-      </p>
+      </span>
       {noteCount > 0 && (
-        <div className="absolute top-1.5 right-1.5 w-[18px] h-[18px] rounded-full flex items-center justify-center text-[9px] font-bold text-white" style={{ background: subject.color }}>
+        <span
+          className="shrink-0 min-w-[20px] h-5 px-1.5 rounded-pill flex items-center justify-center text-[11px] font-bold tabular-nums"
+          style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+        >
           {noteCount > 9 ? '9+' : noteCount}
-        </div>
+        </span>
       )}
     </button>
   )
@@ -682,7 +704,7 @@ function ExamSuggestionCard({
   onTap: () => void
 }) {
   const badgeStyle = daysLeft <= 7
-    ? { bg: 'rgba(248,113,113,0.15)', color: '#F87171' }
+    ? { bg: 'rgb(var(--fill-red) / 0.15)', color: 'rgb(var(--fill-red))' }
     : daysLeft <= 14
     ? { bg: 'rgba(245,158,11,0.12)', color: '#F59E0B' }
     : { bg: 'rgba(148,163,184,0.12)', color: '#94A3B8' }
@@ -690,7 +712,7 @@ function ExamSuggestionCard({
   return (
     <button
       onClick={onTap}
-      className="w-full bg-surface rounded-[18px] border shadow-card-adaptive p-4 flex flex-col gap-2.5 text-left press transition-colors"
+      className="w-full bg-surface rounded-card border shadow-card-adaptive p-4 flex flex-col gap-2.5 text-left press transition-colors"
       style={{ borderColor: active ? 'rgb(var(--color-accent))' : 'rgb(var(--color-border) / 0.6)' }}
     >
       <div className="flex items-center gap-3">
@@ -698,7 +720,7 @@ function ExamSuggestionCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5 flex-wrap">
             <p className="text-text-primary font-bold text-[14px]">{subjectName}</p>
-            <span className="px-2 py-0.5 rounded-pill text-[10px] font-semibold shrink-0" style={{ background: badgeStyle.bg, color: badgeStyle.color }}>
+            <span className="px-2 py-0.5 rounded-pill text-[11px] font-semibold shrink-0" style={{ background: badgeStyle.bg, color: badgeStyle.color }}>
               {daysLeft === 0 ? 'Heute' : daysLeft === 1 ? 'Morgen' : `in ${daysLeft} Tagen`}
             </span>
           </div>
@@ -717,9 +739,9 @@ function ExamSuggestionCard({
 
       {noteCount === 0 && suggestedTopics.length > 0 && (
         <div className="flex flex-wrap gap-1.5 pt-1 border-t border-border/30">
-          <span className="text-[10px] text-text-muted font-medium w-full mb-0.5">Mögliche Themen:</span>
+          <span className="text-[11px] text-text-muted font-medium w-full mb-0.5">Mögliche Themen:</span>
           {suggestedTopics.slice(0, 6).map((t) => (
-            <span key={t} className="text-[10px] px-2 py-0.5 rounded-pill bg-surface-hover text-text-muted border border-border/40">
+            <span key={t} className="text-[11px] px-2 py-0.5 rounded-pill bg-surface-hover text-text-muted border border-border/40">
               {t.length > 30 ? t.slice(0, 30) + '…' : t}
             </span>
           ))}
@@ -729,17 +751,30 @@ function ExamSuggestionCard({
   )
 }
 
-function FeedbackSection({ icon, title, items, color, borderColor, bg }: { icon: string; title: string; items: string[]; color: string; borderColor: string; bg: string }) {
+// Die drei Rückmeldungen trugen ihre Bedeutung bisher als Schriftfarbe auf
+// gleichfarbig getöntem Grund — grüner Text auf Grün, roter auf Rot. Jetzt
+// steht die Farbe im gefüllten Zeichen, die Karte bleibt neutral und die
+// Schrift behält ihren vollen Kontrast.
+const TONE_FILL: Record<'green' | 'orange' | 'blue', string> = {
+  green:  'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]',
+  orange: 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-orange))]',
+  blue:   'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-blue))]',
+}
+
+function FeedbackSection({ icon, title, items, tone }: { icon: IconName; title: string; items: string[]; tone: 'green' | 'orange' | 'blue' }) {
   return (
-    <div className="rounded-[18px] overflow-hidden" style={{ background: bg, border: `1px solid ${borderColor}` }}>
+    <div className="rounded-card overflow-hidden bg-surface border border-border/60">
       <div className="px-4 pt-4 pb-2.5 flex items-center gap-2.5">
-        <span className="text-[18px] leading-none">{icon}</span>
-        <p className="text-[14px] font-bold" style={{ color }}>{title}</p>
+        <span className={`w-7 h-7 rounded-chip flex items-center justify-center shrink-0 ${TONE_FILL[tone]}`}>
+          <Icon name={icon} size={15} />
+        </span>
+        <p className="text-[14px] font-bold text-text-primary">{title}</p>
+        <span className="ml-auto text-[12px] font-semibold text-text-secondary tabular-nums">{items.length}</span>
       </div>
       <div className="px-4 pb-4 space-y-2">
         {items.map((item, i) => (
           <div key={i} className="flex gap-2.5">
-            <span className="text-[13px] mt-0.5 shrink-0 font-bold" style={{ color }}>·</span>
+            <span className="text-[13px] mt-0.5 shrink-0 font-bold text-text-muted">·</span>
             <p className="text-text-secondary text-[13px] leading-snug">{item}</p>
           </div>
         ))}

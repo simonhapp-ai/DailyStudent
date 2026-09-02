@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 
@@ -10,24 +11,24 @@ const DEFAULT_PREFS = {
   streakReminder: false,
 }
 
-const ITEMS: { key: NotifKey; icon: string; title: string; desc: string; color: string }[] = [
+const ITEMS: { key: NotifKey; icon: IconName; title: string; desc: string; color: string }[] = [
   {
     key: 'klausurReminder',
-    icon: '📝',
+    icon: 'note' as IconName,
     title: 'Klausur-Erinnerung',
     desc: '3 Tage vor jeder eingetragenen Klausur',
     color: '#FF3B30',
   },
   {
     key: 'lernplanReminder',
-    icon: '📅',
+    icon: 'calendar' as IconName,
     title: 'Lernplan-Erinnerungen',
     desc: 'Täglich zur besten Lernzeit erinnern',
     color: '#7C3AED',
   },
   {
     key: 'streakReminder',
-    icon: '🔥',
+    icon: 'flame' as IconName,
     title: 'Streak-Erinnerung',
     desc: 'Wenn du heute noch nicht gelernt hast',
     color: '#FF9500',
@@ -38,7 +39,7 @@ function Toggle({ on, onToggle }: { on: boolean; onToggle: () => void }) {
   return (
     <button
       onClick={onToggle}
-      className={`relative w-12 h-6 rounded-full transition-all duration-200 press-sm shrink-0 ${on ? 'grad-accent' : 'bg-border'}`}
+      className={`relative w-12 h-6 rounded-full transition-all duration-200 press-sm shrink-0 ${on ? 'bg-accent' : 'bg-border'}`}
     >
       <span
         className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all duration-200"
@@ -68,7 +69,7 @@ export function BenachrichtigungenScreen() {
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium mb-3 press-sm -ml-0.5"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -78,11 +79,11 @@ export function BenachrichtigungenScreen() {
         <h1 className="text-[28px] font-bold text-text-primary">Benachrichtigungen</h1>
       </div>
 
-      <div className="px-4 mt-5 space-y-4">
+      <div className="px-4 lg:px-6 mt-5 space-y-4 lg:max-w-[760px]">
 
         {/* ── Coming soon banner ──────────────────────────────── */}
         <div
-          className="rounded-[16px] px-4 py-3.5 flex items-start gap-3"
+          className="rounded-card px-4 py-3.5 flex items-start gap-3"
           style={{ background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
@@ -103,10 +104,10 @@ export function BenachrichtigungenScreen() {
                 className={`flex items-center gap-3 px-4 py-4 ${i < ITEMS.length - 1 ? 'border-b border-border/50' : ''}`}
               >
                 <div
-                  className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
+                  className="w-10 h-10 rounded-btn flex items-center justify-center text-[20px] shrink-0"
                   style={{ background: item.color + '18' }}
                 >
-                  {item.icon}
+                  <Icon name={item.icon} size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-text-primary font-medium text-[15px]">{item.title}</p>

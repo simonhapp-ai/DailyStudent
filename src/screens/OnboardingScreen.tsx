@@ -1,4 +1,6 @@
 import { useState, useRef } from 'react'
+import { Icon, type IconName } from '../components/ui/Icon'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Button } from '../components/ui/Button'
@@ -157,7 +159,7 @@ export function OnboardingScreen() {
     return (
       <div className="flex flex-col items-center justify-center min-h-dvh bg-background gap-4">
         <div className="w-12 h-12 rounded-btn bg-accent-soft flex items-center justify-center">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
@@ -177,7 +179,7 @@ export function OnboardingScreen() {
       {step > 1 && (
         <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
           <div
-            className="h-full grad-accent transition-all duration-300"
+            className="h-full bg-accent transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -187,7 +189,7 @@ export function OnboardingScreen() {
       {step > 1 && (
         <button
           onClick={back}
-          className="absolute left-4 flex items-center gap-1 text-accent text-[14px] font-medium press-sm z-10"
+          className="absolute left-4 flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm z-10"
           style={{ top: 'max(48px, calc(env(safe-area-inset-top, 0px) + 12px))' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -270,7 +272,7 @@ export function OnboardingScreen() {
           ) : (
             <div className="space-y-3">
               <Button variant="primary" fullWidth onClick={finish}>
-                Loslegen 🚀
+                Loslegen
               </Button>
               {!(klausurSubject && klausurDate) && (
                 <button
@@ -282,10 +284,10 @@ export function OnboardingScreen() {
               )}
               {/* Referral teaser */}
               <div
-                className="rounded-[14px] p-4 flex items-center gap-3"
+                className="rounded-icon p-4 flex items-center gap-3"
                 style={{ background: 'rgba(255,185,0,0.08)', border: '1px solid rgba(255,185,0,0.2)' }}
               >
-                <span className="text-[22px] shrink-0">🎁</span>
+                <span className="shrink-0 text-text-primary"><Icon name="gift" size={21} /></span>
                 <div>
                   <p className="text-text-primary font-semibold text-[13px]">
                     14 Tage Pro — kostenlos
@@ -309,12 +311,12 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col justify-between min-h-[calc(100dvh-80px)]">
       <div className="flex-1 flex flex-col justify-center">
-        <div className="w-16 h-16 rounded-2xl bg-accent-soft flex items-center justify-center text-3xl mb-8">
-          🎓
+        <div className="w-16 h-16 rounded-card bg-accent-soft flex items-center justify-center text-3xl mb-8">
+          <Icon name="cap" size={30} />
         </div>
         <h1 className="text-4xl font-bold text-text-primary leading-tight mb-4">
           Smarter lernen.<br />
-          <span className="text-accent">Besser abschneiden.</span>
+          <span className="text-text-primary">Besser abschneiden.</span>
         </h1>
         <p className="text-text-secondary text-lg leading-relaxed mb-10">
           Die KI, die deinen echten Unterricht kennt — personalisiert auf deinen Lehrplan.
@@ -322,18 +324,18 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
 
         <div className="space-y-4 mb-6">
           {[
-            { icon: '📸', text: 'Tafelbilder scannen → fertige Lernnotiz in Sekunden' },
-            { icon: '📝', text: 'Probeklausuren genau wie im Unterricht (AFB I–III)' },
-            { icon: '🎯', text: 'KI-Feedback wie vom Lehrer — mit Erwartungshorizont' },
+            { icon: 'camera' as IconName, text: 'Tafelbilder scannen → fertige Lernnotiz in Sekunden' },
+            { icon: 'clipboard' as IconName, text: 'Probeklausuren genau wie im Unterricht (AFB I–III)' },
+            { icon: 'target' as IconName, text: 'KI-Feedback wie vom Lehrer — mit Erwartungshorizont' },
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-3">
-              <span className="text-xl shrink-0">{item.icon}</span>
+              <span className="shrink-0 text-text-secondary"><Icon name={item.icon} size={19} /></span>
               <p className="text-text-secondary text-sm leading-relaxed">{item.text}</p>
             </div>
           ))}
         </div>
 
-        <div className="rounded-2xl px-4 py-3.5 mb-8" style={{ background: 'rgba(255,159,10,0.08)', border: '1px solid rgba(255,159,10,0.2)' }}>
+        <div className="rounded-card px-4 py-3.5 mb-8" style={{ background: 'rgba(255,159,10,0.08)', border: '1px solid rgba(255,159,10,0.2)' }}>
           <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: '#FF9F0A' }}>
             Beta-Hinweis
           </p>
@@ -396,7 +398,7 @@ function GradeSlider({ value, onChange }: { value: string; onChange: (v: string)
         className="px-5 pt-6 pb-5 text-center"
         style={{
           background: hasValue
-            ? 'linear-gradient(180deg, rgba(var(--color-accent), 0.08) 0%, transparent 100%)'
+            ? 'linear-gradient(180deg, rgb(var(--color-accent) / 0.08) 0%, transparent 100%)'
             : undefined,
         }}
       >
@@ -510,7 +512,7 @@ function GradeSlider({ value, onChange }: { value: string; onChange: (v: string)
             return (
               <span
                 key={label}
-                className="absolute -translate-x-1/2 text-[10px] font-semibold text-text-muted"
+                className="absolute -translate-x-1/2 text-[11px] font-semibold text-text-muted"
                 style={{ left: `calc(14px + ${pct / 100} * (100% - 28px))` }}
               >
                 {label}
@@ -591,19 +593,19 @@ function StepPersonal({
       <p className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3">Ich bin …</p>
       <div className="grid grid-cols-2 gap-2 mb-8">
         {([
-          { id: 'schüler' as const, emoji: '🎒', label: 'Schüler', desc: 'Klasse 5–13, Gymnasium etc.' },
-          { id: 'student' as const, emoji: '🎓', label: 'Student', desc: 'Hochschule, Uni, FH …' },
-        ]).map(({ id, emoji, label, desc }) => (
+          { id: 'schüler' as const, icon: 'book' as IconName, label: 'Schüler', desc: 'Klasse 5–13, Gymnasium etc.' },
+          { id: 'student' as const, icon: 'cap' as IconName, label: 'Student', desc: 'Hochschule, Uni, FH …' },
+        ]).map(({ id, icon, label, desc }) => (
           <button
             key={id}
             onClick={() => handleSetUserType(id)}
             className={`py-4 px-4 rounded-card border text-left transition-all duration-150 ${
               userType === id
-                ? 'grad-accent border-transparent'
+                ? 'bg-accent border-transparent'
                 : 'bg-surface border-border hover:bg-surface-hover'
             }`}
           >
-            <p className="text-2xl mb-1">{emoji}</p>
+            <p className="mb-1.5 flex justify-center text-text-primary"><Icon name={icon} size={24} /></p>
             <p className={`text-[15px] font-bold ${userType === id ? 'text-white' : 'text-text-primary'}`}>{label}</p>
             <p className={`text-[11px] mt-0.5 ${userType === id ? 'text-white/80' : 'text-text-muted'}`}>{desc}</p>
           </button>
@@ -612,13 +614,13 @@ function StepPersonal({
 
       {/* Student confirmation — no G8/G9 needed */}
       {userType === 'student' && (
-        <div className="rounded-[16px] px-4 py-3.5 flex items-center gap-3 mb-2"
-          style={{ background: 'rgba(var(--color-accent), 0.08)', border: '1px solid rgba(var(--color-accent), 0.2)' }}
+        <div className="rounded-card px-4 py-3.5 flex items-center gap-3 mb-2"
+          style={{ background: 'rgb(var(--color-accent) / 0.08)', border: '1px solid rgb(var(--color-accent) / 0.2)' }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-accent shrink-0">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          <p className="text-[13px] text-accent font-medium">
+          <p className="text-[13px] text-text-primary font-medium">
             Kein G8/G9 nötig — du legst deine Fächer im nächsten Schritt selbst an.
           </p>
         </div>
@@ -640,7 +642,7 @@ function StepPersonal({
                 onClick={() => { setSchultyp(id); setKlasse(''); setShowMittelstufePicker(false) }}
                 className={`py-4 px-4 rounded-card border text-left transition-all duration-150 ${
                   schultyp === id
-                    ? 'grad-accent border-transparent'
+                    ? 'bg-accent border-transparent'
                     : 'bg-surface border-border hover:bg-surface-hover'
                 }`}
               >
@@ -661,7 +663,7 @@ function StepPersonal({
                   onClick={() => { setShowMittelstufePicker(true); if (!mittelstufeSelected) setKlasse('') }}
                   className={`w-full py-3.5 px-4 rounded-card border text-left transition-all duration-150 ${
                     mittelstufeSelected
-                      ? 'grad-accent border-transparent'
+                      ? 'bg-accent border-transparent'
                       : 'bg-surface border-border hover:bg-surface-hover'
                   }`}
                 >
@@ -691,7 +693,7 @@ function StepPersonal({
                         onClick={() => setKlasse(k)}
                         className={`py-3 rounded-card text-sm font-bold border transition-all duration-150 ${
                           klasse === k
-                            ? 'grad-accent border-transparent text-white'
+                            ? 'bg-accent border-transparent text-white'
                             : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                         }`}
                       >
@@ -712,7 +714,7 @@ function StepPersonal({
                       onClick={() => { setKlasse(k); setShowMittelstufePicker(false) }}
                       className={`py-3.5 px-4 rounded-card border text-left transition-all duration-150 ${
                         klasse === k
-                          ? 'grad-accent border-transparent'
+                          ? 'bg-accent border-transparent'
                           : 'bg-surface border-border hover:bg-surface-hover'
                       }`}
                     >
@@ -738,7 +740,7 @@ function StepPersonal({
                 onClick={() => setSchulform(sf)}
                 className={`py-3 rounded-card text-sm font-medium border transition-all duration-150 ${
                   schulform === sf
-                    ? 'grad-accent border-transparent text-white'
+                    ? 'bg-accent border-transparent text-white'
                     : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                 }`}
               >
@@ -789,7 +791,7 @@ function StepBundesland({ selected, onSelect, isStudent }: { selected: string; o
             onClick={() => onSelect(bl.id)}
             className={`py-3 px-3 rounded-card text-sm font-medium border text-left transition-all duration-150 ${
               selected === bl.id
-                ? 'grad-accent border-transparent text-white'
+                ? 'bg-accent border-transparent text-white'
                 : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
             }`}
           >
@@ -799,7 +801,7 @@ function StepBundesland({ selected, onSelect, isStudent }: { selected: string; o
       </div>
 
       {selected && (
-        <div className="mt-5 flex items-center gap-2 text-success text-sm">
+        <div className="mt-5 flex items-center gap-2 text-text-primary text-sm">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
@@ -875,7 +877,7 @@ function CustomFaecherModal({
             {inputs.length > 1 && (
               <button
                 onClick={() => removeInput(i)}
-                className="w-11 h-11 rounded-card border border-border flex items-center justify-center text-text-muted hover:text-danger hover:border-danger/30 transition-colors shrink-0"
+                className="w-11 h-11 rounded-card border border-border flex items-center justify-center text-text-muted hover:text-text-primary hover:border-danger/30 transition-colors shrink-0"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
@@ -887,7 +889,7 @@ function CustomFaecherModal({
 
         <button
           onClick={addInput}
-          className="w-full py-3 border border-dashed border-border rounded-card flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all duration-200"
+          className="w-full py-3 border border-dashed border-border rounded-card flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-text-primary hover:bg-accent/5 transition-all duration-200"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -944,15 +946,15 @@ function StepFaecher({
         {isStudent
           ? 'Lege deine Studienfächer an.'
           : 'Wähle alle Fächer, die du lernst.'}
-        {' '}<span className="text-accent font-medium">{totalSelected} ausgewählt</span>
+        {' '}<span className="text-text-primary font-medium">{totalSelected} ausgewählt</span>
       </p>
       {isOberstufe && !isStudent && (
-        <p className="text-[11px] text-text-muted mb-4">Tippe auf <span className="font-bold text-accent">LK</span> um Leistungskurse zu markieren.</p>
+        <p className="text-[11px] text-text-muted mb-4">Tippe auf <span className="font-bold text-text-primary">LK</span> um Leistungskurse zu markieren.</p>
       )}
       {(!isOberstufe || isStudent) && <div className="mb-5" />}
 
       {/* ── Custom Fächer section ────────────────────────── */}
-      <div className="mb-6 rounded-[20px] border border-border/60 bg-surface overflow-hidden">
+      <div className="mb-6 rounded-card border border-border/60 bg-surface overflow-hidden">
         <div className="px-4 pt-4 pb-3">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -967,7 +969,7 @@ function StepFaecher({
             </div>
             <button
               onClick={() => setShowCustomModal(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-[12px] grad-accent text-white text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-btn btn-mode text-[13px] font-semibold shrink-0 active:scale-95 transition-all"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -983,12 +985,12 @@ function StepFaecher({
               <div
                 key={cf.id}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill"
-                style={{ background: 'rgba(var(--color-accent), 0.1)', border: '1px solid rgba(var(--color-accent), 0.25)' }}
+                style={{ background: 'rgb(var(--color-accent) / 0.1)', border: '1px solid rgb(var(--color-accent) / 0.25)' }}
               >
-                <span className="text-[13px] font-semibold text-accent">{cf.name}</span>
+                <span className="text-[13px] font-semibold text-text-primary">{cf.name}</span>
                 <button
                   onClick={() => setCustomFaecher(customFaecher.filter((c) => c.id !== cf.id))}
-                  className="text-accent/60 hover:text-accent transition-colors"
+                  className="text-text-primary/60 hover:text-text-primary transition-colors"
                 >
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
@@ -998,7 +1000,7 @@ function StepFaecher({
             ))}
             <button
               onClick={() => setShowCustomModal(true)}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-pill text-[13px] font-medium text-text-muted border border-dashed border-border hover:border-accent/50 hover:text-accent transition-all"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-pill text-[13px] font-medium text-text-muted border border-dashed border-border hover:border-accent/50 hover:text-text-primary transition-all"
             >
               + bearbeiten
             </button>
@@ -1011,7 +1013,7 @@ function StepFaecher({
         <div className="space-y-5">
           {SUBJECT_GROUPS.map((group) => (
             <div key={group.label}>
-              <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">
+              <p className="section-label mb-2">
                 {group.label}
               </p>
               <div className="grid grid-cols-2 gap-2">
@@ -1027,28 +1029,23 @@ function StepFaecher({
                         active ? 'border-accent bg-accent-soft' : 'border-border bg-surface hover:bg-surface-hover'
                       }`}
                     >
-                      <div
-                        className="w-8 h-8 rounded-btn flex items-center justify-center text-lg shrink-0"
-                        style={{ backgroundColor: `${subject.color}22` }}
-                      >
-                        {subject.icon}
-                      </div>
+                      <SubjectIcon subjectId={id} size="sm" />
                       <p className={`text-xs font-semibold leading-tight flex-1 min-w-0 ${active ? 'text-text-primary' : 'text-text-secondary'}`}>
                         {subject.name}
                       </p>
                       {active && isOberstufe ? (
                         <button
                           onClick={(e) => { e.stopPropagation(); onToggleLK(id) }}
-                          className={`absolute top-2 right-2 px-1.5 py-0.5 rounded text-[9px] font-black tracking-wide transition-all ${
+                          className={`absolute top-2 right-2 px-1.5 py-0.5 rounded-chip text-[11px] font-black tracking-wide transition-all ${
                             isLK
-                              ? 'bg-accent text-white'
-                              : 'bg-accent/15 text-accent border border-accent/30'
+                              ? 'btn-mode'
+                              : 'bg-accent/15 text-text-primary border border-accent/30'
                           }`}
                         >
                           LK
                         </button>
                       ) : active ? (
-                        <div className="absolute top-2 right-2 w-4 h-4 rounded-full grad-accent flex items-center justify-center shrink-0">
+                        <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-accent flex items-center justify-center shrink-0">
                           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
                             <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
@@ -1066,7 +1063,7 @@ function StepFaecher({
       {/* Hint for students if no custom fächer yet */}
       {isStudent && customFaecher.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-3xl mb-3">📚</p>
+          <p className="mb-3 flex justify-center text-text-secondary"><Icon name="book" size={28} /></p>
           <p className="text-text-secondary text-[14px] font-medium">Noch keine Fächer angelegt</p>
           <p className="text-text-muted text-[12px] mt-1">Klicke auf "Anlegen" um deine Studienfächer hinzuzufügen</p>
         </div>
@@ -1092,10 +1089,10 @@ function StepFolderSort({
 }) {
   const isQPhase = !isStudent && (schultyp === 'g8' ? parseInt(klasse) >= 11 : parseInt(klasse) >= 12)
 
-  const options: { id: 'manual' | 'halbjahr' | 'themen'; icon: string; title: string; desc: string; comingSoon?: boolean }[] = [
+  const options: { id: 'manual' | 'halbjahr' | 'themen'; icon: IconName; title: string; desc: string; comingSoon?: boolean }[] = [
     {
       id: 'halbjahr',
-      icon: '📅',
+      icon: 'calendar',
       title: isStudent ? 'Nach Semester' : isQPhase ? 'Nach Quartal' : 'Nach Halbjahr',
       desc: isStudent
         ? 'Ordner werden automatisch nach 1., 2., 3. und 4. Semester erstellt'
@@ -1105,13 +1102,13 @@ function StepFolderSort({
     },
     {
       id: 'manual',
-      icon: '✋',
+      icon: 'settings',
       title: 'Manuell',
       desc: 'Du erstellst und benennst Ordner selbst — maximale Kontrolle',
     },
     {
       id: 'themen',
-      icon: '📚',
+      icon: 'book',
       title: 'Nach Themen',
       desc: 'Ordner nach Lehrplanthemen (KC) — folgt bald für alle Bundesländer',
       comingSoon: true,
@@ -1131,16 +1128,16 @@ function StepFolderSort({
             <button
               key={opt.id}
               onClick={() => { if (!opt.comingSoon) setSortMode(opt.id) }}
-              className={`w-full flex items-start gap-4 p-4 rounded-[20px] border text-left transition-all duration-150 ${
+              className={`w-full flex items-start gap-4 p-4 rounded-card border text-left transition-all duration-150 ${
                 active
-                  ? 'grad-accent border-transparent'
+                  ? 'bg-accent border-transparent'
                   : opt.comingSoon
                   ? 'bg-surface border-border/40 opacity-55 cursor-not-allowed'
                   : 'bg-surface border-border hover:bg-surface-hover active:scale-[0.98]'
               }`}
             >
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
-                {opt.icon}
+              <div className={`w-12 h-12 rounded-btn flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
+                <Icon name={opt.icon} size={20} />
               </div>
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -1148,7 +1145,7 @@ function StepFolderSort({
                     {opt.title}
                   </p>
                   {opt.comingSoon && (
-                    <span className="px-2 py-0.5 rounded-pill text-[10px] font-bold bg-border/80 text-text-muted">
+                    <span className="px-2 py-0.5 rounded-pill text-[11px] font-bold bg-border/80 text-text-muted">
                       Bald
                     </span>
                   )}
@@ -1270,9 +1267,9 @@ function StepStundenplan({
           <div className="space-y-3">
             <button
               onClick={() => setMode('manual')}
-              className="w-full flex items-center gap-4 bg-surface border border-border rounded-[20px] p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
+              className="w-full flex items-center gap-4 bg-surface border border-border rounded-card p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-2xl shrink-0">✏️</div>
+              <div className="w-12 h-12 rounded-btn btn-mode flex items-center justify-center shrink-0"><Icon name="pencil" size={22} /></div>
               <div className="flex-1">
                 <p className="text-text-primary font-semibold text-[15px]">Manuell eintragen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">Fächer und Zeiten selbst eingeben</p>
@@ -1283,9 +1280,9 @@ function StepStundenplan({
             </button>
             <button
               onClick={() => setMode('scan')}
-              className="w-full flex items-center gap-4 bg-surface border border-border rounded-[20px] p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
+              className="w-full flex items-center gap-4 bg-surface border border-border rounded-card p-5 text-left hover:bg-surface-hover active:scale-[0.98] transition-all duration-150"
             >
-              <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-2xl shrink-0">📷</div>
+              <div className="w-12 h-12 rounded-btn btn-mode flex items-center justify-center shrink-0"><Icon name="camera" size={22} /></div>
               <div className="flex-1">
                 <p className="text-text-primary font-semibold text-[15px]">Foto / Scan hochladen</p>
                 <p className="text-text-muted text-[13px] mt-0.5">Stundenplan fotografieren oder PDF importieren</p>
@@ -1315,7 +1312,7 @@ function StepStundenplan({
         <div className="flex-1">
           <button
             onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
-            className="flex items-center gap-1.5 text-accent text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-1.5 text-text-primary text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -1329,9 +1326,9 @@ function StepStundenplan({
           {scanPhase === 'idle' && (
             <button
               onClick={() => fileRef.current?.click()}
-              className="w-full border-2 border-dashed border-border rounded-[20px] p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
+              className="w-full border-2 border-dashed border-border rounded-card p-8 flex flex-col items-center gap-3 hover:border-accent/50 hover:bg-accent/5 transition-all"
             >
-              <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center text-3xl">📷</div>
+              <div className="w-16 h-16 rounded-card btn-mode flex items-center justify-center"><Icon name="camera" size={28} /></div>
               <div className="text-center">
                 <p className="text-text-primary font-semibold text-base">Foto oder PDF auswählen</p>
                 <p className="text-text-muted text-sm mt-1">JPG, PNG oder PDF</p>
@@ -1341,7 +1338,7 @@ function StepStundenplan({
 
           {/* ANALYZING — spinner */}
           {scanPhase === 'analyzing' && (
-            <div className="bg-surface border border-border rounded-[20px] p-6 flex flex-col items-center gap-4">
+            <div className="bg-surface border border-border rounded-card p-6 flex flex-col items-center gap-4">
               <div className="w-12 h-12 border-[3px] border-accent/25 border-t-accent rounded-full animate-spin" />
               <div className="text-center">
                 <p className="text-text-primary font-semibold text-[15px]">KI analysiert Stundenplan…</p>
@@ -1353,19 +1350,19 @@ function StepStundenplan({
           {/* ERROR */}
           {scanPhase === 'error' && (
             <div className="space-y-3">
-              <div className="rounded-[20px] p-5" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
+              <div className="rounded-card p-5" style={{ background: 'rgb(var(--color-danger) / 0.08)', border: '1px solid rgb(var(--color-danger) / 0.25)' }}>
                 <p className="text-text-primary font-semibold text-[15px] mb-1">Erkennung fehlgeschlagen</p>
                 <p className="text-text-muted text-[13px] leading-relaxed">{scanError}</p>
               </div>
               <button
                 onClick={() => { setScanPhase('idle'); setScanFile(null); setScanError('') }}
-                className="w-full py-3.5 rounded-[20px] grad-accent text-white text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Erneut versuchen
               </button>
               <button
                 onClick={() => { setMode('manual'); setScanPhase('idle'); setScanError('') }}
-                className="w-full py-3 rounded-[20px] border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
+                className="w-full h-12 rounded-pill border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
               >
                 Manuell eintragen
               </button>
@@ -1375,9 +1372,9 @@ function StepStundenplan({
           {/* MISMATCH — AI found subjects not in user's faecher selection */}
           {scanPhase === 'mismatch' && mismatchData && (
             <div className="space-y-3">
-              <div className="rounded-[20px] p-5 space-y-3" style={{ background: 'rgba(255,149,0,0.08)', border: '1px solid rgba(255,149,0,0.25)' }}>
+              <div className="rounded-card p-5 space-y-3" style={{ background: 'rgba(255,149,0,0.08)', border: '1px solid rgba(255,149,0,0.25)' }}>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">🔎</span>
+                  <span className="text-text-secondary"><Icon name="search" size={19} /></span>
                   <p className="text-text-primary font-semibold text-[15px]">Neue Fächer erkannt</p>
                 </div>
                 <p className="text-text-muted text-[13px] leading-relaxed">
@@ -1392,7 +1389,7 @@ function StepStundenplan({
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill"
                         style={{ background: `${subj?.color ?? '#7C3AED'}22`, border: `1px solid ${subj?.color ?? '#7C3AED'}40` }}
                       >
-                        <span className="text-sm">{subj?.icon ?? '📚'}</span>
+                        <SubjectIcon subjectId={id} size="sm" className="!w-5 !h-5" />
                         <span className="text-[13px] font-semibold" style={{ color: subj?.color ?? '#7C3AED' }}>
                           {subj?.name ?? id}
                         </span>
@@ -1410,7 +1407,7 @@ function StepStundenplan({
                   setScanPhase('idle')
                   setMismatchData(null)
                 }}
-                className="w-full py-3.5 rounded-[20px] grad-accent text-white text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
+                className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold hover:opacity-90 active:scale-95 transition-all"
               >
                 Fächer hinzufügen &amp; Stundenplan übernehmen
               </button>
@@ -1423,7 +1420,7 @@ function StepStundenplan({
                   setScanPhase('idle')
                   setMismatchData(null)
                 }}
-                className="w-full py-3 rounded-[20px] border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
+                className="w-full h-12 rounded-pill border border-border text-text-secondary text-[15px] font-medium hover:bg-surface-hover transition-colors"
               >
                 Nur meine Fächer verwenden
               </button>
@@ -1459,7 +1456,7 @@ function StepStundenplan({
       <div className="flex-1">
         <button
           onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }}
-          className="flex items-center gap-1.5 text-accent text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-1.5 text-text-primary text-sm font-medium mb-6 hover:opacity-80 transition-opacity"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -1468,11 +1465,11 @@ function StepStundenplan({
         </button>
 
         {fromAI && totalSlots > 0 && (
-          <div className="mb-5 rounded-[14px] px-4 py-3 flex items-center gap-2.5" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.25)' }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success shrink-0">
+          <div className="mb-5 rounded-icon px-4 py-3 flex items-center gap-2.5" style={{ background: 'rgb(var(--color-success) / 0.08)', border: '1px solid rgb(var(--color-success) / 0.25)' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
               <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <p className="text-[13px] font-medium text-success">
+            <p className="text-[13px] font-medium text-text-primary">
               {totalSlots} Stunden erkannt — prüfen & anpassen
             </p>
           </div>
@@ -1493,12 +1490,12 @@ function StepStundenplan({
               <button
                 key={d}
                 onClick={() => { setActiveDay(i); setAddingSlot(false) }}
-                className={`flex-1 flex flex-col items-center py-2.5 rounded-[14px] transition-all duration-200 ${
-                  activeDay === i ? 'grad-accent' : 'bg-surface border border-border hover:bg-surface-hover'
+                className={`flex-1 flex flex-col items-center py-2.5 rounded-icon transition-all duration-200 ${
+                  activeDay === i ? 'bg-accent' : 'bg-surface border border-border hover:bg-surface-hover'
                 }`}
               >
                 <span className={`text-[11px] font-semibold ${activeDay === i ? 'text-white/80' : 'text-text-muted'}`}>{d}</span>
-                <span className={`text-[13px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-accent' : 'text-text-muted/30'}`}>
+                <span className={`text-[13px] font-bold mt-0.5 ${activeDay === i ? 'text-white' : count > 0 ? 'text-text-primary' : 'text-text-muted/30'}`}>
                   {count > 0 ? count : '·'}
                 </span>
               </button>
@@ -1510,17 +1507,20 @@ function StepStundenplan({
         <div className="space-y-2 mb-3">
           {daySlots.map((slot) => {
             const subj = SUBJECT_INFO[slot.subjectId]
-            const icon = slot.isFreistunde ? '☕' : (subj?.icon ?? '📚')
             const name = slot.isFreistunde ? 'Freistunde' : (subj?.name ?? slot.subjectId)
             const iconBg = slot.isFreistunde ? 'rgba(148,163,184,0.18)' : `${subj?.color ?? '#7C3AED'}22`
             return (
               <div key={slot.id} className="bg-surface border border-border/60 rounded-card p-3.5 flex items-center gap-3 animate-fade-in">
-                <div
-                  className="w-9 h-9 rounded-btn flex items-center justify-center text-lg shrink-0"
-                  style={{ backgroundColor: iconBg }}
-                >
-                  {icon}
-                </div>
+                {slot.isFreistunde ? (
+                  <div
+                    className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0 text-text-secondary"
+                    style={{ backgroundColor: iconBg }}
+                  >
+                    <Icon name="coffee" size={17} />
+                  </div>
+                ) : (
+                  <SubjectIcon subjectId={slot.subjectId} size="sm" className="!w-9 !h-9" />
+                )}
                 <div className="flex-1 min-w-0">
                   <p className="text-text-primary font-semibold text-[14px]">{name}</p>
                   <p className="text-text-muted text-[12px]">
@@ -1530,7 +1530,7 @@ function StepStundenplan({
                 </div>
                 <button
                   onClick={() => removeSlot(slot.id)}
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 transition-colors shrink-0 press-sm"
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-danger/10 transition-colors shrink-0 press-sm"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
@@ -1545,7 +1545,7 @@ function StepStundenplan({
         {!addingSlot ? (
           <button
             onClick={() => setAddingSlot(true)}
-            className="w-full border border-dashed border-border rounded-card py-3.5 flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-accent hover:bg-accent/5 transition-all duration-200"
+            className="w-full border border-dashed border-border rounded-card py-3.5 flex items-center justify-center gap-2 text-text-muted hover:border-accent/50 hover:text-text-primary hover:bg-accent/5 transition-all duration-200"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -1553,11 +1553,11 @@ function StepStundenplan({
             <span className="text-[13px] font-medium">Stunde hinzufügen</span>
           </button>
         ) : (
-          <div className="bg-surface border border-accent/30 rounded-[20px] p-4 space-y-3">
+          <div className="bg-surface border border-accent/30 rounded-card p-4 space-y-3">
             {/* Time row */}
             <div className="flex gap-2">
               <div className="flex-1">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Von</p>
+                <p className="section-label mb-1.5">Von</p>
                 <input
                   type="time"
                   value={newSlot.startTime}
@@ -1566,7 +1566,7 @@ function StepStundenplan({
                 />
               </div>
               <div className="flex-1">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Bis</p>
+                <p className="section-label mb-1.5">Bis</p>
                 <input
                   type="time"
                   value={newSlot.endTime}
@@ -1577,7 +1577,7 @@ function StepStundenplan({
             </div>
 
             {/* Subject picker */}
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">Fach</p>
+            <p className="section-label">Fach</p>
             <div className="grid grid-cols-3 gap-1.5">
               {profileSubjects.map((s) => (
                 <button
@@ -1589,7 +1589,7 @@ function StepStundenplan({
                       : 'border-border bg-background hover:bg-surface-hover'
                   }`}
                 >
-                  <span className="text-base shrink-0">{s.icon}</span>
+                  <SubjectIcon subjectId={s.id} size="sm" className="!w-5 !h-5" />
                   <span className={`text-[11px] font-medium leading-tight truncate ${!newSlot.isFreistunde && newSlot.subjectId === s.id ? 'text-text-primary' : 'text-text-secondary'}`}>
                     {s.name}
                   </span>
@@ -1603,7 +1603,7 @@ function StepStundenplan({
                     : 'border-border bg-background hover:bg-surface-hover'
                 }`}
               >
-                <span className="text-base shrink-0">☕</span>
+                <span className="shrink-0 text-text-secondary"><Icon name="coffee" size={15} /></span>
                 <span className={`text-[11px] font-medium leading-tight truncate ${newSlot.isFreistunde ? 'text-text-primary' : 'text-text-secondary'}`}>
                   Freistunde
                 </span>
@@ -1635,7 +1635,7 @@ function StepStundenplan({
               <button
                 onClick={commitSlot}
                 disabled={!newSlot.subjectId && !newSlot.isFreistunde}
-                className="flex-1 py-2.5 rounded-card grad-accent text-white text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
+                className="flex-1 py-2.5 rounded-card btn-mode text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
               >
                 Hinzufügen
               </button>
@@ -1696,11 +1696,11 @@ function StepKlausur({
             onClick={() => setSubject(s.id)}
             className={`flex items-center gap-3 py-3 px-4 rounded-card border text-left transition-all duration-150 ${
               subject === s.id
-                ? 'grad-accent border-transparent text-white'
+                ? 'bg-accent border-transparent text-white'
                 : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
             }`}
           >
-            <span className="text-xl">{s.icon}</span>
+            <SubjectIcon subjectId={s.id} size="sm" />
             <span className="font-medium text-sm">{s.name}</span>
           </button>
         ))}
@@ -1725,7 +1725,7 @@ function StepKlausur({
                   key={t}
                   onClick={() => setTopic(topic === t ? '' : t)}
                   className="px-3 py-1.5 rounded-pill text-[12px] font-medium transition-all press-sm"
-                  style={topic === t ? { background: 'rgb(var(--color-accent))', color: 'white' } : { background: 'rgba(var(--color-border),0.5)', color: 'rgb(var(--color-text-secondary))' }}
+                  style={topic === t ? { background: 'rgb(var(--color-accent))', color: 'white' } : { background: 'rgb(var(--color-border) / 0.5)', color: 'rgb(var(--color-text-secondary))' }}
                 >
                   {t.length > 30 ? t.slice(0, 30) + '…' : t}
                 </button>

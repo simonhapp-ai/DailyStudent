@@ -2,7 +2,13 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { ProModal } from '../components/ui/ProModal'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { Icon, type IconName } from '../components/ui/Icon'
+import { Stage } from '../components/ui/Stage'
+import { Tag } from '../components/ui/Tag'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { EmptyState } from '../components/ui/EmptyState'
+import { Banner } from '../components/ui/Banner'
 
 interface ProbeklausurPrefill {
   subjectId: string
@@ -11,68 +17,72 @@ interface ProbeklausurPrefill {
   sourceNoteIds: string[]
 }
 
-const MODES_FULL = [
+// Die vier Klausurarten sind Inhaltskategorien, genau wie die vier Fachgruppen —
+// deshalb tragen sie DEREN Töne statt eines eigenen Farbvokabulars. Mint bleibt
+// der vollständigen Klausur vorbehalten, weil sie das Kernstück des Modus ist.
+// Lila kommt hier nicht vor: das ist die Farbe des Unterrichtsmodus.
+interface Mode {
+  id: number
+  route: string
+  fill: string
+  /** Schriftfarbe auf der Fläche — die Töne sind hell, Weiß trägt darauf nicht. */
+  on: string
+  icon: IconName
+  title: string
+  subtitle: string
+  description: string
+  badges: string[]
+  proBadge?: string
+}
+
+const MODES: Mode[] = [
   {
     id: 2,
     route: '/klausurmodus/probeklausur/vollstaendige-klausur',
-    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+    fill: '#34D399',
+    on: '#FFFFFF',
+    icon: 'clock',
     title: 'Vollständige Klausur',
     subtitle: 'Realistische Klausur-Simulation',
-    description: 'Eine komplette 90-Minuten-Klausur mit AFB I–III, 2–3 Materialien und echter Zeitgrenzen — genau wie im echten Abitur.',
+    description: 'Eine komplette 90-Minuten-Klausur mit AFB I–III, 2–3 Materialien und echter Zeitgrenze — genau wie im Abitur.',
     badges: ['90 Minuten', '3–5 Aufgaben'],
     proBadge: 'KI-Korrektur',
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" />
-      </svg>
-    ),
   },
   {
     id: 1,
     route: '/klausurmodus/probeklausur/afb-trainer',
-    gradient: 'linear-gradient(145deg, #34D399, #059669)',
+    fill: 'rgb(var(--subj-spr))',
+    on: '#FFFFFF',
+    icon: 'target',
     title: 'AFB-Aufgabentrainer',
     subtitle: 'Einzelne Aufgabe gezielt üben',
-    description: 'Du wählst das AFB-Level (I, II oder III) und bekommst genau eine präzise Abituraufgabe auf diesem Niveau — mit passenden Materialien wenn nötig.',
+    description: 'Du wählst das AFB-Level und bekommst genau eine präzise Abituraufgabe auf diesem Niveau — mit Material, wenn nötig.',
     badges: ['1 Aufgabe', 'AFB I / II / III'],
     proBadge: 'KI-Korrektur',
-    icon: (
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
-      </svg>
-    ),
   },
-]
-
-const MODES_HALF = [
   {
     id: 3,
     route: '/klausurmodus/probeklausur/materialklausur',
-    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+    fill: 'rgb(var(--subj-ges))',
+    on: '#FFFFFF',
+    icon: 'document',
     title: 'Materialklausur',
     subtitle: 'Alle drei AFB zu einem Material',
+    description: 'Ein Material, drei Aufgaben darauf — vom Beschreiben über das Erklären bis zum Beurteilen.',
     badges: ['1–3 Materialien', 'AFB I + II + III'],
     proBadge: 'KI-Korrektur',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18M9 21V9" />
-      </svg>
-    ),
   },
   {
     id: 4,
     route: '/klausurmodus/probeklausur/ohne-material',
-    gradient: 'linear-gradient(145deg, #7C3AED, #4C1D95)',
+    fill: 'rgb(var(--subj-kre))',
+    on: '#FFFFFF',
+    icon: 'bulb',
     title: 'Ohne Material',
     subtitle: 'Alles aus dem Kopf',
+    description: 'Keine Vorlage, kein Text — nur die Aufgabe und was du selbst abrufen kannst.',
     badges: ['Kein Material', 'AFB I + II + III'],
     proBadge: 'KI-Korrektur',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" /><circle cx="12" cy="17" r="0.5" fill="white" />
-        <circle cx="12" cy="12" r="10" />
-      </svg>
-    ),
   },
 ]
 
@@ -94,19 +104,21 @@ function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: '2-digit' })
 }
 
-function npColor(np: number): string {
-  if (np >= 13) return '#34D399'
-  if (np >= 10) return '#60A5FA'
-  if (np >= 7) return '#FACC15'
-  if (np >= 4) return '#FB923C'
-  return '#F87171'
+// Notenpunkte laufen über die beschlossene Fünf-Stufen-Skala. Jede Stufe bringt
+// ihre eigene Gegenfarbe mit — auf Gelb und Hellgrün trägt Weiß nicht.
+function npTone(np: number): { bg: string; fg: string } {
+  const step = np >= 13 ? 5 : np >= 10 ? 4 : np >= 7 ? 3 : np >= 4 ? 2 : 1
+  return { bg: `rgb(var(--grade-${step}))`, fg: `rgb(var(--grade-${step}-on))` }
 }
 
 export function ProbeklausurMenuScreen() {
   const navigate = useNavigate()
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
-  const { inProgressProbeklausuren, deleteInProgressProbeklausur, savedProbeklausuren, deleteSavedProbeklausur, isPro, appConfig } = useUser()
+  const {
+    inProgressProbeklausuren, deleteInProgressProbeklausur,
+    savedProbeklausuren, deleteSavedProbeklausur, isPro, appConfig,
+  } = useUser()
   const [showProModal, setShowProModal] = useState(false)
 
   // Beta launch (migration 017_beta_mode_config.sql): AFB-Aufgabentrainer (mode 1)
@@ -121,7 +133,7 @@ export function ProbeklausurMenuScreen() {
     4: appConfig.probeklausurMode4Enabled,
   }
 
-  const handleModeClick = (mode: typeof MODES_FULL[0] | typeof MODES_HALF[0]) => {
+  const handleModeClick = (mode: Mode) => {
     if (mode.id === 1 && appConfig.probeklausurAfbTrainerFree) {
       navigate(mode.route, { state: prefill ? { prefill } : undefined })
       return
@@ -131,257 +143,219 @@ export function ProbeklausurMenuScreen() {
     navigate(mode.route, { state: prefill ? { prefill } : undefined })
   }
 
+  // Bühne nur, wenn es genau eine zeitkritische Handlung gibt (Regel 1): eine
+  // angefangene Klausur will zu Ende geschrieben werden. Sonst reicht der Titel.
+  const offen = [...inProgressProbeklausuren]
+    .sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0]
+  const offenTasks = offen ? offen.exam.tasks.length : 0
+  const offenBeantwortet = offen ? Object.values(offen.userAnswers).filter(Boolean).length : 0
+
+  const erledigt = [...savedProbeklausuren].sort((a, b) => b.completedAt.localeCompare(a.completedAt))
+
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-28">
-      {/* Header */}
-      <div className="px-5" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+      {/* ── Kopf ────────────────────────────────────────────────────── */}
+      <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1.5 text-accent text-[14px] font-semibold mb-4 press-sm"
+          className="flex items-center gap-1 text-text-primary text-[15px] font-semibold mb-4 press-sm -ml-1"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-            <path d="M15 18l-6-6 6-6" />
+          <svg width="9" height="15" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
+            strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M7 1L1 7l6 6" />
           </svg>
           Zurück
         </button>
-        <div className="flex items-end justify-between">
-          <div>
-            <h1 className="text-[28px] font-bold text-text-primary">Probeklausur</h1>
-            <p className="text-[13px] text-text-muted mt-0.5">
-              KI-generiert · AFB I–III · Abitur-konform
+        <div className="flex items-end justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Probeklausur</h1>
+            <p className="text-[13px] text-text-secondary mt-0.5">
+              {erledigt.length > 0
+                ? `${erledigt.length} ${erledigt.length === 1 ? 'geschrieben' : 'geschrieben'} · AFB I–III`
+                : 'KI-generiert · AFB I–III · Abitur-konform'}
             </p>
           </div>
           <button
             onClick={() => navigate('/klausurmodus/probeklausur/retrospektive')}
-            className="flex items-center gap-1.5 text-text-muted text-[13px] font-medium press-sm pb-0.5"
+            className="flex items-center gap-1.5 text-text-primary text-[14px] font-semibold press-sm shrink-0 pb-1"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 8v4l3 3" /><circle cx="12" cy="12" r="10" />
-            </svg>
+            <Icon name="chart" size={15} />
             Verlauf
           </button>
         </div>
       </div>
 
-      <div className="px-5 mt-5 space-y-3">
+      <div className="px-4 mt-4 space-y-3">
 
-        {/* Lernzettel context banner */}
-        {prefill && (
-          <div className="bg-[#5AC8FA]/10 border border-[#5AC8FA]/30 rounded-[16px] p-3.5 flex items-start gap-3">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6M9 13h6M9 17h4" />
-            </svg>
-            <div className="min-w-0">
-              <p className="text-[12px] font-semibold text-[#5AC8FA]">Basierend auf Lernzettel</p>
-              <p className="text-[12px] text-text-secondary mt-0.5">
-                <span className="font-medium">{prefill.subjectName}</span>
-                {prefill.topics.length > 0 && ` · ${prefill.topics.slice(0, 2).join(', ')}${prefill.topics.length > 2 ? ' …' : ''}`}
-              </p>
-            </div>
-          </div>
+        {/* Angefangene Klausur — die eine zeitkritische Sache */}
+        {offen && (
+          <Stage
+            tone="klausur"
+            eyebrow={`${MODE_LABEL[offen.mode]} · seit ${fmtDate(offen.startedAt)}`}
+            title={offen.subjectName}
+            progress={offenTasks > 0 ? offenBeantwortet / offenTasks : 0}
+            note={`${offenBeantwortet} von ${offenTasks} Aufgaben bearbeitet`}
+            action={
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => navigate(MODE_ROUTE[offen.mode], { state: { resume: offen } })}
+                  className="h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
+                  style={{ background: '#FFFFFF', color: '#1B1B1F' }}
+                >
+                  <Icon name="play" size={16} />
+                  Fortfahren
+                </button>
+                <button
+                  onClick={() => deleteInProgressProbeklausur(offen.id)}
+                  className="h-12 rounded-pill bg-white/15 text-white text-[15px] font-semibold press flex items-center justify-center gap-2 border border-white/25"
+                >
+                  <Icon name="trash" size={16} />
+                  Verwerfen
+                </button>
+              </div>
+            }
+          />
         )}
 
-        {/* Full-width cards: Vollständige Klausur + AFB-Aufgabentrainer */}
-        {MODES_FULL.map((mode) => (
-          <button
-            key={mode.id}
-            onClick={() => handleModeClick(mode)}
-            className="w-full bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-5 text-left press"
-          >
-            {/* Top row */}
-            <div className="flex items-start gap-4 mb-3.5">
-              <div
-                className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0"
-                style={{ background: mode.gradient }}
-              >
-                {mode.icon}
-              </div>
-              <div className="flex-1 min-w-0 pt-0.5">
-                <p className="text-text-primary font-bold text-[16px] leading-tight">{mode.title}</p>
-                <p className="text-text-muted text-[12px] mt-0.5">{mode.subtitle}</p>
-              </div>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="2" className="text-text-muted shrink-0 mt-1">
-                <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
+        {/* Herkunft, falls aus einem Lernzettel heraus gestartet */}
+        {prefill && (
+          <Banner tone="info">
+            <span className="font-semibold">Basierend auf Lernzettel</span>
+            <span className="block text-text-secondary mt-0.5">
+              {prefill.subjectName}
+              {prefill.topics.length > 0 &&
+                ` · ${prefill.topics.slice(0, 2).join(', ')}${prefill.topics.length > 2 ? ' …' : ''}`}
+            </span>
+          </Banner>
+        )}
 
-            {/* Description */}
-            <p className="text-text-secondary text-[13px] leading-relaxed mb-3.5">
-              {mode.description}
+        {/* Zwei Spalten, sobald Platz da ist: links die Auswahl, rechts der
+            Bestand. Im Hochformat bleibt die Reihenfolge Auswahl → Bestand. */}
+        <div className="grid gap-3 xl:grid-cols-2 xl:items-start xl:gap-5">
+
+          {/* ── Klausurarten ──────────────────────────────────────── */}
+          <div className="space-y-3">
+            <p className="section-label px-1">
+              Klausurart wählen
+            </p>
+            {MODES.map((mode) => {
+              const gratisInBeta = mode.id === 1 && appConfig.probeklausurAfbTrainerFree
+              const pausiert = mode.id !== 1 && modeEnabled[mode.id] === false
+              return (
+                <button
+                  key={mode.id}
+                  onClick={() => handleModeClick(mode)}
+                  className="w-full bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 text-left press hover:bg-surface-hover transition-colors"
+                >
+                  <div className="flex items-start gap-3.5">
+                    <span
+                      className="w-11 h-11 rounded-icon flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: mode.fill, backgroundImage: 'var(--subj-fade)', color: mode.on }}
+                    >
+                      <Icon name={mode.icon} size={21} />
+                    </span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[16px] font-semibold tracking-[-0.015em] text-text-primary">
+                        {mode.title}
+                      </span>
+                      <span className="block text-[13px] text-text-secondary mt-0.5">{mode.subtitle}</span>
+                    </span>
+                    <svg className="shrink-0 text-text-muted mt-3" width="8" height="14" viewBox="0 0 8 14" fill="none"
+                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <path d="M1 1l6 6-6 6" />
+                    </svg>
+                  </div>
+
+                  <p className="text-[13px] text-text-secondary leading-relaxed mt-3">{mode.description}</p>
+
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {mode.badges.map((badge) => (
+                      <Tag key={badge} size="sm">{badge}</Tag>
+                    ))}
+                    {gratisInBeta ? (
+                      <Tag tone="green" size="sm">Kostenlos in der Beta</Tag>
+                    ) : pausiert ? (
+                      <Tag size="sm">Bald wieder da</Tag>
+                    ) : mode.proBadge && !isPro ? (
+                      <Tag tone="gold" size="sm" className="gap-1">
+                        <Icon name="sparkle" size={10} filled />Pro
+                      </Tag>
+                    ) : null}
+                  </div>
+                </button>
+              )
+            })}
+
+            <p className="text-[12px] text-text-secondary leading-relaxed px-1">
+              Alle Arten folgen den Abitur-Regeln deines Bundeslands: Operatoren, BE-Angaben,
+              AFB-Progression und fachspezifische Aufgabentypen.
+            </p>
+          </div>
+
+          {/* ── Bestand ───────────────────────────────────────────── */}
+          <div className="space-y-3">
+            <p className="section-label px-1">
+              Deine Klausuren
             </p>
 
-            {/* Badges */}
-            <div className="flex flex-wrap gap-1.5">
-              {mode.badges.map((badge) => (
-                <span key={badge} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold bg-background text-text-secondary">
-                  {badge}
-                </span>
-              ))}
-              {mode.id === 1 && appConfig.probeklausurAfbTrainerFree ? (
-                <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold" style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
-                  Kostenlos in der Beta
-                </span>
-              ) : mode.id !== 1 && modeEnabled[mode.id] === false ? (
-                <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold bg-background text-text-muted">
-                  🕒 Bald wieder da
-                </span>
-              ) : mode.proBadge && !isPro && (
-                <span className="badge-pro-gold px-2 py-0.5">✦ Pro</span>
-              )}
-            </div>
-          </button>
-        ))}
-
-        {/* Half-width cards side by side: Materialklausur + Ohne Material */}
-        <div className="flex gap-3">
-          {MODES_HALF.map((mode) => (
-            <button
-              key={mode.id}
-              onClick={() => handleModeClick(mode)}
-              className="flex-1 bg-surface rounded-[20px] shadow-card-adaptive border border-border/60 p-4 flex flex-col text-left press"
-            >
-              <div
-                className="w-10 h-10 rounded-[12px] flex items-center justify-center mb-3 shrink-0"
-                style={{ background: mode.gradient }}
-              >
-                {mode.icon}
-              </div>
-              <p className="text-text-primary font-bold text-[15px] leading-tight">{mode.title}</p>
-              <p className="text-text-muted text-[12px] mt-1 leading-snug flex-1">{mode.subtitle}</p>
-              <div className="mt-3 flex flex-wrap gap-1">
-                {mode.badges.map((badge) => (
-                  <span key={badge} className="px-2 py-0.5 rounded-pill text-[10px] font-semibold bg-background text-text-secondary">
-                    {badge}
-                  </span>
-                ))}
-                {modeEnabled[mode.id] === false ? (
-                  <span className="px-1.5 py-0.5 rounded-pill text-[10px] font-bold bg-background text-text-muted">
-                    🕒 Bald wieder da
-                  </span>
-                ) : mode.proBadge && !isPro && (
-                  <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
-                )}
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Info footer */}
-        <div className="bg-surface rounded-[16px] border border-border/60 p-4 flex items-start gap-3">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2" className="text-accent shrink-0 mt-0.5">
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" strokeWidth="3" />
-          </svg>
-          <p className="text-text-muted text-[12px] leading-relaxed">
-            Alle Modi folgen den Niedersächsischen Abitur-Regeln: Operatoren, BE-Angaben, AFB-Progression und fachspezifische Aufgabentypen.
-          </p>
-        </div>
-
-        {/* ── Angefangene Klausuren ─────────────────────────────────────── */}
-        {inProgressProbeklausuren.length > 0 && (
-          <div>
-            <p className="section-label px-1 mb-2.5">Angefangene Klausuren</p>
-            <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden">
-              {inProgressProbeklausuren.map((pk, i) => {
-                const info = SUBJECT_INFO[pk.subjectId]
-                const answerCount = Object.values(pk.userAnswers).filter(Boolean).length
-                const totalTasks = pk.exam.tasks.length
-                return (
-                  <div
-                    key={pk.id}
-                    className={`flex items-center gap-3 px-4 py-3.5 ${i < inProgressProbeklausuren.length - 1 ? 'border-b border-border/40' : ''}`}
-                  >
-                    <div
-                      className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 text-[19px]"
-                      style={{ background: (info?.color ?? '#7C3AED') + '20' }}
-                    >
-                      {info?.icon ?? '📋'}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-text-primary font-semibold text-[14px] truncate">{pk.subjectName}</p>
-                      <p className="text-text-muted text-[11px] mt-0.5">
-                        {MODE_LABEL[pk.mode]} · {answerCount}/{totalTasks} bearbeitet · {fmtDate(pk.startedAt)}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <button
-                        onClick={() => deleteInProgressProbeklausur(pk.id)}
-                        className="w-8 h-8 rounded-full flex items-center justify-center text-text-muted press-sm"
-                        style={{ background: 'rgba(239,68,68,0.1)' }}
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" />
-                        </svg>
-                      </button>
-                      <button
+            {inProgressProbeklausuren.length > 1 && (
+              <ListGroup>
+                {inProgressProbeklausuren
+                  .filter((pk) => pk.id !== offen?.id)
+                  .map((pk) => {
+                    const beantwortet = Object.values(pk.userAnswers).filter(Boolean).length
+                    return (
+                      <ListRow
+                        key={pk.id}
+                        leading={<SubjectIcon subjectId={pk.subjectId} size="md" />}
+                        title={pk.subjectName}
+                        subtitle={`${MODE_LABEL[pk.mode]} · ${beantwortet}/${pk.exam.tasks.length} bearbeitet`}
+                        value={<Tag tone="orange" size="sm">offen</Tag>}
+                        chevron
                         onClick={() => navigate(MODE_ROUTE[pk.mode], { state: { resume: pk } })}
-                        className="px-3 py-1.5 rounded-pill text-white text-[12px] font-semibold press-sm"
-                        style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)' }}
-                      >
-                        Fortfahren →
-                      </button>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
+                      />
+                    )
+                  })}
+              </ListGroup>
+            )}
 
-        {/* ── Erledigte Klausuren ───────────────────────────────────────── */}
-        {savedProbeklausuren.length > 0 && (
-          <div>
-            <p className="section-label px-1 mb-2.5">Erledigte Klausuren</p>
-            <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden">
-              {[...savedProbeklausuren]
-                .sort((a, b) => b.completedAt.localeCompare(a.completedAt))
-                .map((pk, i, arr) => {
-                  const info = SUBJECT_INFO[pk.subjectId]
-                  return (
-                    <div
-                      key={pk.id}
-                      className={`flex items-center gap-3 px-4 py-3.5 ${i < arr.length - 1 ? 'border-b border-border/40' : ''}`}
-                    >
-                      <div
-                        className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 text-[19px]"
-                        style={{ background: (info?.color ?? '#7C3AED') + '20' }}
-                      >
-                        {info?.icon ?? '📋'}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1.5">
-                          <p className="text-text-primary font-semibold text-[13px] truncate">{pk.topic}</p>
-                          <span className="px-1.5 py-0.5 rounded text-[9px] font-bold text-emerald-400 bg-emerald-400/10 shrink-0">
-                            Erledigt
-                          </span>
-                        </div>
-                        <p className="text-text-muted text-[11px] mt-0.5">
-                          {pk.subjectName} · {MODE_LABEL[pk.mode]} · {fmtDate(pk.completedAt)}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <div className="px-2.5 py-1 rounded-full text-white text-[11px] font-bold" style={{ background: npColor(pk.totalNP) }}>
-                          {pk.totalNP}/15
-                        </div>
-                        <button
-                          onClick={() => deleteSavedProbeklausur(pk.id)}
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted press-sm"
-                          style={{ background: 'rgba(239,68,68,0.1)' }}
+            {erledigt.length > 0 ? (
+              <ListGroup>
+                {erledigt.map((pk) => (
+                  <ListRow
+                    key={pk.id}
+                    leading={<SubjectIcon subjectId={pk.subjectId} size="md" />}
+                    title={pk.topic}
+                    subtitle={`${pk.subjectName} · ${MODE_LABEL[pk.mode]} · ${fmtDate(pk.completedAt)}`}
+                    value={
+                      <span className="flex items-center gap-2">
+                        <span
+                          className="px-2.5 py-1 rounded-pill text-[11px] font-bold tabular-nums"
+                          style={{ background: npTone(pk.totalNP).bg, color: npTone(pk.totalNP).fg }}
                         >
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" />
-                          </svg>
+                          {pk.totalNP}/15
+                        </span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); deleteSavedProbeklausur(pk.id) }}
+                          aria-label={`${pk.topic} löschen`}
+                          className="w-8 h-8 rounded-full flex items-center justify-center text-text-muted hover:text-text-primary press-sm"
+                        >
+                          <Icon name="trash" size={15} />
                         </button>
-                      </div>
-                    </div>
-                  )
-                })}
-            </div>
+                      </span>
+                    }
+                    onClick={() => navigate('/klausurmodus/probeklausur/retrospektive')}
+                  />
+                ))}
+              </ListGroup>
+            ) : !offen && (
+              <EmptyState
+                title="Noch keine Klausur geschrieben"
+                note="Wähle links eine Art — die KI baut daraus eine Klausur aus deinen Notizen und dem Lehrplan deines Bundeslands."
+              />
+            )}
           </div>
-        )}
-
+        </div>
       </div>
 
       <ProModal feature="probeklausur" isOpen={showProModal} onClose={() => setShowProModal(false)} />

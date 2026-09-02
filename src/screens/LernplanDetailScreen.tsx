@@ -1,17 +1,22 @@
 import { useState } from 'react'
+import { Stage } from '../components/ui/Stage'
+import { Metric, MetricRow } from '../components/ui/Metric'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useUser, type PersonalEntry } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { ProModal } from '../components/ui/ProModal'
+import { Dialog } from '../components/ui/Dialog'
+import { Icon, type IconName } from '../components/ui/Icon'
 import type { LernplanSession, LernplanActivity, LernDayType, LernMethode, StundenplanSlot } from '../types'
 
-const METHOD_ICONS: Record<LernMethode, string> = {
-  karteikarten: '🃏',
-  blurting: '✍️',
-  lernzettel: '📝',
-  probeklausur: '📋',
-  lesen: '📖',
-  wiederholen: '🔁',
+const METHOD_ICONS: Record<LernMethode, IconName> = {
+  karteikarten: 'cards',
+  blurting: 'bulb',
+  lernzettel: 'document',
+  probeklausur: 'clipboard',
+  lesen: 'book',
+  wiederholen: 'repeat',
 }
 
 const METHOD_LABELS: Record<LernMethode, string> = {
@@ -38,16 +43,16 @@ const DAY_TYPE_LABELS: Record<LernDayType, string> = {
 }
 
 const DAY_TYPE_COLORS: Record<LernDayType, string> = {
-  lern: 'rgba(var(--color-accent), 0.12)',
-  pause: 'rgba(var(--color-border), 0.6)',
-  klausur: 'rgba(var(--color-danger), 0.12)',
+  lern: 'rgb(var(--color-accent) / 0.12)',
+  pause: 'rgb(var(--color-border) / 0.6)',
+  klausur: 'rgb(var(--color-danger) / 0.12)',
   puffer: 'rgba(255, 149, 0, 0.12)',
 }
 
 const DAY_TYPE_TEXT: Record<LernDayType, string> = {
-  lern: 'text-accent',
+  lern: 'text-text-primary',
   pause: 'text-text-muted',
-  klausur: 'text-danger',
+  klausur: 'text-text-primary',
   puffer: 'text-[#FF9F0A]',
 }
 
@@ -82,15 +87,22 @@ function uid() {
   return `pe-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 }
 
+/** Setzt den Dokumenttitel — steht bewusst ausserhalb des Bauteils, weil er
+ *  zur Seite gehoert und nicht zum Zustand des Screens. */
+function setDocumentTitle(title: string) {
+  document.title = title
+}
+
 export function LernplanDetailScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { lernplaene, deleteLernplan, addEntries, personalEntries, profile, isPro, appConfig, supabaseDataLoading } = useUser()
+  const { lernplaene, deleteLernplan, saveLernplan, addEntries, personalEntries, profile, isPro, appConfig, supabaseDataLoading } = useUser()
 
   const plan = lernplaene.find((p) => p.id === id)
 
   const [expandedSessions, setExpandedSessions] = useState<Set<string>>(new Set())
   const [showProModal, setShowProModal] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   const toggleSession = (key: string) => {
     setExpandedSessions((prev) => {
@@ -116,11 +128,11 @@ export function LernplanDetailScreen() {
     }
     return (
       <div className="flex flex-col items-center justify-center min-h-dvh bg-background gap-4 px-8">
-        <div className="w-16 h-16 rounded-2xl bg-surface flex items-center justify-center text-3xl">📅</div>
+        <div className="w-16 h-16 rounded-card bg-surface flex items-center justify-center text-text-secondary"><Icon name="calendar" size={28} /></div>
         <p className="text-text-primary font-semibold text-lg text-center">Lernplan nicht gefunden</p>
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -279,18 +291,30 @@ export function LernplanDetailScreen() {
       const abbrevs = [...new Set(plan.examSchedule.map((e) => SUBJECT_INFO[e.subjectId]?.name?.slice(0, 3) ?? e.subjectId))]
       suffix = abbrevs.join(', ')
     }
-    document.title = `Lernapp – ${planTypeLabel} – ${suffix}`
+    setDocumentTitle(`Lernapp – ${planTypeLabel} – ${suffix}`)
     window.print()
-    setTimeout(() => { document.title = prevTitle }, 500)
+    setTimeout(() => setDocumentTitle(prevTitle), 500)
   }
 
   const handleDelete = () => {
-    if (!window.confirm('Lernplan wirklich löschen?')) return
     deleteLernplan(plan.id)
     navigate(-1)
   }
 
   const planTypeLabel = plan.planType === 'einzel' ? 'Einzel' : plan.planType === 'abitur' ? 'Abitur' : 'Vollständig'
+
+  const erledigteTage = plan.completedDays ?? []
+  const lerntage = plan.days.filter((d) => d.totalMin > 0)
+  const erledigtAnzahl = lerntage.filter((d) => erledigteTage.includes(d.date)).length
+  const naechsterOffener = lerntage.find((d) => !erledigteTage.includes(d.date))
+
+  const toggleTag = (date: string) => {
+    const drin = erledigteTage.includes(date)
+    saveLernplan({
+      ...plan,
+      completedDays: drin ? erledigteTage.filter((d) => d !== date) : [...erledigteTage, date],
+    })
+  }
 
   return (
     <>
@@ -314,8 +338,7 @@ export function LernplanDetailScreen() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => navigate(-1)}
-              className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 px-2 py-1.5 rounded-btn"
-              style={{ color: 'rgb(var(--color-accent))' }}
+              className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 px-2 py-1.5 rounded-btn text-text-primary"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -354,9 +377,8 @@ export function LernplanDetailScreen() {
                 <span className="icon-expand-label text-[12px] font-semibold">Zum Kalender</span>
               </button>
               <button
-                onClick={handleDelete}
-                className="w-9 h-9 flex items-center justify-center rounded-btn transition-colors"
-                style={{ color: 'rgb(var(--color-danger))' }}
+                onClick={() => setConfirmDelete(true)}
+                className="w-9 h-9 flex items-center justify-center rounded-btn text-text-secondary hover:text-text-primary transition-colors"
                 title="Lernplan löschen"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -370,20 +392,35 @@ export function LernplanDetailScreen() {
           </div>
         </div>
 
+        {naechsterOffener && (
+          <div className="px-4 pt-4">
+            <Stage
+              tone="klausur"
+              eyebrow={`${erledigtAnzahl} von ${lerntage.length} Lerntagen erledigt`}
+              title={naechsterOffener.note ?? formatDay(naechsterOffener.date).weekday + ', ' + formatDay(naechsterOffener.date).day + '. ' + formatDay(naechsterOffener.date).month}
+              progress={lerntage.length > 0 ? erledigtAnzahl / lerntage.length : 0}
+              note={naechsterOffener.totalMin > 0 ? `${durationLabel(naechsterOffener.totalMin)} geplant` : undefined}
+              action={
+                <button
+                  onClick={() => toggleTag(naechsterOffener.date)}
+                  className="w-full h-12 rounded-pill text-[15px] font-semibold press flex items-center justify-center gap-2"
+                  style={{ background: '#FFFFFF', color: '#1B1B1F' }}
+                >
+                  <Icon name="check" size={16} />
+                  Tag als erledigt markieren
+                </button>
+              }
+            />
+          </div>
+        )}
+
         {/* Summary strip */}
         <div className="px-4 py-4">
-          <div className="bg-surface border border-border/60 rounded-[20px] p-4 flex items-start gap-0">
-            {[
-              { label: 'Lerntage', value: String(totalStudyDays) },
-              { label: 'Lernzeit', value: `${Math.round(totalMinutes / 60)}h` },
-              { label: 'Klausuren', value: String(plan.examSchedule.length) },
-            ].map((item, i) => (
-              <div key={i} className={`flex-1 text-center ${i < 2 ? 'border-r border-border/40' : ''}`}>
-                <p className="text-[26px] font-black text-text-primary leading-none">{item.value}</p>
-                <p className="text-[11px] text-text-muted mt-1">{item.label}</p>
-              </div>
-            ))}
-          </div>
+          <MetricRow>
+            <Metric value={totalStudyDays} label="Lerntage" />
+            <Metric value={`${Math.round(totalMinutes / 60)}h`} label="Lernzeit" />
+            <Metric value={plan.examSchedule.length} label="Klausuren" />
+          </MetricRow>
           {plan.summary && (
             <p className="text-text-muted text-[13px] mt-3 leading-relaxed px-1">{plan.summary}</p>
           )}
@@ -399,19 +436,19 @@ export function LernplanDetailScreen() {
             return (
               <div
                 key={day.date}
-                className={`relative rounded-[20px] border overflow-hidden transition-all ${
+                className={`relative rounded-card border overflow-hidden transition-all ${
                   todayMark ? 'border-accent shadow-lg' : 'border-border/60'
                 } ${pastMark && !todayMark ? 'opacity-60' : ''}`}
                 style={{ background: DAY_TYPE_COLORS[day.dayType] }}
               >
                 {/* Day header */}
                 <div className="flex items-center gap-3 px-4 pt-4 pb-3">
-                  <div className={`flex flex-col items-center w-10 rounded-[10px] py-1 shrink-0 ${
+                  <div className={`flex flex-col items-center w-10 rounded-btn py-1 shrink-0 ${
                     todayMark ? 'bg-accent' : 'bg-background/60'
                   }`}>
-                    <p className={`text-[10px] font-bold leading-none ${todayMark ? 'text-white/80' : 'text-text-muted'}`}>{weekday}</p>
+                    <p className={`text-[11px] font-bold leading-none ${todayMark ? 'text-white/80' : 'text-text-muted'}`}>{weekday}</p>
                     <p className={`text-[18px] font-black leading-tight ${todayMark ? 'text-white' : 'text-text-primary'}`}>{dayNum}</p>
-                    <p className={`text-[10px] font-medium leading-none ${todayMark ? 'text-white/70' : 'text-text-muted'}`}>{month}</p>
+                    <p className={`text-[11px] font-medium leading-none ${todayMark ? 'text-white/70' : 'text-text-muted'}`}>{month}</p>
                   </div>
 
                   <div className="flex-1 min-w-0">
@@ -420,7 +457,7 @@ export function LernplanDetailScreen() {
                         {DAY_TYPE_LABELS[day.dayType]}
                       </span>
                       {todayMark && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-pill bg-accent text-white">Heute</span>
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-pill btn-mode">Heute</span>
                       )}
                     </div>
                     {day.note && (
@@ -430,23 +467,40 @@ export function LernplanDetailScreen() {
                       <p className="text-[12px] text-text-muted mt-0.5">{durationLabel(day.totalMin)} geplant</p>
                     )}
                   </div>
+
+                  {/* Erledigt-Schalter — gefuellte Marke, wenn der Tag steht */}
+                  {day.totalMin > 0 && (
+                    <button
+                      onClick={() => toggleTag(day.date)}
+                      aria-pressed={erledigteTage.includes(day.date)}
+                      aria-label={erledigteTage.includes(day.date) ? 'Tag wieder öffnen' : 'Tag als erledigt markieren'}
+                      className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 press-sm border transition-colors"
+                      style={
+                        erledigteTage.includes(day.date)
+                          ? { background: 'rgb(var(--color-accent))', color: 'rgb(var(--color-on-accent))', borderColor: 'transparent' }
+                          : { borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-text-muted))' }
+                      }
+                    >
+                      <Icon name="check" size={15} />
+                    </button>
+                  )}
                 </div>
 
                 {/* Exam banner */}
                 {day.dayType === 'klausur' && (
-                  <div className="mx-4 mb-4 p-3 rounded-[14px] flex items-center gap-2" style={{ background: 'rgba(var(--color-danger),0.10)', border: '1px solid rgba(var(--color-danger),0.25)' }}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger shrink-0">
+                  <div className="mx-4 mb-4 p-3 rounded-icon flex items-center gap-2" style={{ background: 'rgb(var(--color-danger) / 0.10)', border: '1px solid rgb(var(--color-danger) / 0.25)' }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
                       <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                       <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
                     </svg>
-                    <p className="text-danger font-semibold text-[13px]">{day.note ?? 'Klausur heute'}</p>
+                    <p className="text-text-primary font-semibold text-[13px]">{day.note ?? 'Klausur heute'}</p>
                   </div>
                 )}
 
                 {/* Pause banner */}
                 {day.dayType === 'pause' && (
-                  <div className="mx-4 mb-4 p-3 rounded-[14px]" style={{ background: 'rgba(var(--color-border),0.3)' }}>
-                    <p className="text-text-muted text-[13px] text-center">🌿 Erholungstag — keine Lernaufgaben</p>
+                  <div className="mx-4 mb-4 p-3 rounded-icon" style={{ background: 'rgb(var(--color-border) / 0.3)' }}>
+                    <p className="text-text-muted text-[13px] text-center flex items-center justify-center gap-1.5"><Icon name="coffee" size={14} />Erholungstag — keine Lernaufgaben</p>
                   </div>
                 )}
 
@@ -482,10 +536,10 @@ export function LernplanDetailScreen() {
         <div className="no-print px-4 pt-6">
           <button
             onClick={addToCalendar}
-            className="w-full py-3.5 rounded-[20px] text-white text-[14px] font-bold press-sm flex items-center justify-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #7C3AED, #5B21B6)', boxShadow: '0 4px 16px rgba(124,58,237,0.35)' }}
+            className="w-full h-12 rounded-pill text-on-accent text-[14px] font-bold press-sm flex items-center justify-center gap-2"
+            style={{ background: 'var(--grad-mode)' }}
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
               <line x1="16" y1="2" x2="16" y2="6" />
               <line x1="8" y1="2" x2="8" y2="6" />
@@ -498,13 +552,24 @@ export function LernplanDetailScreen() {
         {/* Delete button */}
         <div className="no-print px-4 pt-3">
           <button
-            onClick={handleDelete}
-            className="w-full py-3 rounded-[20px] border border-danger/30 text-danger text-[14px] font-medium hover:bg-danger/5 transition-colors"
+            onClick={() => setConfirmDelete(true)}
+            className="w-full h-12 rounded-pill border border-danger/30 text-text-primary text-[14px] font-medium hover:bg-danger/5 transition-colors"
           >
             Lernplan löschen
           </button>
         </div>
       </div>
+
+      <Dialog
+        open={confirmDelete}
+        title="Lernplan löschen?"
+        message={`Der Lernplan wird mit allen ${plan.days.length} Lerntagen dauerhaft entfernt.`}
+        confirmLabel="Löschen"
+        cancelLabel="Behalten"
+        destructive
+        onConfirm={() => { setConfirmDelete(false); handleDelete() }}
+        onCancel={() => setConfirmDelete(false)}
+      />
 
       <ProModal isOpen={showProModal} onClose={() => setShowProModal(false)} feature="lernplan" />
     </>
@@ -528,29 +593,23 @@ function SessionCard({
   onShowPro: () => void
   onNavigate: (route: string) => void
 }) {
-  const subj = SUBJECT_INFO[session.subjectId]
   const priorityColor = session.priority === 'hoch' ? '#FF453A' : session.priority === 'mittel' ? '#FF9F0A' : '#30D158'
   const hasActivities = (session.activities?.length ?? 0) > 0
   const hasProActivity = session.activities?.some((a) => a.isPro) ?? false
 
   return (
-    <div className="bg-background/70 border border-border/40 rounded-[14px] overflow-hidden">
+    <div className="bg-background/70 border border-border/40 rounded-icon overflow-hidden">
       {/* Collapsed header — always clickable */}
       <button
         onClick={onToggle}
         className="w-full flex items-center gap-3 p-3 text-left active:bg-surface-hover/30 transition-colors"
       >
-        <div
-          className="w-9 h-9 rounded-[10px] flex items-center justify-center text-base shrink-0"
-          style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
-        >
-          {subj?.icon ?? '📚'}
-        </div>
+        <SubjectIcon subjectId={session.subjectId} size="sm" />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap">
             <p className="text-text-primary font-semibold text-[13px]">{session.subjectName}</p>
             {session.isLK && (
-              <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-accent/15 text-accent">LK</span>
+              <span className="text-[11px] font-black px-1.5 py-0.5 rounded-chip bg-accent/15 text-text-primary">LK</span>
             )}
             <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: priorityColor }} />
           </div>
@@ -563,7 +622,7 @@ function SessionCard({
               <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
             )}
             <span className="text-[11px] text-text-muted/70 flex items-center gap-0.5">
-              <span>{METHOD_ICONS[session.method]}</span>
+              <span className="text-text-secondary"><Icon name={METHOD_ICONS[session.method]} size={15} /></span>
             </span>
             {hasActivities && (
               <svg
@@ -583,7 +642,7 @@ function SessionCard({
           {/* Learning goal */}
           {session.learningGoal && (
             <div className="flex items-start gap-2 px-1 mb-3">
-              <span className="text-[13px] shrink-0 mt-0.5">🎯</span>
+              <span className="shrink-0 mt-0.5 text-text-secondary"><Icon name="target" size={14} /></span>
               <p className="text-text-secondary text-[12px] leading-relaxed italic">{session.learningGoal}</p>
             </div>
           )}
@@ -626,8 +685,8 @@ function ActivityRow({
   }
 
   return (
-    <div className={`flex items-center gap-2.5 p-2.5 rounded-[10px] ${
-      isLocked ? 'bg-amber-500/6 border border-amber-500/15' : 'bg-surface/60 border border-border/30'
+    <div className={`flex items-center gap-2.5 p-2.5 rounded-btn ${
+      isLocked ? 'bg-warning/6 border border-warning/15' : 'bg-surface/60 border border-border/30'
     }`}>
       {/* Duration chip */}
       <span className="text-[11px] font-bold text-text-muted bg-background/80 px-2 py-0.5 rounded-[6px] shrink-0 w-14 text-center">
@@ -635,24 +694,24 @@ function ActivityRow({
       </span>
 
       {/* Method icon */}
-      <span className="text-[15px] shrink-0">{METHOD_ICONS[activity.method]}</span>
+      <span className="shrink-0 text-text-secondary"><Icon name={METHOD_ICONS[activity.method]} size={15} /></span>
 
       {/* Title */}
       <div className="flex-1 min-w-0">
         <p className={`text-[12px] font-medium leading-tight ${isLocked ? 'text-text-secondary' : 'text-text-primary'}`}>
           {activity.title}
         </p>
-        <p className="text-[10px] text-text-muted mt-0.5">{METHOD_LABELS[activity.method]}</p>
+        <p className="text-[11px] text-text-muted mt-0.5">{METHOD_LABELS[activity.method]}</p>
       </div>
 
       {/* Action button */}
       {route && (
         <button
           onClick={handleAction}
-          className={`flex items-center gap-1 px-2 py-1.5 rounded-[8px] text-[11px] font-semibold shrink-0 transition-all active:scale-[0.95] ${
+          className={`flex items-center gap-1 px-2 py-1.5 rounded-chip text-[11px] font-semibold shrink-0 transition-all active:scale-[0.95] ${
             isLocked
-              ? 'bg-amber-500/15 text-amber-500'
-              : 'bg-accent/12 text-accent'
+              ? 'bg-warning/15 text-text-secondary'
+              : 'bg-accent/12 text-text-primary'
           }`}
         >
           {isLocked ? (

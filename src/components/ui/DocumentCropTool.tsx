@@ -116,10 +116,10 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
 
   const polygonPoints = relCorners.map(([x, y]) => `${x},${y}`).join(' ')
 
-  const modeLabels: { key: ScanMode; label: string; icon: string }[] = [
-    { key: 'color', label: 'Farbe', icon: '🎨' },
-    { key: 'grayscale', label: 'Graustufen', icon: '⬛' },
-    { key: 'bw', label: 'S/W', icon: '◼' },
+  const modeLabels: { key: ScanMode; label: string }[] = [
+    { key: 'color', label: 'Farbe' },
+    { key: 'grayscale', label: 'Graustufen' },
+    { key: 'bw', label: 'S/W' },
   ]
 
   const cornerColors = ['#7C3AED', '#7C3AED', '#7C3AED', '#7C3AED']
@@ -341,7 +341,7 @@ export default function DocumentCropTool({ imageDataUrl, onConfirm, onCancel }: 
             border: 'none',
             background: processing || !imgLoaded
               ? 'rgba(124,58,237,0.4)'
-              : 'linear-gradient(135deg, #7C3AED 0%, #9B59B6 100%)',
+              : '#7C3AED',
             color: 'white',
             fontSize: 16,
             fontWeight: 700,

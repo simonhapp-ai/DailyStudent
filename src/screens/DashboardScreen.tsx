@@ -2,10 +2,12 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { getActiveStreak } from '../lib/streak'
 import { StreakInfoSheet } from '../components/ui/StreakInfoSheet'
 import { StundenplanPill } from '../components/ui/StundenplanPill'
 import type { StundenplanSlot, Lernplan } from '../types'
+import { Icon } from '../components/ui/Icon'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -60,8 +62,8 @@ function getTimeAgo(isoStr: string): string {
 // not just a mouse-only click target.
 
 const DARK_GLOW: Record<'purple' | 'mint', string> = {
-  purple: 'radial-gradient(130% 100% at 12% -10%, rgba(167,139,250,0.32) 0%, rgba(10,10,15,0) 48%), linear-gradient(155deg, #170f22 0%, #0a0a0f 62%)',
-  mint:   'radial-gradient(130% 100% at 12% -10%, rgba(52,211,153,0.24) 0%, rgba(10,10,15,0) 48%), linear-gradient(155deg, #0f1a17 0%, #0a0a0f 62%)',
+  purple: 'radial-gradient(130% 100% at 12% -10%, rgba(167,139,250,0.32) 0%, rgba(10,10,15,0) 48%), #170f22',
+  mint:   'radial-gradient(130% 100% at 12% -10%, rgba(52,211,153,0.24) 0%, rgba(10,10,15,0) 48%), #0f1a17',
 }
 
 function Card({ children, className = '', onClick, dark = false, glow = 'purple' }: {
@@ -74,7 +76,7 @@ function Card({ children, className = '', onClick, dark = false, glow = 'purple'
   const interactive = !!onClick
   return (
     <div
-      className={`rounded-[20px] p-5 transition-shadow ${
+      className={`rounded-card p-5 transition-shadow ${
         dark ? 'text-white' : 'bg-surface border border-border/60 shadow-card-adaptive'
       } ${interactive ? 'cursor-pointer press' : ''} ${className}`}
       style={dark ? {
@@ -119,10 +121,10 @@ function ErsteSchritteCard({ tasks, onDismiss }: { tasks: ErsteSchritteTask[]; o
   const nextTasks = tasks.filter(t => !t.done)
 
   return (
-    <div className="bg-surface rounded-[20px] border border-border/60 shadow-card-adaptive p-5 mb-4">
+    <div className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-5 mb-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-[20px]">🚀</span>
+          <span className="text-text-primary"><Icon name="target" size={19} /></span>
           <p className="text-[15px] font-bold text-text-primary">Erste Schritte</p>
         </div>
         <div className="flex items-center gap-3">
@@ -137,8 +139,8 @@ function ErsteSchritteCard({ tasks, onDismiss }: { tasks: ErsteSchritteTask[]; o
         </div>
       </div>
 
-      <div className="h-2 rounded-pill overflow-hidden mb-3" style={{ background: 'rgba(var(--color-border), 0.5)' }}>
-        <div className="h-full rounded-pill transition-all duration-500 grad-accent" style={{ width: `${pct}%` }} />
+      <div className="h-2 rounded-pill overflow-hidden mb-3" style={{ background: 'rgb(var(--color-border) / 0.5)' }}>
+        <div className="h-full rounded-pill transition-all duration-500 bg-accent" style={{ width: `${pct}%` }} />
       </div>
 
       {nextTasks.length > 0 && (
@@ -181,7 +183,6 @@ function HeroLernplanCard({
   const pct = studyDays.length > 0 ? Math.round((doneCount / studyDays.length) * 100) : 0
   const nextDay = studyDays.find(d => d.date >= todayStr) ?? studyDays[studyDays.length - 1]
   const mainSession = nextDay?.sessions[0]
-  const subjectInfo = mainSession ? SUBJECT_INFO[mainSession.subjectId] : undefined
 
   if (!activePlan || studyDays.length === 0) {
     return (
@@ -189,8 +190,8 @@ function HeroLernplanCard({
         <SectionLabel dark>Lernplan</SectionLabel>
         <div className="flex items-center gap-4">
           <div
-            className="w-14 h-14 rounded-[16px] flex items-center justify-center shrink-0"
-            style={{ background: 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
+            className="w-14 h-14 rounded-card flex items-center justify-center shrink-0"
+            style={{ background: 'var(--grad-mode)' }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -205,7 +206,7 @@ function HeroLernplanCard({
         </div>
         <button
           onClick={onCreate}
-          className="mt-5 self-start px-5 py-2.5 rounded-[14px] grad-accent text-white text-[13px] font-semibold press-sm"
+          className="mt-5 self-start px-5 py-2.5 rounded-icon btn-mode text-[13px] font-semibold press-sm"
         >
           Lernplan erstellen
         </button>
@@ -218,12 +219,16 @@ function HeroLernplanCard({
       <div>
         <div className="flex items-start justify-between mb-1">
           <SectionLabel dark>{nextDay && nextDay.date === todayStr ? 'Heute im Lernplan' : 'Nächste Lerneinheit'}</SectionLabel>
-          <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-[16px] shrink-0"
-            style={{ background: 'rgba(255,255,255,0.1)' }}
-          >
-            {subjectInfo?.icon ?? '📚'}
-          </div>
+          {mainSession?.subjectId
+            ? <SubjectIcon subjectId={mainSession.subjectId} size="sm" />
+            : (
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-white/70"
+                style={{ background: 'rgba(255,255,255,0.1)' }}
+              >
+                <Icon name="book" size={16} />
+              </div>
+            )}
         </div>
         <p className="text-[26px] font-bold leading-tight tracking-tight">{mainSession?.subjectName ?? activePlan.title}</p>
         <p className="text-[13px] text-white/60 mt-1.5 leading-snug">
@@ -234,13 +239,13 @@ function HeroLernplanCard({
 
       <div>
         <div className="h-2 rounded-pill overflow-hidden mb-2.5" style={{ background: 'rgba(255,255,255,0.15)' }}>
-          <div className="h-full rounded-pill transition-all duration-500 grad-accent" style={{ width: `${pct}%` }} />
+          <div className="h-full rounded-pill transition-all duration-500 bg-accent" style={{ width: `${pct}%` }} />
         </div>
         <div className="flex items-center justify-between">
           <span className="text-[12px] text-white/60">{pct}% erledigt</span>
           <button
             onClick={onContinue}
-            className="px-5 py-2 rounded-[12px] bg-white text-[13px] font-bold text-[#0a0a0f] press-sm"
+            className="px-5 py-2 rounded-btn bg-white text-[13px] font-bold text-[#0a0a0f] press-sm"
           >
             Fortsetzen
           </button>
@@ -268,9 +273,12 @@ function ToDoCard({
 
   // Card is always dark chrome regardless of app theme, so urgency colors are hardcoded
   // (dark-tuned) rather than the theme-conditional CSS vars — they'd read muddy in light mode.
+  // Low-urgency/no-exam case is plain white, not purple — this card's glow is mint
+  // (Klausurenmodus), and purple text inside a mint card mixed the two identity
+  // colors in one component (fixed 31.08.2026, see feedback_no_colored_text_rule).
   const urgencyColor = exam
-    ? exam.days <= 3 ? '#FF6B5F' : exam.days <= 7 ? '#FFB84D' : '#A78BFA'
-    : '#A78BFA'
+    ? exam.days <= 3 ? '#FF6B5F' : exam.days <= 7 ? '#FFB84D' : '#FFFFFF'
+    : '#FFFFFF'
 
   return (
     <Card dark glow="mint" className="min-h-[280px] !p-0 overflow-hidden">
@@ -285,9 +293,7 @@ function ToDoCard({
         >
           {exam ? (
             <>
-              <div className="w-11 h-11 rounded-[14px] flex items-center justify-center text-[22px] mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
-                {exam.info?.icon ?? '📝'}
-              </div>
+              <SubjectIcon subjectId={exam.subjectId} size="md" className="mb-2" />
               <p className="text-[12px] font-semibold text-white/55 mb-2 truncate max-w-full px-1">{exam.info?.name ?? exam.subjectId}</p>
               <p className="text-[32px] font-black leading-none tabular-nums tracking-tight" style={{ color: urgencyColor }}>
                 {exam.days === 0 ? 'Heute' : exam.days}
@@ -298,7 +304,7 @@ function ToDoCard({
             </>
           ) : (
             <>
-              <div className="w-11 h-11 rounded-[14px] flex items-center justify-center mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
+              <div className="w-11 h-11 rounded-icon flex items-center justify-center mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="3" y="4" width="18" height="18" rx="3" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" />
                   <line x1="3" y1="10" x2="21" y2="10" />
@@ -317,8 +323,8 @@ function ToDoCard({
           onClick={onHomeworkNavigate}
           className="flex-1 flex flex-col items-center justify-center text-center px-4 py-4 press-sm"
         >
-          <div className="w-11 h-11 rounded-[14px] flex items-center justify-center text-[20px] mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
-            📓
+          <div className="w-11 h-11 rounded-icon flex items-center justify-center text-[20px] mb-2" style={{ background: 'rgba(255,255,255,0.08)' }}>
+            <Icon name="note" size={26} />
           </div>
           {homeworkCount > 0 ? (
             <>
@@ -327,7 +333,7 @@ function ToDoCard({
             </>
           ) : (
             <>
-              <p className="text-[14px] font-semibold text-white/85">Alles erledigt 🎉</p>
+              <p className="text-[14px] font-semibold text-white/85">Alles erledigt</p>
               <p className="text-[11px] text-white/45 mt-1">Neue Notiz erstellen →</p>
             </>
           )}
@@ -343,8 +349,8 @@ function SchnellnotizCard({ onClick }: { onClick: () => void }) {
   return (
     <Card className="flex items-center gap-4 min-h-[120px]" onClick={onClick}>
       <div
-        className="w-12 h-12 rounded-[14px] flex items-center justify-center shrink-0"
-        style={{ background: 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
+        className="w-12 h-12 rounded-icon flex items-center justify-center shrink-0"
+        style={{ background: 'var(--grad-mode)' }}
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
@@ -364,9 +370,9 @@ function SchnellnotizCard({ onClick }: { onClick: () => void }) {
 function StreakMiniCard({ streak, onClick }: { streak: number; onClick: () => void }) {
   return (
     <Card className="flex flex-col items-center justify-center text-center min-h-[120px] gap-0.5" onClick={onClick}>
-      <span className="text-[26px] leading-none">🔥</span>
+      <Icon name="flame" size={26} filled className="text-fill-orange" />
       <p className="text-[22px] font-black text-text-primary tabular-nums leading-none mt-1.5">{streak}</p>
-      <p className="text-[10px] text-text-muted mt-0.5">{streak === 1 ? 'Tag' : 'Tage'}</p>
+      <p className="text-[11px] text-text-muted mt-0.5">{streak === 1 ? 'Tag' : 'Tage'}</p>
     </Card>
   )
 }
@@ -385,7 +391,7 @@ function TagesplanCard({ slots }: { slots: StundenplanSlot[] }) {
 
       {slots.length === 0 ? (
         <div className="flex items-center gap-3 py-1">
-          <span className="text-[24px]">🎉</span>
+          <span className="text-text-primary"><Icon name="check" size={22} /></span>
           <div>
             <p className="text-[14px] font-bold text-text-primary">Freier Tag!</p>
             <p className="text-[12px] text-text-muted">Nutze die Zeit zum Lernen</p>
@@ -532,9 +538,9 @@ export function DashboardScreen() {
           {upcomingExamsCount > 0 && (
             <span
               className="shrink-0 flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-pill whitespace-nowrap"
-              style={{ background: 'rgba(var(--color-accent), 0.1)', color: 'rgb(var(--color-accent))' }}
+              style={{ background: 'rgb(var(--color-accent) / 0.1)', color: 'rgb(var(--color-accent))' }}
             >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'rgb(var(--color-accent))' }} />
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--grad-mode)' }} />
               {upcomingExamsCount} Klausur{upcomingExamsCount === 1 ? '' : 'en'} in Sicht
             </span>
           )}
@@ -594,21 +600,23 @@ export function DashboardScreen() {
                   <button key={note.id} onClick={() => navigate(notePath)} className="relative block text-left press-sm" style={{ minHeight: 128 }}>
                     {/* Back layer 2 — furthest back, most rotated, softest */}
                     <div
-                      className="absolute inset-0 bg-surface rounded-[22px] border border-border/40"
+                      className="absolute inset-0 bg-surface rounded-card border border-border/40"
                       style={{ transform: 'rotate(5deg) translate(3px, 3px)', boxShadow: '0 2px 6px rgba(0,0,0,0.04)', opacity: 0.55 }}
                     />
                     {/* Back layer 1 */}
                     <div
-                      className="absolute inset-0 bg-surface rounded-[22px] border border-border/50"
+                      className="absolute inset-0 bg-surface rounded-card border border-border/50"
                       style={{ transform: 'rotate(2.5deg) translate(1.5px, 1.5px)', boxShadow: '0 3px 8px rgba(0,0,0,0.06)', opacity: 0.8 }}
                     />
                     {/* Front card — actual content */}
-                    <div className="relative bg-surface rounded-[22px] border border-border/60 shadow-card-adaptive p-4 h-full flex flex-col justify-between hover:bg-surface-hover transition-colors">
+                    <div className="relative bg-surface rounded-card border border-border/60 shadow-card-adaptive p-4 h-full flex flex-col justify-between hover:bg-surface-hover transition-colors">
                       <div className="flex items-center justify-between gap-2">
-                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-[15px] shrink-0" style={{ background: 'rgb(var(--color-text-primary))' }}>
-                          <span style={{ filter: 'grayscale(1) brightness(3)' }}>{info?.icon ?? '📝'}</span>
+                        <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgb(var(--color-text-primary))' }}>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-bg))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><path d="M14 2v6h6" /><path d="M9 13h6M9 17h4" />
+                          </svg>
                         </div>
-                        <span className="text-[10px] font-semibold text-text-muted bg-background px-2.5 py-1 rounded-pill truncate">
+                        <span className="text-[11px] font-semibold text-text-muted bg-background px-2.5 py-1 rounded-pill truncate">
                           {(info?.name ?? 'Notiz').toUpperCase()}
                         </span>
                       </div>

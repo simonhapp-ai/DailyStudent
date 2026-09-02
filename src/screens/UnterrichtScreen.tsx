@@ -6,13 +6,53 @@ import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS
 import type { UserFolder, UserNote } from '../types'
 import { subjects, halfYears } from '../data/mockData'
 import type { HalfYear } from '../types'
-import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { SubjectIcon, QuickNotesIcon } from '../components/ui/SubjectIcon'
+import { Icon } from '../components/ui/Icon'
+import { Stage } from '../components/ui/Stage'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { EmptyState } from '../components/ui/EmptyState'
+import { currentSlot, nextSlot, todaysSlots } from '../lib/appMode'
+import { resolveSubjectInfo, sortSubjectsByGroup } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
+import { bundeslandName } from '../data/bundeslaender'
+
+const grossAnfang = (w: string) => w.charAt(0).toUpperCase() + w.slice(1)
 
 export function UnterrichtScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, userFolders, addFolder, renameFolder, deleteFolder, saveNote, saveToOhneFachFolder } = useUser()
+  const { profile, userNotes, userFolders, addFolder, renameFolder, deleteFolder, saveNote, saveToOhneFachFolder, completedHomeworkIds, standaloneHomework } = useUser()
   const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set())
+
+  // Laufende und nächste Stunde aus dem Stundenplan — Grundlage der Bühne.
+  const laufendeStunde = currentSlot(profile?.stundenplan?.slots)
+  const naechsteStunde = nextSlot(profile?.stundenplan?.slots)
+  const heuteSlots = todaysSlots(profile?.stundenplan?.slots)
+
+  // Offene Hausaufgaben — gleiche Aggregation wie im Hausaufgabenheft: Aufgaben
+  // aus Notizen plus eigenständig erfasste, abzüglich der erledigten.
+  const offeneAufgaben = [
+    ...userNotes.flatMap((n) =>
+      (n.homeworkItems ?? []).map((item, idx) => ({
+        id: item.id ?? `${n.id}-hw-${idx}`,
+        subjectId: item.subjectId ?? n.subjectId,
+        dueDate: item.dueDate,
+      })),
+    ),
+    ...standaloneHomework.map((h) => ({ id: h.id, subjectId: h.subjectId, dueDate: h.dueDate })),
+  ].filter((h) => !completedHomeworkIds.includes(h.id))
+
+  const offeneHausaufgaben = offeneAufgaben.length
+  const naechsteHausaufgabe = (() => {
+    const mitDatum = offeneAufgaben.filter((h) => h.dueDate).sort((a, b) => a.dueDate!.localeCompare(b.dueDate!))
+    const naechste = mitDatum[0]
+    if (!naechste) return offeneHausaufgaben > 0 ? 'Ohne Abgabedatum' : null
+    const fach = naechste.subjectId ? resolveSubjectInfo(naechste.subjectId, profile?.customFaecher).name : 'Aufgabe'
+    const d = new Date(naechste.dueDate + 'T00:00:00')
+    const heute = new Date(); heute.setHours(0, 0, 0, 0)
+    const tage = Math.round((d.getTime() - heute.getTime()) / 86400000)
+    const wann = tage < 0 ? 'überfällig' : tage === 0 ? 'heute' : tage === 1 ? 'bis morgen' : `in ${tage} Tagen`
+    return `Nächste: ${fach} ${wann}`
+  })()
   const [addFolderFor, setAddFolderFor] = useState<string | null>(null)
   const [newFolderName, setNewFolderName] = useState('')
 
@@ -248,7 +288,10 @@ export function UnterrichtScreen() {
     }
   }
 
-  const profileSubjects: { id: string; name: string }[] = (profile?.faecher ?? [])
+  // Nach Fachgruppe sortiert: Fächer derselben Farbe stehen beieinander, statt
+  // sich über die Liste zu verteilen. Vier zusammenhängende Farbblöcke lesen
+  // sich ruhiger als eine gesprenkelte Liste.
+  const profileSubjects: { id: string; name: string }[] = sortSubjectsByGroup(profile?.faecher ?? [])
     .map((id) => {
       const std = subjects.find((s) => s.id === id)
       if (std) return { id: std.id, name: std.name }
@@ -290,66 +333,124 @@ export function UnterrichtScreen() {
     <div className="flex flex-col min-h-dvh bg-background pb-28">
 
       {/* ── Header ─────────────────────────────────────────────── */}
-      <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
-        <h1 className="text-[28px] font-bold text-text-primary">Unterricht</h1>
-        <p className="text-[13px] text-text-muted mt-0.5">
-          {profile?.schulform ?? 'Gymnasium'}{profile?.bundesland ? ` · ${profile.bundesland}` : ''}
-        </p>
+      {/* Kopfzeile mit Avatar (Version C) — seit die Navigationsleiste nur noch zwei
+          Modi kennt, ist der Avatar oben rechts der Weg ins Profil und zu allem
+          Persönlichen. Personalisierung richtet man einmal ein und fasst sie selten
+          an; sie gehört nicht in die Hauptnavigation, muss aber von überall in einem
+          Griff erreichbar sein. */}
+      <div
+        className="px-4 flex items-start justify-between gap-3"
+        style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}
+      >
+        <div className="min-w-0">
+          <h1 className="text-[28px] font-bold text-text-primary">Unterricht</h1>
+          <p className="text-[13px] text-text-muted mt-0.5">
+            {/* Kleingeschriebene Schulform und rohes Laenderkuerzel lasen sich
+                wie ein Datenbankfeld. */}
+            {grossAnfang(profile?.schulform ?? 'Gymnasium')}
+            {profile?.bundesland ? ` · ${bundeslandName(profile.bundesland)}` : ''}
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/profil')}
+          aria-label="Profil und Einstellungen"
+          className="shrink-0 w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold press mt-1"
+          style={{ background: 'var(--stage-bg)' }}
+        >
+          {(profile?.name ?? '')
+            .split(' ')
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((w) => w[0]?.toUpperCase() ?? '')
+            .join('') || '·'}
+        </button>
       </div>
 
       {profileSubjects.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center px-8 text-center py-16">
-          <div className="text-5xl mb-5">📚</div>
-          <p className="text-text-primary font-semibold text-[17px] mb-2">Keine Fächer</p>
-          <p className="text-text-muted text-[14px]">Gehe zu Profil → Onboarding zurücksetzen.</p>
+        <div className="flex-1 flex flex-col justify-center px-5 py-16">
+          <EmptyState
+            title="Noch keine Fächer"
+            note="Ohne Fächer kann die App weder Notizen zuordnen noch Lehrplanthemen vorschlagen."
+            action={
+              <button
+                onClick={() => navigate('/profil/faecher')}
+                className="w-full h-12 rounded-pill btn-mode text-[16px] font-semibold press"
+              >
+                Fächer auswählen
+              </button>
+            }
+          />
         </div>
       ) : (
         <div className="px-4 mt-5 space-y-3">
 
-          {/* ── Schnellaktionen ──────────────────────────────────── */}
-          <div className="flex gap-3">
-            {/* Neue Notiz */}
-            <button
-              onClick={() => navigate('/unterricht/neue-notiz')}
-              className="flex-1 bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 flex flex-col gap-3 hover-lift text-left"
-            >
-              <div
-                className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 glow-gold"
-                style={{ background: 'linear-gradient(145deg, #F8CE45, #C9891A)' }}
-              >
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8">
-                  <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-                </svg>
+          {/* ── Bühne: die laufende Stunde ─────────────────────────
+              Nach Regel 1 erscheint sie nur, wenn es gerade etwas Zeitkritisches
+              gibt. Läuft kein Unterricht, entfällt sie ersatzlos — derselbe
+              Screen, zwei Zustände, kein zweites Layout. */}
+          <Stage
+            eyebrow={
+              laufendeStunde
+                ? `Jetzt · ${laufendeStunde.startTime} – ${laufendeStunde.endTime}`
+                : new Date().toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' })
+            }
+            title={
+              laufendeStunde
+                ? (laufendeStunde.isFreistunde
+                    ? 'Freistunde'
+                    : resolveSubjectInfo(laufendeStunde.subjectId, profile?.customFaecher).name
+                      + (laufendeStunde.room ? ` · ${laufendeStunde.room}` : ''))
+                : naechsteStunde
+                  ? `Nächste Stunde um ${naechsteStunde.startTime}`
+                  : heuteSlots.length > 0
+                    ? 'Schulschluss für heute'
+                    : 'Heute schulfrei'
+            }
+            note={
+              laufendeStunde
+                ? (naechsteStunde
+                    ? `Danach ${naechsteStunde.isFreistunde ? 'frei' : resolveSubjectInfo(naechsteStunde.subjectId, profile?.customFaecher).name} um ${naechsteStunde.startTime}`
+                    : 'Danach Schulschluss')
+                : undefined
+            }
+            action={
+              /* Die Bühne ist in der Mitte geteilt und trägt immer zwei Wege in
+                 eine Notiz. Was sich mit dem Stundenplan ändert, ist die linke
+                 Pille: Läuft Unterricht, heißt sie nach dem Fach und legt es
+                 direkt vor — sonst ist es die neutrale Schnellnotiz. Der Import
+                 bleibt in beiden Fällen an derselben Stelle. */
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  onClick={() =>
+                    navigate(
+                      laufendeStunde && !laufendeStunde.isFreistunde && laufendeStunde.subjectId
+                        ? `/unterricht/${laufendeStunde.subjectId}/neue-notiz`
+                        : '/unterricht/neue-notiz',
+                    )
+                  }
+                  className="h-12 rounded-pill bg-white text-[#1B1B1F] text-[15px] font-semibold press flex items-center justify-center gap-2 px-3"
+                >
+                  <Icon name="note" size={17} />
+                  <span className="truncate">
+                    {laufendeStunde && !laufendeStunde.isFreistunde && laufendeStunde.subjectId
+                      ? resolveSubjectInfo(laufendeStunde.subjectId, profile?.customFaecher).name
+                      : 'Schnellnotiz'}
+                  </span>
+                </button>
+                <button
+                  onClick={() => importRef.current?.click()}
+                  className="h-12 rounded-pill bg-white/15 text-white text-[15px] font-semibold press flex items-center justify-center gap-2 border border-white/25 px-3"
+                >
+                  <Icon name="image" size={17} />
+                  <span className="truncate">Importieren</span>
+                </button>
               </div>
-              <div>
-                <p className="text-text-primary font-semibold text-[14px]">Neue Notiz</p>
-                <p className="text-text-muted text-[11px] mt-0.5">Schnell erfassen</p>
-              </div>
-            </button>
+            }
+          />
 
-            {/* Datei importieren */}
-            <button
-              onClick={() => importRef.current?.click()}
-              className="flex-1 bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 flex flex-col gap-3 hover-lift text-left"
-            >
-              <div
-                className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 glow-green"
-                style={{ background: 'linear-gradient(145deg, #34C759, #1D9A38)' }}
-              >
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2">
-                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-text-primary font-semibold text-[14px]">Importieren</p>
-                <p className="text-text-muted text-[11px] mt-0.5">PDF oder Foto</p>
-              </div>
-            </button>
-          </div>
-
-          {/* Hidden file input — multiple, no count cap */}
+          {/* Hidden file input — multiple, no count cap.
+              Die beiden Schnellaktionen sind in die Bühne gewandert; die
+              separaten Kacheln darunter waren danach eine Dopplung. */}
           <input
             ref={importRef}
             type="file"
@@ -359,33 +460,20 @@ export function UnterrichtScreen() {
             onChange={handleImportFilePick}
           />
 
-          {/* ── Schnellnotizen ───────────────────────────────────── */}
-          {(() => {
-            const ohneFolder = userFolders.find((f) => f.id === 'folder-no-subject')
-            if (!ohneFolder) return null
-            const ohneCount = userNotes.filter((n) => n.folderId === 'folder-no-subject').length
-            return (
-              <button
-                onClick={() => navigate('/unterricht/ohne-fach/ordner/folder-no-subject')}
-                className="w-full flex items-center gap-4 bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-4 press transition-all duration-150"
-              >
-                <div className="w-10 h-10 rounded-[12px] bg-surface-hover flex items-center justify-center shrink-0 text-[18px]">
-                  📁
-                </div>
-                <div className="flex-1 text-left">
-                  <p className="text-text-primary font-semibold text-[15px]">Schnellnotizen</p>
-                  <p className="text-text-muted text-[12px] mt-0.5">
-                    {ohneCount === 0 ? 'Keine Notizen' : `${ohneCount} ${ohneCount === 1 ? 'Notiz' : 'Notizen'}`}
-                  </p>
-                </div>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
-                  <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            )
-          })()}
+          {/* Zwei Spalten, sobald Platz da ist: links der Bestand, rechts der
+              Tag. Im Hochformat bleibt die Reihenfolge wie bisher — erst was
+              heute ansteht, dann die Fächer. */}
+          <div className="grid gap-3 xl:grid-cols-2 xl:items-start xl:gap-5">
 
-          {/* ── Fächer ───────────────────────────────────────────── */}
+            <div className="order-2 xl:order-1 space-y-3">
+          {/* ── Fächer ─────────────────────────────────────────────
+              Eine zusammenhängende Liste statt eines Stapels einzelner Karten:
+              ruhiger, und pro Zeile bleibt mehr Platz für den Inhalt. Das
+              Aufklappen mit dem Ordner-Raster bleibt unverändert erhalten. */}
+          <p className="section-label px-1 pt-2">
+            Deine Fächer
+          </p>
+          <ListGroup>
           {profileSubjects.map((subject) => {
             const subjectFolders = userFolders.filter((f) => f.subjectId === subject.id && !f.parentFolderId)
             const totalNotes = userNotes.filter((n) => n.subjectId === subject.id).length
@@ -393,33 +481,34 @@ export function UnterrichtScreen() {
             const customColorIdx = profile?.customFaecher?.findIndex((cf) => cf.id === subject.id) ?? -1
 
             return (
-              <div key={subject.id} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+              <div key={subject.id} className="border-b border-border/40 last:border-b-0">
                 <button
                   onClick={() => toggleSubject(subject.id)}
-                  className="w-full flex items-center gap-4 px-4 py-4 hover:bg-surface-hover transition-colors press-sm"
+                  aria-expanded={isExpanded}
+                  className="w-full flex items-center gap-3 px-4 py-3 min-h-[52px] hover:bg-surface-hover transition-colors press-sm"
                 >
                   <SubjectIcon
                     subjectId={subject.id}
                     size="md"
                     customColorIndex={customColorIdx >= 0 ? customColorIdx : undefined}
                   />
-                  <div className="flex-1 text-left">
-                    <p className="text-text-primary font-semibold text-[15px]">{subject.name}</p>
-                    <p className="text-text-muted text-[12px] mt-0.5">
+                  <span className="flex-1 min-w-0 flex flex-col gap-0.5 text-left">
+                    <span className="text-[16px] font-semibold tracking-[-0.015em] text-text-primary truncate">{subject.name}</span>
+                    <span className="text-[13px] text-text-secondary truncate">
                       {subjectFolders.length} {subjectFolders.length === 1 ? 'Ordner' : 'Ordner'}
                       {totalNotes > 0 && ` · ${totalNotes} ${totalNotes === 1 ? 'Notiz' : 'Notizen'}`}
-                    </p>
-                  </div>
+                    </span>
+                  </span>
                   <svg
-                    width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                    className={`text-text-muted transition-transform duration-200 shrink-0 ${isExpanded ? '' : '-rotate-90'}`}
+                    width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                    className={`text-text-muted transition-transform duration-200 motion-reduce:transition-none shrink-0 ${isExpanded ? '' : '-rotate-90'}`}
                   >
                     <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
 
                 {isExpanded && (
-                  <div className="border-t border-border/60 px-4 pt-5 pb-4">
+                  <div className="border-t border-border/40 px-4 pt-4 pb-4">
                     <div className="grid grid-cols-3 gap-x-3 gap-y-2">
                       {subjectFolders.map((folder) => (
                         <FolderGridItem
@@ -437,6 +526,80 @@ export function UnterrichtScreen() {
               </div>
             )
           })}
+          </ListGroup>
+            </div>
+
+            <div className="order-1 xl:order-2 space-y-3">
+          <p className="section-label px-1 hidden xl:block">
+            Heute offen
+          </p>
+          {/* ── Schnellnotizen ───────────────────────────────────── */}
+          {(() => {
+            const ohneFolder = userFolders.find((f) => f.id === 'folder-no-subject')
+            if (!ohneFolder) return null
+            const ohneCount = userNotes.filter((n) => n.folderId === 'folder-no-subject').length
+            return (
+              <ListGroup>
+                <ListRow
+                  leading={
+                    <QuickNotesIcon size="md" />
+                  }
+                  title="Schnellnotizen"
+                  subtitle={ohneCount === 0 ? 'Keine Notizen' : `${ohneCount} ${ohneCount === 1 ? 'Notiz' : 'Notizen'}`}
+                  chevron
+                  onClick={() => navigate('/unterricht/ohne-fach/ordner/folder-no-subject')}
+                />
+              </ListGroup>
+            )
+          })()}
+
+          {/* ── Hausaufgaben ───────────────────────────────────────
+              Erfasst werden sie hier, geplant unter Planen — ein Bestand,
+              zwei Wege. Die Anzahl steht dort, wo man sie in der Schule
+              braucht; offene Aufgaben tragen Rot wie jede Gefahrenmeldung. */}
+          <button
+            onClick={() => navigate('/hausaufgaben')}
+            className="w-full bg-surface rounded-card p-4 flex items-center gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
+          >
+            <span className="flex-1 min-w-0">
+              <span className="flex items-center gap-2">
+                <span className="text-[16px] font-semibold text-text-primary">Hausaufgaben</span>
+                {offeneHausaufgaben > 0 && (
+                  <span className="text-[13px] font-semibold px-2.5 py-0.5 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))]">
+                    {offeneHausaufgaben} offen
+                  </span>
+                )}
+              </span>
+              <span className="block text-[13px] text-text-secondary mt-0.5 truncate">
+                {naechsteHausaufgabe ?? 'Alles erledigt'}
+              </span>
+            </span>
+            <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round" className="text-text-muted shrink-0" aria-hidden>
+              <path d="M1 1l6 6-6 6" />
+            </svg>
+          </button>
+
+          {/* Der Tag als eine Zeile. Im Hochformat steht er unter den Aufgaben,
+              im Querformat füllt er die rechte Spalte, die sonst leer bliebe. */}
+          {heuteSlots.length > 0 && (
+            <div className="bg-surface rounded-card p-4">
+              <p className="section-label">
+                Stundenplan heute
+              </p>
+              <p className="text-[16px] font-semibold text-text-primary mt-1.5 leading-snug">
+                {heuteSlots
+                  .map((sl) => sl.isFreistunde ? 'frei' : resolveSubjectInfo(sl.subjectId, profile?.customFaecher).name)
+                  .join(' · ')}
+              </p>
+              <p className="text-[13px] text-text-secondary mt-0.5">
+                Schulschluss {heuteSlots[heuteSlots.length - 1].endTime}
+              </p>
+            </div>
+          )}
+            </div>
+
+          </div>
         </div>
       )}
 
@@ -446,7 +609,7 @@ export function UnterrichtScreen() {
           <h2 className="text-[20px] font-bold text-text-primary mb-2">Neuen Ordner erstellen</h2>
           {addFolderFor && (
             <div className="flex items-center gap-1.5 flex-wrap mb-4">
-              <span className="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-accent/10 text-accent">
+              <span className="px-2.5 py-1 rounded-chip text-[11px] font-semibold btn-mode">
                 {subjects.find((s) => s.id === addFolderFor)?.name
                   ?? profile?.customFaecher?.find((cf) => cf.id === addFolderFor)?.name
                   ?? addFolderFor}
@@ -464,8 +627,8 @@ export function UnterrichtScreen() {
           <button
             onClick={confirmAddFolder}
             disabled={!newFolderName.trim()}
-            className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
-              newFolderName.trim() ? 'grad-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+            className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
+              newFolderName.trim() ? 'btn-mode hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
             Ordner erstellen
@@ -490,7 +653,7 @@ export function UnterrichtScreen() {
             </div>
             <button
               onClick={goManual}
-              className="w-full py-3 rounded-card border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover"
+              className="w-full h-12 rounded-pill border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover"
             >
               Manuell wählen
             </button>
@@ -528,7 +691,7 @@ export function UnterrichtScreen() {
                     importSuggestion.subjectName,
                     importSuggestion.folderId,
                   )}
-                  className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press hover:opacity-90 mb-2.5"
+                  className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold press hover:opacity-90 mb-2.5"
                 >
                   Vorschlag annehmen
                 </button>
@@ -540,7 +703,7 @@ export function UnterrichtScreen() {
             )}
             <button
               onClick={goManual}
-              className="w-full py-3 rounded-card border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover"
+              className="w-full h-12 rounded-pill border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover"
             >
               Manuell wählen
             </button>
@@ -582,7 +745,7 @@ export function UnterrichtScreen() {
                 onClick={() => void startProcessing('', 'Allgemein', 'folder-no-subject')}
                 className="w-full flex items-center gap-3 bg-background border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
               >
-                <div className="w-8 h-8 rounded-full bg-surface-hover flex items-center justify-center shrink-0 text-[16px]">📁</div>
+                <QuickNotesIcon size="sm" />
                 <span className="text-text-primary font-medium text-[15px]">Schnellnotizen</span>
               </button>
             </div>
@@ -602,7 +765,7 @@ export function UnterrichtScreen() {
               <div className="flex items-center gap-3 mb-4">
                 <button
                   onClick={() => setImportPhase('manual-subjects')}
-                  className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+                  className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -619,19 +782,19 @@ export function UnterrichtScreen() {
                   onClick={() => void startProcessing(manualSubject.id, manualSubject.name, undefined)}
                   className="w-full flex items-center gap-3 bg-accent/5 border border-accent/20 rounded-card px-4 py-3.5 text-left press hover:bg-accent/8 transition-colors"
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent shrink-0">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary shrink-0">
                     <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M14 2v6h6" strokeLinecap="round" />
                   </svg>
-                  <span className="text-accent font-medium text-[14px]">Direkt in {manualSubject.name}</span>
+                  <span className="text-text-primary font-medium text-[14px]">Direkt in {manualSubject.name}</span>
                 </button>
 
                 {/* Folders by half year */}
                 {grouped.map(({ hy, folders }: { hy: HalfYear; folders: typeof subjectFolders }) => (
                   <div key={hy.id}>
                     <div className="flex items-center gap-2 px-2 py-1.5">
-                      <span className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{hy.name}</span>
-                      {hy.isCurrent && <span className="text-[10px] px-1.5 py-0.5 rounded-pill icon-accent text-accent font-semibold">Aktuell</span>}
+                      <span className="section-label">{hy.name}</span>
+                      {hy.isCurrent && <span className="text-[11px] px-1.5 py-0.5 rounded-pill btn-mode font-semibold">Aktuell</span>}
                     </div>
                     {folders.map((folder) => (
                       <button
@@ -639,7 +802,7 @@ export function UnterrichtScreen() {
                         onClick={() => void startProcessing(manualSubject.id, manualSubject.name, folder.id)}
                         className="w-full flex items-center gap-3 bg-background border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors mb-1.5"
                       >
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-accent shrink-0">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-primary shrink-0">
                           <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                         <span className="text-text-primary font-medium text-[14px]">{folder.name}</span>
@@ -653,7 +816,7 @@ export function UnterrichtScreen() {
                     onClick={() => void startProcessing(manualSubject.id, manualSubject.name, folder.id)}
                     className="w-full flex items-center gap-3 bg-background border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
                   >
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-accent shrink-0">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-primary shrink-0">
                       <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className="text-text-primary font-medium text-[14px]">{folder.name}</span>
@@ -678,13 +841,13 @@ export function UnterrichtScreen() {
             <p className="text-text-muted text-[12px] mb-4 truncate">{importFiles[importCurrent]?.name}</p>
             <div className="h-2 bg-border/40 rounded-pill overflow-hidden mb-4">
               <div
-                className="h-full grad-accent rounded-pill transition-all duration-500"
+                className="h-full bg-accent rounded-pill transition-all duration-500"
                 style={{ width: `${importFiles.length > 0 ? ((importSucceeded + importFailed) / importFiles.length) * 100 : 0}%` }}
               />
             </div>
             <div className="flex gap-3 mb-5">
-              <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgba(var(--color-success),0.08)', border: '1px solid rgba(var(--color-success),0.2)' }}>
-                <p className="text-success font-bold text-[18px]">{importSucceeded}</p>
+              <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgb(var(--color-success) / 0.08)', border: '1px solid rgb(var(--color-success) / 0.2)' }}>
+                <p className="text-text-primary font-bold text-[18px]">{importSucceeded}</p>
                 <p className="text-text-muted text-[11px]">Erstellt</p>
               </div>
               <div className="flex-1 bg-background border border-border rounded-card px-3 py-2 text-center">
@@ -694,14 +857,14 @@ export function UnterrichtScreen() {
                 <p className="text-text-muted text-[11px]">Ausstehend</p>
               </div>
               {importFailed > 0 && (
-                <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
-                  <p className="text-danger font-bold text-[18px]">{importFailed}</p>
+                <div className="flex-1 rounded-card px-3 py-2 text-center" style={{ background: 'rgb(var(--color-danger) / 0.08)', border: '1px solid rgb(var(--color-danger) / 0.2)' }}>
+                  <p className="text-text-primary font-bold text-[18px]">{importFailed}</p>
                   <p className="text-text-muted text-[11px]">Fehler</p>
                 </div>
               )}
             </div>
             <p className="text-text-muted text-[11px] text-center mb-4">App offen lassen · KI verarbeitet Datei für Datei</p>
-            <button onClick={closeImport} className="w-full py-3 rounded-card border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover">
+            <button onClick={closeImport} className="w-full h-12 rounded-pill border border-border text-text-secondary text-[14px] font-medium press hover:bg-surface-hover">
               Abbrechen
             </button>
           </div>
@@ -713,9 +876,9 @@ export function UnterrichtScreen() {
             <div className="flex flex-col items-center py-4 mb-5">
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center mb-3"
-                style={{ background: importSucceeded > 0 ? 'rgba(var(--color-success),0.12)' : 'rgba(var(--color-border),0.3)' }}
+                style={{ background: importSucceeded > 0 ? 'rgb(var(--color-success) / 0.12)' : 'rgb(var(--color-border) / 0.3)' }}
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className={importSucceeded > 0 ? 'text-success' : 'text-text-muted'}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className={importSucceeded > 0 ? 'text-text-primary' : 'text-text-muted'}>
                   <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
@@ -726,7 +889,7 @@ export function UnterrichtScreen() {
                 <p className="text-text-muted text-[13px] mt-1">{importFailed} {importFailed === 1 ? 'Datei' : 'Dateien'} fehlgeschlagen</p>
               )}
             </div>
-            <button onClick={finishImport} className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press hover:opacity-90">
+            <button onClick={finishImport} className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold press hover:opacity-90">
               {importSucceeded > 0 ? 'Zum Fach' : 'Schließen'}
             </button>
           </div>
@@ -744,7 +907,7 @@ export function UnterrichtScreen() {
               className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
             >
               <div className="w-9 h-9 rounded-btn bg-accent/10 flex items-center justify-center shrink-0">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-accent">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-text-primary">
                   <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
                 </svg>
               </div>
@@ -754,7 +917,7 @@ export function UnterrichtScreen() {
               onClick={() => folderActionsFor && openDeleteConfirm(folderActionsFor)}
               className="w-full flex items-center gap-3 bg-surface border border-border rounded-card px-4 py-3.5 text-left press hover:bg-surface-hover transition-colors"
             >
-              <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(var(--color-danger),0.1)' }}>
+              <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgb(var(--color-danger) / 0.1)' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgb(var(--color-danger))' }}>
                   <polyline points="3 6 5 6 21 6" />
                   <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" />
@@ -783,8 +946,8 @@ export function UnterrichtScreen() {
           <button
             onClick={confirmRename}
             disabled={!renameValue.trim()}
-            className={`w-full py-3.5 rounded-card text-[15px] font-semibold transition-all press ${
-              renameValue.trim() ? 'grad-accent text-white hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
+            className={`w-full h-12 rounded-pill text-[15px] font-semibold transition-all press ${
+              renameValue.trim() ? 'btn-mode hover:opacity-90' : 'bg-surface-hover text-text-muted cursor-not-allowed'
             }`}
           >
             Speichern
@@ -810,7 +973,7 @@ export function UnterrichtScreen() {
             </button>
             <button
               onClick={confirmDeleteFolder}
-              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-danger/10 text-danger border border-danger/20 hover:bg-danger/15 transition-colors press"
+              className="flex-1 py-3.5 rounded-card text-[15px] font-semibold bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] hover:opacity-90 transition-colors press"
             >
               Löschen
             </button>
@@ -868,7 +1031,7 @@ function FolderGridItem({
       onPointerLeave={clearPressTimer}
       onPointerCancel={clearPressTimer}
       onContextMenu={(e) => { if (onLongPress) e.preventDefault() }}
-      className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-2xl active:bg-surface-hover press-sm transition-colors"
+      className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-card active:bg-surface-hover press-sm transition-colors"
     >
       <svg width="62" height="52" viewBox="0 0 62 52" fill="none">
         {/* folder tab — darker blue as shadow/back */}
@@ -881,7 +1044,7 @@ function FolderGridItem({
       <p className="text-[11px] font-semibold text-text-primary text-center line-clamp-2 leading-tight w-full">
         {name}
       </p>
-      <p className="text-[10px] text-text-muted">
+      <p className="text-[11px] text-text-muted">
         {noteCount === 0 ? 'Leer' : `${noteCount} ${noteCount === 1 ? 'Notiz' : 'Notizen'}`}
       </p>
     </button>
@@ -892,10 +1055,10 @@ function AddFolderGridItem({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-2xl active:bg-surface-hover press-sm transition-colors"
+      className="flex flex-col items-center gap-1.5 py-3 px-1 rounded-card active:bg-surface-hover press-sm transition-colors"
     >
       <div className="relative" style={{ width: 62, height: 52 }}>
-        <svg width="62" height="52" viewBox="0 0 62 52" fill="none" className="absolute inset-0 text-accent">
+        <svg width="62" height="52" viewBox="0 0 62 52" fill="none" className="absolute inset-0 text-text-primary">
           {/* ghost tab */}
           <path d="M0 17 L0 9.5 Q0 6.5 3 6.5 L21 6.5 Q23.5 6.5 25 9.5 L28 16 Z"
             fill="currentColor" fillOpacity="0.1"/>
@@ -908,13 +1071,13 @@ function AddFolderGridItem({ onClick }: { onClick: () => void }) {
         {/* + icon centered in body area */}
         <div className="absolute inset-0 flex items-center justify-center" style={{ paddingTop: 12 }}>
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2.4" className="text-accent">
+            strokeWidth="2.4" className="text-text-primary">
             <path d="M12 5v14M5 12h14" strokeLinecap="round"/>
           </svg>
         </div>
       </div>
-      <p className="text-[11px] font-semibold text-accent text-center">Neuer Ordner</p>
-      <p className="text-[10px] text-transparent select-none">·</p>
+      <p className="text-[11px] font-semibold text-text-primary text-center">Neuer Ordner</p>
+      <p className="text-[11px] text-transparent select-none">·</p>
     </button>
   )
 }

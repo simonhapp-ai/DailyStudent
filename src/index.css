@@ -5,26 +5,70 @@
 /* ── iOS Design Tokens ───────────────────────────────────────── */
 
 :root {
-  --color-bg:             244 244 244;   /* pure neutral light grey — no colour cast */
+  --color-bg:             242 242 247;   /* #F2F2F7 — Apple systemGroupedBackground */
   --color-surface:        255 255 255;
-  --color-surface-hover:  239 239 244;
-  --color-border:         209 209 214;
+  --color-surface-hover:  242 242 247;   /* #F2F2F7 — Apple Gray 6 */
+  --color-border:         199 199 204;   /* #C7C7CC — Apple Gray 3 */
   --color-accent:         124  58 237;   /* #7C3AED — violet-600 */
   --color-accent-soft:    rgba(124, 58, 237, 0.10);
-  --color-success:        52  199  89;
-  --color-warning:        255 149   0;
-  --color-danger:         255  59  48;
-  --color-text-primary:   22   14  40;   /* deep purple-tinted black */
-  --color-text-secondary: 72   60  95;
-  --color-text-muted:     152 140 175;
+  --color-on-accent:      255 255 255;   /* Schrift auf der Modusfarbe — immer Weiß */
+  /* Knopfflächen tragen den Verlauf der Landing Page, nicht einen Flachton.
+     Das ist Simons Referenz und gilt für JEDEN Modus-Knopf der App. */
+  --grad-mode: linear-gradient(135deg, #7C3AED, #5B21B6);
+  /* Die Bühne ist im Hellen eine hellere Fläche als im Dunkeln — vorher waren
+     beide fast gleich dunkel, wodurch der Helligkeitswechsel ausblieb. */
+  --stage-bg:         linear-gradient(146deg, #17102B 0%, #2E1D63 100%);
+  --stage-bg-klausur: linear-gradient(146deg, #06251B 0%, #0C4C39 100%);
+  --color-success:        52  199  89;   /* #34C759 — Apple Green, Default (light) — exact match, unchanged */
+  --color-warning:        255 141  40;   /* #FF8D28 — Apple Orange, Default (light) */
+  --color-danger:         255  56  60;   /* #FF383C — Apple Red, Default (light) */
+  --color-teal:             0 195 208;   /* #00C3D0 — Apple Teal, Default (light) — general-purpose, not a feature identity color */
+  --color-blue:             0 136 255;   /* #0088FF — Apple Blue, Default (light) — general-purpose, not a feature identity color */
+  --color-navy:             9  76 134;   /* #094C86 — 5th identity color (31.08.2026), derived from Apple's Blue hue, pulled darker/richer to sit alongside Purple/Mint/Gold. Used for Lernzettel. */
+  --color-text-primary:    0   0   0;   /* #000000 — Apple label */
+  --color-text-secondary:  99  99 102;   /* #636366 — Apple Gray 2 (dark set), lesbar auf Weiß */
+  --color-text-muted:     142 142 147;   /* #8E8E93 — Apple systemGray */
 
-  /* Subject icon radial gradients — light mode: pastel purple sphere */
-  --si-a-from: 245 243 255;   /* violet-50  */
-  --si-a-to:   196 181 253;   /* violet-300 */
-  --si-b-from: 250 245 255;   /* purple-50  */
-  --si-b-to:   216 180 254;   /* purple-300 */
-  --si-c-from: 237 233 254;   /* violet-100 */
-  --si-c-to:   167 139 250;   /* violet-400 */
+  /* ── Notenskala — genau 5 Stufen, keine Zwischentöne (Version C) ────────── */
+  --grade-1:      255  21  45;  --grade-1-on:   255 255 255;  /* 0–3  NP  Rot    */
+  --grade-2:      255 141  40;  --grade-2-on:     0   0   0;  /* 4–6  NP  Orange */
+  --grade-3:      255 204   0;  --grade-3-on:     0   0   0;  /* 7–9  NP  Gelb   */
+  --grade-4:       52 199  89;  --grade-4-on:     0   0   0;  /* 10–12 NP Hellgrün */
+  --grade-5:        0 137  50;  --grade-5-on:   255 255 255;  /* 13–15 NP saftiges Grün */
+
+  /* ── Gefüllte Marken — helle kontraststarke Variante + weiße Schrift ────── */
+  --fill-red:     255  21  45;  --fill-red-on:  255 255 255;
+  --fill-orange:  255 141  40;  --fill-orange-on: 0   0   0;
+  --fill-green:     0 137  50;  --fill-green-on:255 255 255;
+  --fill-blue:     30 110 244;  --fill-blue-on: 255 255 255;
+  --fill-yellow:  255 204   0;  --fill-yellow-on: 0   0   0;
+
+  /* ── Fachgruppen (Version C) ────────────────────────────────────────────── */
+  /* --subj-*-on ist die Farbe des SYMBOLS auf dem Fachzeichen — immer Weiß, in
+     beiden Erscheinungen. Für TEXT auf einer Fachfarbe gilt das nicht, der wird
+     nach Kontrast gewählt (getSubjectOnColor in subjectInfo.ts). */
+  --subj-spr:      92 184 255;  --subj-spr-on:  255 255 255;  /* Sprachen · Blau pastell   */
+  --subj-nat:      52 199  89;  --subj-nat-on:  255 255 255;  /* Naturwiss. · Grün         */
+  --subj-ges:     255 160  86;  --subj-ges-on:  255 255 255;  /* Gesellschaft · Orange     */
+  --subj-kre:     255 138 196;  --subj-kre-on:  255 255 255;  /* Kreativ & Sport · Pink    */
+  --subj-cst:       0   0   0;  --subj-cst-on:  255 255 255;  /* Eigenes Fach              */
+
+  /* Weiche Aufhellung oben links, minimale Tiefe unten rechts — führt keine
+     neue Farbe ein, liegt nur auf dem Fachzeichen. */
+  --subj-fade: linear-gradient(155deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,0) 56%, rgba(0,0,0,.11) 100%);
+
+  /* Kalendereintrag — der Ton trennt nur vom Untergrund. Den Kontrast leistet
+     ohnehin die Schrift, deshalb hell statt kräftig. */
+  --ev-bg:        229 229 234;  --ev-on:          0   0   0;
+
+  /* Bühne — hell die dunkelste Fläche des Screens.
+     Zwei Ausführungen, eine je Modus: Der Unterrichtsmodus trägt Lila, der
+     Klausurenmodus Mint. Die Bühne selbst bleibt in beiden Fällen dunkel —
+     nur der Farbstich wechselt, damit man am Grund erkennt, wo man ist. */
+
+
+  /* Schrift auf gefülltem Purple. Hell ist Purple dunkel genug für Weiß. */
+  --mode-on-purple: #FFFFFF;
 
   /* Liquid Glass nav pill — light mode */
   --nav-pill-bg:     rgba(255, 255, 255, 0.58);
@@ -35,22 +79,66 @@
     0 8px 40px rgba(0, 0, 0, 0.13),
     0 2px 6px rgba(0, 0, 0, 0.07);
 
+  /* Standard Materials (Apple HIG) — 4 blur tiers, consolidated from 8 ad-hoc
+     values across the app (31.08.2026). No light/dark split needed, it's a
+     radius not a color. Liquid Glass itself stays out of scope (native-only,
+     system-adaptive — Simon decided not to chase an approximation of it). */
+  --material-blur-ultrathin: 8px;
+  --material-blur-thin:      14px;
+  --material-blur-regular:   24px;
+  --material-blur-thick:     40px;
+
   color-scheme: light;
 }
 
 .dark {
   --color-bg:              0   0   0;    /* true black */
-  --color-surface:        18  18  20;    /* iOS dark gray */
-  --color-surface-hover:  30  30  33;
-  --color-border:         50  50  55;
+  --color-surface:        28  28  30;    /* #1C1C1E — Apple secondarySystemBackground */
+  --color-surface-hover:  44  44  46;    /* #2C2C2E — erhöhte Fläche */
+  --color-border:         58  58  60;    /* #3A3A3C — Apple Gray 4 (dark) */
   --color-accent:        167 139 250;   /* #A78BFA — violet-400 */
   --color-accent-soft:   rgba(167, 139, 250, 0.15);
-  --color-success:        48 209  88;
-  --color-warning:       255 159  10;
-  --color-danger:        255  69  58;
+  --color-on-accent:     255 255 255;    /* Auch im Dunkeln Weiß — nie Schwarz auf Lila oder Mint */
+  --color-success:        48 209  88;   /* #30D158 — Apple Green, Default (dark) — exact match, unchanged */
+  --color-warning:       255 146  48;   /* #FF9230 — Apple Orange, Default (dark) */
+  --color-danger:        255  66  69;   /* #FF4245 — Apple Red, Default (dark) */
+  --color-teal:            0 210 224;   /* #00D2E0 — Apple Teal, Default (dark) */
+  --color-blue:            0 145 255;   /* #0091FF — Apple Blue, Default (dark) */
   --color-text-primary:  255 255 255;
-  --color-text-secondary:205 205 210;
-  --color-text-muted:    140 140 150;
+  --color-text-secondary:174 174 178;    /* #AEAEB2 — Apple Gray 2 */
+  --color-text-muted:    142 142 147;    /* #8E8E93 — Apple systemGray */
+
+  /* Dunkel: Standard-Dunkelvariante als Fläche + schwarze Schrift */
+  --grade-1:      255  66  69;  --grade-1-on:     0   0   0;
+  --grade-2:      255 146  48;  --grade-2-on:     0   0   0;
+  --grade-3:      255 214   0;  --grade-3-on:     0   0   0;
+  --grade-4:       74 217 104;  --grade-4-on:     0   0   0;
+  --grade-5:       48 209  88;  --grade-5-on:     0   0   0;
+
+  --fill-red:     255  66  69;  --fill-red-on:    0   0   0;
+  --fill-orange:  255 146  48;  --fill-orange-on: 0   0   0;
+  --fill-green:    48 209  88;  --fill-green-on:  0   0   0;
+  --fill-blue:      0 145 255;  --fill-blue-on:   0   0   0;
+  --fill-yellow:  255 214   0;  --fill-yellow-on: 0   0   0;
+
+  /* Pastelltöne tragen in beiden Erscheinungen — sie sind hell genug für Schwarz
+     auf der Fläche und kräftig genug, um sich vom schwarzen Grund abzuheben. */
+  --subj-spr:      92 184 255;  --subj-spr-on:  255 255 255;
+  --subj-nat:      52 199  89;  --subj-nat-on:  255 255 255;
+  --subj-ges:     255 160  86;  --subj-ges-on:  255 255 255;
+  --subj-kre:     255 138 196;  --subj-kre-on:  255 255 255;
+  /* Eigenes Fach kehrt sich um: weiße Fläche im Dunkeln, damit sie überhaupt
+     sichtbar ist — das Symbol darauf ist die eine Ausnahme und wird schwarz. */
+  --subj-cst:     255 255 255;  --subj-cst-on:    0   0   0;
+
+  --ev-bg:         58  58  60;  --ev-on:        255 255 255;
+
+  /* Bühne — dunkel die hellste Fläche des Screens (Rolle dreht sich um) */
+  --stage-bg:         linear-gradient(146deg, #241C3C 0%, #3E2C74 100%);
+  --stage-bg-klausur: linear-gradient(146deg, #0D3327 0%, #175944 100%);
+
+  /* Dunkel wird Purple aufgehellt (#A78BFA) — Schrift darauf wird fast schwarz */
+  --mode-on-purple: #FFFFFF;
 
   /* Liquid Glass nav pill — dark mode */
   --nav-pill-bg:     rgba(36, 36, 42, 0.72);
@@ -60,14 +148,6 @@
     0 0 0 0.75px rgba(255, 255, 255, 0.11),
     0 8px 40px rgba(0, 0, 0, 0.48),
     0 2px 8px rgba(0, 0, 0, 0.28);
-
-  /* Subject icon radial gradients — dark mode: deep purple sphere */
-  --si-a-from:  91  33 182;   /* violet-800 */
-  --si-a-to:    46  16 101;   /* violet-950 */
-  --si-b-from:  88  28 135;   /* purple-900 */
-  --si-b-to:    59   7 100;   /* purple-950 */
-  --si-c-from:  76  29 149;   /* violet-900 */
-  --si-c-to:    30  27  75;   /* indigo-950 */
 
   color-scheme: dark;
 }
@@ -170,9 +250,12 @@ body {
 .section-label {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: rgb(var(--color-text-muted));
+  /* Sekundaer statt gedaempft: Abschnittsbeschriftungen sind Struktur, kein
+     Kleingedrucktes. Damit trifft die Klasse denselben Ton wie die von Hand
+     gesetzten Beschriftungen der umgebauten Screens. */
+  color: rgb(var(--color-text-secondary));
 }
 
 /* ── Input ──────────────────────────────────────────────────── */
@@ -256,12 +339,14 @@ textarea::placeholder {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 3px 12px rgba(109,40,217,0.45), 0 1px 4px rgba(109,40,217,0.25);
   }
   .grad-success {
-    background: linear-gradient(145deg, #4ADE80 0%, #22C55E 55%, #15803D 100%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 3px 12px rgba(21,128,61,0.42), 0 1px 4px rgba(21,128,61,0.22);
+    /* Apple Green (#34C759) as base, lighter/darker derived via HSL lightness — matches --color-success */
+    background: linear-gradient(145deg, #72DA8D 0%, #34C759 55%, #217E38 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 3px 12px rgba(33,126,56,0.42), 0 1px 4px rgba(33,126,56,0.22);
   }
   .grad-danger {
-    background: linear-gradient(145deg, #F87171 0%, #EF4444 55%, #B91C1C 100%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 3px 12px rgba(185,28,28,0.4), 0 1px 4px rgba(185,28,28,0.2);
+    /* Apple Red (#FF383C) as base, lighter/darker derived via HSL lightness — matches --color-danger */
+    background: linear-gradient(145deg, #FF8A8C 0%, #FF383C 55%, #DB0004 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 3px 12px rgba(219,0,4,0.4), 0 1px 4px rgba(219,0,4,0.2);
   }
   .grad-warning {
     background: linear-gradient(145deg, #FCD34D 0%, #F59E0B 55%, #B45309 100%);
@@ -381,6 +466,93 @@ textarea::placeholder {
   }
 }
 
+/* ── Pro-Karte ──────────────────────────────────────────────
+   Die Preiskarte der Landing Page: eine immer dunkle, tiefviolette Flaeche mit
+   weisser Schrift. Sie ist die einzige Karte der App, die in beiden
+   Erscheinungen dunkel bleibt — genau wie die Buehne, und aus demselben Grund:
+   Sie soll herausstechen, nicht sich einfuegen.
+
+   Weil sie immer dunkel ist, tragen ihre Kinder feste helle Werte statt der
+   theme-abhaengigen Token — sonst waere die Schrift im hellen Modus schwarz
+   auf dunkelviolett. Das ist dieselbe Ausnahme, die schon fuer die Buehne gilt. */
+.card-pro {
+  background: linear-gradient(158deg, #241640 0%, #1B1130 55%, #2B1B5E 100%);
+  border: 1px solid rgba(124, 58, 237, 0.28);
+  color: #FFFFFF;
+}
+
+.card-pro .pro-title   { color: #FFFFFF; }
+.card-pro .pro-sub     { color: rgba(255, 255, 255, 0.62); }
+.card-pro .pro-feature { color: rgba(255, 255, 255, 0.86); }
+.card-pro .pro-check   { color: #A78BFA; }
+
+/* ── Empfehlungs-Karte ──────────────────────────────────────
+   Zweite immer dunkle Karte, nach demselben Prinzip wie .card-pro — aber in
+   warmem Ton statt Violett. So sind die beiden herausgehobenen Karten
+   unterscheidbar, ohne dass eine davon flaechig Gold traegt: Pro verkauft
+   etwas, Einladen verschenkt etwas. Gold bleibt auf die Akzente beschraenkt
+   (Zeichen, Fortschritt, Marke). */
+.card-invite {
+  background: linear-gradient(158deg, #2B2010 0%, #1E1709 55%, #3A2B12 100%);
+  border: 1px solid rgba(212, 175, 55, 0.30);
+  color: #FFFFFF;
+}
+
+.card-invite .inv-title { color: #FFFFFF; }
+.card-invite .inv-sub   { color: rgba(255, 255, 255, 0.62); }
+.card-invite .inv-mono  { color: rgba(255, 255, 255, 0.90); }
+
+/* Modus-Knopf — Verlauf der Landing Page, immer weiße Schrift. */
+.btn-mode {
+  background: var(--grad-mode);
+  color: #FFFFFF;
+}
+
+/* ── Tippflaeche ─────────────────────────────────────────────
+   Apple nennt 44x44 pt als Mindestgroesse. Kleine Knoepfe — Loeschen,
+   Schliessen, Schrittweite — sollen aber klein AUSSEHEN. Diese Klasse
+   vergroessert nur die Flaeche, nicht das Bild: ein unsichtbares Feld,
+   das den Knopf auf 44 pt aufpolstert. */
+.tap-44 {
+  position: relative;
+}
+.tap-44::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Modusfarbe ──────────────────────────────────────────────
+   Konzept C kennt genau zwei Modi und je eine Farbe: Lila fuer den
+   Unterricht, Mint fuer die Klausur. Statt das in jedem Screen einzeln zu
+   setzen, schaltet die Klasse an der Modusgrenze den Wert um — jedes
+   bg-accent, border-accent und accent/xx folgt dann automatisch.
+
+   Mint traegt in beiden Erscheinungen denselben Ton, genau wie die
+   Fachzeichen: Ein Zeichen, das seine Farbe je nach Erscheinung wechselt,
+   verliert seinen Wiedererkennungswert. Die Schrift darauf ist deshalb in
+   beiden Faellen dunkel. */
+.mode-klausur {
+  /* Gemessen: Weiss auf #34D399 liegt bei 1,92:1 — auf einer ganzen Karte
+     unlesbar. Da alle farbigen Flaechen weisse Schrift tragen sollen, muss die
+     Modusfarbe selbst dunkel genug dafuer sein: #059669 gibt 3,77:1 und
+     erfuellt damit die Schwelle fuer grosse Schrift und Bedienelemente.
+     Das helle #34D399 lebt weiter im Verlauf und in der Navigationsleiste,
+     wo es als Flaeche ohne Schrift darauf wirkt. */
+  --color-accent:        5 150 105;
+  --color-accent-soft:  rgba(5, 150, 105, 0.12);
+  --color-on-accent:   255 255 255;
+  --grad-mode: linear-gradient(135deg, #047857, #10B981);
+}
+
+/* Schrift auf Mint. Die Modusfarbe des Klausurenmodus ist hell — weisse
+   Schrift darauf liegt bei rund 1,8:1 und ist praktisch unlesbar. */
+.on-mint { color: #FFFFFF; }
+
 /* ── Nav button — neutral hover, Emil Kowalski ──────────────── */
 
 .nav-btn {
@@ -392,7 +564,7 @@ textarea::placeholder {
 }
 
 .nav-active {
-  background: rgba(var(--color-text-primary), 0.08);
+  background: rgb(var(--color-text-primary) / 0.08);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -400,10 +572,10 @@ textarea::placeholder {
     transform: scale(1.08);
   }
   .nav-btn:not(.nav-active):hover {
-    background: rgba(var(--color-text-primary), 0.06);
+    background: rgb(var(--color-text-primary) / 0.06);
   }
   .nav-btn.nav-active:hover {
-    background: rgba(var(--color-text-primary), 0.13);
+    background: rgb(var(--color-text-primary) / 0.13);
   }
 }
 
@@ -438,21 +610,23 @@ textarea::placeholder {
   background: linear-gradient(
     105deg,
     transparent 25%,
-    rgba(255,255,255,0.55) 50%,
+    rgba(255,255,255,0.32) 50%,
     transparent 75%
   );
   background-size: 200% 100%;
   animation: gold-shimmer 10s infinite ease-in-out;
 }
 
-/* ── Referral copy button — gold shimmer ────────────────────── */
+/* ── Empfehlungs-Knopf ───────────────────────────────────────
+   Gold gehoert dem Pro-Abzeichen. Das Einladen ist kein Kauf, sondern ein
+   Gratis-Mechanismus — also traegt der Knopf die Modusfarbe. Der Schimmer
+   bleibt, weil er die Aufmerksamkeit lenkt, ohne eine zweite Farbe zu setzen. */
 .btn-copy-shimmer {
   position: relative;
   overflow: hidden;
   color: #3B1F00;
-  background: linear-gradient(135deg, #C8860A 0%, #F5C842 35%, #FFD700 50%, #D4AF37 65%, #C07700 100%);
+  background: linear-gradient(135deg, #C8860A 0%, #F5C842 38%, #FFD700 52%, #D4AF37 68%, #C07700 100%);
   box-shadow: 0 1px 6px rgba(200,134,10,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
-  text-shadow: 0 1px 1px rgba(255,255,255,0.2);
 }
 
 .btn-copy-shimmer::after {
@@ -462,9 +636,119 @@ textarea::placeholder {
   background: linear-gradient(
     105deg,
     transparent 25%,
-    rgba(255,255,255,0.55) 50%,
+    rgba(255,255,255,0.32) 50%,
     transparent 75%
   );
   background-size: 200% 100%;
   animation: gold-shimmer 4s infinite ease-in-out;
+}
+
+/* ── Zustandsblock „arbeitet" — Balken läuft, wo später das Ergebnis steht ──── */
+@keyframes working {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+
+/* Eintragskasten im Kalender — die Einblendung laeuft als Keyframe, nicht ueber
+   einen Zustand, der per requestAnimationFrame gesetzt wird. Laeuft dieses rAF
+   nicht (Tab im Hintergrund, gedrosselter Renderer), blieb der Kasten sonst
+   unsichtbar, waehrend seine Abdunklung den ganzen Screen blockierte. */
+@keyframes fab-in {
+  from { transform: scale(0.12); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+.fab-in {
+  animation: fab-in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fab-in { animation-duration: 0.01ms; }
+}
+
+/* ── Lichtlauf um die Planen-Pille ────────────────────────────────────────
+   Beim Betreten des Klausurenmodus laeuft einmal ein Strahl am Rand entlang.
+
+   Bahn: eineinhalb Umrundungen in einer Sekunde, unten in der Mitte los, oben
+   in der Mitte Schluss. Ein Kegelverlauf beginnt bei 0 Grad oben und dreht im
+   Uhrzeigersinn — unten ist also 180 Grad, und 180 + 540 landet wieder oben.
+   Linear, weil gleichmaessige Bewegung kein Beschleunigen traegt (Emil
+   Kowalski: linear nur fuer konstante Bewegung, sonst ease-out).
+
+   Der Strahl liegt in einem Ring: Die Verlaufsflaeche wird auf die Randstaerke
+   maskiert, sodass nur der Rand leuchtet und der Inhalt frei bleibt.
+
+   Farbe fest verdrahtet statt ueber --color-accent: Die Seitenleiste liegt
+   ausserhalb des Modus-Bereichs (sie zeigt bewusst beide Modi), dort waere der
+   Akzent das Lila des Unterrichtsmodus. Auf Weiss traegt das helle Mint kaum,
+   auf Schwarz leuchtet das dunkle nicht — daher je Erscheinungsbild ein
+   eigener Ton, mit weissem Kern als gemeinsamer Spitze.
+
+   Kein Zustand und kein Timer dahinter: Das Element wird beim Moduswechsel
+   ohnehin neu aufgebaut, die Animation laeuft dadurch von selbst genau einmal.
+   Als CSS-Animation, damit sie nicht auf dem Strang liegt, auf dem in diesem
+   Moment der Moduswechsel gerendert wird. */
+@property --glanz-winkel {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 180deg;
+}
+
+.glanz-lauf {
+  position: relative;
+  --glanz-farbe: 5 150 105;   /* dunkles Mint — traegt auf weisser Flaeche */
+}
+
+.dark .glanz-lauf {
+  --glanz-farbe: 52 211 153;  /* helles Mint — leuchtet auf dunkler Flaeche */
+}
+
+.glanz-lauf::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 3px;               /* Ringstaerke */
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--glanz-winkel),
+    #ffffff 0deg,                              /* Kopf */
+    rgb(var(--glanz-farbe) / 0.55) 7deg,
+    transparent 15deg,                         /* davor: nichts */
+    transparent 298deg,
+    rgb(var(--glanz-farbe) / 0.22) 316deg,     /* Schweif, waechst zum Kopf hin */
+    rgb(var(--glanz-farbe) / 0.62) 338deg,
+    rgb(var(--glanz-farbe)) 352deg,
+    #ffffff 360deg
+  );
+  filter: drop-shadow(0 0 5px rgb(var(--glanz-farbe) / 0.7));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: glanz-umlauf 1s linear 1 both;
+}
+
+@keyframes glanz-umlauf {
+  from { --glanz-winkel: 180deg; opacity: 1; }
+  90%  {                         opacity: 1; }
+  to   { --glanz-winkel: 720deg; opacity: 0; }
+}
+
+/* Bei reduzierter Bewegung bleibt die Aussage („hier liegt Planen"), aber ohne
+   Umlauf: Der Rand leuchtet einmal auf und wieder ab. */
+@media (prefers-reduced-motion: reduce) {
+  .glanz-lauf::after {
+    background: rgb(var(--glanz-farbe) / 0.85);
+    animation: glanz-ruhig 1s ease 1 both;
+  }
+
+  @keyframes glanz-ruhig {
+    from, 45% { opacity: 1; }
+    to        { opacity: 0; }
+  }
 }

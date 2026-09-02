@@ -1,7 +1,12 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { Icon } from '../components/ui/Icon'
 import { useUser } from '../context/UserContext'
 import { resolveSubjectInfo } from '../data/subjectInfo'
+import { PlanenBar } from '../components/ui/PlanenBar'
+import { ListGroup } from '../components/ui/ListGroup'
+import { EmptyState } from '../components/ui/EmptyState'
+import { Tag, type TagTone } from '../components/ui/Tag'
 
 function toDateStr(d: Date): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
@@ -35,8 +40,14 @@ interface PendingItem {
   isStandalone: boolean
 }
 
+/** Wie dringend die Abgabe ist — Stufe aus dem bestehenden Tonvorrat. */
+function fristTon(days: number): TagTone {
+  if (days <= 0) return 'red'
+  if (days <= 2) return 'orange'
+  return 'neutral'
+}
+
 export function HausaufgabenheftScreen() {
-  const navigate = useNavigate()
   const { profile, userNotes, completedHomeworkIds, standaloneHomework, completeHomework, addStandaloneHomework } = useUser()
 
   const [confirmingId, setConfirmingId] = useState<string | null>(null)
@@ -99,238 +110,218 @@ export function HausaufgabenheftScreen() {
   const today = toDateStr(new Date())
   const daysUntil = (d: string) => Math.round((new Date(d + 'T00:00:00').getTime() - new Date(today + 'T00:00:00').getTime()) / 86400000)
 
-  return (
-    <div className="flex flex-col bg-background min-h-dvh pb-24">
-      {/* Header */}
-      <div
-        className="flex items-center gap-3 px-4 border-b border-border/40 shrink-0"
-        style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))', paddingBottom: 14 }}
-      >
+  // Was zuerst fällig ist, steht oben. Aufgaben ohne Datum ans Ende — sie
+  // drängen nicht, sollen aber nicht verschwinden.
+  const sortiert = [...pending].sort((a, b) => {
+    if (!a.dueDate && !b.dueDate) return 0
+    if (!a.dueDate) return 1
+    if (!b.dueDate) return -1
+    return a.dueDate.localeCompare(b.dueDate)
+  })
+
+  // Auf dem Schreibtisch steht das Formular dauerhaft rechts, auf dem Telefon
+  // nur nach Tippen — dort kostet es sonst die halbe Liste.
+  const formular = (
+    <div className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-5 space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-[16px] font-semibold text-text-primary">Neue Hausaufgabe</p>
         <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+          onClick={() => setShowAddForm(false)}
+          className="w-8 h-8 rounded-full bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-secondary press-sm lg:hidden"
+          aria-label="Abbrechen"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Zurück
+          <Icon name="close" size={14} />
         </button>
-        <div className="flex-1">
-          <h1 className="text-[20px] font-bold text-text-primary">Hausaufgabenheft</h1>
-          {pending.length > 0 && (
-            <p className="text-[12px] text-text-muted">{pending.length} offen</p>
+      </div>
+
+      <div>
+        <p className="section-label mb-2">Fach</p>
+        <div className="flex flex-wrap gap-1.5">
+          {profileSubjects.map((s) => {
+            const active = addSubjectId === s.id
+            return (
+              <button
+                key={s.id}
+                onClick={() => setAddSubjectId(s.id === addSubjectId ? '' : s.id)}
+                className="flex items-center gap-1.5 px-3 h-9 rounded-pill text-[12px] font-medium border press-sm transition-colors"
+                style={active
+                  ? { background: `${s.color}1F`, borderColor: s.color, color: 'rgb(var(--color-text-primary))' }
+                  : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-secondary))' }}
+              >
+                <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
+                {s.name}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div>
+        <p className="section-label mb-1.5">Aufgabe</p>
+        <textarea
+          value={addDescription}
+          onChange={(e) => {
+            e.target.style.height = 'auto'
+            e.target.style.height = `${e.target.scrollHeight}px`
+            setAddDescription(e.target.value)
+          }}
+          placeholder="Was ist zu tun? z.B. Seite 23, Nr. 4–7…"
+          className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors resize-none leading-relaxed"
+          style={{ minHeight: '76px', overflow: 'hidden' }}
+        />
+      </div>
+
+      <div>
+        <p className="section-label mb-1.5">Abgabe</p>
+        <div className="flex gap-2">
+          <input
+            type="date"
+            value={addDueDate}
+            onChange={(e) => setAddDueDate(e.target.value)}
+            min={toDateStr(new Date())}
+            className="flex-1 h-11 bg-background border border-border rounded-btn px-3 text-[14px] text-text-primary focus:outline-none focus:border-accent transition-colors"
+          />
+          {nextLessonDate && (
+            <button
+              onClick={() => setAddDueDate(nextLessonDate)}
+              className="flex items-center gap-1.5 px-3 h-11 rounded-btn text-[12px] font-medium border press-sm whitespace-nowrap transition-colors"
+              style={addDueDate === nextLessonDate
+                ? { background: 'var(--grad-mode)', borderColor: 'transparent', color: '#FFFFFF' }
+                : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-secondary))' }}
+            >
+              <Icon name="calendar" size={13} />
+              Nächste Stunde
+            </button>
           )}
         </div>
-        <div className="w-9 h-9 shrink-0" />
+        {nextLessonDate && addDueDate === nextLessonDate && (
+          <p className="text-[12px] text-text-secondary mt-1.5">→ {formatDate(nextLessonDate)}</p>
+        )}
       </div>
 
-      <div className="px-4 pt-4 space-y-3">
+      <button
+        onClick={handleAdd}
+        disabled={!addDescription.trim() || !addSubjectId}
+        className="w-full h-12 rounded-pill text-[15px] font-semibold press disabled:opacity-40 transition-opacity"
+        style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+      >
+        Hinzufügen
+      </button>
+      {!addSubjectId && addDescription.trim().length > 0 && (
+        <p className="text-[12px] text-text-secondary text-center">Bitte zuerst ein Fach auswählen</p>
+      )}
+    </div>
+  )
 
-        {/* ── Add form (inline, no popup) ─────────────────────── */}
-        {showAddForm && (
-          <div className="bg-surface border border-accent/30 rounded-2xl overflow-hidden">
-            <div className="px-4 pt-4 pb-1">
-              <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Neue Hausaufgabe</p>
-            </div>
+  return (
+    <div className="flex flex-col bg-background min-h-dvh pb-28">
 
-            {/* Subject pills */}
-            <div className="px-4 pb-3">
-              <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
-              <div className="flex flex-wrap gap-1.5">
-                {profileSubjects.map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={() => setAddSubjectId(s.id === addSubjectId ? '' : s.id)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-xs font-semibold border transition-all press-sm"
-                    style={addSubjectId === s.id
-                      ? { backgroundColor: s.color, borderColor: 'transparent', color: 'white' }
-                      : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
-                  >
-                    {s.icon} {s.name}
-                  </button>
-                ))}
-              </div>
-            </div>
+      <div className="px-4 lg:px-6" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
+        <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
+        <p className="text-[13px] text-text-secondary mt-0.5">
+          {pending.length > 0
+            ? `${pending.length} ${pending.length === 1 ? 'Hausaufgabe offen' : 'Hausaufgaben offen'}`
+            : 'Hausaufgaben — erfasst im Unterricht, abgehakt hier.'}
+        </p>
+        <PlanenBar className="mt-4" />
+      </div>
 
-            {/* Description */}
-            <div className="px-4 pb-3">
-              <textarea
-                value={addDescription}
-                onChange={(e) => {
-                  e.target.style.height = 'auto'
-                  e.target.style.height = `${e.target.scrollHeight}px`
-                  setAddDescription(e.target.value)
-                }}
-                placeholder="Was ist zu tun? z.B. Seite 23, Nr. 4–7…"
-                className="w-full bg-background border border-border rounded-card px-3 py-2.5 text-text-secondary text-sm placeholder-text-muted focus:outline-none focus:border-accent transition-colors resize-none leading-relaxed"
-                style={{ minHeight: '72px', overflow: 'hidden' }}
-              />
-            </div>
+      <div className="px-4 mt-5 lg:px-6 lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-6 lg:items-start lg:max-w-[1120px]">
 
-            {/* Date + next lesson */}
-            <div className="px-4 pb-3">
-              <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Abgabe</p>
-              <div className="flex gap-2">
-                <input
-                  type="date"
-                  value={addDueDate}
-                  onChange={(e) => setAddDueDate(e.target.value)}
-                  min={toDateStr(new Date())}
-                  className="flex-1 bg-background border border-border rounded-card px-3 py-2 text-text-primary text-sm focus:outline-none focus:border-accent transition-colors"
-                />
-                {nextLessonDate && (
-                  <button
-                    onClick={() => setAddDueDate(nextLessonDate)}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-card text-xs font-semibold border transition-all press-sm whitespace-nowrap"
-                    style={addDueDate === nextLessonDate
-                      ? { background: 'rgb(var(--color-accent))', borderColor: 'transparent', color: 'white' }
-                      : { borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
-                  >
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round" />
-                    </svg>
-                    Nächste Stunde
-                  </button>
-                )}
-              </div>
-              {nextLessonDate && addDueDate === nextLessonDate && (
-                <p className="text-[10px] text-accent mt-1">→ {formatDate(nextLessonDate)}</p>
-              )}
-            </div>
+        <div className="space-y-4 lg:order-1">
 
-            {/* Save */}
-            <div className="px-4 pb-4">
-              <button
-                onClick={handleAdd}
-                disabled={!addDescription.trim() || !addSubjectId}
-                className="w-full py-3 rounded-card text-white text-sm font-bold disabled:opacity-40 transition-all press-sm"
-                style={{ background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)', boxShadow: '0 3px 12px rgba(124,58,237,0.4)' }}
-              >
-                Hinzufügen
-              </button>
-              {!addSubjectId && addDescription.trim().length > 0 && (
-                <p className="text-[11px] text-warning text-center mt-2">Bitte zuerst ein Fach auswählen</p>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* ── Pending homework list ────────────────────────────── */}
-        {pending.length === 0 && !showAddForm && (
-          <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-success/10 flex items-center justify-center text-3xl">✅</div>
-            <p className="text-text-primary font-bold text-[16px]">Alle Hausaufgaben erledigt!</p>
-            <p className="text-text-muted text-[13px]">Tippe + um neue hinzuzufügen</p>
-          </div>
-        )}
-
-        {pending.map((item) => {
-          const subj = item.subjectId ? resolveSubjectInfo(item.subjectId, profile?.customFaecher) : null
-          const color = subj?.color ?? '#FF9500'
-          const isConfirming = confirmingId === item.id
-          const days = item.dueDate ? daysUntil(item.dueDate) : null
-
-          return (
-            <div
-              key={item.id}
-              className="bg-surface border border-border/60 rounded-2xl overflow-hidden transition-all"
-              style={isConfirming ? { borderColor: 'rgba(74,222,128,0.4)' } : undefined}
+          {!showAddForm && (
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="w-full h-12 rounded-pill flex items-center justify-center gap-2 text-[15px] font-semibold press lg:hidden"
+              style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
             >
-              {/* Subject + meta row */}
-              <div className="flex items-center gap-2 px-4 pt-3.5 pb-1">
-                {subj ? (
-                  <div
-                    className="w-7 h-7 rounded-[8px] flex items-center justify-center text-sm shrink-0"
-                    style={{ backgroundColor: `${color}20` }}
-                  >
-                    {subj.icon}
-                  </div>
-                ) : (
-                  <div className="w-7 h-7 rounded-[8px] bg-surface-hover flex items-center justify-center shrink-0 text-sm">📚</div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="text-[12px] font-bold truncate" style={{ color: subj ? color : 'rgb(var(--color-text-muted))' }}>
-                    {subj?.name ?? 'Kein Fach'}
-                  </p>
-                </div>
-                {item.dueDate && days !== null && (
-                  <span
-                    className="text-[10px] font-bold px-2 py-0.5 rounded-pill shrink-0"
-                    style={{
-                      background: days <= 0 ? 'rgba(255,59,48,0.12)' : days <= 2 ? 'rgba(255,149,0,0.12)' : 'rgba(var(--color-border),0.3)',
-                      color: days <= 0 ? '#FF3B30' : days <= 2 ? '#FF9500' : 'rgb(var(--color-text-muted))',
-                    }}
-                  >
-                    {days === 0 ? 'Heute' : days < 0 ? 'Überfällig' : days === 1 ? 'Morgen' : formatDate(item.dueDate)}
-                  </span>
-                )}
-              </div>
+              <Icon name="plus" size={17} />
+              Hausaufgabe hinzufügen
+            </button>
+          )}
 
-              {/* Description */}
-              <div className="px-4 pb-2">
-                <p className="text-[14px] text-text-primary leading-relaxed">{item.description}</p>
-              </div>
+          {showAddForm && <div className="lg:hidden">{formular}</div>}
 
-              {/* Note title (if from a note) */}
-              {item.noteTitle && (
-                <div className="px-4 pb-2">
-                  <p className="text-[11px] text-text-muted">aus: {item.noteTitle}</p>
-                </div>
-              )}
+          {sortiert.length === 0 ? (
+            <EmptyState
+              title="Nichts offen"
+              note="Hausaufgaben, die du im Unterricht in einer Notiz festhältst, landen automatisch hier. Einzelne kannst du auch direkt eintragen."
+            />
+          ) : (
+            <ListGroup>
+              {sortiert.map((item) => {
+                const subj = item.subjectId ? resolveSubjectInfo(item.subjectId, profile?.customFaecher) : null
+                const isConfirming = confirmingId === item.id
+                const days = item.dueDate ? daysUntil(item.dueDate) : null
 
-              {/* Action row */}
-              <div className="px-4 pb-3.5 pt-1 border-t border-border/30">
-                {isConfirming ? (
-                  <div className="flex gap-2 items-center">
-                    <p className="text-[12px] text-text-secondary flex-1">Wirklich fertig?</p>
-                    <button
-                      onClick={() => setConfirmingId(null)}
-                      className="px-3 py-1.5 rounded-pill text-[11px] font-semibold border border-border text-text-muted hover:bg-surface-hover transition-all press-sm"
-                    >
-                      Zurück
-                    </button>
+                return (
+                  <div key={item.id} className="flex items-start gap-3 px-4 py-3.5 border-b border-border/40 last:border-b-0">
+
+                    {/* Kästchen — der einzige Weg zum Erledigen, deshalb 44 pt groß. */}
                     <button
                       onClick={() => handleComplete(item.id)}
-                      className="px-3 py-1.5 rounded-pill text-[11px] font-bold text-white press-sm"
-                      style={{ background: 'linear-gradient(135deg,#34C759,#28a745)' }}
+                      className="tap-44 -ml-1.5 -mt-1.5 flex items-center justify-center shrink-0 press-sm"
+                      aria-label={isConfirming ? 'Erledigen bestätigen' : 'Als erledigt markieren'}
                     >
-                      Ja, erledigt ✓
+                      <span
+                        className="w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center transition-colors"
+                        style={isConfirming
+                          ? { borderColor: 'rgb(var(--fill-green))', color: 'rgb(var(--fill-green))' }
+                          : { borderColor: 'rgb(var(--color-border))', color: 'transparent' }}
+                      >
+                        <Icon name="check" size={13} />
+                      </span>
                     </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => handleComplete(item.id)}
-                    className="flex items-center gap-2 text-[12px] font-semibold text-text-muted hover:text-success transition-colors press-sm"
-                  >
-                    <div className="w-5 h-5 rounded-full border-2 border-border flex items-center justify-center">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                        <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                    Als erledigt markieren
-                  </button>
-                )}
-              </div>
-            </div>
-          )
-        })}
-      </div>
 
-      {/* FAB */}
-      <button
-        onClick={() => setShowAddForm((v) => !v)}
-        className="fixed bottom-28 right-5 w-14 h-14 rounded-full flex items-center justify-center z-40 press transition-transform"
-        style={{
-          background: 'linear-gradient(135deg, #7C3AED, #9F5FFA)',
-          boxShadow: '0 4px 20px rgba(124,58,237,0.45)',
-        }}
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-          {showAddForm
-            ? <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-            : <path d="M12 5v14M5 12h14" strokeLinecap="round" />}
-        </svg>
-      </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {subj && <SubjectIcon subjectId={item.subjectId!} size="sm" className="!w-4 !h-4" />}
+                        <span className="text-[12px] font-medium text-text-secondary">{subj?.name ?? 'Kein Fach'}</span>
+                        {item.dueDate && days !== null && (
+                          <Tag tone={fristTon(days)} size="sm">
+                            {days === 0 ? 'Heute' : days < 0 ? 'Überfällig' : days === 1 ? 'Morgen' : formatDate(item.dueDate)}
+                          </Tag>
+                        )}
+                      </div>
+
+                      <p className="text-[15px] text-text-primary leading-relaxed mt-1">
+                        {item.description?.trim() || item.noteTitle || 'Ohne Beschreibung'}
+                      </p>
+
+                      {item.noteTitle && item.description?.trim() && (
+                        <p className="text-[12px] text-text-muted mt-0.5 truncate">aus: {item.noteTitle}</p>
+                      )}
+
+                      {isConfirming && (
+                        <div className="flex items-center gap-2 mt-2.5">
+                          <span className="text-[13px] text-text-secondary flex-1">Wirklich fertig?</span>
+                          <button
+                            onClick={() => setConfirmingId(null)}
+                            className="px-3 h-9 rounded-pill text-[13px] font-medium text-text-secondary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm"
+                          >
+                            Zurück
+                          </button>
+                          <button
+                            onClick={() => handleComplete(item.id)}
+                            className="px-3 h-9 rounded-pill text-[13px] font-semibold text-[rgb(var(--fill-green))] bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press-sm"
+                          >
+                            Ja, erledigt
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </ListGroup>
+          )}
+        </div>
+
+        <div className="hidden lg:block lg:order-2 lg:sticky lg:top-6">
+          {formular}
+        </div>
+      </div>
     </div>
   )
 }

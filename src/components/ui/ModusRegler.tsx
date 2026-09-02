@@ -9,7 +9,6 @@ export interface ModusOption {
 }
 
 const MINT = '#34D399'
-const MINT_DARK = '#059669'
 
 // Functions (not plain objects) so AnimatePresence can re-evaluate the exiting card's
 // direction via `custom` after it's no longer part of the render tree — a static exit
@@ -53,9 +52,9 @@ export function ModusRegler({
 
   return (
     <div
-      className="rounded-[24px] p-5 overflow-hidden relative"
+      className="rounded-sheet p-5 overflow-hidden relative"
       style={{
-        background: 'linear-gradient(165deg, #14141f 0%, #0d0d15 100%)',
+        background: '#14141f',
         boxShadow: '0 8px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)',
       }}
     >
@@ -93,7 +92,7 @@ export function ModusRegler({
                 <motion.div
                   layoutId="modus-regler-thumb"
                   className="absolute inset-0 rounded-full"
-                  style={{ background: `linear-gradient(145deg, ${MINT}, ${MINT_DARK})`, boxShadow: '0 2px 14px rgba(52,211,153,0.5)' }}
+                  style={{ background: `${MINT}`, boxShadow: '0 2px 14px rgba(52,211,153,0.5)' }}
                   transition={reduceMotion ? { duration: 0.01 } : { type: 'spring', duration: 0.4, bounce: 0.2 }}
                 />
               )}
@@ -129,8 +128,8 @@ export function ModusRegler({
             className="flex flex-col items-center text-center px-2 pt-1 pb-1"
           >
             <div
-              className="w-14 h-14 rounded-[18px] flex items-center justify-center mb-3"
-              style={{ background: `linear-gradient(145deg, ${MINT}, ${MINT_DARK})`, boxShadow: '0 4px 18px rgba(52,211,153,0.4)' }}
+              className="w-14 h-14 rounded-card flex items-center justify-center mb-3"
+              style={{ background: `${MINT}`, boxShadow: '0 4px 18px rgba(52,211,153,0.4)' }}
             >
               <span className="w-6 h-6" style={{ color: '#0a0a0f' }}>{active.icon}</span>
             </div>

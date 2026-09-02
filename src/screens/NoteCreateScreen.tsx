@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { classifyContent, solveTasksFromText, generateSmartNote, answerQuestion, extractTextFromImage, suggestNoteSubject, analyzeTextBlock } from '../lib/groq'
 import { loadKcForSubject } from '../data/kcLoader'
@@ -6,6 +7,7 @@ import type { HomeworkItem, TextBlockAnalysis } from '../types'
 import { analyzeFileToSmartNote } from '../lib/gemini'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import { RichText } from '../components/ui/RichText'
+import { Icon } from '../components/ui/Icon'
 import type { CanvasPageData } from '../components/ui/DrawingCanvas'
 import { useUser } from '../context/UserContext'
 import { subjects, halfYears } from '../data/mockData'
@@ -117,6 +119,40 @@ function getNextLessonDate(subjectId: string, stundenplan: { slots: { day: numbe
 
 // ── Component ────────────────────────────────────────────────────────────────
 
+// ── Entwurf einer angefangenen Notiz ──────────────────────────────────────
+// Eigener Schluessel, nicht Teil von lernapp_v1: Der Entwurf ist ein
+// Zwischenstand, keine gespeicherte Notiz, und soll das Schema der App nicht
+// anfassen. Er wird geloescht, sobald die Notiz gespeichert oder geleert wird.
+const DRAFT_KEY = 'lernapp_note_draft_v1'
+
+interface NoteDraft { title: string; blocks: NoteBlock[]; savedAt: number }
+
+function blockHasContent(b: NoteBlock): boolean {
+  if (b.type === 'text') return (b as TextBlock).content.trim().length > 0
+  if (b.type === 'photo') return ((b as PhotoBlock).attachments?.length ?? 0) > 0
+  if (b.type === 'drawing') return ((b as DrawingBlock).pages?.length ?? 0) > 0
+  return false
+}
+
+function loadDraft(): NoteDraft | null {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY)
+    if (!raw) return null
+    const d = JSON.parse(raw) as NoteDraft
+    // Aeltere Entwuerfe als ein Tag interessieren niemanden mehr.
+    if (Date.now() - (d.savedAt ?? 0) > 86_400_000) { localStorage.removeItem(DRAFT_KEY); return null }
+    return d
+  } catch { return null }
+}
+
+function saveDraft(d: NoteDraft) {
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)) } catch { /* Speicher voll — Entwurf ist verzichtbar */ }
+}
+
+function clearDraft() {
+  try { localStorage.removeItem(DRAFT_KEY) } catch { /* egal */ }
+}
+
 export function NoteCreateScreen() {
   const { id, folderId } = useParams<{ id?: string; folderId?: string }>()
   const navigate = useNavigate()
@@ -141,11 +177,32 @@ export function NoteCreateScreen() {
 
   const [title, setTitle] = useState(subjectFromUrl ? `${subjectFromUrl.name}: ` : '')
 
-  const [blocks, setBlocks] = useState<NoteBlock[]>(() => [
-    makeTextBlock('text-0'),
-    makePhotoBlock('photo-0'),
-    makeDrawingBlock('drawing-0'),
-  ])
+  const [blocks, setBlocks] = useState<NoteBlock[]>(() => {
+    // Angefangene Notiz wiederherstellen. Bis hierher ging alles verloren,
+    // sobald man versehentlich woanders hin tippte oder die App verliess —
+    // ohne Warnung, ohne Zwischenstand.
+    const draft = loadDraft()
+    if (draft?.blocks?.length) return draft.blocks
+    return [makeTextBlock('text-0'), makePhotoBlock('photo-0'), makeDrawingBlock('drawing-0')]
+  })
+
+  // Entwurf sichern, sobald sich etwas aendert — verzoegert, damit nicht bei
+  // jedem Tastendruck geschrieben wird.
+  useEffect(() => {
+    const hasContent = title.trim().length > 0 || blocks.some(blockHasContent)
+    if (!hasContent) { clearDraft(); return }
+    const id = setTimeout(() => saveDraft({ title, blocks, savedAt: Date.now() }), 600)
+    return () => clearTimeout(id)
+  }, [title, blocks])
+
+  // Beim Schliessen des Fensters warnen, solange etwas Ungespeichertes dasteht.
+  useEffect(() => {
+    const hasContent = title.trim().length > 0 || blocks.some(blockHasContent)
+    if (!hasContent) return
+    const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = '' }
+    window.addEventListener('beforeunload', warn)
+    return () => window.removeEventListener('beforeunload', warn)
+  }, [title, blocks])
 
   // Page menu (3-dot menu on each thumbnail)
   const [pageMenu, setPageMenu] = useState<{ blockId: string; pageId: string } | null>(null)
@@ -519,12 +576,13 @@ export function NoteCreateScreen() {
     blocks.some(b => (b.type === 'text' || b.type === 'photo' || b.type === 'drawing') && b.aiResult !== null)
 
   const doSave = (subjectId: string, resolvedFolderId: string, generatedNote?: GeneratedSmartNote) => {
+    clearDraft()
     const note = buildNote(subjectId, resolvedFolderId)
     saveNote(note, generatedNote ?? buildGeneratedNote())
     setShowSaveModal(false)
     recordStudyDay()
     void addCoins('SMART_NOTE').then((gain) => {
-      if (gain > 0) showCoinToast(gain)
+      if (gain > 0) showCoinToast(gain, 'SMART_NOTE')
       if (noteHasPhotos(note)) setTimeout(showLocalAttachmentToast, gain > 0 ? 2100 : 0)
     })
     if (resolvedFolderId && subjectId) navigate(`/unterricht/${subjectId}/ordner/${resolvedFolderId}`, { replace: true })
@@ -674,12 +732,13 @@ export function NoteCreateScreen() {
       <div key={block.id} className="mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
         {/* Block header */}
         <div className="flex items-center justify-between px-4 pt-3 pb-1">
-          <span className="section-label">
-            {isDefault ? '📝 Mitschrift' : `📝 Textnotiz ${index + 1}`}
+          <span className="section-label flex items-center gap-1.5">
+            <Icon name="pencil" size={13} />
+            {isDefault ? 'Mitschrift' : `Textnotiz ${index + 1}`}
           </span>
           {!isDefault && (
             <button onClick={() => removeBlock(block.id)} className="p-1 rounded-btn hover:bg-danger/10 transition-colors press-sm">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary">
                 <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
               </svg>
             </button>
@@ -708,7 +767,7 @@ export function NoteCreateScreen() {
                   key={i}
                   onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${kw}` : kw })}
                   className="shrink-0 px-2.5 py-1 rounded-pill text-[11px] font-medium border border-dashed active:scale-95 transition-all"
-                  style={{ borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+                  style={{ borderColor: 'rgb(var(--color-accent) / 0.4)', color: 'rgb(var(--color-accent))' }}
                 >
                   + {kw}
                 </button>
@@ -721,12 +780,12 @@ export function NoteCreateScreen() {
         <div className="border-t border-border px-4 py-2 flex items-center justify-between">
           <span className="text-xs text-text-muted">
             {block.aiStatus === 'done' ? (
-              <span className="text-success font-medium flex items-center gap-1">
+              <span className="text-text-primary font-medium flex items-center gap-1">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 Analysiert
               </span>
             ) : block.aiStatus === 'error' ? (
-              <span className="text-danger text-xs truncate max-w-[140px]">{block.aiError}</span>
+              <span className="text-text-primary text-xs truncate max-w-[140px]">{block.aiError}</span>
             ) : null}
           </span>
           <button
@@ -734,8 +793,8 @@ export function NoteCreateScreen() {
             disabled={!canAnalyze}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
               !canAnalyze ? 'bg-surface-hover text-text-muted cursor-not-allowed'
-              : block.aiStatus === 'done' ? 'bg-success/10 text-success border border-success/20 hover:bg-success/15'
-              : 'grad-accent text-white hover:opacity-90'
+              : block.aiStatus === 'done' ? 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] hover:opacity-90'
+              : 'btn-mode hover:opacity-90'
             }`}
           >
             {block.aiStatus === 'analyzing' ? (
@@ -750,14 +809,14 @@ export function NoteCreateScreen() {
 
         {/* Rich text block AI result */}
         {block.textAiResult && (
-          <div className="border-t border-border divide-y divide-border/40" style={{ background: 'rgba(var(--color-accent),0.015)' }}>
+          <div className="border-t border-border divide-y divide-border/40" style={{ background: 'rgb(var(--color-accent) / 0.015)' }}>
 
             {/* KC-Tiefe progress */}
             {block.textAiResult.kcTiefeTotal > 0 && (
               <div className="px-4 py-3">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">KC-Tiefe</p>
-                  <span className="text-[10px] font-medium truncate max-w-[180px]" style={{ color: 'rgb(var(--color-accent))' }}>
+                  <p className="section-label">KC-Tiefe</p>
+                  <span className="text-[11px] font-medium truncate max-w-[180px]" style={{ color: 'rgb(var(--color-accent))' }}>
                     {block.textAiResult.erkanntesTopic}
                   </span>
                 </div>
@@ -770,7 +829,7 @@ export function NoteCreateScreen() {
                         className="flex-1 h-1.5 rounded-full transition-all"
                         style={{
                           background: i < activeIdx
-                            ? 'rgba(var(--color-accent),0.4)'
+                            ? 'rgb(var(--color-accent) / 0.4)'
                             : i === activeIdx
                             ? 'rgb(var(--color-accent))'
                             : 'rgb(var(--color-border))',
@@ -785,7 +844,7 @@ export function NoteCreateScreen() {
                     return (
                       <span
                         key={label}
-                        className="text-[10px]"
+                        className="text-[11px]"
                         style={{ fontWeight: isCurrent ? 700 : 400, color: isCurrent ? 'rgb(var(--color-accent))' : 'rgb(var(--color-text-muted))' }}
                       >
                         {label}
@@ -799,15 +858,15 @@ export function NoteCreateScreen() {
             {/* Vertiefung — one entry per bullet point */}
             {block.textAiResult.elaborations.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2.5">Vertiefung</p>
+                <p className="section-label mb-2.5">Vertiefung</p>
                 <div className="space-y-3">
                   {block.textAiResult.elaborations.map((e, i) => (
                     <div key={i}>
                       <p className="text-xs font-semibold text-text-primary leading-snug">{e.punkt}</p>
                       <p className="text-[11px] text-text-secondary leading-relaxed mt-0.5">{e.vertiefung}</p>
                       {e.eselsbruecke && (
-                        <p className="text-[11px] mt-1 flex items-start gap-1" style={{ color: 'rgb(217 119 6)' }}>
-                          <span className="shrink-0">💡</span>
+                        <p className="text-[11px] mt-1 flex items-start gap-1 text-text-secondary">
+                          <span className="shrink-0 mt-0.5"><Icon name="bulb" size={11} /></span>
                           <span>{e.eselsbruecke}</span>
                         </p>
                       )}
@@ -820,7 +879,7 @@ export function NoteCreateScreen() {
             {/* Definitionen */}
             {block.textAiResult.definitionen.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Definitionen</p>
+                <p className="section-label mb-2">Definitionen</p>
                 <div className="space-y-2">
                   {block.textAiResult.definitionen.map((d, i) => (
                     <div key={i} className="flex gap-1.5">
@@ -835,13 +894,13 @@ export function NoteCreateScreen() {
             {/* Häufige Fehler */}
             {block.textAiResult.haeufigeFehler.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2 flex items-center gap-1">
-                  <span style={{ color: 'rgb(249 115 22)' }}>⚠</span> Häufige Fehler
+                <p className="section-label mb-2 flex items-center gap-1">
+                  <Icon name="warning" size={11} /> Häufige Fehler
                 </p>
                 <ul className="space-y-1.5">
                   {block.textAiResult.haeufigeFehler.map((f, i) => (
                     <li key={i} className="text-[11px] text-text-secondary flex gap-1.5">
-                      <span className="shrink-0 mt-0.5" style={{ color: 'rgb(249 115 22)' }}>•</span>
+                      <span className="shrink-0 mt-0.5 text-text-muted">•</span>
                       <span>{f}</span>
                     </li>
                   ))}
@@ -852,7 +911,7 @@ export function NoteCreateScreen() {
             {/* Verwandte Themen */}
             {block.textAiResult.verbindungen.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Verwandte Themen</p>
+                <p className="section-label mb-2">Verwandte Themen</p>
                 <div className="flex flex-wrap gap-1.5">
                   {block.textAiResult.verbindungen.map((v, i) => (
                     <span key={i} className="px-2.5 py-1 rounded-pill text-[11px] font-medium border border-border text-text-secondary">
@@ -866,14 +925,14 @@ export function NoteCreateScreen() {
             {/* Offene KC-Punkte — click to add to note */}
             {block.textAiResult.offeneKcPunkte.length > 0 && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Noch nicht in deinen Notizen</p>
+                <p className="section-label mb-2">Noch nicht in deinen Notizen</p>
                 <div className="flex flex-wrap gap-1.5">
                   {block.textAiResult.offeneKcPunkte.map((p, i) => (
                     <button
                       key={i}
                       onClick={() => updateBlock(block.id, { content: block.content ? `${block.content}\n${p}` : p })}
                       className="px-2.5 py-1 rounded-pill text-[11px] font-medium border border-dashed active:scale-95 transition-all hover:opacity-80"
-                      style={{ borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+                      style={{ borderColor: 'rgb(var(--color-accent) / 0.4)', color: 'rgb(var(--color-accent))' }}
                     >
                       + {p}
                     </button>
@@ -885,7 +944,7 @@ export function NoteCreateScreen() {
             {/* Klausurhinweis */}
             {block.textAiResult.klausurhinweis && (
               <div className="px-4 py-3">
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">📋 Klausurhinweis</p>
+                <p className="section-label mb-1.5 flex items-center gap-1"><Icon name="clipboard" size={11} />Klausurhinweis</p>
                 <p className="text-[11px] text-text-secondary leading-relaxed">{block.textAiResult.klausurhinweis}</p>
               </div>
             )}
@@ -905,12 +964,13 @@ export function NoteCreateScreen() {
       <div key={block.id} className="mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
         {/* Block header */}
         <div className="flex items-center justify-between px-4 pt-3 pb-1">
-          <span className="section-label">
-            {isDefault ? '📸 Fotoblock' : `📸 Fotonotiz ${index + 1}`}
+          <span className="section-label flex items-center gap-1.5">
+            <Icon name="camera" size={13} />
+            {isDefault ? 'Fotoblock' : `Fotonotiz ${index + 1}`}
           </span>
           {!isDefault && (
             <button onClick={() => removeBlock(block.id)} className="p-1 rounded-btn hover:bg-danger/10 transition-colors press-sm">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary">
                 <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
               </svg>
             </button>
@@ -922,13 +982,13 @@ export function NoteCreateScreen() {
           {block.pdfFile ? (
             <div className="py-2">
               <div className="flex items-center gap-3 p-3 rounded-card border border-border bg-background">
-                <div className="w-10 h-10 rounded-btn bg-accent/10 flex items-center justify-center shrink-0 text-xl">
-                  📄
+                <div className="w-10 h-10 rounded-btn bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center shrink-0 text-text-primary">
+                  <Icon name="document" size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-text-primary text-sm font-medium truncate">{block.pdfFile.name}</p>
                   <p className="text-text-muted text-xs mt-0.5 flex items-center gap-1">
-                    <span className="text-accent font-medium">Gemini</span> analysiert das PDF
+                    <span className="text-text-primary font-medium">Gemini</span> analysiert das PDF
                   </p>
                 </div>
                 <button
@@ -995,15 +1055,15 @@ export function NoteCreateScreen() {
                   >
                     <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" /></svg>
                   </button>
-                  <div className="absolute bottom-0.5 left-0.5 bg-black/50 rounded px-1">
-                    <span className="text-[9px] text-white font-medium">{i + 1}</span>
+                  <div className="absolute bottom-0.5 left-0.5 bg-black/50 rounded-chip px-1">
+                    <span className="text-[11px] text-white font-medium">{i + 1}</span>
                   </div>
                 </div>
               ))}
               {block.pdfLoading && (
                 <div className="aspect-square rounded-card border border-border bg-background flex flex-col items-center justify-center gap-1">
                   <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                  <span className="text-[9px] text-text-muted">PDF…</span>
+                  <span className="text-[11px] text-text-muted">PDF…</span>
                 </div>
               )}
               {/* Add more — only when below limit */}
@@ -1022,7 +1082,7 @@ export function NoteCreateScreen() {
           )}
           {/* Limit hint */}
           {block.attachments.length >= PHOTO_LIMIT && (
-            <p className="text-[10px] text-text-muted pb-2 px-1">Max. {PHOTO_LIMIT} Fotos pro Block · mehr mit Pro</p>
+            <p className="text-[11px] text-text-muted pb-2 px-1">Max. {PHOTO_LIMIT} Fotos pro Block · mehr mit Pro</p>
           )}
         </div>
 
@@ -1030,12 +1090,12 @@ export function NoteCreateScreen() {
         <div className="border-t border-border px-4 py-2 flex items-center justify-between">
           <span className="text-xs text-text-muted">
             {block.aiStatus === 'done' ? (
-              <span className="text-success font-medium flex items-center gap-1">
+              <span className="text-text-primary font-medium flex items-center gap-1">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 Analysiert
               </span>
             ) : block.aiStatus === 'error' ? (
-              <span className="text-danger text-xs truncate max-w-[140px]">{block.aiError}</span>
+              <span className="text-text-primary text-xs truncate max-w-[140px]">{block.aiError}</span>
             ) : null}
           </span>
           <button
@@ -1043,8 +1103,8 @@ export function NoteCreateScreen() {
             disabled={!canAnalyze}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
               !canAnalyze ? 'bg-surface-hover text-text-muted cursor-not-allowed'
-              : block.aiStatus === 'done' ? 'bg-success/10 text-success border border-success/20 hover:bg-success/15'
-              : 'grad-accent text-white hover:opacity-90'
+              : block.aiStatus === 'done' ? 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] hover:opacity-90'
+              : 'btn-mode hover:opacity-90'
             }`}
           >
             {block.aiStatus === 'analyzing' ? (
@@ -1064,7 +1124,7 @@ export function NoteCreateScreen() {
             <div>
               <button
                 onClick={() => updateBlock(block.id, { transcriptionOpen: !block.transcriptionOpen } as Partial<PhotoBlock>)}
-                className="flex items-center gap-2 text-[10px] font-bold text-text-muted uppercase tracking-wider hover:text-text-secondary transition-colors"
+                className="flex items-center gap-2 section-label hover:text-text-secondary transition-colors"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`transition-transform ${block.transcriptionOpen ? '' : '-rotate-90'}`}>
                   <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -1082,12 +1142,12 @@ export function NoteCreateScreen() {
             {block.aiResult.tasks.length > 0 && (
               <div className="space-y-4">
                 {block.aiResult.tasks.length > 1 && (
-                  <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider">{block.aiResult.tasks.length} Aufgaben gelöst</p>
+                  <p className="section-label">{block.aiResult.tasks.length} Aufgaben gelöst</p>
                 )}
                 {block.aiResult.tasks.map((task, ti) => (
                   <div key={ti} className={`${ti > 0 ? 'pt-4 border-t border-border' : ''}`}>
                     {block.aiResult!.tasks.length > 1 && (
-                      <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-1.5">Aufgabe {ti + 1}</p>
+                      <p className="text-[11px] font-bold text-text-primary uppercase tracking-wider mb-1.5">Aufgabe {ti + 1}</p>
                     )}
                     {task.question && (
                       <p className="text-xs text-text-muted italic mb-2"><MathRenderer text={task.question} /></p>
@@ -1095,13 +1155,13 @@ export function NoteCreateScreen() {
                     <ol className="space-y-1.5 mb-2">
                       {task.steps.map((step, i) => (
                         <li key={i} className="flex gap-2 items-start text-sm text-text-secondary">
-                          <span className="w-5 h-5 rounded-full bg-accent/10 text-accent text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                          <span className="w-5 h-5 rounded-full bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary text-xs font-bold tabular-nums flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
                           <span className="leading-relaxed"><MathRenderer text={step} /></span>
                         </li>
                       ))}
                     </ol>
                     <div className="px-3 py-2 rounded-btn mb-2" style={{ backgroundColor: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
-                      <p className="text-xs font-bold text-success mb-0.5">Ergebnis</p>
+                      <p className="text-xs font-bold text-text-primary mb-0.5">Ergebnis</p>
                       <p className="text-sm text-text-primary font-medium"><MathRenderer text={task.answer} /></p>
                     </div>
                     {task.proof && (
@@ -1118,7 +1178,7 @@ export function NoteCreateScreen() {
             {/* Summary */}
             {block.aiResult.summary && (
               <div>
-                <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Zusammenfassung</p>
+                <p className="section-label mb-1.5">Zusammenfassung</p>
                 <div className="text-text-secondary text-sm leading-relaxed"><RichText text={block.aiResult.summary} /></div>
               </div>
             )}
@@ -1162,11 +1222,11 @@ export function NoteCreateScreen() {
       <div key={block.id} className="mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-3 pb-2 border-b border-border">
-          <span className="section-label">✏️ Schreibblock</span>
+          <span className="section-label flex items-center gap-1.5"><Icon name="pencil" size={13} />Schreibblock</span>
           <div className="flex items-center gap-2">
             {!isDefault && (
               <button onClick={() => removeBlock(block.id)} className="p-1 rounded-btn hover:bg-danger/10 transition-colors press-sm">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary">
                   <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                 </svg>
               </button>
@@ -1190,7 +1250,7 @@ export function NoteCreateScreen() {
                 {/* Thumbnail card */}
                 <button
                   onClick={openCanvas}
-                  className="absolute inset-0 rounded-lg overflow-hidden press-sm transition-shadow"
+                  className="absolute inset-0 rounded-chip overflow-hidden press-sm transition-shadow"
                   style={{
                     background: '#fff',
                     border: '1.5px solid rgba(0,0,0,0.1)',
@@ -1243,7 +1303,7 @@ export function NoteCreateScreen() {
                 {/* Mini popup */}
                 {pageMenu?.blockId === block.id && pageMenu?.pageId === page.id && (
                   <div
-                    className="absolute rounded-xl overflow-hidden"
+                    className="absolute rounded-btn overflow-hidden"
                     style={{
                       top: 26, ...(i === 0 ? { left: 0 } : { right: 0 }),
                       background: '#2C2C2E',
@@ -1273,11 +1333,11 @@ export function NoteCreateScreen() {
             {/* Add page tile — looks like a new page */}
             <button
               onClick={openCanvas}
-              className="shrink-0 rounded-lg press-sm relative overflow-hidden"
+              className="shrink-0 rounded-chip press-sm relative overflow-hidden"
               style={{
                 width: 68, height: 96,
                 background: 'rgb(var(--color-surface))',
-                border: '1.5px dashed rgba(var(--color-border),0.7)',
+                border: '1.5px dashed rgb(var(--color-border) / 0.7)',
               }}
               title="Neue Seite im Schreibblock"
             >
@@ -1287,8 +1347,8 @@ export function NoteCreateScreen() {
                   position: 'absolute',
                   left: 10, top: 6, right: 4, bottom: 10,
                   borderRadius: 5,
-                  background: 'rgba(var(--color-border),0.18)',
-                  border: '1px solid rgba(var(--color-border),0.35)',
+                  background: 'rgb(var(--color-border) / 0.18)',
+                  border: '1px solid rgb(var(--color-border) / 0.35)',
                 }}
               />
               {/* Main page face */}
@@ -1298,7 +1358,7 @@ export function NoteCreateScreen() {
                   left: 6, top: 10, right: 8, bottom: 6,
                   borderRadius: 5,
                   background: 'rgb(var(--color-surface))',
-                  border: '1.2px solid rgba(var(--color-border),0.5)',
+                  border: '1.2px solid rgb(var(--color-border) / 0.5)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1306,7 +1366,7 @@ export function NoteCreateScreen() {
               >
                 <div style={{
                   width: 20, height: 20, borderRadius: '50%',
-                  background: 'rgba(var(--color-accent),0.15)',
+                  background: 'rgb(var(--color-accent) / 0.15)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-accent))" strokeWidth="2.8" strokeLinecap="round">
@@ -1344,7 +1404,7 @@ export function NoteCreateScreen() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-2 py-8" style={{ backgroundColor: 'rgb(var(--color-surface))' }}>
-                <div className="w-11 h-11 rounded-[14px] flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#7C3AED,#5B21B6)' }}>
+                <div className="w-11 h-11 rounded-icon flex items-center justify-center" style={{ background: '#7C3AED', backgroundImage: 'var(--subj-fade)' }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                     <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -1365,7 +1425,7 @@ export function NoteCreateScreen() {
             <button
               onClick={openCanvas}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[11px] font-semibold press-sm"
-              style={{ background: 'rgba(var(--color-accent),0.1)', border: '1px solid rgba(var(--color-accent),0.3)', color: 'rgb(var(--color-accent))' }}
+              style={{ background: 'rgb(var(--color-accent) / 0.1)', border: '1px solid rgb(var(--color-accent) / 0.3)', color: 'rgb(var(--color-accent))' }}
             >
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
@@ -1391,12 +1451,12 @@ export function NoteCreateScreen() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" strokeWidth="2.2" className="shrink-0 mt-0.5">
                   <circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" strokeLinecap="round" />
                 </svg>
-                <span className="text-[12px] text-danger">{block.aiError}</span>
+                <span className="text-[12px] text-text-primary">{block.aiError}</span>
               </div>
             )}
             {block.aiStatus === 'done' && block.aiResult && (
               <div className="px-4 py-3 space-y-3">
-                <div className="flex items-start gap-2 rounded-xl px-3 py-2.5" style={{ backgroundColor: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
+                <div className="flex items-start gap-2 rounded-btn px-3 py-2.5" style={{ backgroundColor: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)' }}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.2" className="shrink-0 mt-0.5">
                     <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /><path d="M12 9v4M12 17h.01" strokeLinecap="round" />
                   </svg>
@@ -1411,7 +1471,7 @@ export function NoteCreateScreen() {
                       <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </summary>
-                  <p className="mt-2 text-[12px] text-text-secondary leading-relaxed whitespace-pre-wrap font-mono bg-surface-hover rounded-lg px-3 py-2.5">
+                  <p className="mt-2 text-[12px] text-text-secondary leading-relaxed whitespace-pre-wrap font-mono bg-surface-hover rounded-chip px-3 py-2.5">
                     {block.transcription}
                   </p>
                 </details>
@@ -1427,7 +1487,7 @@ export function NoteCreateScreen() {
                     <div className="flex flex-wrap gap-1.5">
                       {block.aiResult.keywords.map((k) => (
                         <span key={k} className="px-2.5 py-1 rounded-pill text-[11px] font-semibold"
-                          style={{ background: 'rgba(var(--color-accent),0.1)', color: 'rgb(var(--color-accent))' }}>{k}</span>
+                          style={{ background: 'rgb(var(--color-accent) / 0.1)', color: 'rgb(var(--color-accent))' }}>{k}</span>
                       ))}
                     </div>
                   </div>
@@ -1459,9 +1519,9 @@ export function NoteCreateScreen() {
     <div key={block.id} className="mx-4 mb-3 bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pt-3 pb-1">
-        <span className="section-label">📚 Hausaufgaben</span>
+        <span className="section-label flex items-center gap-1.5"><Icon name="book" size={13} />Hausaufgaben</span>
         <button onClick={() => removeBlock(block.id)} className="p-1 rounded-btn hover:bg-danger/10 transition-colors press-sm">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-danger">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary">
             <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
           </svg>
         </button>
@@ -1470,7 +1530,7 @@ export function NoteCreateScreen() {
       {/* Subject pills — only when no note-level subject */}
       {!selectedSubjectId && (
         <div className="px-4 pb-2">
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-1.5">Fach</p>
+          <p className="section-label mb-1.5">Fach</p>
           <div className="flex flex-wrap gap-1.5">
             {profileSubjects.map((s) => (
               <button
@@ -1479,14 +1539,15 @@ export function NoteCreateScreen() {
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-[11px] font-semibold border transition-all press-sm"
                 style={block.subjectId === s.id
                   ? { backgroundColor: s.color, borderColor: 'transparent', color: 'white' }
-                  : { borderColor: 'rgba(var(--color-border),0.6)', color: 'rgb(var(--color-text-secondary))' }}
+                  : { borderColor: 'rgb(var(--color-border) / 0.6)', color: 'rgb(var(--color-text-secondary))' }}
               >
-                {s.icon} {s.name}
+                <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
+                    {s.name}
               </button>
             ))}
           </div>
           {!block.subjectId && (
-            <p className="text-[10px] text-warning mt-1.5">Wähle ein Fach, damit die HA im Hausaufgabenheft erscheint</p>
+            <p className="text-[11px] text-text-secondary mt-1.5">Wähle ein Fach, damit die HA im Hausaufgabenheft erscheint</p>
           )}
         </div>
       )}
@@ -1508,7 +1569,7 @@ export function NoteCreateScreen() {
         {/* Due date + next lesson button */}
         <div>
           <div className="flex items-center gap-2">
-            <label className="text-[11px] font-bold text-text-muted uppercase tracking-wider shrink-0 w-16">Abgabe</label>
+            <label className="section-label shrink-0 w-16">Abgabe</label>
             <input
               type="date"
               value={block.dueDate}
@@ -1522,7 +1583,7 @@ export function NoteCreateScreen() {
                 className="flex items-center gap-1 px-2.5 py-2 rounded-card text-[11px] font-semibold border transition-all press-sm whitespace-nowrap shrink-0"
                 style={block.dueDate === nextLesson
                   ? { background: 'rgb(var(--color-accent))', borderColor: 'transparent', color: 'white' }
-                  : { borderColor: 'rgba(var(--color-accent),0.4)', color: 'rgb(var(--color-accent))' }}
+                  : { borderColor: 'rgb(var(--color-accent) / 0.4)', color: 'rgb(var(--color-accent))' }}
               >
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round" />
@@ -1532,7 +1593,7 @@ export function NoteCreateScreen() {
             )}
           </div>
           {nextLesson && block.dueDate === nextLesson && (
-            <p className="text-[10px] text-accent mt-1 pl-[72px]">
+            <p className="text-[11px] text-text-primary mt-1 pl-[72px]">
               → {new Date(nextLesson + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: 'short' })}
             </p>
           )}
@@ -1541,7 +1602,7 @@ export function NoteCreateScreen() {
         {/* Separator */}
         <div className="flex items-center gap-2">
           <div className="flex-1 h-px bg-border/60" />
-          <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">KI-Hilfe · optional</span>
+          <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">KI-Hilfe · optional</span>
           <div className="flex-1 h-px bg-border/60" />
         </div>
 
@@ -1562,7 +1623,7 @@ export function NoteCreateScreen() {
             className={`flex items-center gap-2 px-3 py-2 rounded-card text-xs font-semibold transition-all press-sm ${
               !block.description.trim()
                 ? 'bg-surface-hover text-text-muted cursor-not-allowed'
-                : 'grad-accent text-white hover:opacity-90'
+                : 'btn-mode hover:opacity-90'
             }`}
           >
             {block.aiLoading ? (
@@ -1577,10 +1638,10 @@ export function NoteCreateScreen() {
         {block.aiHelp && (
           <div className="bg-accent/5 border border-accent/15 rounded-card px-3 py-2.5">
             <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[10px] font-bold text-accent uppercase tracking-wider">KI-Hilfe</p>
+              <p className="text-[11px] font-bold text-text-primary uppercase tracking-wider">KI-Hilfe</p>
               <button
                 onClick={() => updateBlock(block.id, { aiHelp: null })}
-                className="text-text-muted hover:text-danger text-[10px] transition-colors"
+                className="text-text-muted hover:text-text-primary text-[11px] transition-colors"
               >
                 Löschen
               </button>
@@ -1608,13 +1669,11 @@ export function NoteCreateScreen() {
         </button>
         <div className="flex items-center gap-2">
           {subject && (
-            <div className="w-6 h-6 rounded flex items-center justify-center text-sm" style={{ backgroundColor: `${subject.color}22` }}>
-              {subject.icon}
-            </div>
+            <SubjectIcon subjectId={subject.id} size="sm" className="!w-6 !h-6" />
           )}
           <span className="text-text-primary font-semibold text-sm">Neue Notiz</span>
         </div>
-        <button onClick={handleSavePress} className="text-accent text-sm font-semibold hover:opacity-80 transition-opacity px-1 py-1">
+        <button onClick={handleSavePress} className="text-text-primary text-sm font-semibold hover:opacity-80 transition-opacity px-1 py-1">
           Speichern
         </button>
       </div>
@@ -1639,7 +1698,8 @@ export function NoteCreateScreen() {
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-pill text-xs font-medium border transition-all ${selectedSubjectId === s.id ? 'text-white border-transparent' : 'border-border text-text-muted hover:bg-surface-hover'}`}
                 style={selectedSubjectId === s.id ? { backgroundColor: s.color } : undefined}
               >
-                {s.icon} {s.name}
+                <SubjectIcon subjectId={s.id} size="sm" className="!w-4 !h-4" />
+                    {s.name}
               </button>
             ))}
           </div>
@@ -1647,7 +1707,9 @@ export function NoteCreateScreen() {
       )}
 
       {/* SCROLLABLE ZONE */}
-      <div className="flex-1 overflow-y-auto">
+      {/* Eine Notiz ist Text — ueber die volle Breite eines Schreibtischs
+          liest sie sich nicht. Gleiche Lesebreite wie die fertige Smart Note. */}
+      <div className="flex-1 overflow-y-auto lg:px-6 lg:max-w-[920px] lg:w-full">
 
         {/* Title */}
         <input
@@ -1670,32 +1732,32 @@ export function NoteCreateScreen() {
 
         {/* Add more blocks */}
         <div className="mx-4 mb-4">
-          <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider mb-2">Weitere Felder</p>
+          <p className="section-label mb-2">Weitere Felder</p>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={addHomeworkBlock}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-accent hover:bg-accent/5 transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-text-primary transition-all active:scale-95"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" strokeLinecap="round" strokeLinejoin="round" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
               Hausaufgaben
             </button>
             <button
               onClick={addTextBlock}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-accent hover:bg-accent/5 transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-text-primary transition-all active:scale-95"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19" strokeLinecap="round" /><line x1="5" y1="12" x2="19" y2="12" strokeLinecap="round" /></svg>
               Textnotiz
             </button>
             <button
               onClick={addPhotoBlock}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-accent hover:bg-accent/5 transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-text-primary transition-all active:scale-95"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19" strokeLinecap="round" /><line x1="5" y1="12" x2="19" y2="12" strokeLinecap="round" /></svg>
               Fotonotiz
             </button>
             <button
               onClick={addDrawingBlock}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-accent hover:bg-accent/5 transition-all active:scale-95"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-card border border-dashed border-border text-text-muted text-xs font-medium hover:border-accent hover:text-text-primary transition-all active:scale-95"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" /></svg>
               Schreibnotiz
@@ -1706,7 +1768,7 @@ export function NoteCreateScreen() {
         {/* Q&A */}
         {(qaItems.length > 0 || askLoading) && (
           <div className="mx-4 mb-4 space-y-2">
-            <p className="text-[10px] font-bold text-text-muted uppercase tracking-wider px-1">Fragen &amp; Antworten</p>
+            <p className="section-label px-1">Fragen &amp; Antworten</p>
             {qaItems.map((item, i) => (
               <div key={i} className="bg-surface border border-border rounded-card overflow-hidden">
                 <button
@@ -1714,7 +1776,7 @@ export function NoteCreateScreen() {
                   className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-surface-hover transition-colors"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent shrink-0" strokeWidth="2.5">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-text-primary shrink-0" strokeWidth="2.5">
                       <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span className="text-text-primary text-sm font-medium truncate">{item.q}</span>
@@ -1763,7 +1825,7 @@ export function NoteCreateScreen() {
             <button
               onClick={() => void submitAsk()}
               disabled={!askInput.trim()}
-              className={`w-8 h-8 rounded-btn flex items-center justify-center shrink-0 transition-all ${askInput.trim() ? 'grad-accent text-white hover:opacity-90 active:scale-95' : 'bg-surface-hover text-text-muted cursor-not-allowed'}`}
+              className={`w-8 h-8 rounded-btn flex items-center justify-center shrink-0 transition-all ${askInput.trim() ? 'btn-mode hover:opacity-90 active:scale-95' : 'bg-surface-hover text-text-muted cursor-not-allowed'}`}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" strokeLinecap="round" strokeLinejoin="round" />
@@ -1787,7 +1849,7 @@ export function NoteCreateScreen() {
             </div>
             <button
               onClick={() => setShowAskBar(true)}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-2.5 rounded-card text-sm font-semibold border border-accent/40 text-accent hover:bg-accent/5 active:scale-95 transition-all duration-150"
+              className="shrink-0 flex items-center gap-1.5 px-3 py-2.5 rounded-card text-sm font-semibold border border-accent/40 text-text-primary hover:bg-accent/5 active:scale-95 transition-all duration-150"
             >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" strokeLinecap="round" strokeLinejoin="round" />
@@ -1803,7 +1865,7 @@ export function NoteCreateScreen() {
         <div className="fixed inset-0 z-[70] bg-black/95 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
           <img src={lightbox} alt="Vollansicht" className="max-w-full max-h-full object-contain rounded-card" />
           <button
-            className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+            className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center tap-44"
             onClick={() => setLightbox(null)}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -1831,7 +1893,7 @@ export function NoteCreateScreen() {
               {folderId && (
                 <button
                   onClick={() => { setShowCancelConfirm(false); confirmSave(folderId) }}
-                  className="w-full py-3 rounded-card grad-accent text-white text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
+                  className="w-full h-12 rounded-pill btn-mode text-sm font-semibold hover:opacity-90 active:scale-95 transition-all"
                 >
                   {currentFolder ? `In „${currentFolder.name}" speichern` : 'Im Ordner speichern'}
                 </button>
@@ -1841,8 +1903,8 @@ export function NoteCreateScreen() {
                   setShowCancelConfirm(false)
                   navigate('/unterricht', { replace: true })
                 }}
-                className="w-full py-3 rounded-card border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
-                style={{ borderColor: 'rgba(248,113,113,0.3)', color: '#F87171' }}
+                className="w-full h-12 rounded-pill border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
+                style={{ borderColor: 'rgb(var(--fill-red) / 0.3)', color: 'rgb(var(--fill-red))' }}
               >
                 Trotzdem verlassen
               </button>
@@ -1850,7 +1912,7 @@ export function NoteCreateScreen() {
                 onClick={() => {
                   setShowCancelConfirm(false)
                 }}
-                className="w-full py-3 rounded-card bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
+                className="w-full h-12 rounded-pill bg-surface-hover text-text-secondary text-sm font-semibold hover:bg-border transition-all active:scale-95"
               >
                 Zurück
               </button>
@@ -1872,7 +1934,7 @@ export function NoteCreateScreen() {
                   <p className="text-text-muted text-xs mt-0.5">Kein Fach ausgewählt — wähle eine Option</p>
                 </div>
                 <button onClick={() => navigate(-1)} className="p-1.5 rounded-btn hover:bg-danger/5 transition-colors -mt-0.5 -mr-1">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                     <polyline points="3 6 5 6 21 6" strokeLinecap="round" />
                     <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M10 11v6M14 11v6" strokeLinecap="round" />
@@ -1890,16 +1952,16 @@ export function NoteCreateScreen() {
               {suggestionStatus === 'done' && suggestion && (
                 <button onClick={acceptSuggestion} className="w-full flex items-center gap-3 px-4 py-3.5 bg-accent/5 border border-accent/20 rounded-card text-left hover:bg-accent/10 active:scale-95 transition-all">
                   <div className="w-9 h-9 rounded-btn bg-accent/10 flex items-center justify-center shrink-0">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent" strokeWidth="2">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-text-primary" strokeWidth="2">
                       <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className="text-[10px] font-bold text-accent uppercase tracking-wider">KI-Vorschlag</span>
+                    <span className="text-[11px] font-bold text-text-primary uppercase tracking-wider">KI-Vorschlag</span>
                     <p className="text-text-primary text-sm font-semibold">{suggestion.subjectName}</p>
                     <p className="text-text-muted text-xs mt-0.5 line-clamp-1">{suggestion.reason}</p>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent" strokeWidth="2.5"><path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-text-primary" strokeWidth="2.5"><path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" /></svg>
                 </button>
               )}
               <button onClick={() => setShowNoSubjectModal(false)} className="w-full flex items-center gap-3 px-4 py-3.5 bg-surface border border-border rounded-card text-left hover:bg-surface-hover active:scale-95 transition-all">
@@ -1915,7 +1977,7 @@ export function NoteCreateScreen() {
                 </div>
               </button>
               <button onClick={saveToOhneFach} className="w-full flex items-center gap-3 px-4 py-3.5 bg-surface border border-border rounded-card text-left hover:bg-surface-hover active:scale-95 transition-all">
-                <div className="w-9 h-9 rounded-btn bg-surface-hover flex items-center justify-center shrink-0 text-base">📁</div>
+                <div className="w-9 h-9 rounded-btn bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center shrink-0 text-text-primary"><Icon name="folder" size={17} /></div>
                 <div>
                   <p className="text-text-primary text-sm font-medium">Schnellnotizen</p>
                   <p className="text-text-muted text-xs mt-0.5">
@@ -1944,10 +2006,10 @@ export function NoteCreateScreen() {
                 <div className="flex items-start justify-between">
                   <div>
                     <h2 className="text-base font-bold text-text-primary">Wo speichern?</h2>
-                    <p className="text-text-muted text-xs mt-0.5">{subject ? `${subject.icon} ${subject.name}` : 'Kein Fach'}</p>
+                    <p className="text-text-muted text-xs mt-0.5">{subject ? subject.name : 'Kein Fach'}</p>
                   </div>
                   <button onClick={() => navigate(-1)} className="p-1.5 rounded-btn hover:bg-danger/5 transition-colors -mt-0.5 -mr-1">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                       <polyline points="3 6 5 6 21 6" strokeLinecap="round" />
                       <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" strokeLinecap="round" strokeLinejoin="round" />
                       <path d="M10 11v6M14 11v6" strokeLinecap="round" />
@@ -1961,7 +2023,7 @@ export function NoteCreateScreen() {
                   className={`w-full flex items-center gap-3 px-5 py-3.5 text-left hover:bg-surface-hover transition-colors border-b border-border ${selectedFolderId === '' ? 'bg-accent/5' : ''}`}
                 >
                   <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 icon-accent">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-accent"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="text-text-primary"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-text-primary">Notizen</p>
@@ -1972,7 +2034,7 @@ export function NoteCreateScreen() {
                   <div key={halfYear.id}>
                     <div className="px-5 py-2 bg-background/40">
                       <span className="text-xs font-semibold text-text-muted">{halfYear.name}</span>
-                      {halfYear.isCurrent && <span className="ml-2 text-xs text-accent font-medium">Aktuell</span>}
+                      {halfYear.isCurrent && <span className="ml-2 text-xs text-text-primary font-medium">Aktuell</span>}
                     </div>
                     {folders.map((folder) => (
                       <button
@@ -1987,7 +2049,7 @@ export function NoteCreateScreen() {
                         </div>
                         <p className="text-sm font-medium text-text-primary flex-1 truncate">{folder.name}</p>
                         {selectedFolderId === folder.id && (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-accent" strokeWidth="2.5"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-text-primary" strokeWidth="2.5"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                         )}
                       </button>
                     ))}
@@ -2023,7 +2085,7 @@ export function NoteCreateScreen() {
           <div className="relative w-full max-w-lg bg-surface rounded-t-2xl px-5 pt-5 shadow-2xl" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom, 0px))' }}>
             <div className="w-10 h-1 rounded-full bg-border mx-auto mb-4" />
             <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(135deg,#7C3AED,#5B21B6)' }}>
+              <div className="w-10 h-10 rounded-btn flex items-center justify-center shrink-0" style={{ background: '#7C3AED', backgroundImage: 'var(--subj-fade)' }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                   <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
@@ -2034,7 +2096,7 @@ export function NoteCreateScreen() {
               </div>
             </div>
             {smartNoteError.length > 0 && (
-              <p className="text-xs text-danger mb-3">{smartNoteError}</p>
+              <p className="text-xs text-text-primary mb-3">{smartNoteError}</p>
             )}
             <div className="flex gap-3">
               <button
@@ -2048,7 +2110,7 @@ export function NoteCreateScreen() {
                 onClick={runSmartNoteAndSave}
                 disabled={smartNoteLoading}
                 className="flex-1 py-3 rounded-card text-sm font-bold text-white flex items-center justify-center gap-2 active:scale-[0.98] transition-all disabled:opacity-60"
-                style={{ background: 'linear-gradient(135deg,#7C3AED,#5B21B6)' }}
+                style={{ background: '#7C3AED', backgroundImage: 'var(--subj-fade)' }}
               >
                 {smartNoteLoading ? (
                   <>

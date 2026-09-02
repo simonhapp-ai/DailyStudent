@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
 import { getActiveStreak } from '../../lib/streak'
 import { StreakInfoSheet } from './StreakInfoSheet'
+import { Icon } from './Icon'
 
 // inline=true: no fixed positioning — use inside a FixedBadges container
 export function StreakBadge({ inline = false }: { inline?: boolean }) {
@@ -25,10 +26,10 @@ export function StreakBadge({ inline = false }: { inline?: boolean }) {
   const pillStyle: React.CSSProperties = {
     padding: '5px 10px 5px 8px',
     borderRadius: '20px',
-    background: 'rgba(var(--color-surface), 0.92)',
-    border: '1px solid rgba(var(--color-border), 0.7)',
-    backdropFilter: 'blur(14px)',
-    WebkitBackdropFilter: 'blur(14px)',
+    background: 'rgb(var(--color-surface) / 0.92)',
+    border: '1px solid rgb(var(--color-border) / 0.7)',
+    backdropFilter: 'blur(var(--material-blur-thin))',
+    WebkitBackdropFilter: 'blur(var(--material-blur-thin))',
     ...(!inline && {
       position: 'fixed',
       top: 'max(14px, calc(env(safe-area-inset-top, 0px) + 10px))',
@@ -46,7 +47,7 @@ export function StreakBadge({ inline = false }: { inline?: boolean }) {
         className={`${inline ? '' : 'fixed z-40 '}flex items-center gap-1.5 select-none press-sm`}
         style={pillStyle}
       >
-        <span className="text-[14px] leading-none" aria-hidden>🔥</span>
+        <Icon name="flame" size={15} filled />
         <span
           className="font-bold tabular-nums leading-none"
           style={{ color: 'rgb(var(--color-text-primary))', fontSize: '13px' }}

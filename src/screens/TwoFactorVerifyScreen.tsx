@@ -76,17 +76,17 @@ export function TwoFactorVerifyScreen({ onVerified }: Props) {
         <img
           src="/logo.png"
           alt="DailyStudent"
-          className="w-16 h-16 rounded-[22px] mx-auto mb-4 shadow-lg object-cover"
+          className="w-16 h-16 rounded-card mx-auto mb-4 shadow-lg object-cover"
         />
         <h1 className="text-2xl font-bold text-foreground">DailyStudent</h1>
         <p className="text-sm text-muted mt-1">Zwei-Faktor-Authentifizierung</p>
       </div>
 
-      <div className="w-full max-w-sm bg-surface rounded-2xl shadow-card-adaptive border border-border/60 p-6">
+      <div className="w-full max-w-sm bg-surface rounded-card shadow-card-adaptive border border-border/60 p-6">
 
         <div
-          className="w-12 h-12 rounded-[14px] flex items-center justify-center mb-4 mx-auto"
-          style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+          className="w-12 h-12 rounded-icon flex items-center justify-center mb-4 mx-auto"
+          style={{ background: '#8b5cf6' }}
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="5" y="11" width="14" height="10" rx="2" />
@@ -110,18 +110,18 @@ export function TwoFactorVerifyScreen({ onVerified }: Props) {
             value={code}
             onChange={handleCodeChange}
             autoComplete="one-time-code"
-            className="w-full bg-background border border-border rounded-xl px-4 py-4 text-center text-3xl font-bold tracking-[0.5em] text-foreground placeholder:text-muted/30 focus:outline-none focus:border-accent transition-colors"
+            className="w-full bg-background border border-border rounded-btn px-4 py-4 text-center text-3xl font-bold tracking-[0.5em] text-foreground placeholder:text-muted/30 focus:outline-none focus:border-accent transition-colors"
           />
 
           {error && (
-            <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-center">{error}</p>
+            <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-center">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={loading || code.length < 6 || !challengeId}
-            className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+            className="w-full rounded-btn px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+            style={{ background: '#8b5cf6' }}
           >
             {loading ? (
               <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />

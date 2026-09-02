@@ -1,230 +1,409 @@
+import { useMemo } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
+import { QuickNotesIcon } from './SubjectIcon'
+import { Icon, type IconName } from './Icon'
+import { SubjectIcon } from './SubjectIcon'
+import { resolveSubjectInfo } from '../../data/subjectInfo'
+import { isPlanenPath, PLANEN_HOME, modeForPath, MODE_HOME, type AppMode } from '../../lib/appMode'
+import { UNTERRICHT_TIPS, KLAUSUR_TIPS, tipOfTheDay, type Tip } from '../../data/tips'
 
-const NAV_ITEMS = [
-  {
-    label: 'Übersicht',
-    path: '/dashboard',
-    icon: (active: boolean) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor" fillOpacity={active ? 0.15 : 0} />
-        <rect x="13" y="3" width="8" height="8" rx="2" fill="currentColor" fillOpacity={active ? 0.15 : 0} />
-        <rect x="3" y="13" width="8" height="8" rx="2" fill="currentColor" fillOpacity={active ? 0.15 : 0} />
-        <rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor" fillOpacity={active ? 0.15 : 0} />
-      </svg>
-    ),
-  },
-  {
-    label: 'Unterricht',
-    path: '/unterricht',
-    icon: (active: boolean) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"
-          fill="currentColor" fillOpacity={active ? 0.12 : 0} />
-        <path d="M14 2v6h6" />
-        <line x1="16" y1="13" x2="8" y2="13" />
-        <line x1="16" y1="17" x2="8" y2="17" />
-        <line x1="10" y1="9" x2="8" y2="9" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Klausurmodus',
-    path: '/klausurmodus',
-    icon: (active: boolean) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 10l10-5 10 5-10 5z" fill="currentColor" fillOpacity={active ? 0.12 : 0} />
-        <path d="M22 10v6M6 12v5c3 3 9 3 12 0v-5" />
-      </svg>
-    ),
-  },
-  {
-    label: 'Kalender',
-    path: '/kalender',
-    icon: (active: boolean) => (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2.2 : 1.8} strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="3" fill="currentColor" fillOpacity={active ? 0.10 : 0} />
-        <line x1="16" y1="2" x2="16" y2="6" />
-        <line x1="8" y1="2" x2="8" y2="6" />
-        <line x1="3" y1="10" x2="21" y2="10" />
-      </svg>
-    ),
-  },
+// Seitenleiste für iPad und Desktop (Version C).
+//
+// Im Querformat wandern die zwei Modi aus der schwebenden Leiste unten in eine
+// feste Seitenleiste links. Dort liegt auch das Profil und der Planen-Bereich,
+// ohne dass etwas aufklappen muss — es ist Platz da, also wird er genutzt.
+// Rechts steht der Inhalt.
+//
+// Das ist ausdrücklich kein breit gezogenes Telefon-Layout: Was auf dem Telefon
+// nacheinander kommt (Modus wählen → Rubrik wählen → Inhalt), steht hier
+// nebeneinander.
+
+interface NavEntry {
+  label: string
+  path: string
+  icon: IconName
+  badge?: string
+}
+
+const UNTERRICHT_NAV: NavEntry[] = [
+  { label: 'Neue Notiz', path: '/unterricht/neue-notiz', icon: 'note' },
+  { label: 'Schnellnotizen', path: '/unterricht/ohne-fach/ordner/folder-no-subject', icon: 'folder' },
+  { label: 'Schreibblock', path: '/schreibblock', icon: 'pencil' },
 ]
 
-export function DesktopSidebar() {
+const KLAUSUR_NAV: NavEntry[] = [
+  { label: 'Übersicht', path: '/klausurmodus', icon: 'cap' },
+  { label: 'Karteikarten', path: '/klausurmodus/lernen', icon: 'cards' },
+  { label: 'Blurting', path: '/klausurmodus/blurting', icon: 'speech' },
+  { label: 'Lernzettel', path: '/klausurmodus/lernzettel', icon: 'document' },
+  { label: 'Probeklausur', path: '/klausurmodus/probeklausur', icon: 'clipboard' },
+  { label: 'Lernplan', path: '/klausurmodus/lernplan', icon: 'target' },
+]
+
+// Planen — dieselben sechs Rubriken wie in der Planen-Leiste auf dem Telefon,
+// hier aber dauerhaft sichtbar statt hinter „Mehr".
+const PLANEN_NAV: NavEntry[] = [
+  { label: 'Kalender', path: '/kalender', icon: 'calendar' },
+  { label: 'Statistiken', path: '/insights', icon: 'chart' },
+  { label: 'Stundenplan', path: '/stundenplan', icon: 'clock' },
+  { label: 'Notenrechner', path: '/abi-rechner', icon: 'target' },
+  { label: 'Hausaufgaben', path: '/hausaufgaben', icon: 'check' },
+  { label: 'Klausuren', path: '/klausuren', icon: 'warning' },
+]
+
+function useSidebar() {
   const location = useLocation()
   const navigate = useNavigate()
-  const { profile, isPro } = useUser()
+  const { profile, userNotes } = useUser()
+  const mode = modeForPath(location.pathname)
+  const isActive = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(path + '/')
+  const initials =
+    (profile?.name ?? '')
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((w) => w[0]?.toUpperCase() ?? '')
+      .join('') || '·'
+  // Die drei zuletzt benutzten Fächer — abgeleitet aus dem jüngsten Notizdatum
+  // je Fach. Wer noch keine Notizen hat, sieht die ersten drei aus dem Profil,
+  // damit die Leiste nicht leer bleibt.
+  const zuletztBenutzt = useMemo(() => {
+    const faecher = profile?.faecher ?? []
+    const letzteNutzung = new Map<string, string>()
+    for (const n of userNotes) {
+      if (!n.subjectId) continue
+      const bisher = letzteNutzung.get(n.subjectId)
+      if (!bisher || n.createdAt > bisher) letzteNutzung.set(n.subjectId, n.createdAt)
+    }
+    const benutzt = faecher
+      .filter((id) => letzteNutzung.has(id))
+      .sort((a, b) => (letzteNutzung.get(b) ?? '').localeCompare(letzteNutzung.get(a) ?? ''))
+    return (benutzt.length > 0 ? benutzt : faecher).slice(0, 3)
+  }, [profile?.faecher, userNotes])
 
-  function isActive(path: string) {
-    return location.pathname === path || location.pathname.startsWith(path + '/')
-  }
+  return { location, navigate, profile, mode, isActive, initials, zuletztBenutzt, inPlanen: isPlanenPath(location.pathname) }
+}
 
-  const initial = (profile?.name?.[0] ?? 'S').toUpperCase()
-  const isProfilActive = location.pathname.startsWith('/profil') || location.pathname.startsWith('/insights')
+// Hinweiskarte — im Querformat ist unter der Navigation Platz, der sonst leer
+// bliebe. Sie beschreibt eine Gewohnheit, kein Feature.
+function TipCard({ tip }: { tip: Tip }) {
+  return (
+    <div className="mt-5 mx-1 rounded-card bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] p-3.5 flex gap-2.5">
+      <span className="text-text-secondary shrink-0 mt-0.5">
+        <Icon name="speech" size={16} />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-[12px] font-semibold uppercase tracking-[0.06em] text-text-secondary">
+          {tip.title}
+        </span>
+        <span className="block text-[12.5px] leading-snug text-text-primary mt-1">{tip.body}</span>
+      </span>
+    </div>
+  )
+}
+
+function ModeSwitch({ mode, onPick }: { mode: AppMode; onPick: (m: AppMode) => void }) {
+  const reducedMotion = useReducedMotion()
+  return (
+    <div
+      role="tablist"
+      aria-label="Modus"
+      className="relative flex p-1 rounded-pill border border-border/50"
+      style={{ background: 'rgb(var(--color-bg))' }}
+    >
+      {/* Der Schieber liegt UNTER den Beschriftungen und wandert zwischen den
+          beiden Haelften. Dadurch liest sich die Leiste als ein Schalter statt
+          als zwei Knoepfe auf grauem Grund. */}
+      <motion.span
+        aria-hidden
+        layout
+        className="absolute top-1 bottom-1 rounded-pill"
+        style={{
+          left: mode === 'unterricht' ? '0.25rem' : '50%',
+          right: mode === 'unterricht' ? '50%' : '0.25rem',
+          background: mode === 'unterricht'
+            ? 'linear-gradient(135deg, #8B5CF6, #7C3AED)'
+            : 'linear-gradient(135deg, #34D399, #10B981)',
+        }}
+        transition={reducedMotion ? { duration: 0 } : { type: 'spring', duration: 0.34, bounce: 0.16 }}
+      />
+      {(['unterricht', 'klausur'] as AppMode[]).map((m) => {
+        const active = mode === m
+        return (
+          <button
+            key={m}
+            role="tab"
+            aria-selected={active}
+            onClick={() => onPick(m)}
+            className="relative flex-1 h-9 rounded-pill text-[14px] font-semibold press-sm transition-colors"
+            style={{ color: active ? '#FFFFFF' : 'rgb(var(--color-text-primary))' }}
+          >
+            {m === 'unterricht' ? 'Unterricht' : 'Klausur'}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+function SectionLabel({ children }: { children: string }) {
+  return (
+    <p className="section-label px-3.5 pt-4 pb-1.5">
+      {children}
+    </p>
+  )
+}
+
+// ── Schmale Variante (Tablet-Hochformat / kleinere Fenster) ─────────────────
+export function DesktopSidebar() {
+  const { navigate, mode, isActive, initials, inPlanen } = useSidebar()
+  const entries = mode === 'unterricht'
+    ? UNTERRICHT_NAV
+    : inPlanen ? PLANEN_NAV : [...KLAUSUR_NAV, { label: 'Planen', path: PLANEN_HOME, icon: 'calendar' as IconName }]
 
   return (
     <aside
       className="flex flex-col h-dvh shrink-0 border-r border-border/40 lg:hidden"
       style={{
-        width: '72px',
-        backdropFilter: 'saturate(180%) blur(24px)',
-        WebkitBackdropFilter: 'saturate(180%) blur(24px)',
-        backgroundColor: 'rgba(var(--color-surface), 0.96)',
-        // CSS custom property override for lg breakpoint
+        width: '76px',
+        backdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
+        WebkitBackdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
+        backgroundColor: 'rgb(var(--color-surface) / 0.96)',
       }}
     >
-      {/* Logo */}
-      <div className="flex justify-center pt-7 pb-5 px-2">
-        <div className="w-9 h-9 rounded-[12px] overflow-hidden shrink-0">
-          <img src="/logo.png" alt="DailyStudent" className="w-full h-full object-cover" style={{ transform: 'scale(1.38)', transformOrigin: 'center' }} />
-        </div>
-      </div>
+      <button
+        onClick={() => navigate('/profil')}
+        title="Profil und Einstellungen"
+        className="mx-auto mt-6 mb-4 w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold press shrink-0"
+        style={{ background: 'var(--stage-bg)' }}
+      >
+        {initials}
+      </button>
 
-      {/* Nav */}
-      <nav className="flex-1 flex flex-col gap-1 px-2">
-        {NAV_ITEMS.map((item) => {
-          const active = isActive(item.path)
+      {/* Modus als zwei gestapelte Flächen — dieselbe Logik wie die Leiste unten */}
+      <div className="px-2 flex flex-col gap-1.5">
+        {(['unterricht', 'klausur'] as AppMode[]).map((m) => {
+          const active = mode === m
           return (
             <button
-              key={item.path}
-              onClick={() => navigate(item.path)}
-              title={item.label}
-              className={`w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn ${active ? 'nav-active' : ''}`}
-              style={{
-                color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))',
-                fontWeight: active ? 700 : 500,
-              }}
+              key={m}
+              onClick={() => navigate(MODE_HOME[m])}
+              title={m === 'unterricht' ? 'Unterricht' : 'Klausur'}
+              className="w-full h-11 rounded-icon text-[11px] font-bold press-sm transition-colors"
+              style={
+                active
+                  ? {
+                      background: m === 'unterricht'
+                        ? 'linear-gradient(135deg, #8B5CF6, #7C3AED)'
+                        : 'linear-gradient(135deg, #34D399, #10B981)',
+                      color: '#FFFFFF',
+                    }
+                  : { color: 'rgb(var(--color-text-primary))' }
+              }
             >
-              {item.icon(active)}
-              <span className="text-[9px] tracking-tight leading-none">
-                {item.label === 'Klausurmodus' ? 'Klausur' : item.label}
-              </span>
+              {m === 'unterricht' ? 'Unt.' : 'Kla.'}
+            </button>
+          )
+        })}
+      </div>
+
+      <nav className="flex-1 flex flex-col gap-1 px-2 pt-4 overflow-y-auto">
+        {entries.map((e) => {
+          const active = isActive(e.path)
+          return (
+            <button
+              key={e.path}
+              onClick={() => navigate(e.path)}
+              title={e.label}
+              className={`w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-btn press-sm nav-btn ${active ? 'nav-active' : ''}`}
+              style={{ color: 'rgb(var(--color-text-primary))' }}
+            >
+              <Icon name={e.icon} size={20} />
+              <span className="text-[11px] leading-none tracking-tight truncate w-full text-center">{e.label}</span>
             </button>
           )
         })}
       </nav>
-
-      {/* Divider */}
-      <div className="mx-3 border-t border-border/30 mb-3" />
-
-      {/* Profil */}
-      <div className="px-2 pb-6">
-        <button
-          onClick={() => navigate('/profil')}
-          title="Profil"
-          className={`w-full flex flex-col items-center gap-1 py-2.5 px-1 rounded-[12px] press-sm nav-btn ${isProfilActive ? 'nav-active' : ''}`}
-          style={{
-            color: isProfilActive ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-muted))',
-          }}
-        >
-          {/* Avatar circle */}
-          <div
-            className="w-7 h-7 rounded-full flex items-center justify-center text-white text-[11px] font-bold shrink-0"
-            style={{ background: profile?.avatarBg ?? 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
-          >
-            {profile?.avatarEmoji ?? initial}
-          </div>
-          <span className="text-[9px] font-semibold leading-none" style={{ fontWeight: isProfilActive ? 700 : 500 }}>
-            Profil
-          </span>
-        </button>
-
-        {isPro && (
-          <div className="mt-1 flex justify-center">
-            <span className="badge-pro-gold px-2 py-0.5">✦ Pro</span>
-          </div>
-        )}
-      </div>
     </aside>
   )
 }
 
-// Wide variant shown at lg: breakpoint (1024px+) — inject via CSS
-// We use a style tag approach since Tailwind can't do pseudo-breakpoints on custom properties easily
+// ── Breite Variante (Desktop, iPad Querformat) ──────────────────────────────
 export function DesktopSidebarWide() {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { profile, isPro } = useUser()
-
-  function isActive(path: string) {
-    return location.pathname === path || location.pathname.startsWith(path + '/')
-  }
-
-  const initial = (profile?.name?.[0] ?? 'S').toUpperCase()
-  const isProfilActive = location.pathname.startsWith('/profil') || location.pathname.startsWith('/insights')
+  const { navigate, profile, mode, isActive, initials, zuletztBenutzt, inPlanen } = useSidebar()
+  const reducedMotion = useReducedMotion()
 
   return (
     <aside
       className="hidden lg:flex flex-col h-dvh shrink-0 border-r border-border/40"
       style={{
-        width: '220px',
-        backdropFilter: 'saturate(180%) blur(24px)',
-        WebkitBackdropFilter: 'saturate(180%) blur(24px)',
-        backgroundColor: 'rgba(var(--color-surface), 0.96)',
+        width: '272px',
+        backdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
+        WebkitBackdropFilter: 'saturate(180%) blur(var(--material-blur-regular))',
+        backgroundColor: 'rgb(var(--color-surface) / 0.96)',
       }}
     >
-      {/* Logo + wordmark */}
-      <div className="flex items-center gap-3 px-5 pt-7 pb-5">
-        <div className="w-9 h-9 rounded-[12px] overflow-hidden shrink-0">
-          <img src="/logo.png" alt="DailyStudent" className="w-full h-full object-cover" style={{ transform: 'scale(1.38)', transformOrigin: 'center' }} />
-        </div>
-        <div>
-          <p className="text-[14px] font-bold text-text-primary leading-tight">DailyStudent</p>
-          <p className="text-[10px] text-text-muted leading-tight">Lernökosystem</p>
-        </div>
-      </div>
-
-      {/* Nav */}
-      <nav className="flex-1 flex flex-col gap-0.5 px-3">
-        {NAV_ITEMS.map((item) => {
-          const active = isActive(item.path)
-          return (
-            <button
-              key={item.path}
-              onClick={() => navigate(item.path)}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm nav-btn text-left ${active ? 'nav-active' : ''}`}
-              style={{
-                color: active ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-secondary))',
-                fontWeight: active ? 700 : 500,
-              }}
-            >
-              <span className="shrink-0">{item.icon(active)}</span>
-              <span className="text-[14px] leading-none">{item.label}</span>
-            </button>
-          )
-        })}
-      </nav>
-
-      {/* Divider */}
-      <div className="mx-4 border-t border-border/30 mb-3" />
-
-      {/* Profil */}
-      <div className="px-3 pb-6">
-        <button
-          onClick={() => navigate('/profil')}
-          className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-[12px] press-sm nav-btn ${isProfilActive ? 'nav-active' : ''}`}
-          style={{
-            color: isProfilActive ? 'rgb(var(--color-text-primary))' : 'rgb(var(--color-text-secondary))',
-          }}
+      {/* Identität — die ganze Zeile ist antippbar und führt ins Profil */}
+      <button
+        onClick={() => navigate('/profil')}
+        className="flex items-center gap-3 px-4 pt-6 pb-4 press-sm text-left"
+      >
+        <span
+          className="w-11 h-11 rounded-full flex items-center justify-center text-white text-[15px] font-bold shrink-0"
+          style={{ background: 'var(--stage-bg)' }}
         >
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[14px] font-bold shrink-0"
-            style={{ background: profile?.avatarBg ?? 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}
-          >
-            {profile?.avatarEmoji ?? initial}
-          </div>
-          <div className="flex-1 overflow-hidden text-left">
-            <div className="flex items-center gap-1.5">
-              <p className="text-[13px] font-semibold text-text-primary leading-tight truncate">
-                {profile?.name ?? 'Profil'}
-              </p>
-              {isPro && <span className="badge-pro-gold px-1.5 py-0.5 shrink-0">✦ Pro</span>}
-            </div>
-          </div>
-        </button>
+          {initials}
+        </span>
+        <span className="flex-1 min-w-0">
+          <span className="block text-[15px] font-semibold text-text-primary truncate">
+            {profile?.name ?? 'Profil'}
+          </span>
+          <span className="block text-[12px] text-text-secondary truncate">
+            {profile?.klasse ? `Klasse ${profile.klasse}` : 'Einstellungen'}
+            {profile?.bundesland ? ` · ${profile.bundesland}` : ''}
+          </span>
+        </span>
+        <svg width="7" height="12" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
+          strokeLinecap="round" strokeLinejoin="round" className="text-text-muted shrink-0" aria-hidden>
+          <path d="M1 1l6 6-6 6" />
+        </svg>
+      </button>
+
+      <div className="px-3">
+        <ModeSwitch mode={mode} onPick={(m) => navigate(MODE_HOME[m])} />
       </div>
+
+      <nav className="flex-1 overflow-y-auto px-3 pb-6">
+        {mode === 'unterricht' ? (
+          <>
+            {/* Nur die drei zuletzt benutzten Fächer. Die vollständige Liste
+                steht direkt daneben im Inhalt — sie hier zu wiederholen macht
+                die Leiste bei acht Fächern voll, ohne etwas hinzuzufügen. */}
+            {zuletztBenutzt.length > 0 && (
+              <>
+                <SectionLabel>Zuletzt</SectionLabel>
+                <div className="flex flex-col gap-0.5">
+                  {zuletztBenutzt.map((id) => {
+                    const info = resolveSubjectInfo(id, profile?.customFaecher)
+                    const active = isActive(`/unterricht/${id}`)
+                    return (
+                      <button
+                        key={id}
+                        onClick={() => navigate(`/unterricht/${id}`)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-btn press-sm text-left nav-btn ${active ? 'nav-active' : ''}`}
+                        style={{ color: 'rgb(var(--color-text-primary))' }}
+                      >
+                        <SubjectIcon subjectId={id} size="sm" />
+                        <span className="text-[14px] font-medium truncate">{info.name}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </>
+            )}
+
+            <SectionLabel>Erfassen</SectionLabel>
+            <div className="flex flex-col gap-0.5">
+              {UNTERRICHT_NAV.map((e) => (
+                <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
+              ))}
+            </div>
+
+            <TipCard tip={tipOfTheDay(UNTERRICHT_TIPS)} />
+          </>
+        ) : (
+          /* Klausurenmodus hat zwei Ebenen: die Lernwerkzeuge und, eine Ebene
+             tiefer, den Planen-Bereich. Beide zusammen waren zwölf Zeilen
+             untereinander — zu viel. Man steigt jetzt hinab und wieder herauf;
+             die Liste wechselt dabei, die Modusfarbe bleibt. */
+          <AnimatePresence mode="wait" initial={false}>
+            {inPlanen ? (
+              <motion.div
+                key="planen"
+                initial={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 14 }}
+                animate={reducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 14 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <button
+                  onClick={() => navigate(MODE_HOME.klausur)}
+                  className="w-full flex items-center gap-2 px-3.5 pt-4 pb-2 text-[13px] font-semibold text-text-primary press-sm"
+                >
+                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"
+                    strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M7 1L1 7l6 6" />
+                  </svg>
+                  Klausurenmodus
+                </button>
+                <SectionLabel>Planen</SectionLabel>
+                <div className="flex flex-col gap-0.5">
+                  {PLANEN_NAV.map((e) => (
+                    <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="lernen"
+                initial={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -14 }}
+                animate={reducedMotion ? { opacity: 1 } : { opacity: 1, x: 0 }}
+                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -14 }}
+                transition={reducedMotion ? { duration: 0 } : { duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+              >
+                <SectionLabel>Lernen</SectionLabel>
+                <div className="flex flex-col gap-0.5">
+                  {KLAUSUR_NAV.map((e) => (
+                    <SideRow key={e.path} entry={e} active={isActive(e.path)} onClick={() => navigate(e.path)} />
+                  ))}
+                </div>
+
+                <SectionLabel>Weiter</SectionLabel>
+                {/* Beim Betreten des Klausurenmodus laeuft einmal ein Lichtstrahl
+                    am Rand entlang — Planen liegt seit Version C hinter dieser
+                    einen Zeile, das darf man beim Ankommen kurz sehen. */}
+                <SideRow
+                  entry={{ label: 'Planen', path: PLANEN_HOME, icon: 'calendar' }}
+                  active={false}
+                  onClick={() => navigate(PLANEN_HOME)}
+                  className="glanz-lauf"
+                />
+
+                <TipCard tip={tipOfTheDay(KLAUSUR_TIPS)} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
+      </nav>
     </aside>
+  )
+}
+
+function SideRow({ entry, active, onClick, className = '' }: { entry: NavEntry; active: boolean; onClick: () => void; className?: string }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 px-3 py-2 rounded-btn press-sm text-left nav-btn ${active ? 'nav-active' : ''} ${className}`}
+      style={{ color: 'rgb(var(--color-text-primary))', fontWeight: active ? 600 : 500 }}
+    >
+      {/* Schnellnotizen traegt sein eigenes Zeichen — dasselbe wie im
+          Unterrichtsmodus, damit man dieselbe Sache nicht zweimal
+          unterschiedlich dargestellt sieht. */}
+      {entry.label === 'Schnellnotizen' ? (
+        <QuickNotesIcon size="sm" />
+      ) : (
+        <span className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+          <Icon name={entry.icon} size={17} />
+        </span>
+      )}
+      <span className="text-[14px] truncate flex-1">{entry.label}</span>
+      {entry.badge && (
+        <span className="text-[11px] font-semibold px-2 py-0.5 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] shrink-0">
+          {entry.badge}
+        </span>
+      )}
+    </button>
   )
 }

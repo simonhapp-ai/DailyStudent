@@ -1145,10 +1145,9 @@ function FeatureSection({
 export function LandingScreen() {
   const navigate = useNavigate()
   const { authUser } = useUser()
-  const isDesktop = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
   const goToApp = () => {
     if (authUser) {
-      navigate(isDesktop ? '/dashboard' : '/unterricht')
+      navigate('/unterricht')
     } else {
       navigate('/demo')
     }

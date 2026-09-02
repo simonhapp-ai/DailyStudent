@@ -1,10 +1,14 @@
 import { useState, useMemo } from 'react'
+import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
-import { SUBJECT_INFO } from '../data/subjectInfo'
+import { SUBJECT_INFO, getSubjectOnColor } from '../data/subjectInfo'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { PlanenBar } from '../components/ui/PlanenBar'
 import { endnoteForEntry } from './AbiRechnerScreen'
 import { getActiveStreak } from '../lib/streak'
 import type { AbiHalbjahr } from '../types'
+import { npMarke } from '../lib/afb'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -137,7 +141,7 @@ function GradeChart({ lines, zielnoteNP }: { lines: ChartLine[]; zielnoteNP: num
           <button
             onClick={() => setSelectedId(null)}
             className={`px-2.5 py-1 rounded-pill text-[11px] font-medium transition-colors press-sm ${
-              selectedId === null ? 'bg-accent text-white' : 'bg-background text-text-muted'
+              selectedId === null ? 'btn-mode' : 'bg-background text-text-muted'
             }`}
           >
             Alle
@@ -150,7 +154,7 @@ function GradeChart({ lines, zielnoteNP }: { lines: ChartLine[]; zielnoteNP: num
             className="px-2.5 py-1 rounded-pill text-[11px] font-medium transition-colors press-sm"
             style={
               selectedId === l.subjectId
-                ? { background: l.color + '28', color: l.color, border: `1px solid ${l.color}55` }
+                ? { background: l.color, color: getSubjectOnColor(l.subjectId) }
                 : { background: 'var(--color-background)', color: 'var(--color-text-muted)' }
             }
           >
@@ -244,8 +248,7 @@ interface TipCtx {
 
 interface TipDef {
   id: string
-  icon: string
-  accentColor: string
+  icon: IconName
   title: (ctx: TipCtx) => string
   text: (ctx: TipCtx) => string
   condition: ((ctx: TipCtx) => boolean) | null
@@ -255,8 +258,7 @@ interface TipDef {
 const ALL_TIPS: TipDef[] = [
   {
     id: 'exam-urgent',
-    icon: '🔔',
-    accentColor: '#EF4444',
+    icon: 'bell' as IconName,
     title: (ctx) => `Klausur in ${ctx.nextExamInDays} Tagen`,
     text: () => 'Nutze jetzt Active Recall: Schreib ohne Notizen alles auf, was du weißt. Das ist 2× effektiver als erneutes Lesen.',
     condition: (ctx) => ctx.nextExamInDays !== null && ctx.nextExamInDays > 0 && ctx.nextExamInDays <= 7,
@@ -264,8 +266,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'exam-soon',
-    icon: '⏰',
-    accentColor: '#F97316',
+    icon: 'clock',
     title: (ctx) => `Klausur in ${ctx.nextExamInDays} Tagen`,
     text: () => 'Starte täglich mit 25 Minuten Probeklausur. So trainierst du das Abrufen unter Zeitdruck — genau wie im echten Abi.',
     condition: (ctx) => ctx.nextExamInDays !== null && ctx.nextExamInDays > 7 && ctx.nextExamInDays <= 21,
@@ -273,8 +274,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'weakness',
-    icon: '📈',
-    accentColor: '#6366F1',
+    icon: 'chart' as IconName,
     title: (ctx) => `${ctx.weakestName} verbessern`,
     text: () => '5 Karteikarten pro Tag fürs Schwachfach. Kleine, konsistente Einheiten schlagen Marathon-Lernen am Wochenende.',
     condition: (ctx) => ctx.weakestNP !== null && ctx.weakestNP < 13 && ctx.weakestName !== null,
@@ -282,8 +282,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'streak-high',
-    icon: '🔥',
-    accentColor: '#FF9500',
+    icon: 'flame' as IconName,
     title: (ctx) => `${ctx.streak} Tage Streak — stark!`,
     text: () => 'Konstanz ist der stärkste Lernbooster. Selbst 10 Minuten täglich reichen, um den Streak zu halten.',
     condition: (ctx) => ctx.streak >= 7,
@@ -291,8 +290,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'on-track',
-    icon: '⭐',
-    accentColor: '#34C759',
+    icon: 'star',
     title: () => 'Du bist auf Kurs!',
     text: () => 'Deine Note liegt im Zielbereich. Halte dieses Niveau durch regelmäßige Wiederholungen — Konstanz schlägt Intensität.',
     condition: (ctx) => ctx.isOnTrack === true,
@@ -300,8 +298,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'spaced-rep',
-    icon: '🧠',
-    accentColor: '#8B5CF6',
+    icon: 'bulb' as IconName,
     title: () => 'Spaced Repetition',
     text: () => 'Dein Gehirn vergisst 80% innerhalb von 24h. Wiederhole Karteikarten täglich in kurzen Sessions — das verankert Wissen im Langzeitgedächtnis.',
     condition: null,
@@ -309,8 +306,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'active-recall',
-    icon: '✏️',
-    accentColor: '#14B8A6',
+    icon: 'pencil' as IconName,
     title: () => 'Active Recall',
     text: () => 'Schreib auf, was du weißt — ohne Notizen. Fehler jetzt zu machen ist der effektivste Weg zum Lernen.',
     condition: null,
@@ -318,8 +314,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'feynman',
-    icon: '💡',
-    accentColor: '#EAB308',
+    icon: 'bulb' as IconName,
     title: () => 'Feynman-Methode',
     text: () => 'Erkläre ein Thema, als wärst du der Lehrer und dein Schüler ist 10 Jahre alt. Wo du stockst — da sind deine Lücken.',
     condition: null,
@@ -327,8 +322,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'pomodoro',
-    icon: '🍅',
-    accentColor: '#EF4444',
+    icon: 'clock' as IconName,
     title: () => 'Pomodoro-Technik',
     text: () => '25 Minuten fokussiert lernen, 5 Minuten Pause. Dein Gehirn braucht diese Erholung, um Gelerntes zu festigen.',
     condition: null,
@@ -336,8 +330,7 @@ const ALL_TIPS: TipDef[] = [
   },
   {
     id: 'sleep',
-    icon: '💤',
-    accentColor: '#6366F1',
+    icon: 'moon' as IconName,
     title: () => 'Schlaf konsolidiert Wissen',
     text: () => 'Während du schläfst, schreibt dein Gehirn das Gelernte ins Langzeitgedächtnis. 8 Stunden vor der Klausur sind Gold wert.',
     condition: null,
@@ -394,7 +387,7 @@ function SubjectBarChart({ items }: { items: BarItem[] }) {
                 className="flex flex-col justify-end items-center w-full"
                 style={{ height: BAR_MAX + 18 }}
               >
-                <span className="text-[10px] font-bold mb-1 leading-none" style={{ color: c }}>
+                <span className="text-[11px] font-bold mb-1 leading-none" style={{ color: c }}>
                   {s.np}
                 </span>
                 <div
@@ -403,10 +396,10 @@ function SubjectBarChart({ items }: { items: BarItem[] }) {
                 />
               </div>
               {/* Baseline */}
-              <div className="w-full h-px" style={{ background: 'rgba(var(--color-border), 0.7)' }} />
+              <div className="w-full h-px" style={{ background: 'rgb(var(--color-border) / 0.7)' }} />
               {/* Subject icon + grade label */}
-              <span className="text-[18px] leading-none mt-1.5">{s.info.icon}</span>
-              <span className="text-[9px] font-semibold mt-0.5" style={{ color: c }}>
+              <SubjectIcon subjectId={s.subjectId} size="sm" className="mt-1.5 !w-6 !h-6" />
+              <span className="text-[11px] font-semibold mt-0.5" style={{ color: c }}>
                 {npToLabel(s.np)}
               </span>
             </div>
@@ -539,16 +532,11 @@ export function InsightsScreen() {
 
       {/* ── Header ─────────────────────────────────────────────────────── */}
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-            <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Zurück
-        </button>
-        <h1 className="text-[28px] font-bold text-text-primary">Statistiken</h1>
+        <h1 className="text-[30px] font-extrabold tracking-[-0.035em] text-text-primary">Planen</h1>
+        {/* Die Planen-Leiste ersetzt den Zurück-Knopf: Sie IST die Navigation dieses
+            Bereichs. Zurück in den Klausurenmodus führt die Modus-Leiste unten. */}
+        <PlanenBar className="mt-4" />
+        <h2 className="text-[22px] font-bold text-text-primary mt-5">Statistiken</h2>
         <p className="text-[13px] text-text-muted mt-0.5">Dein Lernfortschritt auf einen Blick</p>
       </div>
 
@@ -561,16 +549,16 @@ export function InsightsScreen() {
         {/* ── Quick Stats ──────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
           {([
-            { icon: '🔥', value: activeStreak.toString(), unit: 'Tage', label: 'Streak' },
-            { icon: '📝', value: userNotes.length.toString(), unit: '', label: 'Notizen' },
-            { icon: '📸', value: totalPhotos.toString(), unit: '', label: 'Fotos' },
-            { icon: '📋', value: savedProbeklausuren.length.toString(), unit: '', label: 'Probeklausuren' },
-            { icon: '📄', value: lernzettel.length.toString(), unit: '', label: 'Lernzettel' },
-            { icon: '🎴', value: generatedFlashCards.length.toString(), unit: '', label: 'Karteikarten' },
+            { icon: 'flame' as IconName, value: activeStreak.toString(), unit: 'Tage', label: 'Streak' },
+            { icon: 'note' as IconName, value: userNotes.length.toString(), unit: '', label: 'Notizen' },
+            { icon: 'camera' as IconName, value: totalPhotos.toString(), unit: '', label: 'Fotos' },
+            { icon: 'clipboard' as IconName, value: savedProbeklausuren.length.toString(), unit: '', label: 'Probeklausuren' },
+            { icon: 'document' as IconName, value: lernzettel.length.toString(), unit: '', label: 'Lernzettel' },
+            { icon: 'cards' as IconName, value: generatedFlashCards.length.toString(), unit: '', label: 'Karteikarten' },
           ] as const).map((s) => (
             <div key={s.label} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4 lg:p-5">
               <div className="flex items-start justify-between mb-1.5">
-                <span className="text-[22px] lg:text-[26px]">{s.icon}</span>
+                <span className="text-text-secondary"><Icon name={s.icon} size={22} /></span>
                 <p className="text-text-primary font-bold text-[22px] leading-none">
                   {s.value}
                   {s.unit && <span className="text-text-muted text-[12px] font-normal ml-1">{s.unit}</span>}
@@ -590,8 +578,8 @@ export function InsightsScreen() {
                 {abiGesamtnote ? 'Aktuelle Tendenz im Abi-Rechner' : 'Noch keine Noten eingetragen'}
               </p>
             </div>
-            <button onClick={() => navigate('/abi-rechner')} className="text-accent text-[13px] font-medium press-sm">
-              {abiGesamtnote ? 'Details →' : 'Eintragen →'}
+            <button onClick={() => navigate('/abi-rechner')} className="text-text-primary text-[13px] font-medium press-sm">
+              {abiGesamtnote ? 'Details' : 'Eintragen'}
             </button>
           </div>
 
@@ -599,7 +587,7 @@ export function InsightsScreen() {
             <div>
               <div className="flex items-end justify-between mb-4">
                 <div>
-                  <p className="text-text-muted text-[10px] uppercase tracking-widest mb-1.5">Aktuell</p>
+                  <p className="text-text-muted text-[11px] uppercase tracking-widest mb-1.5">Aktuell</p>
                   <p className="text-[38px] font-bold leading-none" style={{ color: isOnTrack ? '#34C759' : '#FF6B35' }}>
                     {abiGesamtnote}
                   </p>
@@ -607,7 +595,7 @@ export function InsightsScreen() {
                 <div className="flex-1 flex justify-center">
                   {isOnTrack ? (
                     <span className="px-3 py-1.5 rounded-pill text-[12px] font-semibold" style={{ background: 'rgba(52,199,89,0.15)', color: '#34C759' }}>
-                      ✓ Auf Kurs
+                      Auf Kurs
                     </span>
                   ) : (
                     <span className="px-3 py-1.5 rounded-pill text-[12px] font-semibold" style={{ background: 'rgba(255,107,53,0.15)', color: '#FF6B35' }}>
@@ -616,7 +604,7 @@ export function InsightsScreen() {
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="text-text-muted text-[10px] uppercase tracking-widest mb-1.5">Ziel</p>
+                  <p className="text-text-muted text-[11px] uppercase tracking-widest mb-1.5">Ziel</p>
                   <p className="text-[38px] font-bold text-text-secondary leading-none">{zielnote}</p>
                 </div>
               </div>
@@ -627,7 +615,7 @@ export function InsightsScreen() {
                       className="h-full rounded-pill transition-all duration-700"
                       style={{
                         width: `${progressPct}%`,
-                        background: isOnTrack ? '#34C759' : 'linear-gradient(90deg, #FF6B35, #FF9500)',
+                        background: isOnTrack ? '#34C759' : '#FF6B35',
                       }}
                     />
                   </div>
@@ -647,7 +635,7 @@ export function InsightsScreen() {
               </p>
               <button
                 onClick={() => navigate('/abi-rechner')}
-                className="mt-4 px-5 py-2.5 rounded-card bg-accent text-white text-[14px] font-semibold press"
+                className="mt-4 px-5 py-2.5 rounded-card btn-mode text-[14px] font-semibold press"
               >
                 Zum Abi-Rechner →
               </button>
@@ -674,7 +662,7 @@ export function InsightsScreen() {
               <p className="text-text-muted text-[12px] mt-0.5">{daysStudiedThisWeek}/7 Tage gelernt</p>
             </div>
             {daysStudiedThisWeek === 7 && (
-              <span className="text-[13px]">🏆</span>
+              <span className="text-text-secondary"><Icon name="star" size={13} /></span>
             )}
           </div>
           <div className="flex justify-between mb-4">
@@ -690,12 +678,12 @@ export function InsightsScreen() {
                     style={studied ? { background: '#34C759' } : { border: '1.5px solid var(--color-border)' }}
                   >
                     {studied && (
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A2413" strokeWidth="3">
                         <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     )}
                   </div>
-                  <span className={`text-[10px] font-medium ${isToday ? 'text-accent' : 'text-text-muted'}`}>
+                  <span className={`text-[11px] font-medium ${isToday ? 'text-text-primary' : 'text-text-muted'}`}>
                     {dayLabel(day)}
                   </span>
                 </div>
@@ -711,7 +699,7 @@ export function InsightsScreen() {
             </div>
             <p className="text-text-muted text-[11px] mt-1.5">
               {daysStudiedThisWeek === 7
-                ? '🏆 Perfekte Woche — großartig!'
+                ? 'Perfekte Woche — großartig!'
                 : `Noch ${7 - daysStudiedThisWeek} ${7 - daysStudiedThisWeek === 1 ? 'Tag' : 'Tage'} für eine perfekte Woche`}
             </p>
           </div>
@@ -719,7 +707,7 @@ export function InsightsScreen() {
             <div className="flex gap-3 mt-4 pt-4 border-t border-border/50">
               {notesThisWeek > 0 && (
                 <div className="flex items-center gap-2">
-                  <span className="text-[16px]">📝</span>
+                  <span className="text-text-secondary"><Icon name="note" size={16} /></span>
                   <div>
                     <p className="text-text-primary font-semibold text-[14px] leading-none">{notesThisWeek}</p>
                     <p className="text-text-muted text-[11px] mt-0.5">Notiz{notesThisWeek !== 1 ? 'en' : ''}</p>
@@ -728,7 +716,7 @@ export function InsightsScreen() {
               )}
               {examsThisWeek > 0 && (
                 <div className="flex items-center gap-2">
-                  <span className="text-[16px]">📋</span>
+                  <span className="text-text-secondary"><Icon name="clipboard" size={16} /></span>
                   <div>
                     <p className="text-text-primary font-semibold text-[14px] leading-none">{examsThisWeek}</p>
                     <p className="text-text-muted text-[11px] mt-0.5">Klausur{examsThisWeek !== 1 ? 'en' : ''}</p>
@@ -744,15 +732,15 @@ export function InsightsScreen() {
           <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-5">
             <p className="text-text-primary font-bold text-[16px] mb-4">Lernmaterial gesamt</p>
             <div className="flex gap-3">
-              <div className="flex-1 bg-background rounded-[14px] p-3 text-center">
+              <div className="flex-1 bg-background rounded-icon p-3 text-center">
                 <p className="font-bold text-[22px] text-text-primary">{userNotes.length}</p>
                 <p className="text-text-muted text-[11px] mt-0.5">Notizen</p>
               </div>
-              <div className="flex-1 bg-background rounded-[14px] p-3 text-center">
+              <div className="flex-1 bg-background rounded-icon p-3 text-center">
                 <p className="font-bold text-[22px] text-text-primary">{generatedFlashCards.length}</p>
                 <p className="text-text-muted text-[11px] mt-0.5">Karten</p>
               </div>
-              <div className="flex-1 bg-background rounded-[14px] p-3 text-center">
+              <div className="flex-1 bg-background rounded-icon p-3 text-center">
                 <p className="font-bold text-[22px] text-text-primary">{appStats.examCount}</p>
                 <p className="text-text-muted text-[11px] mt-0.5">Klausuren</p>
               </div>
@@ -768,14 +756,11 @@ export function InsightsScreen() {
               <div
                 key={tip.id}
                 className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4"
-                style={{ borderLeft: `3px solid ${tip.accentColor}` }}
+                style={{ borderLeft: '3px solid rgb(var(--color-accent))' }}
               >
                 <div className="flex items-start gap-3">
-                  <div
-                    className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 text-[18px]"
-                    style={{ background: tip.accentColor + '1A' }}
-                  >
-                    {tip.icon}
+                  <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
+                    <Icon name={tip.icon} size={18} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-text-primary font-semibold text-[14px]">{tip.title(tipCtx)}</p>
@@ -812,17 +797,17 @@ export function InsightsScreen() {
                 <div key={s.subjectId} className="bg-surface rounded-card shadow-card-adaptive border border-border/60 p-4">
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-[22px]">{s.info.icon}</span>
+                      <SubjectIcon subjectId={s.subjectId} size="sm" />
                       {s.isLK && (
                         <span
-                          className="px-1.5 py-0.5 rounded text-[9px] font-bold"
-                          style={{ background: s.info.color + '25', color: s.info.color }}
+                          className="px-1.5 py-0.5 rounded-chip text-[11px] font-bold"
+                          style={{ background: s.info.color, color: getSubjectOnColor(s.subjectId) }}
                         >
                           LK
                         </span>
                       )}
                     </div>
-                    {s.quarter && <span className="text-text-muted text-[10px]">{s.quarter}</span>}
+                    {s.quarter && <span className="text-text-muted text-[11px]">{s.quarter}</span>}
                   </div>
                   <p className="text-text-secondary text-[12px] truncate mb-1">{s.info.name}</p>
                   {s.np !== null ? (
@@ -866,12 +851,7 @@ export function InsightsScreen() {
                     key={`${exam.subjectId}-${exam.date}`}
                     className="bg-surface rounded-card shadow-card-adaptive border border-border/60 px-4 py-3.5 flex items-center gap-4"
                   >
-                    <div
-                      className="w-11 h-11 rounded-[12px] flex items-center justify-center shrink-0 text-[20px]"
-                      style={{ background: exam.info.color + '20' }}
-                    >
-                      {exam.info.icon}
-                    </div>
+                    <SubjectIcon subjectId={exam.subjectId} size="lg" className="!w-11 !h-11" />
                     <div className="flex-1 min-w-0">
                       <p className="text-text-primary font-semibold text-[15px] truncate">{exam.info.name}</p>
                       <p className="text-text-muted text-[12px] mt-0.5">{fmtDate(exam.date)}</p>
@@ -916,18 +896,11 @@ export function InsightsScreen() {
             return avg !== null && avg < 13
           })
 
-          const npColor = (np: number) => {
-            if (np >= 13) return '#34D399'
-            if (np >= 10) return '#60A5FA'
-            if (np >= 7)  return '#FACC15'
-            if (np >= 4)  return '#FB923C'
-            return '#F87171'
-          }
 
           return (
             <div>
               <p className="section-label px-1 mb-2.5">Klausurergebnisse</p>
-              <div className="bg-surface border border-border/60 rounded-[20px] shadow-card-adaptive overflow-hidden mb-3">
+              <div className="bg-surface border border-border/60 rounded-card shadow-card-adaptive overflow-hidden mb-3">
                 {recent.map((pk, i) => (
                   <div key={pk.id} className={`flex items-center gap-3 px-4 py-3 ${i < recent.length - 1 ? 'border-b border-border/40' : ''}`}>
                     <div className="flex-1 min-w-0">
@@ -941,27 +914,27 @@ export function InsightsScreen() {
                         const prev = scores[idx - 1]
                         const delta = pk.totalNP - prev
                         if (delta !== 0) return (
-                          <span className="text-[12px] font-semibold" style={{ color: delta > 0 ? '#34D399' : '#F87171' }}>
+                          <span className="text-[12px] font-semibold text-text-secondary tabular-nums">
                             {delta > 0 ? '↑' : '↓'}{Math.abs(delta)}
                           </span>
                         )
                       }
                       return null
                     })()}
-                    <div className="px-2.5 py-1 rounded-full text-white text-[12px] font-bold shrink-0 whitespace-nowrap" style={{ background: npColor(pk.totalNP) }}>
+                    <div className="px-2.5 py-1 rounded-full text-[12px] font-bold shrink-0 whitespace-nowrap tabular-nums" style={npMarke(pk.totalNP)}>
                       {pk.totalNP}/15
                     </div>
                   </div>
                 ))}
               </div>
               {weakAfb.length > 0 && (
-                <div className="bg-amber-500/10 border border-amber-500/30 rounded-[16px] p-4 flex items-start gap-3">
+                <div className="bg-warning/10 border border-warning/30 rounded-card p-4 flex items-start gap-3">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5">
                     <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                     <line x1="12" y1="9" x2="12" y2="13" /><line x1="12" y1="17" x2="12.01" y2="17" />
                   </svg>
                   <p className="text-[13px] text-text-secondary leading-snug">
-                    <span className="font-semibold text-amber-400">Optimierungspotenzial:</span> AFB {weakAfb.join(' + ')} liegt unter 13 NP — {weakAfb.includes('III') ? 'Analyse- und Bewertungsaufgaben trainieren für volle Punktzahl' : weakAfb.includes('II') ? 'Transferaufgaben üben — hier entscheiden sich die Top-Punkte' : 'Basisaufgaben sichern, damit keine Pflichtpunkte verloren gehen'}.
+                    <span className="font-semibold text-text-secondary">Optimierungspotenzial:</span> AFB {weakAfb.join(' + ')} liegt unter 13 NP — {weakAfb.includes('III') ? 'Analyse- und Bewertungsaufgaben trainieren für volle Punktzahl' : weakAfb.includes('II') ? 'Transferaufgaben üben — hier entscheiden sich die Top-Punkte' : 'Basisaufgaben sichern, damit keine Pflichtpunkte verloren gehen'}.
                   </p>
                 </div>
               )}

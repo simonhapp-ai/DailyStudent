@@ -1,9 +1,12 @@
 import { useState, useRef } from 'react'
+import { WorkingState } from '../components/ui/EmptyState'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { generateLernplan } from '../lib/gemini'
 import { extractTopicsFromImage } from '../lib/groq'
 import { buildKcPromptContext } from '../data/kcLoader'
+import { Icon, type IconName } from '../components/ui/Icon'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { SUBJECT_INFO, getTopicPlaceholder, getTopicsPlaceholder } from '../data/subjectInfo'
 import { ProModal } from '../components/ui/ProModal'
 import type { LernplanType, LernplanBlockedTime, Lernplan, LernplanGeneratorInput, LernMethode } from '../types'
@@ -40,7 +43,12 @@ export function LernplanKonfiguratorScreen() {
   const TOTAL_STEPS = 7
 
   // Step 1: Plan type
-  const [planType, setPlanType] = useState<LernplanType>('vollstaendig')
+  // Vorausgewaehlt war "Vollstaendig" — ein Typ, der waehrend der Beta gar
+  // nicht verfuegbar ist. Wer einfach auf Weiter tippte, lief damit direkt in
+  // die Sperre. Der Einzel-Lernplan ist der einzige frei nutzbare und deshalb
+  // die richtige Vorauswahl. (Regel 4: Vorauswahl ist ein Vorschlag — sie muss
+  // funktionieren, sonst ist sie keiner.)
+  const [planType, setPlanType] = useState<LernplanType>('einzel')
   const [showProModal, setShowProModal] = useState(false)
 
   // Step 2: Klausurtermine + Themen-Checklisten
@@ -262,14 +270,14 @@ export function LernplanKonfiguratorScreen() {
     <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto">
       {/* Progress bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
-        <div className="h-full grad-accent transition-all duration-300" style={{ width: `${progress}%` }} />
+        <div className="h-full bg-accent transition-all duration-300" style={{ width: `${progress}%` }} />
       </div>
 
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pb-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={step === 1 ? () => navigate(-1) : handleBack}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium press-sm shrink-0 -ml-1"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -369,7 +377,7 @@ export function LernplanKonfiguratorScreen() {
           <button
             onClick={handleNext}
             disabled={!canNext[step]}
-            className="w-full py-4 rounded-[20px] grad-accent text-white text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
+            className="w-full h-12 rounded-pill btn-mode text-[16px] font-semibold disabled:opacity-40 active:scale-[0.98] transition-all"
           >
             {step === TOTAL_STEPS - 1 ? 'Weiter zur Zusammenfassung' : 'Weiter'}
           </button>
@@ -398,10 +406,10 @@ export function LernplanKonfiguratorScreen() {
 /* ─── Step 1: Plan Type ────────────────────────────────────────── */
 
 function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday, betaPaused }: { planType: LernplanType; onSelect: (t: LernplanType) => void; isPro: boolean; onShowPro: () => void; einzelCreatedToday: number; betaPaused: boolean }) {
-  const options: { id: LernplanType; icon: string; title: string; desc: string; badge?: string }[] = [
+  const options: { id: LernplanType; icon: IconName; title: string; desc: string; badge?: string }[] = [
     {
       id: 'einzel',
-      icon: '🎯',
+      icon: 'target',
       title: 'Einzel-Lernplan',
       desc: !isPro
         ? `Fokussierter Plan für eine einzelne Klausur. ${Math.max(0, 3 - einzelCreatedToday)}/3 heute übrig (Free).`
@@ -409,14 +417,14 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
     },
     {
       id: 'vollstaendig',
-      icon: '📅',
+      icon: 'calendar',
       title: 'Vollständiger Lernplan',
       desc: 'Strukturierter Mehrwochen-Plan für alle anstehenden Klausuren — mit Priorisierung und Ausgleich.',
       badge: 'Pro',
     },
     {
       id: 'abitur',
-      icon: '🏆',
+      icon: 'cap',
       title: 'Abitur-Lernplan',
       desc: 'Der große Plan für die Abiprüfungen: 4 Semester Stoff, volle Tage verfügbar, LK-Gewichtung.',
       badge: 'Pro',
@@ -437,27 +445,27 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
                 if (opt.badge && (!isPro || betaPaused)) { onShowPro(); return }
                 onSelect(opt.id)
               }}
-              className={`w-full flex items-start gap-4 p-4 rounded-[20px] border text-left transition-all duration-150 active:scale-[0.98] ${
-                active ? 'grad-accent border-transparent' : 'bg-surface border-border hover:bg-surface-hover'
+              className={`w-full flex items-start gap-4 p-4 rounded-card border text-left transition-all duration-150 active:scale-[0.98] ${
+                active ? 'bg-accent border-transparent' : 'bg-surface border-border hover:bg-surface-hover'
               }`}
             >
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-white/20' : 'bg-accent/10'}`}>
-                {opt.icon}
+              <div className={`w-12 h-12 rounded-btn flex items-center justify-center text-2xl shrink-0 ${active ? 'bg-[rgb(var(--color-on-accent)/0.18)] text-on-accent' : 'bg-accent/10'}`}>
+                <Icon name={opt.icon} size={22} />
               </div>
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <p className={`font-bold text-[16px] ${active ? 'text-white' : 'text-text-primary'}`}>{opt.title}</p>
+                  <p className={`font-bold text-[16px] ${active ? 'text-on-accent' : 'text-text-primary'}`}>{opt.title}</p>
                   {opt.badge && (!isPro || betaPaused) && (
                     betaPaused
-                      ? <span className="px-1.5 py-0.5 rounded-pill text-[10px] font-bold bg-background text-text-muted">🕒 Bald verfügbar</span>
+                      ? <span className="px-1.5 py-0.5 rounded-pill text-[11px] font-bold bg-background text-text-muted inline-flex items-center gap-1"><Icon name="clock" size={10} />Bald verfügbar</span>
                       : <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
                   )}
                 </div>
-                <p className={`text-[13px] mt-1 leading-snug ${active ? 'text-white/80' : 'text-text-muted'}`}>{opt.desc}</p>
+                <p className={`text-[13px] mt-1 leading-snug ${active ? 'text-on-accent/80' : 'text-text-muted'}`}>{opt.desc}</p>
               </div>
               {active && (
-                <div className="w-5 h-5 rounded-full bg-white/25 flex items-center justify-center shrink-0 mt-0.5">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+                <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-on-accent" style={{ background: 'rgb(var(--color-on-accent) / 0.22)' }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
@@ -467,8 +475,8 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
         })}
       </div>
       {planType === 'einzel' && (
-        <div className="mt-4 flex items-start gap-3 p-3.5 rounded-[16px] border border-amber-500/20" style={{ background: 'rgba(245,158,11,0.07)' }}>
-          <span className="shrink-0 mt-0.5">💡</span>
+        <div className="mt-4 flex items-start gap-3 p-3.5 rounded-card border border-amber-500/20" style={{ background: 'rgba(245,158,11,0.07)' }}>
+          <span className="shrink-0 mt-0.5 text-text-secondary"><Icon name="bulb" size={15} /></span>
           <p className="text-[12px] text-text-secondary leading-relaxed">
             <strong className="text-text-primary">Hinweis:</strong> Bist du mitten in einer Klausurenphase mit mehreren Klausuren, empfehlen wir den{' '}
             <strong className="text-text-primary">Vollständigen Lernplan</strong> – er koordiniert alle Fächer gleichzeitig.
@@ -548,7 +556,7 @@ function StepKlausurtermine({
       <div>
         <h2 className="text-2xl font-bold text-text-primary mb-1">Klausurtermine</h2>
         <div className="mt-8 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-surface mx-auto flex items-center justify-center text-3xl mb-4">📅</div>
+          <div className="w-16 h-16 rounded-card bg-surface mx-auto flex items-center justify-center text-text-secondary mb-4"><Icon name="calendar" size={28} /></div>
           <p className="text-text-primary font-semibold mb-2">Keine Klausurtermine eingetragen</p>
           <p className="text-text-muted text-sm leading-relaxed">
             Trage zuerst deine Klausurtermine im Kalender ein, dann komm zurück.
@@ -591,7 +599,7 @@ function StepKlausurtermine({
           return (
             <div
               key={key}
-              className={`w-full rounded-[20px] border transition-all duration-150 ${
+              className={`w-full rounded-card border transition-all duration-150 ${
                 active ? 'border-accent bg-accent-soft' : 'border-border bg-surface'
               }`}
             >
@@ -603,27 +611,22 @@ function StepKlausurtermine({
                 onKeyDown={(e) => e.key === 'Enter' && onToggle(key)}
                 className="w-full flex items-center gap-3 p-4 cursor-pointer active:scale-[0.98] transition-all select-none"
               >
-                <div
-                  className="w-11 h-11 rounded-[14px] flex items-center justify-center text-xl shrink-0"
-                  style={{ backgroundColor: `${subj?.color ?? '#7C3AED'}22` }}
-                >
-                  {subj?.icon ?? '📚'}
-                </div>
+                <SubjectIcon subjectId={k.subjectId} size="md" />
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-[15px] text-text-primary">{subj?.name ?? k.subjectId}</p>
                   <p className="text-text-muted text-[12px] mt-0.5">{formatDate(k.date)}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className={`text-[11px] font-bold px-2 py-0.5 rounded-pill ${
-                    days <= 3 ? 'bg-danger/15 text-danger' : days <= 7 ? 'bg-orange-500/15 text-orange-400' : 'bg-border text-text-muted'
+                    days <= 3 ? 'bg-danger/15 text-text-primary' : days <= 7 ? 'bg-orange-500/15 text-orange-400' : 'bg-border text-text-muted'
                   }`}>
                     {days === 0 ? 'Heute' : days === 1 ? 'Morgen' : `${days}d`}
                   </span>
                   {active && (
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${hasTopics ? 'grad-accent' : 'bg-border'}`}>
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${hasTopics ? 'bg-accent' : 'bg-border'}`}>
                       {hasTopics
                         ? <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                        : <span className="text-[9px] text-text-muted font-bold">!</span>
+                        : <span className="text-[11px] text-text-muted font-bold">!</span>
                       }
                     </div>
                   )}
@@ -639,7 +642,7 @@ function StepKlausurtermine({
                     <button
                       onClick={() => handleScanClick(key)}
                       disabled={isScanning}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-[10px] bg-surface border border-border text-text-secondary text-[12px] font-medium hover:bg-surface-hover active:scale-[0.97] transition-all disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-btn bg-surface border border-border text-text-secondary text-[12px] font-medium hover:bg-surface-hover active:scale-[0.97] transition-all disabled:opacity-50"
                     >
                       {isScanning
                         ? <span className="w-3.5 h-3.5 border border-accent/40 border-t-accent rounded-full animate-spin" />
@@ -655,7 +658,7 @@ function StepKlausurtermine({
                       {topics.map((topic) => (
                         <span
                           key={topic}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[12px] font-medium bg-accent/12 text-accent border border-accent/20"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[12px] font-medium bg-accent/12 text-text-primary border border-accent/20"
                         >
                           {topic}
                           <button
@@ -679,12 +682,12 @@ function StepKlausurtermine({
                       onChange={(e) => setInputValues((prev) => ({ ...prev, [key]: e.target.value }))}
                       onKeyDown={(e) => e.key === 'Enter' && addTopic(key)}
                       placeholder={getTopicPlaceholder(k.subjectId)}
-                      className="flex-1 bg-background border border-border rounded-[12px] px-3 py-2 text-text-primary text-[13px] placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
+                      className="flex-1 bg-background border border-border rounded-btn px-3 py-2 text-text-primary text-[13px] placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
                     />
                     <button
                       onClick={() => addTopic(key)}
                       disabled={!(inputValues[key] ?? '').trim()}
-                      className="w-9 h-9 rounded-[12px] grad-accent flex items-center justify-center shrink-0 disabled:opacity-30 active:scale-[0.95] transition-all"
+                      className="w-9 h-9 rounded-btn bg-accent flex items-center justify-center shrink-0 disabled:opacity-30 active:scale-[0.95] transition-all"
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                         <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -749,7 +752,7 @@ function StepZeitBlocker({
       <p className="text-text-muted text-sm mb-6">Ab wann soll der Plan starten und welche Zeiten sind blockiert?</p>
 
       {/* Start date */}
-      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Startdatum</p>
+      <p className="section-label mb-2">Startdatum</p>
       <input
         type="date"
         value={startDate}
@@ -761,7 +764,7 @@ function StepZeitBlocker({
       {/* Existing blocks */}
       {blockedTimes.length > 0 && (
         <div className="space-y-2 mb-4">
-          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Blockierte Zeiten</p>
+          <p className="section-label mb-2">Blockierte Zeiten</p>
           {blockedTimes.map((b) => (
             <div key={b.id} className="flex items-center gap-3 bg-surface border border-border/60 rounded-card p-3">
               <div className="flex-1 min-w-0">
@@ -773,7 +776,7 @@ function StepZeitBlocker({
               </div>
               <button
                 onClick={() => onRemoveBlock(b.id)}
-                className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-danger hover:bg-danger/10 transition-colors"
+                className="w-7 h-7 rounded-full flex items-center justify-center text-text-muted hover:text-text-primary hover:bg-danger/10 transition-colors"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
@@ -787,7 +790,7 @@ function StepZeitBlocker({
       {/* Preset suggestions */}
       {!addingBlock && (
         <div>
-          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Schnell hinzufügen</p>
+          <p className="section-label mb-2">Schnell hinzufügen</p>
           <div className="flex flex-wrap gap-2 mb-3">
             {presets
               .filter((p) => !blockedTimes.some((b) => b.label === p.label))
@@ -805,7 +808,7 @@ function StepZeitBlocker({
               ))}
             <button
               onClick={() => setAddingBlock(true)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-pill bg-accent-soft border border-accent/30 text-accent text-[13px] font-medium hover:bg-accent/20 transition-all"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-pill bg-accent-soft border border-accent/30 text-text-primary text-[13px] font-medium hover:bg-accent/20 transition-all"
             >
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M12 5v14M5 12h14" strokeLinecap="round" />
@@ -818,7 +821,7 @@ function StepZeitBlocker({
 
       {/* Custom block form */}
       {addingBlock && (
-        <div className="bg-surface border border-accent/30 rounded-[20px] p-4 space-y-3">
+        <div className="bg-surface border border-accent/30 rounded-card p-4 space-y-3">
           <input
             type="text"
             value={newBlock.label}
@@ -834,7 +837,7 @@ function StepZeitBlocker({
                 onClick={() => toggleBlockDay(i)}
                 className={`w-9 h-9 rounded-btn text-[12px] font-bold border transition-all ${
                   newBlock.dayOfWeek.includes(i)
-                    ? 'grad-accent border-transparent text-white'
+                    ? 'bg-accent border-transparent text-on-accent'
                     : 'bg-background border-border text-text-secondary hover:bg-surface-hover'
                 }`}
               >
@@ -844,7 +847,7 @@ function StepZeitBlocker({
           </div>
           <div className="flex gap-2">
             <div className="flex-1">
-              <p className="text-[10px] font-bold text-text-muted uppercase mb-1">Von</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase mb-1">Von</p>
               <input
                 type="time"
                 value={newBlock.startTime}
@@ -853,7 +856,7 @@ function StepZeitBlocker({
               />
             </div>
             <div className="flex-1">
-              <p className="text-[10px] font-bold text-text-muted uppercase mb-1">Bis</p>
+              <p className="text-[11px] font-bold text-text-muted uppercase mb-1">Bis</p>
               <input
                 type="time"
                 value={newBlock.endTime}
@@ -872,7 +875,7 @@ function StepZeitBlocker({
             <button
               onClick={() => onAddBlock()}
               disabled={!newBlock.label.trim()}
-              className="flex-1 py-2.5 rounded-card grad-accent text-white text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
+              className="flex-1 py-2.5 rounded-card btn-mode text-sm font-semibold disabled:opacity-40 active:scale-95 transition-all"
             >
               Hinzufügen
             </button>
@@ -918,7 +921,7 @@ function StepLernkapazitaet({
       <p className="text-text-muted text-sm mb-6">Wie viel kannst und willst du täglich lernen?</p>
 
       {/* Hours */}
-      <div className="bg-surface border border-border/60 rounded-[20px] p-5 mb-4">
+      <div className="bg-surface border border-border/60 rounded-card p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
           <p className="text-text-primary font-bold text-[16px]">{dailyStudyHours}h pro Tag</p>
           <span className="text-[12px] text-text-muted">{dailyStudyHours <= 2 ? 'Leicht' : dailyStudyHours <= 4 ? 'Moderat' : dailyStudyHours <= 6 ? 'Intensiv' : 'Vollgas'}</span>
@@ -932,13 +935,13 @@ function StepLernkapazitaet({
           onChange={(e) => onHoursChange(parseFloat(e.target.value))}
           className="w-full accent-accent"
         />
-        <div className="flex justify-between text-[10px] text-text-muted mt-1">
+        <div className="flex justify-between text-[11px] text-text-muted mt-1">
           <span>1h</span><span>4h</span><span>8h</span>
         </div>
       </div>
 
       {/* Study time preference */}
-      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Lernzeit bevorzugt</p>
+      <p className="section-label mb-2">Lernzeit bevorzugt</p>
       <div className="grid grid-cols-3 gap-2 mb-4">
         {[
           { id: 'morgen' as const, label: 'Morgens', sub: '7–13 Uhr' },
@@ -950,12 +953,12 @@ function StepLernkapazitaet({
             onClick={() => onPreferenceChange(opt.id)}
             className={`py-3 px-2 rounded-card border text-center transition-all duration-150 ${
               studyTimePreference === opt.id
-                ? 'grad-accent border-transparent'
+                ? 'bg-accent border-transparent'
                 : 'bg-surface border-border hover:bg-surface-hover'
             }`}
           >
-            <p className={`text-[13px] font-bold ${studyTimePreference === opt.id ? 'text-white' : 'text-text-primary'}`}>{opt.label}</p>
-            <p className={`text-[10px] mt-0.5 ${studyTimePreference === opt.id ? 'text-white/70' : 'text-text-muted'}`}>{opt.sub}</p>
+            <p className={`text-[13px] font-bold ${studyTimePreference === opt.id ? 'text-on-accent' : 'text-text-primary'}`}>{opt.label}</p>
+            <p className={`text-[11px] mt-0.5 ${studyTimePreference === opt.id ? 'text-on-accent/70' : 'text-text-muted'}`}>{opt.sub}</p>
           </button>
         ))}
       </div>
@@ -975,8 +978,8 @@ function StepLernkapazitaet({
       </div>
 
       {/* Target grade */}
-      <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Zielnote (Notenpunkte)</p>
-      <div className="bg-surface border border-border/60 rounded-[20px] p-5 mb-4">
+      <p className="section-label mb-2">Zielnote (Notenpunkte)</p>
+      <div className="bg-surface border border-border/60 rounded-card p-5 mb-4">
         <div className="flex items-center justify-between mb-4">
           <p className="text-text-primary font-bold text-[16px]">
             {targetGrade ? `${targetGrade} NP` : '— NP'}
@@ -994,7 +997,7 @@ function StepLernkapazitaet({
           onChange={(e) => onGradeChange(e.target.value)}
           className="w-full accent-accent"
         />
-        <div className="flex justify-between text-[10px] text-text-muted mt-1">
+        <div className="flex justify-between text-[11px] text-text-muted mt-1">
           <span>0</span><span>5</span><span>10</span><span>15</span>
         </div>
       </div>
@@ -1002,7 +1005,7 @@ function StepLernkapazitaet({
       {/* LK subjects */}
       {isOberstufe && selectedSubjectIds.length > 0 && (
         <>
-          <p className="text-[11px] font-bold text-text-muted uppercase tracking-wider mb-2">Leistungskurse (LK)</p>
+          <p className="section-label mb-2">Leistungskurse (LK)</p>
           <p className="text-[12px] text-text-muted mb-3">LK-Fächer erhalten im Plan ~40% mehr Lernzeit.</p>
           <div className="flex flex-wrap gap-2">
             {selectedSubjectIds.map((id) => {
@@ -1014,13 +1017,13 @@ function StepLernkapazitaet({
                   onClick={() => onToggleLK(id)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-pill border text-[13px] font-semibold transition-all ${
                     isLK
-                      ? 'bg-accent text-white border-accent'
+                      ? 'btn-mode border-accent'
                       : 'bg-surface border-border text-text-secondary hover:bg-surface-hover'
                   }`}
                 >
-                  <span>{subj?.icon ?? '📚'}</span>
+                  <SubjectIcon subjectId={id} size="sm" />
                   {subj?.name ?? id}
-                  {isLK && <span className="text-[10px] font-black">LK</span>}
+                  {isLK && <span className="text-[11px] font-black">LK</span>}
                 </button>
               )
             })}
@@ -1033,13 +1036,13 @@ function StepLernkapazitaet({
 
 /* ─── Step 5: Methoden ─────────────────────────────────────────── */
 
-const METHODEN_META: Record<LernMethode, { label: string; emoji: string; desc: string }> = {
-  karteikarten: { label: 'Karteikarten', emoji: '🎴', desc: 'Fragen & Antworten üben' },
-  blurting:     { label: 'Blurting',     emoji: '🧠', desc: 'Alles aus dem Gedächtnis aufschreiben' },
-  lernzettel:   { label: 'Lernzettel',   emoji: '📄', desc: 'Zusammenfassung lesen & merken' },
-  probeklausur: { label: 'Probeklausur', emoji: '📋', desc: 'Unter echten Bedingungen üben' },
-  lesen:        { label: 'Lesen',        emoji: '📖', desc: 'Notizen & Lernzettel durchlesen' },
-  wiederholen:  { label: 'Wiederholen',  emoji: '🔁', desc: 'Gelerntes kurz rekapitulieren' },
+const METHODEN_META: Record<LernMethode, { label: string; icon: IconName; desc: string }> = {
+  karteikarten: { label: 'Karteikarten', icon: 'cards',     desc: 'Fragen & Antworten üben' },
+  blurting:     { label: 'Blurting',     icon: 'bulb',      desc: 'Alles aus dem Gedächtnis aufschreiben' },
+  lernzettel:   { label: 'Lernzettel',   icon: 'document',  desc: 'Zusammenfassung lesen & merken' },
+  probeklausur: { label: 'Probeklausur', icon: 'clipboard', desc: 'Unter echten Bedingungen üben' },
+  lesen:        { label: 'Lesen',        icon: 'book',      desc: 'Notizen & Lernzettel durchlesen' },
+  wiederholen:  { label: 'Wiederholen',  icon: 'repeat',    desc: 'Gelerntes kurz rekapitulieren' },
 }
 
 function StepMethoden({
@@ -1064,21 +1067,21 @@ function StepMethoden({
             <button
               key={m}
               onClick={() => onToggle(m)}
-              className={`flex flex-col gap-1.5 p-4 rounded-[16px] border text-left transition-all press ${
+              className={`flex flex-col gap-1.5 p-4 rounded-card border text-left transition-all press ${
                 active
                   ? 'border-accent bg-accent/10'
                   : 'border-border/60 bg-surface'
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className="text-2xl">{meta.emoji}</span>
+                <span className="text-text-primary"><Icon name={meta.icon} size={22} /></span>
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
                   active ? 'border-accent bg-accent' : 'border-border'
                 }`}>
                   {active && <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                 </div>
               </div>
-              <span className={`text-[14px] font-semibold ${active ? 'text-accent' : 'text-text-primary'}`}>{meta.label}</span>
+              <span className={`text-[14px] font-semibold ${active ? 'text-text-primary' : 'text-text-primary'}`}>{meta.label}</span>
               <span className="text-[11px] text-text-muted leading-tight">{meta.desc}</span>
             </button>
           )
@@ -1110,7 +1113,7 @@ function StepSchwerpunkte({
       <p className="text-text-muted text-sm mb-1">
         Optional — welche Themen bereiten dir Probleme? Der Plan gibt diesen mehr Zeit.
       </p>
-      <button onClick={onSkip} className="text-accent text-[13px] font-medium mb-6 hover:text-accent/80 transition-colors">
+      <button onClick={onSkip} className="text-text-primary text-[13px] font-medium mb-6 hover:text-text-primary/80 transition-colors">
         Überspringen →
       </button>
 
@@ -1118,9 +1121,9 @@ function StepSchwerpunkte({
         {subjectIds.map((id) => {
           const subj = SUBJECT_INFO[id]
           return (
-            <div key={id} className="bg-surface border border-border/60 rounded-[20px] p-4">
+            <div key={id} className="bg-surface border border-border/60 rounded-card p-4">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-xl">{subj?.icon ?? '📚'}</span>
+                <SubjectIcon subjectId={id} size="sm" />
                 <p className="text-text-primary font-bold text-[15px]">{subj?.name ?? id}</p>
               </div>
               <textarea
@@ -1183,10 +1186,10 @@ function StepZusammenfassung({
       <p className="text-text-muted text-sm mb-6">Überprüfe deine Einstellungen, dann erstellt die KI deinen Plan.</p>
 
       {/* Summary card */}
-      <div className="bg-surface border border-border/60 rounded-[20px] p-5 mb-5 space-y-4">
-        <SummaryRow icon="📋" label="Plantyp" value={planTypeLabels[planType]} />
+      <div className="bg-surface border border-border/60 rounded-card p-5 mb-5 space-y-4">
+        <SummaryRow icon="clipboard" label="Plantyp" value={planTypeLabels[planType]} />
         <SummaryRow
-          icon="📚"
+          icon="book"
           label="Klausuren"
           value={selectedTermine.map((k) => {
             const name = SUBJECT_INFO[k.subjectId]?.name ?? k.subjectId
@@ -1194,56 +1197,54 @@ function StepZusammenfassung({
             return `${name} (${count} Thema${count !== 1 ? 'en' : ''})`
           }).join(', ')}
         />
-        <SummaryRow icon="📅" label="Startdatum" value={formatDate(startDate)} />
-        <SummaryRow icon="⏱️" label="Planungszeitraum" value={`${planDays} Tage`} />
-        <SummaryRow icon="🕐" label="Lernzeit/Tag" value={`${dailyStudyHours}h`} />
-        <SummaryRow icon="📅" label="Wochenende" value={includeWeekends ? 'Eingeschlossen' : 'Pausentage'} />
-        {targetGrade && <SummaryRow icon="🎯" label="Zielnote" value={`${targetGrade} NP`} />}
+        <SummaryRow icon="calendar" label="Startdatum" value={formatDate(startDate)} />
+        <SummaryRow icon="clock" label="Planungszeitraum" value={`${planDays} Tage`} />
+        <SummaryRow icon="clock" label="Lernzeit/Tag" value={`${dailyStudyHours}h`} />
+        <SummaryRow icon="calendar" label="Wochenende" value={includeWeekends ? 'Eingeschlossen' : 'Pausentage'} />
+        {targetGrade && <SummaryRow icon="target" label="Zielnote" value={`${targetGrade} NP`} />}
         {lkFaecher.length > 0 && (
           <SummaryRow
-            icon="⭐"
+            icon="star"
             label="Leistungskurse"
             value={lkFaecher.map((id) => SUBJECT_INFO[id]?.name ?? id).join(', ')}
           />
         )}
         {blockedTimes.length > 0 && (
-          <SummaryRow icon="🚫" label="Blockierungen" value={blockedTimes.map((b) => b.label).join(', ')} />
+          <SummaryRow icon="lock" label="Blockierungen" value={blockedTimes.map((b) => b.label).join(', ')} />
         )}
         {Object.values(weaknesses).some((v) => v.trim()) && (
-          <SummaryRow icon="⚠️" label="Schwächen eingetragen" value="Ja — mehr Sessions eingeplant" />
+          <SummaryRow icon="warning" label="Schwächen eingetragen" value="Ja — mehr Sessions eingeplant" />
         )}
       </div>
 
       {genError && (
-        <div className="mb-4 p-3 rounded-[14px] text-danger text-[13px]" style={{ background: 'rgba(var(--color-danger),0.08)', border: '1px solid rgba(var(--color-danger),0.2)' }}>
+        <div className="mb-4 p-3 rounded-icon text-text-primary text-[13px]" style={{ background: 'rgb(var(--color-danger) / 0.08)', border: '1px solid rgb(var(--color-danger) / 0.2)' }}>
           {genError}
         </div>
       )}
 
       {generating ? (
-        <div className="bg-surface border border-border/60 rounded-[20px] p-6 flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-[3px] border-accent/25 border-t-accent rounded-full animate-spin" />
-          <div className="text-center">
-            <p className="text-text-primary font-semibold text-[15px]">KI erstellt deinen Lernplan…</p>
-            <p className="text-text-muted text-[13px] mt-1">Das kann 20–40 Sekunden dauern.</p>
-          </div>
-        </div>
+        <WorkingState
+          tone="klausur"
+          title="KI erstellt deinen Lernplan"
+          note="Das dauert 20 bis 40 Sekunden."
+        />
       ) : (
         <button
           onClick={onGenerate}
-          className="w-full py-4 rounded-[20px] grad-accent text-white text-[16px] font-bold active:scale-[0.98] transition-all"
+          className="w-full h-12 rounded-pill btn-mode text-[16px] font-bold active:scale-[0.98] transition-all"
         >
-          Lernplan generieren ✨
+          Lernplan generieren
         </button>
       )}
     </div>
   )
 }
 
-function SummaryRow({ icon, label, value }: { icon: string; label: string; value: string }) {
+function SummaryRow({ icon, label, value }: { icon: IconName; label: string; value: string }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="text-base shrink-0 mt-0.5">{icon}</span>
+      <span className="shrink-0 mt-0.5 text-text-secondary"><Icon name={icon} size={16} /></span>
       <div className="flex-1 min-w-0">
         <p className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">{label}</p>
         <p className="text-text-primary text-[14px] font-medium mt-0.5 break-words">{value}</p>

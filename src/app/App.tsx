@@ -1,4 +1,5 @@
 import { Component, useEffect, useRef, useState } from 'react'
+import { modeForPath } from '../lib/appMode'
 import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
@@ -27,15 +28,15 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: string |
 import { BottomNav } from '../components/ui/BottomNav'
 import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSidebar'
 import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
-import { CoinToast } from '../components/ui/CoinToast'
+import { XpToast } from '../components/ui/XpToast'
 import { AttachmentToast } from '../components/ui/AttachmentToast'
-import { CoinIconGlobalDefs } from '../components/ui/CoinIcon'
 import { StreakBadge } from '../components/ui/StreakBadge'
 import { ReferralPill } from '../components/ui/ReferralPill'
 import { UserProvider, useUser } from '../context/UserContext'
 import { useDeepLinkAuth } from '../hooks/useDeepLinkAuth'
 import { OnboardingScreen } from '../screens/OnboardingScreen'
 import { KalenderScreen } from '../screens/KalenderScreen'
+import { StundenplanScreen } from '../screens/StundenplanScreen'
 import { UnterrichtScreen } from '../screens/UnterrichtScreen'
 import { LessonScreen } from '../screens/LessonScreen'
 import { SmartNotesScreen } from '../screens/SmartNotesScreen'
@@ -45,7 +46,6 @@ import { NoteCreateScreen } from '../screens/NoteCreateScreen'
 import { FolderScreen } from '../screens/FolderScreen'
 import { ProfilScreen } from '../screens/ProfilScreen'
 import { ProfilCoinsScreen } from '../screens/ProfilCoinsScreen'
-import { ProfilErscheinungsbildScreen } from '../screens/ProfilErscheinungsbildScreen'
 import { ProfilAccountScreen } from '../screens/ProfilAccountScreen'
 import { ProfilSupportScreen } from '../screens/ProfilSupportScreen'
 import { ProfilDevToolsScreen } from '../screens/ProfilDevToolsScreen'
@@ -87,31 +87,37 @@ import { Analytics } from '@vercel/analytics/react'
 import { CookieBanner } from '../components/ui/CookieBanner'
 import { analyticsAllowed, hasConsent, saveConsent } from '../lib/consent'
 import { Capacitor } from '@capacitor/core'
+import { IST_TELEFON } from '../lib/geraet'
 
 function ThemeApplier() {
+  // Erscheinungsbild.
+  //
+  // Apples HIG raet von einem app-eigenen Appearance-Setting ab ("users may
+  // think your app is broken because it doesn't respond to their systemwide
+  // appearance choice"). Deshalb war der Schalter am 31.08.2026 entfernt worden
+  // und die App folgte immer dem System.
+  //
+  // Er ist zurueck — mit "System" als einer der drei Moeglichkeiten und als
+  // Standard. Damit bleibt Apples eigentliche Sorge beantwortet: Wer nichts
+  // einstellt, folgt dem Geraet. Wer bewusst etwas anderes waehlt, bekommt es.
+  // Ein Schalter, der in den Speicher schreibt und nichts bewirkt, waere die
+  // schlechteste der drei Varianten gewesen.
   const { theme } = useUser()
 
   useEffect(() => {
-    const isDark = theme === 'dark'
-      ? true
-      : theme === 'light'
-        ? false
-        : window.matchMedia('(prefers-color-scheme: dark)').matches
-    document.documentElement.classList.toggle('dark', isDark)
-    // Native (iOS wrapper) can't see this in-app theme choice on its own —
-    // it only knows the device's OS-level appearance, which can differ.
-    notifyNativeTheme(isDark)
-  }, [theme])
-
-  useEffect(() => {
-    if (theme !== 'system') return
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => {
-      document.documentElement.classList.toggle('dark', e.matches)
-      notifyNativeTheme(e.matches)
+    const apply = () => {
+      const isDark = theme === 'system' ? mq.matches : theme === 'dark'
+      document.documentElement.classList.toggle('dark', isDark)
+      // Native (iOS wrapper) can't see this in-app theme choice on its own —
+      // it only knows the device's OS-level appearance, which can differ.
+      notifyNativeTheme(isDark)
     }
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
+    apply()
+    // Dem System nur folgen, solange nichts anderes gewaehlt ist.
+    if (theme !== 'system') return
+    mq.addEventListener('change', apply)
+    return () => mq.removeEventListener('change', apply)
   }, [theme])
 
   return null
@@ -121,8 +127,23 @@ function ThemeApplier() {
 // User-Agent based: phones have "iPhone"/"iPod" or "Android" + "Mobile" in UA.
 // iPads (all versions), Android tablets, and desktops do NOT match → desktop.
 // Also works in Chrome DevTools device simulation (DevTools changes the UA).
-const IS_DESKTOP = !/iPhone|iPod|(Android.*Mobile)/i.test(navigator.userAgent)
+const IS_DESKTOP = !IST_TELEFON
 const IS_NATIVE = Capacitor.isNativePlatform()
+
+const DESIGN_VORSCHAU = (() => {
+  if (IS_NATIVE) return false
+  if (!/^(localhost|127\.0\.0\.1|192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3})$/.test(window.location.hostname)) return false
+  try {
+    if (new URLSearchParams(window.location.search).get('vorschau') === '1') {
+      sessionStorage.setItem('vorschau', '1')
+      return true
+    }
+    return sessionStorage.getItem('vorschau') === '1'
+  } catch {
+    return false
+  }
+})()
+
 
 // Web-only signal for the landing page: has this browser touched the app
 // before (previous account data, prior cookie consent, or already seen the
@@ -163,7 +184,7 @@ function FixedBadges() {
 }
 
 function SmartRedirect() {
-  return <Navigate to={IS_DESKTOP ? '/dashboard' : '/unterricht'} replace />
+  return <Navigate to="/unterricht" replace />
 }
 
 // All routes extracted into a component so the route tree is always at the
@@ -179,6 +200,7 @@ function AppRoutes() {
       <Route path="/" element={<SmartRedirect />} />
       <Route path="/dashboard" element={<DashboardScreen />} />
       <Route path="/kalender" element={<KalenderScreen />} />
+      <Route path="/stundenplan" element={<StundenplanScreen />} />
       <Route path="/hausaufgaben" element={<HausaufgabenheftScreen />} />
       <Route path="/klausuren" element={<KlausurplanScreen />} />
       <Route path="/abi-rechner" element={<AbiRechnerScreen />} />
@@ -209,7 +231,6 @@ function AppRoutes() {
       <Route path="/klausurmodus/lernplan/:id" element={<LernplanDetailScreen />} />
       <Route path="/profil" element={<ProfilScreen />} />
       <Route path="/profil/coins" element={<ProfilCoinsScreen />} />
-      <Route path="/profil/erscheinungsbild" element={<ProfilErscheinungsbildScreen />} />
       <Route path="/profil/account" element={<ProfilAccountScreen />} />
       <Route path="/profil/support" element={<ProfilSupportScreen />} />
       <Route path="/profil/dev-tools" element={<ProfilDevToolsScreen />} />
@@ -319,7 +340,8 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   if (location.pathname === '/agb') return <AGBScreen />
 
   // Only redirect to auth once Supabase has confirmed there's no valid session
-  if (!authLoading && !authUser) {
+  const designPreview = DESIGN_VORSCHAU
+    if (!authLoading && !authUser && !designPreview) {
     if (location.pathname === '/') {
       // Native app cold start: consent → demo → login, once per device —
       // no marketing landing page, straight into the product. The URL bar
@@ -375,14 +397,17 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
       <div className="flex h-dvh bg-background overflow-hidden">
         <DesktopSidebar />
         <DesktopSidebarWide />
-        <main ref={desktopMainRef} className="flex-1 overflow-y-auto relative">
+        <main
+          ref={desktopMainRef}
+          className={`flex-1 overflow-y-auto relative ${modeForPath(location.pathname) === 'klausur' ? 'mode-klausur' : ''}`}
+        >
           <RouteFade routeKey={location.pathname}>
             <AppRoutes />
           </RouteFade>
           <SyncErrorBanner />
         </main>
         <FixedBadges />
-        <CoinToast />
+        <XpToast />
         <AttachmentToast />
       </div>
     )
@@ -391,13 +416,15 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   // ── Mobile layout (screen.width < 768px) ───────────────────────────────────
   return (
     <div className="max-w-lg mx-auto relative min-h-dvh">
-      <RouteFade routeKey={location.pathname}>
-        <AppRoutes />
-      </RouteFade>
+      <div className={modeForPath(location.pathname) === 'klausur' ? 'mode-klausur' : undefined}>
+        <RouteFade routeKey={location.pathname}>
+          <AppRoutes />
+        </RouteFade>
+      </div>
       {!hideNav && <BottomNav />}
       <SyncErrorBanner />
       <StreakBadge />
-      <CoinToast />
+      <XpToast />
       <AttachmentToast />
     </div>
   )
@@ -419,7 +446,6 @@ export function App() {
 
   return (
     <ErrorBoundary>
-      <CoinIconGlobalDefs />
       <UserProvider>
         <ThemeApplier />
         <BrowserRouter>

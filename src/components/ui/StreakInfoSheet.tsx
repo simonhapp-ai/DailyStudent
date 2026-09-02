@@ -1,5 +1,6 @@
 import { useUser } from '../../context/UserContext'
 import { getActiveStreak } from '../../lib/streak'
+import { Icon } from './Icon'
 
 const MILESTONES = [
   { days: 5, reward: 25 },
@@ -22,7 +23,7 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
         <div className="w-10 h-1 bg-border rounded-full mx-auto mb-5" />
 
         <div className="flex items-center gap-3 mb-1">
-          <span className="text-[32px] leading-none">🔥</span>
+          <Icon name="flame" size={32} filled className="text-fill-orange" />
           <div>
             <p className="text-[22px] font-black text-text-primary tabular-nums leading-none">{streak} {streak === 1 ? 'Tag' : 'Tage'}</p>
             <p className="text-text-muted text-[12px] mt-1">Aktuelle Lernstreak</p>
@@ -41,9 +42,9 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
           </p>
         </div>
 
-        <div className="rounded-[14px] bg-background px-4 py-3 mb-5 flex items-center justify-between">
+        <div className="rounded-icon bg-background px-4 py-3 mb-5 flex items-center justify-between">
           <span className="text-text-secondary text-[13px]">Deine Streak Freezes</span>
-          <span className="text-text-primary font-bold text-[15px] tabular-nums">🧊 {freezes}</span>
+          <span className="text-text-primary font-bold text-[15px] tabular-nums flex items-center gap-1.5"><Icon name="snowflake" size={15} />{freezes}</span>
         </div>
 
         <p className="text-text-primary text-[14px] font-semibold mb-2.5">Meilenstein-Boni</p>
@@ -51,22 +52,22 @@ export function StreakInfoSheet({ isOpen, onClose }: { isOpen: boolean; onClose:
           {MILESTONES.map((m) => (
             <div
               key={m.days}
-              className="rounded-[12px] py-2.5 text-center"
+              className="rounded-btn py-2.5 text-center"
               style={{
-                background: streak >= m.days ? 'rgba(52,211,153,0.12)' : 'rgba(var(--color-border), 0.4)',
+                background: streak >= m.days ? 'rgba(52,211,153,0.12)' : 'rgb(var(--color-border) / 0.4)',
               }}
             >
               <p className="text-[15px] font-black tabular-nums" style={{ color: streak >= m.days ? '#059669' : 'rgb(var(--color-text-muted))' }}>
                 {m.days}
               </p>
-              <p className="text-[10px] text-text-muted mt-0.5">+{m.reward}</p>
+              <p className="text-[11px] text-text-muted mt-0.5">+{m.reward}</p>
             </div>
           ))}
         </div>
 
         <button
           onClick={onClose}
-          className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold press transition-all"
+          className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold press transition-all"
         >
           Verstanden
         </button>

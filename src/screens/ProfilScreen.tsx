@@ -1,5 +1,10 @@
 import { useUser } from '../context/UserContext'
-import { CoinIcon, getCoinTier, COIN_TIERS } from '../components/ui/CoinIcon'
+import { Tag } from '../components/ui/Tag'
+import { Metric, MetricRow } from '../components/ui/Metric'
+import type { AppTheme } from '../context/UserContext'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { Icon, type IconName } from '../components/ui/Icon'
+import { rangFuer, rangFortschritt } from '../lib/xp'
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
@@ -7,18 +12,19 @@ import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { purchasePlan } from '../lib/revenuecat'
 import { ProModal, WELCOME_COUPON_ID } from '../components/ui/ProModal'
 import { getActiveStreak } from '../lib/streak'
+import { bundeslandName } from '../data/bundeslaender'
 
 const AVATAR_BG_OPTIONS = [
-  { id: 'purple', gradient: 'linear-gradient(145deg, #A78BFA, #7C3AED)' },
-  { id: 'blue',   gradient: 'linear-gradient(145deg, #60A5FA, #2563EB)' },
-  { id: 'teal',   gradient: 'linear-gradient(145deg, #5AC8FA, #0891B2)' },
-  { id: 'green',  gradient: 'linear-gradient(145deg, #34D399, #059669)' },
-  { id: 'orange', gradient: 'linear-gradient(145deg, #FBBF24, #D97706)' },
-  { id: 'pink',   gradient: 'linear-gradient(145deg, #F472B6, #DB2777)' },
-  { id: 'red',    gradient: 'linear-gradient(145deg, #F87171, #DC2626)' },
-  { id: 'indigo', gradient: 'linear-gradient(145deg, #818CF8, #4338CA)' },
-  { id: 'cyan',   gradient: 'linear-gradient(145deg, #67E8F9, #0E7490)' },
-  { id: 'rose',   gradient: 'linear-gradient(145deg, #FDA4AF, #E11D48)' },
+  { id: 'purple', gradient: '#A78BFA' },
+  { id: 'blue',   gradient: '#60A5FA' },
+  { id: 'teal',   gradient: 'var(--grad-mode)' },
+  { id: 'green',  gradient: '#34D399' },
+  { id: 'orange', gradient: '#FBBF24' },
+  { id: 'pink',   gradient: '#F472B6' },
+  { id: 'red',    gradient: '#F87171' },
+  { id: 'indigo', gradient: '#818CF8' },
+  { id: 'cyan',   gradient: '#67E8F9' },
+  { id: 'rose',   gradient: '#FDA4AF' },
 ]
 
 const AVATAR_EMOJI_OPTIONS = ['🎓', '📚', '✏️', '🔬', '🧮', '📐', '🧪', '🔭', '💡', '📝']
@@ -29,31 +35,79 @@ const PRO_TOGGLE_ALLOWLIST = [
   // 'weitere@email.de',
 ]
 
-const THEME_LABELS = { light: 'Hell', dark: 'Dunkel', system: 'System' } as const
 
-function NavRow({ label, sublabel, onClick, danger = false }: {
-  label: string; sublabel?: string; onClick: () => void; danger?: boolean
+function NavRow({ label, sublabel, onClick }: {
+  label: string; sublabel?: string; onClick: () => void
 }) {
   return (
-    <button
+    <ListRow
+      title={<span className="text-[15px] font-normal">{label}</span>}
+      value={sublabel}
+      chevron
       onClick={onClick}
-      className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm"
-    >
-      <span className={`text-[15px] ${danger ? 'text-danger' : 'text-text-primary'}`}>{label}</span>
-      <div className="flex items-center gap-1.5 shrink-0">
-        {sublabel && <span className="text-text-muted text-[13px]">{sublabel}</span>}
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={danger ? 'text-danger' : 'text-text-muted'}>
-          <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+    />
+  )
+}
+
+// Erscheinungsbild steht direkt hier statt hinter einer eigenen Seite: Drei
+// Moeglichkeiten, eine Zeile — dafuer lohnt kein Screenwechsel. (Die frühere
+// Unterseite war beim Umbau entfallen, die Zeile zeigte danach ins Leere.)
+function ThemeRow({ theme, onPick }: { theme: AppTheme; onPick: (t: AppTheme) => void }) {
+  const options: { value: AppTheme; label: string }[] = [
+    { value: 'light', label: 'Hell' },
+    { value: 'dark', label: 'Dunkel' },
+    { value: 'system', label: 'System' },
+  ]
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 min-h-[52px] border-b border-border/40 last:border-b-0">
+      <span className="text-[15px] text-text-primary flex-1">Erscheinungsbild</span>
+      <div className="flex p-0.5 rounded-pill bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] shrink-0">
+        {options.map((o) => (
+          <button
+            key={o.value}
+            onClick={() => onPick(o.value)}
+            aria-pressed={theme === o.value}
+            className="h-8 px-3 rounded-pill text-[13px] font-semibold press-sm transition-colors"
+            style={
+              theme === o.value
+                ? { background: 'rgb(var(--color-surface))', color: 'rgb(var(--color-text-primary))' }
+                : { color: 'rgb(var(--color-text-secondary))' }
+            }
+          >
+            {o.label}
+          </button>
+        ))}
       </div>
-    </button>
+    </div>
+  )
+}
+
+/** Fortschrittsring zum naechsten Rang — dieselbe Sprache wie die Kennzahlen,
+ *  nur rund. Ersetzt das gezeichnete Muenzbild. */
+function RangRing({ xp }: { xp: number }) {
+  const anteil = rangFortschritt(xp)
+  const umfang = 2 * Math.PI * 15
+  return (
+    <span className="relative w-9 h-9 shrink-0 flex items-center justify-center">
+      <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden>
+        <circle cx="18" cy="18" r="15" fill="none" strokeWidth="3"
+          stroke="rgb(var(--color-border))" />
+        <circle cx="18" cy="18" r="15" fill="none" strokeWidth="3" strokeLinecap="round"
+          stroke="rgb(var(--color-accent))"
+          strokeDasharray={`${umfang * anteil} ${umfang}`}
+          transform="rotate(-90 18 18)" />
+      </svg>
+      <span className="absolute text-[12px] font-bold tabular-nums text-text-primary">
+        {rangFuer(xp).stufe}
+      </span>
+    </span>
   )
 }
 
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt, appConfig } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt, appConfig } = useUser()
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string | null>(null)
@@ -75,7 +129,7 @@ export function ProfilScreen() {
 
   const trialActive = trialEndsAt ? new Date(trialEndsAt) > new Date() : false
 
-  const avatarBg = profile?.avatarBg ?? 'linear-gradient(145deg, #A78BFA, #7C3AED)'
+  const avatarBg = profile?.avatarBg ?? '#A78BFA'
   const avatarEmoji = profile?.avatarEmoji ?? '🎓'
 
   useEffect(() => {
@@ -131,15 +185,15 @@ export function ProfilScreen() {
 
   const activeStreak = getActiveStreak(appStats.streak, appStats.lastStudyDate)
 
-  const stats = [
-    { label: 'Streak',    value: activeStreak.toString(), unit: 'Tage', icon: '🔥' },
-    { label: 'Notizen',   value: userNotes.length.toString(),            icon: '📝' },
-    { label: 'Klausuren', value: appStats.examCount.toString(),          icon: '📋' },
-    { label: 'Ø Note',    value: profile?.abiGesamtnote ?? '—',          icon: '⭐' },
+  const stats: { label: string; value: string; unit?: string; icon: IconName }[] = [
+    { label: 'Streak',    value: activeStreak.toString(), unit: 'Tage', icon: 'flame' as IconName },
+    { label: 'Notizen',   value: userNotes.length.toString(),            icon: 'note' as IconName },
+    { label: 'Klausuren', value: appStats.examCount.toString(),          icon: 'clipboard' as IconName },
+    { label: 'Ø Note',    value: profile?.abiGesamtnote ?? '—',          icon: 'star' },
   ]
 
   const subtitle = profile
-    ? `${profile.schulform} · ${profile.klasse}. Klasse · ${profile.bundesland}`
+    ? `${profile.schulform.charAt(0).toUpperCase()}${profile.schulform.slice(1)} · ${profile.klasse}. Klasse · ${bundeslandName(profile.bundesland)}`
     : 'Gymnasium · 12. Klasse'
 
   const isDevAllowlisted = PRO_TOGGLE_ALLOWLIST.includes(authUser?.email ?? '')
@@ -152,7 +206,10 @@ export function ProfilScreen() {
         <h1 className="text-[28px] font-bold text-text-primary">Profil</h1>
       </div>
 
-      <div className="px-4 mt-5 space-y-5">
+      <div className="px-4 lg:px-6 mt-5 lg:max-w-[1180px] lg:grid lg:grid-cols-2 lg:gap-6 lg:items-start">
+
+        {/* Linke Spalte — wer du bist und wo du stehst */}
+        <div className="space-y-5">
 
         {/* ── User card ──────────────────────────────────────────── */}
         <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
@@ -179,7 +236,7 @@ export function ProfilScreen() {
               </div>
               {/* Small edit badge */}
               <div className="absolute -bottom-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center border-2 border-surface"
-                   style={{ background: 'linear-gradient(145deg, #A78BFA, #7C3AED)' }}>
+                   style={{ background: 'var(--grad-mode)' }}>
                 <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
                   <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
@@ -223,11 +280,11 @@ export function ProfilScreen() {
                   <button
                     key={emoji}
                     onClick={() => updateProfile({ avatarEmoji: emoji })}
-                    className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[22px] press-sm transition-all"
+                    className="w-10 h-10 rounded-btn flex items-center justify-center text-[22px] press-sm transition-all"
                     style={{
                       background: avatarEmoji === emoji
-                        ? 'rgba(var(--color-accent), 0.15)'
-                        : 'rgba(var(--color-border), 0.4)',
+                        ? 'rgb(var(--color-accent) / 0.15)'
+                        : 'rgb(var(--color-border) / 0.4)',
                       outline: avatarEmoji === emoji ? '2px solid rgb(var(--color-accent))' : '2px solid transparent',
                     }}
                   >
@@ -245,19 +302,19 @@ export function ProfilScreen() {
             the page instead (see that section, right above the footer) — Simon's
             explicit placement call, 31.07.2026. This normal-state version is
             unchanged and simply doesn't render during beta; no code removed. */}
+        {/* Karte auf der eigenen Fläche statt auf einem blassen Blau, das sonst
+            nirgends in der App vorkommt. Die Modusfarbe steht im Knopf, nicht als
+            Tönung über der ganzen Karte. */}
         {!isPro && appConfig.proPurchasesEnabled && (
-          <div
-            className="rounded-card p-5 border border-accent/20"
-            style={{ background: 'linear-gradient(140deg, rgba(0,122,255,0.08) 0%, rgba(0,122,255,0.02) 100%)' }}
-          >
+          <div className="card-pro rounded-card p-5 shadow-card-adaptive">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="text-accent font-bold text-[17px]">Pro freischalten</p>
-                <p className="text-text-secondary text-[13px] mt-0.5">Alle KI-Features. Kein Limit.</p>
+                <p className="pro-title font-bold text-[17px]">Pro freischalten</p>
+                <p className="pro-sub text-[13px] mt-0.5">Alle KI-Features. Kein Limit.</p>
               </div>
               <div className="text-right">
-                <p className="text-text-primary font-bold text-[20px]">€7,99<span className="text-text-muted text-[13px] font-normal">/Mo</span></p>
-                <p className="text-text-muted text-[11px]">jährlich</p>
+                <p className="pro-title font-bold text-[20px]">€7,99<span className="pro-sub text-[13px] font-normal">/Mo</span></p>
+                <p className="pro-sub text-[11px]">jährlich</p>
               </div>
             </div>
             <ul className="space-y-2.5 mb-5">
@@ -267,8 +324,8 @@ export function ProfilScreen() {
                 'KI-Rotstift-Korrektur',
                 'Persönlicher Lernplan',
               ].map((f) => (
-                <li key={f} className="flex items-center gap-2.5 text-[14px] text-text-secondary">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-success shrink-0">
+                <li key={f} className="flex items-center gap-2.5 text-[14px] pro-feature">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="pro-check shrink-0">
                     <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   {f}
@@ -278,20 +335,23 @@ export function ProfilScreen() {
             {/* Platform-aware teaser — the authoritative check (RevenueCat
                 trial eligibility on iOS) happens once ProModal opens; this is
                 just marketing copy pointing at whichever offer applies. */}
-            <p className="text-[12px] font-semibold mb-3" style={{ color: '#34D399' }}>
-              {Capacitor.isNativePlatform() ? '🎉 1 Woche kostenlos beim Monatsabo' : '🎉 20% Rabatt auf deinen ersten Kauf'}
-            </p>
+            {/* Das Angebot ist eine Marke, keine farbige Schrift. */}
+            <div className="mb-3">
+              <Tag tone="gold" size="sm">
+                {Capacitor.isNativePlatform() ? '1 Woche kostenlos beim Monatsabo' : '20% Rabatt auf deinen ersten Kauf'}
+              </Tag>
+            </div>
             <button
               onClick={() => handleUpgrade('yearly')}
               disabled={checkoutLoading !== null}
-              className="w-full py-3.5 rounded-card grad-accent text-white text-[15px] font-semibold hover:opacity-90 press transition-all disabled:opacity-60"
+              className="w-full h-12 rounded-pill btn-mode text-[15px] font-bold hover:opacity-90 press transition-all disabled:opacity-60"
             >
               {checkoutLoading === 'yearly' ? 'Wird geladen…' : 'Pro freischalten · €59,99/Jahr'}
             </button>
             <button
               onClick={() => handleUpgrade('monthly')}
               disabled={checkoutLoading !== null}
-              className="w-full py-2 text-[13px] text-text-muted hover:text-text-secondary transition-colors disabled:opacity-60"
+              className="w-full py-2 text-[13px] pro-sub hover:opacity-80 transition-opacity disabled:opacity-60"
             >
               {checkoutLoading === 'monthly' ? 'Wird geladen…' : 'Oder monatlich: €7,99/Monat'}
             </button>
@@ -303,22 +363,21 @@ export function ProfilScreen() {
             widget now lives at the bottom of the page, this normal-state version
             just doesn't render while paused. */}
         {!isPro && !trialActive && appConfig.proPurchasesEnabled && (
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+          <div className="card-invite rounded-card shadow-card-adaptive overflow-hidden">
             <div className="p-5">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2.5">
                   <div
-                    className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
-                    style={{ background: 'linear-gradient(145deg, #FFD700, #FF8C00)' }}
+                    className="w-10 h-10 rounded-btn flex items-center justify-center shrink-0 btn-premium"
                   >
-                    🎁
+                    <Icon name="gift" size={22} />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <p className="text-text-primary font-bold text-[15px]">14 Tage Pro gratis</p>
-                      <span className="badge-pro-gold px-2.5 py-0.5">Nur kurze Zeit</span>
+                      <p className="inv-title font-bold text-[15px]">14 Tage Pro gratis</p>
+                      <Tag tone="gold" size="sm">Nur kurze Zeit</Tag>
                     </div>
-                    <p className="text-text-muted text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
+                    <p className="inv-sub text-[12px] mt-0.5">Lade 5 Freunde ein — erhalte 14 Tage Pro</p>
                   </div>
                 </div>
               </div>
@@ -326,8 +385,8 @@ export function ProfilScreen() {
               {/* Progress bar */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-text-muted text-[12px]">Fortschritt</span>
-                  <span className="text-text-primary font-bold text-[13px] tabular-nums">{referralCount}/5</span>
+                  <span className="inv-sub text-[12px]">Fortschritt</span>
+                  <span className="inv-title font-bold text-[13px] tabular-nums">{referralCount}/5</span>
                 </div>
                 <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(128,128,128,0.15)' }}>
                   <div
@@ -342,10 +401,10 @@ export function ProfilScreen() {
                   {[1, 2, 3, 4, 5].map((n) => (
                     <span
                       key={n}
-                      className="text-[10px] font-medium"
+                      className="text-[11px] font-medium"
                       style={{ color: referralCount >= n ? '#D4AF37' : 'rgb(var(--color-text-muted))' }}
                     >
-                      {n === 5 ? '🎉' : `${n}`}
+                      {n === 5 ? <Icon name="gift" size={13} /> : `${n}`}
                     </span>
                   ))}
                 </div>
@@ -355,7 +414,7 @@ export function ProfilScreen() {
               {referralCode && (
                 <div className="flex items-center gap-3">
                   <div
-                    className="shrink-0 rounded-[10px] overflow-hidden"
+                    className="shrink-0 rounded-btn overflow-hidden"
                     style={{ width: 64, height: 64, background: '#fff' }}
                   >
                     <img
@@ -367,12 +426,11 @@ export function ProfilScreen() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
-                    <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
+                    <p className="inv-sub text-[11px] mb-1.5">Dein Einladungslink</p>
+                    <p className="inv-mono font-mono text-[12px] truncate mb-2">{referralLink}</p>
                     {copyToast ? (
-                      <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
-                        style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>
-                        ✓ Kopiert!
+                      <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]">
+                        Kopiert
                       </div>
                     ) : (
                       <button
@@ -396,10 +454,10 @@ export function ProfilScreen() {
             style={{ borderColor: 'rgba(48,209,88,0.25)', background: 'linear-gradient(140deg, rgba(48,209,88,0.07) 0%, rgba(48,209,88,0.02) 100%)' }}
           >
             <div
-              className="w-11 h-11 rounded-[12px] flex items-center justify-center text-[22px] shrink-0"
-              style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+              className="w-11 h-11 rounded-btn flex items-center justify-center text-[22px] shrink-0"
+              style={{ background: 'var(--grad-mode)' }}
             >
-              🎉
+              <Icon name="gift" size={26} />
             </div>
             <div>
               <p className="text-text-primary font-bold text-[15px]">14 Tage Pro aktiv!</p>
@@ -410,101 +468,130 @@ export function ProfilScreen() {
           </div>
         )}
 
-        {/* ── Stats — compact single row + insights link ──────────── */}
-        <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
-          <div className="flex items-stretch divide-x divide-border/40">
-            {stats.map((stat) => (
-              <div key={stat.label} className="flex-1 flex flex-col items-center justify-center py-4 px-2 gap-0.5">
-                <span className="text-[17px] leading-none">{stat.icon}</span>
-                <p className="text-text-primary font-bold text-[19px] leading-none tabular-nums mt-1.5">
-                  {stat.value}
-                  {stat.unit && <span className="text-[11px] font-normal text-text-muted ml-0.5">{stat.unit}</span>}
-                </p>
-                <p className="text-text-muted text-[10px] font-medium uppercase tracking-wide mt-0.5">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-          <button
+        {/* ── Stand ──────────────────────────────────────────────
+            Drei Kennzahlen ueber denselben Baustein wie im Klausurenmodus,
+            darunter die Wege zu den Zahlen dahinter. Vorher war das eine
+            handgebaute Karte mit eigener Zeilenhoehe und einem indigofarbenen
+            Zeichen, das sonst nirgends in der App vorkommt. */}
+        <MetricRow>
+          {stats.slice(0, 3).map((stat) => (
+            <Metric
+              key={stat.label}
+              value={<span className="tabular-nums">{stat.value}{stat.unit && <span className="text-[13px] font-normal text-text-secondary ml-0.5">{stat.unit}</span>}</span>}
+              label={stat.label}
+            />
+          ))}
+        </MetricRow>
+
+        <ListGroup>
+          <ListRow
+            leading={
+              <span className="w-9 h-9 rounded-icon bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-primary shrink-0">
+                <Icon name="chart" size={17} />
+              </span>
+            }
+            title={<span className="text-[15px] font-normal">Statistiken</span>}
+            subtitle="Notenverlauf, Aktivität, Klausuren"
+            chevron
             onClick={() => navigate('/insights')}
-            className="w-full border-t border-border/40 flex items-center justify-between px-4 py-2.5 press-sm"
-          >
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-[6px] flex items-center justify-center shrink-0"
-                style={{ background: 'linear-gradient(145deg, #6366F1, #4C1D95)' }}>
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
-                </svg>
-              </div>
-              <span className="text-text-secondary text-[13px] font-medium">Statistiken & Insights</span>
-            </div>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted">
-              <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+          />
+          {/* Rang statt Muenze: eine Zahl und ein Ring, kein Bild. Der Rang
+              sagt etwas ueber den Umfang, die Streak ueber die Regelmaessigkeit —
+              zwei Dinge, deshalb zwei Anzeigen. */}
+          <ListRow
+            leading={<RangRing xp={appStats.coins ?? 0} />}
+            title={<span className="text-[15px] font-normal">Rang</span>}
+            subtitle={`Stufe ${rangFuer(appStats.coins ?? 0).stufe} · ${rangFuer(appStats.coins ?? 0).label}`}
+            value={<span className="tabular-nums font-semibold text-text-primary">{appStats.coins ?? 0} XP</span>}
+            chevron
+            onClick={() => navigate('/profil/coins')}
+          />
+        </ListGroup>
+
         </div>
 
-        {/* ── Coins preview row ──────────────────────────────────── */}
-        <button
-          onClick={() => navigate('/profil/coins')}
-          className="w-full bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden flex items-center gap-3 px-4 py-3.5 press-sm text-left"
-        >
-          <CoinIcon coins={appStats.coins ?? 0} size={34} tilt={false} noAnimation/>
-          <div className="flex-1 min-w-0">
-            <p className="text-text-primary font-bold text-[15px] leading-none">Coins</p>
-            <p className="text-text-muted text-[12px] mt-0.5">
-              <span className="font-semibold tabular-nums" style={{ color: '#F59E0B' }}>{appStats.coins ?? 0}</span>
-              {' '}· {COIN_TIERS[getCoinTier(appStats.coins ?? 0)].label}
-            </p>
+        {/* Rechte Spalte — die Wege zu den Einstellungen */}
+        <div className="space-y-5 mt-5 lg:mt-0">
+
+        {/* ── Anpassen ────────────────────────────────────────────
+            Zweiter Weg in den Planen-Bereich. Kalender und Stundenplan sind
+            die beiden Dinge, die man einmal einrichtet und danach selten
+            anfasst — sie gehoeren deshalb auch hierher, nicht nur hinter den
+            Planen-Knopf im Klausurenmodus. */}
+        <div>
+          <h2 className="section-label mb-2">Anpassen</h2>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => navigate('/kalender')}
+              className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-4 flex items-center gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
+            >
+              <span className="w-10 h-10 rounded-icon flex items-center justify-center shrink-0 text-white" style={{ background: 'var(--grad-mode)' }}>
+                <Icon name="calendar" size={19} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-semibold text-text-primary">Kalender</span>
+                <span className="block text-[13px] text-text-secondary truncate">Termine</span>
+              </span>
+            </button>
+            <button
+              onClick={() => navigate('/stundenplan')}
+              className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-4 flex items-center gap-3 text-left press-sm hover:bg-surface-hover transition-colors"
+            >
+              <span className="w-10 h-10 rounded-icon flex items-center justify-center shrink-0 text-white" style={{ background: 'var(--grad-mode)' }}>
+                <Icon name="clock" size={19} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[15px] font-semibold text-text-primary">Stundenplan</span>
+                <span className="block text-[13px] text-text-secondary truncate">Wochenstunden</span>
+              </span>
+            </button>
           </div>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
-            <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
+        </div>
 
         {/* ── Allgemein ──────────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Allgemein</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden divide-y divide-border/50">
-            <NavRow label="Erscheinungsbild" sublabel={THEME_LABELS[theme]} onClick={() => navigate('/profil/erscheinungsbild')} />
+          <ListGroup>
+            <ThemeRow theme={theme} onPick={setTheme} />
             {authUser && <NavRow label="Account" onClick={() => navigate('/profil/account')} />}
-          </div>
+          </ListGroup>
         </div>
 
         {/* ── Einstellungen ──────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Einstellungen</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden divide-y divide-border/50">
+          <ListGroup>
             <NavRow label="Fach hinzufügen" onClick={() => navigate('/profil/faecher')} />
             <NavRow label="Benachrichtigungen" onClick={() => navigate('/profil/benachrichtigungen')} />
             <NavRow label="Bundesland & Lehrplan" onClick={() => navigate('/profil/bundesland')} />
-          </div>
+          </ListGroup>
         </div>
 
         {/* ── Rechtliches ────────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Rechtliches</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden divide-y divide-border/50">
+          <ListGroup>
             <NavRow label="Impressum" onClick={() => navigate('/profil/impressum')} />
             <NavRow label="Datenschutzerklärung" onClick={() => navigate('/profil/datenschutz')} />
             <NavRow label="Nutzungsbedingungen (AGB)" onClick={() => navigate('/profil/agb')} />
-          </div>
+          </ListGroup>
         </div>
 
         {/* ── Support ────────────────────────────────────────────── */}
         <div>
           <h2 className="section-label mb-2">Support</h2>
-          <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+          <ListGroup>
             <NavRow label="Hilfe & Feedback" onClick={() => navigate('/profil/support')} />
-          </div>
+          </ListGroup>
         </div>
 
         {/* ── Dev-Tools (nur allowlisted) ─────────────────────────── */}
         {isDevAllowlisted && (
           <div>
             <h2 className="section-label mb-2">Entwickler</h2>
-            <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
+            <ListGroup>
               <NavRow label="Dev-Tools" sublabel={isPro ? 'Pro aktiv' : undefined} onClick={() => navigate('/profil/dev-tools')} />
-            </div>
+            </ListGroup>
           </div>
         )}
 
@@ -529,8 +616,8 @@ export function ProfilScreen() {
               </p>
               <button
                 onClick={() => setShowProComingSoon(true)}
-                className="relative w-full py-3 rounded-card text-white text-[14px] font-semibold press transition-all overflow-hidden"
-                style={{ background: 'linear-gradient(135deg, #34D399, #059669)', animation: 'ea-glow 2.4s ease-in-out infinite' }}
+                className="relative w-full h-12 rounded-pill text-[14px] font-semibold press transition-all overflow-hidden"
+                style={{ background: '#FFFFFF', color: '#1B1B1F' }}
               >
                 <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
                 <span className="relative">Für Rabatt vormerken</span>
@@ -542,10 +629,10 @@ export function ProfilScreen() {
                 <div className="p-5">
                   <div className="flex items-start gap-2.5 mb-4">
                     <div
-                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-[20px] shrink-0"
-                      style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+                      className="w-10 h-10 rounded-btn flex items-center justify-center text-[20px] shrink-0"
+                      style={{ background: 'var(--grad-mode)' }}
                     >
-                      🔗
+                      <Icon name="gift" size={19} />
                     </div>
                     <div>
                       <p className="text-text-primary font-bold text-[15px]">Freunde einladen</p>
@@ -556,7 +643,7 @@ export function ProfilScreen() {
                   {referralCode && (
                     <div className="flex items-center gap-3">
                       <div
-                        className="shrink-0 rounded-[10px] overflow-hidden"
+                        className="shrink-0 rounded-btn overflow-hidden"
                         style={{ width: 64, height: 64, background: '#fff' }}
                       >
                         <img
@@ -568,12 +655,12 @@ export function ProfilScreen() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-text-muted text-[11px] mb-1.5">Dein Einladungslink</p>
-                        <p className="text-text-primary font-mono text-[12px] truncate mb-2">{referralLink}</p>
+                        <p className="inv-sub text-[11px] mb-1.5">Dein Einladungslink</p>
+                        <p className="inv-mono font-mono text-[12px] truncate mb-2">{referralLink}</p>
                         {copyToast ? (
                           <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
                             style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>
-                            ✓ Kopiert!
+                            Kopiert
                           </div>
                         ) : (
                           <button
@@ -597,6 +684,7 @@ export function ProfilScreen() {
           DailyStudent <span className="text-text-muted/30">·</span> Beta
         </p>
 
+        </div>
       </div>
 
       {/* Same shiny-mint keyframes as the Landing Page's Early Access button —
@@ -616,7 +704,7 @@ export function ProfilScreen() {
       {/* Toast */}
       {paymentToast === 'success' && (
         <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-pill bg-success/10 border border-success/30 shadow-float animate-fade-in">
-          <p className="text-success text-[13px] font-semibold whitespace-nowrap">Zahlung erfolgreich! Pro wird aktiviert…</p>
+          <p className="text-text-primary text-[13px] font-semibold whitespace-nowrap">Zahlung erfolgreich! Pro wird aktiviert…</p>
         </div>
       )}
       {paymentToast === 'error' && (

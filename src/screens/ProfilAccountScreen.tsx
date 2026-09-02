@@ -78,7 +78,7 @@ export function ProfilAccountScreen() {
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium mb-3 press-sm -ml-0.5"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -88,7 +88,7 @@ export function ProfilAccountScreen() {
         <h1 className="text-[28px] font-bold text-text-primary">Account</h1>
       </div>
 
-      <div className="px-4 mt-5">
+      <div className="px-4 lg:px-6 mt-5 lg:max-w-[760px]">
         <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
           <div className="px-4 py-3.5 flex items-center justify-between border-b border-border/50">
             <span className="text-text-muted text-[13px]">E-Mail</span>
@@ -139,8 +139,8 @@ export function ProfilAccountScreen() {
             onClick={() => void signOut()}
             className="w-full flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-hover transition-colors press-sm border-b border-border/50"
           >
-            <span className="text-danger text-[15px]">Abmelden</span>
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-danger">
+            <span className="text-text-primary text-[15px]">Abmelden</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
               <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
@@ -155,10 +155,10 @@ export function ProfilAccountScreen() {
           </button>
         </div>
         {portalError && (
-          <p className="text-[13px] text-danger mt-2 px-1">{portalError}</p>
+          <p className="text-[13px] text-text-primary mt-2 px-1">{portalError}</p>
         )}
         {restoreMessage && (
-          <p className={`text-[13px] mt-2 px-1 ${restoreMessage.isError ? 'text-danger' : 'text-text-secondary'}`}>{restoreMessage.text}</p>
+          <p className={`text-[13px] mt-2 px-1 ${restoreMessage.isError ? 'text-text-primary' : 'text-text-secondary'}`}>{restoreMessage.text}</p>
         )}
       </div>
 
@@ -167,13 +167,13 @@ export function ProfilAccountScreen() {
         <>
           <div className="fixed inset-0 z-[50] bg-black/50" onClick={() => { if (!deleting) { setDeleteOpen(false) } }} />
           <div
-            className="fixed inset-x-4 z-[51] bg-surface rounded-2xl shadow-float overflow-hidden"
+            className="fixed inset-x-4 z-[51] bg-surface rounded-card shadow-float overflow-hidden"
             style={{ top: '12%' }}
           >
             <div className="px-5 pt-6 pb-5">
               <div
                 className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
-                style={{ background: 'rgba(var(--color-danger), 0.1)' }}
+                style={{ background: 'rgb(var(--color-danger) / 0.1)' }}
               >
                 <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-danger))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -188,7 +188,7 @@ export function ProfilAccountScreen() {
               </p>
 
               {deleteError && (
-                <div className="rounded-[10px] px-3 py-2.5 mb-4 border" style={{ background: 'rgba(var(--color-danger),0.08)', borderColor: 'rgba(var(--color-danger),0.2)' }}>
+                <div className="rounded-btn px-3 py-2.5 mb-4 border" style={{ background: 'rgb(var(--color-danger) / 0.08)', borderColor: 'rgb(var(--color-danger) / 0.2)' }}>
                   <p className="text-[12px] leading-snug" style={{ color: 'rgb(var(--color-danger))' }}>{deleteError}</p>
                 </div>
               )}
@@ -202,27 +202,27 @@ export function ProfilAccountScreen() {
                 onChange={(e) => setDeleteInput(e.target.value)}
                 placeholder="löschen"
                 autoFocus
-                className="w-full bg-background border rounded-[12px] px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none mb-4"
-                style={{ borderColor: deleteInput.toLowerCase() === 'löschen' ? 'rgba(var(--color-danger),0.6)' : 'rgba(var(--color-border),0.8)' }}
+                className="w-full bg-background border rounded-btn px-4 py-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none mb-4"
+                style={{ borderColor: deleteInput.toLowerCase() === 'löschen' ? 'rgb(var(--color-danger) / 0.6)' : 'rgb(var(--color-border) / 0.8)' }}
               />
 
               <div className="flex gap-2">
                 <button
                   onClick={() => setDeleteOpen(false)}
                   disabled={deleting}
-                  className="flex-1 py-3 rounded-[14px] bg-surface-hover text-text-secondary text-[14px] font-semibold press-sm disabled:opacity-50"
+                  className="flex-1 py-3 rounded-icon bg-surface-hover text-text-secondary text-[14px] font-semibold press-sm disabled:opacity-50"
                 >
                   Abbrechen
                 </button>
                 <button
                   onClick={handleDeleteAccount}
                   disabled={deleteInput.toLowerCase() !== 'löschen' || deleting}
-                  className="flex-1 py-3 rounded-[14px] text-white text-[14px] font-bold press-sm disabled:opacity-40 transition-all"
+                  className="flex-1 py-3 rounded-icon text-white text-[14px] font-bold press-sm disabled:opacity-40 transition-all"
                   style={{
                     background: deleteInput.toLowerCase() === 'löschen'
-                      ? 'linear-gradient(135deg, rgb(var(--color-danger)), rgba(var(--color-danger),0.85))'
-                      : 'rgba(var(--color-danger),0.25)',
-                    boxShadow: deleteInput.toLowerCase() === 'löschen' ? '0 4px 16px rgba(var(--color-danger),0.35)' : 'none',
+                      ? 'rgb(var(--fill-red))'
+                      : 'rgb(var(--color-danger) / 0.25)',
+                    boxShadow: deleteInput.toLowerCase() === 'löschen' ? '0 4px 16px rgb(var(--color-danger) / 0.35)' : 'none',
                   }}
                 >
                   {deleting ? 'Wird gelöscht…' : 'Endgültig löschen'}

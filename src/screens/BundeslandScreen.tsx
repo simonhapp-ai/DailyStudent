@@ -2,24 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 
-const BUNDESLAENDER = [
-  { id: 'by', name: 'Bayern' },
-  { id: 'bw', name: 'Baden-Württ.' },
-  { id: 'be', name: 'Berlin' },
-  { id: 'bb', name: 'Brandenburg' },
-  { id: 'hb', name: 'Bremen' },
-  { id: 'hh', name: 'Hamburg' },
-  { id: 'he', name: 'Hessen' },
-  { id: 'mv', name: 'Meckl.-Vorp.' },
-  { id: 'ni', name: 'Niedersachsen' },
-  { id: 'nw', name: 'NRW' },
-  { id: 'rp', name: 'Rheinl.-Pfalz' },
-  { id: 'sl', name: 'Saarland' },
-  { id: 'sn', name: 'Sachsen' },
-  { id: 'st', name: 'Sachsen-Anh.' },
-  { id: 'sh', name: 'Schleswig-H.' },
-  { id: 'th', name: 'Thüringen' },
-]
+
+import { BUNDESLAENDER } from '../data/bundeslaender'
 
 const SCHULFORMEN = ['Gymnasium', 'Gesamtschule', 'FOS']
 
@@ -65,7 +49,7 @@ export function BundeslandScreen() {
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
           onClick={() => navigate('/profil')}
-          className="flex items-center gap-1 text-accent text-[14px] font-medium mb-3 press-sm -ml-0.5"
+          className="flex items-center gap-1 text-text-primary text-[14px] font-medium mb-3 press-sm -ml-0.5"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -79,7 +63,7 @@ export function BundeslandScreen() {
         </p>
       </div>
 
-      <div className="px-4 mt-5 space-y-5">
+      <div className="px-4 lg:px-6 mt-5 space-y-5 lg:max-w-[760px]">
 
         {/* ── Bundesland ──────────────────────────────────────── */}
         <div>
@@ -91,12 +75,12 @@ export function BundeslandScreen() {
                 <button
                   key={bl.id}
                   onClick={() => { setBundeslandId(bl.id); setSaved(false) }}
-                  className={`py-2.5 px-1 rounded-[12px] text-center press-sm transition-all duration-200 border ${active ? 'text-accent' : 'text-text-secondary'}`}
+                  className={`py-2.5 px-1 rounded-btn text-center press-sm transition-all duration-200 border ${active ? 'text-text-primary' : 'text-text-secondary'}`}
                   style={active ? {
-                    background: 'rgba(var(--color-accent),0.08)',
-                    borderColor: 'rgba(var(--color-accent),0.5)',
+                    background: 'rgb(var(--color-accent) / 0.08)',
+                    borderColor: 'rgb(var(--color-accent) / 0.5)',
                   } : {
-                    borderColor: 'rgba(var(--color-border),0.6)',
+                    borderColor: 'rgb(var(--color-border) / 0.6)',
                     background: 'rgb(var(--color-surface))',
                   }}
                 >
@@ -118,11 +102,11 @@ export function BundeslandScreen() {
                   key={sf}
                   onClick={() => { setSchulform(sf); setSaved(false) }}
                   className={`w-full flex items-center justify-between px-4 py-3.5 press-sm transition-all ${i < SCHULFORMEN.length - 1 ? 'border-b border-border/50' : ''}`}
-                  style={active ? { background: 'rgba(var(--color-accent),0.06)' } : {}}
+                  style={active ? { background: 'rgb(var(--color-accent) / 0.06)' } : {}}
                 >
-                  <span className={`text-[15px] font-medium ${active ? 'text-accent' : 'text-text-primary'}`}>{sf}</span>
+                  <span className={`text-[15px] font-medium ${active ? 'text-text-primary' : 'text-text-primary'}`}>{sf}</span>
                   {active && (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-accent shrink-0">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-primary shrink-0">
                       <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   )}
@@ -146,17 +130,17 @@ export function BundeslandScreen() {
                   <button
                     key={id}
                     onClick={() => { setSchultyp(id); setSaved(false) }}
-                    className="py-3.5 px-4 rounded-[14px] border press-sm transition-all text-left"
+                    className="py-3.5 px-4 rounded-icon border press-sm transition-all text-left"
                     style={active ? {
-                      background: 'rgba(var(--color-accent),0.08)',
-                      borderColor: 'rgba(var(--color-accent),0.5)',
+                      background: 'rgb(var(--color-accent) / 0.08)',
+                      borderColor: 'rgb(var(--color-accent) / 0.5)',
                     } : {
-                      borderColor: 'rgba(var(--color-border),0.6)',
+                      borderColor: 'rgb(var(--color-border) / 0.6)',
                       background: 'rgb(var(--color-surface))',
                     }}
                   >
-                    <p className={`font-bold text-[22px] leading-none ${active ? 'text-accent' : 'text-text-primary'}`}>{label}</p>
-                    <p className={`text-[11px] mt-1 ${active ? 'text-accent/70' : 'text-text-muted'}`}>{sub} · {range}</p>
+                    <p className={`font-bold text-[22px] leading-none ${active ? 'text-text-primary' : 'text-text-primary'}`}>{label}</p>
+                    <p className={`text-[11px] mt-1 ${active ? 'text-text-primary/70' : 'text-text-muted'}`}>{sub} · {range}</p>
                   </button>
                 )
               })}
@@ -168,13 +152,13 @@ export function BundeslandScreen() {
         <button
           onClick={handleSave}
           disabled={!changed || saved}
-          className="w-full py-3.5 rounded-card text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
+          className="w-full h-12 rounded-pill text-white text-[15px] font-bold press-sm disabled:opacity-40 transition-all"
           style={{
-            background: 'linear-gradient(135deg, rgb(var(--color-accent)), rgba(var(--color-accent),0.8))',
-            boxShadow: changed && !saved ? '0 4px 16px rgba(var(--color-accent),0.4)' : 'none',
+            background: 'var(--grad-mode)',
+            boxShadow: changed && !saved ? '0 4px 16px rgb(var(--color-accent) / 0.4)' : 'none',
           }}
         >
-          {saved ? '✓ Gespeichert' : error ? '✕ Fehler' : 'Speichern'}
+          {saved ? 'Gespeichert' : error ? 'Fehler' : 'Speichern'}
         </button>
 
         {error && (

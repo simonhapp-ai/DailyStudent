@@ -1,9 +1,10 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
+import { pdfToImages } from '../../lib/pdf'
 import { getStroke } from 'perfect-freehand'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-type Tool = 'pen' | 'highlighter' | 'eraser' | 'select' | 'geometry' | 'lasso'
+type Tool = 'pen' | 'highlighter' | 'eraser' | 'select' | 'geometry' | 'lasso' | 'text'
 type PenType = 'füller' | 'bleistift' | 'fineliner' | 'edding'
 type BackgroundType = 'white' | 'lined' | 'grid' | 'dotted'
 type Background = { type: BackgroundType } | { type: 'image'; dataUrl: string }
@@ -15,6 +16,23 @@ export interface CanvasImageData {
   y: number
   w: number
   h: number
+}
+
+// ── Textfeld ──────────────────────────────────────────────────────────────
+// Getippter Text neben der Handschrift. Bewusst NICHT in die Zeichenflaeche
+// gemalt, sondern als HTML darueber gelegt — genau wie die Bilder: So bleibt
+// er auswaehlbar, aenderbar und bei jedem Zoom scharf. Gemalter Text waere
+// beim Hineinzoomen unscharf und nachtraeglich nicht mehr zu bearbeiten.
+// Erst beim Export und fuer die Vorschaubilder wird er einmalig mitgemalt.
+export interface CanvasTextData {
+  id: string
+  text: string
+  x: number
+  y: number
+  /** Breite des Feldes; die Hoehe ergibt sich aus dem Umbruch. */
+  w: number
+  size: number
+  colorHex: string
 }
 
 type GeomShape =
@@ -37,6 +55,8 @@ export interface CanvasPageData {
   background: Background
   strokes: StrokeRecord[]
   images: CanvasImageData[]
+  /** Optional, damit bestehende Seiten ohne Migration weiter gelten. */
+  texts?: CanvasTextData[]
   thumbnail?: string
 }
 
@@ -48,6 +68,17 @@ const PEN_SIZES    = [1.5, 3, 5, 8, 13, 20]
 const MARKER_SIZES = [8, 12, 18, 26, 36, 50]
 const ERASER_SIZES = [8, 14, 22, 32, 44, 60]
 const DOT_VIS_SIZES = [3, 5, 8, 12, 17, 24]   // visual dot sizes in the picker
+
+// ── Zoom-Schreibfeld ──────────────────────────────────────────────────────
+// Der Streifen am unteren Rand ist KEINE zweite Zeichenflaeche, sondern eine
+// zweite ANSICHT auf dieselbe Seite: derselbe Strichbestand, nur vergroessert
+// und auf einen Ausschnitt beschnitten. Deshalb gibt es keinen zweiten
+// Speicher, keine Synchronisierung und keinen Sonderfall beim Rueckgaengig-
+// machen — Zeigereignisse werden nur durch eine andere Matrix gerechnet und
+// laufen dann durch denselben Pfad wie auf dem Blatt.
+const WB_ZOOM = 2.6
+const WB_HEIGHT = 148          // Hoehe des Streifens auf dem Bildschirm
+const WB_ADVANCE = 0.72        // Anteil der Fensterbreite, um den weitergerueckt wird
 
 const DEFAULT_COLORS = ['#111827', '#2563EB', '#DC2626', '#16A34A', '#7C3AED', '#F97316']
 const COLORS_KEY = 'sb_palette_v1'
@@ -186,6 +217,32 @@ function drawBackground(
   } else if (bg.type === 'image') {
     const img = imgCache.get((bg as { dataUrl: string }).dataUrl)
     if (img?.complete && img.naturalWidth > 0) ctx.drawImage(img, 0, 0, w, h)
+  }
+}
+
+/** Malt Textfelder in eine Zeichenflaeche. Wird NUR fuer Vorschaubilder und
+ *  den PDF-Export gebraucht: Auf dem Bildschirm liegen sie als HTML darueber,
+ *  damit sie aenderbar und scharf bleiben. */
+function drawCanvasTexts(ctx: CanvasRenderingContext2D, texts: CanvasTextData[]) {
+  for (const t of texts) {
+    if (!t.text.trim()) continue
+    ctx.save()
+    ctx.fillStyle = t.colorHex
+    ctx.font = `${t.size}px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`
+    ctx.textBaseline = 'top'
+    // Zeilenumbruch von Hand: Die Zeichenflaeche kann das nicht selbst.
+    const zeilen: string[] = []
+    for (const absatz of t.text.split('\n')) {
+      let zeile = ''
+      for (const wort of absatz.split(' ')) {
+        const test = zeile ? `${zeile} ${wort}` : wort
+        if (ctx.measureText(test).width > t.w - 8 && zeile) { zeilen.push(zeile); zeile = wort }
+        else zeile = test
+      }
+      zeilen.push(zeile)
+    }
+    zeilen.forEach((z, i) => ctx.fillText(z, t.x + 4, t.y + 2 + i * t.size * 1.35))
+    ctx.restore()
   }
 }
 
@@ -443,6 +500,7 @@ export function DrawingCanvas({
   const imgCacheRef  = useRef(new Map<string, HTMLImageElement>())
   const bgInputRef   = useRef<HTMLInputElement>(null)
   const canvasImgInputRef = useRef<HTMLInputElement>(null)
+  const pdfInputRef = useRef<HTMLInputElement>(null)
   const colorInputRef = useRef<HTMLInputElement>(null)
   const editingColorIdxRef = useRef(0)
   const canvasSizeRef = useRef({ w: 0, h: 0 })
@@ -469,6 +527,29 @@ export function DrawingCanvas({
 
   // Pen-only mode: fingers navigate (pan), only pencil draws
   const PEN_ONLY_KEY = 'sb_pen_only_v1'
+  // Der Streifen: an/aus plus die linke obere Ecke des gezeigten Ausschnitts
+  // in Seitenkoordinaten.
+  const [wb, setWb] = useState<{ on: boolean; x: number; y: number }>({ on: false, x: 0, y: 0 })
+  // Die Zeigerbehandlung laeuft ausserhalb des Renderns und braucht den
+  // aktuellen Ausschnitt — deshalb der Spiegel, gesetzt in einem Effekt statt
+  // waehrend des Renderns.
+  const wbRef = useRef(wb)
+  /** Setzt Zustand und Spiegel zusammen — die Zeigerbehandlung laeuft
+   *  ausserhalb des Renderns und braucht den aktuellen Ausschnitt sofort. */
+  const updateWb = useCallback((f: (v: { on: boolean; x: number; y: number }) => { on: boolean; x: number; y: number }) => {
+    const next = f(wbRef.current)
+    wbRef.current = next
+    setWb(next)
+  }, [])
+  const wbCanvasRef = useRef<HTMLCanvasElement>(null)
+  /** Breite des gezeigten Ausschnitts in Seitenkoordinaten. Liegt im Zustand,
+   *  weil das Rechteck auf dem Blatt sie beim Rendern braucht — aus dem Ref
+   *  gelesen waere sie beim ersten Bild noch nicht da. */
+  const [wbFensterB, setWbFensterB] = useState(240)
+  const wbWrapRef = useRef<HTMLDivElement>(null)
+  // Sagt getXY, auf welcher Flaeche gerade gezeichnet wird.
+  const drawSurfaceRef = useRef<'page' | 'wb'>('page')
+
   const [penOnlyMode, setPenOnlyMode] = useState(() => localStorage.getItem(PEN_ONLY_KEY) === '1')
   const penOnlyModeRef = useRef(penOnlyMode)
   useEffect(() => { penOnlyModeRef.current = penOnlyMode }, [penOnlyMode])
@@ -492,6 +573,9 @@ export function DrawingCanvas({
   // Image state
   const currentImagesRef = useRef<CanvasImageData[]>([])
   const [currentImagesState, setCurrentImagesState] = useState<CanvasImageData[]>([])
+  const currentTextsRef = useRef<CanvasTextData[]>([])
+  const [currentTexts, setCurrentTextsState] = useState<CanvasTextData[]>([])
+  const [activeTextId, setActiveTextId] = useState<string | null>(null)
   const [selectedImageId, setSelectedImageId] = useState<string | null>(null)
   const imageInteractionRef = useRef<{
     action: ImageInteractionAction
@@ -593,6 +677,12 @@ export function DrawingCanvas({
   // ── Color helpers ─────────────────────────────────────────────────────────
 
   const handleColorDotClick = (idx: number) => {
+    // Bei offenem Textfeld faerbt der Farbpunkt DIESES Feld — sonst waere die
+    // Farbe waehrend des Schreibens nicht erreichbar.
+    if (tool === 'text' && activeTextId) {
+      setCurrentTexts(currentTextsRef.current.map((t) =>
+        t.id === activeTextId ? { ...t, colorHex: colors[idx] } : t))
+    }
     if (activeColorIdx === idx) {
       editingColorIdxRef.current = idx
       if (colorInputRef.current) {
@@ -629,6 +719,12 @@ export function DrawingCanvas({
     pagesRef.current[curIdxRef.current].images = images
   }, [])
 
+  const setCurrentTexts = useCallback((texts: CanvasTextData[]) => {
+    currentTextsRef.current = texts
+    setCurrentTextsState(texts)
+    pagesRef.current[curIdxRef.current].texts = texts
+  }, [])
+
   const preloadImage = useCallback((dataUrl: string) => {
     if (imgCacheRef.current.has(dataUrl)) return
     const el = new Image()
@@ -653,6 +749,7 @@ export function DrawingCanvas({
     drawCanvasImages(ctx, w, h, page.images ?? [], imgCacheRef.current)
     const strokes = pageIdx === curIdxRef.current ? strokesRef.current : page.strokes
     for (const s of strokes) paintStrokeRecord(ctx, s)
+    drawCanvasTexts(ctx, pageIdx === curIdxRef.current ? currentTextsRef.current : (page.texts ?? []))
     return off.toDataURL('image/png', 0.75)
   }, [])
 
@@ -661,6 +758,7 @@ export function DrawingCanvas({
     const idx = curIdxRef.current
     pagesRef.current[idx].strokes   = [...strokesRef.current]
     pagesRef.current[idx].images    = currentImagesRef.current
+    pagesRef.current[idx].texts     = currentTextsRef.current
     pagesRef.current[idx].thumbnail = generateThumbnail(idx)
     onPagesChange(pagesRef.current.map(p => ({
       id: p.id, background: p.background,
@@ -687,6 +785,9 @@ export function DrawingCanvas({
     const imgs0 = pagesRef.current[0].images ?? []
     currentImagesRef.current = imgs0
     setCurrentImagesState(imgs0)
+    const txt0 = pagesRef.current[0].texts ?? []
+    currentTextsRef.current = txt0
+    setCurrentTextsState(txt0)
     pagesRef.current.forEach(page => {
       if (page.background.type === 'image') preloadImage((page.background as { dataUrl: string }).dataUrl)
       ;(page.images ?? []).forEach(img => preloadImage(img.dataUrl))
@@ -749,15 +850,18 @@ export function DrawingCanvas({
     const leaving = curIdxRef.current
     pagesRef.current[leaving].strokes   = [...strokesRef.current]
     pagesRef.current[leaving].images    = currentImagesRef.current
+    pagesRef.current[leaving].texts     = currentTextsRef.current
     pagesRef.current[leaving].thumbnail = generateThumbnail(leaving)
     curIdxRef.current = idx
     strokesRef.current = [...pagesRef.current[idx].strokes]
     undoStackRef.current = []; redoStackRef.current = []
     const newBg  = pagesRef.current[idx].background
     const newImg = pagesRef.current[idx].images ?? []
+    const newTxt = pagesRef.current[idx].texts ?? []
     setCurrentIdx(idx); setCurrentBgType(newBg.type)
     currentImagesRef.current = newImg; setCurrentImagesState(newImg)
-    setSelectedImageId(null); updateHistoryState()
+    currentTextsRef.current = newTxt; setCurrentTextsState(newTxt)
+    setSelectedImageId(null); setActiveTextId(null); updateHistoryState()
     redrawBgCanvas(newBg); redrawStrokeCanvas(strokesRef.current)
     notifyPagesChanged()
   }, [redrawBgCanvas, redrawStrokeCanvas, updateHistoryState, notifyPagesChanged, generateThumbnail])
@@ -765,12 +869,15 @@ export function DrawingCanvas({
   const addPage = useCallback(() => {
     pagesRef.current[curIdxRef.current].strokes = [...strokesRef.current]
     pagesRef.current[curIdxRef.current].images  = currentImagesRef.current
-    const newPage: CanvasPageData = { id: `p${Date.now()}`, background: { type: 'white' }, strokes: [], images: [] }
+    pagesRef.current[curIdxRef.current].texts   = currentTextsRef.current
+    const newPage: CanvasPageData = { id: `p${Date.now()}`, background: { type: 'white' }, strokes: [], images: [], texts: [] }
     pagesRef.current.push(newPage)
     const newIdx = pagesRef.current.length - 1
     curIdxRef.current = newIdx
     strokesRef.current = []; undoStackRef.current = []; redoStackRef.current = []
     currentImagesRef.current = []
+    currentTextsRef.current = []
+    setCurrentTextsState([]); setActiveTextId(null)
     setPageCount(pagesRef.current.length); setCurrentIdx(newIdx)
     setCurrentBgType('white'); setCurrentImagesState([]); setSelectedImageId(null)
     updateHistoryState(); redrawBgCanvas({ type: 'white' }); redrawStrokeCanvas([])
@@ -956,6 +1063,18 @@ export function DrawingCanvas({
   // ── Pointer events (drawing) ──────────────────────────────────────────────
 
   const getXY = (e: React.PointerEvent<HTMLCanvasElement>): number[] => {
+    // Im Streifen gilt eine andere Matrix: fester Zoom, verschobener Ursprung.
+    // Alles danach rechnet weiter in Seitenkoordinaten, als waere nichts
+    // geschehen — das ist der ganze Trick.
+    if (drawSurfaceRef.current === 'wb') {
+      const rect = e.currentTarget.getBoundingClientRect()
+      const w = wbRef.current
+      return [
+        w.x + (e.clientX - rect.left) / WB_ZOOM,
+        w.y + (e.clientY - rect.top) / WB_ZOOM,
+        e.pressure || 0.5,
+      ]
+    }
     const rect = fgCanvasRef.current!.getBoundingClientRect()
     const scale = viewTransformRef.current.scale
     return [
@@ -964,6 +1083,31 @@ export function DrawingCanvas({
       e.pressure || 0.5,
     ]
   }
+
+  /** Zeichnet den Streifen neu — Bestand plus, falls vorhanden, den laufenden Strich. */
+  const redrawWriteBox = useCallback(() => {
+    const c = wbCanvasRef.current
+    if (!c) return
+    const ctx = c.getContext('2d')
+    if (!ctx) return
+    const dpr = window.devicePixelRatio || 1
+    const cssW = c.clientWidth, cssH = c.clientHeight
+    if (c.width !== cssW * dpr || c.height !== cssH * dpr) {
+      c.width = cssW * dpr
+      c.height = cssH * dpr
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    ctx.clearRect(0, 0, cssW, cssH)
+    ctx.save()
+    ctx.scale(WB_ZOOM, WB_ZOOM)
+    ctx.translate(-wbRef.current.x, -wbRef.current.y)
+    for (const st of strokesRef.current) paintStrokeRecord(ctx, st)
+    const act = activeRef.current
+    if (act && act.tool !== 'eraser') {
+      paintStroke(ctx, act.points, act.tool, act.colorHex, act.size, act.penType)
+    }
+    ctx.restore()
+  }, [])
 
   const handleDeleteSelection = () => {
     const sel = selectionRef.current
@@ -1018,7 +1162,7 @@ export function DrawingCanvas({
       return
     }
     const shape = detectGeomShape(active.points)
-    const newId = `g${Date.now()}`
+    const newId = genId()
     const snap: StrokeRecord = { id: newId, points: active.points, tool: 'geometry', colorHex: active.colorHex, size: active.size, shape }
     // Paint shape to sk canvas
     const sk = skCanvasRef.current
@@ -1036,6 +1180,19 @@ export function DrawingCanvas({
 
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (tool === 'select') return
+
+    // Textwerkzeug: Tippen legt ein Feld an und setzt den Schreibpunkt hinein.
+    if (tool === 'text') {
+      const [cx, cy] = getXY(e)
+      const id = genId()
+      setCurrentTexts([
+        ...currentTextsRef.current,
+        { id, text: '', x: cx, y: cy, w: 260, size: 16, colorHex: colors[activeColorIdx] },
+      ])
+      setActiveTextId(id)
+      notifyPagesChanged()
+      return
+    }
 
     if (e.pointerType === 'pen') { hasSeenPenRef.current = true; penIsActiveRef.current = true }
 
@@ -1066,15 +1223,24 @@ export function DrawingCanvas({
       }
       // Tapped empty space — deselect
       selectedGeomIdRef.current = null; setSelectedGeomId(null)
-      // Finger on empty: can't draw, done
-      if (e.pointerType !== 'pen') return
-      // Pen on empty: fall through to draw
+      // Zeichnen auf leerer Fläche. Bisher durfte das AUSSCHLIESSLICH ein Stift,
+      // wodurch das Werkzeug auf dem Telefon und am Schreibtisch wirkungslos war.
+      // Jetzt entscheidet allein der Schalter, siehe unten.
+      if (e.pointerType !== 'pen' && penOnlyModeRef.current) return
     }
 
-    // Standard pen-only / touch blocking (for non-geometry tools)
+    // Wer zeichnen darf, entscheidet AUSSCHLIESSLICH der Nur-Stift-Schalter:
+    //
+    //   an  — nur der Stift zeichnet, ein Finger schiebt das Blatt.
+    //   aus — ein Finger zeichnet, zwei Finger schieben und zoomen.
+    //
+    // Vorher sperrte sich der Finger zusaetzlich selbst aus, sobald auf dem
+    // Geraet einmal ein Stift benutzt worden war — auch bei ausgeschaltetem
+    // Schalter. Das legte den Zustand hinter dem Ruecken des Nutzers fest;
+    // wer den Stift weglegte, konnte ohne Neustart nicht mehr mit dem Finger
+    // schreiben. Nichts soll sich hier von selbst festlegen.
     if (tool !== 'geometry') {
       if (penOnlyModeRef.current && e.pointerType !== 'pen') return
-      if (!penOnlyModeRef.current && hasSeenPenRef.current && e.pointerType === 'touch') return
     }
 
     // ── Lasso tool: selection drag or new lasso ───────────────────────────────
@@ -1140,6 +1306,13 @@ export function DrawingCanvas({
       penType: drawTool === 'pen' ? penTypeRef.current : undefined,
     }
   }
+
+  useEffect(() => {
+    if (!wb.on) return
+    redrawWriteBox()
+    const c = wbCanvasRef.current
+    if (c) setWbFensterB(c.clientWidth / WB_ZOOM)
+  }, [wb, redrawWriteBox])
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (tool === 'eraser') {
@@ -1222,11 +1395,31 @@ export function DrawingCanvas({
       return
     }
 
+    if (wbRef.current.on) redrawWriteBox()
+
     const fg = fgCanvasRef.current; if (!fg) return
     const ctx = fg.getContext('2d'); if (!ctx) return
     const { w, h } = getCSS()
     ctx.clearRect(0, 0, w, h)
     paintStroke(ctx, activeRef.current.points, activeRef.current.tool, activeRef.current.colorHex, activeRef.current.size, activeRef.current.penType)
+  }
+
+  /** Rueckt den Ausschnitt nach rechts; am Zeilenende in die naechste Zeile. */
+  const naechsterAbschnitt = () => {
+    const c = wbCanvasRef.current
+    const { w: seiteB } = getCSS()
+    const fensterB = (c?.clientWidth ?? 600) / WB_ZOOM
+    const zeilenH = WB_HEIGHT / WB_ZOOM
+    updateWb((v) => {
+      const naechstesX = v.x + fensterB * WB_ADVANCE
+      if (naechstesX + fensterB <= seiteB) return { ...v, x: naechstesX }
+      return { ...v, x: 0, y: v.y + zeilenH * 0.9 }
+    })
+  }
+
+  const naechsteZeile = () => {
+    const zeilenH = WB_HEIGHT / WB_ZOOM
+    updateWb((v) => ({ ...v, x: 0, y: v.y + zeilenH * 0.9 }))
   }
 
   const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -1325,6 +1518,19 @@ export function DrawingCanvas({
     redoStackRef.current = []
     strokesRef.current = [...strokesRef.current, stroke]
     updateHistoryState(); exportAndNotify(); notifyPagesChanged()
+
+    // Im Streifen: neu zeichnen und mitwandern, sobald man sich dem rechten
+    // Rand naehert. Von Hand nachschieben zu muessen waere der haeufigste
+    // Handgriff ueberhaupt.
+    if (wbRef.current.on) {
+      redrawWriteBox()
+      const c = wbCanvasRef.current
+      if (c) {
+        const fensterBreite = c.clientWidth / WB_ZOOM
+        const letzterX = Math.max(...stroke.points.map((pt) => pt[0]))
+        if (letzterX > wbRef.current.x + fensterBreite * 0.82) naechsterAbschnitt()
+      }
+    }
   }
 
   const onPointerLeave = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -1383,6 +1589,58 @@ export function DrawingCanvas({
   const deleteSelectedImage = (id: string) => {
     setCurrentImages(currentImagesRef.current.filter(i => i.id !== id))
     setSelectedImageId(null); exportAndNotify(); notifyPagesChanged()
+  }
+
+  // ── PDF als Papier ────────────────────────────────────────────────────
+  // Ein Arbeitsblatt wird nicht als BILD in die Seite gelegt, sondern als
+  // deren PAPIER — pro PDF-Seite eine Seite im Block. Damit liegen die Striche
+  // darueber wie auf jedem anderen Papier auch, der Export flacht ohnehin alle
+  // Ebenen zusammen, und es braucht keine einzige neue Zeile Zeichenlogik.
+  const [pdfLoading, setPdfLoading] = useState(false)
+
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setPdfLoading(true)
+    try {
+      const seiten = await pdfToImages(file)
+      if (seiten.length === 0) return
+
+      // Laufende Seite sichern, bevor der Bestand ersetzt wird.
+      pagesRef.current[curIdxRef.current].strokes = [...strokesRef.current]
+      pagesRef.current[curIdxRef.current].images  = currentImagesRef.current
+      pagesRef.current[curIdxRef.current].texts   = currentTextsRef.current
+
+      const neue: CanvasPageData[] = seiten.map((dataUrl, i) => ({
+        id: `pdf${Date.now()}-${i}`,
+        background: { type: 'image', dataUrl },
+        strokes: [], images: [], texts: [],
+      }))
+      seiten.forEach(preloadImage)
+
+      // Ist der Block noch leer und unbeschrieben, ERSETZT das PDF ihn —
+      // sonst haette man immer eine leere erste Seite davor.
+      const leer = pagesRef.current.length === 1
+        && pagesRef.current[0].strokes.length === 0
+        && (pagesRef.current[0].images ?? []).length === 0
+      pagesRef.current = leer ? neue : [...pagesRef.current, ...neue]
+
+      const idx = leer ? 0 : pagesRef.current.length - seiten.length
+      curIdxRef.current = idx
+      strokesRef.current = []
+      undoStackRef.current = []; redoStackRef.current = []
+      currentImagesRef.current = []; currentTextsRef.current = []
+      setCurrentImagesState([]); setCurrentTextsState([]); setActiveTextId(null)
+      setPageCount(pagesRef.current.length); setCurrentIdx(idx)
+      setCurrentBgType('image')
+      updateHistoryState()
+      redrawBgCanvas(pagesRef.current[idx].background)
+      redrawStrokeCanvas([])
+      exportAndNotify(); notifyPagesChanged()
+    } finally {
+      setPdfLoading(false)
+    }
   }
 
   const handleCanvasImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1460,6 +1718,7 @@ export function DrawingCanvas({
         drawBackground(ctx, w, h, page.background, imgCacheRef.current)
         drawCanvasImages(ctx, w, h, page.images ?? [], imgCacheRef.current)
         for (const s of page.strokes) paintStrokeRecord(ctx, s)
+        drawCanvasTexts(ctx, page.texts ?? [])
         doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 210, 297)
       }
       doc.save('notiz.pdf')
@@ -1523,7 +1782,7 @@ export function DrawingCanvas({
             }}
           >
             <div
-              className="rounded-2xl overflow-hidden"
+              className="rounded-card overflow-hidden"
               style={{
                 background: '#2C2C2E',
                 border: '1px solid rgba(255,255,255,0.08)',
@@ -1538,7 +1797,7 @@ export function DrawingCanvas({
                 onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }}>
+                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(255,255,255,0.1)' }}>
                   <BgIcon type={currentBgType} size={15} />
                 </div>
                 <span className="text-[14px] font-semibold" style={{ color: 'rgba(255,255,255,0.92)' }}>Vorlage wechseln</span>
@@ -1554,7 +1813,7 @@ export function DrawingCanvas({
                     <button
                       key={type}
                       onClick={() => { setPageBackground({ type }); setShowBgPicker(false) }}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all press-sm mt-2"
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-btn text-[11px] font-semibold transition-all press-sm mt-2"
                       style={
                         currentBgType === type
                           ? { background: 'rgba(124,58,237,0.3)', border: '1.5px solid rgba(124,58,237,0.7)', color: '#C4B5FD' }
@@ -1567,7 +1826,7 @@ export function DrawingCanvas({
                   ))}
                   <button
                     onClick={() => { bgInputRef.current?.click(); setShowBgPicker(false) }}
-                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition-all press-sm mt-2"
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-btn text-[11px] font-semibold transition-all press-sm mt-2"
                     style={
                       currentBgType === 'image'
                         ? { background: 'rgba(124,58,237,0.3)', border: '1.5px solid rgba(124,58,237,0.7)', color: '#C4B5FD' }
@@ -1590,7 +1849,7 @@ export function DrawingCanvas({
                 disabled
                 style={{ opacity: 0.38 }}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(90,200,250,0.15)' }}>
+                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(90,200,250,0.15)' }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#5AC8FA" strokeWidth="2.2">
                     <path d="M1 4v6h6" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M3.51 15a9 9 0 1 0 .49-4.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -1616,7 +1875,7 @@ export function DrawingCanvas({
                 onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: penOnlyMode ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.1)' }}>
+                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0" style={{ background: penOnlyMode ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.1)' }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={penOnlyMode ? '#C4B5FD' : 'rgba(255,255,255,0.7)'} strokeWidth="2.2">
                     <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
@@ -1649,7 +1908,7 @@ export function DrawingCanvas({
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,59,48,0.12)' }}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(255,59,48,0.18)' }}>
+                <div className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'rgba(255,59,48,0.18)' }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6B6B" strokeWidth="2.2">
                     <path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2" strokeLinecap="round" />
                   </svg>
@@ -1800,28 +2059,43 @@ export function DrawingCanvas({
       {/* Clear confirm overlay */}
       {showClearConfirm && (
         <div className="fixed inset-0 flex items-center justify-center" style={{ zIndex: 60, background: 'rgba(0,0,0,0.4)' }}>
-          <div className="rounded-2xl px-6 py-5 flex flex-col gap-3" style={{ background: 'var(--color-surface, #fff)', boxShadow: '0 16px 48px rgba(0,0,0,0.2)', minWidth: 240 }}>
+          <div className="rounded-card px-6 py-5 flex flex-col gap-3" style={{ background: 'var(--color-surface, #fff)', boxShadow: '0 16px 48px rgba(0,0,0,0.2)', minWidth: 240 }}>
             <p className="text-[15px] font-bold text-text-primary text-center">Seite löschen?</p>
             <p className="text-[12px] text-text-secondary text-center">Alle Striche auf dieser Seite werden entfernt.</p>
             <div className="flex gap-2 mt-1">
-              <button onClick={() => setShowClearConfirm(false)} className="flex-1 py-2 rounded-xl text-[13px] font-semibold transition-all press-sm" style={{ background: 'rgba(0,0,0,0.07)', color: 'rgb(var(--color-text-secondary))' }}>Abbrechen</button>
-              <button onClick={handleClear} className="flex-1 py-2 rounded-xl text-[13px] font-bold transition-all press-sm" style={{ background: '#FF3B30', color: 'white' }}>Löschen</button>
+              <button onClick={() => setShowClearConfirm(false)} className="flex-1 py-2 rounded-btn text-[13px] font-semibold transition-all press-sm" style={{ background: 'rgba(0,0,0,0.07)', color: 'rgb(var(--color-text-secondary))' }}>Abbrechen</button>
+              <button onClick={handleClear} className="flex-1 py-2 rounded-btn text-[13px] font-bold transition-all press-sm" style={{ background: '#FF3B30', color: 'white' }}>Löschen</button>
             </div>
           </div>
         </div>
       )}
 
-      {/* ── Main toolbar (icon-only) ── */}
-      <div
-        className="flex items-center gap-0.5 px-3 border-b border-border/30 bg-surface shrink-0"
-        style={{ paddingTop: 'max(env(safe-area-inset-top), 10px)', paddingBottom: 10 }}
-      >
+      {/* ── Werkzeugleiste ────────────────────────────────────────────
+          Zwei feste Zeilen nach dem Vorbild von Goodnotes: Oben alles, was das
+          DOKUMENT betrifft, unten die WERKZEUGE. Sie liegen fest ueber dem
+          Blatt und nehmen ihm nichts weg — die Auswahlfelder klappen nur auf,
+          wenn man ein Werkzeug bewusst antippt.
+
+          Zwei Zeilen kosten wenig Platz, weil das Blatt zoombar ist; eine
+          einzelne Zeile mit allem darin war dagegen gedraengt und zwang zu
+          Symbolen ohne Beschriftung. */}
+      <div className="shrink-0 border-b border-border/30">
+
+        {/* Obere Zeile — Dokument. Traegt die Modusfarbe. */}
+        <div
+          className="flex items-center gap-0.5 px-3 text-white"
+          style={{
+            background: 'var(--grad-mode)',
+            paddingTop: 'max(env(safe-area-inset-top), 8px)',
+            paddingBottom: 8,
+          }}
+        >
 
         {/* Back */}
         {isFullscreen && onBack && (
           <button
             onClick={onBack}
-            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+            className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
             style={{ color: 'rgb(var(--color-text-secondary))' }}
             title="Zurück"
           >
@@ -1835,7 +2109,7 @@ export function DrawingCanvas({
         <button
           ref={settingsBtnRef}
           onClick={() => { setShowSettings(v => !v); if (showSettings) setShowBgPicker(false) }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={showSettings
             ? { background: 'rgba(124,58,237,0.12)', color: '#7C3AED' }
             : { color: 'rgb(var(--color-text-muted))' }}
@@ -1847,21 +2121,56 @@ export function DrawingCanvas({
         </button>
 
         {/* Undo / Redo */}
-        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0 ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Rückgängig">
+        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Rückgängig">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
             <path d="M3 7v6h6" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
-        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0 ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Wiederholen">
+        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Wiederholen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
             <path d="M21 7v6h-6" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
 
-        {/* Divider */}
-        <div className="w-px h-6 bg-border/50 mx-1.5 shrink-0" />
+          {/* Titel — sagt, wo man ist. Ohne Navigationsleiste im Vollbild
+              waere sonst nicht erkennbar, dass man sich noch in einer Smart
+              Note befindet. */}
+          {isFullscreen && (
+            <span className="flex-1 min-w-0 px-2 text-[13px] font-semibold truncate opacity-90">
+              Schreibblock · Smart Note
+            </span>
+          )}
+
+          <div className="flex-1" />
+
+          {/* KI-Analyse und Export gehoeren zum Dokument, nicht zum Werkzeug. */}
+          {isFullscreen && onAnalyzeRequest && (
+            <button onClick={handleAnalyzeRequest}
+              className="flex items-center justify-center h-11 px-3 rounded-btn press-sm shrink-0 text-[13px] font-bold"
+              title="KI-Analyse"
+            >
+              KI
+            </button>
+          )}
+          {isFullscreen && (
+            <button onClick={handleExportPDF} disabled={isExporting}
+              className="flex items-center justify-center w-11 h-11 rounded-btn press-sm shrink-0"
+              style={{ opacity: isExporting ? 0.5 : 1 }}
+              title="Als PDF exportieren"
+            >
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          )}
+        </div>
+
+        {/* Untere Zeile — Werkzeuge. Neutral, damit die Farbpunkte daneben
+            lesbar bleiben; auf Lila waere jede Farbe verfaelscht. */}
+        <div className="flex items-center gap-0.5 px-3 py-1.5 bg-surface overflow-x-auto">
 
         {/* ── Tool icons ── */}
 
@@ -1869,7 +2178,7 @@ export function DrawingCanvas({
         <button
           ref={penBtnRef}
           onClick={() => { if (tool === 'pen') setActiveToolPopup(v => v === 'pen' ? null : 'pen'); else { setTool('pen'); setActiveToolPopup(null) } }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={tool === 'pen' ? { background: 'rgba(124,58,237,0.14)', color: '#7C3AED' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Stift"
         >
@@ -1885,7 +2194,7 @@ export function DrawingCanvas({
         <button
           ref={hlBtnRef}
           onClick={() => { if (tool === 'highlighter') setActiveToolPopup(v => v === 'highlighter' ? null : 'highlighter'); else { setTool('highlighter'); setActiveToolPopup(null) } }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={tool === 'highlighter' ? { background: 'rgba(250,204,21,0.15)', color: '#CA8A04' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Marker"
         >
@@ -1901,7 +2210,7 @@ export function DrawingCanvas({
         <button
           ref={erBtnRef}
           onClick={() => { if (tool === 'eraser') setActiveToolPopup(v => v === 'eraser' ? null : 'eraser'); else { setTool('eraser'); setActiveToolPopup(null) } }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={tool === 'eraser' ? { background: 'rgba(255,59,48,0.11)', color: '#FF3B30' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Radierer"
         >
@@ -1918,7 +2227,7 @@ export function DrawingCanvas({
         <button
           ref={geomBtnRef}
           onClick={() => { if (tool === 'geometry') setActiveToolPopup(v => v === 'geometry' ? null : 'geometry'); else { setTool('geometry'); setActiveToolPopup(null) } }}
-          className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
           style={tool === 'geometry' ? { background: 'rgba(90,200,250,0.15)', color: '#5AC8FA' } : { color: 'rgb(var(--color-text-muted))' }}
           title="Geometrie-Stift"
         >
@@ -1931,7 +2240,7 @@ export function DrawingCanvas({
         </button>
 
         {/* Lasso — dashed selection oval */}
-        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl">
+        <button onClick={() => setTool('lasso')} className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0" style={tool === 'lasso' ? { background: 'rgba(52,199,89,0.13)', color: '#34C759' } : { color: 'rgb(var(--color-text-muted))' }} title="Lasso-Auswahl">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round">
             <ellipse cx="13" cy="10" rx="8.5" ry="6" strokeWidth="1.75" strokeDasharray="2.8 2"/>
             <path d="M4.5 11C3.2 13.5 3.8 16.5 6.5 16.5L9 16.5" strokeWidth="1.65" strokeDasharray="2.8 2"/>
@@ -1942,7 +2251,7 @@ export function DrawingCanvas({
 
         {/* Foto hinzufügen */}
         {isFullscreen && (
-          <button onClick={() => canvasImgInputRef.current?.click()} className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0" style={{ color: 'rgb(var(--color-text-muted))' }} title="Foto einfügen">
+          <button onClick={() => canvasImgInputRef.current?.click()} className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0" style={{ color: 'rgb(var(--color-text-muted))' }} title="Foto einfügen">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2.5" y="4" width="19" height="16" rx="2.5" />
               <circle cx="8.5" cy="9.5" r="2" />
@@ -1952,11 +2261,68 @@ export function DrawingCanvas({
         )}
         <input ref={canvasImgInputRef} type="file" accept="image/*" className="hidden" onChange={handleCanvasImageUpload} />
 
+        {/* Arbeitsblatt als PDF — wird zum Papier, nicht zum Bild darauf. */}
+        <button
+          onClick={() => pdfInputRef.current?.click()}
+          disabled={pdfLoading}
+          className="flex items-center justify-center w-11 h-11 rounded-btn press-sm shrink-0 disabled:opacity-50"
+          style={{ color: 'rgb(var(--color-text-muted))' }}
+          title="PDF öffnen und beschreiben"
+        >
+          {pdfLoading ? (
+            <svg className="animate-spin" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1"
+              strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <path d="M14 2v6h6M9 15l2 2 4-4" />
+            </svg>
+          )}
+        </button>
+        <input ref={pdfInputRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => void handlePdfUpload(e)} />
+
+        {/* Textfeld */}
+        <button
+          onClick={() => setTool(tool === 'text' ? 'pen' : 'text')}
+          aria-pressed={tool === 'text'}
+          className="flex items-center justify-center w-11 h-11 rounded-btn press-sm shrink-0 transition-colors"
+          style={tool === 'text'
+            ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
+            : { color: 'rgb(var(--color-text-muted))' }}
+          title="Textfeld"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1"
+            strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 5h14M12 5v14M9 19h6" />
+          </svg>
+        </button>
+
+        {/* Zoom-Schreibfeld — nur im Vollbild sinnvoll, sonst fehlt die Hoehe. */}
+        {isFullscreen && (
+          <button
+            onClick={() => updateWb((v) => ({ ...v, on: !v.on }))}
+            aria-pressed={wb.on}
+            className="flex items-center justify-center w-11 h-11 rounded-btn press-sm shrink-0 transition-colors"
+            style={wb.on
+              ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
+              : { color: 'rgb(var(--color-text-muted))' }}
+            title="Zoom-Schreibfeld"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2.5" y="8.5" width="19" height="7" rx="1.5" />
+              <path d="M6 11.5v1M9 10.5v3M12 11.5v1M15 10.5v3M18 11.5v1" />
+            </svg>
+          </button>
+        )}
+
         {/* ── Prominent separator ── */}
         <div className="w-px h-7 mx-2 shrink-0" style={{ background: 'rgba(0,0,0,0.12)' }} />
 
         {/* 6 Color dots */}
-        {(tool === 'pen' || tool === 'highlighter' || tool === 'geometry') && (
+        {(tool === 'pen' || tool === 'highlighter' || tool === 'geometry' || tool === 'text') && (
           <div className="flex items-center gap-1.5 shrink-0">
             {colors.map((hex, idx) => {
               const isActive = activeColorIdx === idx
@@ -1979,38 +2345,54 @@ export function DrawingCanvas({
           </div>
         )}
 
-        <div className="flex-1" />
-
-        {/* KI-Analyse */}
-        {isFullscreen && onAnalyzeRequest && (
-          <button onClick={handleAnalyzeRequest}
-            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
-            title="KI-Analyse"
-          >
-            <span style={{ fontSize: 13, fontWeight: 800, color: '#059669', letterSpacing: '-0.3px' }}>KI</span>
-          </button>
-        )}
-
-        {/* PDF export */}
-        {isFullscreen && (
-          <button onClick={handleExportPDF} disabled={isExporting}
-            className="flex items-center justify-center w-11 h-11 rounded-xl transition-all press-sm shrink-0"
-            style={{ color: '#7C3AED', opacity: isExporting ? 0.5 : 1 }}
-            title="Als PDF exportieren"
-          >
-            {isExporting ? (
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" className="animate-spin">
-                <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" strokeLinecap="round" />
-              </svg>
-            ) : (
-              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1">
-                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            )}
-          </button>
-        )}
+        </div>
       </div>
+
+      {/* ── Zoom-Schreibfeld ──────────────────────────────────────────
+          Man schreibt darin gross, auf dem Blatt landet es klein und sauber.
+          In Goodnotes ist das der Grund, warum Handschrift ordentlich
+          aussieht — und im Unterricht der groesste einzelne Gewinn.
+
+          Steht ausserhalb der Zoom-Matrix des Blattes: Der Streifen soll
+          seine eigene Vergroesserung behalten, egal wie weit die Seite selbst
+          gezoomt ist. */}
+      {isFullscreen && wb.on && (
+        <div
+          ref={wbWrapRef}
+          className="order-last shrink-0 border-t border-border/40 bg-surface"
+          style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        >
+          <div className="flex items-center gap-2 px-3 py-1.5">
+            <span className="section-label">Zoom-Schreibfeld</span>
+            <div className="flex-1" />
+            <button
+              onClick={naechsteZeile}
+              className="h-8 px-3 rounded-pill text-[12px] font-semibold bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary press-sm"
+            >
+              Nächste Zeile
+            </button>
+            <button
+              onClick={() => updateWb((v) => ({ ...v, on: false }))}
+              aria-label="Schreibfeld schließen"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-text-secondary press-sm tap-44"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <canvas
+            ref={wbCanvasRef}
+            className="w-full block bg-white"
+            style={{ height: WB_HEIGHT, touchAction: 'none', cursor: 'crosshair' }}
+            onPointerDown={(e) => { drawSurfaceRef.current = 'wb'; onPointerDown(e) }}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerLeave={onPointerLeave}
+            onPointerCancel={onPointerLeave}
+          />
+        </div>
+      )}
 
       {/* ── Canvas area ── */}
       {isFullscreen ? (
@@ -2079,13 +2461,65 @@ export function DrawingCanvas({
                   pointerEvents: tool === 'select' ? 'none' : 'auto',
                   touchAction: 'none',
                 }}
-                onPointerDown={onPointerDown}
+                onPointerDown={(e) => { drawSurfaceRef.current = 'page'; onPointerDown(e) }}
                 onPointerMove={onPointerMove}
                 onPointerUp={onPointerUp}
                 onPointerLeave={onPointerLeave}
                 onPointerCancel={onPointerLeave}
                 onDoubleClick={(e) => e.preventDefault()}
               />
+
+              {/* Ausschnitt des Zoom-Schreibfelds — zeigt auf dem Blatt, wohin
+                  gerade geschrieben wird. Ohne diese Markierung verliert man
+                  im Streifen sofort den Bezug zur Seite. */}
+              {wb.on && (
+                  <div
+                    className="absolute pointer-events-none rounded-[3px]"
+                    style={{
+                      zIndex: 5,
+                      left: wb.x, top: wb.y,
+                      width: wbFensterB, height: WB_HEIGHT / WB_ZOOM,
+                      border: '1.5px solid rgb(var(--color-accent))',
+                      background: 'rgb(var(--color-accent) / 0.07)',
+                    }}
+                  />
+              )}
+
+              {/* Textfelder — HTML ueber der Zeichenflaeche, damit sie
+                  auswaehlbar, aenderbar und bei jedem Zoom scharf bleiben. */}
+              {currentTexts.map((t) => (
+                <textarea
+                  key={t.id}
+                  value={t.text}
+                  autoFocus={t.id === activeTextId}
+                  onChange={(ev) => setCurrentTexts(
+                    currentTextsRef.current.map((x) => x.id === t.id ? { ...x, text: ev.target.value } : x),
+                  )}
+                  onBlur={() => {
+                    // Leere Felder verschwinden von selbst — ein leeres
+                    // Kaestchen auf dem Blatt waere nur Muell.
+                    if (!t.text.trim()) {
+                      setCurrentTexts(currentTextsRef.current.filter((x) => x.id !== t.id))
+                    }
+                    setActiveTextId(null)
+                    notifyPagesChanged()
+                  }}
+                  placeholder="Text…"
+                  spellCheck={false}
+                  className="absolute bg-transparent resize-none outline-none leading-snug"
+                  style={{
+                    zIndex: 6,
+                    left: t.x, top: t.y, width: t.w,
+                    fontSize: t.size,
+                    color: t.colorHex,
+                    minHeight: t.size * 1.6,
+                    border: t.id === activeTextId ? '1px dashed rgb(var(--color-accent))' : '1px solid transparent',
+                    borderRadius: 4,
+                    padding: '2px 4px',
+                    pointerEvents: tool === 'text' || t.id === activeTextId ? 'auto' : 'none',
+                  }}
+                />
+              ))}
 
               {/* Eraser circle cursor */}
               {tool === 'eraser' && eraserCursorPos && (() => {
@@ -2282,7 +2716,7 @@ export function DrawingCanvas({
                     style={{
                       height: 36, paddingInline: 18,
                       borderRadius: 12, border: 'none',
-                      background: '#7C3AED', color: 'white',
+                      background: 'var(--grad-mode)', color: 'white',
                       fontSize: 14, fontWeight: 700,
                       boxShadow: '0 4px 16px rgba(124,58,237,0.45)',
                       cursor: 'pointer',
@@ -2305,7 +2739,7 @@ export function DrawingCanvas({
                 />
               ))}
               <div className="w-px h-3 bg-black/15 mx-0.5" />
-              <button onClick={addPage} className="w-6 h-6 rounded-full flex items-center justify-center text-black/40 hover:text-black/70 transition-all press-sm">
+              <button onClick={addPage} className="w-6 h-6 rounded-full flex items-center justify-center text-black/40 hover:text-black/70 transition-all press-sm tap-44">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                   <path d="M12 5v14M5 12h14" strokeLinecap="round" />
                 </svg>

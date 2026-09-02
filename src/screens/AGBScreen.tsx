@@ -11,7 +11,7 @@ export function AGBScreen() {
       <div className="px-4 mt-4 space-y-6 text-[13px] text-text-secondary leading-relaxed">
 
         {/* Meta */}
-        <div className="bg-surface border border-border/60 rounded-[20px] p-4 shadow-card-adaptive">
+        <div className="bg-surface border border-border/60 rounded-card p-4 shadow-card-adaptive">
           <p className="text-[11px] text-text-muted uppercase font-semibold tracking-wide mb-1">Letzte Aktualisierung</p>
           <p className="text-text-primary font-semibold">28. August 2026</p>
         </div>
@@ -264,7 +264,7 @@ export function AGBScreen() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-surface border border-border/60 rounded-[20px] p-5 shadow-card-adaptive">
+    <div className="bg-surface border border-border/60 rounded-card p-5 shadow-card-adaptive">
       <p className="text-[13px] font-bold text-text-primary mb-3">{title}</p>
       <div className="text-[13px] text-text-secondary leading-relaxed">{children}</div>
     </div>

@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import { RichText } from '../components/ui/RichText'
+import { Icon, type IconName } from '../components/ui/Icon'
+import { Tag } from '../components/ui/Tag'
 import { useUser } from '../context/UserContext'
 import { explainKeyword, extractTextFromImage, generateFlashcards, generateSmartNote } from '../lib/groq'
 import { pdfToImages } from '../lib/pdf'
@@ -11,9 +13,9 @@ import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { FlashCard, GeneratedSmartNote, UserNote } from '../types'
 
 function CollapsibleSection({
-  title, children, badge, defaultOpen = true,
+  title, icon, children, badge, defaultOpen = true,
 }: {
-  title: string; children: React.ReactNode; badge?: React.ReactNode; defaultOpen?: boolean
+  title: string; icon?: IconName; children: React.ReactNode; badge?: React.ReactNode; defaultOpen?: boolean
 }) {
   const [open, setOpen] = useState(defaultOpen)
   return (
@@ -23,6 +25,7 @@ function CollapsibleSection({
         className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface-hover transition-colors press-sm"
       >
         <div className="flex items-center gap-2">
+          {icon && <span className="text-text-secondary shrink-0"><Icon name={icon} size={16} /></span>}
           <span className="text-text-primary font-semibold text-sm">{title}</span>
           {badge}
         </div>
@@ -243,13 +246,13 @@ export function SmartNotesScreen() {
           <span className="text-text-primary font-semibold text-sm">Bearbeiten</span>
           <button
             onClick={saveEdit}
-            className="text-accent text-sm font-semibold hover:opacity-80 transition-opacity px-1 py-1"
+            className="text-text-primary text-sm font-semibold hover:opacity-80 transition-opacity px-1 py-1"
           >
             Speichern
           </button>
         </div>
 
-        <div className="px-4 pt-4 space-y-4">
+        <div className="px-4 pt-4 space-y-4 lg:px-6 lg:max-w-[900px]">
           {/* Title */}
           <input
             type="text"
@@ -261,7 +264,7 @@ export function SmartNotesScreen() {
 
           {/* Photos */}
           <div>
-            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Fotos / Arbeitsblätter</p>
+            <p className="section-label mb-2">Fotos / Arbeitsblätter</p>
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
               {resolvedEditAttachments.map((src, i) => (
                 <div key={i} className="relative shrink-0">
@@ -274,15 +277,15 @@ export function SmartNotesScreen() {
                       <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
                     </svg>
                   </button>
-                  <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1">
-                    <span className="text-[10px] text-text-muted font-medium">{i + 1}</span>
+                  <div className="absolute bottom-1 left-1 bg-background/80 rounded-chip px-1">
+                    <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </div>
               ))}
               {pdfLoading && (
                 <div className="w-24 h-24 shrink-0 rounded-card border border-border bg-surface flex flex-col items-center justify-center gap-1.5">
                   <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                  <span className="text-text-muted text-[10px]">PDF…</span>
+                  <span className="text-text-muted text-[11px]">PDF…</span>
                 </div>
               )}
               {/* Add buttons */}
@@ -294,7 +297,7 @@ export function SmartNotesScreen() {
                   <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" strokeLinecap="round" strokeLinejoin="round" />
                   <circle cx="12" cy="13" r="4" />
                 </svg>
-                <span className="text-[10px] text-text-muted">Foto</span>
+                <span className="text-[11px] text-text-muted">Foto</span>
               </button>
               <button
                 onClick={() => fileRef.current?.click()}
@@ -305,14 +308,14 @@ export function SmartNotesScreen() {
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
                 </svg>
-                <span className="text-[10px] text-text-muted">Hochladen</span>
+                <span className="text-[11px] text-text-muted">Hochladen</span>
               </button>
             </div>
           </div>
 
           {/* Mitschrift */}
           <div>
-            <p className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-2">Meine Mitschrift</p>
+            <p className="section-label mb-2">Meine Mitschrift</p>
             <textarea
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
@@ -325,13 +328,15 @@ export function SmartNotesScreen() {
           {/* KI-Analyse section */}
           <div className="bg-surface border border-border rounded-card overflow-hidden">
             <div className="px-4 py-3 border-b border-border flex items-center justify-between">
-              <span className="text-text-primary font-semibold text-sm">📝 KI-Analyse</span>
+              <span className="flex items-center gap-2 text-text-primary font-semibold text-sm">
+                <Icon name="sparkle" size={16} />KI-Analyse
+              </span>
               <button
                 onClick={() => void reanalyze()}
                 disabled={!canReanalyze}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all ${
                   canReanalyze
-                    ? 'grad-accent text-white hover:opacity-90'
+                    ? 'btn-mode hover:opacity-90'
                     : 'bg-surface-hover text-text-muted cursor-not-allowed'
                 }`}
               >
@@ -352,10 +357,10 @@ export function SmartNotesScreen() {
             </div>
             <div className="px-4 py-3">
               {analysisStatus === 'error' && (
-                <p className="text-sm mb-3" style={{ color: '#F87171' }}>{analysisError}</p>
+                <p className="text-sm mb-3 text-text-primary">{analysisError}</p>
               )}
               {analysisStatus === 'done' && editGeneratedNote && (
-                <p className="text-xs text-success font-medium mb-2">✓ Neue Analyse bereit — wird beim Speichern übernommen</p>
+                <p className="text-xs text-text-primary font-medium mb-2">Neue Analyse bereit — wird beim Speichern übernommen</p>
               )}
               {displayNote.summary ? (
                 <div className="text-text-secondary text-sm leading-relaxed"><RichText text={displayNote.summary} /></div>
@@ -378,7 +383,7 @@ export function SmartNotesScreen() {
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-24">
       <Header
-        title="Smart Notes"
+        title="Smart Note"
         subtitle={lessonTitle}
         showBack
         right={
@@ -386,7 +391,7 @@ export function SmartNotesScreen() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="w-8 h-8 flex items-center justify-center rounded-btn bg-surface border border-border text-text-muted hover:text-danger hover:bg-danger/5 hover:border-danger/30 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-btn bg-surface border border-border text-text-muted hover:text-text-primary hover:bg-danger/5 hover:border-danger/30 transition-colors"
                 title="Notiz löschen"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -411,13 +416,14 @@ export function SmartNotesScreen() {
         }
       />
 
-      <div className="px-4 space-y-3 mt-1">
+      <div className="px-4 space-y-3 mt-1 lg:px-6 lg:max-w-[900px]">
 
         {/* Fotos */}
         {photos.length > 0 && (
           <CollapsibleSection
-            title="📸 Fotos"
-            badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{photos.length}</span>}
+            title="Fotos"
+            icon="camera"
+            badge={<span className="text-xs px-1.5 py-0.5 rounded-chip bg-surface-hover text-text-muted font-medium">{photos.length}</span>}
           >
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
               {resolvedPhotos.map((src, i) => (
@@ -427,8 +433,8 @@ export function SmartNotesScreen() {
                     alt={`Seite ${i + 1}`}
                     className="w-28 h-28 object-cover rounded-card border border-border hover:opacity-90 transition-opacity"
                   />
-                  <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1.5 py-0.5">
-                    <span className="text-[10px] text-text-muted font-medium">{i + 1}</span>
+                  <div className="absolute bottom-1 left-1 bg-background/80 rounded-chip px-1.5 py-0.5">
+                    <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </button>
               ))}
@@ -440,8 +446,9 @@ export function SmartNotesScreen() {
         {/* Schreibnotizen (canvas drawing thumbnails) */}
         {drawings.length > 0 && (
           <CollapsibleSection
-            title="✏️ Schreibnotizen"
-            badge={<span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">{drawings.length}</span>}
+            title="Schreibnotizen"
+            icon="pencil"
+            badge={<span className="text-xs px-1.5 py-0.5 rounded-chip bg-surface-hover text-text-muted font-medium">{drawings.length}</span>}
           >
             <div className="flex gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: 'none' }}>
               {resolvedDrawings.map((src, i) => (
@@ -451,8 +458,8 @@ export function SmartNotesScreen() {
                     alt={`Seite ${i + 1}`}
                     className="w-28 h-36 object-cover rounded-card border border-border hover:opacity-90 transition-opacity"
                   />
-                  <div className="absolute bottom-1 left-1 bg-background/80 rounded px-1.5 py-0.5">
-                    <span className="text-[10px] text-text-muted font-medium">{i + 1}</span>
+                  <div className="absolute bottom-1 left-1 bg-background/80 rounded-chip px-1.5 py-0.5">
+                    <span className="text-[11px] text-text-muted font-medium">{i + 1}</span>
                   </div>
                 </button>
               ))}
@@ -465,7 +472,7 @@ export function SmartNotesScreen() {
         {authUser && (photos.length > 0 || drawings.length > 0) && hasLocalOnlyAttachments(userNote) && (
           <div className="flex items-center gap-3 px-4 py-3 bg-surface rounded-card shadow-card-adaptive border border-border/60">
             <div className="w-9 h-9 rounded-btn bg-accent/10 flex items-center justify-center shrink-0">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" strokeLinecap="round" strokeLinejoin="round" />
                 <polyline points="17 8 12 3 7 8" strokeLinecap="round" strokeLinejoin="round" />
                 <line x1="12" y1="3" x2="12" y2="15" strokeLinecap="round" />
@@ -483,22 +490,24 @@ export function SmartNotesScreen() {
               onClick={() => void transferToCloud()}
               disabled={transferStatus === 'uploading' || transferStatus === 'done'}
               className={`shrink-0 px-3 py-1.5 rounded-btn text-xs font-semibold transition-all press-sm ${
-                transferStatus === 'done' ? 'bg-success/10 text-success border border-success/20'
-                : 'grad-accent text-white hover:opacity-90'
+                transferStatus === 'done' ? 'bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))]'
+                : 'btn-mode hover:opacity-90'
               }`}
             >
-              {transferStatus === 'uploading' ? 'Läuft…' : transferStatus === 'done' ? 'Übertragen ✓' : 'Übertragen'}
+              {transferStatus === 'uploading' ? 'Läuft…' : transferStatus === 'done' ? 'Übertragen' : 'Übertragen'}
             </button>
           </div>
         )}
 
         {/* PDFs */}
         {(userNote?.pdfAttachments?.length ?? 0) > 0 && (
-          <CollapsibleSection title="📄 PDF-Quelle">
+          <CollapsibleSection title="PDF-Quelle" icon="document">
             <div className="space-y-2">
               {userNote!.pdfAttachments!.map((pdf, i) => (
                 <div key={i} className="flex items-center gap-3 px-3 py-2.5 bg-background border border-border rounded-card">
-                  <div className="w-8 h-8 rounded-btn bg-accent/10 flex items-center justify-center shrink-0 text-base">📄</div>
+                  <div className="w-8 h-8 rounded-btn bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center shrink-0 text-text-primary">
+                    <Icon name="document" size={16} />
+                  </div>
                   <p className="text-sm text-text-secondary truncate flex-1">{pdf.name}</p>
                 </div>
               ))}
@@ -509,7 +518,7 @@ export function SmartNotesScreen() {
 
         {/* Mitschrift */}
         {userNote?.content ? (
-          <CollapsibleSection title="✏️ Meine Mitschrift">
+          <CollapsibleSection title="Meine Mitschrift" icon="pencil">
             <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-wrap">{userNote.content}</p>
           </CollapsibleSection>
         ) : userNote && (
@@ -524,9 +533,10 @@ export function SmartNotesScreen() {
         {/* Hausaufgaben */}
         {userNote?.homeworkItems && userNote.homeworkItems.length > 0 && (
           <CollapsibleSection
-            title="📚 Hausaufgaben"
+            title="Hausaufgaben"
+            icon="book"
             badge={
-              <span className="text-xs px-1.5 py-0.5 rounded bg-surface-hover text-text-muted font-medium">
+              <span className="text-xs px-1.5 py-0.5 rounded-chip bg-surface-hover text-text-muted font-medium">
                 {userNote.homeworkItems.length}
               </span>
             }
@@ -539,12 +549,10 @@ export function SmartNotesScreen() {
                   <div key={hwId} className="bg-background border border-border rounded-card px-3 py-2.5 space-y-1">
                     <div className="flex items-start justify-between gap-2">
                       <p className={`text-sm leading-snug flex-1 ${isDone ? 'line-through text-text-muted' : 'text-text-primary'}`}>
-                        {hw.description}
+                        {hw.description?.trim() || 'Ohne Beschreibung'}
                       </p>
                       {isDone && (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0" style={{ backgroundColor: 'rgba(48,209,88,0.12)', color: '#30D158' }}>
-                          ✓ Erledigt
-                        </span>
+                        <Tag tone="green" size="sm" className="whitespace-nowrap shrink-0">Erledigt</Tag>
                       )}
                     </div>
                     {hw.dueDate && (
@@ -553,8 +561,8 @@ export function SmartNotesScreen() {
                       </p>
                     )}
                     {hw.aiHelp && (
-                      <div className="mt-1.5 px-3 py-2 rounded-btn" style={{ backgroundColor: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.15)' }}>
-                        <p className="text-xs font-semibold text-accent mb-0.5">KI-Hilfe</p>
+                      <div className="mt-1.5 px-3 py-2 rounded-btn" style={{ background: 'var(--color-accent-soft)', border: '1px solid rgb(var(--color-accent) / 0.18)' }}>
+                        <p className="text-xs font-semibold text-text-primary mb-0.5">KI-Hilfe</p>
                         <p className="text-xs text-text-secondary leading-relaxed">{hw.aiHelp}</p>
                       </div>
                     )}
@@ -567,9 +575,10 @@ export function SmartNotesScreen() {
 
         {/* KI-Zusammenfassung */}
         <CollapsibleSection
-          title="📝 KI-Zusammenfassung"
+          title="KI-Zusammenfassung"
+          icon="sparkle"
           badge={generatedNote ? (
-            <span className="text-xs px-1.5 py-0.5 rounded bg-success/10 text-success font-medium">KI</span>
+            <span className="text-xs px-1.5 py-0.5 rounded-chip bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] font-medium">KI</span>
           ) : undefined}
         >
           {note.summary ? (
@@ -581,12 +590,12 @@ export function SmartNotesScreen() {
 
         {/* Lösung(en) */}
         {(note.tasks && note.tasks.length > 0) ? (
-          <CollapsibleSection title={`📐 ${note.tasks.length > 1 ? `${note.tasks.length} Aufgaben` : 'Lösung'}`}>
+          <CollapsibleSection title={note.tasks.length > 1 ? `${note.tasks.length} Aufgaben` : 'Lösung'} icon="clipboard">
             <div className="space-y-4">
               {note.tasks.map((task, ti) => (
                 <div key={ti} className={ti > 0 ? 'pt-4 border-t border-border' : ''}>
                   {note.tasks!.length > 1 && (
-                    <p className="text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: subject?.color ?? '#007AFF' }}>Aufgabe {ti + 1}</p>
+                    <p className="text-[11px] font-bold uppercase tracking-wider mb-1.5 text-text-secondary">Aufgabe {ti + 1}</p>
                   )}
                   {task.question && (
                     <p className="text-xs text-text-muted italic mb-2"><MathRenderer text={task.question} /></p>
@@ -594,18 +603,15 @@ export function SmartNotesScreen() {
                   <ol className="space-y-2 mb-2">
                     {task.steps.map((step, i) => (
                       <li key={i} className="flex gap-2 items-start text-sm text-text-secondary">
-                        <span
-                          className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
-                          style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
-                        >
+                        <span className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 tabular-nums bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
                           {i + 1}
                         </span>
                         <span className="leading-relaxed"><MathRenderer text={step} /></span>
                       </li>
                     ))}
                   </ol>
-                  <div className="px-3 py-2 rounded-btn mb-2" style={{ backgroundColor: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
-                    <p className="text-xs font-bold text-success mb-0.5">Ergebnis</p>
+                  <div className="px-3 py-2 rounded-btn mb-2 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+                    <p className="text-xs font-bold text-text-secondary mb-0.5">Ergebnis</p>
                     <p className="text-sm text-text-primary font-medium"><MathRenderer text={task.answer} /></p>
                   </div>
                   {task.proof && (
@@ -619,22 +625,19 @@ export function SmartNotesScreen() {
             </div>
           </CollapsibleSection>
         ) : note.solution ? (
-          <CollapsibleSection title="📐 Lösung">
+          <CollapsibleSection title="Lösung" icon="clipboard">
             <ol className="space-y-2 mb-3">
               {note.solution.steps.map((step, i) => (
                 <li key={i} className="flex gap-2 items-start text-sm text-text-secondary">
-                  <span
-                    className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
-                  >
+                  <span className="w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 tabular-nums bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
                     {i + 1}
                   </span>
                   <span className="leading-relaxed"><MathRenderer text={step} /></span>
                 </li>
               ))}
             </ol>
-            <div className="px-3 py-2 rounded-btn mb-2" style={{ backgroundColor: 'rgba(74,222,128,0.08)', border: '1px solid rgba(74,222,128,0.2)' }}>
-              <p className="text-xs font-bold text-success mb-0.5">Ergebnis</p>
+            <div className="px-3 py-2 rounded-btn mb-2 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24]">
+              <p className="text-xs font-bold text-text-secondary mb-0.5">Ergebnis</p>
               <p className="text-sm text-text-primary font-medium"><MathRenderer text={note.solution.answer} /></p>
             </div>
             {note.solution.proof && (
@@ -647,7 +650,7 @@ export function SmartNotesScreen() {
         ) : null}
 
         {/* Schlüsselbegriffe */}
-        <CollapsibleSection title="🔑 Schlüsselbegriffe">
+        <CollapsibleSection title="Schlüsselbegriffe" icon="bulb">
           {note.keywords.length > 0 ? (
             <div>
               <div className="flex flex-wrap gap-2">
@@ -660,7 +663,7 @@ export function SmartNotesScreen() {
                       onClick={() => void handleKeywordClick(kw)}
                       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-pill text-xs font-medium border transition-all active:scale-95 ${
                         isSelected
-                          ? 'grad-accent text-white border-transparent'
+                          ? 'btn-mode border-transparent'
                           : 'bg-surface-hover border-border text-text-secondary hover:border-accent/50 hover:text-text-primary'
                       }`}
                     >
@@ -673,8 +676,8 @@ export function SmartNotesScreen() {
                 })}
               </div>
               {selectedKeyword && (
-                <div className="mt-3 px-3 py-2.5 bg-accent/5 border border-accent/15 rounded-card">
-                  <p className="text-[10px] font-bold text-accent uppercase tracking-wider mb-1.5">{selectedKeyword}</p>
+                <div className="mt-3 px-3 py-2.5 bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] rounded-card">
+                  <p className="text-[11px] font-bold text-text-primary uppercase tracking-wider mb-1.5">{selectedKeyword}</p>
                   {loadingKeyword === selectedKeyword ? (
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 border-2 border-accent border-t-transparent rounded-full animate-spin shrink-0" />
@@ -685,7 +688,7 @@ export function SmartNotesScreen() {
                   )}
                 </div>
               )}
-              <p className="text-[10px] text-text-muted mt-2">Antippen für KI-Erklärung</p>
+              <p className="text-[11px] text-text-muted mt-2">Antippen für KI-Erklärung</p>
             </div>
           ) : (
             <p className="text-text-muted text-sm">Werden nach der KI-Analyse generiert.</p>
@@ -694,7 +697,7 @@ export function SmartNotesScreen() {
 
         {/* Fragen aus dem Unterricht */}
         {userNote?.qa && userNote.qa.length > 0 && (
-          <CollapsibleSection title="⚡ Fragen aus dem Unterricht">
+          <CollapsibleSection title="Fragen aus dem Unterricht" icon="speech">
             <div className="space-y-3">
               {userNote.qa.map((item, i) => (
                 <div key={i} className={i < userNote.qa!.length - 1 ? 'pb-3 border-b border-border' : ''}>
@@ -707,15 +710,12 @@ export function SmartNotesScreen() {
         )}
 
         {/* Klausurthemen */}
-        <CollapsibleSection title="🎯 Mögliche Klausurthemen">
+        <CollapsibleSection title="Mögliche Klausurthemen" icon="target">
           {note.examTopics.length > 0 ? (
             <ul className="space-y-2">
               {note.examTopics.map((topic, i) => (
                 <li key={i} className="flex gap-3 items-start">
-                  <span
-                    className="w-5 h-5 rounded-pill text-xs font-bold flex items-center justify-center shrink-0 mt-0.5"
-                    style={{ backgroundColor: `${subject?.color ?? '#007AFF'}22`, color: subject?.color ?? '#007AFF' }}
-                  >
+                  <span className="w-5 h-5 rounded-pill text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 tabular-nums bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-text-primary">
                     {i + 1}
                   </span>
                   <span className="text-text-secondary text-sm">{topic}</span>
@@ -733,8 +733,8 @@ export function SmartNotesScreen() {
             {fcStatus === 'done' ? (
               <div className="bg-surface border border-success/30 rounded-card px-4 py-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-[10px] flex items-center justify-center" style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="w-9 h-9 rounded-btn flex items-center justify-center" style={{ background: 'var(--grad-mode)' }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 6L9 17l-5-5" />
                     </svg>
                   </div>
@@ -745,10 +745,10 @@ export function SmartNotesScreen() {
                 </div>
                 <button
                   onClick={() => navigate('/klausurmodus/lernen')}
-                  className="px-3.5 py-2 rounded-pill text-white text-sm font-semibold press-sm"
-                  style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}
+                  className="px-3.5 py-2 rounded-pill text-sm font-semibold press-sm"
+                  style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                 >
-                  Jetzt lernen →
+                  Jetzt lernen
                 </button>
               </div>
             ) : (
@@ -757,13 +757,13 @@ export function SmartNotesScreen() {
                 disabled={fcStatus === 'generating'}
                 className="w-full bg-surface border border-border rounded-card px-4 py-4 flex items-center gap-4 press disabled:opacity-60"
               >
-                <div className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: 'linear-gradient(145deg, #34D399, #059669)' }}>
+                <div className="w-9 h-9 rounded-btn flex items-center justify-center shrink-0" style={{ background: 'var(--grad-mode)' }}>
                   {fcStatus === 'generating' ? (
-                    <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                    <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
                       <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
                     </svg>
                   ) : (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="7" y="7" width="13" height="12" rx="2.5" strokeOpacity="0.5" />
                       <rect x="4" y="9" width="13" height="12" rx="2.5" />
                       <line x1="7" y1="14" x2="14" y2="14" />
@@ -801,7 +801,7 @@ export function SmartNotesScreen() {
         >
           <img src={lightbox} alt="Vollansicht" className="max-w-full max-h-full object-contain rounded-card" />
           <button
-            className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center"
+            className="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/10 flex items-center justify-center tap-44"
             onClick={() => setLightbox(null)}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
@@ -816,12 +816,12 @@ export function SmartNotesScreen() {
         <>
           <div className="fixed inset-0 z-[60] bg-black/50" onClick={() => setShowDeleteConfirm(false)} />
           <div
-            className="fixed inset-x-5 z-[61] bg-surface rounded-2xl shadow-float overflow-hidden"
+            className="fixed inset-x-5 z-[61] bg-surface rounded-card shadow-float overflow-hidden"
             style={{ top: '30%', maxWidth: 380, margin: '0 auto' }}
           >
             <div className="px-5 pt-5 pb-4">
-              <div className="flex items-center justify-center w-12 h-12 rounded-[14px] mx-auto mb-4"
-                style={{ background: 'rgba(var(--color-danger), 0.12)' }}>
+              <div className="flex items-center justify-center w-12 h-12 rounded-icon mx-auto mb-4"
+                style={{ background: 'rgb(var(--color-danger) / 0.12)' }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                   strokeLinecap="round" strokeLinejoin="round" style={{ color: 'rgb(var(--color-danger))' }}>
                   <polyline points="3 6 5 6 21 6" />
@@ -838,7 +838,7 @@ export function SmartNotesScreen() {
             <div className="px-5 pb-5 flex gap-2.5">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-3 rounded-[12px] bg-surface-hover border border-border text-text-secondary text-[14px] font-semibold press-sm"
+                className="flex-1 py-3 rounded-btn bg-surface-hover border border-border text-text-secondary text-[14px] font-semibold press-sm"
               >
                 Abbrechen
               </button>
@@ -849,8 +849,8 @@ export function SmartNotesScreen() {
                     navigate(-1)
                   }
                 }}
-                className="flex-1 py-3 rounded-[12px] text-white text-[14px] font-bold press-sm"
-                style={{ background: 'linear-gradient(135deg, #FF453A, #CC2E28)', boxShadow: '0 4px 12px rgba(255,69,58,0.35)' }}
+                className="flex-1 py-3 rounded-btn text-white text-[14px] font-bold press-sm"
+                style={{ background: '#FF453A', boxShadow: '0 4px 12px rgba(255,69,58,0.35)' }}
               >
                 Löschen
               </button>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Icon } from '../components/ui/Icon'
 import { Capacitor } from '@capacitor/core'
 import { Browser } from '@capacitor/browser'
 import { supabase } from '../lib/supabase'
@@ -29,6 +30,8 @@ export function AuthScreen() {
   const [appleLoading, setAppleLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false)
+  const [resendState, setResendState] = useState<'idle' | 'sending' | 'sent'>('idle')
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
@@ -50,7 +53,10 @@ export function AuthScreen() {
       if (mode === 'signup') {
         const { error } = await supabase.auth.signUp({ email, password })
         if (error) throw error
-        setSuccessMsg('Bestätigungs-E-Mail gesendet. Bitte prüfe dein Postfach.')
+        // Nach der Registrierung passiert erst einmal nichts Sichtbares — die
+        // Bestaetigungsmail entscheidet. Eine schmale gruene Zeile unter dem
+        // Formular hat das nicht getragen; hier uebernimmt ein eigener Zustand.
+        setAwaitingConfirmation(true)
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
@@ -146,6 +152,63 @@ export function AuthScreen() {
     setSuccessMsg(null)
   }
 
+  const handleResend = async () => {
+    setResendState('sending')
+    try {
+      await supabase.auth.resend({ type: 'signup', email })
+      setResendState('sent')
+    } catch {
+      setResendState('idle')
+      setError('Konnte nicht erneut senden. Versuch es in einer Minute noch einmal.')
+    }
+  }
+
+  // Warten auf die Bestaetigung — ein eigener Zustand statt einer Zeile unter
+  // dem Formular. Solange sie aussteht, kann man sich nicht anmelden, also hat
+  // das Formular hier nichts verloren.
+  if (awaitingConfirmation) {
+    return (
+      <div className="min-h-dvh bg-background flex flex-col items-center justify-center px-5 py-12">
+        <div className="w-full max-w-sm text-center">
+          <span
+            className="w-16 h-16 rounded-sheet mx-auto mb-6 flex items-center justify-center text-white"
+            style={{ background: 'var(--grad-mode)' }}
+          >
+            <Icon name="bell" size={28} />
+          </span>
+          <h1 className="text-[24px] font-bold text-text-primary">Prüf dein Postfach</h1>
+          <p className="text-[15px] text-text-secondary mt-2 leading-relaxed">
+            Wir haben eine Bestätigung an <span className="font-semibold text-text-primary">{email}</span> geschickt.
+            Öffne den Link darin, dann kannst du dich anmelden.
+          </p>
+          <p className="text-[13px] text-text-secondary mt-4 leading-relaxed">
+            Nichts angekommen? Schau im Spam-Ordner — sonst schick sie dir neu.
+          </p>
+
+          <button
+            onClick={() => void handleResend()}
+            disabled={resendState !== 'idle'}
+            className="w-full h-12 rounded-pill btn-mode text-[15px] font-semibold press mt-6 disabled:opacity-60"
+          >
+            {resendState === 'sending' ? 'Wird gesendet…'
+              : resendState === 'sent' ? 'Nochmal gesendet'
+              : 'E-Mail erneut senden'}
+          </button>
+          <button
+            onClick={() => { setAwaitingConfirmation(false); setMode('login'); setSuccessMsg(null) }}
+            className="w-full h-12 rounded-pill text-[15px] font-semibold text-text-primary press mt-2"
+          >
+            Zurück zur Anmeldung
+          </button>
+
+          {error && (
+            <p className="text-[13px] text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-red))] rounded-btn px-3 py-2 mt-4">{error}</p>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-dvh bg-background flex flex-col items-center justify-center px-4 py-12">
 
@@ -154,14 +217,14 @@ export function AuthScreen() {
         <img
           src="/logo.png"
           alt="DailyStudent"
-          className="w-16 h-16 rounded-[22px] mx-auto mb-4 shadow-lg object-cover"
+          className="w-16 h-16 rounded-card mx-auto mb-4 shadow-lg object-cover"
         />
         <h1 className="text-2xl font-bold text-foreground">DailyStudent</h1>
         <p className="text-sm text-muted mt-1">Dein KI-Lernassistent</p>
       </div>
 
       {/* Card */}
-      <div className="w-full max-w-sm bg-surface rounded-2xl shadow-card-adaptive border border-border/60 p-6">
+      <div className="w-full max-w-sm bg-surface rounded-card shadow-card-adaptive border border-border/60 p-6">
         <h2 className="text-xl font-bold text-foreground mb-5 text-left">
           {mode === 'login' ? 'Willkommen zurück'
             : mode === 'signup' ? 'Konto erstellen'
@@ -182,15 +245,15 @@ export function AuthScreen() {
               onChange={e => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-background border border-border rounded-btn px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
             />
-            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>}
-            {successMsg && <p className="text-xs text-green-500 bg-green-500/10 rounded-xl px-3 py-2 text-left">{successMsg}</p>}
+            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-left">{error}</p>}
+            {successMsg && <p className="text-xs text-green-500 bg-green-500/10 rounded-btn px-3 py-2 text-left">{successMsg}</p>}
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+              className="w-full rounded-btn px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+              style={{ background: '#8b5cf6' }}
             >
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Link senden'}
             </button>
@@ -216,7 +279,7 @@ export function AuthScreen() {
                 required
                 minLength={6}
                 autoComplete="new-password"
-                className="w-full bg-background border border-border rounded-xl px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+                className="w-full bg-background border border-border rounded-btn px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
               />
               <button type="button" onClick={() => setShowNewPassword(v => !v)} tabIndex={-1}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors">
@@ -234,12 +297,12 @@ export function AuthScreen() {
                 )}
               </button>
             </div>
-            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>}
+            {error && <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-left">{error}</p>}
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+              className="w-full rounded-btn px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+              style={{ background: '#8b5cf6' }}
             >
               {loading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> : 'Passwort speichern'}
             </button>
@@ -252,7 +315,7 @@ export function AuthScreen() {
           <button
             onClick={handleGoogle}
             disabled={googleLoading || appleLoading || loading}
-            className="flex-1 flex items-center justify-center gap-2 bg-background border border-border rounded-xl px-4 py-3 text-sm font-semibold text-foreground active:scale-[0.98] transition-transform disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-2 bg-background border border-border rounded-btn px-4 py-3 text-sm font-semibold text-foreground active:scale-[0.98] transition-transform disabled:opacity-50"
           >
             {googleLoading ? (
               <span className="w-5 h-5 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin inline-block" />
@@ -270,7 +333,7 @@ export function AuthScreen() {
           <button
             onClick={handleApple}
             disabled={appleLoading || googleLoading || loading}
-            className="flex-1 flex items-center justify-center gap-2 bg-background border border-border rounded-xl px-4 py-3 text-sm font-semibold text-foreground active:scale-[0.98] transition-transform disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-2 bg-background border border-border rounded-btn px-4 py-3 text-sm font-semibold text-foreground active:scale-[0.98] transition-transform disabled:opacity-50"
           >
             {appleLoading ? (
               <span className="w-5 h-5 border-2 border-foreground/20 border-t-foreground rounded-full animate-spin inline-block" />
@@ -299,7 +362,7 @@ export function AuthScreen() {
             onChange={e => setEmail(e.target.value)}
             required
             autoComplete="email"
-            className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+            className="w-full bg-background border border-border rounded-btn px-4 py-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
           />
           <div className="relative">
             <input
@@ -310,7 +373,7 @@ export function AuthScreen() {
               required
               minLength={6}
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-              className="w-full bg-background border border-border rounded-xl px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
+              className="w-full bg-background border border-border rounded-btn px-4 py-3 pr-10 text-sm text-foreground placeholder:text-muted focus:outline-none focus:border-accent transition-colors"
             />
             <button
               type="button"
@@ -338,7 +401,7 @@ export function AuthScreen() {
               <button
                 type="button"
                 onClick={() => { setMode('forgot'); setError(null); setSuccessMsg(null) }}
-                className="text-xs text-accent hover:underline"
+                className="text-xs text-text-primary hover:underline"
               >
                 Passwort vergessen?
               </button>
@@ -346,17 +409,17 @@ export function AuthScreen() {
           )}
 
           {error && (
-            <p className="text-xs text-red-500 bg-red-500/10 rounded-xl px-3 py-2 text-left">{error}</p>
+            <p className="text-xs text-red-500 bg-red-500/10 rounded-btn px-3 py-2 text-left">{error}</p>
           )}
           {successMsg && (
-            <p className="text-xs text-green-500 bg-green-500/10 rounded-xl px-3 py-2 text-left">{successMsg}</p>
+            <p className="text-xs text-green-500 bg-green-500/10 rounded-btn px-3 py-2 text-left">{successMsg}</p>
           )}
 
           <button
             type="submit"
             disabled={loading || googleLoading || appleLoading}
-            className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
-            style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)' }}
+            className="w-full rounded-btn px-4 py-3 text-sm font-semibold text-white active:scale-[0.98] transition-transform disabled:opacity-50 flex items-center justify-center gap-2"
+            style={{ background: '#8b5cf6' }}
           >
             {loading ? (
               <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" />
@@ -369,7 +432,7 @@ export function AuthScreen() {
         {/* Toggle login / signup */}
         <p className="text-xs text-muted text-center mt-4">
           {mode === 'login' ? 'Noch kein Konto? ' : 'Bereits ein Konto? '}
-          <button onClick={switchMode} className="text-accent font-semibold">
+          <button onClick={switchMode} className="text-text-primary font-semibold">
             {mode === 'login' ? 'Registrieren' : 'Anmelden'}
           </button>
         </p>

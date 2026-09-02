@@ -1,4 +1,9 @@
 import { useState, useEffect } from 'react'
+import { Banner } from '../components/ui/Banner'
+import { EmptyState } from '../components/ui/EmptyState'
+import { ListGroup, ListRow } from '../components/ui/ListGroup'
+import { SubjectIcon } from '../components/ui/SubjectIcon'
+import { Icon } from '../components/ui/Icon'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
@@ -75,6 +80,14 @@ export function FlashCardGeneratorScreen() {
         .filter((n) => n.subjectId === selectedSubjectId && generatedNotes[n.id])
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     : []
+
+  // Ein Fach kann nur Karteikarten liefern, wenn es analysierte Notizen hat.
+  const faecherNachMaterial = availableSubjects.map((subject) => ({
+    subject,
+    noteCount: userNotes.filter((n) => n.subjectId === subject.id && generatedNotes[n.id]).length,
+  }))
+  const mitMaterial = faecherNachMaterial.filter((f) => f.noteCount > 0)
+  const ohneMaterial = faecherNachMaterial.filter((f) => f.noteCount === 0)
 
   const selectedSubject = selectedSubjectId
     ? resolveSubjectInfo(selectedSubjectId, profile?.customFaecher)
@@ -173,17 +186,21 @@ export function FlashCardGeneratorScreen() {
                   {i > 0 && <div className="h-px w-8 bg-border" />}
                   <div className="flex items-center gap-1.5">
                     <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-all"
+                      className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-bold transition-all"
                       style={{
                         background: done
-                          ? 'rgb(var(--color-success))'
+                          ? 'rgb(var(--fill-green))'
                           : active
-                          ? 'linear-gradient(135deg, #A78BFA, #6D28D9)'
+                          ? '#34D399'
                           : 'rgb(var(--color-border))',
-                        color: done || active ? 'white' : 'rgb(var(--color-text-muted))',
+                        color: done
+                          ? 'rgb(var(--fill-green-on))'
+                          : active
+                          ? '#FFFFFF'
+                          : 'rgb(var(--color-text-muted))',
                       }}
                     >
-                      {done ? '✓' : i + 1}
+                      {done ? <Icon name="check" size={13} /> : i + 1}
                     </div>
                     <span className={`text-xs font-medium ${active ? 'text-text-primary' : 'text-text-muted'}`}>
                       {label}
@@ -198,42 +215,65 @@ export function FlashCardGeneratorScreen() {
         {/* ── Step 1: Fach wählen ────────────────────────────────── */}
         {step === 'fach' && (
           <div className="space-y-2">
-            <p className="section-label px-1">Für welches Fach?</p>
+            {mitMaterial.length > 0 && <p className="section-label px-1">Für welches Fach?</p>}
             {availableSubjects.length === 0 ? (
-              <div className="bg-surface border border-border rounded-card px-4 py-6 text-center">
-                <p className="text-text-muted text-sm">Keine Fächer gefunden. Bitte erst Fächer im Profil auswählen.</p>
-              </div>
-            ) : (
-              availableSubjects.map((subject) => {
-                const noteCount = userNotes.filter(
-                  (n) => n.subjectId === subject.id && generatedNotes[n.id]
-                ).length
-                return (
+              <EmptyState
+                title="Keine Fächer ausgewählt"
+                note="Wähle im Profil deine Fächer — danach kannst du daraus Karteikarten erstellen."
+                action={
                   <button
-                    key={subject.id}
-                    onClick={() => handleSelectSubject(subject.id)}
-                    className="w-full bg-surface border border-border rounded-card px-4 py-4 flex items-center gap-4 text-left press hover:border-accent/40 transition-colors"
+                    onClick={() => navigate('/profil/faecher')}
+                    className="w-full h-12 rounded-pill font-semibold text-[15px] press"
+                    style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                   >
-                    <div
-                      className="w-10 h-10 rounded-[12px] flex items-center justify-center text-lg shrink-0"
-                      style={{ backgroundColor: `${subject.color}22` }}
-                    >
-                      {subject.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-text-primary font-semibold text-[15px]">{subject.name}</p>
-                      <p className="text-text-muted text-xs mt-0.5">
-                        {noteCount > 0
-                          ? `${noteCount} analysierte Notiz${noteCount > 1 ? 'en' : ''}`
-                          : 'Noch keine analysierten Notizen'}
-                      </p>
-                    </div>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-muted shrink-0">
-                      <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
+                    Fächer auswählen
                   </button>
-                )
-              })
+                }
+              />
+            ) : (
+              <>
+                {/* Faecher MIT Material zuerst. Vorher standen alle acht in einer
+                    Reihe, auch die ohne eine einzige analysierte Notiz — jede
+                    davon fuehrte in einen leeren zweiten Schritt. Eine Zeile, die
+                    sich anbieten laesst, muss auch irgendwohin fuehren. */}
+                {mitMaterial.length > 0 && (
+                  <ListGroup>
+                    {mitMaterial.map(({ subject, noteCount }) => (
+                      <ListRow
+                        key={subject.id}
+                        leading={<SubjectIcon subjectId={subject.id} size="md" />}
+                        title={subject.name}
+                        subtitle={`${noteCount} analysierte Notiz${noteCount > 1 ? 'en' : ''}`}
+                        chevron
+                        onClick={() => handleSelectSubject(subject.id)}
+                      />
+                    ))}
+                  </ListGroup>
+                )}
+
+                {ohneMaterial.length > 0 && (
+                  <div className="pt-3">
+                    <p className="section-label px-1 mb-2">Noch ohne Material</p>
+                    <ListGroup>
+                      {ohneMaterial.map(({ subject }) => (
+                        <ListRow
+                          key={subject.id}
+                          className="opacity-70"
+                          leading={<SubjectIcon subjectId={subject.id} size="md" />}
+                          title={subject.name}
+                          subtitle="Erst eine Notiz analysieren lassen"
+                          chevron
+                          onClick={() => navigate(`/unterricht/${subject.id}`)}
+                        />
+                      ))}
+                    </ListGroup>
+                    <p className="text-[12px] text-text-secondary mt-2 px-1 leading-relaxed">
+                      Karteikarten entstehen aus deinen eigenen Notizen. Tippe ein Fach an,
+                      um dort eine anzulegen.
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
@@ -246,8 +286,8 @@ export function FlashCardGeneratorScreen() {
                 Notizen aus {selectedSubject?.name}
                 {selectedNoteIds.length > 0 && (
                   <span
-                    className="ml-2 px-1.5 py-0.5 rounded-full text-white text-[10px] font-bold"
-                    style={{ background: '#7C3AED' }}
+                    className="ml-2 px-1.5 py-0.5 rounded-full text-[11px] font-bold"
+                    style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                   >
                     {selectedNoteIds.length}
                   </span>
@@ -255,29 +295,29 @@ export function FlashCardGeneratorScreen() {
               </p>
               {selectedNoteIds.length > 0 && (
                 <button
-                  className="text-xs font-bold px-3 py-1.5 rounded-pill press-sm text-white"
-                  style={{ background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' }}
+                  className="text-xs font-bold px-3 py-1.5 rounded-pill press-sm"
+                  style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                   onClick={() => setStep('method')}
                 >
-                  Weiter →
+                  Weiter
                 </button>
               )}
             </div>
 
             {notesForSubject.length === 0 ? (
-              <div className="bg-surface border border-border rounded-card px-4 py-8 text-center space-y-2">
-                <p className="text-text-primary text-sm font-medium">Noch keine analysierten Notizen</p>
-                <p className="text-text-muted text-xs leading-relaxed">
-                  Öffne eine Notiz und tippe auf „Analysieren" um eine Smart Note zu erstellen.
-                </p>
+              <EmptyState
+                title="Noch keine analysierten Notizen"
+                note="Öffne eine Notiz im Unterrichtsmodus und lass sie analysieren — daraus entstehen die Karten."
+                action={
                 <button
                   onClick={() => navigate('/unterricht')}
-                  className="mt-3 px-4 py-2 rounded-pill text-white text-sm font-semibold press-sm"
-                  style={{ background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' }}
+                  className="w-full h-12 rounded-pill text-on-accent text-[15px] font-semibold press"
+                  style={{ background: 'var(--grad-mode)' }}
                 >
                   Zum Unterrichtsmodus
                 </button>
-              </div>
+                }
+              />
             ) : (
               notesForSubject.map((note) => {
                 const genNote = generatedNotes[note.id]
@@ -287,7 +327,7 @@ export function FlashCardGeneratorScreen() {
                     key={note.id}
                     onClick={() => toggleNote(note.id)}
                     className={`w-full bg-surface border rounded-card px-4 py-4 text-left press transition-colors ${
-                      isSelected ? 'border-accent/60' : 'border-border hover:border-accent/30'
+                      isSelected ? 'border-[#34D399]' : 'border-border hover:border-[#34D399]/40'
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -295,13 +335,13 @@ export function FlashCardGeneratorScreen() {
                       <div
                         className="w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all"
                         style={{
-                          borderColor: isSelected ? '#7C3AED' : 'rgb(var(--color-border))',
-                          background: isSelected ? '#7C3AED' : 'transparent',
+                          borderColor: isSelected ? '#34D399' : 'rgb(var(--color-border))',
+                          background: isSelected ? '#34D399' : 'transparent',
                         }}
                       >
                         {isSelected && (
                           <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-                            <path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M2 6l3 3 5-5" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         )}
                       </div>
@@ -313,7 +353,7 @@ export function FlashCardGeneratorScreen() {
                           </p>
                         )}
                         <div className="flex items-center gap-2 mt-1.5">
-                          <span className="text-xs px-1.5 py-0.5 rounded bg-success/10 text-success font-medium">
+                          <span className="text-xs px-1.5 py-0.5 rounded-chip bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] text-[rgb(var(--fill-green))] font-medium">
                             KI analysiert
                           </span>
                           {genNote?.keywords && (
@@ -333,17 +373,17 @@ export function FlashCardGeneratorScreen() {
         {step === 'method' && (
           <div className="space-y-4">
             {/* Tab switcher */}
-            <div className="flex gap-1.5 bg-surface border border-border rounded-[14px] p-1">
+            <div className="flex gap-1.5 bg-surface border border-border rounded-icon p-1">
               {(['ki', 'manuell'] as Method[]).map((m) => (
                 <button
                   key={m}
                   onClick={() => { setMethod(m); setError('') }}
-                  className={`flex-1 py-2.5 rounded-[10px] text-[13px] font-semibold transition-all press-sm ${
-                    method === m ? 'text-white' : 'text-text-muted'
+                  className={`flex-1 py-2.5 rounded-btn text-[13px] font-semibold transition-all press-sm ${
+                    method === m ? 'text-on-accent' : 'text-text-muted'
                   }`}
-                  style={method === m ? { background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' } : {}}
+                  style={method === m ? { background: 'var(--grad-mode)' } : {}}
                 >
-                  {m === 'ki' ? '✨ KI generieren' : '✏️ Manuell erstellen'}
+                  <span className="inline-flex items-center gap-1.5"><Icon name={m === 'ki' ? 'sparkle' : 'pencil'} size={15} />{m === 'ki' ? 'KI generieren' : 'Manuell erstellen'}</span>
                 </button>
               ))}
             </div>
@@ -351,19 +391,19 @@ export function FlashCardGeneratorScreen() {
             {/* ── KI Pfad ──────────────────────────────────────── */}
             {method === 'ki' && (
               <div className="space-y-4">
-                <div className="bg-surface border border-border rounded-[16px] p-4">
+                <div className="bg-surface border border-border rounded-card p-4">
                   <p className="section-label mb-3">Wie viele Karten?</p>
                   <div className="flex gap-2">
                     {COUNT_OPTIONS.map((n) => (
                       <button
                         key={n}
                         onClick={() => setCardCount(n)}
-                        className={`flex-1 py-2.5 rounded-[10px] text-sm font-bold press-sm transition-all ${
-                          cardCount === n ? 'text-white' : 'text-text-muted'
+                        className={`flex-1 py-2.5 rounded-btn text-sm font-bold press-sm transition-all ${
+                          cardCount === n ? 'text-on-accent' : 'text-text-muted'
                         }`}
                         style={
                           cardCount === n
-                            ? { background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' }
+                            ? { background: 'var(--grad-mode)' }
                             : { background: 'rgb(var(--color-border) / 0.3)' }
                         }
                       >
@@ -378,15 +418,13 @@ export function FlashCardGeneratorScreen() {
                 </div>
 
                 {error && (
-                  <div className="bg-danger/10 border border-danger/30 rounded-card px-4 py-3">
-                    <p className="text-danger text-sm">{error}</p>
-                  </div>
+                  <Banner tone="danger">{error}</Banner>
                 )}
 
                 <button
                   onClick={handleGenerateKI}
-                  className="w-full py-3.5 rounded-[14px] text-white font-bold text-[15px] press"
-                  style={{ background: 'linear-gradient(135deg, #A78BFA, #6D28D9)' }}
+                  className="w-full py-3.5 rounded-icon font-bold text-[15px] press"
+                  style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
                 >
                   {cardCount} Karten mit KI erstellen
                 </button>
@@ -397,13 +435,11 @@ export function FlashCardGeneratorScreen() {
             {method === 'manuell' && (
               <div className="space-y-3">
                 {error && (
-                  <div className="bg-danger/10 border border-danger/30 rounded-card px-4 py-3">
-                    <p className="text-danger text-sm">{error}</p>
-                  </div>
+                  <Banner tone="danger">{error}</Banner>
                 )}
 
                 {manualCards.map((card, idx) => (
-                  <div key={idx} className="bg-surface border border-border rounded-[16px] p-4 space-y-3">
+                  <div key={idx} className="bg-surface border border-border rounded-card p-4 space-y-3">
                     <div className="flex items-center justify-between">
                       <p className="text-[11px] font-bold text-text-muted uppercase tracking-wide">
                         Karte {idx + 1}
@@ -431,7 +467,7 @@ export function FlashCardGeneratorScreen() {
                         }
                         placeholder="Frage oder Begriff…"
                         rows={2}
-                        className="w-full bg-background border border-border rounded-[10px] px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent/60 transition-colors"
+                        className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent/60 transition-colors"
                       />
                     </div>
                     <div>
@@ -445,7 +481,7 @@ export function FlashCardGeneratorScreen() {
                         }
                         placeholder="Antwort oder Erklärung…"
                         rows={2}
-                        className="w-full bg-background border border-border rounded-[10px] px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent/60 transition-colors"
+                        className="w-full bg-background border border-border rounded-btn px-3 py-2.5 text-[14px] text-text-primary placeholder:text-text-muted resize-none focus:outline-none focus:border-accent/60 transition-colors"
                       />
                     </div>
                   </div>
@@ -453,7 +489,7 @@ export function FlashCardGeneratorScreen() {
 
                 <button
                   onClick={() => setManualCards((prev) => [...prev, { front: '', back: '' }])}
-                  className="w-full py-3 rounded-[14px] border-2 border-dashed text-text-muted text-sm font-semibold press-sm hover:border-accent/40 transition-colors"
+                  className="w-full py-3 rounded-icon border-2 border-dashed text-text-muted text-sm font-semibold press-sm hover:border-accent/40 transition-colors"
                   style={{ borderColor: 'rgb(var(--color-border))' }}
                 >
                   + Karte hinzufügen
@@ -462,8 +498,8 @@ export function FlashCardGeneratorScreen() {
                 <button
                   onClick={handleSaveManual}
                   disabled={validManualCount === 0}
-                  className="w-full py-3.5 rounded-[14px] text-white font-bold text-[15px] press disabled:opacity-40"
-                  style={{ background: 'linear-gradient(135deg, #34D399, #059669)' }}
+                  className="w-full py-3.5 rounded-icon text-on-accent font-bold text-[15px] press disabled:opacity-40"
+                  style={{ background: 'var(--grad-mode)' }}
                 >
                   {validManualCount > 0 ? `${validManualCount} Karte${validManualCount !== 1 ? 'n' : ''} speichern` : 'Karten speichern'}
                 </button>
@@ -476,10 +512,10 @@ export function FlashCardGeneratorScreen() {
         {step === 'generating' && (
           <div className="flex flex-col items-center justify-center py-16 gap-5">
             <div
-              className="w-16 h-16 rounded-[20px] flex items-center justify-center"
-              style={{ background: 'linear-gradient(145deg, #A78BFA, #6D28D9)' }}
+              className="w-16 h-16 rounded-card flex items-center justify-center"
+              style={{ background: 'var(--grad-mode)' }}
             >
-              <svg className="animate-spin" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+              <svg className="animate-spin" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5">
                 <path d="M21 12a9 9 0 11-6.219-8.56" strokeLinecap="round" />
               </svg>
             </div>

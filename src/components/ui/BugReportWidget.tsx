@@ -68,7 +68,7 @@ export function BugReportWidget() {
         <div className="flex items-center gap-3">
           <div
             className="w-8 h-8 rounded-btn flex items-center justify-center shrink-0 text-white text-[14px] font-black"
-            style={{ background: 'linear-gradient(135deg, #FF453A, #FF6B5B)' }}
+            style={{ background: '#FF453A' }}
           >
             !
           </div>
@@ -98,7 +98,7 @@ export function BugReportWidget() {
               onChange={e => setScreen(e.target.value)}
               placeholder="z.B. Karteikarten, Lernplan, Unterricht…"
               disabled={status === 'sending' || status === 'sent'}
-              className="w-full text-[14px] text-text placeholder:text-text-muted/50 bg-transparent border border-border/60 rounded-[12px] px-3 py-2.5 focus:outline-none focus:border-accent/60 transition-colors"
+              className="w-full text-[14px] text-text placeholder:text-text-muted/50 bg-transparent border border-border/60 rounded-btn px-3 py-2.5 focus:outline-none focus:border-accent/60 transition-colors"
             />
           </div>
 
@@ -113,14 +113,14 @@ export function BugReportWidget() {
               placeholder="Beschreib kurz was nicht funktioniert…"
               rows={4}
               disabled={status === 'sending' || status === 'sent'}
-              className="w-full text-[14px] text-text placeholder:text-text-muted/50 bg-transparent border border-border/60 rounded-[12px] px-3 py-2.5 resize-none focus:outline-none focus:border-accent/60 transition-colors"
+              className="w-full text-[14px] text-text placeholder:text-text-muted/50 bg-transparent border border-border/60 rounded-btn px-3 py-2.5 resize-none focus:outline-none focus:border-accent/60 transition-colors"
             />
           </div>
 
           {/* Status messages */}
           {status === 'sent' && (
             <p className="text-[13px] font-semibold text-center" style={{ color: '#30D158' }}>
-              Danke! Report wurde gesendet ✓
+              Danke, dein Bericht ist angekommen
             </p>
           )}
           {status === 'error' && (
@@ -133,7 +133,7 @@ export function BugReportWidget() {
           <div className="flex gap-2.5">
             <button
               onClick={handleClose}
-              className="flex-1 py-3 rounded-[12px] text-[14px] font-semibold text-text-muted press-sm"
+              className="flex-1 py-3 rounded-btn text-[14px] font-semibold text-text-muted press-sm"
               style={{ background: 'var(--color-surface-2)' }}
             >
               Abbrechen
@@ -141,8 +141,8 @@ export function BugReportWidget() {
             <button
               onClick={handleSend}
               disabled={!message.trim() || status === 'sending' || status === 'sent'}
-              className="flex-1 py-3 rounded-[12px] text-[14px] font-bold text-white press-sm disabled:opacity-40"
-              style={{ background: 'linear-gradient(135deg, #FF453A, #FF6B5B)' }}
+              className="flex-1 py-3 rounded-btn text-[14px] font-bold text-white press-sm disabled:opacity-40"
+              style={{ background: '#FF453A' }}
             >
               {status === 'sending' ? 'Sende…' : 'Senden'}
             </button>
