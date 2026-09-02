@@ -323,33 +323,40 @@ export function OnboardingScreen() {
 /* ─── Step 1: Welcome ─────────────────────────────────────── */
 
 function StepWelcome({ onNext }: { onNext: () => void }) {
+  // Der Screen passte nicht auf ein Bild.
+  //
+  // Der Inhalt war senkrecht ZENTRIERT (flex-1 justify-center). Ist er hoeher
+  // als der Platz, schiebt Zentrieren ihn nach beiden Seiten hinaus: Das
+  // Zeichen rutscht nach unten, und der Knopf faellt unter den Rand — man sah
+  // ihn beim ersten Oeffnen gar nicht. Genau der Screen, der als erster den
+  // Ton setzt.
+  //
+  // Jetzt oben beginnend statt zentriert, mit knapperen Abstaenden, und der
+  // Knopf sitzt fest am unteren Ende der Flaeche. Der Kopfbereich bleibt
+  // unveraendert — der Balken steht auf allen Schritten gleich hoch.
   return (
-    <div className="flex flex-col justify-between min-h-[calc(100svh-140px)]">
-      <div className="flex-1 flex flex-col justify-center">
-        {/* Volle Modusfarbe mit weissem Zeichen — dasselbe Muster wie ueberall
-            sonst in der App, statt eines blassen Zeichens auf blasser Flaeche. */}
+    <div className="flex flex-col min-h-[calc(100svh-140px)]">
+      <div className="flex-1 flex flex-col">
         <div
-          className="w-16 h-16 rounded-card flex items-center justify-center mb-8"
+          className="w-14 h-14 rounded-card flex items-center justify-center mb-5"
           style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
         >
-          <Icon name="cap" size={30} />
+          <Icon name="cap" size={27} />
         </div>
-        <h1 className="text-4xl font-bold text-text-primary leading-tight mb-4">
-          Smarter lernen.<br />
-          <span className="text-text-primary">Besser abschneiden.</span>
+
+        <h1 className="text-[30px] font-bold text-text-primary leading-[1.15] tracking-[-0.03em] mb-2.5">
+          Smarter lernen.<br />Besser abschneiden.
         </h1>
-        <p className="text-text-secondary text-lg leading-relaxed mb-10">
+        <p className="text-text-secondary text-[15px] leading-snug mb-6">
           Die KI, die deinen echten Unterricht kennt — personalisiert auf deinen Lehrplan.
         </p>
 
-        <div className="space-y-4 mb-6">
+        <div className="space-y-2.5 mb-5">
           {[
             { icon: 'camera' as IconName, text: 'Tafelbilder scannen → fertige Lernnotiz in Sekunden' },
             { icon: 'clipboard' as IconName, text: 'Probeklausuren genau wie im Unterricht (AFB I–III)' },
             { icon: 'target' as IconName, text: 'KI-Feedback wie vom Lehrer — mit Erwartungshorizont' },
           ].map((item, i) => (
-            /* Die Zeichen standen nackt und grau neben dem Text und lasen sich
-               eher als Rauschen denn als Hinweis. Kachel wie im Rest der App. */
             <div key={i} className="flex items-center gap-3">
               <span
                 className="w-9 h-9 rounded-icon flex items-center justify-center shrink-0"
@@ -362,20 +369,20 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
           ))}
         </div>
 
-        {/* War ein beiger Kasten mit oranger Schrift — eine Farbe, die sonst
-            nirgends im Erscheinungsbild vorkommt, und farbige Schrift dazu. Der
-            Hinweis traegt sein Signal jetzt in der Marke, der Text ist normal. */}
-        <div className="rounded-card px-4 py-3.5 mb-8 bg-surface border border-border/60">
-          <Tag tone="orange" size="sm" className="mb-2">Beta</Tag>
-          <p className="text-text-secondary text-[13px] leading-relaxed">
-            Die App funktioniert vor allem für Oberstufenschüler richtig gut. Für Studierende und die Mittelstufe ist sie nutzbar, aber noch nicht perfekt — sobald die Beta endet, wird sie für alle besser.
+        {/* Der Hinweis sinkt an das untere Ende der Flaeche, damit der freie
+            Platz zwischen Inhalt und Knopf nicht als Loch dasteht. */}
+        <div className="rounded-card px-3.5 py-3 bg-surface border border-border/60 mt-auto">
+          <Tag tone="orange" size="sm" className="mb-1.5">Beta</Tag>
+          <p className="text-text-secondary text-[12.5px] leading-snug">
+            Am besten für die Oberstufe. Für Studierende und die Mittelstufe nutzbar,
+            aber noch nicht perfekt — das wird mit dem Ende der Beta besser.
           </p>
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="pt-5">
         <Button variant="primary" fullWidth size="lg" onClick={onNext}>
-          Los geht's
+          Los geht&rsquo;s
         </Button>
       </div>
     </div>
