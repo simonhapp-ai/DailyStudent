@@ -1902,7 +1902,7 @@ export function NoteCreateScreen() {
                   navigate('/unterricht', { replace: true })
                 }}
                 className="w-full h-12 rounded-pill border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
-                style={{ borderColor: 'rgba(248,113,113,0.3)', color: '#F87171' }}
+                style={{ borderColor: 'rgb(var(--fill-red) / 0.3)', color: 'rgb(var(--fill-red))' }}
               >
                 Trotzdem verlassen
               </button>

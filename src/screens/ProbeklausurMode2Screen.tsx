@@ -12,6 +12,7 @@ import { BottomSheet } from '../components/ui/BottomSheet'
 import { ProModal } from '../components/ui/ProModal'
 import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
+import { AFB_PILL, npMarke } from '../lib/afb'
 
 interface ProbeklausurPrefill {
   subjectId: string
@@ -22,21 +23,9 @@ interface ProbeklausurPrefill {
 
 // ── Shared helpers (same as Mode 1, duplicated to keep screens self-contained)
 
-const AFB_COLORS: Record<string, string> = {
-  I:   'bg-blue-500/15 text-blue-400',
-  II:  'bg-amber-500/15 text-amber-400',
-  III: 'bg-purple-500/15 text-purple-400',
-}
-const ACCENT = '#34D399'
-const ACCENT_SOLID = '#0891B2'
+const ACCENT = 'var(--grad-mode)'
+const ACCENT_SOLID = 'rgb(var(--color-accent))'
 
-function npColor(np: number): string {
-  if (np >= 13) return '#34D399'
-  if (np >= 10) return '#60A5FA'
-  if (np >= 7)  return '#FACC15'
-  if (np >= 4)  return '#FB923C'
-  return '#F87171'
-}
 
 function MaterialCard({ m }: { m: GeneratedExam['materials'][0] }) {
   return (
@@ -57,7 +46,7 @@ function TaskAnswerCard({
     <div className="bg-background rounded-icon border border-border/60 p-4 mb-3">
       <div className="flex items-center gap-2 mb-2.5">
         <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufgabe {task.label}</span>
-        <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+        <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_PILL}`}>AFB {task.afb}</span>
         {task.materialRefs.length > 0 && (
           <span className="text-text-muted text-[11px]">· {task.materialRefs.join(', ')}</span>
         )}
@@ -87,10 +76,13 @@ function CorrectionCard({
       >
         <div className="flex items-center gap-2">
           <span className="text-text-muted text-[11px] font-semibold uppercase tracking-wide">Aufg. {task.label}</span>
-          <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_COLORS[task.afb]}`}>AFB {task.afb}</span>
+          <span className={`px-2 py-0.5 rounded-chip text-[11px] font-bold ${AFB_PILL}`}>AFB {task.afb}</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[14px] font-bold" style={{ color: npColor(correction.scoreNP) }}>
+          <span
+            className="text-[12px] font-semibold px-2 py-0.5 rounded-pill tabular-nums"
+            style={npMarke(correction.scoreNP)}
+          >
             {correction.scoreNP}/15 NP
           </span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
@@ -309,12 +301,12 @@ export function ProbeklausurMode2Screen() {
               className="flex items-center gap-2 bg-surface border border-border rounded-btn px-3 py-2 press-sm"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                style={{ color: timer.isWarning ? '#F87171' : ACCENT_SOLID }}>
+                style={{ color: timer.isWarning ? 'rgb(var(--fill-red))' : ACCENT_SOLID }}>
                 <circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" strokeLinecap="round" />
               </svg>
               <span
                 className="text-[14px] font-mono font-bold"
-                style={{ color: timer.isWarning ? '#F87171' : 'inherit' }}
+                style={{ color: timer.isWarning ? 'rgb(var(--fill-red))' : 'inherit' }}
               >
                 {timer.display}
               </span>
@@ -328,8 +320,8 @@ export function ProbeklausurMode2Screen() {
           )}
 
           {phase === 'result' && correction && (
-            <div className="px-3 py-1 rounded-pill text-white text-[13px] font-bold"
-              style={{ backgroundColor: npColor(correction.totalNP) }}>
+            <div className="px-3 py-1 rounded-pill text-[13px] font-bold tabular-nums"
+              style={npMarke(correction.totalNP)}>
               {correction.totalNP}/15 NP
             </div>
           )}
@@ -486,11 +478,11 @@ export function ProbeklausurMode2Screen() {
                 })}
               </>
             ) : (
-              <div className="mt-2 rounded-card border border-accent/20 overflow-hidden" style={{ background: 'rgba(124,58,237,0.04)' }}>
+              <div className="mt-2 rounded-card border border-accent/20 overflow-hidden" style={{ background: 'var(--color-accent-soft)' }}>
                 <div className="p-5 space-y-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-icon flex items-center justify-center shrink-0" style={{ background: 'rgba(124,58,237,0.15)' }}>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="w-10 h-10 rounded-icon flex items-center justify-center shrink-0" style={{ background: 'rgb(var(--color-accent) / 0.16)' }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgb(var(--color-accent))" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
                       </svg>
                     </div>

@@ -8,6 +8,7 @@ import { PlanenBar } from '../components/ui/PlanenBar'
 import { endnoteForEntry } from './AbiRechnerScreen'
 import { getActiveStreak } from '../lib/streak'
 import type { AbiHalbjahr } from '../types'
+import { npMarke } from '../lib/afb'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -895,13 +896,6 @@ export function InsightsScreen() {
             return avg !== null && avg < 13
           })
 
-          const npColor = (np: number) => {
-            if (np >= 13) return '#34D399'
-            if (np >= 10) return '#60A5FA'
-            if (np >= 7)  return '#FACC15'
-            if (np >= 4)  return '#FB923C'
-            return '#F87171'
-          }
 
           return (
             <div>
@@ -920,14 +914,14 @@ export function InsightsScreen() {
                         const prev = scores[idx - 1]
                         const delta = pk.totalNP - prev
                         if (delta !== 0) return (
-                          <span className="text-[12px] font-semibold" style={{ color: delta > 0 ? '#34D399' : '#F87171' }}>
+                          <span className="text-[12px] font-semibold text-text-secondary tabular-nums">
                             {delta > 0 ? '↑' : '↓'}{Math.abs(delta)}
                           </span>
                         )
                       }
                       return null
                     })()}
-                    <div className="px-2.5 py-1 rounded-full text-white text-[12px] font-bold shrink-0 whitespace-nowrap" style={{ background: npColor(pk.totalNP) }}>
+                    <div className="px-2.5 py-1 rounded-full text-[12px] font-bold shrink-0 whitespace-nowrap tabular-nums" style={npMarke(pk.totalNP)}>
                       {pk.totalNP}/15
                     </div>
                   </div>

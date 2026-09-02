@@ -514,12 +514,12 @@ export function BlurtingScreen() {
             />
           </div>
 
-          {error && <p className="px-4 pb-2 text-[13px] text-center" style={{ color: '#F87171' }}>{error}</p>}
+          {error && <p className="px-4 pb-2 text-[13px] text-center" style={{ color: 'rgb(var(--fill-red))' }}>{error}</p>}
           {micError && <p className="px-4 pb-2 text-[12px] text-center text-text-muted">{micError}</p>}
 
           <div className="px-5 pb-10 pt-1 shrink-0 space-y-3">
             <div className="flex items-center justify-between text-[12px]">
-              <span style={{ color: wordCount >= MIN_WORDS ? '#34D399' : 'rgb(var(--color-text-muted))' }}>
+              <span className={wordCount >= MIN_WORDS ? 'font-semibold text-text-primary' : 'text-text-muted'}>
                 {wordCount} von {MIN_WORDS} Wörtern
               </span>
               <span className="text-text-muted">ca. {estimatedMinutes} Min</span>
@@ -704,7 +704,7 @@ function ExamSuggestionCard({
   onTap: () => void
 }) {
   const badgeStyle = daysLeft <= 7
-    ? { bg: 'rgba(248,113,113,0.15)', color: '#F87171' }
+    ? { bg: 'rgb(var(--fill-red) / 0.15)', color: 'rgb(var(--fill-red))' }
     : daysLeft <= 14
     ? { bg: 'rgba(245,158,11,0.12)', color: '#F59E0B' }
     : { bg: 'rgba(148,163,184,0.12)', color: '#94A3B8' }

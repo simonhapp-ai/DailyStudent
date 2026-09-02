@@ -193,7 +193,7 @@ export function KlausurphasenScreen() {
               label: 'Karteikarten',
               note: totalCards > 0 ? `${totalCards} Karten` : 'Noch keine',
               icon: 'cards' as const,
-              fill: '#34D399', on: '#FFFFFF',
+              fill: 'rgb(var(--color-accent))', on: '#FFFFFF',
               to: totalCards > 0 ? '/klausurmodus/lernen' : '/klausurmodus/karteikarten/neu',
             },
             {
