@@ -175,42 +175,47 @@ export function OnboardingScreen() {
   // schaukelt nicht.
   return (
     <div className="flex flex-col min-h-[100svh] bg-background max-w-lg mx-auto">
-      {/* Progress bar */}
-      {step > 1 && (
-        <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
+      {/* Kopfbereich — auf jedem Schritt gleich aufgebaut.
+          Vorher stand der Fortschrittsbalken fest ganz oben (und damit hinter
+          der Notch), waehrend der Zurueck-Knopf absolut positioniert war und
+          beim Scrollen wegwanderte; die Polsterung des Inhalts war eine feste
+          Zahl, die den sicheren Bereich des Geraets gar nicht kannte. Dadurch
+          sass oben auf jedem Schritt etwas anderes.
+          Jetzt eine Leiste, die den sicheren Bereich als Polsterung traegt:
+          erst der Rand des Geraets, dann der Balken, dann der Zurueck-Weg. Der
+          Inhalt beginnt darunter — auf allen Schritten an derselben Stelle. */}
+      <div
+        className="fixed top-0 left-0 right-0 z-20 max-w-lg mx-auto bg-background"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+      >
+        {/* Der Balken laeuft ab dem ersten Schritt mit. Ihn dort wegzulassen
+            haette den Kopf wieder unterschiedlich hoch gemacht — und ein leeres
+            graues Band saehe aus wie ein Strich, nicht wie ein Anfang. */}
+        <div className="h-1 bg-border">
           <div
             className="h-full bg-accent transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
-      )}
+        <div className="h-[52px] flex items-center px-4">
+          {step > 1 && (
+            <button
+              onClick={back}
+              className="flex items-center gap-1 -ml-2 px-2 py-2 rounded-btn text-text-primary text-[14px] font-medium press-sm"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Zurück
+            </button>
+          )}
+        </div>
+      </div>
 
-      {/* Back button */}
-      {step > 1 && (
-        <button
-          onClick={back}
-          className="absolute left-4 flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm z-10"
-          style={{ top: 'max(48px, calc(env(safe-area-inset-top, 0px) + 12px))' }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Zurück
-        </button>
-      )}
-
-      {/* Schrittinhalt.
-          Lief ueber AnimatePresence mit mode="wait": Der naechste Schritt wird
-          dort erst eingehaengt, wenn die Ausblendung des vorherigen ihr Ende
-          MELDET. Bleibt diese Meldung aus, laeuft der Zaehler weiter, waehrend
-          der Bildschirm auf dem alten Schritt stehen bleibt — genau so
-          gemessen: neun Mal „Weiter", der Fuss-Knopf wechselte, der Inhalt
-          nicht. Man tippt dann gegen eine Wand.
-          Jetzt eine CSS-Animation ohne Fuellmodus. Der Grundzustand ist
-          sichtbar: Laeuft sie, blendet der Schritt herein; laeuft sie nicht,
-          ist er einfach sofort da. Dieselbe Regel wie beim Screenwechsel und
-          beim Eintragskasten im Kalender. */}
-      <div className="flex-1 px-6 pt-20 pb-10 overflow-hidden">
+      <div
+        className="flex-1 px-6 pb-10 overflow-hidden"
+        style={{ paddingTop: 'calc(env(safe-area-inset-top, 0px) + 68px)' }}
+      >
         <div>
           <div
             key={step}
@@ -319,7 +324,7 @@ export function OnboardingScreen() {
 
 function StepWelcome({ onNext }: { onNext: () => void }) {
   return (
-    <div className="flex flex-col justify-between min-h-[calc(100svh-80px)]">
+    <div className="flex flex-col justify-between min-h-[calc(100svh-140px)]">
       <div className="flex-1 flex flex-col justify-center">
         {/* Volle Modusfarbe mit weissem Zeichen — dasselbe Muster wie ueberall
             sonst in der App, statt eines blassen Zeichens auf blasser Flaeche. */}
@@ -1299,7 +1304,7 @@ function StepStundenplan({
   // ── CHOOSE MODE ─────────────────────────────────────────────
   if (mode === 'choose') {
     return (
-      <div className="flex flex-col min-h-[calc(100svh-80px)]">
+      <div className="flex flex-col min-h-[calc(100svh-140px)]">
         <div className="flex-1">
           <h2 className="text-2xl font-bold text-text-primary mb-1">Dein Stundenplan</h2>
           <p className="text-text-muted text-sm mb-8">
@@ -1353,7 +1358,7 @@ function StepStundenplan({
   // ── SCAN MODE ───────────────────────────────────────────────
   if (mode === 'scan') {
     return (
-      <div className="flex flex-col min-h-[calc(100svh-80px)]">
+      <div className="flex flex-col min-h-[calc(100svh-140px)]">
         <div className="flex-1">
           <button
             onClick={() => { setMode('choose'); setScanPhase('idle'); setScanError(''); setScanFile(null) }}
@@ -1497,7 +1502,7 @@ function StepStundenplan({
 
   // ── MANUAL MODE ─────────────────────────────────────────────
   return (
-    <div className="flex flex-col min-h-[calc(100svh-80px)]">
+    <div className="flex flex-col min-h-[calc(100svh-140px)]">
       <div className="flex-1">
         <button
           onClick={() => { setMode('choose'); setAddingSlot(false); setFromAI(false) }}
