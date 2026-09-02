@@ -6,7 +6,7 @@ import { QuickNotesIcon } from './SubjectIcon'
 import { Icon, type IconName } from './Icon'
 import { SubjectIcon } from './SubjectIcon'
 import { resolveSubjectInfo } from '../../data/subjectInfo'
-import { isPlanenPath, PLANEN_HOME, modeForPath, MODE_HOME, blendeModusWechsel, type AppMode } from '../../lib/appMode'
+import { isPlanenPath, PLANEN_HOME, modeForPath, MODE_HOME, type AppMode } from '../../lib/appMode'
 import { UNTERRICHT_TIPS, KLAUSUR_TIPS, tipOfTheDay, type Tip } from '../../data/tips'
 
 // Seitenleiste für iPad und Desktop (Version C).
@@ -190,7 +190,7 @@ export function DesktopSidebar() {
           return (
             <button
               key={m}
-              onClick={() => { if (!active) blendeModusWechsel(); navigate(MODE_HOME[m]) }}
+              onClick={() => navigate(MODE_HOME[m])}
               title={m === 'unterricht' ? 'Unterricht' : 'Klausur'}
               className="w-full h-11 rounded-icon text-[11px] font-bold press-sm transition-colors"
               style={
@@ -273,7 +273,7 @@ export function DesktopSidebarWide() {
       </button>
 
       <div className="px-3">
-        <ModeSwitch mode={mode} onPick={(m) => { if (m !== mode) blendeModusWechsel(); navigate(MODE_HOME[m]) }} />
+        <ModeSwitch mode={mode} onPick={(m) => navigate(MODE_HOME[m])} />
       </div>
 
       <nav className="flex-1 overflow-y-auto px-3 pb-6">

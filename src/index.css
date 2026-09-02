@@ -823,25 +823,3 @@ textarea::placeholder {
   }
 }
 
-/* Blende beim Moduswechsel — dunkel auf, dunkel ab.
-   Die Mitte liegt bei 42 %: Dort ist es am dunkelsten, und genau dort hat React
-   den Austausch hinter sich. Aufhellen darf etwas laenger dauern als
-   Verdunkeln, weil das Auge das Erscheinen des neuen Bildes verfolgt. */
-@keyframes modus-blende {
-  0%   { opacity: 0; }
-  42%  { opacity: 0.92; }
-  100% { opacity: 0; }
-}
-
-.modus-blende {
-  animation: modus-blende 440ms cubic-bezier(0.4, 0, 0.2, 1) both;
-}
-
-/* Bei reduzierter Bewegung bleibt der Zweck (der Austausch wird abgedeckt),
-   aber deutlich kuerzer und blasser. */
-@media (prefers-reduced-motion: reduce) {
-  .modus-blende {
-    animation-duration: 220ms;
-    opacity: 0.6;
-  }
-}

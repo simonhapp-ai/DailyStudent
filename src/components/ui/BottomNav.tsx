@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { recenterScreen } from '../../lib/nativeBridge'
-import { modeForPath, MODE_HOME, isPlanenPath, PLANEN_HOME, blendeModusWechsel, type AppMode } from '../../lib/appMode'
+import { modeForPath, MODE_HOME, isPlanenPath, PLANEN_HOME, type AppMode } from '../../lib/appMode'
 
 // Zwei Modi statt vier Tabs (Version C).
 //
@@ -54,7 +54,7 @@ export function BottomNav() {
                 // Immer neu zentrieren — deckt sowohl das erneute Tippen auf den
                 // bereits aktiven Modus ab (der Pfad ändert sich nicht, der
                 // app-weite Route-Effect feuert also nicht) als auch den Wechsel.
-                if (!active) { blendeModusWechsel(); recenterScreen(); navigate(MODE_HOME[mode]); return }
+                if (!active) { navigate(MODE_HOME[mode]); return }
 
                 // Ein SCHNELLER Doppeltipp auf den bereits aktiven
                 // Klausurenmodus fuehrt ins Planen — sonst muss man dafuer

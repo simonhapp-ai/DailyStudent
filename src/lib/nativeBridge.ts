@@ -20,11 +20,18 @@ export function notifyNativeTheme(isDark: boolean) {
 // Forces the native scroll view back to (0,0), like a real rubber-band
 // recoil — window.scrollTo() alone can't reliably cancel an in-flight
 // native elastic bounce. Falls back to a plain window scroll on web/desktop.
-export function recenterScreen() {
+/**
+ * @param animiert Weiches Hochscrollen. Richtig, wenn der Nutzer den bereits
+ *   aktiven Tab noch einmal antippt — dann ist die Bewegung die Antwort auf
+ *   seine Geste. Falsch beim Wechsel auf einen anderen Screen: Dort soll er
+ *   sofort richtig sitzen, sonst sieht man ihn erst an der alten Stelle und
+ *   dann nach oben rutschen.
+ */
+export function recenterScreen(animiert = true) {
   const bridge = getHandler('recenterBridge')
   if (bridge) {
     bridge.postMessage(null)
   } else {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: animiert ? 'smooth' : 'auto' })
   }
 }

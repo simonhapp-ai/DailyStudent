@@ -1,4 +1,4 @@
-import { Component, useEffect, useRef, useState } from 'react'
+import { Component, useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { modeForPath } from '../lib/appMode'
 import type { ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -88,7 +88,6 @@ import { CookieBanner } from '../components/ui/CookieBanner'
 import { analyticsAllowed, hasConsent, saveConsent } from '../lib/consent'
 import { Capacitor } from '@capacitor/core'
 import { IST_TELEFON } from '../lib/geraet'
-import { ModusBlende } from '../components/ui/ModusBlende'
 
 function ThemeApplier() {
   // Erscheinungsbild.
@@ -278,11 +277,16 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Every route change starts scrolled to the top — otherwise a screen you
-  // scrolled down on before navigating away reopens still scrolled down,
-  // which reads as a website reloading state rather than a real app screen.
-  useEffect(() => {
-    recenterScreen()
+  // Jeder Screen beginnt oben — sonst oeffnet sich ein Screen, auf dem man
+  // vorher heruntergescrollt hatte, wieder mittendrin.
+  //
+  // useLayoutEffect statt useEffect, und ohne weiches Scrollen: Vorher lief
+  // beides NACH dem Zeichnen, man sah also kurz den neuen Screen an der alten
+  // Stelle und dann eine Scrollbewegung nach oben. Beim Moduswechsel, wo
+  // ohnehin alles zugleich wechselt, wurde daraus ein Ruckeln. Jetzt sitzt der
+  // Screen bereits richtig, bevor das erste Bild steht.
+  useLayoutEffect(() => {
+    recenterScreen(false)
     desktopMainRef.current?.scrollTo(0, 0)
   }, [location.pathname])
   // True if localStorage has a previous session — lets us skip the spinner for returning users
@@ -415,7 +419,6 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
         {!hideNav && <FixedBadges />}
         <XpToast />
         <AttachmentToast />
-        <ModusBlende />
       </div>
     )
   }
@@ -433,7 +436,6 @@ function Layout({ consentGiven, onConsentGiven }: { consentGiven: boolean; onCon
       {!hideNav && <StreakBadge />}
       <XpToast />
       <AttachmentToast />
-      <ModusBlende />
     </div>
   )
 }
