@@ -9,6 +9,7 @@ import { Icon } from '../components/ui/Icon'
 import { useUser } from '../context/UserContext'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { Lernplan, LernplanType } from '../types'
+import { zurueckZiel } from '../lib/appMode'
 
 const PLAN_TYPE_LABELS: Record<LernplanType, string> = {
   einzel: 'Einzel',
@@ -61,7 +62,7 @@ export function LernplanListScreen() {
       <Header
         title="Lernpläne"
         subtitle={sorted.length > 0 ? `${sorted.length} ${sorted.length === 1 ? 'Plan' : 'Pläne'}` : 'KI-generiert'}
-        onBack={() => navigate(-1)}
+        onBack={() => navigate(zurueckZiel())}
       />
 
       <div className="px-4 space-y-3 mt-2">

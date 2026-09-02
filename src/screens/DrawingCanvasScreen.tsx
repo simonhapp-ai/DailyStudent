@@ -4,6 +4,7 @@ import { DrawingCanvas } from '../components/ui/DrawingCanvas'
 import type { CanvasPageData } from '../components/ui/DrawingCanvas'
 import { extractTextFromImage, generateSmartNote } from '../lib/groq'
 import { drawingBlockTransfer } from '../lib/drawingBlockTransfer'
+import { zurueckZiel } from '../lib/appMode'
 
 interface PhotoBlockAIResult {
   transcription: string
@@ -114,7 +115,7 @@ export function DrawingCanvasScreen() {
 
   const handleBack = () => {
     drawingBlockTransfer.store(buildPatch())
-    navigate(-1)
+    navigate(zurueckZiel())
   }
 
   const handleNavAway = (path: string) => {
@@ -132,7 +133,7 @@ export function DrawingCanvasScreen() {
     const target = warnNavTarget
     setWarnNavTarget(null)
     drawingBlockTransfer.store(buildPatch())
-    navigate(-1)  // restore NoteCreateScreen state
+    navigate(zurueckZiel())  // restore NoteCreateScreen state
     // Then navigate onward after a tick so history is correct
     setTimeout(() => navigate(target, { replace: true }), 0)
   }

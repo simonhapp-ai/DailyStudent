@@ -14,6 +14,7 @@ import { subjects, halfYears } from '../data/mockData'
 import type { GeneratedSmartNote, UserNote } from '../types'
 import DocumentCropTool from '../components/ui/DocumentCropTool'
 import { drawingBlockTransfer } from '../lib/drawingBlockTransfer'
+import { zurueckZiel } from '../lib/appMode'
 
 // ── Local block types ────────────────────────────────────────────────────────
 
@@ -254,7 +255,7 @@ export function NoteCreateScreen() {
   // Per-photo-block file refs (keyed by block id)
   const photoRefs = useRef<Record<string, { camera: HTMLInputElement | null; file: HTMLInputElement | null; docScan: HTMLInputElement | null }>>({})
 
-  // Handle returning from DrawingCanvasScreen — DrawingCanvasScreen uses navigate(-1)
+  // Handle returning from DrawingCanvasScreen — DrawingCanvasScreen uses navigate(zurueckZiel())
   // which restores THIS component instance (blocks state preserved). The drawing block
   // data is passed via drawingBlockTransfer to avoid the remount bug from navigate(returnTo).
   useEffect(() => {
@@ -274,7 +275,7 @@ export function NoteCreateScreen() {
       }
       return { ...b, ...patch } as DrawingBlock
     }))
-  // location.key changes every time we arrive at this route (navigate(-1) included)
+  // location.key changes every time we arrive at this route (navigate(zurueckZiel()) included)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key])
 
@@ -705,14 +706,14 @@ export function NoteCreateScreen() {
   const currentFolder = folderId ? userFolders.find((f) => f.id === folderId) : null
 
   const handleCancelPress = () => {
-    if (!hasUserContent) { navigate(-1); return }
+    if (!hasUserContent) { navigate(zurueckZiel()); return }
     setShowCancelConfirm(true)
   }
 
   const hasContent = hasUserContent || title.trim().length > 0
 
   const handleSavePress = () => {
-    if (!hasContent) { navigate(-1); return }
+    if (!hasContent) { navigate(zurueckZiel()); return }
     if (folderId) { confirmSave(folderId); return }
     if (!selectedSubjectId) { void openNoSubjectModal(); return }
     setShowSaveModal(true)
@@ -1933,7 +1934,7 @@ export function NoteCreateScreen() {
                   <h2 className="text-base font-bold text-text-primary">Wo speichern?</h2>
                   <p className="text-text-muted text-xs mt-0.5">Kein Fach ausgewählt — wähle eine Option</p>
                 </div>
-                <button onClick={() => navigate(-1)} className="p-1.5 rounded-btn hover:bg-danger/5 transition-colors -mt-0.5 -mr-1">
+                <button onClick={() => navigate(zurueckZiel())} className="p-1.5 rounded-btn hover:bg-danger/5 transition-colors -mt-0.5 -mr-1">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                     <polyline points="3 6 5 6 21 6" strokeLinecap="round" />
                     <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" strokeLinecap="round" strokeLinejoin="round" />
@@ -2008,7 +2009,7 @@ export function NoteCreateScreen() {
                     <h2 className="text-base font-bold text-text-primary">Wo speichern?</h2>
                     <p className="text-text-muted text-xs mt-0.5">{subject ? subject.name : 'Kein Fach'}</p>
                   </div>
-                  <button onClick={() => navigate(-1)} className="p-1.5 rounded-btn hover:bg-danger/5 transition-colors -mt-0.5 -mr-1">
+                  <button onClick={() => navigate(zurueckZiel())} className="p-1.5 rounded-btn hover:bg-danger/5 transition-colors -mt-0.5 -mr-1">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">
                       <polyline points="3 6 5 6 21 6" strokeLinecap="round" />
                       <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" strokeLinecap="round" strokeLinejoin="round" />

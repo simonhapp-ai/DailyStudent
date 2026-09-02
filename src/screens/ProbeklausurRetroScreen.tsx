@@ -7,6 +7,7 @@ import { useUser } from '../context/UserContext'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { SavedProbeklausur } from '../types'
+import { zurueckZiel } from '../lib/appMode'
 
 const MODE_LABELS: Record<number, string> = {
   1: 'AFB-Trainer',
@@ -247,7 +248,7 @@ export function ProbeklausurRetroScreen() {
       <div className="px-4 pb-4 border-b border-border/60 bg-surface/80" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(zurueckZiel())}
             className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">

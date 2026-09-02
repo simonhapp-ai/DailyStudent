@@ -10,6 +10,7 @@ import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { Dialog } from '../components/ui/Dialog'
 import type { GeneratedSmartNote } from '../types'
 import type { UserNote } from '../types'
+import { zurueckZiel } from '../lib/appMode'
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -318,7 +319,7 @@ export function BlurtingScreen() {
             style={{ paddingTop: 'max(54px, calc(env(safe-area-inset-top, 0px) + 16px))', paddingBottom: '12px' }}
           >
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(zurueckZiel())}
               className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"

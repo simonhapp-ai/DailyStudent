@@ -12,6 +12,7 @@ import { generateMode1Exam, correctExam } from '../lib/gemini'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
 import { AFB_PILL, npMarke } from '../lib/afb'
+import { zurueckZiel } from '../lib/appMode'
 
 interface ProbeklausurPrefill {
   subjectId: string
@@ -220,9 +221,9 @@ export function ProbeklausurMode1Screen() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
-              if (phase === 'setup' || phase === 'loading') { navigate(-1); return }
+              if (phase === 'setup' || phase === 'loading') { navigate(zurueckZiel()); return }
               if (phase === 'exam') { setShowExitWarning(true); return }
-              navigate(-1)
+              navigate(zurueckZiel())
             }}
             className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm shrink-0 -ml-1"
           >
@@ -479,7 +480,7 @@ export function ProbeklausurMode1Screen() {
               Neue Aufgabe
             </button>
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(zurueckZiel())}
               className="flex-1 py-4 rounded-card text-white text-[15px] font-bold press"
               style={{ background: ACCENT }}
             >
@@ -503,16 +504,16 @@ export function ProbeklausurMode1Screen() {
           </div>
           <button
             onClick={() => {
-              if (!exam || !inProgressIdRef.current) { navigate(-1); return }
+              if (!exam || !inProgressIdRef.current) { navigate(zurueckZiel()); return }
               saveInProgressProbeklausur({ id: inProgressIdRef.current, mode: 1, subjectId: exam.subjectId, subjectName: exam.subject, topic: exam.topic, exam, userAnswers: answers, startedAt: resumeStartedAt })
               setShowExitWarning(false)
-              navigate(-1)
+              navigate(zurueckZiel())
             }}
             className="w-full h-12 rounded-pill font-semibold text-[15px] bg-surface border border-border/60 text-text-primary press"
           >
             Klausur pausieren — Fortschritt gespeichert
           </button>
-          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(-1) }} className="w-full h-12 rounded-pill font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
+          <button onClick={() => { setShowExitWarning(false); if (inProgressIdRef.current) deleteInProgressProbeklausur(inProgressIdRef.current); navigate(zurueckZiel()) }} className="w-full h-12 rounded-pill font-semibold text-[15px] text-white press mb-2" style={{ background: 'rgb(var(--fill-red))' }}>
             Klausur beenden (Fortschritt gelöscht)
           </button>
         </div>

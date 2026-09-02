@@ -9,6 +9,7 @@ import { Tag } from '../components/ui/Tag'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Banner } from '../components/ui/Banner'
+import { zurueckZiel } from '../lib/appMode'
 
 interface ProbeklausurPrefill {
   subjectId: string
@@ -157,7 +158,7 @@ export function ProbeklausurMenuScreen() {
       {/* ── Kopf ────────────────────────────────────────────────────── */}
       <div className="px-4" style={{ paddingTop: 'max(58px, calc(env(safe-area-inset-top, 0px) + 18px))' }}>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(zurueckZiel())}
           className="flex items-center gap-1 text-text-primary text-[15px] font-semibold mb-4 press-sm -ml-1"
         >
           <svg width="9" height="15" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2"

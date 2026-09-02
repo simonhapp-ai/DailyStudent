@@ -13,6 +13,7 @@ import { generateLernzettel, generateLernzettelVisual } from '../lib/gemini'
 import { saveLocalAsset } from '../lib/noteStorage'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import type { Lernzettel, LernzettelImage, LernzettelModus } from '../types'
+import { zurueckZiel } from '../lib/appMode'
 
 const G_LERNZETTEL = 'rgb(var(--color-accent))'
 
@@ -201,7 +202,7 @@ export function LernzettelGeneratorScreen() {
             ? () => setStep('modus')
             : step === 'modus'
             ? () => { setStep('fach'); setSelectedSubjectId(null) }
-            : () => navigate(-1)
+            : () => navigate(zurueckZiel())
         }
       />
 

@@ -10,6 +10,7 @@ import { useUser } from '../context/UserContext'
 import { generateFlashcards } from '../lib/groq'
 import { resolveSubjectInfo } from '../data/subjectInfo'
 import type { FlashCard } from '../types'
+import { zurueckZiel } from '../lib/appMode'
 
 type Step = 'fach' | 'note' | 'method' | 'generating'
 type Method = 'ki' | 'manuell'
@@ -169,7 +170,7 @@ export function FlashCardGeneratorScreen() {
         onBack={() => {
           if (step === 'note') setStep('fach')
           else if (step === 'method') setStep('note')
-          else navigate(-1)
+          else navigate(zurueckZiel())
         }}
       />
 

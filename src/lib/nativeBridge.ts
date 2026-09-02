@@ -17,9 +17,6 @@ export function notifyNativeTheme(isDark: boolean) {
   getHandler('themeBridge')?.postMessage(isDark)
 }
 
-// Forces the native scroll view back to (0,0), like a real rubber-band
-// recoil — window.scrollTo() alone can't reliably cancel an in-flight
-// native elastic bounce. Falls back to a plain window scroll on web/desktop.
 /**
  * @param animiert Weiches Hochscrollen. Richtig, wenn der Nutzer den bereits
  *   aktiven Tab noch einmal antippt — dann ist die Bewegung die Antwort auf
@@ -31,16 +28,21 @@ export function notifyNativeTheme(isDark: boolean) {
 let gesperrt = false
 
 export function recenterScreen(animiert = true) {
-  const bridge = getHandler('recenterBridge')
-  if (bridge) {
-    bridge.postMessage(null)
+  if (animiert) {
+    // Die native Bruecke faehrt eine Federanimation ueber 0,35 s. Genau das
+    // will man hier: Der Nutzer hat den bereits aktiven Tab noch einmal
+    // angetippt, die Bewegung ist die Antwort darauf.
+    const bridge = getHandler('recenterBridge')
+    if (bridge) bridge.postMessage(null)
+    else window.scrollTo({ top: 0, behavior: 'smooth' })
     return
   }
 
-  if (animiert) {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    return
-  }
+  // Beim Screenwechsel bewusst OHNE Bruecke: Deren Federanimation lief bisher
+  // bei jedem Routenwechsel mit und sah aus, als wuerde die Seite von selbst
+  // nach oben wischen — auch dann, wenn der neue Screen ohnehin oben beginnt.
+  // Screens haengen nicht aneinander; wer in einem heruntergescrollt hat,
+  // startet im naechsten trotzdem oben, und zwar ohne Bewegung.
 
   // Eine Wischbewegung gleitet nach dem Loslassen weiter. Tippt man waehrend
   // dieses Nachlaufs auf die Leiste, ueberschreibt die laufende Bewegung ein

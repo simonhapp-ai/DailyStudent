@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { zurueckZiel } from '../../lib/appMode'
 
 interface HeaderProps {
   title: string
@@ -22,7 +23,7 @@ export function Header({ title, subtitle, showBack, onBack, right }: HeaderProps
       <div className="flex items-center gap-1 flex-1 min-w-0">
         {(showBack || onBack) && (
           <button
-            onClick={() => onBack ? onBack() : navigate(-1)}
+            onClick={() => onBack ? onBack() : navigate(zurueckZiel())}
             className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 mr-1 px-2 py-1.5 rounded-btn"
             style={{ color: 'rgb(var(--color-text-primary))' }}
           >

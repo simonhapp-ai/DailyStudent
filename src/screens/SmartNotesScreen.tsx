@@ -12,6 +12,7 @@ import { getAttachment, useResolvedAttachments, hasLocalOnlyAttachments, transfe
 import { SUBJECT_INFO } from '../data/subjectInfo'
 import type { FlashCard, GeneratedSmartNote, UserNote } from '../types'
 import { EmptyState } from '../components/ui/EmptyState'
+import { zurueckZiel } from '../lib/appMode'
 
 function CollapsibleSection({
   title, icon, children, badge, defaultOpen = true,
@@ -868,7 +869,7 @@ export function SmartNotesScreen() {
                 onClick={() => {
                   if (lessonId) {
                     deleteUserNote(lessonId)
-                    navigate(-1)
+                    navigate(zurueckZiel())
                   }
                 }}
                 className="flex-1 py-3 rounded-btn text-white text-[14px] font-bold press-sm"

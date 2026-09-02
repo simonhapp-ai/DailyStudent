@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { zurueckZiel } from '../../lib/appMode'
 
 // Zurueck-Weg ueber der Ueberschrift.
 //
@@ -22,7 +23,7 @@ export function ZurueckZeile({
   const navigate = useNavigate()
   return (
     <button
-      onClick={() => (ziel ? navigate(ziel) : navigate(-1))}
+      onClick={() => (ziel ? navigate(ziel) : navigate(zurueckZiel()))}
       className={`flex items-center gap-1 -ml-2 -mt-1 mb-2 px-2 py-2 rounded-btn press-sm text-[13px] font-medium text-text-primary ${className}`}
     >
       <svg width="7" height="12" viewBox="0 0 8 14" fill="none" stroke="currentColor" strokeWidth="2.2"

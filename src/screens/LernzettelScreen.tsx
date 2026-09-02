@@ -12,6 +12,7 @@ import { SUBJECT_INFO } from '../data/subjectInfo'
 import { Dialog } from '../components/ui/Dialog'
 import type { Lernzettel } from '../types'
 import { Icon } from '../components/ui/Icon'
+import { zurueckZiel } from '../lib/appMode'
 
 const G_LERNZETTEL = '#34D399'
 
@@ -388,7 +389,7 @@ export function LernzettelScreen() {
 
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-28">
-      <Header title="Lernzettel" subtitle="Deine Zusammenfassungen" onBack={() => navigate(-1)} />
+      <Header title="Lernzettel" subtitle="Deine Zusammenfassungen" onBack={() => navigate(zurueckZiel())} />
       <div className="px-4 pb-2" />
 
       <div className="px-4 space-y-3">

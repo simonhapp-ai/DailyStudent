@@ -9,6 +9,7 @@ import { ProModal } from '../components/ui/ProModal'
 import { Dialog } from '../components/ui/Dialog'
 import { Icon, type IconName } from '../components/ui/Icon'
 import type { LernplanSession, LernplanActivity, LernDayType, LernMethode, StundenplanSlot } from '../types'
+import { zurueckZiel } from '../lib/appMode'
 
 const METHOD_ICONS: Record<LernMethode, IconName> = {
   karteikarten: 'cards',
@@ -131,7 +132,7 @@ export function LernplanDetailScreen() {
         <div className="w-16 h-16 rounded-card bg-surface flex items-center justify-center text-text-secondary"><Icon name="calendar" size={28} /></div>
         <p className="text-text-primary font-semibold text-lg text-center">Lernplan nicht gefunden</p>
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(zurueckZiel())}
           className="flex items-center gap-1 text-text-primary text-[14px] font-medium press-sm"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -298,7 +299,7 @@ export function LernplanDetailScreen() {
 
   const handleDelete = () => {
     deleteLernplan(plan.id)
-    navigate(-1)
+    navigate(zurueckZiel())
   }
 
   const planTypeLabel = plan.planType === 'einzel' ? 'Einzel' : plan.planType === 'abitur' ? 'Abitur' : 'Vollständig'
@@ -337,7 +338,7 @@ export function LernplanDetailScreen() {
         >
           <div className="flex items-center gap-3">
             <button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate(zurueckZiel())}
               className="flex items-center gap-0.5 press-sm shrink-0 -ml-2 px-2 py-1.5 rounded-btn text-text-primary"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

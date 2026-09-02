@@ -1,12 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { Header } from '../components/ui/Header'
+import { zurueckZiel } from '../lib/appMode'
 
 export function AGBScreen() {
   const navigate = useNavigate()
 
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-28">
-      <Header title="Nutzungsbedingungen" subtitle="Terms and Conditions" onBack={() => navigate(-1)} />
+      <Header title="Nutzungsbedingungen" subtitle="Terms and Conditions" onBack={() => navigate(zurueckZiel())} />
 
       <div className="px-4 mt-4 space-y-6 text-[13px] text-text-secondary leading-relaxed lg:px-6 lg:max-w-[760px]">
 

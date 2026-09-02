@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Icon } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { erzwingeOnboarding } from '../lib/onboarding'
 import { rangFuer } from '../lib/xp'
 
 // Emails die die Dev-Tools sehen dürfen
@@ -124,6 +125,12 @@ export function ProfilDevToolsScreen() {
           {/* ── Onboarding reset (dev-only — wipes local data cache) ── */}
           <button
             onClick={() => {
+              // Die lokalen Daten allein zu loeschen reichte nicht: Das Profil
+              // liegt auch in Supabase und wurde beim naechsten Laden sofort
+              // wieder heruntergeladen — man landete direkt in der App statt im
+              // Onboarding. Die Marke haelt das Onboarding offen, bis es einmal
+              // abgeschlossen ist.
+              erzwingeOnboarding()
               localStorage.removeItem('lernapp_v1')
               window.location.href = '/'
             }}

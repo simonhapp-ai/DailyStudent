@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { recenterScreen } from '../../lib/nativeBridge'
-import { modeForPath, MODE_HOME, isPlanenPath, PLANEN_HOME, type AppMode } from '../../lib/appMode'
+import { modeForPath, MODE_HOME, PLANEN_HOME, type AppMode } from '../../lib/appMode'
 
 // Zwei Modi statt vier Tabs (Version C).
 //
@@ -54,31 +54,27 @@ export function BottomNav() {
                 // Immer neu zentrieren — deckt sowohl das erneute Tippen auf den
                 // bereits aktiven Modus ab (der Pfad ändert sich nicht, der
                 // app-weite Route-Effect feuert also nicht) als auch den Wechsel.
-                if (!active) {
-                  // Zuruecksetzen VOR dem Wechsel, nicht als Reaktion darauf.
-                  // Der Effekt am Layout laeuft erst, wenn React den neuen Baum
-                  // committet — gemessen war der Pfad da laengst gewechselt,
-                  // die Seite stand aber noch auf der alten Hoehe und der alten
-                  // Position. Man sah also den alten Screen unten kleben und
-                  // dann einen Sprung. Hier ist der alte Screen noch da und
-                  // laesst sich verlustfrei nach oben setzen; der neue beginnt
-                  // dadurch bereits oben.
+                // Nicht am Startpunkt dieses Modus? Dann dorthin. Das gilt
+                // auch fuer Screens, die zu keinem Modus gehoeren — aus dem
+                // Profil kam man sonst nicht mehr in den Unterricht zurueck,
+                // weil dessen Knopf dort faelschlich als „aktiv" galt.
+                if (location.pathname !== MODE_HOME[mode]) {
                   recenterScreen(false)
                   navigate(MODE_HOME[mode])
                   return
                 }
 
-                // Ein SCHNELLER Doppeltipp auf den bereits aktiven
+                // Schon am Startpunkt: Ein SCHNELLER zweiter Tipp auf den
                 // Klausurenmodus fuehrt ins Planen — sonst muss man dafuer
-                // jedes Mal an den oberen Bildschirmrand greifen. Entscheidend
-                // ist das Zeitfenster: Ohne es waere jeder zweite Tipp
-                // irgendwann ein Sprung, auch Minuten spaeter, und das
-                // Hochscrollen des aktiven Tabs waere nicht mehr erreichbar.
+                // jedes Mal an den oberen Bildschirmrand greifen. Ohne das
+                // Zeitfenster waere jeder zweite Tipp irgendwann ein Sprung,
+                // auch Minuten spaeter, und das Hochscrollen des aktiven Tabs
+                // nicht mehr erreichbar.
                 const jetzt = Date.now()
                 const schnell = jetzt - letzterTipp.current < DOPPELTIPP_MS
                 letzterTipp.current = jetzt
 
-                if (schnell && mode === 'klausur' && !isPlanenPath(location.pathname)) {
+                if (schnell && mode === 'klausur') {
                   recenterScreen(false)
                   navigate(PLANEN_HOME)
                   return
