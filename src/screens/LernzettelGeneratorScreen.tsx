@@ -183,6 +183,15 @@ export function LernzettelGeneratorScreen() {
     }
   }
 
+  // Ein Fach kann nur einen Lernzettel liefern, wenn es analysierte Notizen hat.
+  const faecherNachMaterial = availableSubjectIds.map((subjectId) => ({
+    subjectId,
+    info: resolveSubjectInfo(subjectId, profile?.customFaecher),
+    noteCount: userNotes.filter((n) => n.subjectId === subjectId && generatedNotes[n.id]).length,
+  }))
+  const mitMaterial = faecherNachMaterial.filter((f) => f.noteCount > 0)
+  const ohneMaterial = faecherNachMaterial.filter((f) => f.noteCount === 0)
+
   return (
     <div className="flex flex-col min-h-dvh bg-background pb-24">
       <Header
@@ -234,35 +243,56 @@ export function LernzettelGeneratorScreen() {
         {/* ── STEP: FACH ────────────────────────────────────────── */}
         {step === 'fach' && (
           <div className="space-y-2.5">
-            <p className="section-label px-0.5 mb-1">Fach wählen</p>
+            {mitMaterial.length > 0 && <p className="section-label px-0.5 mb-1">Fach wählen</p>}
             {availableSubjectIds.length === 0 ? (
               <EmptyState
                 title="Keine Fächer ausgewählt"
                 note="Wähle im Profil deine Fächer — danach kannst du daraus Lernzettel erstellen."
               />
             ) : (
-              <ListGroup>
-                {availableSubjectIds.map((subjectId) => {
-                  const info = resolveSubjectInfo(subjectId, profile?.customFaecher)
-                  const noteCount = userNotes.filter(
-                    (n) => n.subjectId === subjectId && generatedNotes[n.id]
-                  ).length
-                  return (
-                    <ListRow
-                      key={subjectId}
-                      leading={<SubjectIcon subjectId={subjectId} size="md" />}
-                      title={info?.name ?? subjectId}
-                      subtitle={
-                        noteCount === 0
-                          ? 'Keine Smart Notes vorhanden'
-                          : `${noteCount} Smart Note${noteCount !== 1 ? 's' : ''} verfügbar`
-                      }
-                      chevron
-                      onClick={() => handleSelectSubject(subjectId)}
-                    />
-                  )
-                })}
-              </ListGroup>
+              <>
+                {/* Faecher MIT Material zuerst. Vorher standen alle in einer
+                    Reihe, auch die ohne eine einzige analysierte Notiz — jede
+                    davon fuehrte in einen leeren zweiten Schritt. Eine Zeile,
+                    die sich anbieten laesst, muss auch irgendwohin fuehren. */}
+                {mitMaterial.length > 0 && (
+                  <ListGroup>
+                    {mitMaterial.map(({ subjectId, info, noteCount }) => (
+                      <ListRow
+                        key={subjectId}
+                        leading={<SubjectIcon subjectId={subjectId} size="md" />}
+                        title={info?.name ?? subjectId}
+                        subtitle={`${noteCount} Smart Note${noteCount !== 1 ? 's' : ''} verfügbar`}
+                        chevron
+                        onClick={() => handleSelectSubject(subjectId)}
+                      />
+                    ))}
+                  </ListGroup>
+                )}
+
+                {ohneMaterial.length > 0 && (
+                  <div className="pt-3">
+                    <p className="section-label px-0.5 mb-2">Noch ohne Material</p>
+                    <ListGroup>
+                      {ohneMaterial.map(({ subjectId, info }) => (
+                        <ListRow
+                          key={subjectId}
+                          className="opacity-70"
+                          leading={<SubjectIcon subjectId={subjectId} size="md" />}
+                          title={info?.name ?? subjectId}
+                          subtitle="Erst eine Notiz analysieren lassen"
+                          chevron
+                          onClick={() => navigate(`/unterricht/${subjectId}`)}
+                        />
+                      ))}
+                    </ListGroup>
+                    <p className="text-[12px] text-text-secondary mt-2 px-0.5 leading-relaxed">
+                      Ein Lernzettel entsteht aus deinen eigenen Notizen. Tippe ein Fach an,
+                      um dort eine anzulegen.
+                    </p>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
