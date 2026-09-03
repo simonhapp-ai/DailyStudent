@@ -7,7 +7,8 @@ import { useUser } from '../context/UserContext'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
-import { generateMode2Exam, correctExam } from '../lib/gemini'
+import { generateMode2Exam, correctExam } from '../lib/gemini';
+import { resolveEngine } from '../lib/studyEngine'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { ProModal } from '../components/ui/ProModal'
 import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
@@ -153,7 +154,7 @@ export function ProbeklausurMode2Screen() {
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.prefill ?? null
   const resume = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, savedProbeklausuren, isPro, appConfig } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, savedProbeklausuren, isPro, claudeTrialUsed, appConfig } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
@@ -189,7 +190,7 @@ export function ProbeklausurMode2Screen() {
     setError(null)
     setPhase('loading')
     try {
-      const generated = await generateMode2Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined)
+      const generated = await generateMode2Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined, resolveEngine({ isPro, claudeTrialUsed }))
       setExam(generated)
       setAnswers({})
       inProgressIdRef.current = `ip-2-${subjectId}-${Date.now()}`
@@ -208,7 +209,7 @@ export function ProbeklausurMode2Screen() {
     setShowTimerExpiredBanner(false)
     setPhase('correcting')
     try {
-      const result = await correctExam(exam, answers)
+      const result = await correctExam(exam, answers, resolveEngine({ isPro, claudeTrialUsed }))
       setCorrection(result)
       setPhase('result')
       const pk: SavedProbeklausur = {

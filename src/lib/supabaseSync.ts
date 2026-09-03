@@ -400,6 +400,7 @@ export interface SupabaseUserData {
   profile: UserProfile
   theme: AppTheme
   isPro: boolean
+  claudeTrialUsed: boolean
   appStats: AppStats
   userFolders: UserFolder[]
   userNotes: UserNote[]
@@ -472,6 +473,7 @@ export async function loadUserDataFromSupabase(userId: string): Promise<Supabase
       profile: mapProfile(profileRow, resolvedAbiHalbjahre, resolvedAbiPruefungen),
       theme: (profileRow.theme as AppTheme) ?? 'dark',
       isPro,
+      claudeTrialUsed: profileRow.claude_trial_used === true,
       appStats: statsRow ? mapAppStats(statsRow) : DEFAULT_STATS,
       userFolders: (folderRows ?? []).map(mapFolder),
       userNotes: (noteRows ?? []).map(mapNote),
@@ -505,6 +507,7 @@ export interface SupabaseUserMeta {
   profile: UserProfile
   theme: AppTheme
   isPro: boolean
+  claudeTrialUsed: boolean
   appStats: AppStats
   referralCode: string | null
   referralCount: number
@@ -545,6 +548,7 @@ export async function loadUserMetaFromSupabase(userId: string): Promise<Supabase
       profile: mapProfile(profileRow, resolvedAbiHalbjahre, resolvedAbiPruefungen),
       theme: (profileRow.theme as AppTheme) ?? 'dark',
       isPro,
+      claudeTrialUsed: profileRow.claude_trial_used === true,
       appStats: statsRow ? mapAppStats(statsRow) : DEFAULT_STATS,
       referralCode: profileRow.referral_code ?? null,
       referralCount: referralCount ?? 0,

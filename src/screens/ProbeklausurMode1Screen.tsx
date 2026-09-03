@@ -8,7 +8,8 @@ import { Icon, type IconName } from '../components/ui/Icon'
 import { ProModal } from '../components/ui/ProModal'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
-import { generateMode1Exam, correctExam } from '../lib/gemini'
+import { generateMode1Exam, correctExam } from '../lib/gemini';
+import { resolveEngine } from '../lib/studyEngine'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { ExamMaterialCard } from '../components/probeklausur/ExamMaterialCard'
 import { renderMathSegments } from '../lib/mathSegments'
@@ -126,7 +127,7 @@ export function ProbeklausurMode1Screen() {
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.prefill ?? null
   const resume = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, appConfig } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, appConfig } = useUser()
   // Beta launch: AFB-Aufgabentrainer opened for free, incl. correction — see
   // migration 017_beta_mode_config.sql + ProbeklausurMenuScreen.
   const correctionUnlocked = isPro || appConfig.probeklausurAfbTrainerFree
@@ -161,6 +162,7 @@ export function ProbeklausurMode1Screen() {
         topic.trim(),
         afb,
         getKc(subjectId) ?? undefined,
+        resolveEngine({ isPro, claudeTrialUsed }),
       )
       setExam(generated)
       setAnswers({})
@@ -176,7 +178,7 @@ export function ProbeklausurMode1Screen() {
     if (!exam) return
     setPhase('correcting')
     try {
-      const result = await correctExam(exam, answers)
+      const result = await correctExam(exam, answers, resolveEngine({ isPro, claudeTrialUsed }))
       setCorrection(result)
       setPhase('result')
       const pk: SavedProbeklausur = {

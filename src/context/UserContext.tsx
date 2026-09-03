@@ -199,6 +199,8 @@ interface UserContextValue {
   setTheme: (t: AppTheme) => void
   isPro: boolean
   setIsPro: (v: boolean) => void
+  /** 1x lebenslange Gratis-Kostprobe der Claude-Engine bereits verbraucht? (Server-Wahrheit) */
+  claudeTrialUsed: boolean
   completeOnboarding: (profile: UserProfile, prebuiltFolders?: UserFolder[]) => void
   updateProfile: (data: Partial<UserProfile>) => void
   addEntry: (entry: PersonalEntry) => void
@@ -508,6 +510,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 setProfile(meta.profile)
                 setThemeState(meta.theme)
                 setIsProState(meta.isPro)
+                setClaudeTrialUsed(meta.claudeTrialUsed)
                 // Merge cooldowns so locally-added ones survive the Supabase response
                 const localCooldowns = loadStorage().appStats?.cooldowns ?? []
                 const mergedStats: AppStats = {
@@ -546,6 +549,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                 setProfile(supabaseData.profile)
                 setThemeState(supabaseData.theme)
                 setIsProState(supabaseData.isPro)
+                setClaudeTrialUsed(supabaseData.claudeTrialUsed)
                 setPersonalEntries(supabaseData.personalEntries)
                 setGeneratedNotes(supabaseData.generatedNotes)
                 setUserNotes(supabaseData.userNotes)
@@ -604,6 +608,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
                   profile: s.profile,
                   theme: s.theme ?? 'dark',
                   isPro: s.isPro ?? false,
+                  claudeTrialUsed: false,
                   appStats: mitVorgaben(s.appStats),
                   userFolders: s.userFolders ?? [],
                   userNotes: s.userNotes ?? [],
@@ -634,6 +639,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(stored.profile ?? null)
   const [theme, setThemeState] = useState<AppTheme>(stored.theme ?? 'dark')
   const [isPro, setIsProState] = useState<boolean>(stored.isPro ?? false)
+  const [claudeTrialUsed, setClaudeTrialUsed] = useState<boolean>(false)
   const [personalEntries, setPersonalEntries] = useState<PersonalEntry[]>(stored.personalEntries ?? [])
   const [generatedNotes, setGeneratedNotes] = useState<Record<string, GeneratedSmartNote>>(
     stored.generatedNotes ?? {},
@@ -1414,6 +1420,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         setTheme,
         isPro: effectiveIsPro,
         setIsPro,
+        claudeTrialUsed,
         completeOnboarding,
         updateProfile,
         addEntry,

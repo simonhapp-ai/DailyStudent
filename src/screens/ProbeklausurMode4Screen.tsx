@@ -8,7 +8,8 @@ import { Icon, type IconName } from '../components/ui/Icon'
 import { ProModal } from '../components/ui/ProModal'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
-import { generateMode4Exam, correctExam } from '../lib/gemini'
+import { generateMode4Exam, correctExam } from '../lib/gemini';
+import { resolveEngine } from '../lib/studyEngine'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
@@ -109,7 +110,7 @@ export function ProbeklausurMode4Screen() {
   const navigate = useNavigate()
   const location = useLocation()
   const resume = (location.state as { resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, appConfig } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, appConfig } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
@@ -134,7 +135,7 @@ export function ProbeklausurMode4Screen() {
     setError(null)
     setPhase('loading')
     try {
-      const generated = await generateMode4Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined)
+      const generated = await generateMode4Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined, resolveEngine({ isPro, claudeTrialUsed }))
       setExam(generated)
       setAnswers({})
       inProgressIdRef.current = `ip-4-${subjectId}-${Date.now()}`
@@ -149,7 +150,7 @@ export function ProbeklausurMode4Screen() {
     if (!exam) return
     setPhase('correcting')
     try {
-      const result = await correctExam(exam, answers)
+      const result = await correctExam(exam, answers, resolveEngine({ isPro, claudeTrialUsed }))
       setCorrection(result)
       setPhase('result')
       const pk: SavedProbeklausur = {

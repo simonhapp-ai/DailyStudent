@@ -1,11 +1,12 @@
 import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, MaterialTable, MaterialChart, MaterialCitation, LernzettelFigure, TaskCorrection, LernplanDay, LernplanExam, LernplanGeneratorInput, LernzettelModus } from '../types'
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
-import { supabase } from './supabase'
 import type { AiBucket } from './aiRateLimit'
+import { getAuthHeader } from './authHeader'
+import { claudeFetch, ClaudeFallbackError, type ClaudeBucket, type EngineOpts } from './claude'
 
-async function getAuthHeader(): Promise<Record<string, string>> {
-  const { data: { session } } = await supabase.auth.getSession()
-  return session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}
+// Baut die `claude`-Option für examFetch aus den Engine-Optionen des Aufrufers.
+function claudeOpt(o: EngineOpts | undefined, bucket: ClaudeBucket, maxTokens: number, effort: 'low' | 'medium' = 'low') {
+  return o?.engine === 'claude' ? { bucket, maxTokens, effort, trial: o.trial === true } : null
 }
 
 interface GeminiProxyResult {
@@ -201,7 +202,26 @@ export const GEMINI_BATCH_DELAY_MS = 4500
 
 // ── Probeklausur: Exam Generation & Correction ───────────────────────────────
 
-async function examFetch(systemPrompt: string, userPrompt: string, bucket: AiBucket, temperature = 0.6): Promise<unknown> {
+// `claude`: wenn gesetzt, zuerst Claude Sonnet 5 versuchen; bei ClaudeFallbackError
+// (kein Pro / Kostprobe verbraucht / Tageslimit / Monats-Deckel / kein Key) still auf
+// Gemini zurückfallen. Ein echter Claude-Fehler (nicht Fallback) wird durchgereicht.
+async function examFetch(
+  systemPrompt: string,
+  userPrompt: string,
+  bucket: AiBucket,
+  temperature = 0.6,
+  claude?: { bucket: ClaudeBucket; maxTokens?: number; effort?: 'low' | 'medium'; trial?: boolean } | null,
+): Promise<unknown> {
+  if (claude) {
+    try {
+      return await claudeFetch(systemPrompt, userPrompt, claude.bucket, {
+        maxTokens: claude.maxTokens, effort: claude.effort, temperature, trial: claude.trial,
+      })
+    } catch (e) {
+      if (!(e instanceof ClaudeFallbackError)) throw e
+      // still weiter über Gemini
+    }
+  }
   const result = await geminiProxy('flash', {
     systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
@@ -400,7 +420,7 @@ function parseExam(raw: unknown, subject: string, subjectId: string, topic: stri
   }
 }
 
-export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData): Promise<GeneratedExam> {
+export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
   const isMath = subjectId === 'mathematik'
   const isHumanities = [
     'deutsch', 'englisch', 'franzoesisch', 'latein', 'spanisch', 'russisch', 'italienisch',
@@ -442,11 +462,11 @@ export async function generateMode1Exam(subject: string, subjectId: string, topi
     `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
 
 JSON: {"materials":${materialsSkeleton},"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":${materialRefsSkeleton}}],"totalBE":8}`,
-    'probeklausur_other')
+    'probeklausur_other', 0.6, claudeOpt(opts, 'claude_probeklausur', 10000))
   return parseExam(raw, subject, subjectId, topic, 1)
 }
 
-export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
+export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
   const fachHinweis: Record<string, string> = {
     biologie: '1 Komplex, Teilaufgaben 1.1–1.4, ~35 BE. M1="kind":"table" (Messdaten) oder "kind":"text", M2="kind":"chart" oder "kind":"svg" (Schema).',
     physik: '1 Komplex, Teilaufgaben 1.1–1.5, ~50 BE. M1="kind":"svg" (Versuchsaufbau), M2="kind":"chart" (Messreihe als Zahlen).',
@@ -460,11 +480,11 @@ export async function generateMode2Exam(subject: string, subjectId: string, topi
     `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
 
 JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}},{"id":"M2","title":"...","type":"text","kind":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
-    'probeklausur_full', 0.55)
+    'probeklausur_full', 0.55, claudeOpt(opts, 'claude_probeklausur', 11000))
   return parseExam(raw, subject, subjectId, topic, 2)
 }
 
-export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
+export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
   const isHumanities = [
@@ -494,11 +514,11 @@ Materialien: ${materialSpec}
 ${taskSpec}
 
 JSON: {"materials":[${m1Skeleton}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
-    'probeklausur_other')
+    'probeklausur_other', 0.6, claudeOpt(opts, 'claude_probeklausur', 11000))
   return parseExam(raw, subject, subjectId, topic, 3)
 }
 
-export async function generateMode4Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
+export async function generateMode4Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
   const raw = await examFetch(GENERATION_SYSTEM,
     `Fach: ${subject} | Thema: ${topic} | Modus: Ohne Material (alles aus dem Kopf)${kcBlock}
@@ -507,7 +527,7 @@ Aufg.2 AFB II 8–12 BE: Transfer OHNE Material — Vergleich, Szenario, oder "a
 Aufg.3 AFB III 8–10 BE: Argumentative Beurteilung/Erörterung ohne Material.
 
 JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Erläutern","text":"...","be":10,"materialRefs":[]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":8,"materialRefs":[]}],"totalBE":24}`,
-    'probeklausur_other', 0.65)
+    'probeklausur_other', 0.65, claudeOpt(opts, 'claude_probeklausur', 9000))
   return parseExam(raw, subject, subjectId, topic, 4)
 }
 
@@ -563,7 +583,7 @@ function npToGradeLabel(np: number): string {
   return 'Ungenügend'
 }
 
-export async function correctExam(exam: GeneratedExam, answers: Record<string, string>): Promise<ExamCorrection> {
+export async function correctExam(exam: GeneratedExam, answers: Record<string, string>, opts?: EngineOpts): Promise<ExamCorrection> {
   const materialsBlock = exam.materials.map(materialToPromptText).join('\n\n')
   const tasksBlock = exam.tasks.map((t) => {
     const answer = (answers[t.id] ?? '').trim()
@@ -576,7 +596,7 @@ ${tasksBlock}
 
 JSON: {"taskCorrections":[{"taskId":"t1","errors":[],"gaps":[],"formulationHelp":[],"scoreNP":11,"justification":"..."}],"totalNP":11,"gradeLabel":"Gut","overallJustification":"..."}`
 
-  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3)) as {
+  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3, claudeOpt(opts, 'claude_probeklausur', 6000, 'medium'))) as {
     taskCorrections?: { taskId?: string; errors?: string[]; gaps?: string[]; formulationHelp?: string[]; scoreNP?: number; justification?: string }[]
     totalNP?: number
     gradeLabel?: string
@@ -682,7 +702,7 @@ const LERNZETTEL_MODUS_PROMPTS: Record<LernzettelModus, string> = {
   stichpunkte: `MODUS: Stichpunkte. Ziel: Schnelles Wiederholen kurz vor der Klausur. Überwiegend "- "-Aufzählungen statt Fließtext, nur die wichtigsten Fakten, Definitionen und Zusammenhänge — keine ausschweifenden Erklärungen. Trotzdem inhaltlich vollständig für das Thema. Ziel-Länge hier kürzer: ca. 500–900 Wörter in kompakten Stichpunkten statt der sonst üblichen 1500–2500.`,
 }
 
-export async function generateLernzettel(input: LernzettelInput): Promise<LernzettelOutput> {
+export async function generateLernzettel(input: LernzettelInput, opts?: EngineOpts): Promise<LernzettelOutput> {
   const { subjectId, subjectName, modus, selectedTopics, smartNotes, kcData } = input
   const isMath = subjectId === 'mathematik'
 
@@ -707,7 +727,7 @@ ${notesBlock || '(keine — nur auf Basis von Fach/Thema/Kerncurriculum erstelle
 ${kcBlock}
 Erstelle den vollständigen Lernzettel als JSON gemäß der Vorgaben aus der System-Instruktion.`
 
-  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4)) as {
+  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4, claudeOpt(opts, 'claude_lernzettel', 12000, 'medium'))) as {
     title?: string
     content?: string
     keywords?: string[]

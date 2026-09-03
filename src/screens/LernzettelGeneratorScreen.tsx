@@ -10,6 +10,7 @@ import { ModusRegler, type ModusOption } from '../components/ui/ModusRegler'
 import { ProModal } from '../components/ui/ProModal'
 import { useUser } from '../context/UserContext'
 import { generateLernzettel, generateLernzettelVisual } from '../lib/gemini'
+import { resolveEngine } from '../lib/studyEngine'
 import { saveLocalAsset } from '../lib/noteStorage'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import type { Lernzettel, LernzettelImage, LernzettelModus } from '../types'
@@ -60,7 +61,7 @@ const MODI: (ModusOption & { id: LernzettelModus })[] = [
 
 export function LernzettelGeneratorScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast, lernzettel, appConfig } = useUser()
+  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast, lernzettel, appConfig, isPro, claudeTrialUsed } = useUser()
 
   const [step, setStep] = useState<Step>('fach')
   const [showProModal, setShowProModal] = useState(false)
@@ -140,7 +141,7 @@ export function LernzettelGeneratorScreen() {
         selectedTopics,
         smartNotes,
         kcData: kcData ?? undefined,
-      })
+      }, resolveEngine({ isPro, claudeTrialUsed }))
 
       const images: LernzettelImage[] = []
       if (withImages && output.images.length > 0) {
