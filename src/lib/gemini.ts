@@ -6,18 +6,18 @@ import { safeJsonParse } from './jsonRepair'
 import { claudeFetch, ClaudeFallbackError, type ClaudeBucket, type EngineOpts } from './claude'
 
 // Baut die `claude`-Option für examFetch aus den Engine-Optionen des Aufrufers.
-// Generierung -> Haiku 4.5 (schnell genug für Vercels 60 s). Korrektur -> Sonnet 5
-// mit Thinking (kleiner Output, Reasoning zählt). `mode: 'correct'` schaltet um.
+// Claude läuft nur noch für Lernzettel + Korrektur (Prüfungs-Generierung immer
+// Gemini). Beide auf Sonnet 5 — Output klein genug für Vercels 60 s. Korrektur
+// mit adaptive thinking (Reasoning zählt), Lernzettel ohne (Prosa, Tempo).
 function claudeOpt(
   o: EngineOpts | undefined,
   bucket: ClaudeBucket,
   maxTokens: number,
-  mode: 'gen' | 'correct' = 'gen',
+  thinking: 'adaptive' | 'disabled',
+  effort: 'low' | 'medium',
 ) {
   if (o?.engine !== 'claude') return null
-  return mode === 'correct'
-    ? { bucket, maxTokens, model: 'sonnet' as const, effort: 'medium' as const, thinking: 'adaptive' as const, trial: o.trial === true }
-    : { bucket, maxTokens, model: 'haiku' as const, trial: o.trial === true }
+  return { bucket, maxTokens, model: 'sonnet' as const, thinking, effort, trial: o.trial === true }
 }
 
 interface GeminiProxyResult {
@@ -265,7 +265,7 @@ export const MATERIAL_FORMAT_SPEC = `MATERIALFORMAT — jedes Material trägt "i
 - "kind":"table" — Datentabelle. Felder: "content" (kurze Text-Wiedergabe) UND "table":{"headers":["t [s]","s [m]"],"rows":[["0","0"],["0,2","0,20"]]}. Messreihen ≥6 Zeilen, Einheiten in die Header.
 - "kind":"chart" — Diagramm als ZAHLEN, nicht als Bild. Feld: "chart":{"type":"line"|"bar"|"scatter"|"function","xLabel":"…","yLabel":"…","xUnit":"…","yUnit":"…","series":[{"label":"Messreihe","points":[{"x":0,"y":0},{"x":1,"y":9.8}]}],"functions":[{"label":"v(t)=g·t","expr":"9.81*x","domain":[0,5]}]}. "series" ODER "functions" (mind. eines). "expr"-Grammatik: Variable nur x, Operatoren + - * / ^ ( ), Funktionen sin cos tan sqrt abs exp ln log, Konstanten pi e, Dezimalpunkt (KEIN Komma), sonst nichts. Zusätzlich "content" mit Achsen + Wertepaaren als Text.
 - "kind":"svg" — schematische Zeichnung (Versuchsaufbau, Kräftediagramm, beschriftetes Koordinatensystem). Feld: "svg":"<svg viewBox='0 0 320 220'>…</svg>". NUR diese Tags: svg g path line polyline polygon rect circle ellipse text tspan defs marker linearGradient radialGradient stop. KEIN script/foreignObject/image, kein style- oder on…-Attribut. stroke='currentColor'. Achsen/Teile mit <text> beschriften. Zusätzlich "content" mit einer Text-Beschreibung.
-- "kind":"source" — Originalquelle für Quellenarbeit. Felder: "content" (Originaltext/Auszug, 3–6 Sätze) UND "citation":{"author":"…","work":"…","year":"…","publisher":"…","pages":"…"}.
+- "kind":"source" — Quelle für Quellenarbeit. Felder: "content" (Textauszug, 3–6 Sätze) UND "citation". KEINEN echten Autor/kein echtes Werk/kein Jahr erfinden — wenn du keinen realen Beleg exakt zitieren kannst, konstruiere einen plausiblen Beispieltext und setze "citation":{"work":"Konstruierter Beispieltext"} (author/year/publisher weglassen).
 
 "content"-Regel: bei text/source der volle Text. Bei table/chart/svg reicht EIN kurzer Satz als Bildunterschrift (die Korrektur baut sich die Werte aus table/chart selbst zusammen) — NICHT die Tabelle/das Diagramm nochmal als Text ausschreiben.
 
@@ -431,7 +431,7 @@ function parseExam(raw: unknown, subject: string, subjectId: string, topic: stri
   }
 }
 
-export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
+export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData): Promise<GeneratedExam> {
   const isMath = subjectId === 'mathematik'
   const isHumanities = [
     'deutsch', 'englisch', 'franzoesisch', 'latein', 'spanisch', 'russisch', 'italienisch',
@@ -473,11 +473,11 @@ export async function generateMode1Exam(subject: string, subjectId: string, topi
     `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
 
 JSON: {"materials":${materialsSkeleton},"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":${materialRefsSkeleton}}],"totalBE":8}`,
-    'probeklausur_other', 0.6, claudeOpt(opts, 'claude_probeklausur', 8000))
+    'probeklausur_other', 0.6)
   return parseExam(raw, subject, subjectId, topic, 1)
 }
 
-export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
+export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
   const fachHinweis: Record<string, string> = {
     biologie: '1 Komplex, Teilaufgaben 1.1–1.4, ~35 BE. M1="kind":"table" (Messdaten) oder "kind":"text", M2="kind":"chart" oder "kind":"svg" (Schema).',
     physik: '1 Komplex, Teilaufgaben 1.1–1.5, ~50 BE. M1="kind":"svg" (Versuchsaufbau), M2="kind":"chart" (Messreihe als Zahlen).',
@@ -491,11 +491,11 @@ export async function generateMode2Exam(subject: string, subjectId: string, topi
     `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
 
 JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}},{"id":"M2","title":"...","type":"text","kind":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
-    'probeklausur_full', 0.55, claudeOpt(opts, 'claude_probeklausur', 8000))
+    'probeklausur_full', 0.55)
   return parseExam(raw, subject, subjectId, topic, 2)
 }
 
-export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
+export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
   const isHumanities = [
@@ -525,11 +525,11 @@ Materialien: ${materialSpec}
 ${taskSpec}
 
 JSON: {"materials":[${m1Skeleton}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
-    'probeklausur_other', 0.6, claudeOpt(opts, 'claude_probeklausur', 8000))
+    'probeklausur_other', 0.6)
   return parseExam(raw, subject, subjectId, topic, 3)
 }
 
-export async function generateMode4Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
+export async function generateMode4Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
   const raw = await examFetch(GENERATION_SYSTEM,
     `Fach: ${subject} | Thema: ${topic} | Modus: Ohne Material (alles aus dem Kopf)${kcBlock}
@@ -538,7 +538,7 @@ Aufg.2 AFB II 8–12 BE: Transfer OHNE Material — Vergleich, Szenario, oder "a
 Aufg.3 AFB III 8–10 BE: Argumentative Beurteilung/Erörterung ohne Material.
 
 JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Erläutern","text":"...","be":10,"materialRefs":[]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":8,"materialRefs":[]}],"totalBE":24}`,
-    'probeklausur_other', 0.65, claudeOpt(opts, 'claude_probeklausur', 8000))
+    'probeklausur_other', 0.65)
   return parseExam(raw, subject, subjectId, topic, 4)
 }
 
@@ -607,7 +607,7 @@ ${tasksBlock}
 
 JSON: {"taskCorrections":[{"taskId":"t1","errors":[],"gaps":[],"formulationHelp":[],"scoreNP":11,"justification":"..."}],"totalNP":11,"gradeLabel":"Gut","overallJustification":"..."}`
 
-  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3, claudeOpt(opts, 'claude_probeklausur', 6000, 'correct'))) as {
+  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3, claudeOpt(opts, 'claude_probeklausur', 6000, 'adaptive', 'medium'))) as {
     taskCorrections?: { taskId?: string; errors?: string[]; gaps?: string[]; formulationHelp?: string[]; scoreNP?: number; justification?: string }[]
     totalNP?: number
     gradeLabel?: string
@@ -738,7 +738,7 @@ ${notesBlock || '(keine — nur auf Basis von Fach/Thema/Kerncurriculum erstelle
 ${kcBlock}
 Erstelle den vollständigen Lernzettel als JSON gemäß der Vorgaben aus der System-Instruktion.`
 
-  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4, claudeOpt(opts, 'claude_lernzettel', 9000))) as {
+  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4, claudeOpt(opts, 'claude_lernzettel', 9000, 'disabled', 'low'))) as {
     title?: string
     content?: string
     keywords?: string[]

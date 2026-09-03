@@ -190,7 +190,7 @@ export function ProbeklausurMode2Screen() {
     setError(null)
     setPhase('loading')
     try {
-      const generated = await generateMode2Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined, resolveEngine({ isPro, claudeTrialUsed }))
+      const generated = await generateMode2Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined)
       setExam(generated)
       setAnswers({})
       inProgressIdRef.current = `ip-2-${subjectId}-${Date.now()}`

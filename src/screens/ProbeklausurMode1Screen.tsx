@@ -162,7 +162,6 @@ export function ProbeklausurMode1Screen() {
         topic.trim(),
         afb,
         getKc(subjectId) ?? undefined,
-        resolveEngine({ isPro, claudeTrialUsed }),
       )
       setExam(generated)
       setAnswers({})
