@@ -102,7 +102,11 @@ async function handler(request: Request): Promise<Response> {
   if (!token || !user) return errBody(401, 'Unauthorized')
 
   const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) return fallback('no ANTHROPIC_API_KEY in env')   // Key noch nicht in Vercel
+  if (!apiKey) {
+    // Diagnose: welche relevanten Env-Schlüssel-NAMEN sieht die Function? (keine Werte)
+    const relevant = Object.keys(process.env).filter((k) => /ANTHROPIC|GEMINI|GROQ|SUPABASE/i.test(k))
+    return fallback(`no ANTHROPIC_API_KEY in env; visible keys: [${relevant.join(', ')}]`)
+  }
 
   let payload: { bucket?: string; body?: Record<string, unknown>; trial?: boolean }
   try {
