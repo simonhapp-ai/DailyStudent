@@ -6,11 +6,18 @@ import { safeJsonParse } from './jsonRepair'
 import { claudeFetch, ClaudeFallbackError, type ClaudeBucket, type EngineOpts } from './claude'
 
 // Baut die `claude`-Option für examFetch aus den Engine-Optionen des Aufrufers.
-// Thinking nur bei der Korrektur ('medium') — sonst läuft Sonnet 5 über Vercels 60-s-Limit.
-function claudeOpt(o: EngineOpts | undefined, bucket: ClaudeBucket, maxTokens: number, effort: 'low' | 'medium' = 'low') {
-  return o?.engine === 'claude'
-    ? { bucket, maxTokens, effort, thinking: (effort === 'medium' ? 'adaptive' : 'disabled') as 'adaptive' | 'disabled', trial: o.trial === true }
-    : null
+// Generierung -> Haiku 4.5 (schnell genug für Vercels 60 s). Korrektur -> Sonnet 5
+// mit Thinking (kleiner Output, Reasoning zählt). `mode: 'correct'` schaltet um.
+function claudeOpt(
+  o: EngineOpts | undefined,
+  bucket: ClaudeBucket,
+  maxTokens: number,
+  mode: 'gen' | 'correct' = 'gen',
+) {
+  if (o?.engine !== 'claude') return null
+  return mode === 'correct'
+    ? { bucket, maxTokens, model: 'sonnet' as const, effort: 'medium' as const, thinking: 'adaptive' as const, trial: o.trial === true }
+    : { bucket, maxTokens, model: 'haiku' as const, trial: o.trial === true }
 }
 
 interface GeminiProxyResult {
@@ -214,12 +221,12 @@ async function examFetch(
   userPrompt: string,
   bucket: AiBucket,
   temperature = 0.6,
-  claude?: { bucket: ClaudeBucket; maxTokens?: number; effort?: 'low' | 'medium'; thinking?: 'adaptive' | 'disabled'; trial?: boolean } | null,
+  claude?: { bucket: ClaudeBucket; maxTokens?: number; model?: 'haiku' | 'sonnet'; effort?: 'low' | 'medium'; thinking?: 'adaptive' | 'disabled'; trial?: boolean } | null,
 ): Promise<unknown> {
   if (claude) {
     try {
       return await claudeFetch(systemPrompt, userPrompt, claude.bucket, {
-        maxTokens: claude.maxTokens, effort: claude.effort, thinking: claude.thinking, temperature, trial: claude.trial,
+        model: claude.model, maxTokens: claude.maxTokens, effort: claude.effort, thinking: claude.thinking, temperature, trial: claude.trial,
       })
     } catch (e) {
       if (!(e instanceof ClaudeFallbackError)) throw e
@@ -260,7 +267,7 @@ export const MATERIAL_FORMAT_SPEC = `MATERIALFORMAT — jedes Material trägt "i
 - "kind":"svg" — schematische Zeichnung (Versuchsaufbau, Kräftediagramm, beschriftetes Koordinatensystem). Feld: "svg":"<svg viewBox='0 0 320 220'>…</svg>". NUR diese Tags: svg g path line polyline polygon rect circle ellipse text tspan defs marker linearGradient radialGradient stop. KEIN script/foreignObject/image, kein style- oder on…-Attribut. stroke='currentColor'. Achsen/Teile mit <text> beschriften. Zusätzlich "content" mit einer Text-Beschreibung.
 - "kind":"source" — Originalquelle für Quellenarbeit. Felder: "content" (Originaltext/Auszug, 3–6 Sätze) UND "citation":{"author":"…","work":"…","year":"…","publisher":"…","pages":"…"}.
 
-HARTREGEL: "content" ist bei JEDEM Material gefüllt — bei table/chart/svg mit einer treuen Text-Wiedergabe, weil die Korrektur nur "content" liest.
+"content"-Regel: bei text/source der volle Text. Bei table/chart/svg reicht EIN kurzer Satz als Bildunterschrift (die Korrektur baut sich die Werte aus table/chart selbst zusammen) — NICHT die Tabelle/das Diagramm nochmal als Text ausschreiben.
 
 BEISPIELE:
 {"id":"M1","title":"Fallversuch — Messwerte","type":"tabelle","kind":"table","content":"t[s]: 0;0,2;0,4;0,6;0,8;1,0 — s[m]: 0;0,20;0,78;1,76;3,14;4,90","table":{"headers":["t [s]","s [m]"],"rows":[["0","0"],["0,2","0,20"],["0,4","0,78"],["0,6","1,76"],["0,8","3,14"],["1,0","4,90"]]}}
@@ -466,7 +473,7 @@ export async function generateMode1Exam(subject: string, subjectId: string, topi
     `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
 
 JSON: {"materials":${materialsSkeleton},"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":${materialRefsSkeleton}}],"totalBE":8}`,
-    'probeklausur_other', 0.6, claudeOpt(opts, 'claude_probeklausur', 10000))
+    'probeklausur_other', 0.6, claudeOpt(opts, 'claude_probeklausur', 8000))
   return parseExam(raw, subject, subjectId, topic, 1)
 }
 
@@ -484,7 +491,7 @@ export async function generateMode2Exam(subject: string, subjectId: string, topi
     `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
 
 JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}},{"id":"M2","title":"...","type":"text","kind":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
-    'probeklausur_full', 0.55, claudeOpt(opts, 'claude_probeklausur', 11000))
+    'probeklausur_full', 0.55, claudeOpt(opts, 'claude_probeklausur', 8000))
   return parseExam(raw, subject, subjectId, topic, 2)
 }
 
@@ -518,7 +525,7 @@ Materialien: ${materialSpec}
 ${taskSpec}
 
 JSON: {"materials":[${m1Skeleton}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
-    'probeklausur_other', 0.6, claudeOpt(opts, 'claude_probeklausur', 11000))
+    'probeklausur_other', 0.6, claudeOpt(opts, 'claude_probeklausur', 8000))
   return parseExam(raw, subject, subjectId, topic, 3)
 }
 
@@ -531,7 +538,7 @@ Aufg.2 AFB II 8–12 BE: Transfer OHNE Material — Vergleich, Szenario, oder "a
 Aufg.3 AFB III 8–10 BE: Argumentative Beurteilung/Erörterung ohne Material.
 
 JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Erläutern","text":"...","be":10,"materialRefs":[]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":8,"materialRefs":[]}],"totalBE":24}`,
-    'probeklausur_other', 0.65, claudeOpt(opts, 'claude_probeklausur', 9000))
+    'probeklausur_other', 0.65, claudeOpt(opts, 'claude_probeklausur', 8000))
   return parseExam(raw, subject, subjectId, topic, 4)
 }
 
@@ -600,7 +607,7 @@ ${tasksBlock}
 
 JSON: {"taskCorrections":[{"taskId":"t1","errors":[],"gaps":[],"formulationHelp":[],"scoreNP":11,"justification":"..."}],"totalNP":11,"gradeLabel":"Gut","overallJustification":"..."}`
 
-  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3, claudeOpt(opts, 'claude_probeklausur', 6000, 'medium'))) as {
+  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3, claudeOpt(opts, 'claude_probeklausur', 6000, 'correct'))) as {
     taskCorrections?: { taskId?: string; errors?: string[]; gaps?: string[]; formulationHelp?: string[]; scoreNP?: number; justification?: string }[]
     totalNP?: number
     gradeLabel?: string
@@ -731,7 +738,7 @@ ${notesBlock || '(keine — nur auf Basis von Fach/Thema/Kerncurriculum erstelle
 ${kcBlock}
 Erstelle den vollständigen Lernzettel als JSON gemäß der Vorgaben aus der System-Instruktion.`
 
-  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4, claudeOpt(opts, 'claude_lernzettel', 12000, 'medium'))) as {
+  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4, claudeOpt(opts, 'claude_lernzettel', 9000))) as {
     title?: string
     content?: string
     keywords?: string[]

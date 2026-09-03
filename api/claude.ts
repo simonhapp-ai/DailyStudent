@@ -21,8 +21,12 @@ const BUCKET_LIMITS: Record<string, number> = {
   claude_probeklausur: 2,   // /Tag (Generierung + Korrektur eines Versuchs)
 }
 
-// Sonnet 5, USD/1M Tokens. EUR ≈ USD (1:1-Puffer). Cache-Read/-Write nach Skill-Doku.
-const PRICE = { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 }
+// USD/1M Tokens, EUR ≈ USD (1:1-Puffer). Modell-abhängig: Generierung läuft auf
+// Haiku 4.5 ($1/$5), Korrektur auf Sonnet 5 ($2/$10).
+const PRICE_BY_MODEL: Record<string, { input: number; output: number; cacheRead: number; cacheWrite: number }> = {
+  haiku: { input: 1, output: 5, cacheRead: 0.1, cacheWrite: 1.25 },
+  sonnet: { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 },
+}
 
 const MONTHLY_CAP_EUR = 20
 const TRIAL_STOP_EUR = 15   // ab hier keine neuen Gratis-Kostproben mehr (Pro hat Vorrang)
@@ -176,14 +180,16 @@ async function handler(request: Request): Promise<Response> {
   if (data.stop_reason === 'refusal') return fallback('anthropic refusal')
 
   // ── Kosten verbuchen ────────────────────────────────────────────────────
+  const modelStr = String((payload.body as { model?: string })?.model ?? '')
+  const price = modelStr.includes('haiku') ? PRICE_BY_MODEL.haiku : PRICE_BY_MODEL.sonnet
   const u = data.usage ?? {}
   const eur = (
-    (u.input_tokens ?? 0) * PRICE.input +
-    (u.output_tokens ?? 0) * PRICE.output +
-    (u.cache_read_input_tokens ?? 0) * PRICE.cacheRead +
-    (u.cache_creation_input_tokens ?? 0) * PRICE.cacheWrite
+    (u.input_tokens ?? 0) * price.input +
+    (u.output_tokens ?? 0) * price.output +
+    (u.cache_read_input_tokens ?? 0) * price.cacheRead +
+    (u.cache_creation_input_tokens ?? 0) * price.cacheWrite
   ) / 1_000_000
-  console.log('[claude tokens]', bucket, u, `~${eur.toFixed(4)} EUR`)
+  console.log('[claude tokens]', bucket, modelStr || '?', u, `~${eur.toFixed(4)} EUR`)
   void rpc(token, 'add_claude_spend', { p_month: month, p_eur: eur })
   if (wantsTrial) void rpc(token, 'mark_claude_trial_used', { p_user_id: user.id })
 

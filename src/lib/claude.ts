@@ -29,11 +29,13 @@ export const CLAUDE_BUCKET_LIMITS: Record<ClaudeBucket, number> = {
 }
 
 interface ClaudeOpts {
+  /** 'haiku' (schnell, für Generierung — passt in Vercels 60 s) oder 'sonnet'
+   *  (langsamer, klüger — für die Korrektur). Default 'haiku'. */
+  model?: 'haiku' | 'sonnet'
   maxTokens?: number
   effort?: 'low' | 'medium'
-  /** Default 'disabled' — für strukturierte JSON-Generierung braucht Sonnet 5 kein
-   *  Reasoning, und Thinking treibt die Zeit über Vercels 60-s-Limit. Nur die
-   *  Korrektur nutzt 'adaptive'. */
+  /** Nur für Sonnet relevant. Default 'disabled' — Thinking treibt die Zeit über
+   *  Vercels 60-s-Limit. Korrektur nutzt 'adaptive'. */
   thinking?: 'adaptive' | 'disabled'
   temperature?: number
   trial?: boolean
@@ -53,13 +55,18 @@ export async function claudeFetch(
   // Gemini ruft). Claude-Rail wird gegen die Vercel-Preview/-Prod getestet.
   if (import.meta.env.DEV) throw new ClaudeFallbackError()
 
-  const body = {
-    model: 'claude-sonnet-5',
+  const isHaiku = (opts.model ?? 'haiku') === 'haiku'
+  const body: Record<string, unknown> = {
+    model: isHaiku ? 'claude-haiku-4-5' : 'claude-sonnet-5',
     max_tokens: opts.maxTokens ?? 8000,
     system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
     messages: [{ role: 'user', content: userPrompt }],
-    thinking: { type: opts.thinking ?? 'disabled' },
-    output_config: { effort: opts.effort ?? 'low' },
+  }
+  if (!isHaiku) {
+    // Haiku 4.5 kennt weder output_config.effort noch das adaptive-thinking-Feld
+    // (Fehler) — dort einfach weglassen = kein Thinking, schnellster Pfad.
+    body.thinking = { type: opts.thinking ?? 'disabled' }
+    body.output_config = { effort: opts.effort ?? 'low' }
   }
 
   let res: Response
