@@ -1,14 +1,14 @@
-import { useState, useRef } from 'react'
+import { useMemo, useState } from 'react'
 import { WorkingState } from '../components/ui/EmptyState'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { generateLernplan } from '../lib/gemini'
-import { extractTopicsFromImage } from '../lib/groq'
 import { buildKcPromptContext } from '../data/kcLoader'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
-import { getTopicPlaceholder, getTopicsPlaceholder, subjectInfo } from '../data/subjectInfo'
+import { getTopicsPlaceholder, subjectInfo } from '../data/subjectInfo'
 import { ProModal } from '../components/ui/ProModal'
+import { ThemenChips } from '../components/ui/ThemenChips'
 import type { LernplanType, LernplanBlockedTime, Lernplan, LernplanGeneratorInput, LernMethode } from '../types'
 import { zurueckZiel } from '../lib/appMode'
 
@@ -57,7 +57,16 @@ export function LernplanKonfiguratorScreen() {
   const [selectedTermineKeys, setSelectedTermineKeys] = useState<string[]>(() =>
     allTermine.map((k) => `${k.subjectId}|${k.date}`)
   )
-  const [examChecklists, setExamChecklists] = useState<Record<string, string[]>>({})
+  // Die beim Klausur-Eintragen erfassten Themen vorbefüllen — Schritt 2 fragt
+  // dann nur noch „stimmt das?" statt alles neu.
+  const [examChecklists, setExamChecklists] = useState<Record<string, string[]>>(() =>
+    Object.fromEntries(
+      allTermine.map((k) => [
+        `${k.subjectId}|${k.date}`,
+        k.topics && k.topics.length > 0 ? k.topics : (k.topic ? [k.topic] : []),
+      ])
+    )
+  )
 
   // Step 3: Zeit & Blockierungen
   const [startDate, setStartDate] = useState(TODAY)
@@ -87,6 +96,22 @@ export function LernplanKonfiguratorScreen() {
   const selectedTermine = allTermine.filter((k) =>
     selectedTermineKeys.includes(`${k.subjectId}|${k.date}`)
   )
+
+  // Was tatsächlich in den Plan einfließt — für die Anzeige in der Zusammenfassung,
+  // damit der Nutzer sieht, dass KC + seine Notizen berücksichtigt werden.
+  const personalization = useMemo(() => {
+    const ids = [...new Set(selectedTermine.map((k) => k.subjectId))]
+    const kcSubjects: string[] = []
+    const noteSubjects: string[] = []
+    let noteCount = 0
+    for (const id of ids) {
+      const name = subjectInfo(id)?.name ?? id
+      if (getKc(id)) kcSubjects.push(name)
+      const n = userNotes.filter((x) => x.subjectId === id && generatedNotes[x.id]).length
+      if (n > 0) { noteSubjects.push(name); noteCount += n }
+    }
+    return { kcSubjects, noteSubjects, noteCount }
+  }, [selectedTermine, getKc, userNotes, generatedNotes])
 
   const canNext: Record<number, boolean> = {
     1: true,
@@ -364,6 +389,7 @@ export function LernplanKonfiguratorScreen() {
             planType={planType}
             selectedTermine={selectedTermine}
             examChecklists={examChecklists}
+            personalization={personalization}
             startDate={startDate}
             blockedTimes={blockedTimes}
             dailyStudyHours={dailyStudyHours}
@@ -505,59 +531,12 @@ function StepKlausurtermine({
   onChecklistChange,
 }: {
   planType: LernplanType
-  allTermine: { subjectId: string; date: string; topic?: string }[]
+  allTermine: { subjectId: string; date: string; topic?: string; topics?: string[] }[]
   selectedKeys: string[]
   onToggle: (key: string) => void
   examChecklists: Record<string, string[]>
   onChecklistChange: (key: string, topics: string[]) => void
 }) {
-  const [inputValues, setInputValues] = useState<Record<string, string>>({})
-  const [scanning, setScanning] = useState<string | null>(null)
-  const scanKeyRef = useRef<string | null>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const addTopic = (key: string) => {
-    const val = (inputValues[key] ?? '').trim()
-    if (!val) return
-    const current = examChecklists[key] ?? []
-    if (!current.includes(val)) onChecklistChange(key, [...current, val])
-    setInputValues((prev) => ({ ...prev, [key]: '' }))
-  }
-
-  const removeTopic = (key: string, topic: string) => {
-    onChecklistChange(key, (examChecklists[key] ?? []).filter((t) => t !== topic))
-  }
-
-  const handleScanClick = (key: string) => {
-    scanKeyRef.current = key
-    fileInputRef.current?.click()
-  }
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    const key = scanKeyRef.current
-    if (!file || !key) return
-    e.target.value = ''
-    setScanning(key)
-    try {
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(reader.result as string)
-        reader.onerror = reject
-        reader.readAsDataURL(file)
-      })
-      const topics = await extractTopicsFromImage(dataUrl)
-      const current = examChecklists[key] ?? []
-      const newTopics = topics.filter((t) => !current.includes(t))
-      if (newTopics.length > 0) onChecklistChange(key, [...current, ...newTopics])
-    } catch {
-      // silent — user can retry
-    } finally {
-      setScanning(null)
-      scanKeyRef.current = null
-    }
-  }
-
   if (allTermine.length === 0) {
     return (
       <div>
@@ -573,25 +552,23 @@ function StepKlausurtermine({
     )
   }
 
+  // Ein Termin bringt seine Themen schon aus dem Klausur-Eintrag mit — dann
+  // fragt dieser Schritt nur noch nach einer Bestätigung.
+  const anyPrefilled = allTermine.some((k) => (k.topics?.length ?? 0) > 0 || !!k.topic)
+
   const sorted = [...allTermine].sort((a, b) => a.date.localeCompare(b.date))
 
   return (
     <div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        className="hidden"
-        onChange={handleFileChange}
-      />
       <h2 className="text-2xl font-bold text-text-primary mb-1">
         {planType === 'einzel' ? 'Welche Klausur?' : 'Welche Klausuren?'}
       </h2>
       <p className="text-text-muted text-sm mb-6">
-        {planType === 'einzel'
-          ? 'Wähle deine Klausur und trag die Prüfungsthemen ein.'
-          : 'Wähle alle Klausuren und trag die Themen ein — der Plan lernt mit.'}
+        {anyPrefilled
+          ? 'Stimmen die Themen? Ergänze fehlende, dann weiter.'
+          : planType === 'einzel'
+            ? 'Wähle deine Klausur und trag die Prüfungsthemen ein.'
+            : 'Wähle alle Klausuren und trag die Themen ein — der Plan lernt mit.'}
       </p>
       <div className="space-y-3">
         {sorted.map((k) => {
@@ -600,7 +577,6 @@ function StepKlausurtermine({
           const subj = subjectInfo(k.subjectId)
           const days = daysUntil(k.date)
           const topics = examChecklists[key] ?? []
-          const isScanning = scanning === key
           const hasTopics = topics.length > 0
 
           return (
@@ -643,64 +619,12 @@ function StepKlausurtermine({
               {/* Checklist section (visible when selected) */}
               {active && (
                 <div className="px-4 pb-4 space-y-3">
-                  {/* Section label + scan button */}
-                  <div className="flex items-center justify-between">
-                    <p className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">Klausurinhalte</p>
-                    <button
-                      onClick={() => handleScanClick(key)}
-                      disabled={isScanning}
-                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-btn bg-surface border border-border text-text-secondary text-[12px] font-medium hover:bg-surface-hover active:scale-[0.97] transition-all disabled:opacity-50"
-                    >
-                      {isScanning
-                        ? <span className="w-3.5 h-3.5 border border-accent/40 border-t-accent rounded-full animate-spin" />
-                        : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                      }
-                      {isScanning ? 'Scannt…' : 'Liste scannen'}
-                    </button>
-                  </div>
-
-                  {/* Topic chips */}
-                  {topics.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {topics.map((topic) => (
-                        <span
-                          key={topic}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[12px] font-medium bg-accent/12 text-text-primary border border-accent/20"
-                        >
-                          {topic}
-                          <button
-                            onClick={() => removeTopic(key, topic)}
-                            className="w-4 h-4 rounded-full bg-accent/20 hover:bg-accent/40 flex items-center justify-center transition-colors"
-                          >
-                            <svg width="7" height="7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                              <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
-                            </svg>
-                          </button>
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Text input */}
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={inputValues[key] ?? ''}
-                      onChange={(e) => setInputValues((prev) => ({ ...prev, [key]: e.target.value }))}
-                      onKeyDown={(e) => e.key === 'Enter' && addTopic(key)}
-                      placeholder={getTopicPlaceholder(k.subjectId)}
-                      className="flex-1 bg-background border border-border rounded-btn px-3 py-2 text-text-primary text-[13px] placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
-                    />
-                    <button
-                      onClick={() => addTopic(key)}
-                      disabled={!(inputValues[key] ?? '').trim()}
-                      className="w-9 h-9 rounded-btn bg-accent flex items-center justify-center shrink-0 disabled:opacity-30 active:scale-[0.95] transition-all"
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                        <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-                      </svg>
-                    </button>
-                  </div>
+                  <ThemenChips
+                    topics={topics}
+                    onChange={(next) => onChecklistChange(key, next)}
+                    subjectId={k.subjectId}
+                    placeholder={getTopicsPlaceholder(k.subjectId)}
+                  />
 
                   {/* Validation hint */}
                   {!hasTopics && (
@@ -1154,6 +1078,7 @@ function StepZusammenfassung({
   planType,
   selectedTermine,
   examChecklists,
+  personalization,
   startDate,
   blockedTimes,
   dailyStudyHours,
@@ -1168,6 +1093,7 @@ function StepZusammenfassung({
   planType: LernplanType
   selectedTermine: { subjectId: string; date: string; topic?: string }[]
   examChecklists: Record<string, string[]>
+  personalization: { kcSubjects: string[]; noteSubjects: string[]; noteCount: number }
   startDate: string
   blockedTimes: LernplanBlockedTime[]
   dailyStudyHours: number
@@ -1221,6 +1147,18 @@ function StepZusammenfassung({
         )}
         {Object.values(weaknesses).some((v) => v.trim()) && (
           <SummaryRow icon="warning" label="Schwächen eingetragen" value="Ja — mehr Sessions eingeplant" />
+        )}
+        {personalization.kcSubjects.length > 0 ? (
+          <SummaryRow icon="book" label="Kerncurriculum" value={personalization.kcSubjects.join(', ')} />
+        ) : (
+          <SummaryRow icon="book" label="Grundlage" value="Kerncurriculum + deine Themen" />
+        )}
+        {personalization.noteCount > 0 && (
+          <SummaryRow
+            icon="note"
+            label="Smart Notes fließen ein"
+            value={`${personalization.noteCount} — ${personalization.noteSubjects.join(', ')}`}
+          />
         )}
       </div>
 

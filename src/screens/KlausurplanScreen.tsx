@@ -9,6 +9,10 @@ import { EmptyState } from '../components/ui/EmptyState'
 import { Tag, type TagTone } from '../components/ui/Tag'
 import { Icon } from '../components/ui/Icon'
 import { ZurueckZeile } from '../components/ui/ZurueckZeile'
+import { ThemenChips } from '../components/ui/ThemenChips'
+
+const terminTopics = (k: { topics?: string[]; topic?: string }): string =>
+  k.topics && k.topics.length > 0 ? k.topics.join(', ') : (k.topic ?? '')
 
 // ── Klausurtermine (Planen, Rubrik 4) ─────────────────────────────────────
 //
@@ -43,7 +47,7 @@ export function KlausurplanScreen() {
   const [addOpen, setAddOpen] = useState(false)
   const [subjectId, setSubjectId] = useState('')
   const [date, setDate] = useState('')
-  const [topic, setTopic] = useState('')
+  const [topicList, setTopicList] = useState<string[]>([])
 
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const todayStr = toDateStr(today)
@@ -61,8 +65,8 @@ export function KlausurplanScreen() {
 
   const handleAdd = () => {
     if (!subjectId || !date) return
-    addKlausurtermin({ subjectId, date, topic: topic.trim() || undefined })
-    setSubjectId(''); setDate(''); setTopic('')
+    addKlausurtermin({ subjectId, date, topics: topicList })
+    setSubjectId(''); setDate(''); setTopicList([])
     setAddOpen(false)
   }
 
@@ -76,7 +80,7 @@ export function KlausurplanScreen() {
       <div className="flex items-center justify-between">
         <p className="text-[16px] font-semibold text-text-primary">Neue Klausur</p>
         <button
-          onClick={() => { setAddOpen(false); setSubjectId(''); setDate(''); setTopic('') }}
+          onClick={() => { setAddOpen(false); setSubjectId(''); setDate(''); setTopicList([]) }}
           className="w-8 h-8 rounded-full bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] flex items-center justify-center text-text-secondary press-sm lg:hidden"
           aria-label="Abbrechen"
         >
@@ -121,30 +125,17 @@ export function KlausurplanScreen() {
       </div>
 
       <div>
-        <p className="section-label mb-1.5">Thema — optional</p>
-        {subjectTopics.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-2">
-            {subjectTopics.slice(0, 5).map((t) => (
-              <button
-                key={t}
-                onClick={() => setTopic(topic === t ? '' : t)}
-                className="px-2.5 py-1.5 rounded-pill text-[12px] font-medium press-sm transition-colors"
-                style={topic === t
-                  ? { background: 'var(--grad-mode)', color: '#FFFFFF' }
-                  : { background: 'rgb(120 120 128 / 0.12)', color: 'rgb(var(--color-text-secondary))' }}
-              >
-                {t.length > 25 ? t.slice(0, 25) + '…' : t}
-              </button>
-            ))}
-          </div>
-        )}
-        <input
-          type="text"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
+        <p className="section-label mb-1.5">Themen — optional (mehrere möglich)</p>
+        <ThemenChips
+          topics={topicList}
+          onChange={setTopicList}
+          subjectId={subjectId}
+          suggestions={subjectTopics}
           placeholder={getTopicPlaceholder(subjectId)}
-          className="w-full h-11 bg-background border border-border rounded-btn px-3 text-[14px] text-text-primary placeholder-text-muted focus:outline-none focus:border-accent transition-colors"
         />
+        <p className="text-[11px] text-text-muted mt-2 leading-snug">
+          Die Themen sind später im Lernplan schon vorausgefüllt.
+        </p>
       </div>
 
       <button
@@ -217,7 +208,7 @@ export function KlausurplanScreen() {
                       subtitle={
                         <span>
                           {new Date(k.date + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: 'numeric', month: 'long' })}
-                          {k.topic ? ` · ${k.topic}` : ''}
+                          {terminTopics(k) ? ` · ${terminTopics(k)}` : ''}
                         </span>
                       }
                       value={
@@ -251,7 +242,7 @@ export function KlausurplanScreen() {
                       subtitle={
                         <span>
                           {new Date(k.date + 'T00:00:00').toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' })}
-                          {k.topic ? ` · ${k.topic}` : ''}
+                          {terminTopics(k) ? ` · ${terminTopics(k)}` : ''}
                         </span>
                       }
                       value={
