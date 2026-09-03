@@ -284,12 +284,24 @@ const SVG_TAGS = new Set([
   'text', 'tspan', 'defs', 'marker', 'lineargradient', 'radialgradient', 'stop', 'title', 'desc',
 ])
 const SVG_ATTRS = new Set([
-  'd', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'stroke-dasharray',
-  'points', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'cx', 'cy', 'r', 'rx', 'ry', 'width', 'height',
-  'viewbox', 'transform', 'font-size', 'font-family', 'font-weight', 'text-anchor',
-  'dominant-baseline', 'offset', 'stop-color', 'stop-opacity', 'fill-opacity', 'stroke-opacity',
-  'opacity', 'gradientunits', 'gradienttransform', 'marker-end', 'marker-start', 'id', 'class',
+  'd', 'fill', 'fill-rule', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-linecap',
+  'stroke-linejoin', 'stroke-dasharray', 'stroke-opacity', 'stroke-miterlimit',
+  'points', 'x', 'y', 'x1', 'y1', 'x2', 'y2', 'dx', 'dy', 'cx', 'cy', 'r', 'rx', 'ry',
+  'width', 'height', 'viewbox', 'preserveaspectratio', 'overflow', 'transform',
+  'font-size', 'font-family', 'font-weight', 'font-style', 'text-anchor', 'dominant-baseline',
+  'letter-spacing', 'offset', 'stop-color', 'stop-opacity', 'opacity',
+  'gradientunits', 'gradienttransform',
+  // Pfeilspitzen / Marker — ohne diese rendern Marker leer (häufig bei Schaltplänen/Kräftediagrammen)
+  'marker-end', 'marker-start', 'marker-mid', 'markerwidth', 'markerheight',
+  'refx', 'refy', 'orient', 'markerunits',
+  'xmlns', 'id', 'class',
 ])
+
+// Auch bei erlaubtem Attribut den Wert prüfen: externe url()-Verweise (Bild/ Resource)
+// raus, nur lokales url(#id) für Marker/Gradient bleibt.
+function attrValueOk(value: string): boolean {
+  return !/url\(\s*['"]?(?!#)/i.test(value) && !/javascript:/i.test(value)
+}
 
 function sanitizeSvg(markup: string): string | null {
   if (typeof markup !== 'string' || markup.length > 20000) return null
@@ -307,9 +319,9 @@ function sanitizeSvg(markup: string): string | null {
     if (!SVG_TAGS.has(el.tagName.toLowerCase())) return false
     for (const attr of [...el.attributes]) {
       const name = attr.name.toLowerCase()
-      if (name.startsWith('on') || name === 'style' || name === 'href' || name.endsWith(':href') || !SVG_ATTRS.has(name)) {
-        el.removeAttribute(attr.name)
-      }
+      const bad = name.startsWith('on') || name === 'style' || name === 'href'
+        || name.endsWith(':href') || !SVG_ATTRS.has(name) || !attrValueOk(attr.value)
+      if (bad) el.removeAttribute(attr.name)
     }
     for (const child of [...el.children]) {
       if (!walk(child)) child.remove()
@@ -317,17 +329,34 @@ function sanitizeSvg(markup: string): string | null {
     return true
   }
   if (!walk(root)) return null
+  // Alles Zeichenbare weggefiltert → lieber der Text-Fallback als ein leeres Kästchen.
+  if (root.children.length === 0) return null
+
+  // viewBox: Groß-/Kleinschreibung normalisieren, sonst aus width/height ableiten,
+  // sonst Standard. Ohne gültige viewBox skaliert das SVG nicht sauber.
+  let vb = root.getAttribute('viewBox') || root.getAttribute('viewbox')
+  const wAttr = parseFloat(root.getAttribute('width') || '')
+  const hAttr = parseFloat(root.getAttribute('height') || '')
+  if (!vb && isFinite(wAttr) && isFinite(hAttr) && wAttr > 0 && hAttr > 0) {
+    vb = `0 0 ${wAttr} ${hAttr}`
+  }
+  root.removeAttribute('viewbox')
+  root.setAttribute('viewBox', vb || `0 0 ${W} ${H}`)
 
   root.setAttribute('width', '100%')
   root.removeAttribute('height')
-  root.setAttribute('class', 'text-text-primary max-w-[420px] h-auto')
-  if (!root.getAttribute('viewBox')) root.setAttribute('viewBox', `0 0 ${W} ${H}`)
+  if (!root.getAttribute('preserveAspectRatio')) root.setAttribute('preserveAspectRatio', 'xMidYMid meet')
+  root.setAttribute('class', 'text-text-primary w-full max-w-[440px] h-auto')
   return new XMLSerializer().serializeToString(root)
 }
 
-export function SafeSvg({ markup }: { markup: string }) {
+export function SafeSvg({ markup, fallback }: { markup: string; fallback?: string }) {
   const clean = useMemo(() => sanitizeSvg(markup), [markup])
-  if (!clean) return null
+  if (!clean) {
+    return fallback
+      ? <p className="text-[13px] text-text-secondary my-1 whitespace-pre-wrap leading-relaxed">{fallback}</p>
+      : null
+  }
   return (
     <div className="my-1 overflow-x-auto" dangerouslySetInnerHTML={{ __html: clean }} />
   )

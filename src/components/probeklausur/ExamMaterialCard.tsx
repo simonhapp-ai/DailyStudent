@@ -30,7 +30,7 @@ export function ExamMaterialCard({ m, showTypeLabel = false }: { m: Probeklausur
       ) : m.kind === 'chart' && m.chart ? (
         <ChartSvg chart={m.chart} />
       ) : m.kind === 'svg' && m.svg ? (
-        <SafeSvg markup={m.svg} />
+        <SafeSvg markup={m.svg} fallback={m.content} />
       ) : m.kind === 'source' ? (
         <CitationBlock citation={m.citation} excerpt={m.content} />
       ) : (

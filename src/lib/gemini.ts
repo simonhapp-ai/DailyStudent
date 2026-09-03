@@ -268,7 +268,15 @@ export const MATERIAL_FORMAT_SPEC = `MATERIALFORMAT — jedes Material trägt "i
 - "kind":"text" — Fließtext/Sachtext/Beschreibung. Feld: "content" (String).
 - "kind":"table" — Datentabelle. Felder: "content" (kurze Text-Wiedergabe) UND "table":{"headers":["t [s]","s [m]"],"rows":[["0","0"],["0,2","0,20"]]}. Messreihen ≥6 Zeilen, Einheiten in die Header.
 - "kind":"chart" — Diagramm als ZAHLEN, nicht als Bild. Feld: "chart":{"type":"line"|"bar"|"scatter"|"function","xLabel":"…","yLabel":"…","xUnit":"…","yUnit":"…","series":[{"label":"Messreihe","points":[{"x":0,"y":0},{"x":1,"y":9.8}]}],"functions":[{"label":"v(t)=g·t","expr":"9.81*x","domain":[0,5]}]}. "series" ODER "functions" (mind. eines). "expr"-Grammatik: Variable nur x, Operatoren + - * / ^ ( ), Funktionen sin cos tan sqrt abs exp ln log, Konstanten pi e, Dezimalpunkt (KEIN Komma), sonst nichts. Zusätzlich "content" mit Achsen + Wertepaaren als Text.
-- "kind":"svg" — schematische Zeichnung (Versuchsaufbau, Kräftediagramm, beschriftetes Koordinatensystem). Feld: "svg":"<svg viewBox='0 0 320 220'>…</svg>". NUR diese Tags: svg g path line polyline polygon rect circle ellipse text tspan defs marker linearGradient radialGradient stop. KEIN script/foreignObject/image, kein style- oder on…-Attribut. stroke='currentColor'. Achsen/Teile mit <text> beschriften. Zusätzlich "content" mit einer Text-Beschreibung.
+- "kind":"svg" — EINFACHE schematische Prinzipskizze (Schaltplan, Versuchsaufbau, Kräftediagramm, beschriftete Skizze). Feld "svg". HARTE REGELN, sonst rendert es falsch:
+  · Rahmen exakt: <svg viewBox='0 0 320 220' xmlns='http://www.w3.org/2000/svg'> … </svg>. ALLE Koordinaten zwischen x=10…310 und y=10…210 — nichts ragt aus der Fläche, 10 px Rand freilassen.
+  · Attribute in EINFACHEN Anführungszeichen (viewBox='…'), damit der JSON-String gültig bleibt.
+  · Erlaubte Tags: svg g path line polyline polygon rect circle ellipse text tspan defs marker. KEIN style/script/image/foreignObject, keine on…-Attribute, keine externen url().
+  · Linien & Umrisse: stroke='currentColor' stroke-width='1.5' fill='none'. Gefüllte Punkte/Pfeilspitzen/Text: fill='currentColor'. NIEMALS feste Farben ('black','#000') — unsichtbar im Dunkelmodus.
+  · Beschriftung immer <text font-size='10' text-anchor='middle' fill='currentColor'>Kurz</text>, max. 16 Zeichen, Labels dürfen sich NICHT überlappen (mind. 14 px Abstand).
+  · Pfeile: genau ein <defs><marker id='arw' markerWidth='8' markerHeight='8' refX='7' refY='4' orient='auto'><path d='M0 0L8 4L0 8z' fill='currentColor'/></marker></defs>, dann marker-end='url(#arw)' an der Linie.
+  · 6–18 Elemente. Prinzipskizze, keine Illustration.
+  Zusätzlich "content" mit einer Text-Beschreibung der Skizze (Ersatzanzeige, falls das SVG nicht rendert).
 - "kind":"source" — Quelle für Quellenarbeit. Felder: "content" (Textauszug, 3–6 Sätze) UND "citation". KEINEN echten Autor/kein echtes Werk/kein Jahr erfinden — wenn du keinen realen Beleg exakt zitieren kannst, konstruiere einen plausiblen Beispieltext und setze "citation":{"work":"Konstruierter Beispieltext"} (author/year/publisher weglassen).
 
 "content"-Regel: bei text/source der volle Text. Bei table/chart/svg reicht EIN kurzer Satz als Bildunterschrift (die Korrektur baut sich die Werte aus table/chart selbst zusammen) — NICHT die Tabelle/das Diagramm nochmal als Text ausschreiben.
@@ -276,7 +284,8 @@ export const MATERIAL_FORMAT_SPEC = `MATERIALFORMAT — jedes Material trägt "i
 BEISPIELE:
 {"id":"M1","title":"Fallversuch — Messwerte","type":"tabelle","kind":"table","content":"t[s]: 0;0,2;0,4;0,6;0,8;1,0 — s[m]: 0;0,20;0,78;1,76;3,14;4,90","table":{"headers":["t [s]","s [m]"],"rows":[["0","0"],["0,2","0,20"],["0,4","0,78"],["0,6","1,76"],["0,8","3,14"],["1,0","4,90"]]}}
 {"id":"M2","title":"v-t-Diagramm","type":"diagramm","kind":"chart","content":"Ursprungsgerade, Steigung 9,81 m/s². Messpunkte (0|0),(0,4|3,92),(0,8|7,85).","chart":{"type":"function","xLabel":"Zeit","yLabel":"Geschwindigkeit","xUnit":"s","yUnit":"m/s","functions":[{"label":"v(t)=9,81·t","expr":"9.81*x","domain":[0,1]}],"series":[{"label":"Messung","points":[{"x":0,"y":0},{"x":0.4,"y":3.92},{"x":0.8,"y":7.85}]}]}}
-{"id":"M1","title":"Auszug aus der Rede","type":"text","kind":"source","content":"Ich habe einen Traum, dass eines Tages … (4 Sätze Originalzitat).","citation":{"author":"Martin Luther King","work":"I Have a Dream","year":"1963","publisher":"Rede, Washington D.C."}}`
+{"id":"M1","title":"Auszug aus der Rede","type":"text","kind":"source","content":"Ich habe einen Traum, dass eines Tages … (4 Sätze Originalzitat).","citation":{"author":"Martin Luther King","work":"I Have a Dream","year":"1963","publisher":"Rede, Washington D.C."}}
+{"id":"M1","title":"Reihenschaltung","type":"versuchsaufbau","kind":"svg","content":"Reihenschaltung: Quelle U0 = 9 V, Widerstand R = 100 Ω, Amperemeter A in Reihe im selben Stromkreis.","svg":"<svg viewBox='0 0 320 220' xmlns='http://www.w3.org/2000/svg'><rect x='45' y='50' width='230' height='120' fill='none' stroke='currentColor' stroke-width='1.5'/><line x1='45' y1='100' x2='45' y2='120' stroke='currentColor' stroke-width='3'/><line x1='37' y1='108' x2='53' y2='108' stroke='currentColor' stroke-width='1.5'/><text x='26' y='114' font-size='10' text-anchor='middle' fill='currentColor'>U0</text><rect x='138' y='42' width='44' height='16' fill='none' stroke='currentColor' stroke-width='1.5'/><text x='160' y='36' font-size='10' text-anchor='middle' fill='currentColor'>R</text><circle cx='160' cy='170' r='12' fill='none' stroke='currentColor' stroke-width='1.5'/><text x='160' y='174' font-size='10' text-anchor='middle' fill='currentColor'>A</text></svg>"}`
 
 const GENERATION_SYSTEM = `Du bist ein Abiturklausur-Generator für Niedersachsen. Erstelle exakt dem deutschen Abitur entsprechende Aufgaben.
 
@@ -336,8 +345,16 @@ interface RawExamJSON {
   totalBE: number
 }
 
-// Chart-Sub-Objekt vom Modell absichern: type whitelisten, Zahlen coercen,
-// Serien/Punkte deckeln, expr als String belassen (Auswertung erst im Renderer).
+// Zahl aus dem Modell — akzeptiert auch deutsches Dezimalkomma ("0,4"). null, wenn
+// es wirklich keine Zahl ist (dann Kategorie-Achse).
+function coerceNum(v: unknown): number | null {
+  if (typeof v === 'number') return isFinite(v) ? v : null
+  const n = Number(String(v ?? '').replace(',', '.').trim())
+  return isFinite(n) ? n : null
+}
+
+// Chart-Sub-Objekt vom Modell absichern: type whitelisten, Zahlen coercen (inkl.
+// Komma-Dezimalzahlen), Serien/Punkte deckeln, expr für den Renderer normalisieren.
 function sanitizeChart(raw: unknown): MaterialChart | undefined {
   if (!raw || typeof raw !== 'object') return undefined
   const c = raw as Record<string, unknown>
@@ -350,8 +367,8 @@ function sanitizeChart(raw: unknown): MaterialChart | undefined {
           points: Array.isArray(so.points)
             ? (so.points as unknown[]).slice(0, 60).map((p) => {
                 const po = (p ?? {}) as Record<string, unknown>
-                const x = typeof po.x === 'number' ? po.x : (typeof po.x === 'string' ? po.x : Number(po.x) || 0)
-                return { x, y: Number(po.y) || 0 }
+                const xn = coerceNum(po.x)
+                return { x: xn !== null ? xn : String(po.x ?? ''), y: coerceNum(po.y) ?? 0 }
               })
             : [],
         }
@@ -361,9 +378,11 @@ function sanitizeChart(raw: unknown): MaterialChart | undefined {
     ? (c.functions as unknown[]).slice(0, 4).map((f) => {
         const fo = (f ?? {}) as Record<string, unknown>
         const dom = Array.isArray(fo.domain) && fo.domain.length === 2
-          ? [Number(fo.domain[0]) || 0, Number(fo.domain[1]) || 0] as [number, number]
+          ? [coerceNum(fo.domain[0]) ?? 0, coerceNum(fo.domain[1]) ?? 0] as [number, number]
           : undefined
-        return { label: String(fo.label ?? ''), expr: String(fo.expr ?? ''), domain: dom }
+        // "9,81*x" → "9.81*x" (nur Ziffer,Ziffer), damit der Term-Parser es frisst
+        const expr = String(fo.expr ?? '').replace(/(\d),(\d)/g, '$1.$2')
+        return { label: String(fo.label ?? ''), expr, domain: dom }
       })
     : undefined
   if ((!series || series.length === 0) && (!functions || functions.length === 0)) return undefined
@@ -451,7 +470,7 @@ function parseExam(
 const EXAM_MATERIAL_SYSTEM = `Du erstellst NUR das Material für eine deutsche Oberstufen-Probeklausur — die Aufgaben kommen separat, erzeuge KEINE Aufgaben. Antworte ausschließlich mit validem JSON.
 
 Erzeuge 1–3 Materialien, IDs "M1","M2","M3". Darstellung nach Thema wählen:
-- Physik/Technik/Chemie: bevorzugt "kind":"svg" — ein sauberer, fachlich korrekter Schaltplan / Versuchsaufbau / Kräftediagramm, vollständig beschriftet. Das ist der Kern deiner Aufgabe.
+- Physik/Technik/Chemie: bevorzugt "kind":"svg" — ein sauberer, fachlich korrekter Schaltplan / Versuchsaufbau / Kräftediagramm, vollständig beschriftet, GENAU nach den harten SVG-Regeln + Beispiel unten (viewBox 0 0 320 220, currentColor, font-size 10, keine Überlappungen, einfach halten). Das ist der Kern deiner Aufgabe.
 - Messdaten / Funktionsverläufe: "kind":"chart" (Zahlen, kein Bild) oder "kind":"table" (Messreihe ≥6 Zeilen).
 - Geistes-/Gesellschaftswissenschaften: "kind":"source" — Sachtext 4–6 Sätze + "citation" (keinen echten Autor erfinden → "citation":{"work":"Konstruierter Beispieltext"}).
 - Reiner Kontext ohne Daten: "kind":"text".
