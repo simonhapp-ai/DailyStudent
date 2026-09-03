@@ -1,7 +1,6 @@
 import { useState, useRef, useMemo } from 'react'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { WorkingState } from '../components/ui/EmptyState'
-import { ClaudeWaitNote } from '../components/ui/ClaudeWaitNote'
 import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -10,7 +9,6 @@ import { ProModal } from '../components/ui/ProModal'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode4Exam, correctExam } from '../lib/gemini';
-import { resolveEngine } from '../lib/studyEngine'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
@@ -111,11 +109,9 @@ export function ProbeklausurMode4Screen() {
   const navigate = useNavigate()
   const location = useLocation()
   const resume = (location.state as { resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, appConfig } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, appConfig } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
-  // Korrektur läuft für Pro über Claude Sonnet (langsam, ~1–2 Min) — sonst Gemini.
-  const usesClaude = resolveEngine({ isPro, claudeTrialUsed }).engine === 'claude'
 
   const userSubjects = subjects.filter((s) => profile?.faecher?.includes(s.id))
   const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
@@ -153,7 +149,7 @@ export function ProbeklausurMode4Screen() {
     if (!exam) return
     setPhase('correcting')
     try {
-      const result = await correctExam(exam, answers, resolveEngine({ isPro, claudeTrialUsed }))
+      const result = await correctExam(exam, answers)
       setCorrection(result)
       setPhase('result')
       const pk: SavedProbeklausur = {
@@ -294,10 +290,7 @@ export function ProbeklausurMode4Screen() {
         )}
 
         {(phase === 'loading' || phase === 'correcting') && (
-          <div className="space-y-3">
-            <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert die Aufgaben…' : 'KI korrigiert deine Antworten…'} note={phase === 'correcting' && usesClaude ? undefined : 'Einen Moment Geduld'} />
-            {phase === 'correcting' && usesClaude && <ClaudeWaitNote />}
-          </div>
+          <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert die Aufgaben…' : 'KI korrigiert deine Antworten…'} note="Einen Moment Geduld" />
         )}
 
         {phase === 'exam' && exam && (

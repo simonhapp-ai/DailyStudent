@@ -16,11 +16,13 @@
 // Korrektur bei großem Output 60–150 s — das passt hier rein, ein 60-s-Limit nicht.
 export const config = { maxDuration: 300 }
 
-// Muss mit CLAUDE_BUCKET_LIMITS in src/lib/claude.ts übereinstimmen. Bewusst eng
-// (siehe Plan WS4.5): ein einzelner Extremnutzer soll die Marge nicht auffressen.
+// Muss mit CLAUDE_BUCKET_LIMITS in src/lib/claude.ts übereinstimmen. Seit
+// Migration 021 pro KALENDERMONAT (check_claude_limit summiert über den Monat),
+// nicht mehr pro Tag. Bewusst großzügig — realistische Nutzung bleibt weit
+// darunter, der 20-€-Monatsdeckel + Gemini-Fallback sind der eigentliche Schutz.
 const BUCKET_LIMITS: Record<string, number> = {
-  claude_lernzettel: 5,     // /Tag
-  claude_probeklausur: 2,   // /Tag (Generierung + Korrektur eines Versuchs)
+  claude_lernzettel: 50,     // /Monat
+  claude_probeklausur: 25,   // /Monat (nur Material-Generierung; Korrektur läuft über Gemini)
 }
 
 // USD/1M Tokens, EUR ≈ USD (1:1-Puffer). Modell-abhängig: Generierung läuft auf

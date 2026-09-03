@@ -9,6 +9,7 @@ import { MathRenderer } from '../components/ui/MathRenderer'
 import { ModusRegler, type ModusOption } from '../components/ui/ModusRegler'
 import { ProModal } from '../components/ui/ProModal'
 import { ClaudeWaitNote } from '../components/ui/ClaudeWaitNote'
+import { PremiumKiToggle } from '../components/ui/PremiumKiToggle'
 import { useUser } from '../context/UserContext'
 import { generateLernzettel } from '../lib/gemini'
 import { resolveEngine } from '../lib/studyEngine'
@@ -61,7 +62,7 @@ const MODI: (ModusOption & { id: LernzettelModus })[] = [
 
 export function LernzettelGeneratorScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast, lernzettel, appConfig, isPro, claudeTrialUsed } = useUser()
+  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast, lernzettel, appConfig, isPro, claudeTrialUsed, updateProfile } = useUser()
 
   const [step, setStep] = useState<Step>('fach')
   const [showProModal, setShowProModal] = useState(false)
@@ -74,7 +75,10 @@ export function LernzettelGeneratorScreen() {
   const [error, setError] = useState('')
 
   // Lernzettel läuft für Pro über Claude Sonnet (langsam, ~1–2 Min) — sonst Gemini (schnell).
-  const usesClaude = resolveEngine({ isPro, claudeTrialUsed }).engine === 'claude'
+  // Der Pro-Schalter (profile.claudeEnabled, Default an) kann Claude abschalten.
+  const claudePref = profile?.claudeEnabled !== false
+  const engine = resolveEngine({ isPro, claudeTrialUsed, claudePref })
+  const usesClaude = engine.engine === 'claude'
 
   const availableSubjectIds = profile?.faecher ?? []
 
@@ -143,7 +147,7 @@ export function LernzettelGeneratorScreen() {
         selectedTopics,
         smartNotes,
         kcData: kcData ?? undefined,
-      }, resolveEngine({ isPro, claudeTrialUsed }))
+      }, engine)
 
       // Rasterbilder sind derzeit deaktiviert (Gemini-Bildkontingent = 0). Abbildungen
       // liefert jetzt "figures" (client-gerendertes SVG/Tabelle) direkt aus dem Modell.
@@ -466,6 +470,15 @@ export function LernzettelGeneratorScreen() {
                 </div>
               )}
             </div>
+
+            {/* Premium-KI-Schalter (nur Pro) */}
+            {isPro && (
+              <PremiumKiToggle
+                checked={claudePref}
+                onChange={(v) => updateProfile({ claudeEnabled: v })}
+                subtitle="Lernzettel von Claude — gründlicher formuliert, mit Diagrammen. Etwas langsamer (~1–2 Min). Aus = schneller über Gemini."
+              />
+            )}
 
             {/* Error banner */}
             {error && (

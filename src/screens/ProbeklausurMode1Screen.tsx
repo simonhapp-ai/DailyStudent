@@ -2,6 +2,7 @@ import { useState, useRef, useMemo } from 'react'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { WorkingState } from '../components/ui/EmptyState'
 import { ClaudeWaitNote } from '../components/ui/ClaudeWaitNote'
+import { PremiumKiToggle } from '../components/ui/PremiumKiToggle'
 import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -128,12 +129,15 @@ export function ProbeklausurMode1Screen() {
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.prefill ?? null
   const resume = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, appConfig } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, appConfig, updateProfile } = useUser()
   // Beta launch: AFB-Aufgabentrainer opened for free, incl. correction — see
   // migration 017_beta_mode_config.sql + ProbeklausurMenuScreen.
   const correctionUnlocked = isPro || appConfig.probeklausurAfbTrainerFree
-  // Korrektur läuft für Pro über Claude Sonnet (langsam, ~1–2 Min) — sonst Gemini.
-  const usesClaude = resolveEngine({ isPro, claudeTrialUsed }).engine === 'claude'
+  // Material (AFB II/III) erzeugt bei Pro + Schalter Claude — saubere svg-Schemata.
+  // Aufgaben stellt und korrigiert immer Gemini.
+  const claudePref = profile?.claudeEnabled !== false
+  const examEngine = resolveEngine({ isPro, claudeTrialUsed, claudePref })
+  const usesClaude = examEngine.engine === 'claude'
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
@@ -165,6 +169,7 @@ export function ProbeklausurMode1Screen() {
         topic.trim(),
         afb,
         getKc(subjectId) ?? undefined,
+        examEngine,
       )
       setExam(generated)
       setAnswers({})
@@ -180,7 +185,7 @@ export function ProbeklausurMode1Screen() {
     if (!exam) return
     setPhase('correcting')
     try {
-      const result = await correctExam(exam, answers, resolveEngine({ isPro, claudeTrialUsed }))
+      const result = await correctExam(exam, answers)
       setCorrection(result)
       setPhase('result')
       const pk: SavedProbeklausur = {
@@ -339,6 +344,14 @@ export function ProbeklausurMode1Screen() {
               )}
             </div>
 
+            {isPro && afb !== 'I' && (
+              <PremiumKiToggle
+                checked={claudePref}
+                onChange={(v) => updateProfile({ claudeEnabled: v })}
+                subtitle="Material (Schaltpläne, Aufbauten) von Claude zeichnen lassen — sauberer, dafür ~30 s länger. Aufgaben & Korrektur bleiben Gemini."
+              />
+            )}
+
             {error && (
               <Banner tone="danger">
                 <span className="font-semibold">Fehler beim Generieren</span>
@@ -351,8 +364,8 @@ export function ProbeklausurMode1Screen() {
         {/* LOADING */}
         {(phase === 'loading' || phase === 'correcting') && (
           <div className="space-y-3">
-            <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert deine Aufgabe…' : 'KI korrigiert deine Antwort…'} note={phase === 'correcting' && usesClaude ? undefined : 'Einen Moment Geduld'} />
-            {phase === 'correcting' && usesClaude && <ClaudeWaitNote />}
+            <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert deine Aufgabe…' : 'KI korrigiert deine Antwort…'} note={phase === 'loading' && usesClaude && afb !== 'I' ? undefined : 'Einen Moment Geduld'} />
+            {phase === 'loading' && usesClaude && afb !== 'I' && <ClaudeWaitNote compact />}
           </div>
         )}
 

@@ -400,26 +400,35 @@ function sanitizeCitation(raw: unknown): MaterialCitation | undefined {
   return Object.values(out).some(Boolean) ? out : undefined
 }
 
-function parseExam(raw: unknown, subject: string, subjectId: string, topic: string, mode: 1 | 2 | 3 | 4): GeneratedExam {
+function parseMaterial(m: Record<string, unknown>): ProbeklausurMaterial {
+  const type = (['tabelle', 'diagramm', 'versuchsaufbau', 'text', 'sequenz'].includes(String(m.type))
+    ? m.type : 'text') as ProbeklausurMaterial['type']
+  const kind = (['text', 'table', 'chart', 'svg', 'source', 'image'].includes(String(m.kind))
+    ? m.kind : undefined) as ProbeklausurMaterial['kind']
+  const svg = typeof m.svg === 'string' && m.svg.length < 20000 ? m.svg : undefined
+  return {
+    id: String(m.id),
+    title: String(m.title ?? ''),
+    type,
+    kind,
+    content: String(m.content ?? ''),
+    table: sanitizeTable(m.table),
+    chart: sanitizeChart(m.chart),
+    svg,
+    citation: sanitizeCitation(m.citation),
+  }
+}
+
+function parseExam(
+  raw: unknown, subject: string, subjectId: string, topic: string, mode: 1 | 2 | 3 | 4,
+  presetMaterials?: ProbeklausurMaterial[] | null,
+): GeneratedExam {
   const j = raw as RawExamJSON
-  const materials: ProbeklausurMaterial[] = (j.materials ?? []).map((m) => {
-    const type = (['tabelle', 'diagramm', 'versuchsaufbau', 'text', 'sequenz'].includes(String(m.type))
-      ? m.type : 'text') as ProbeklausurMaterial['type']
-    const kind = (['text', 'table', 'chart', 'svg', 'source', 'image'].includes(String(m.kind))
-      ? m.kind : undefined) as ProbeklausurMaterial['kind']
-    const svg = typeof m.svg === 'string' && m.svg.length < 20000 ? m.svg : undefined
-    return {
-      id: String(m.id),
-      title: String(m.title ?? ''),
-      type,
-      kind,
-      content: String(m.content ?? ''),
-      table: sanitizeTable(m.table),
-      chart: sanitizeChart(m.chart),
-      svg,
-      citation: sanitizeCitation(m.citation),
-    }
-  })
+  // presetMaterials: von Claude vorab erzeugt (siehe generateExamMaterials) — dann
+  // NICHT das, was Gemini nebenbei in j.materials gepackt hat, verwenden.
+  const materials: ProbeklausurMaterial[] = presetMaterials && presetMaterials.length > 0
+    ? presetMaterials
+    : (j.materials ?? []).map(parseMaterial)
   const tasks: ProbeklausurTask[] = (j.tasks ?? []).map((t) => ({
     id: String(t.id),
     label: String(t.label ?? t.id),
@@ -435,7 +444,55 @@ function parseExam(raw: unknown, subject: string, subjectId: string, topic: stri
   }
 }
 
-export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData): Promise<GeneratedExam> {
+// ── Claude-Schiene für Probeklausur-MATERIAL (nicht die Aufgaben) ─────────────
+// Nur das, was Gemini Flash schlecht macht: handgezeichnete Schemata (kind:"svg").
+// Aufgaben stellt anschließend immer Gemini. Läuft nur für Pro + Schalter an;
+// jeder Fehlschlag (auch DEV, auch Fallback) → null → reiner Gemini-Pfad.
+const EXAM_MATERIAL_SYSTEM = `Du erstellst NUR das Material für eine deutsche Oberstufen-Probeklausur — die Aufgaben kommen separat, erzeuge KEINE Aufgaben. Antworte ausschließlich mit validem JSON.
+
+Erzeuge 1–3 Materialien, IDs "M1","M2","M3". Darstellung nach Thema wählen:
+- Physik/Technik/Chemie: bevorzugt "kind":"svg" — ein sauberer, fachlich korrekter Schaltplan / Versuchsaufbau / Kräftediagramm, vollständig beschriftet. Das ist der Kern deiner Aufgabe.
+- Messdaten / Funktionsverläufe: "kind":"chart" (Zahlen, kein Bild) oder "kind":"table" (Messreihe ≥6 Zeilen).
+- Geistes-/Gesellschaftswissenschaften: "kind":"source" — Sachtext 4–6 Sätze + "citation" (keinen echten Autor erfinden → "citation":{"work":"Konstruierter Beispieltext"}).
+- Reiner Kontext ohne Daten: "kind":"text".
+
+Jedes Material füllt zusätzlich "content" mit einer treuen Text-Wiedergabe (die Korrektur liest content).
+
+${MATERIAL_FORMAT_SPEC}
+
+Antworte NUR mit: {"materials":[ … ]}`
+
+export async function generateExamMaterials(
+  subject: string, subjectId: string, topic: string,
+  kcData: KcSubjectData | undefined, opts: EngineOpts | undefined,
+): Promise<ProbeklausurMaterial[] | null> {
+  void subjectId
+  if (opts?.engine !== 'claude') return null
+  const kcBlock = kcData ? `\n\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}` : ''
+  try {
+    const raw = await claudeFetch(
+      EXAM_MATERIAL_SYSTEM,
+      `Fach: ${subject} | Thema: ${topic}${kcBlock}\n\nErzeuge die Materialien als JSON.`,
+      'claude_probeklausur',
+      { model: 'sonnet', maxTokens: 4000, thinking: 'disabled', effort: 'low', temperature: 0.5, trial: opts.trial === true },
+    ) as { materials?: unknown }
+    const list = Array.isArray(raw.materials) ? raw.materials : []
+    const mats = list
+      .filter((m): m is Record<string, unknown> => !!m && typeof m === 'object' && 'id' in m)
+      .map(parseMaterial)
+    return mats.length > 0 ? mats : null
+  } catch {
+    return null // ClaudeFallbackError o. ä. → Aufrufer nimmt den reinen Gemini-Pfad
+  }
+}
+
+/** Prompt-Block, der Gemini sagt: Material ist schon da, mach nur die Aufgaben. */
+function givenMaterialsHint(mats: ProbeklausurMaterial[]): string {
+  const list = mats.map((m) => `${m.id} (${m.kind ?? 'text'}): ${m.title || m.content.slice(0, 70)}`).join(' · ')
+  return `MATERIALIEN SIND BEREITS ERSTELLT — erzeuge sie NICHT neu, gib "materials":[] zurück. Vorhandene Materialien: ${list}. Schreibe nur "tasks", die per "materialRefs" auf diese IDs verweisen.`
+}
+
+export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
   const isMath = subjectId === 'mathematik'
   const isHumanities = [
     'deutsch', 'englisch', 'franzoesisch', 'latein', 'spanisch', 'russisch', 'italienisch',
@@ -470,18 +527,21 @@ export async function generateMode1Exam(subject: string, subjectId: string, topi
     : isHumanities
       ? `{"id":"M1","title":"...","type":"text","kind":"source","content":"...","citation":{"author":"...","year":"..."}}`
       : `{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}}`
-  const materialsSkeleton = afb === 'I' ? '[]' : `[${matSkeletonObj}]`
+  // AFB I hat kein Material → kein Claude-Aufruf. Ab AFB II ggf. Claude-Material.
+  const preMaterials = afb === 'I' ? null : await generateExamMaterials(subject, subjectId, topic, kcData, opts)
+  const matHint = preMaterials ? `${givenMaterialsHint(preMaterials)}\n\n` : ''
+  const materialsSkeleton = afb === 'I' || preMaterials ? '[]' : `[${matSkeletonObj}]`
   const materialRefsSkeleton = afb === 'I' ? '[]' : '["M1"]'
 
   const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
+    `${matHint}Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
 
 JSON: {"materials":${materialsSkeleton},"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":${materialRefsSkeleton}}],"totalBE":8}`,
     'probeklausur_other', 0.6)
-  return parseExam(raw, subject, subjectId, topic, 1)
+  return parseExam(raw, subject, subjectId, topic, 1, preMaterials)
 }
 
-export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
+export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
   const fachHinweis: Record<string, string> = {
     biologie: '1 Komplex, Teilaufgaben 1.1–1.4, ~35 BE. M1="kind":"table" (Messdaten) oder "kind":"text", M2="kind":"chart" oder "kind":"svg" (Schema).',
     physik: '1 Komplex, Teilaufgaben 1.1–1.5, ~50 BE. M1="kind":"svg" (Versuchsaufbau), M2="kind":"chart" (Messreihe als Zahlen).',
@@ -491,15 +551,21 @@ export async function generateMode2Exam(subject: string, subjectId: string, topi
   const hinweis = fachHinweis[subjectId] ?? '1 Komplex, 3–5 Teilaufgaben, AFB I→II→III, 2–3 Materialien, ~45 BE.'
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
-  const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
+  const preMaterials = await generateExamMaterials(subject, subjectId, topic, kcData, opts)
+  const matHint = preMaterials ? `${givenMaterialsHint(preMaterials)}\n\n` : ''
+  const matSkeleton = preMaterials
+    ? '[]'
+    : '[{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}},{"id":"M2","title":"...","type":"text","kind":"text","content":"..."}]'
 
-JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}},{"id":"M2","title":"...","type":"text","kind":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
+  const raw = await examFetch(GENERATION_SYSTEM,
+    `${matHint}Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
+
+JSON: {"materials":${matSkeleton},"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
     'probeklausur_full', 0.55)
-  return parseExam(raw, subject, subjectId, topic, 2)
+  return parseExam(raw, subject, subjectId, topic, 2, preMaterials)
 }
 
-export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
+export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
   const isHumanities = [
@@ -523,14 +589,17 @@ Aufg.3 AFB III 8–12 BE: Erörtern / Stellungnahme / Urteil über das Material 
 Aufg.2 AFB II 10–12 BE: Material direkt auswerten + Fachwissen verknüpfen (M1+M2).
 Aufg.3 AFB III 8–10 BE: Über Material hinaus (Hypothese, Bewertung, Stellungnahme).`
 
-  const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | Modus: Materialklausur${kcBlock}
-Materialien: ${materialSpec}
-${taskSpec}
+  const preMaterials = await generateExamMaterials(subject, subjectId, topic, kcData, opts)
+  const matHint = preMaterials ? `${givenMaterialsHint(preMaterials)}\n\n` : ''
+  const matSkeleton = preMaterials ? '[]' : `[${m1Skeleton}]`
 
-JSON: {"materials":[${m1Skeleton}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
+  const raw = await examFetch(GENERATION_SYSTEM,
+    `${matHint}Fach: ${subject} | Thema: ${topic} | Modus: Materialklausur${kcBlock}
+${preMaterials ? '' : `Materialien: ${materialSpec}\n`}${taskSpec}
+
+JSON: {"materials":${matSkeleton},"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
     'probeklausur_other', 0.6)
-  return parseExam(raw, subject, subjectId, topic, 3)
+  return parseExam(raw, subject, subjectId, topic, 3, preMaterials)
 }
 
 export async function generateMode4Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
@@ -598,7 +667,11 @@ function npToGradeLabel(np: number): string {
   return 'Ungenügend'
 }
 
-export async function correctExam(exam: GeneratedExam, answers: Record<string, string>, opts?: EngineOpts): Promise<ExamCorrection> {
+// Korrektur läuft für ALLE über Gemini (Simon-Entscheidung): der Lerneffekt kommt
+// aus dem Denken bei den Aufgaben, Gemini greift klare Fehler ohnehin zuverlässig
+// ab, und die Formulierungsnuance rechtfertigt die Claude-Kosten nicht. Kein
+// EngineOpts-Parameter mehr.
+export async function correctExam(exam: GeneratedExam, answers: Record<string, string>): Promise<ExamCorrection> {
   const materialsBlock = exam.materials.map(materialToPromptText).join('\n\n')
   const tasksBlock = exam.tasks.map((t) => {
     const answer = (answers[t.id] ?? '').trim()
@@ -611,7 +684,7 @@ ${tasksBlock}
 
 JSON: {"taskCorrections":[{"taskId":"t1","errors":[],"gaps":[],"formulationHelp":[],"scoreNP":11,"justification":"..."}],"totalNP":11,"gradeLabel":"Gut","overallJustification":"..."}`
 
-  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3, claudeOpt(opts, 'claude_probeklausur', 10000, 'adaptive', 'medium'))) as {
+  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3)) as {
     taskCorrections?: { taskId?: string; errors?: string[]; gaps?: string[]; formulationHelp?: string[]; scoreNP?: number; justification?: string }[]
     totalNP?: number
     gradeLabel?: string

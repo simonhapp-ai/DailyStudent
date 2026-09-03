@@ -112,6 +112,7 @@ export async function retrySyncQueue(userId: string): Promise<{ success: number;
             klausurtermine: p.profile.klausurtermine ?? [], stundenplan: p.profile.stundenplan ?? null,
             abi_halbjahre: p.profile.abiHalbjahre ?? null, abi_gesamtpunkte: p.profile.abiGesamtpunkte ?? null,
             abi_gesamtnote: p.profile.abiGesamtnote ?? null, is_dev_mode: p.profile.isDevMode ?? false,
+            claude_enabled: p.profile.claudeEnabled !== false,
             theme: p.theme, is_pro: p.isPro,
           })
           break
@@ -234,6 +235,7 @@ function mapProfile(r: Row, abiHalbjahreOverride?: AbiHalbjahr[] | null, abiPrue
     faecher: r.faecher ?? [],
     lkFaecher: r.lk_faecher ?? [],
     customFaecher: r.custom_faecher ?? undefined,
+    claudeEnabled: r.claude_enabled !== false,
     zielnote: r.zielnote,
     folderSortMode: r.folder_sort_mode,
     // Alte Datensätze kennen nur `topic` (Einzelstring) — beim Laden auf `topics` auffüllen.
@@ -609,6 +611,7 @@ export async function syncProfile(userId: string, profile: UserProfile, theme: A
       abi_gesamtpunkte: profile.abiGesamtpunkte ?? null,
       abi_gesamtnote: profile.abiGesamtnote ?? null,
       is_dev_mode: profile.isDevMode ?? false,
+      claude_enabled: profile.claudeEnabled !== false,
       theme,
       is_pro: isPro,
     })

@@ -22,10 +22,10 @@ export interface EngineOpts { engine?: Engine; trial?: boolean }
 export type ClaudeBucket = 'claude_lernzettel' | 'claude_probeklausur'
 
 // Muss mit BUCKET_LIMITS in api/claude.ts übereinstimmen (nur zur Doku — die echte
-// Durchsetzung ist serverseitig).
+// Durchsetzung ist serverseitig). Seit Migration 021 pro Kalendermonat, nicht pro Tag.
 export const CLAUDE_BUCKET_LIMITS: Record<ClaudeBucket, number> = {
-  claude_lernzettel: 5,
-  claude_probeklausur: 2,
+  claude_lernzettel: 50,
+  claude_probeklausur: 25,
 }
 
 interface ClaudeOpts {

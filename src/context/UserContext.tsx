@@ -150,6 +150,9 @@ export interface UserProfile {
   avatarBg?: string
   userType?: 'schüler' | 'student'
   customFaecher?: Array<{ id: string; name: string; icon?: string }>
+  /** Pro-Schalter: Lernzettel + Probeklausur-Material über Claude erzeugen.
+   *  undefined = an (Default). Aus = alles über Gemini. */
+  claudeEnabled?: boolean
 }
 
 export type AppTheme = 'light' | 'dark' | 'system'

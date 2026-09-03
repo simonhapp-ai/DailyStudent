@@ -83,6 +83,32 @@ function ThemeRow({ theme, onPick }: { theme: AppTheme; onPick: (t: AppTheme) =>
   )
 }
 
+// Pro-Schalter „Premium-KI" (Claude) — global. Steht zusätzlich in den Generatoren
+// selbst. Default an; aus = alles über Gemini (schneller, kein Kontingent-Verbrauch).
+function PremiumKiRow({ enabled, onToggle }: { enabled: boolean; onToggle: (v: boolean) => void }) {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 min-h-[52px] border-b border-border/40 last:border-b-0">
+      <span className="min-w-0 flex-1">
+        <span className="block text-[15px] text-text-primary">Premium-KI</span>
+        <span className="block text-[12px] text-text-secondary leading-snug">
+          Lernzettel &amp; Klausur-Material von der stärkeren KI (Claude). Aus = schneller über Gemini.
+        </span>
+      </span>
+      <button
+        onClick={() => onToggle(!enabled)}
+        aria-pressed={enabled}
+        className="w-11 h-6 rounded-full flex items-center px-0.5 shrink-0 transition-colors"
+        style={{ background: enabled ? 'var(--grad-mode)' : 'rgb(var(--color-border))' }}
+      >
+        <span
+          className="w-5 h-5 rounded-full bg-white shadow transition-transform"
+          style={{ transform: enabled ? 'translateX(20px)' : 'translateX(0)' }}
+        />
+      </button>
+    </div>
+  )
+}
+
 /** Fortschrittsring zum naechsten Rang — dieselbe Sprache wie die Kennzahlen,
  *  nur rund. Ersetzt das gezeichnete Muenzbild. */
 function RangRing({ xp }: { xp: number }) {
@@ -554,6 +580,12 @@ export function ProfilScreen() {
         <div>
           <h2 className="section-label mb-2">Allgemein</h2>
           <ListGroup>
+            {isPro && (
+              <PremiumKiRow
+                enabled={profile?.claudeEnabled !== false}
+                onToggle={(v) => updateProfile({ claudeEnabled: v })}
+              />
+            )}
             <ThemeRow theme={theme} onPick={setTheme} />
             {authUser && <NavRow label="Account" onClick={() => navigate('/profil/account')} />}
           </ListGroup>

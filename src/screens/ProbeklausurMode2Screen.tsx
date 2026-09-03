@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { WorkingState } from '../components/ui/EmptyState'
 import { ClaudeWaitNote } from '../components/ui/ClaudeWaitNote'
+import { PremiumKiToggle } from '../components/ui/PremiumKiToggle'
 import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -155,11 +156,13 @@ export function ProbeklausurMode2Screen() {
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.prefill ?? null
   const resume = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, savedProbeklausuren, isPro, claudeTrialUsed, appConfig } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, savedProbeklausuren, isPro, claudeTrialUsed, appConfig, updateProfile } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
-  // Korrektur läuft für Pro über Claude Sonnet (langsam, ~1–2 Min) — sonst Gemini.
-  const usesClaude = resolveEngine({ isPro, claudeTrialUsed }).engine === 'claude'
+  // Material erzeugt bei Pro + Schalter Claude (svg-Schemata); Aufgaben & Korrektur immer Gemini.
+  const claudePref = profile?.claudeEnabled !== false
+  const examEngine = resolveEngine({ isPro, claudeTrialUsed, claudePref })
+  const usesClaude = examEngine.engine === 'claude'
 
   const userSubjects = subjects.filter((s) => profile?.faecher?.includes(s.id))
   const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
@@ -193,7 +196,7 @@ export function ProbeklausurMode2Screen() {
     setError(null)
     setPhase('loading')
     try {
-      const generated = await generateMode2Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined)
+      const generated = await generateMode2Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined, examEngine)
       setExam(generated)
       setAnswers({})
       inProgressIdRef.current = `ip-2-${subjectId}-${Date.now()}`
@@ -212,7 +215,7 @@ export function ProbeklausurMode2Screen() {
     setShowTimerExpiredBanner(false)
     setPhase('correcting')
     try {
-      const result = await correctExam(exam, answers, resolveEngine({ isPro, claudeTrialUsed }))
+      const result = await correctExam(exam, answers)
       setCorrection(result)
       setPhase('result')
       const pk: SavedProbeklausur = {
@@ -395,6 +398,14 @@ export function ProbeklausurMode2Screen() {
               ))}
             </div>
 
+            {isPro && (
+              <PremiumKiToggle
+                checked={claudePref}
+                onChange={(v) => updateProfile({ claudeEnabled: v })}
+                subtitle="Material (Schaltpläne, Aufbauten) von Claude zeichnen lassen — sauberer, dafür ~30 s länger. Aufgaben & Korrektur bleiben Gemini."
+              />
+            )}
+
             {error && (
               <Banner tone="danger">
                 <span className="font-semibold">Fehler</span>
@@ -407,8 +418,8 @@ export function ProbeklausurMode2Screen() {
         {/* LOADING */}
         {(phase === 'loading' || phase === 'correcting') && (
           <div className="space-y-3">
-            <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert die Klausur…' : 'KI korrigiert alle Aufgaben…'} note={phase === 'correcting' && usesClaude ? undefined : 'Das kann 10–20 Sekunden dauern'} />
-            {phase === 'correcting' && usesClaude && <ClaudeWaitNote />}
+            <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert die Klausur…' : 'KI korrigiert alle Aufgaben…'} note={phase === 'loading' && usesClaude ? undefined : 'Das kann 10–20 Sekunden dauern'} />
+            {phase === 'loading' && usesClaude && <ClaudeWaitNote compact />}
           </div>
         )}
 

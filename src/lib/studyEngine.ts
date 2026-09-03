@@ -17,8 +17,11 @@ export function resolveEngine(args: {
   isPro: boolean
   claudeTrialUsed: boolean
   useTrial?: boolean
+  /** Pro-Nutzer-Schalter (profile.claudeEnabled). Nur `false` schaltet ab —
+   *  undefined/true heißt an. Greift nur für Pro; die Kostprobe ist davon unberührt. */
+  claudePref?: boolean
 }): EngineOpts {
-  if (args.isPro) return { engine: 'claude' }
+  if (args.isPro) return args.claudePref === false ? { engine: 'gemini' } : { engine: 'claude' }
   if (!args.claudeTrialUsed && args.useTrial) return { engine: 'claude', trial: true }
   return { engine: 'gemini' }
 }
