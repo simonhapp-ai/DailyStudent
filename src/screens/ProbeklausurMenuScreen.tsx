@@ -10,13 +10,7 @@ import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Banner } from '../components/ui/Banner'
 import { zurueckZiel } from '../lib/appMode'
-
-interface ProbeklausurPrefill {
-  subjectId: string
-  subjectName: string
-  topics: string[]
-  sourceNoteIds: string[]
-}
+import type { ProbeklausurPrefill } from '../types'
 
 // Die vier Klausurarten sind Inhaltskategorien, genau wie die vier Fachgruppen —
 // deshalb tragen sie DEREN Töne statt eines eigenen Farbvokabulars. Mint bleibt

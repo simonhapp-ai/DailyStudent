@@ -462,9 +462,17 @@ ${MATERIAL_FORMAT_SPEC}
 
 Antworte NUR mit: {"materials":[ … ]}`
 
+/** Inhaltliche Basis für Material + Aufgaben, wenn die Klausur aus einem
+ *  Lernzettel heraus gestartet wurde. Leer → kein Block. */
+function examContextBlock(contextText?: string): string {
+  if (!contextText || !contextText.trim()) return ''
+  return `\nINHALTLICHE BASIS — der Schüler hat dazu einen Lernzettel erstellt. Greife dessen Begriffe, Schwerpunkte, Definitionen und Beispiele auf; Material und Aufgaben sollen genau dazu passen:\n"""\n${contextText.slice(0, 3500).trim()}\n"""\n`
+}
+
 export async function generateExamMaterials(
   subject: string, subjectId: string, topic: string,
   kcData: KcSubjectData | undefined, opts: EngineOpts | undefined,
+  contextText?: string,
 ): Promise<ProbeklausurMaterial[] | null> {
   void subjectId
   if (opts?.engine !== 'claude') return null
@@ -472,7 +480,7 @@ export async function generateExamMaterials(
   try {
     const raw = await claudeFetch(
       EXAM_MATERIAL_SYSTEM,
-      `Fach: ${subject} | Thema: ${topic}${kcBlock}\n\nErzeuge die Materialien als JSON.`,
+      `Fach: ${subject} | Thema: ${topic}${kcBlock}\n${examContextBlock(contextText)}\nErzeuge die Materialien als JSON.`,
       'claude_probeklausur',
       // 8000: ein beschriftetes Schema-SVG allein sind ~2k Tokens, dazu 1–2 weitere
       // Materialien + content-Text — 4000 lief mitten im JSON aus ("expected }").
@@ -494,7 +502,7 @@ function givenMaterialsHint(mats: ProbeklausurMaterial[]): string {
   return `MATERIALIEN SIND BEREITS ERSTELLT — erzeuge sie NICHT neu, gib "materials":[] zurück. Vorhandene Materialien: ${list}. Schreibe nur "tasks", die per "materialRefs" auf diese IDs verweisen.`
 }
 
-export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
+export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData, contextText?: string, opts?: EngineOpts): Promise<GeneratedExam> {
   const isMath = subjectId === 'mathematik'
   const isHumanities = [
     'deutsch', 'englisch', 'franzoesisch', 'latein', 'spanisch', 'russisch', 'italienisch',
@@ -530,20 +538,20 @@ export async function generateMode1Exam(subject: string, subjectId: string, topi
       ? `{"id":"M1","title":"...","type":"text","kind":"source","content":"...","citation":{"author":"...","year":"..."}}`
       : `{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}}`
   // AFB I hat kein Material → kein Claude-Aufruf. Ab AFB II ggf. Claude-Material.
-  const preMaterials = afb === 'I' ? null : await generateExamMaterials(subject, subjectId, topic, kcData, opts)
+  const preMaterials = afb === 'I' ? null : await generateExamMaterials(subject, subjectId, topic, kcData, opts, contextText)
   const matHint = preMaterials ? `${givenMaterialsHint(preMaterials)}\n\n` : ''
   const materialsSkeleton = afb === 'I' || preMaterials ? '[]' : `[${matSkeletonObj}]`
   const materialRefsSkeleton = afb === 'I' ? '[]' : '["M1"]'
 
   const raw = await examFetch(GENERATION_SYSTEM,
-    `${matHint}Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
+    `${matHint}Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}${examContextBlock(contextText)}
 
 JSON: {"materials":${materialsSkeleton},"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":${materialRefsSkeleton}}],"totalBE":8}`,
     'probeklausur_other', 0.6)
   return parseExam(raw, subject, subjectId, topic, 1, preMaterials)
 }
 
-export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
+export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, contextText?: string, opts?: EngineOpts): Promise<GeneratedExam> {
   const fachHinweis: Record<string, string> = {
     biologie: '1 Komplex, Teilaufgaben 1.1–1.4, ~35 BE. M1="kind":"table" (Messdaten) oder "kind":"text", M2="kind":"chart" oder "kind":"svg" (Schema).',
     physik: '1 Komplex, Teilaufgaben 1.1–1.5, ~50 BE. M1="kind":"svg" (Versuchsaufbau), M2="kind":"chart" (Messreihe als Zahlen).',
@@ -553,21 +561,21 @@ export async function generateMode2Exam(subject: string, subjectId: string, topi
   const hinweis = fachHinweis[subjectId] ?? '1 Komplex, 3–5 Teilaufgaben, AFB I→II→III, 2–3 Materialien, ~45 BE.'
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
-  const preMaterials = await generateExamMaterials(subject, subjectId, topic, kcData, opts)
+  const preMaterials = await generateExamMaterials(subject, subjectId, topic, kcData, opts, contextText)
   const matHint = preMaterials ? `${givenMaterialsHint(preMaterials)}\n\n` : ''
   const matSkeleton = preMaterials
     ? '[]'
     : '[{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}},{"id":"M2","title":"...","type":"text","kind":"text","content":"..."}]'
 
   const raw = await examFetch(GENERATION_SYSTEM,
-    `${matHint}Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
+    `${matHint}Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}${examContextBlock(contextText)}
 
 JSON: {"materials":${matSkeleton},"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
     'probeklausur_full', 0.55)
   return parseExam(raw, subject, subjectId, topic, 2, preMaterials)
 }
 
-export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, opts?: EngineOpts): Promise<GeneratedExam> {
+export async function generateMode3Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, contextText?: string, opts?: EngineOpts): Promise<GeneratedExam> {
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
   const isHumanities = [
@@ -591,12 +599,12 @@ Aufg.3 AFB III 8–12 BE: Erörtern / Stellungnahme / Urteil über das Material 
 Aufg.2 AFB II 10–12 BE: Material direkt auswerten + Fachwissen verknüpfen (M1+M2).
 Aufg.3 AFB III 8–10 BE: Über Material hinaus (Hypothese, Bewertung, Stellungnahme).`
 
-  const preMaterials = await generateExamMaterials(subject, subjectId, topic, kcData, opts)
+  const preMaterials = await generateExamMaterials(subject, subjectId, topic, kcData, opts, contextText)
   const matHint = preMaterials ? `${givenMaterialsHint(preMaterials)}\n\n` : ''
   const matSkeleton = preMaterials ? '[]' : `[${m1Skeleton}]`
 
   const raw = await examFetch(GENERATION_SYSTEM,
-    `${matHint}Fach: ${subject} | Thema: ${topic} | Modus: Materialklausur${kcBlock}
+    `${matHint}Fach: ${subject} | Thema: ${topic} | Modus: Materialklausur${kcBlock}${examContextBlock(contextText)}
 ${preMaterials ? '' : `Materialien: ${materialSpec}\n`}${taskSpec}
 
 JSON: {"materials":${matSkeleton},"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
@@ -604,10 +612,10 @@ JSON: {"materials":${matSkeleton},"tasks":[{"id":"t1","label":"1","afb":"I","ope
   return parseExam(raw, subject, subjectId, topic, 3, preMaterials)
 }
 
-export async function generateMode4Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
+export async function generateMode4Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData, contextText?: string): Promise<GeneratedExam> {
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
   const raw = await examFetch(GENERATION_SYSTEM,
-    `Fach: ${subject} | Thema: ${topic} | Modus: Ohne Material (alles aus dem Kopf)${kcBlock}
+    `Fach: ${subject} | Thema: ${topic} | Modus: Ohne Material (alles aus dem Kopf)${kcBlock}${examContextBlock(contextText)}
 Aufg.1 AFB I 4–8 BE: Reproduktion ohne Material.
 Aufg.2 AFB II 8–12 BE: Transfer OHNE Material — Vergleich, Szenario, oder "an einem selbst gewählten Beispiel".
 Aufg.3 AFB III 8–10 BE: Argumentative Beurteilung/Erörterung ohne Material.

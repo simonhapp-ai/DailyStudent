@@ -217,6 +217,18 @@ export interface GeneratedExam {
   totalBE: number
 }
 
+/** Übergabe aus einem Lernzettel (o. ä.) in den Probeklausur-Generator: Fach,
+ *  Thema UND Inhalt sind schon da — der Nutzer muss nichts erneut eingeben. */
+export interface ProbeklausurPrefill {
+  subjectId: string
+  subjectName: string
+  topics: string[]
+  sourceNoteIds: string[]
+  lernzettelId?: string
+  /** Inhalt des Lernzettels als KI-Kontext für Material + Aufgaben. */
+  contextText?: string
+}
+
 export interface TaskCorrection {
   taskId: string
   errors: string[]

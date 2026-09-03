@@ -11,7 +11,7 @@ import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode4Exam, correctExam } from '../lib/gemini';
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
-import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
+import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur, ProbeklausurPrefill } from '../types'
 import { AFB_PILL, npMarke } from '../lib/afb'
 import { zurueckZiel } from '../lib/appMode'
 
@@ -109,6 +109,7 @@ export function ProbeklausurMode4Screen() {
   const navigate = useNavigate()
   const location = useLocation()
   const resume = (location.state as { resume?: InProgressProbeklausur } | null)?.resume ?? null
+  const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
   const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, appConfig } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
@@ -117,8 +118,8 @@ export function ProbeklausurMode4Screen() {
   const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
 
   const [phase, setPhase] = useState<Phase>(resume ? 'exam' : 'setup')
-  const [subjectId, setSubjectId] = useState(resume?.subjectId ?? displaySubjects[0]?.id ?? '')
-  const [topic, setTopic] = useState(resume?.topic ?? '')
+  const [subjectId, setSubjectId] = useState(resume?.subjectId ?? prefill?.subjectId ?? displaySubjects[0]?.id ?? '')
+  const [topic, setTopic] = useState(resume?.topic ?? prefill?.topics[0] ?? '')
   const [exam, setExam] = useState<GeneratedExam | null>(resume?.exam ?? null)
   const [answers, setAnswers] = useState<Record<string, string>>(resume?.userAnswers ?? {})
   const [correction, setCorrection] = useState<ExamCorrection | null>(null)
@@ -134,7 +135,7 @@ export function ProbeklausurMode4Screen() {
     setError(null)
     setPhase('loading')
     try {
-      const generated = await generateMode4Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined)
+      const generated = await generateMode4Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined, prefill?.contextText)
       setExam(generated)
       setAnswers({})
       inProgressIdRef.current = `ip-4-${subjectId}-${Date.now()}`
@@ -223,6 +224,14 @@ export function ProbeklausurMode4Screen() {
 
         {phase === 'setup' && (
           <div className="space-y-5">
+            {prefill && (
+              <Banner tone="info">
+                <span className="font-semibold">Aus deinem Lernzettel</span>
+                <span className="block text-text-secondary mt-0.5">
+                  Fach und Thema sind gesetzt, die KI baut die Aufgaben auf dem Lernzettel-Inhalt auf. Du kannst unten noch anpassen.
+                </span>
+              </Banner>
+            )}
             <div>
               <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-2.5">Fach</p>
               <div className="flex flex-wrap gap-2">

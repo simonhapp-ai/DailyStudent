@@ -16,16 +16,9 @@ import { ProModal } from '../components/ui/ProModal'
 import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
 import { ExamMaterialCard } from '../components/probeklausur/ExamMaterialCard'
 import { renderMathSegments } from '../lib/mathSegments'
-import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
+import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur, ProbeklausurPrefill } from '../types'
 import { AFB_PILL, npMarke } from '../lib/afb'
 import { zurueckZiel } from '../lib/appMode'
-
-interface ProbeklausurPrefill {
-  subjectId: string
-  subjectName: string
-  topics: string[]
-  sourceNoteIds: string[]
-}
 
 // ── Shared helpers (same as Mode 1, duplicated to keep screens self-contained)
 
@@ -196,7 +189,7 @@ export function ProbeklausurMode2Screen() {
     setError(null)
     setPhase('loading')
     try {
-      const generated = await generateMode2Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined, examEngine)
+      const generated = await generateMode2Exam(selectedSubject?.name ?? subjectId, subjectId, topic.trim(), getKc(subjectId) ?? undefined, prefill?.contextText, examEngine)
       setExam(generated)
       setAnswers({})
       inProgressIdRef.current = `ip-2-${subjectId}-${Date.now()}`
@@ -342,6 +335,14 @@ export function ProbeklausurMode2Screen() {
         {/* SETUP */}
         {phase === 'setup' && (
           <div className="space-y-5">
+            {prefill && (
+              <Banner tone="info">
+                <span className="font-semibold">Aus deinem Lernzettel</span>
+                <span className="block text-text-secondary mt-0.5">
+                  Fach und Thema sind gesetzt, die KI baut die Klausur auf dem Lernzettel-Inhalt auf. Du kannst unten noch anpassen.
+                </span>
+              </Banner>
+            )}
             <div>
               <p className="text-text-muted text-[11px] font-semibold uppercase tracking-wide mb-2.5">Fach</p>
               <div className="flex flex-wrap gap-2">

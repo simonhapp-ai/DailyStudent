@@ -341,8 +341,10 @@ export function LernzettelScreen() {
                 prefill: {
                   subjectId: activeLz.subjectId,
                   subjectName: activeLz.subjectName,
-                  topics: activeLz.selectedTopics,
+                  topics: activeLz.selectedTopics.length > 0 ? activeLz.selectedTopics : [activeLz.title],
                   sourceNoteIds: activeLz.sourceNoteIds,
+                  lernzettelId: activeLz.id,
+                  contextText: activeLz.content.slice(0, 4000),
                 },
               },
             })}
@@ -359,7 +361,7 @@ export function LernzettelScreen() {
               </div>
               <div>
                 <p className="text-[14px] font-semibold text-text-primary">Probeklausur erstellen</p>
-                <p className="text-[11px] text-text-muted">Mit Themen dieses Lernzettels als Basis</p>
+                <p className="text-[11px] text-text-muted">Fach, Thema und Inhalt werden übernommen</p>
               </div>
             </div>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-text-muted shrink-0" strokeLinecap="round" strokeLinejoin="round">
