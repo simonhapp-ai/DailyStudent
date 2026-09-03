@@ -143,7 +143,10 @@ async function handler(request: Request): Promise<Response> {
   })
   if (!limitRes || !limitRes[0]) return fallback('check_claude_limit RPC null (migration 019 not applied?)')
   const { allowed, month_spend } = limitRes[0]
-  if (!allowed) return fallback('daily bucket limit reached')
+  // Test-Account (Allowlist) hat kein Tageslimit — sonst blockieren ein paar
+  // Fehlversuche beim Testen sofort das 5/Tag- bzw. 2/Tag-Kontingent.
+  const isAllowlisted = PRO_TEST_ALLOWLIST.includes(user.email)
+  if (!allowed && !isAllowlisted) return fallback('daily bucket limit reached')
   if (Number(month_spend) >= MONTHLY_CAP_EUR) return fallback(`monthly cap: spent ${month_spend} EUR`)
   if (wantsTrial && Number(month_spend) >= TRIAL_STOP_EUR) return fallback(`trial stopped: spent ${month_spend} EUR`)
 
@@ -193,6 +196,10 @@ async function handler(request: Request): Promise<Response> {
   ) / 1_000_000
   console.log('[claude tokens]', bucket, modelStr || '?', u, `~${eur.toFixed(4)} EUR`)
   void rpc(token, 'add_claude_spend', { p_month: month, p_eur: eur })
+  // Tageszähler erst JETZT hochzählen — nach einem erfolgreichen, abgerechneten
+  // Call. Timeouts / JSON-Fehler / Refusals / Gemini-Fallbacks verbrauchen so kein
+  // Kontingent mehr (brauchte Migration 020). Allowlist zählt gar nicht mit.
+  if (!isAllowlisted) void rpc(token, 'bump_claude_usage', { p_user_id: user.id, p_bucket: bucket })
   if (wantsTrial) void rpc(token, 'mark_claude_trial_used', { p_user_id: user.id })
 
   return J({ status: 200, data })
