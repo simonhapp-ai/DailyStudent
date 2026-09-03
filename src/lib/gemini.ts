@@ -240,7 +240,7 @@ async function examFetch(
     // exam-generation test, counted against maxOutputTokens) — thinkingLevel 'low' keeps this
     // fast and predictable, matching how these prompts were originally tuned for a non-reasoning
     // model. gemini-3.1-flash-lite has no such overhead by default, so it's left alone below.
-    // 8192 war zu knapp: ein Lernzettel (1500–2500 Wörter) + figures + JSON-Overhead +
+    // 8192 war zu knapp: ein Lernzettel (1200–1800 Wörter) + figures + JSON-Overhead +
     // ~600 verdeckte "thought"-Tokens lief mitten im content-String aus → "Unterminated
     // string" beim Parsen. Flash rechnet nur echte Output-Tokens ab, die Obergrenze ist
     // reiner Puffer.
@@ -697,12 +697,13 @@ OUTPUT-FORMAT (STRIKT):
 
 TIEFE:
 - Kein oberflächlicher Überblick — jeder in den Smart Notes oder gewählten Themen vorkommende Fachbegriff wird tatsächlich erklärt, nicht nur genannt.
-- Ziel-Länge 1500–2500 Wörter (Ausnahme: Stichpunkte-Modus, siehe unten) — lieber gründlich als kurz.
+- Ziel-Länge 1200–1800 Wörter (Ausnahme: Stichpunkte-Modus, siehe unten) — dicht und präzise, keine Füllsätze und keine Wiederholungen. Ein Lernzettel soll den Schüler nicht überwältigen: lieber das Wesentliche klar als jedes Detail.
 - Bei mathematischen/naturwissenschaftlichen Themen: Herleitungen zeigen, nicht nur Endformeln nennen, wo sinnvoll auch ein Rechenbeispiel einbauen.
 - Bei Textfächern/Gesellschaftswissenschaften: Zusammenhänge, Ursachen/Wirkungen, unterschiedliche Positionen wo fachlich relevant.
 
 VISUALS (optional, sehr sparsam):
 - "figures": client-gerenderte Abbildungen aus Daten (Tabelle / Diagramm / schematisches SVG) — bevorzugt, weil scharf und kostenfrei. Max. 2 Einträge. Jeder Eintrag: {"kind":"table"|"chart"|"svg","afterHeading":"Exakter Text einer ##/### Überschrift aus content","title":"...","alt":"kurze Beschreibung", …je nach kind das passende Feld (table / chart / svg)}. Format exakt wie im MATERIALFORMAT unten.
+- PLATZIERUNG: mindestens eine Abbildung soll mitten im Lernzettel stehen, nicht erst am Ende — wähle als "afterHeading" eine Überschrift aus dem MITTLEREN Drittel des content (nicht die erste, nicht "## Klausurrelevanz"). So bricht die Abbildung den Text an einer sinnvollen Stelle auf.
 - "images": [] IMMER leer lassen (der Rasterbild-Generator ist derzeit nicht verfügbar).
 - "afterHeading" muss wortwörtlich einer Überschrift aus content entsprechen, sonst kann die Abbildung nicht platziert werden. Bei rein textlichen/abstrakten Themen "figures": [] lassen.
 
@@ -715,7 +716,7 @@ const LERNZETTEL_MODUS_PROMPTS: Record<LernzettelModus, string> = {
   faktisch: `MODUS: Faktisch-präzise. Ziel: Der Schüler soll Textbausteine direkt in einer Klausur verwenden können. Jeder Fachbegriff wird vollständig und fachlich korrekt definiert, mit exakter Terminologie — auf dem Niveau, das ein Prüfer erwartet. Sprachlich anspruchsvoll und druckreif formuliert, keine umgangssprachlichen Vereinfachungen. Wo es mehrere gängige Definitionen gibt, die prüfungsrelevanteste wählen und kurz begründen.`,
   bildlich: `MODUS: Bildlich-anschaulich. Ziel: Jemand, der das Thema noch nie gehört hat, versteht es wirklich. Nutze durchgehend Alltagsvergleiche, Analogien und bildhafte Sprache statt trockener Definitionen (z. B. "Stell dir vor…", "Das funktioniert ähnlich wie…"). Fachbegriffe werden eingeführt, aber sofort in einfache Worte übersetzt. Kurze, klare Sätze, wenig Schachtelsätze.`,
   grundlagen: `MODUS: Von Grund auf. Ziel: Nichts wird vorausgesetzt. Beginne mit einem Abschnitt "## Das musst du vorher wissen", der die Voraussetzungen klärt, die man kennen muss, um das eigentliche Thema zu verstehen (auch wenn das nicht Teil der ursprünglichen Notizen war) — und baue danach systematisch Schritt für Schritt zum eigentlichen Thema auf. Jeder Schritt baut erkennbar auf dem vorigen auf.`,
-  stichpunkte: `MODUS: Stichpunkte. Ziel: Schnelles Wiederholen kurz vor der Klausur. Überwiegend "- "-Aufzählungen statt Fließtext, nur die wichtigsten Fakten, Definitionen und Zusammenhänge — keine ausschweifenden Erklärungen. Trotzdem inhaltlich vollständig für das Thema. Ziel-Länge hier kürzer: ca. 500–900 Wörter in kompakten Stichpunkten statt der sonst üblichen 1500–2500.`,
+  stichpunkte: `MODUS: Stichpunkte. Ziel: Schnelles Wiederholen kurz vor der Klausur. Überwiegend "- "-Aufzählungen statt Fließtext, nur die wichtigsten Fakten, Definitionen und Zusammenhänge — keine ausschweifenden Erklärungen. Trotzdem inhaltlich vollständig für das Thema. Ziel-Länge hier kürzer: ca. 500–900 Wörter in kompakten Stichpunkten statt der sonst üblichen 1200–1800.`,
 }
 
 export async function generateLernzettel(input: LernzettelInput, opts?: EngineOpts): Promise<LernzettelOutput> {
