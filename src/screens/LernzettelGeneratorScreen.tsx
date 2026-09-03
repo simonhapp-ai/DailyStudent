@@ -8,10 +8,10 @@ import { Header } from '../components/ui/Header'
 import { MathRenderer } from '../components/ui/MathRenderer'
 import { ModusRegler, type ModusOption } from '../components/ui/ModusRegler'
 import { ProModal } from '../components/ui/ProModal'
+import { ClaudeWaitNote } from '../components/ui/ClaudeWaitNote'
 import { useUser } from '../context/UserContext'
-import { generateLernzettel, generateLernzettelVisual } from '../lib/gemini'
+import { generateLernzettel } from '../lib/gemini'
 import { resolveEngine } from '../lib/studyEngine'
-import { saveLocalAsset } from '../lib/noteStorage'
 import { resolveSubjectInfo, getTopicPlaceholder } from '../data/subjectInfo'
 import type { Lernzettel, LernzettelImage, LernzettelModus } from '../types'
 import { zurueckZiel } from '../lib/appMode'
@@ -71,8 +71,10 @@ export function LernzettelGeneratorScreen() {
   const [selectedNoteIds, setSelectedNoteIds] = useState<string[]>([])
   const [customTopicInput, setCustomTopicInput] = useState('')
   const [showNoNotesWarning, setShowNoNotesWarning] = useState(false)
-  const [withImages, setWithImages] = useState(false)
   const [error, setError] = useState('')
+
+  // Lernzettel läuft für Pro über Claude Sonnet (langsam, ~1–2 Min) — sonst Gemini (schnell).
+  const usesClaude = resolveEngine({ isPro, claudeTrialUsed }).engine === 'claude'
 
   const availableSubjectIds = profile?.faecher ?? []
 
@@ -143,18 +145,9 @@ export function LernzettelGeneratorScreen() {
         kcData: kcData ?? undefined,
       }, resolveEngine({ isPro, claudeTrialUsed }))
 
+      // Rasterbilder sind derzeit deaktiviert (Gemini-Bildkontingent = 0). Abbildungen
+      // liefert jetzt "figures" (client-gerendertes SVG/Tabelle) direkt aus dem Modell.
       const images: LernzettelImage[] = []
-      if (withImages && output.images.length > 0) {
-        for (const imgPrompt of output.images) {
-          try {
-            const dataUrl = await generateLernzettelVisual(imgPrompt.prompt)
-            const ref = await saveLocalAsset(dataUrl)
-            images.push({ ref, afterHeading: imgPrompt.afterHeading, alt: imgPrompt.alt })
-          } catch {
-            // Erklärbild fehlgeschlagen (z. B. Tageslimit) — Lernzettel bleibt trotzdem nutzbar
-          }
-        }
-      }
 
       const now = Date.now()
       const lz: Lernzettel = {
@@ -474,28 +467,6 @@ export function LernzettelGeneratorScreen() {
               )}
             </div>
 
-            {/* Erklärbilder toggle */}
-            <button
-              onClick={() => setWithImages((v) => !v)}
-              className="w-full bg-surface border border-border/60 rounded-card p-4 text-left press flex items-center gap-3"
-            >
-              <div className="flex-1 min-w-0">
-                <p className="text-[14px] font-semibold text-text-primary">Mit Erklärbildern <span className="text-[11px] font-normal text-text-muted">(Beta)</span></p>
-                <p className="text-[12px] text-text-muted mt-0.5 leading-snug">
-                  KI generiert bis zu 2 passende Diagramme/Bilder — kann die Erstellung etwas verlangsamen.
-                </p>
-              </div>
-              <div
-                className="w-11 h-6 rounded-full flex items-center px-0.5 shrink-0 transition-colors"
-                style={{ background: withImages ? G_LERNZETTEL : 'rgb(var(--color-border))' }}
-              >
-                <div
-                  className="w-5 h-5 rounded-full bg-white shadow transition-transform"
-                  style={{ transform: withImages ? 'translateX(20px)' : 'translateX(0)' }}
-                />
-              </div>
-            </button>
-
             {/* Error banner */}
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-card p-3">
@@ -593,7 +564,6 @@ export function LernzettelGeneratorScreen() {
                 {selectedNoteIds.length > 0
                   ? 'KI analysiert deine Smart Notes …'
                   : 'KI nutzt Kerncurriculum-Daten als Basis …'}
-                {withImages && ' Erklärbilder folgen im Anschluss …'}
               </p>
             </div>
             <div className="flex gap-1.5">
@@ -605,6 +575,7 @@ export function LernzettelGeneratorScreen() {
                 />
               ))}
             </div>
+            {usesClaude && <ClaudeWaitNote className="mt-2" />}
           </div>
         )}
       </div>

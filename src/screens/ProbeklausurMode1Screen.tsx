@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo } from 'react'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { WorkingState } from '../components/ui/EmptyState'
+import { ClaudeWaitNote } from '../components/ui/ClaudeWaitNote'
 import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -131,6 +132,8 @@ export function ProbeklausurMode1Screen() {
   // Beta launch: AFB-Aufgabentrainer opened for free, incl. correction — see
   // migration 017_beta_mode_config.sql + ProbeklausurMenuScreen.
   const correctionUnlocked = isPro || appConfig.probeklausurAfbTrainerFree
+  // Korrektur läuft für Pro über Claude Sonnet (langsam, ~1–2 Min) — sonst Gemini.
+  const usesClaude = resolveEngine({ isPro, claudeTrialUsed }).engine === 'claude'
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
 
@@ -347,7 +350,10 @@ export function ProbeklausurMode1Screen() {
 
         {/* LOADING */}
         {(phase === 'loading' || phase === 'correcting') && (
-          <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert deine Aufgabe…' : 'KI korrigiert deine Antwort…'} note="Einen Moment Geduld" />
+          <div className="space-y-3">
+            <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert deine Aufgabe…' : 'KI korrigiert deine Antwort…'} note={phase === 'correcting' && usesClaude ? undefined : 'Einen Moment Geduld'} />
+            {phase === 'correcting' && usesClaude && <ClaudeWaitNote />}
+          </div>
         )}
 
         {/* EXAM */}

@@ -687,7 +687,8 @@ OUTPUT-FORMAT (STRIKT):
   - Zeilen die mit "Merke: " beginnen für die wirklich zentralen Merksätze (sparsam, nur 2–4 pro Lernzettel)
   - Zeilen die mit "- " beginnen für Aufzählungen (v. a. im Stichpunkte-Modus)
   - Leerzeilen zwischen Absätzen für Lesbarkeit
-  - Mathematische/naturwissenschaftliche Formeln IMMER als echtes LaTeX zwischen $...$ (inline) oder $$...$$ (eigene Zeile bei längeren Herleitungen) — z. B. $f'(x) = \\lim_{h \\to 0} \\frac{f(x+h)-f(x)}{h}$. Kein Unicode-Ersatz (kein x², kein √) — der Renderer kann echtes LaTeX darstellen.
+  - Mathematische/naturwissenschaftliche Formeln IMMER als echtes LaTeX zwischen $...$ (inline) oder $$...$$ (eigene Zeile bei längeren Herleitungen). Kein Unicode-Ersatz (kein x², kein √) — der Renderer kann echtes LaTeX darstellen.
+  - KRITISCH: "content" ist ein JSON-String. Jeder LaTeX-Backslash MUSS im JSON doppelt geschrieben werden, sonst ist die Antwort ungültiges JSON und unbrauchbar. Richtig: "$f'(x) = \\\\lim_{h \\\\to 0} \\\\frac{f(x+h)-f(x)}{h}$". Falsch: "$f'(x) = \\lim...". Gilt für ALLE Befehle: \\\\vec \\\\cdot \\\\alpha \\\\beta \\\\Delta \\\\sqrt \\\\int \\\\sum \\\\frac \\\\partial \\\\nabla \\\\times usw.
 - content endet immer mit einem Abschnitt "## Klausurrelevanz" mit den wichtigsten prüfungsrelevanten Punkten.
 
 TIEFE:

@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo } from 'react'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { WorkingState } from '../components/ui/EmptyState'
+import { ClaudeWaitNote } from '../components/ui/ClaudeWaitNote'
 import { Banner } from '../components/ui/Banner'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
@@ -110,6 +111,8 @@ export function ProbeklausurMode3Screen() {
   const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, appConfig } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
+  // Korrektur läuft für Pro über Claude Sonnet (langsam, ~1–2 Min) — sonst Gemini.
+  const usesClaude = resolveEngine({ isPro, claudeTrialUsed }).engine === 'claude'
 
   const userSubjects = subjects.filter((s) => profile?.faecher?.includes(s.id))
   const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
@@ -287,7 +290,10 @@ export function ProbeklausurMode3Screen() {
         )}
 
         {(phase === 'loading' || phase === 'correcting') && (
-          <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert Materialcluster…' : 'KI korrigiert alle Aufgaben…'} note="Einen Moment Geduld" />
+          <div className="space-y-3">
+            <WorkingState tone="klausur" title={phase === 'loading' ? 'KI generiert Materialcluster…' : 'KI korrigiert alle Aufgaben…'} note={phase === 'correcting' && usesClaude ? undefined : 'Einen Moment Geduld'} />
+            {phase === 'correcting' && usesClaude && <ClaudeWaitNote />}
+          </div>
         )}
 
         {phase === 'exam' && exam && (
