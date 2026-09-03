@@ -12,7 +12,9 @@
 //
 // "fallback" heißt: { status: 200, fallback: true } — der Client (src/lib/claude.ts wirft
 // ClaudeFallbackError, examFetch fängt es) generiert dann still über Gemini weiter.
-export const config = { maxDuration: 60 }
+// Fluid Compute erlaubt auf Hobby bis 300 s. Sonnet 5 braucht für Lernzettel /
+// Korrektur bei großem Output 60–150 s — das passt hier rein, ein 60-s-Limit nicht.
+export const config = { maxDuration: 300 }
 
 // Muss mit CLAUDE_BUCKET_LIMITS in src/lib/claude.ts übereinstimmen. Bewusst eng
 // (siehe Plan WS4.5): ein einzelner Extremnutzer soll die Marge nicht auffressen.
@@ -31,10 +33,10 @@ const PRICE_BY_MODEL: Record<string, { input: number; output: number; cacheRead:
 const MONTHLY_CAP_EUR = 20
 const TRIAL_STOP_EUR = 15   // ab hier keine neuen Gratis-Kostproben mehr (Pro hat Vorrang)
 
-// Vercel Hobby killt Functions bei 60 s. Wir brechen den Anthropic-Call vorher
-// selbst ab und fallen sauber auf Gemini zurück, statt in den Plattform-Kill zu
-// laufen. Der 10-s-Puffer ist fürs Kosten-Logging danach.
-const ANTHROPIC_TIMEOUT_MS = 50_000
+// Selbst-Abbruch vor Vercels maxDuration (300 s), damit wir sauber auf Gemini
+// zurückfallen statt in den Plattform-Kill zu laufen. Puffer für die Supabase-
+// Roundtrips + das Kosten-Logging danach.
+const ANTHROPIC_TIMEOUT_MS = 240_000
 
 // Gleiche Liste wie PRO_TEST_ALLOWLIST in src/context/UserContext.tsx.
 const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
@@ -163,7 +165,7 @@ async function handler(request: Request): Promise<Response> {
     })
   } catch (e) {
     clearTimeout(timer)
-    if ((e as { name?: string })?.name === 'AbortError') return fallback('anthropic timeout (>50s)')
+    if ((e as { name?: string })?.name === 'AbortError') return fallback('self-timeout (>240s) — Sonnet zu langsam')
     return errBody(502, `Claude nicht erreichbar: ${String(e)}`)
   }
   clearTimeout(timer)
