@@ -60,7 +60,11 @@ async function isProbeklausurMode2Paused(): Promise<boolean> {
   }
 }
 
-async function getSupabaseUser(token: string): Promise<{ id: string } | null> {
+// Gleiche Liste wie PRO_TEST_ALLOWLIST in src/context/UserContext.tsx — für diese
+// Emails ist die Mode-2-Beta-Pause serverseitig ausgenommen (Test der Claude-Schiene).
+const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
+
+async function getSupabaseUser(token: string): Promise<{ id: string; email: string } | null> {
   const supabaseUrl = process.env.VITE_SUPABASE_URL
   const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
   if (!supabaseUrl || !supabaseAnonKey) return null
@@ -72,8 +76,8 @@ async function getSupabaseUser(token: string): Promise<{ id: string } | null> {
       },
     })
     if (!res.ok) return null
-    const data = await res.json() as { id?: string }
-    return data.id ? { id: data.id } : null
+    const data = await res.json() as { id?: string; email?: string }
+    return data.id ? { id: data.id, email: (data.email ?? '').toLowerCase().trim() } : null
   } catch {
     return null
   }
@@ -154,7 +158,7 @@ async function handler(request: Request): Promise<Response> {
       })
     }
 
-    if (bucket === 'probeklausur_full' && await isProbeklausurMode2Paused()) {
+    if (bucket === 'probeklausur_full' && !PRO_TEST_ALLOWLIST.includes(user.email) && await isProbeklausurMode2Paused()) {
       return new Response(JSON.stringify({
         geminiStatus: 403,
         geminiData: { error: { message: 'Dieser Modus ist während der Beta-Phase pausiert.' } },

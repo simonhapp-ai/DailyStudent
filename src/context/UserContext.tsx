@@ -1398,8 +1398,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // provider's stored email would otherwise silently fail this check with no
   // visible error, just the beta view rendering as if the allowlist did
   // nothing at all.
+  // Allowlist: Käufe frei UND die pausierten Probeklausur-Modi 2/3/4 offen — nur
+  // für diese Emails, für alle anderen bleibt die Beta-Pause. (Zum Testen der
+  // Claude-Schiene auf der vollständigen Klausur; serverseitiger Gemini-Block
+  // für Mode 2 ist in api/gemini.ts ebenfalls allowlist-ausgenommen.)
   const effectiveAppConfig: AppConfig = PRO_TEST_ALLOWLIST.includes((authUser?.email ?? '').toLowerCase().trim())
-    ? { ...appConfig, proPurchasesEnabled: true }
+    ? { ...appConfig, proPurchasesEnabled: true, probeklausurMode2Enabled: true, probeklausurMode3Enabled: true, probeklausurMode4Enabled: true }
     : appConfig
 
   return (
