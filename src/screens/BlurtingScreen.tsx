@@ -592,7 +592,7 @@ export function BlurtingScreen() {
             style={{ paddingTop: 'max(54px, calc(env(safe-area-inset-top, 0px) + 16px))', paddingBottom: '12px' }}
           >
             <button onClick={handleNewTopic} className="text-text-primary text-[14px] font-medium press-sm">
-              Neues Thema
+              Zurück
             </button>
             {selectedSubject && selected && <TopicPill label={selected.title} color={selectedSubject.color} />}
           </div>

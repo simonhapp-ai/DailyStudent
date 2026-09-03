@@ -306,14 +306,19 @@ function parseExam(raw: unknown, subject: string, subjectId: string, topic: stri
 
 export async function generateMode1Exam(subject: string, subjectId: string, topic: string, afb: 'I' | 'II' | 'III', kcData?: KcSubjectData): Promise<GeneratedExam> {
   const isMath = subjectId === 'mathematik'
+  const isHumanities = [
+    'deutsch', 'englisch', 'franzoesisch', 'latein', 'spanisch', 'russisch', 'italienisch',
+    'griechisch', 'japanisch', 'geschichte', 'politik', 'philosophie', 'ethik', 'werteUndNormen',
+    'religion', 'seminarfach',
+  ].includes(subjectId)
 
   const materialRule = afb === 'I'
     ? 'Kein Material (leeres Array).'
     : afb === 'II'
       ? isMath
-        ? 'Optional: 1 Sachkontext (kurze Textbeschreibung einer realen Situation, KEINE Messreihe).'
+        ? 'Genau 1 Sachkontext (kurze Textbeschreibung einer realen Situation, KEINE Messreihe).'
         : 'Genau 1 passendes Material (Tabelle oder Text).'
-      : 'Optional 1 Material wenn nötig, sonst leer.'
+      : 'Genau 1 Material, das die Transferaufgabe trägt.'
 
   const operatorHint = isMath
     ? afb === 'I'
@@ -326,10 +331,19 @@ export async function generateMode1Exam(subject: string, subjectId: string, topi
   const beRange = afb === 'I' ? '4–8' : '8–12'
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
 
+  // AFB II/III MÜSSEN ein Material tragen — sonst verweist der Aufgabentext auf
+  // „das Material", das im leeren Skelett dann fehlt. Ab AFB II wird das Skelett
+  // deshalb befüllt (Typ fachabhängig).
+  const materialType = isMath || isHumanities ? 'text' : 'tabelle'
+  const materialsSkeleton = afb === 'I'
+    ? '[]'
+    : `[{"id":"M1","title":"...","type":"${materialType}","content":"..."}]`
+  const materialRefsSkeleton = afb === 'I' ? '[]' : '["M1"]'
+
   const raw = await examFetch(GENERATION_SYSTEM,
     `Fach: ${subject} | Thema: ${topic} | AFB: ${afb} | Material: ${materialRule} | BE: ${beRange}${operatorHint ? `\n${operatorHint}` : ''}${kcBlock}
 
-JSON: {"materials":[],"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":[]}],"totalBE":8}`,
+JSON: {"materials":${materialsSkeleton},"tasks":[{"id":"t1","label":"1","afb":"${afb}","operator":"...","text":"1 Satz mit Operator vorne + BE am Ende.","be":8,"materialRefs":${materialRefsSkeleton}}],"totalBE":8}`,
     'probeklausur_other')
   return parseExam(raw, subject, subjectId, topic, 1)
 }

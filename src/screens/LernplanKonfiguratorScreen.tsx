@@ -269,9 +269,15 @@ export function LernplanKonfiguratorScreen() {
 
   return (
     <div className="flex flex-col min-h-dvh bg-background max-w-lg mx-auto">
-      {/* Progress bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-border z-10 max-w-lg mx-auto">
-        <div className="h-full bg-accent transition-all duration-300" style={{ width: `${progress}%` }} />
+      {/* Progress bar — die Safe-Area-Zone mitfärben, sonst sitzt der 1px-Balken
+          unter der Dynamic Island und ist unsichtbar. */}
+      <div
+        className="fixed inset-x-0 top-0 z-10 bg-border"
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+      >
+        <div className="max-w-lg mx-auto h-1 bg-border">
+          <div className="h-full bg-accent transition-all duration-300" style={{ width: `${progress}%` }} />
+        </div>
       </div>
 
       {/* Header */}

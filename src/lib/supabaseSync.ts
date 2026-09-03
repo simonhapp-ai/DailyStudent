@@ -7,7 +7,7 @@ import type {
   UserFolder, UserNote, GeneratedSmartNote, FlashCard,
   Lernzettel, SavedProbeklausur, Lernplan, AppStats, AbiHalbjahr, AbiPruefung,
 } from '../types'
-import type { UserProfile, PersonalEntry, StandaloneHomeworkItem, AppTheme } from '../context/UserContext'
+import type { UserProfile, PersonalEntry, StandaloneHomeworkItem, AppTheme, KlausurTermin } from '../context/UserContext'
 
 // ─── SYNC QUEUE — track failed syncs for recovery ──────────────────────────
 
@@ -236,7 +236,11 @@ function mapProfile(r: Row, abiHalbjahreOverride?: AbiHalbjahr[] | null, abiPrue
     customFaecher: r.custom_faecher ?? undefined,
     zielnote: r.zielnote,
     folderSortMode: r.folder_sort_mode,
-    klausurtermine: r.klausurtermine ?? [],
+    // Alte Datensätze kennen nur `topic` (Einzelstring) — beim Laden auf `topics` auffüllen.
+    klausurtermine: ((r.klausurtermine ?? []) as KlausurTermin[]).map((k) => ({
+      ...k,
+      topics: k.topics && k.topics.length > 0 ? k.topics : (k.topic ? [k.topic] : []),
+    })),
     stundenplan: r.stundenplan,
     abiHalbjahre: abiHalbjahreOverride !== undefined ? abiHalbjahreOverride : r.abi_halbjahre,
     abiPruefungen: abiPruefungenOverride ?? undefined,
@@ -798,6 +802,13 @@ export async function syncSmartNote(userId: string, noteId: string, note: Genera
     console.warn('[Supabase] syncSmartNote', err)
     addToSyncQueue('syncSmartNote', { noteId, note })
   }
+}
+
+export async function deleteFlashCardsFromDB(userId: string, ids: string[]): Promise<void> {
+  if (ids.length === 0) return
+  try {
+    await supabase.from('flashcards').delete().eq('user_id', userId).in('id', ids)
+  } catch (err) { console.warn('[Supabase] deleteFlashCards', err) }
 }
 
 export async function syncFlashCardsBatch(userId: string, cards: FlashCard[]): Promise<void> {

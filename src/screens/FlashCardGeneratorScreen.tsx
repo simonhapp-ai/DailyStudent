@@ -63,7 +63,10 @@ export function FlashCardGeneratorScreen() {
           createdAt: new Date().toISOString(),
         }))
         saveFlashCards(cards)
-        navigate('/klausurmodus/lernen', { replace: true })
+        navigate('/klausurmodus/lernen', {
+          replace: true,
+          state: { openDeckId: noteId, createdCount: cards.length },
+        })
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Fehler beim Generieren')
         setStep('fach')
@@ -131,8 +134,15 @@ export function FlashCardGeneratorScreen() {
         allCards.push(...cards)
       }
 
-      saveFlashCards(allCards.slice(0, cardCount))
-      navigate('/klausurmodus/lernen')
+      const saved = allCards.slice(0, cardCount)
+      saveFlashCards(saved)
+      navigate('/klausurmodus/lernen', {
+        replace: true,
+        state: {
+          openDeckId: selectedNoteIds.length === 1 ? selectedNoteIds[0] : null,
+          createdCount: saved.length,
+        },
+      })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Fehler beim Generieren')
       setStep('method')
@@ -156,7 +166,10 @@ export function FlashCardGeneratorScreen() {
       createdAt: new Date().toISOString(),
     }))
     saveFlashCards(cards)
-    navigate('/klausurmodus/lernen')
+    navigate('/klausurmodus/lernen', {
+      replace: true,
+      state: { openDeckId: deckId, createdCount: cards.length },
+    })
   }
 
   const STEPS = ['Fach', 'Notizen', 'Methode']

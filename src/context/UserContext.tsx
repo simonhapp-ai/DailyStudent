@@ -11,7 +11,7 @@ import {
   syncFolder, syncFoldersBatch, deleteFoldersFromDB,
   syncNote, deleteNotesFromDB,
   syncSmartNote,
-  syncFlashCardsBatch,
+  syncFlashCardsBatch, deleteFlashCardsFromDB,
   syncLernzettel, deleteLernzettelFromDB,
   syncProbeklausur, deleteProbeklausurFromDB,
   syncLernplaeneBatch, deleteLernplanFromDB,
@@ -55,7 +55,9 @@ export interface PersonalEntry {
 export interface KlausurTermin {
   subjectId: string
   date: string
+  /** @deprecated Einzel-Thema — nur noch für Migration/Rückwärtskompatibilität. Neu: `topics`. */
   topic?: string
+  topics?: string[]
 }
 
 // Beta-launch feature flags, read from the `app_config` table (see migration
@@ -212,6 +214,8 @@ interface UserContextValue {
   deleteFolder: (folderId: string) => void
   saveToOhneFachFolder: (note: UserNote, generated?: GeneratedSmartNote) => void
   saveFlashCards: (newCards: FlashCard[]) => void
+  updateFlashCard: (cardId: string, patch: { front?: string; back?: string }) => void
+  deleteFlashCard: (cardId: string) => void
   addKlausurtermin: (termin: KlausurTermin) => void
   removeKlausurtermin: (subjectId: string, date: string) => void
   applyFaecherChanges: (newFaecher: string[], deletedFaecherIds: string[], newCustomFaecher?: Array<{ id: string; name: string; icon?: string }>) => void
@@ -939,7 +943,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const addKlausurtermin = (termin: KlausurTermin) => {
     if (!profile) return
-    const updated = { ...profile, klausurtermine: [...(profile.klausurtermine ?? []), termin] }
+    // Beide Felder schreiben: `topics` (neu, kanonisch) + `topic` (Übergangszeit,
+    // damit ältere App-Versionen den Termin nicht ohne Thema sehen).
+    const topics = termin.topics && termin.topics.length > 0 ? termin.topics : (termin.topic ? [termin.topic] : [])
+    const normalized: KlausurTermin = { ...termin, topics, topic: topics[0] }
+    const updated = { ...profile, klausurtermine: [...(profile.klausurtermine ?? []), normalized] }
     setProfile(updated)
     persist(updated, personalEntries, generatedNotes, userNotes, userFolders)
     if (authUser) void syncProfile(authUser.id, updated, theme, isPro)
@@ -960,6 +968,22 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setGeneratedFlashCards(updated)
     saveStorage({ ...loadStorage(), generatedFlashCards: updated })
     if (authUser) void syncFlashCardsBatch(authUser.id, updated)
+  }
+
+  const updateFlashCard = (cardId: string, patch: { front?: string; back?: string }) => {
+    const updated = generatedFlashCards.map((c) => (c.id === cardId ? { ...c, ...patch } : c))
+    setGeneratedFlashCards(updated)
+    saveStorage({ ...loadStorage(), generatedFlashCards: updated })
+    if (authUser) void syncFlashCardsBatch(authUser.id, updated.filter((c) => c.id === cardId))
+  }
+
+  const deleteFlashCard = (cardId: string) => {
+    const updated = generatedFlashCards.filter((c) => c.id !== cardId)
+    setGeneratedFlashCards(updated)
+    saveStorage({ ...loadStorage(), generatedFlashCards: updated })
+    // syncFlashCardsBatch ist nur Upsert — der Löschvorgang braucht einen echten
+    // Remote-Delete, sonst taucht die Karte beim nächsten Hydrate wieder auf.
+    if (authUser) void deleteFlashCardsFromDB(authUser.id, [cardId])
   }
 
   const saveLernzettel = (lz: Lernzettel) => {
@@ -1406,6 +1430,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
         applyFaecherChanges,
         saveToOhneFachFolder,
         saveFlashCards,
+        updateFlashCard,
+        deleteFlashCard,
         addKlausurtermin,
         removeKlausurtermin,
         completedHomeworkIds,

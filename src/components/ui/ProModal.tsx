@@ -96,7 +96,7 @@ interface ProModalProps {
 }
 
 export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }: ProModalProps) {
-  const { appConfig, authUser } = useUser()
+  const { appConfig, authUser, isPro } = useUser()
   const [plan, setPlan] = useState<'annual' | 'monthly'>('annual')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -119,6 +119,9 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
   }, [isOpen])
 
   if (!isOpen) return null
+  // Wer bereits Pro hat, darf nie einen Checkout sehen — egal über welchen der
+  // ProModal-Trigger er hier landet (Beta-Allowlist, versehentlicher Aufruf, …).
+  if (isPro) return null
 
   const content = featureContent[feature]
   const showTrialCopy = isNative && trialEligible && plan === 'monthly'

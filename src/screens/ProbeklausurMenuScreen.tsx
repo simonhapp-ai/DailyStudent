@@ -139,7 +139,12 @@ export function ProbeklausurMenuScreen() {
       navigate(mode.route, { state: prefill ? { prefill } : undefined })
       return
     }
-    if (mode.id !== 1 && modeEnabled[mode.id] === false) { setShowProModal(true); return }
+    // Pausierter Modus: zum Screen navigieren — der zeigt für alle (auch Pro/Allowlist)
+    // den nicht-verkäuferischen BetaPausedScreen, statt einen Checkout aufzumachen.
+    if (mode.id !== 1 && modeEnabled[mode.id] === false) {
+      navigate(mode.route, { state: prefill ? { prefill } : undefined })
+      return
+    }
     if (!isPro && mode.id !== 2) { setShowProModal(true); return }
     navigate(mode.route, { state: prefill ? { prefill } : undefined })
   }

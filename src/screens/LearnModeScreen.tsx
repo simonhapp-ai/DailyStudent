@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Progress } from '../components/ui/Progress'
 import { Icon } from '../components/ui/Icon'
 import { Tag } from '../components/ui/Tag'
 import { EmptyState } from '../components/ui/EmptyState'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { FlashCard } from '../components/learn/FlashCard'
 import { Header } from '../components/ui/Header'
 import { useUser } from '../context/UserContext'
@@ -13,7 +13,7 @@ import { resolveSubjectInfo } from '../data/subjectInfo'
 import type { FlashCard as FlashCardType } from '../types'
 
 
-type View = 'library' | 'session'
+type View = 'library' | 'deck' | 'session'
 
 interface Deck {
   noteId: string
@@ -31,8 +31,16 @@ export function LearnModeScreen() {
   const [activeDeck, setActiveDeck] = useState<Deck | null>(null)
   const [cardIndex, setCardIndex] = useState(0)
   const [knownCount, setKnownCount] = useState(0)
+  // Deck-Ansicht: gerade erstellte / zum Ansehen geöffnete Karten
+  const [createdCount, setCreatedCount] = useState<number | null>(null)
+  const [editingCardId, setEditingCardId] = useState<string | null>(null)
+  const [draftFront, setDraftFront] = useState('')
+  const [draftBack, setDraftBack] = useState('')
   const navigate = useNavigate()
-  const { generatedFlashCards, userNotes, profile, recordStudyDay, addCoins, showCoinToast } = useUser()
+  const location = useLocation()
+  const navState = location.state as { openDeckId?: string | null; createdCount?: number; expandNewest?: boolean } | null
+  const navConsumed = useRef(false)
+  const { generatedFlashCards, userNotes, profile, recordStudyDay, addCoins, showCoinToast, updateFlashCard, deleteFlashCard } = useUser()
 
   // ── Build decks ────────────────────────────────────────────────────────────
   const deckMap = generatedFlashCards.reduce<Record<string, FlashCardType[]>>((acc, card) => {
@@ -73,6 +81,28 @@ export function LearnModeScreen() {
     acc[key].decks.push(deck)
     return acc
   }, {})
+
+  // Aus dem Generator kommend: direkt die gerade erstellten Karten öffnen, statt
+  // im Hauptmenü zu landen. Einmal auswerten, dann den Navigations-State löschen.
+  useEffect(() => {
+    if (navConsumed.current || !navState) return
+    if (navState.openDeckId && decks.length === 0) return // auf Hydration warten
+    navConsumed.current = true
+    if (navState.openDeckId) {
+      const target = decks.find((d) => d.noteId === navState.openDeckId)
+      if (target) {
+        /* eslint-disable react-hooks/set-state-in-effect */
+        setActiveDeck(target)
+        setCreatedCount(navState.createdCount ?? null)
+        setView('deck')
+        /* eslint-enable react-hooks/set-state-in-effect */
+      }
+    }
+    // KI-Multinote (kein openDeckId): einfach im Hauptmenü landen — die neuen
+    // Sets stehen durch die createdAt-Sortierung ohnehin oben.
+    navigate('.', { replace: true, state: null })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decks.length])
 
   // ── Session controls ───────────────────────────────────────────────────────
   const sessionCards = activeDeck?.cards ?? []
@@ -149,6 +179,111 @@ export function LearnModeScreen() {
                 Weiß ich
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Deck view — gerade erstellt / zum Ansehen, Korrigieren, Lernen ─────────
+  if (view === 'deck' && activeDeck) {
+    const liveDeck = decks.find((d) => d.noteId === activeDeck.noteId) ?? activeDeck
+    const closeDeck = () => { setView('library'); setEditingCardId(null); setCreatedCount(null) }
+    return (
+      <div className="flex flex-col min-h-dvh bg-background pb-28">
+        <Header title={liveDeck.noteTitle} subtitle={liveDeck.subjectName} onBack={closeDeck} />
+        <div className="px-4 space-y-4">
+          {createdCount != null && (
+            <p className="text-[13px] text-text-secondary">
+              {createdCount} {createdCount === 1 ? 'Karte' : 'Karten'} erstellt
+            </p>
+          )}
+
+          <button
+            onClick={() => startSession(liveDeck)}
+            className="w-full h-12 rounded-pill flex items-center justify-center gap-2 font-semibold text-[15px] press"
+            style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+          >
+            <Icon name="play" size={16} />
+            Lernen starten
+          </button>
+
+          <div className="space-y-2.5">
+            {liveDeck.cards.map((card, i) => {
+              const editing = editingCardId === card.id
+              return (
+                <div key={card.id} className="rounded-card border border-border/60 bg-surface p-4">
+                  {editing ? (
+                    <div className="space-y-2.5">
+                      <div>
+                        <p className="section-label mb-1">Vorderseite</p>
+                        <textarea
+                          value={draftFront}
+                          onChange={(e) => setDraftFront(e.target.value)}
+                          rows={2}
+                          className="w-full bg-background border border-border rounded-btn px-3 py-2 text-[14px] text-text-primary resize-y"
+                        />
+                      </div>
+                      <div>
+                        <p className="section-label mb-1">Rückseite</p>
+                        <textarea
+                          value={draftBack}
+                          onChange={(e) => setDraftBack(e.target.value)}
+                          rows={3}
+                          className="w-full bg-background border border-border rounded-btn px-3 py-2 text-[14px] text-text-primary resize-y"
+                        />
+                      </div>
+                      <div className="flex gap-2 pt-0.5">
+                        <button
+                          onClick={() => {
+                            const f = draftFront.trim(), b = draftBack.trim()
+                            if (f && b) updateFlashCard(card.id, { front: f, back: b })
+                            setEditingCardId(null)
+                          }}
+                          className="flex-1 h-10 rounded-pill text-[14px] font-semibold press"
+                          style={{ background: 'var(--grad-mode)', color: '#FFFFFF' }}
+                        >
+                          Speichern
+                        </button>
+                        <button
+                          onClick={() => setEditingCardId(null)}
+                          className="h-10 px-4 rounded-pill text-[14px] font-semibold text-text-primary bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press"
+                        >
+                          Abbrechen
+                        </button>
+                        <button
+                          onClick={() => {
+                            const wasLast = liveDeck.cards.length <= 1
+                            deleteFlashCard(card.id)
+                            setEditingCardId(null)
+                            if (wasLast) closeDeck()
+                          }}
+                          className="h-10 w-10 flex items-center justify-center rounded-pill text-[rgb(var(--fill-red))] bg-[rgb(120,120,128)]/[0.12] dark:bg-[rgb(120,120,128)]/[0.24] press"
+                          aria-label="Karte löschen"
+                        >
+                          <Icon name="trash" size={16} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex gap-3">
+                      <span className="text-[12px] font-bold text-text-muted tabular-nums pt-0.5 shrink-0">{i + 1}</span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[14px] font-semibold text-text-primary">{card.front}</p>
+                        <p className="text-[13px] text-text-secondary mt-1">{card.back}</p>
+                      </div>
+                      <button
+                        onClick={() => { setEditingCardId(card.id); setDraftFront(card.front); setDraftBack(card.back) }}
+                        className="shrink-0 h-8 w-8 flex items-center justify-center rounded-btn text-text-secondary press-sm"
+                        aria-label="Karte bearbeiten"
+                      >
+                        <Icon name="pencil" size={15} />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </div>
       </div>

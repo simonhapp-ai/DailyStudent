@@ -420,7 +420,7 @@ export function ProbeklausurMode4Screen() {
               className="flex-1 py-4 rounded-card text-white text-[15px] font-bold press"
               style={{ background: ACCENT }}
             >
-              Menü
+              Zurück
             </button>
           </div>
         )}

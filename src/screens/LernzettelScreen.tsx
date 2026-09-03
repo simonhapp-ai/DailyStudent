@@ -436,7 +436,7 @@ export function LernzettelScreen() {
       <div className="mt-6">
         {/* Section header */}
         <div className="flex items-center gap-2 px-4 mb-2">
-          {appConfig.proPurchasesEnabled ? (
+          {appConfig.proPurchasesEnabled && !isPro ? (
             <span className="badge-pro-gold px-2.5 py-1 gap-1"><Icon name="sparkle" size={10} filled />PRO</span>
           ) : (
             <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold bg-background text-text-muted">Vorschau</span>
@@ -473,7 +473,7 @@ export function LernzettelScreen() {
                 <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', background: p.color, color: '#fff' }}>
                   {p.subject}
                 </span>
-                {appConfig.proPurchasesEnabled ? (
+                {appConfig.proPurchasesEnabled && !isPro ? (
                   <span className="badge-pro-gold gap-1" style={{ padding: '2px 7px', fontSize: '10px' }}><Icon name="sparkle" size={9} filled />PRO</span>
                 ) : (
                   <span style={{ padding: '2px 7px', fontSize: '10px', fontWeight: 700, borderRadius: '999px', background: 'rgb(var(--color-border) / 0.5)', color: 'rgb(var(--color-text-muted))' }}>Vorschau</span>
