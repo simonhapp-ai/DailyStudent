@@ -1,13 +1,11 @@
 /**
- * JSON.parse mit Reparatur für den häufigsten KI-Fehler: LaTeX-Backslashes
- * (\vec, \lim, \alpha, \frac …) einfach statt doppelt in JSON-Strings.
+ * JSON.parse mit Reparatur für die zwei häufigsten KI-Fehler:
+ *  A) LaTeX-Backslashes (\vec, \lim, \frac …) einfach statt doppelt escaped.
+ *  B) Antwort mitten im String abgeschnitten (Token-Limit) → "Unterminated string".
  *
- * Zwei Fehlerklassen:
- *  1. Ungültiges Escape (\v, \e, \l, \frac, …) → JSON.parse WIRFT. Fängt `repairEscapes`.
- *  2. Zufällig gültiges Escape (\n, \t, \f, \b, \r + Buchstabe, z. B. \nabla → \n+"abla",
- *     \frac → \f+"rac") → JSON.parse schluckt es still und schiebt ein Steuerzeichen
- *     mitten in die Formel. Das lässt sich NACH dem Parsen nicht mehr erkennen, nur
- *     davor — und nur dort, wo wir sicher sind, dass es LaTeX ist: innerhalb von $…$.
+ * Reihenfolge: erst normal parsen (mit $…$-Backslash-Reparatur), dann Escapes global
+ * reparieren, zuletzt eine abgeschnittene Antwort notdürftig schließen — lieber ein
+ * unvollständiger Lernzettel als ein harter Fehler.
  */
 
 /** Verdoppelt jeden Backslash, der kein gültiges JSON-Escape einleitet. Lässt
@@ -31,8 +29,7 @@ function repairEscapes(s: string): string {
 }
 
 /** In $…$ / $$…$$-Spannen ist jeder Backslash LaTeX → dort `repairEscapes` roh
- *  anwenden (verdoppelt auch \frac, \nabla, die außerhalb echte \n/\f sein könnten).
- *  Prosa außerhalb der Mathe-Spannen bleibt unangetastet. */
+ *  anwenden (verdoppelt auch \frac, \nabla, die außerhalb echte \n/\f sein könnten). */
 function repairMathSpans(raw: string): string {
   if (!raw.includes('$')) return raw
   return raw.replace(/(\${1,2})([^$]*?)\1/g, (_m, delim: string, inner: string) =>
@@ -40,10 +37,37 @@ function repairMathSpans(raw: string): string {
   )
 }
 
-export function safeJsonParse(raw: string): unknown {
-  try {
-    return JSON.parse(repairMathSpans(raw))
-  } catch {
-    return JSON.parse(repairEscapes(raw))
+/** Eine abgeschnittene JSON-Antwort so weit schließen, dass sie parst: offenen
+ *  String beenden, offene {}/[] in umgekehrter Reihenfolge schließen. Das letzte
+ *  Feld bleibt dann evtl. unvollständig, aber der Rest ist nutzbar. */
+function closeTruncatedJson(s: string): string {
+  const stack: string[] = []
+  let inStr = false
+  let esc = false
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i]
+    if (inStr) {
+      if (esc) esc = false
+      else if (c === '\\') esc = true
+      else if (c === '"') inStr = false
+      continue
+    }
+    if (c === '"') inStr = true
+    else if (c === '{' || c === '[') stack.push(c)
+    else if (c === '}' || c === ']') stack.pop()
   }
+  let out = s
+  if (esc) out = out.slice(0, -1)        // einzelner Backslash am Ende → weg
+  if (inStr) out += '"'
+  // hängendes ',' oder ':' vor dem Schließen entfernen
+  out = out.replace(/[,\s]+$/, '')
+  if (/[:]\s*$/.test(out)) out += 'null'
+  for (let i = stack.length - 1; i >= 0; i--) out += stack[i] === '{' ? '}' : ']'
+  return out
+}
+
+export function safeJsonParse(raw: string): unknown {
+  try { return JSON.parse(repairMathSpans(raw)) } catch { /* weiter */ }
+  try { return JSON.parse(repairEscapes(raw)) } catch { /* weiter */ }
+  return JSON.parse(closeTruncatedJson(repairEscapes(raw)))
 }

@@ -240,7 +240,11 @@ async function examFetch(
     // exam-generation test, counted against maxOutputTokens) — thinkingLevel 'low' keeps this
     // fast and predictable, matching how these prompts were originally tuned for a non-reasoning
     // model. gemini-3.1-flash-lite has no such overhead by default, so it's left alone below.
-    generationConfig: { temperature, maxOutputTokens: 8192, responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'low' } },
+    // 8192 war zu knapp: ein Lernzettel (1500–2500 Wörter) + figures + JSON-Overhead +
+    // ~600 verdeckte "thought"-Tokens lief mitten im content-String aus → "Unterminated
+    // string" beim Parsen. Flash rechnet nur echte Output-Tokens ab, die Obergrenze ist
+    // reiner Puffer.
+    generationConfig: { temperature, maxOutputTokens: 24000, responseMimeType: 'application/json', thinkingConfig: { thinkingLevel: 'low' } },
   }, bucket)
 
   if (result.geminiStatus !== 200) {
@@ -607,7 +611,7 @@ ${tasksBlock}
 
 JSON: {"taskCorrections":[{"taskId":"t1","errors":[],"gaps":[],"formulationHelp":[],"scoreNP":11,"justification":"..."}],"totalNP":11,"gradeLabel":"Gut","overallJustification":"..."}`
 
-  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3, claudeOpt(opts, 'claude_probeklausur', 6000, 'adaptive', 'medium'))) as {
+  const raw = (await examFetch(CORRECTION_SYSTEM, userPrompt, 'probeklausur_other', 0.3, claudeOpt(opts, 'claude_probeklausur', 10000, 'adaptive', 'medium'))) as {
     taskCorrections?: { taskId?: string; errors?: string[]; gaps?: string[]; formulationHelp?: string[]; scoreNP?: number; justification?: string }[]
     totalNP?: number
     gradeLabel?: string
@@ -739,7 +743,7 @@ ${notesBlock || '(keine — nur auf Basis von Fach/Thema/Kerncurriculum erstelle
 ${kcBlock}
 Erstelle den vollständigen Lernzettel als JSON gemäß der Vorgaben aus der System-Instruktion.`
 
-  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4, claudeOpt(opts, 'claude_lernzettel', 9000, 'disabled', 'low'))) as {
+  const raw = (await examFetch(LERNZETTEL_SYSTEM, userPrompt, 'lernzettel', 0.4, claudeOpt(opts, 'claude_lernzettel', 14000, 'disabled', 'low'))) as {
     title?: string
     content?: string
     keywords?: string[]
