@@ -97,7 +97,7 @@ function setDocumentTitle(title: string) {
 export function LernplanDetailScreen() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { lernplaene, deleteLernplan, saveLernplan, addEntries, personalEntries, profile, isPro, appConfig, supabaseDataLoading } = useUser()
+  const { lernplaene, deleteLernplan, saveLernplan, addEntries, personalEntries, profile, isPro, supabaseDataLoading } = useUser()
 
   const plan = lernplaene.find((p) => p.id === id)
 
@@ -517,10 +517,7 @@ export function LernplanDetailScreen() {
                           session={session}
                           isExpanded={isExpanded}
                           onToggle={() => toggleSession(sessionKey)}
-                          // Beta launch: treat paused purchases as "not Pro" here too, so
-                          // the badge + lock stay consistent with everywhere else — no
-                          // effect once purchases resume (see migration 017_beta_mode_config.sql).
-                          isPro={isPro && appConfig.proPurchasesEnabled}
+                          isPro={isPro}
                           onShowPro={() => setShowProModal(true)}
                           onNavigate={(route) => navigate(route)}
                         />

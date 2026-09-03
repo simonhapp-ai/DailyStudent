@@ -8,6 +8,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { ProModal } from '../components/ui/ProModal'
+import { ProModeGate } from '../components/ui/ProModeGate'
 import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode1Exam, correctExam } from '../lib/gemini';
@@ -122,10 +123,8 @@ export function ProbeklausurMode1Screen() {
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.prefill ?? null
   const resume = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, appConfig, updateProfile } = useUser()
-  // Beta launch: AFB-Aufgabentrainer opened for free, incl. correction — see
-  // migration 017_beta_mode_config.sql + ProbeklausurMenuScreen.
-  const correctionUnlocked = isPro || appConfig.probeklausurAfbTrainerFree
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, updateProfile } = useUser()
+  const correctionUnlocked = isPro
   // Material (AFB II/III) erzeugt bei Pro + Schalter Claude — saubere svg-Schemata.
   // Aufgaben stellt und korrigiert immer Gemini.
   const claudePref = profile?.claudeEnabled !== false
@@ -206,6 +205,9 @@ export function ProbeklausurMode1Screen() {
   }
 
   const ACCENT = 'var(--grad-mode)'
+
+  // AFB-Aufgabentrainer ist Pro (siehe Paywall). Fängt auch Direkt-URL / Resume.
+  if (!isPro && phase === 'setup') return <ProModeGate title="AFB-Aufgabentrainer" />
 
   return (
     <div className="flex flex-col min-h-dvh bg-background">

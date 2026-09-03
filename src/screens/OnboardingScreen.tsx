@@ -11,7 +11,6 @@ import type { StundenplanSlot } from '../types'
 import { SUBJECT_INFO, SUBJECT_GROUPS, resolveSubjectInfo, getTopicPlaceholder, subjectInfo } from '../data/subjectInfo'
 import { topics } from '../data/mockData'
 import { parseStundenplanFromImage } from '../lib/groq'
-import { Tag } from '../components/ui/Tag'
 
 const BUNDESLAENDER = [
   { id: 'by', name: 'Bayern' },
@@ -373,10 +372,9 @@ function StepWelcome({ onNext }: { onNext: () => void }) {
         </div>
 
         <div className="rounded-card px-3.5 py-3 bg-surface border border-border/60">
-          <Tag tone="orange" size="sm" className="mb-1.5">Beta</Tag>
           <p className="text-text-secondary text-[12.5px] leading-snug">
             Am besten für die Oberstufe. Für Studierende und die Mittelstufe nutzbar,
-            aber noch nicht perfekt — das wird mit dem Ende der Beta besser.
+            an manchen Stellen noch nicht perfekt.
           </p>
         </div>
       </div>

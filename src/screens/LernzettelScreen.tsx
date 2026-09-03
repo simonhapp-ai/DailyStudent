@@ -185,7 +185,7 @@ function LernzettelRow({
 
 export function LernzettelScreen() {
   const navigate = useNavigate()
-  const { lernzettel, isPro, deleteLernzettel, toggleLernzettelHighlight, appConfig } = useUser()
+  const { lernzettel, isPro, deleteLernzettel, toggleLernzettelHighlight } = useUser()
   const [view, setView] = useState<View>('library')
   const [activeLz, setActiveLz] = useState<Lernzettel | null>(null)
   const [showPro, setShowPro] = useState(false)
@@ -438,7 +438,7 @@ export function LernzettelScreen() {
       <div className="mt-6">
         {/* Section header */}
         <div className="flex items-center gap-2 px-4 mb-2">
-          {appConfig.proPurchasesEnabled && !isPro ? (
+          {!isPro ? (
             <span className="badge-pro-gold px-2.5 py-1 gap-1"><Icon name="sparkle" size={10} filled />PRO</span>
           ) : (
             <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold bg-background text-text-muted">Vorschau</span>
@@ -475,7 +475,7 @@ export function LernzettelScreen() {
                 <span style={{ fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '999px', background: p.color, color: '#fff' }}>
                   {p.subject}
                 </span>
-                {appConfig.proPurchasesEnabled && !isPro ? (
+                {!isPro ? (
                   <span className="badge-pro-gold gap-1" style={{ padding: '2px 7px', fontSize: '10px' }}><Icon name="sparkle" size={9} filled />PRO</span>
                 ) : (
                   <span style={{ padding: '2px 7px', fontSize: '10px', fontWeight: 700, borderRadius: '999px', background: 'rgb(var(--color-border) / 0.5)', color: 'rgb(var(--color-text-muted))' }}>Vorschau</span>
@@ -522,26 +522,17 @@ export function LernzettelScreen() {
         {/* CTA — nur für Free-User */}
         {!isPro && (
           <div className="px-4 mt-3 mb-6">
-            {appConfig.proPurchasesEnabled ? (
-              <button
-                onClick={() => setShowPro(true)}
-                className="w-full h-12 rounded-pill font-bold text-[14px] press"
-                style={{
-                  background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
-                  color: '#3B1F00',
-                  boxShadow: '0 4px 18px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.3)',
-                }}
-              >
-                Pro freischalten
-              </button>
-            ) : (
-              <button
-                onClick={() => setShowPro(true)}
-                className="w-full h-12 rounded-pill font-bold text-[14px] press bg-surface border border-border/60 text-text-secondary"
-              >
-                Für Update vormerken
-              </button>
-            )}
+            <button
+              onClick={() => setShowPro(true)}
+              className="w-full h-12 rounded-pill font-bold text-[14px] press"
+              style={{
+                background: 'linear-gradient(135deg, #C8860A 0%, #F5C842 45%, #D97706 100%)',
+                color: '#3B1F00',
+                boxShadow: '0 4px 18px rgba(200,134,10,0.45), inset 0 1px 0 rgba(255,255,255,0.3)',
+              }}
+            >
+              Pro freischalten
+            </button>
           </div>
         )}
       </div>

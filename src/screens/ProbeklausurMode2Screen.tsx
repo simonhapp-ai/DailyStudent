@@ -13,7 +13,6 @@ import { generateMode2Exam, correctExam } from '../lib/gemini';
 import { resolveEngine } from '../lib/studyEngine'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { ProModal } from '../components/ui/ProModal'
-import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
 import { ExamMaterialCard } from '../components/probeklausur/ExamMaterialCard'
 import { renderMathSegments } from '../lib/mathSegments'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur, ProbeklausurPrefill } from '../types'
@@ -149,7 +148,7 @@ export function ProbeklausurMode2Screen() {
   const location = useLocation()
   const prefill = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.prefill ?? null
   const resume = (location.state as { prefill?: ProbeklausurPrefill; resume?: InProgressProbeklausur } | null)?.resume ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, savedProbeklausuren, isPro, claudeTrialUsed, appConfig, updateProfile } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, savedProbeklausuren, isPro, claudeTrialUsed, updateProfile } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
   // Material erzeugt bei Pro + Schalter Claude (svg-Schemata); Aufgaben & Korrektur immer Gemini.
@@ -248,12 +247,6 @@ export function ProbeklausurMode2Screen() {
     })
     setShowExitWarning(false)
     navigate(zurueckZiel())
-  }
-
-  // Beta launch (migration 017_beta_mode_config.sql) — catches direct URL access
-  // and the menu's "Fortfahren" resume button too, not just its click-gate.
-  if (!appConfig.probeklausurMode2Enabled) {
-    return <BetaPausedScreen title="Vollständige Klausur" />
   }
 
   return (

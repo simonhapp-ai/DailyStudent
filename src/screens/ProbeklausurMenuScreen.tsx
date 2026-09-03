@@ -112,33 +112,13 @@ export function ProbeklausurMenuScreen() {
   const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
   const {
     inProgressProbeklausuren, deleteInProgressProbeklausur,
-    savedProbeklausuren, deleteSavedProbeklausur, isPro, appConfig,
+    savedProbeklausuren, deleteSavedProbeklausur, isPro,
   } = useUser()
   const [showProModal, setShowProModal] = useState(false)
 
-  // Beta launch (migration 017_beta_mode_config.sql): AFB-Aufgabentrainer (mode 1)
-  // opened for free regardless of isPro — Simon wants to showcase it. The other
-  // three modes are paused (most token-expensive generations) — same ProModal
-  // as the normal Pro-lock, since it already shows the beta "coming soon"
-  // content whenever Pro purchases are paused. Reverts to the original
-  // !isPro-gated behavior automatically once the flags flip back.
-  const modeEnabled: Record<number, boolean> = {
-    2: appConfig.probeklausurMode2Enabled,
-    3: appConfig.probeklausurMode3Enabled,
-    4: appConfig.probeklausurMode4Enabled,
-  }
-
+  // Nur die Vollständige Klausur (Mode 2) ist frei (1×/Tag, in-screen gedeckelt).
+  // AFB-Trainer / Materialklausur / Ohne-Material sind Pro.
   const handleModeClick = (mode: Mode) => {
-    if (mode.id === 1 && appConfig.probeklausurAfbTrainerFree) {
-      navigate(mode.route, { state: prefill ? { prefill } : undefined })
-      return
-    }
-    // Pausierter Modus: zum Screen navigieren — der zeigt für alle (auch Pro/Allowlist)
-    // den nicht-verkäuferischen BetaPausedScreen, statt einen Checkout aufzumachen.
-    if (mode.id !== 1 && modeEnabled[mode.id] === false) {
-      navigate(mode.route, { state: prefill ? { prefill } : undefined })
-      return
-    }
     if (!isPro && mode.id !== 2) { setShowProModal(true); return }
     navigate(mode.route, { state: prefill ? { prefill } : undefined })
   }
@@ -239,8 +219,6 @@ export function ProbeklausurMenuScreen() {
               Klausurart wählen
             </p>
             {MODES.map((mode) => {
-              const gratisInBeta = mode.id === 1 && appConfig.probeklausurAfbTrainerFree
-              const pausiert = mode.id !== 1 && modeEnabled[mode.id] === false
               return (
                 <button
                   key={mode.id}
@@ -272,15 +250,11 @@ export function ProbeklausurMenuScreen() {
                     {mode.badges.map((badge) => (
                       <Tag key={badge} size="sm">{badge}</Tag>
                     ))}
-                    {gratisInBeta ? (
-                      <Tag tone="green" size="sm">Kostenlos in der Beta</Tag>
-                    ) : pausiert ? (
-                      <Tag size="sm">Bald wieder da</Tag>
-                    ) : mode.proBadge && !isPro ? (
+                    {mode.id !== 2 && !isPro && (
                       <Tag tone="gold" size="sm" className="gap-1">
                         <Icon name="sparkle" size={10} filled />Pro
                       </Tag>
-                    ) : null}
+                    )}
                   </div>
                 </button>
               )

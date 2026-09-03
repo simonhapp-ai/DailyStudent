@@ -13,7 +13,7 @@ import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode3Exam, correctExam } from '../lib/gemini';
 import { resolveEngine } from '../lib/studyEngine'
 import { BottomSheet } from '../components/ui/BottomSheet'
-import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
+import { ProModeGate } from '../components/ui/ProModeGate'
 import { ExamMaterialCard } from '../components/probeklausur/ExamMaterialCard'
 import { renderMathSegments } from '../lib/mathSegments'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur, ProbeklausurPrefill } from '../types'
@@ -110,7 +110,7 @@ export function ProbeklausurMode3Screen() {
   const location = useLocation()
   const resume = (location.state as { resume?: InProgressProbeklausur } | null)?.resume ?? null
   const prefill = (location.state as { prefill?: ProbeklausurPrefill } | null)?.prefill ?? null
-  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, appConfig, updateProfile } = useUser()
+  const { profile, getKc, saveProbeklausur, saveInProgressProbeklausur, deleteInProgressProbeklausur, isPro, claudeTrialUsed, updateProfile } = useUser()
   const inProgressIdRef = useRef<string | null>(resume?.id ?? null)
   const resumeStartedAt = useMemo(() => resume?.startedAt ?? new Date().toISOString(), [])
   // Material erzeugt bei Pro + Schalter Claude (svg-Schemata); Aufgaben & Korrektur immer Gemini.
@@ -180,11 +180,8 @@ export function ProbeklausurMode3Screen() {
     }
   }
 
-  // Beta launch (migration 017_beta_mode_config.sql) — catches direct URL access
-  // and the menu's "Fortfahren" resume button too, not just its click-gate.
-  if (!appConfig.probeklausurMode3Enabled) {
-    return <BetaPausedScreen title="Materialklausur" />
-  }
+  // Materialklausur ist Pro (siehe Paywall) — fängt auch Direkt-URL / Resume.
+  if (!isPro && phase === 'setup') return <ProModeGate title="Materialklausur" />
 
   return (
     <div className="flex flex-col min-h-dvh bg-background">

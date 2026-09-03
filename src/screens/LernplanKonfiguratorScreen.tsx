@@ -37,17 +37,17 @@ function formatDate(dateStr: string): string {
 }
 
 export function LernplanKonfiguratorScreen() {
-  const { profile, isPro, saveLernplan, getKc, generatedNotes, userNotes, lernplaene, appConfig } = useUser()
+  const { profile, isPro, saveLernplan, getKc, generatedNotes, userNotes, lernplaene } = useUser()
   const navigate = useNavigate()
 
   const [step, setStep] = useState(1)
   const TOTAL_STEPS = 7
 
   // Step 1: Plan type
-  // Vorausgewaehlt war "Vollstaendig" — ein Typ, der waehrend der Beta gar
-  // nicht verfuegbar ist. Wer einfach auf Weiter tippte, lief damit direkt in
-  // die Sperre. Der Einzel-Lernplan ist der einzige frei nutzbare und deshalb
-  // die richtige Vorauswahl. (Regel 4: Vorauswahl ist ein Vorschlag — sie muss
+  // Vorausgewaehlt war "Vollstaendig" — ein Pro-Typ. Wer einfach auf Weiter
+  // tippte, lief damit direkt in die Pro-Sperre. Der Einzel-Lernplan ist der
+  // einzige frei nutzbare und deshalb die richtige Vorauswahl. (Regel 4:
+  // Vorauswahl ist ein Vorschlag — sie muss
   // funktionieren, sonst ist sie keiner.)
   const [planType, setPlanType] = useState<LernplanType>('einzel')
   const [showProModal, setShowProModal] = useState(false)
@@ -130,15 +130,8 @@ export function LernplanKonfiguratorScreen() {
     (p) => p.planType === 'einzel' && p.createdAt?.slice(0, 10) === today
   ).length
 
-  // Beta launch (migration 017_beta_mode_config.sql): Pro purchases paused, so
-  // Vollständig/Abitur must also be blocked for anyone with dev-mode or
-  // referral-trial "Pro" status — otherwise those accounts could still trigger
-  // the heaviest Lernplan generations during the token-cost-sensitive beta
-  // window. No effect once purchases resume.
-  const proActive = isPro && appConfig.proPurchasesEnabled
-
   const handleNext = () => {
-    if (step === 1 && (planType === 'vollstaendig' || planType === 'abitur') && !proActive) {
+    if (step === 1 && (planType === 'vollstaendig' || planType === 'abitur') && !isPro) {
       setShowProModal(true)
       return
     }
@@ -326,7 +319,7 @@ export function LernplanKonfiguratorScreen() {
       {/* Content */}
       <div className="flex-1 px-4 pb-4 overflow-y-auto">
         {step === 1 && (
-          <StepPlanType planType={planType} onSelect={setPlanType} isPro={isPro} onShowPro={() => setShowProModal(true)} einzelCreatedToday={einzelCreatedToday} betaPaused={!appConfig.proPurchasesEnabled} />
+          <StepPlanType planType={planType} onSelect={setPlanType} isPro={isPro} onShowPro={() => setShowProModal(true)} einzelCreatedToday={einzelCreatedToday} />
         )}
         {step === 2 && (
           <StepKlausurtermine
@@ -438,7 +431,7 @@ export function LernplanKonfiguratorScreen() {
 
 /* ─── Step 1: Plan Type ────────────────────────────────────────── */
 
-function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday, betaPaused }: { planType: LernplanType; onSelect: (t: LernplanType) => void; isPro: boolean; onShowPro: () => void; einzelCreatedToday: number; betaPaused: boolean }) {
+function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday }: { planType: LernplanType; onSelect: (t: LernplanType) => void; isPro: boolean; onShowPro: () => void; einzelCreatedToday: number }) {
   const options: { id: LernplanType; icon: IconName; title: string; desc: string; badge?: string }[] = [
     {
       id: 'einzel',
@@ -475,7 +468,7 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
             <button
               key={opt.id}
               onClick={() => {
-                if (opt.badge && (!isPro || betaPaused)) { onShowPro(); return }
+                if (opt.badge && !isPro) { onShowPro(); return }
                 onSelect(opt.id)
               }}
               className={`w-full flex items-start gap-4 p-4 rounded-card border text-left transition-all duration-150 active:scale-[0.98] ${
@@ -488,10 +481,8 @@ function StepPlanType({ planType, onSelect, isPro, onShowPro, einzelCreatedToday
               <div className="flex-1 min-w-0 pt-0.5">
                 <div className="flex items-center gap-2 flex-wrap">
                   <p className={`font-bold text-[16px] ${active ? 'text-on-accent' : 'text-text-primary'}`}>{opt.title}</p>
-                  {opt.badge && (!isPro || betaPaused) && (
-                    betaPaused
-                      ? <span className="px-1.5 py-0.5 rounded-pill text-[11px] font-bold bg-background text-text-muted inline-flex items-center gap-1"><Icon name="clock" size={10} />Bald verfügbar</span>
-                      : <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
+                  {opt.badge && !isPro && (
+                    <span className="badge-pro-gold px-1.5 py-0.5">✦ Pro</span>
                   )}
                 </div>
                 <p className={`text-[13px] mt-1 leading-snug ${active ? 'text-on-accent/80' : 'text-text-muted'}`}>{opt.desc}</p>

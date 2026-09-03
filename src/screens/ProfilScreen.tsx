@@ -10,7 +10,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Capacitor } from '@capacitor/core'
 import { createCheckoutSession, fetchIsProFromSupabase } from '../lib/stripe'
 import { purchasePlan } from '../lib/revenuecat'
-import { ProModal, WELCOME_COUPON_ID } from '../components/ui/ProModal'
+import { WELCOME_COUPON_ID } from '../components/ui/ProModal'
 import { getActiveStreak } from '../lib/streak'
 import { bundeslandName } from '../data/bundeslaender'
 import { ZurueckZeile } from '../components/ui/ZurueckZeile'
@@ -134,11 +134,10 @@ function RangRing({ xp }: { xp: number }) {
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt, appConfig } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt } = useUser()
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string | null>(null)
-  const [showProComingSoon, setShowProComingSoon] = useState(false)
   const [avatarPickerOpen, setAvatarPickerOpen] = useState(false)
   const [copyToast, setCopyToast] = useState(false)
 
@@ -172,13 +171,6 @@ export function ProfilScreen() {
   }, [])
 
   const handleUpgrade = async (plan: 'monthly' | 'yearly') => {
-    // Beta launch: Pro purchases paused (migration 017_beta_mode_config.sql).
-    // Existing native/Stripe logic below is untouched and resumes automatically
-    // once app_config.pro_purchases_enabled flips back — this only short-circuits.
-    if (!appConfig.proPurchasesEnabled) {
-      setShowProComingSoon(true)
-      return
-    }
     if (Capacitor.isNativePlatform()) {
       setCheckoutLoading(plan)
       const result = await purchasePlan(plan)
@@ -325,20 +317,15 @@ export function ProfilScreen() {
         </div>
 
         {/* ── Pro upgrade (nur sichtbar wenn nicht Pro) ──────────── */}
-        {/* Beta launch (migration 017_beta_mode_config.sql): while purchases are
-            paused, this card + the Referral Widget move to the very bottom of
-            the page instead (see that section, right above the footer) — Simon's
-            explicit placement call, 31.07.2026. This normal-state version is
-            unchanged and simply doesn't render during beta; no code removed. */}
         {/* Karte auf der eigenen Fläche statt auf einem blassen Blau, das sonst
             nirgends in der App vorkommt. Die Modusfarbe steht im Knopf, nicht als
             Tönung über der ganzen Karte. */}
-        {!isPro && appConfig.proPurchasesEnabled && (
+        {!isPro && (
           <div className="card-pro rounded-card p-5 shadow-card-adaptive">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <p className="pro-title font-bold text-[17px]">Pro freischalten</p>
-                <p className="pro-sub text-[13px] mt-0.5">Alle KI-Features. Kein Limit.</p>
+                <p className="pro-title font-bold text-[17px]">Premium-KI freischalten</p>
+                <p className="pro-sub text-[13px] mt-0.5">Claude für Lernzettel & Klausurmaterial. Kein Limit.</p>
               </div>
               <div className="text-right">
                 <p className="pro-title font-bold text-[20px]">€7,99<span className="pro-sub text-[13px] font-normal">/Mo</span></p>
@@ -347,10 +334,10 @@ export function ProfilScreen() {
             </div>
             <ul className="space-y-2.5 mb-5">
               {[
+                'Lernzettel & Klausurmaterial von Claude statt Standard-KI',
+                'Alle Probeklausur-Arten + vollständige KI-Korrektur',
+                'Alle Lernplan-Arten, unbegrenzte Lernzettel & Karteikarten',
                 'KI-Zusammenfassungen aus Foto-Scans',
-                'Unbegrenzte Karteikarten (FSRS)',
-                'KI-Rotstift-Korrektur',
-                'Persönlicher Lernplan',
               ].map((f) => (
                 <li key={f} className="flex items-center gap-2.5 text-[14px] pro-feature">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="pro-check shrink-0">
@@ -383,14 +370,14 @@ export function ProfilScreen() {
             >
               {checkoutLoading === 'monthly' ? 'Wird geladen…' : 'Oder monatlich: €7,99/Monat'}
             </button>
+            <p className="pro-sub text-[11px] leading-relaxed mt-3">
+              Premium-KI: 50 Lernzettel und 25 Klausur-Materialien pro Monat über Claude — danach automatisch weiter mit der Standard-KI.
+            </p>
           </div>
         )}
 
         {/* ── Referral Widget ────────────────────────────────────── */}
-        {/* Beta launch: same relocation as the card above — beta framing of this
-            widget now lives at the bottom of the page, this normal-state version
-            just doesn't render while paused. */}
-        {!isPro && !trialActive && appConfig.proPurchasesEnabled && (
+        {!isPro && !trialActive && (
           <div className="card-invite rounded-card shadow-card-adaptive overflow-hidden">
             <div className="p-5">
               <div className="flex items-start justify-between mb-3">
@@ -629,111 +616,13 @@ export function ProfilScreen() {
           </div>
         )}
 
-        {/* ── Beta: Pro-Banner + Freunde einladen, ganz unten ─────── */}
-        {/* Simon (31.07.2026): während der Beta sollen diese zwei Karten nicht
-            oben im Profil stehen, sondern ganz unten, Pro-Banner direkt über dem
-            Einladen-Button. Reine Positionierung — die Normal-Zustand-Versionen
-            oben ("Pro upgrade"/"Referral Widget"-Sektionen) übernehmen automatisch
-            wieder ihren angestammten Platz, sobald appConfig.proPurchasesEnabled
-            wieder true ist. */}
-        {!isPro && !appConfig.proPurchasesEnabled && (
-          <>
-            <div className="rounded-card p-5 border border-border/60 bg-surface">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="px-2.5 py-1 rounded-pill text-[11px] font-bold" style={{ background: 'rgba(52,211,153,0.15)', color: '#34D399' }}>
-                  Beta
-                </span>
-                <p className="text-text-primary font-bold text-[16px]">Pro startet nach der Beta</p>
-              </div>
-              <p className="text-text-secondary text-[13px] leading-relaxed mb-4">
-                Wir pausieren Pro-Käufe während des Beta-Launches. Deine Notizen, Karteikarten & Fortschritte bleiben gespeichert.
-              </p>
-              <button
-                onClick={() => setShowProComingSoon(true)}
-                className="relative w-full h-12 rounded-pill text-[14px] font-semibold press transition-all overflow-hidden"
-                style={{ background: '#FFFFFF', color: '#1B1B1F' }}
-              >
-                <span className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.22) 50%, transparent 65%)', backgroundSize: '200% 100%', animation: 'shimmer 2.2s infinite linear' }} />
-                <span className="relative">Für Rabatt vormerken</span>
-              </button>
-            </div>
-
-            {!trialActive && (
-              <div className="bg-surface rounded-card shadow-card-adaptive border border-border/60 overflow-hidden">
-                <div className="p-5">
-                  <div className="flex items-start gap-2.5 mb-4">
-                    <div
-                      className="w-10 h-10 rounded-btn flex items-center justify-center text-[20px] shrink-0"
-                      style={{ background: 'var(--grad-mode)' }}
-                    >
-                      <Icon name="gift" size={19} />
-                    </div>
-                    <div>
-                      <p className="text-text-primary font-bold text-[15px]">Freunde einladen</p>
-                      <p className="text-text-muted text-[12px] mt-0.5">Teile deinen Link — dein Pro-Bonus wartet auf dich, sobald Pro startet</p>
-                    </div>
-                  </div>
-
-                  {referralCode && (
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="shrink-0 rounded-btn overflow-hidden"
-                        style={{ width: 64, height: 64, background: '#fff' }}
-                      >
-                        <img
-                          src={`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(referralLink ?? '')}&size=128x128&margin=4`}
-                          alt="QR Code"
-                          width={64}
-                          height={64}
-                          className="w-full h-full"
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="inv-sub text-[11px] mb-1.5">Dein Einladungslink</p>
-                        <p className="inv-mono font-mono text-[12px] truncate mb-2">{referralLink}</p>
-                        {copyToast ? (
-                          <div className="w-full py-2 rounded-btn text-[13px] font-semibold text-center"
-                            style={{ background: 'rgba(48,209,88,0.12)', color: '#30D158', border: '1px solid rgba(48,209,88,0.25)' }}>
-                            Kopiert
-                          </div>
-                        ) : (
-                          <button
-                            onClick={handleCopyReferral}
-                            className="btn-copy-shimmer w-full py-2 rounded-btn text-[13px] font-semibold press-sm"
-                          >
-                            Link kopieren
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* ── Footer — quiet beta marker, not a badge/callout ─────── */}
+        {/* ── Footer ──────────────────────────────────────────────── */}
         <p className="text-center text-[11px] text-text-muted/50 tracking-wide pt-1">
-          DailyStudent <span className="text-text-muted/30">·</span> Beta
+          DailyStudent
         </p>
 
         </div>
       </div>
-
-      {/* Same shiny-mint keyframes as the Landing Page's Early Access button —
-          duplicated locally rather than shared, matching the existing pattern
-          (LandingScreen.tsx/DemoScreen.tsx/ProModal.tsx each keep their own copy). */}
-      <style>{`
-        @keyframes shimmer {
-          0% { background-position: -200% center; }
-          100% { background-position: 200% center; }
-        }
-        @keyframes ea-glow {
-          0%, 100% { box-shadow: 0 2px 10px rgba(52,211,153,0.35), 0 0 0 0 rgba(52,211,153,0); }
-          50% { box-shadow: 0 4px 20px rgba(52,211,153,0.6), 0 0 18px 2px rgba(52,211,153,0.2); }
-        }
-      `}</style>
 
       {/* Toast */}
       {paymentToast === 'success' && (
@@ -748,8 +637,6 @@ export function ProfilScreen() {
           </p>
         </div>
       )}
-
-      <ProModal feature="allgemein" isOpen={showProComingSoon} onClose={() => setShowProComingSoon(false)} />
     </div>
   )
 }

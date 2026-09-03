@@ -60,41 +60,11 @@ export interface KlausurTermin {
   topics?: string[]
 }
 
-// Beta-launch feature flags, read from the `app_config` table (see migration
-// 017_beta_mode_config.sql) — lets Simon pause Pro purchases and specific
-// token-heavy Probeklausur modes from the Supabase dashboard alone (works from
-// a phone browser), no code deploy or App Store resubmission needed.
-export interface AppConfig {
-  proPurchasesEnabled: boolean
-  probeklausurAfbTrainerFree: boolean
-  probeklausurMode2Enabled: boolean
-  probeklausurMode3Enabled: boolean
-  probeklausurMode4Enabled: boolean
-}
-
-// Fail-open: if the fetch fails or the row doesn't exist yet, the app behaves
-// exactly like it did before beta mode existed (same convention as the AI
-// rate-limiter's fail-open default in api/groq.ts/api/gemini.ts).
-const DEFAULT_APP_CONFIG: AppConfig = {
-  proPurchasesEnabled: true,
-  probeklausurAfbTrainerFree: false,
-  probeklausurMode2Enabled: true,
-  probeklausurMode3Enabled: true,
-  probeklausurMode4Enabled: true,
-}
-
-// Test-Allowlist — nach Pro-Launch drin lassen; erlaubt späteres Testen bei
-// aktiver Beta, für Nicht-Allowlist-User folgenlos. Bypassed nur
-// proPurchasesEnabled (damit Simon den echten Kauf-Flow gegen die
-// genehmigten Apple-Produkte testen kann, ohne den globalen
-// app_config-Schalter für alle 130+ Beta-Nutzer umzulegen) — die
-// probeklausur_mode2/3/4-Pausierung bleibt für alle, inkl. Allowlist,
-// unberührt, da das eine Feature-Pause ist, kein Kauf-Gate.
-// Both of Simon's addresses: simon.happ@gmx.de is what the app's own Profil→Account
-// screen shows, but Google Sign-In was originally set up against a Gmail alias
-// (simonhapp161@gmail.com, created because Google login required a @gmail.com
-// address at the time) — auth events can carry either depending on the exact
-// OAuth flow, so both need to be covered for the bypass to be reliable.
+// Test-Allowlist — Simons Adressen zählen app-weit als Pro (Client UND Server,
+// api/claude.ts / api/gemini.ts haben dieselbe Liste). simon.happ@gmx.de ist die
+// im Profil angezeigte Adresse, simonhapp161@gmail.com der Gmail-Alias, mit dem
+// Google Sign-In ursprünglich eingerichtet wurde — je nach OAuth-Flow trägt das
+// Auth-Event die eine oder die andere.
 const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
 
 /** Was der XP-Toast zum Zeichnen braucht. */
@@ -270,7 +240,6 @@ interface UserContextValue {
   referralCount: number
   trialEndsAt: string | null
   subscriptionSource: 'stripe' | 'apple' | null
-  appConfig: AppConfig
 }
 
 const STORAGE_KEY = 'lernapp_v1'
@@ -428,30 +397,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [nativeEntitlementActive, setNativeEntitlementActive] = useState(false)
   // Guard: only load Supabase data once per user session, not on every token refresh
   const loadedForUserId = useRef<string | null>(null)
-
-  const [appConfig, setAppConfig] = useState<AppConfig>(DEFAULT_APP_CONFIG)
-
-  // Fetched once on app load, independent of auth — the flags it controls
-  // (Pro checkout, specific Probeklausur modes) need to render correctly
-  // before/regardless of login state. See DEFAULT_APP_CONFIG for the
-  // fail-open fallback if this fetch fails or the row doesn't exist.
-  useEffect(() => {
-    void (async () => {
-      try {
-        const { data } = await supabase.from('app_config').select('*').eq('id', 1).maybeSingle()
-        if (!data) return
-        setAppConfig({
-          proPurchasesEnabled: data.pro_purchases_enabled,
-          probeklausurAfbTrainerFree: data.probeklausur_afb_trainer_free,
-          probeklausurMode2Enabled: data.probeklausur_mode2_enabled,
-          probeklausurMode3Enabled: data.probeklausur_mode3_enabled,
-          probeklausurMode4Enabled: data.probeklausur_mode4_enabled,
-        })
-      } catch {
-        // Fail open — keep DEFAULT_APP_CONFIG
-      }
-    })()
-  }, [])
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -1395,19 +1340,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
     console.log(`[Sync] Manual retry: ${result.success} success, ${result.failed} failed`)
   }
 
-  const effectiveIsPro = isPro || nativeEntitlementActive || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
-
-  // .toLowerCase().trim() — a case/whitespace mismatch against the auth
-  // provider's stored email would otherwise silently fail this check with no
-  // visible error, just the beta view rendering as if the allowlist did
-  // nothing at all.
-  // Allowlist: Käufe frei UND die pausierten Probeklausur-Modi 2/3/4 offen — nur
-  // für diese Emails, für alle anderen bleibt die Beta-Pause. (Zum Testen der
-  // Claude-Schiene auf der vollständigen Klausur; serverseitiger Gemini-Block
-  // für Mode 2 ist in api/gemini.ts ebenfalls allowlist-ausgenommen.)
-  const effectiveAppConfig: AppConfig = PRO_TEST_ALLOWLIST.includes((authUser?.email ?? '').toLowerCase().trim())
-    ? { ...appConfig, proPurchasesEnabled: true, probeklausurMode2Enabled: true, probeklausurMode3Enabled: true, probeklausurMode4Enabled: true }
-    : appConfig
+  // .toLowerCase().trim() — sonst scheitert der Abgleich still an einem
+  // Groß-/Kleinschreib- oder Whitespace-Unterschied zur gespeicherten Auth-Email.
+  const isAllowlisted = PRO_TEST_ALLOWLIST.includes((authUser?.email ?? '').toLowerCase().trim())
+  const effectiveIsPro = isPro || nativeEntitlementActive || isAllowlisted
+    || (trialEndsAt ? new Date(trialEndsAt) > new Date() : false)
 
   return (
     <UserContext.Provider
@@ -1494,7 +1431,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
         referralCount,
         trialEndsAt,
         subscriptionSource,
-        appConfig: effectiveAppConfig,
       }}
     >
       {children}

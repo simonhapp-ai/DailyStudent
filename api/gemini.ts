@@ -36,34 +36,6 @@ const BUCKET_LIMITS: Record<string, number> = {
   lernplan: 10,
 }
 
-// Beta launch (2026-07-31, see supabase/migrations/017_beta_mode_config.sql):
-// Mode 2 (Vollständige Klausur) is the single most expensive Probeklausur
-// generation and has its own dedicated bucket, so it's the one case that can
-// be cleanly blocked server-side (Mode 1/3/4 share `probeklausur_other` and
-// are gated client-side only, in the Mode screens themselves — see
-// ProbeklausurMenuScreen.tsx). Fail-open like checkRateLimit: any error here
-// just lets the request through, matching the app's existing fail-open
-// convention rather than risking another false-positive full outage.
-async function isProbeklausurMode2Paused(): Promise<boolean> {
-  const supabaseUrl = process.env.VITE_SUPABASE_URL
-  const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
-  if (!supabaseUrl || !supabaseAnonKey) return false
-  try {
-    const res = await fetch(`${supabaseUrl}/rest/v1/app_config?id=eq.1&select=probeklausur_mode2_enabled`, {
-      headers: { Authorization: `Bearer ${supabaseAnonKey}`, apikey: supabaseAnonKey },
-    })
-    if (!res.ok) return false
-    const rows = await res.json() as { probeklausur_mode2_enabled?: boolean }[]
-    return rows[0]?.probeklausur_mode2_enabled === false
-  } catch {
-    return false
-  }
-}
-
-// Gleiche Liste wie PRO_TEST_ALLOWLIST in src/context/UserContext.tsx — für diese
-// Emails ist die Mode-2-Beta-Pause serverseitig ausgenommen (Test der Claude-Schiene).
-const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
-
 async function getSupabaseUser(token: string): Promise<{ id: string; email: string } | null> {
   const supabaseUrl = process.env.VITE_SUPABASE_URL
   const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
@@ -153,16 +125,6 @@ async function handler(request: Request): Promise<Response> {
     const { model, body, bucket } = await request.json() as { model: string; body: unknown; bucket?: string }
     if (!bucket || !BUCKET_LIMITS[bucket]) {
       return new Response(JSON.stringify({ geminiStatus: 400, geminiData: { error: { message: 'Invalid bucket' } } }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
-
-    if (bucket === 'probeklausur_full' && !PRO_TEST_ALLOWLIST.includes(user.email) && await isProbeklausurMode2Paused()) {
-      return new Response(JSON.stringify({
-        geminiStatus: 403,
-        geminiData: { error: { message: 'Dieser Modus ist während der Beta-Phase pausiert.' } },
-      }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
       })

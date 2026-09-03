@@ -62,7 +62,7 @@ const MODI: (ModusOption & { id: LernzettelModus })[] = [
 
 export function LernzettelGeneratorScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast, lernzettel, appConfig, isPro, claudeTrialUsed, updateProfile } = useUser()
+  const { profile, userNotes, generatedNotes, getKc, saveLernzettel, recordStudyDay, addCoins, showCoinToast, lernzettel, isPro, claudeTrialUsed, updateProfile } = useUser()
 
   const [step, setStep] = useState<Step>('fach')
   const [showProModal, setShowProModal] = useState(false)
@@ -121,12 +121,8 @@ export function LernzettelGeneratorScreen() {
 
   const handleGenerate = async () => {
     if (!selectedSubjectId || !selectedModus) return
-    // Beta launch (migration 017_beta_mode_config.sql): Pro purchases are
-    // paused, so a 1/day cap now applies to everyone, including dev-mode or
-    // referral-trial "Pro" accounts — otherwise those would keep burning full
-    // Lernzettel generations during the token-cost-sensitive beta window.
-    // No effect once purchases resume (this whole check is skipped then).
-    if (!appConfig.proPurchasesEnabled && todayLernzettelCount >= 1) {
+    // Free: 1 Lernzettel pro Tag (Paywall). Pro: unbegrenzt.
+    if (!isPro && todayLernzettelCount >= 1) {
       setShowProModal(true)
       return
     }
