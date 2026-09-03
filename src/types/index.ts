@@ -147,13 +147,54 @@ export interface AbiPruefung {
   punkte: number | null   // 0–15, wird ×4 gewichtet (max. 60 pro Prüfung, ×5 = max. 300)
 }
 
+/* ─── Strukturiertes Material (Prüfung + Lernzettel) ─────────── */
+
+export interface MaterialTable {
+  headers: string[]
+  rows: string[][]
+  caption?: string
+}
+
+export interface MaterialChartSeries {
+  label: string
+  points: Array<{ x: number | string; y: number }>
+}
+
+export interface MaterialChart {
+  type: 'line' | 'bar' | 'scatter' | 'function'
+  title?: string
+  xLabel?: string
+  yLabel?: string
+  xUnit?: string
+  yUnit?: string
+  series?: MaterialChartSeries[]
+  functions?: Array<{ label: string; expr: string; domain?: [number, number] }>
+}
+
+export interface MaterialCitation {
+  author?: string
+  work?: string
+  year?: string
+  publisher?: string
+  url?: string
+  pages?: string
+}
+
 /* ─── Probeklausur ───────────────────────────────────────────── */
 
 export interface ProbeklausurMaterial {
   id: string           // 'M1', 'M2', 'M3'
   title: string
-  type: 'tabelle' | 'diagramm' | 'versuchsaufbau' | 'text' | 'sequenz'
-  content: string
+  type: 'tabelle' | 'diagramm' | 'versuchsaufbau' | 'text' | 'sequenz'  // Legacy-Label
+  /** Render-Schalter — fehlt ⇒ 'text' (alte Datensätze). */
+  kind?: 'text' | 'table' | 'chart' | 'svg' | 'source' | 'image'
+  content: string      // Immer befüllt: Prosa ODER treue Text-Wiedergabe (Korrektur liest content)
+  table?: MaterialTable
+  chart?: MaterialChart
+  svg?: string         // rohes <svg> — beim Rendern über SafeSvg saniert
+  citation?: MaterialCitation
+  imageRef?: string    // WS5 — idb:/cloud: Ref via noteStorage.ts
+  imageAlt?: string
 }
 
 export interface ProbeklausurTask {
@@ -295,6 +336,18 @@ export interface LernzettelImage {
   alt: string
 }
 
+/** Client-gerenderte Abbildung (Tabelle/Chart/SVG) — reine Inline-JSON-Daten,
+ *  kein Storage-Ref (anders als LernzettelImage). */
+export interface LernzettelFigure {
+  kind: 'table' | 'chart' | 'svg'
+  afterHeading?: string
+  title?: string
+  table?: MaterialTable
+  chart?: MaterialChart
+  svg?: string
+  alt?: string
+}
+
 export interface Lernzettel {
   id: string               // 'lz-{subjectId}-{timestamp}'
   subjectId: string
@@ -307,6 +360,7 @@ export interface Lernzettel {
   keywords: string[]
   examTopics: string[]
   images?: LernzettelImage[]
+  figures?: LernzettelFigure[]
   highlighted?: boolean
   generatedAt: string
   userNoteId: string       // ID der begleitenden UserNote im Lernzettel-Ordner

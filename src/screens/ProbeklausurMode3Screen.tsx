@@ -11,29 +11,14 @@ import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode3Exam, correctExam } from '../lib/gemini'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { BetaPausedScreen } from '../components/ui/BetaPausedScreen'
+import { ExamMaterialCard } from '../components/probeklausur/ExamMaterialCard'
+import { renderMathSegments } from '../lib/mathSegments'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
 import { AFB_PILL, npMarke } from '../lib/afb'
 import { zurueckZiel } from '../lib/appMode'
 
 const ACCENT = 'var(--grad-mode)'
 
-
-function MaterialCard({ m }: { m: GeneratedExam['materials'][0] }) {
-  const typeLabel: Record<string, string> = {
-    tabelle: 'Tabelle', diagramm: 'Diagramm', text: 'Text',
-    versuchsaufbau: 'Versuchsaufbau', sequenz: 'Sequenz',
-  }
-  return (
-    <div className="bg-background rounded-icon border border-border/60 p-4 mb-3">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="px-2 py-0.5 rounded-chip text-[11px] font-bold bg-accent/15 text-text-primary">{m.id}</span>
-        <span className="text-text-muted text-[11px] font-semibold uppercase">{typeLabel[m.type] ?? m.type}</span>
-        <p className="text-text-secondary text-[12px] font-semibold truncate">{m.title}</p>
-      </div>
-      <p className="text-text-primary text-[13px] whitespace-pre-wrap leading-relaxed font-mono">{m.content}</p>
-    </div>
-  )
-}
 
 function TaskAnswerCard({
   task, answer, onChange,
@@ -48,7 +33,7 @@ function TaskAnswerCard({
         )}
         <span className="ml-auto text-text-muted text-[11px] font-semibold">{task.be} BE</span>
       </div>
-      <p className="text-text-primary text-[14px] font-medium leading-relaxed mb-3">{task.text}</p>
+      <p className="text-text-primary text-[14px] font-medium leading-relaxed mb-3">{renderMathSegments(task.text, `t-${task.id}`)}</p>
       <textarea
         value={answer}
         onChange={(e) => onChange(e.target.value)}
@@ -314,7 +299,7 @@ export function ProbeklausurMode3Screen() {
                 {exam.materials.length} Materialie{exam.materials.length !== 1 ? 'n' : ''} · Lies sie sorgfältig
               </p>
             </div>
-            {exam.materials.map((m) => <MaterialCard key={m.id} m={m} />)}
+            {exam.materials.map((m) => <ExamMaterialCard key={m.id} m={m} showTypeLabel />)}
 
             <div className="bg-surface rounded-icon border border-border/60 px-4 py-2.5 mb-4 mt-2 flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-text-primary">

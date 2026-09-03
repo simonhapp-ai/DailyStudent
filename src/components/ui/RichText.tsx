@@ -1,6 +1,7 @@
 import { renderMathSegments } from '../../lib/mathSegments'
 import { useResolvedAttachments } from '../../lib/noteStorage'
-import type { LernzettelImage } from '../../types'
+import { MaterialFigure } from './MaterialFigure'
+import type { LernzettelImage, LernzettelFigure } from '../../types'
 
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*)/)
@@ -33,25 +34,35 @@ function ImageBlock({ src, alt }: { src: string; alt: string }) {
  * `> `/"Merke: " blockquotes, `- ` bullets, blank-line spacers, and inline `$...$` math via KaTeX.
  * Used wherever Smart-Note or Lernzettel content (not just single short fields) is displayed.
  *
- * `images` (Lernzettel-only): each is inserted right after the heading line whose text matches
- * `afterHeading` exactly; unmatched images are appended at the end so nothing silently disappears.
+ * `images` / `figures` (Lernzettel-only): each is inserted right after the heading line whose text
+ * matches `afterHeading` exactly; unmatched entries are appended at the end so nothing silently
+ * disappears. `images` are raster (IndexedDB refs); `figures` are client-rendered (table/chart/svg).
  */
-export function RichText({ text, images }: { text: string; images?: LernzettelImage[] }) {
+export function RichText({ text, images, figures }: { text: string; images?: LernzettelImage[]; figures?: LernzettelFigure[] }) {
   const refs = images?.map((img) => img.ref) ?? []
   const resolvedSrcs = useResolvedAttachments(refs)
 
   if (!text) return null
   const lines = text.split('\n')
   const placed = new Set<number>()
+  const placedFigures = new Set<number>()
 
-  const imagesAfter = (headingText: string) =>
-    (images ?? [])
+  const imagesAfter = (headingText: string) => [
+    ...(images ?? [])
       .map((img, idx) => ({ img, idx }))
       .filter(({ img }) => img.afterHeading === headingText)
       .map(({ img, idx }) => {
         placed.add(idx)
         return <ImageBlock key={`img-${idx}`} src={resolvedSrcs[idx] ?? img.ref} alt={img.alt} />
-      })
+      }),
+    ...(figures ?? [])
+      .map((figure, idx) => ({ figure, idx }))
+      .filter(({ figure }) => figure.afterHeading === headingText)
+      .map(({ figure, idx }) => {
+        placedFigures.add(idx)
+        return <MaterialFigure key={`fig-${idx}`} figure={figure} />
+      }),
+  ]
 
   const nodes = lines.map((line, i) => {
     if (line.startsWith('### ')) {
@@ -109,10 +120,16 @@ export function RichText({ text, images }: { text: string; images?: LernzettelIm
     .filter(({ idx }) => !placed.has(idx))
     .map(({ img, idx }) => <ImageBlock key={`img-leftover-${idx}`} src={resolvedSrcs[idx] ?? img.ref} alt={img.alt} />)
 
+  const leftoverFigures = (figures ?? [])
+    .map((figure, idx) => ({ figure, idx }))
+    .filter(({ idx }) => !placedFigures.has(idx))
+    .map(({ figure, idx }) => <MaterialFigure key={`fig-leftover-${idx}`} figure={figure} />)
+
   return (
     <>
       {nodes}
       {leftover}
+      {leftoverFigures}
     </>
   )
 }

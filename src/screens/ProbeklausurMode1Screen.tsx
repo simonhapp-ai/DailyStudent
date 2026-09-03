@@ -10,6 +10,8 @@ import { subjects, topics } from '../data/mockData'
 import { getTopicPlaceholder } from '../data/subjectInfo'
 import { generateMode1Exam, correctExam } from '../lib/gemini'
 import { BottomSheet } from '../components/ui/BottomSheet'
+import { ExamMaterialCard } from '../components/probeklausur/ExamMaterialCard'
+import { renderMathSegments } from '../lib/mathSegments'
 import type { GeneratedExam, ExamCorrection, SavedProbeklausur, InProgressProbeklausur } from '../types'
 import { AFB_PILL, npMarke } from '../lib/afb'
 import { zurueckZiel } from '../lib/appMode'
@@ -25,18 +27,6 @@ interface ProbeklausurPrefill {
 
 
 
-function MaterialCard({ m }: { m: GeneratedExam['materials'][0] }) {
-  return (
-    <div className="bg-background rounded-icon border border-border/60 p-4 mb-3">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="px-2 py-0.5 rounded-chip text-[11px] font-bold bg-accent/15 text-text-primary">{m.id}</span>
-        <p className="text-text-secondary text-[12px] font-semibold">{m.title}</p>
-      </div>
-      <p className="text-text-primary text-[13px] whitespace-pre-wrap leading-relaxed font-mono">{m.content}</p>
-    </div>
-  )
-}
-
 function TaskAnswerCard({
   task, answer, onChange,
 }: { task: GeneratedExam['tasks'][0]; answer: string; onChange: (v: string) => void }) {
@@ -50,7 +40,7 @@ function TaskAnswerCard({
         )}
         <span className="ml-auto text-text-muted text-[11px] font-semibold">{task.be} BE</span>
       </div>
-      <p className="text-text-primary text-[14px] font-medium leading-relaxed mb-3">{task.text}</p>
+      <p className="text-text-primary text-[14px] font-medium leading-relaxed mb-3">{renderMathSegments(task.text, `t-${task.id}`)}</p>
       <textarea
         value={answer}
         onChange={(e) => onChange(e.target.value)}
@@ -362,7 +352,7 @@ export function ProbeklausurMode1Screen() {
         {/* EXAM */}
         {phase === 'exam' && exam && (
           <div>
-            {exam.materials.map((m) => <MaterialCard key={m.id} m={m} />)}
+            {exam.materials.map((m) => <ExamMaterialCard key={m.id} m={m} />)}
             {exam.tasks.map((t) => (
               <TaskAnswerCard
                 key={t.id}
