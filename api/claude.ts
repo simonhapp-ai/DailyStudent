@@ -86,7 +86,10 @@ async function rpc<T>(token: string, name: string, args: Record<string, unknown>
 // HTTP immer 200; der echte Status steckt im Body (wie api/gemini.ts), damit der Client
 // ihn zuverlässig lesen kann statt an einer Plattform-Fehlerseite zu scheitern.
 const J = (obj: unknown) => new Response(JSON.stringify(obj), { status: 200, headers: { 'Content-Type': 'application/json' } })
-const fallback = () => J({ status: 200, fallback: true })
+const fallback = (reason: string) => {
+  console.log('[claude] fallback:', reason)
+  return J({ status: 200, fallback: true })
+}
 const errBody = (status: number, message: string) => J({ status, data: { error: { message } } })
 
 async function handler(request: Request): Promise<Response> {
@@ -99,7 +102,7 @@ async function handler(request: Request): Promise<Response> {
   if (!token || !user) return errBody(401, 'Unauthorized')
 
   const apiKey = process.env.ANTHROPIC_API_KEY
-  if (!apiKey) return fallback()   // Key noch nicht in Vercel -> still über Gemini weiter
+  if (!apiKey) return fallback('no ANTHROPIC_API_KEY in env')   // Key noch nicht in Vercel
 
   let payload: { bucket?: string; body?: Record<string, unknown>; trial?: boolean }
   try {
@@ -116,20 +119,21 @@ async function handler(request: Request): Promise<Response> {
   // ── Zugriffs-Schranke: Pro ODER Gratis-Kostprobe ──────────────────────────
   const { isPro, trialUsed } = await getProStatus(token, user.id, user.email)
   const wantsTrial = payload.trial === true && !isPro
-  if (!isPro && !wantsTrial) return fallback()
-  if (wantsTrial && trialUsed) return fallback()
+  if (!isPro && !wantsTrial) return fallback(`not pro (email=${user.email || '?'}, bucket=${bucket})`)
+  if (wantsTrial && trialUsed) return fallback('trial already used')
 
   // ── Tageslimit + Monats-Deckel (fail-CLOSED: bei Zweifel Gemini) ──────────
   const limitRes = await rpc<{ allowed: boolean; month_spend: number }[]>(token, 'check_claude_limit', {
     p_user_id: user.id, p_bucket: bucket, p_limit: limit, p_month: month,
   })
-  if (!limitRes || !limitRes[0]) return fallback()
+  if (!limitRes || !limitRes[0]) return fallback('check_claude_limit RPC null (migration 019 not applied?)')
   const { allowed, month_spend } = limitRes[0]
-  if (!allowed) return fallback()
-  if (Number(month_spend) >= MONTHLY_CAP_EUR) return fallback()
-  if (wantsTrial && Number(month_spend) >= TRIAL_STOP_EUR) return fallback()
+  if (!allowed) return fallback('daily bucket limit reached')
+  if (Number(month_spend) >= MONTHLY_CAP_EUR) return fallback(`monthly cap: spent ${month_spend} EUR`)
+  if (wantsTrial && Number(month_spend) >= TRIAL_STOP_EUR) return fallback(`trial stopped: spent ${month_spend} EUR`)
 
   // ── Anthropic-Call ───────────────────────────────────────────────────────
+  console.log('[claude] calling anthropic', { bucket, isPro, wantsTrial, month_spend })
   let anthRes: Response
   try {
     anthRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -151,9 +155,10 @@ async function handler(request: Request): Promise<Response> {
   }
   if (!anthRes.ok) {
     const msg = (data as { error?: { message?: string } })?.error?.message ?? `Claude Fehler ${anthRes.status}`
+    console.log('[claude] anthropic error', anthRes.status, msg)
     return errBody(anthRes.status, msg)
   }
-  if (data.stop_reason === 'refusal') return fallback()
+  if (data.stop_reason === 'refusal') return fallback('anthropic refusal')
 
   // ── Kosten verbuchen ────────────────────────────────────────────────────
   const u = data.usage ?? {}
