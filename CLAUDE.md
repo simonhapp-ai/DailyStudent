@@ -468,6 +468,11 @@ KC-Daten liegen als JSON-Dateien in `public/kc/{Bundesland}/{fach}.json`.
 - **Sensible Signing-Keys (`.p8`-Dateien, private Keys) nie in den Chat einfügen lassen:** bei Bedarf (z.B. JWT-Generierung für Supabases Apple-Provider) nur den Dateipfad erfragen, lokal per Bash/Node verarbeiten, nur das Ergebnis zurückgeben.
 - **Lernzettel-Erklärbilder sind lokal-first (IndexedDB) wie Note-Attachments, kein eigenes Storage-Bucket:** `Lernzettel.images` enthält nur `{ref: 'idb:<uuid>', afterHeading?, alt}` — die eigentlichen PNG-Bytes verlassen nie den `saveLocalAsset()`/`getAttachment()`-Pfad aus `src/lib/noteStorage.ts`. Kein Cross-Device-Sync für diese Bilder (anders als Note-Attachments gibt es hier keinen "Übertragen"-Button) — bewusste Vereinfachung für die erste Version, da die Bilder jederzeit neu generierbar sind. `RichText` löst sie über `useResolvedAttachments()` auf und platziert sie nach der Überschrift, die `afterHeading` wortwörtlich matcht; kein Match → Bild wird ans Ende gehängt statt zu verschwinden.
 - **Swipebare Listenzeilen (Wischen für Aktionen, wie Apple Notizen) — Referenzimplementierung ist `LernzettelRow` in `LernzettelScreen.tsx`:** `framer-motion` `motion.div drag="x"` mit `dragConstraints`/`dragElastic`, `onTap` statt natives `onClick` (unterscheidet zuverlässig Tap von Swipe, wichtig wenn beides auf demselben Element liegt), `animate={{x: isOpen ? -REVEAL : 0}}` gesteuert über ein `openRowId`-State im Eltern-Screen (nicht lokal pro Zeile), damit das Öffnen einer Zeile alle anderen automatisch schließt. Erste swipebare Liste im Repo (Stand 25.07.2026) — bei ähnlichem Bedarf anderswo (Notizen, Karteikarten-Decks) dieses Muster kopieren statt neu zu erfinden, noch keine eigene wiederverwendbare Komponente extrahiert.
+- **Sichtbarkeit hängt nie an einer Animation.** Ein- und Ausblendungen von Screens, Schritten und Bildern laufen als CSS-Animation **ohne** `animation-fill-mode` (`.route-fade`, `.schritt-wechsel`, `.bild-wechsel`, `.fab-in` in `index.css`) — der Grundzustand ist damit sichtbar. Kein `AnimatePresence mode="wait"` und kein `initial: opacity 0` für Inhalte, die auch ohne Animation da sein müssen: Bleibt das Animationsbild aus, steht der Screen sonst dauerhaft leer, während der Zustand dahinter weiterläuft. Dreimal genau so passiert (Screenwechsel, Onboarding, Demo).
+- **Zurück folgt dem Weg, nicht dem Verlauf.** `elternPfad()` in `src/lib/appMode.ts` ist die einzige Stelle, an der die Hierarchie steht; `zurueckZiel()` liest die offene Adresse. **Kein `navigate(-1)`.** Zwei Wurzeln: Unterricht und Klausurenmodus. Profil hängt am Unterricht (Avatar), die sechs Planen-Rubriken am Klausurenmodus, Notiz/Ordner am Fach.
+- **Eigene Fächer werden wie feste behandelt.** `subjectInfo(id)` aus `data/subjectInfo.ts` statt `SUBJECT_INFO[id]` — das Verzeichnis wird vom `UserContext` über `registerCustomFaecher()` gefüllt. Direktzugriffe auf `SUBJECT_INFO` zeigen bei eigenen Fächern die Kennung statt des Namens; für Studierende, die nur eigene Fächer haben, betrifft das fast jede Anzeige. `resolveSubjectInfo(id, liste)` bleibt für das Onboarding, wo es noch kein Profil gibt.
+- **`dvh` nur dort, wo die Seite selbst nicht scrollt.** Die dynamische Fensterhöhe ändert sich, während die Browserleiste ein- und ausfährt; in einer scrollenden Seite entsteht daraus eine Schaukel, die den Screen von selbst auf und ab rütteln lässt. Für scrollende Seiten `svh`.
+- **Gespeicherte Datensätze werden beim Laden mit den Vorgaben aufgefüllt**, nicht nur mit `??` gegen `undefined` geprüft — ein Datensatz aus einer älteren Fassung kennt neuere Felder nicht (`mitVorgaben()` in `UserContext.tsx`). Sonst wirft die erste Stelle, die `.length` darauf liest.
 - **Löschen mit Companion-Records/IndexedDB-Assets folgt dem `deleteLernzettel()`-Muster, nicht `deleteAttachmentsForNotes()` blind aufrufen:** `deleteAttachmentsForNotes()` (in `noteStorage.ts`) räumt ausschließlich `UserNote.attachments`/`drawingAttachments` auf — für andere Record-Typen mit eigenen Bild-Refs außerhalb einer `UserNote` (z. B. `Lernzettel.images`) muss `deleteAttachment(ref)` direkt pro Ref aufgerufen werden. Beim Löschen eines Records mit Companion-`UserNote` (wie bei Lernzettel: `userNoteId`) immer auch die Companion-Note + ihre eigenen Attachments aufräumen, nicht nur den Haupt-Record.
 
 ---
@@ -768,6 +773,61 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 - **Simon hinterfragt technische Behauptungen aktiv und erwartet ehrliche, unaufgeregte Korrektur ohne Beschönigung** — explizit gewünscht: „no hallucinations". Schätzt direkte, faktenbasierte Einordnung von Aufwand/Risiko/Kosten (z.B. Apple-IAP-Kommission, realistischer Zeitaufwand für einen nativen Rewrite) höher ein als vorauseilende Zustimmung zu seinen eigenen Ideen — siehe 26.–27.07.2026-Diskussion über Wrapper- vs. natives-Rewrite-Strategie in „Zukunftsvision" weiter unten.
 - **Sensible Daten (private Keys, `.p8`-Dateien) nie in den Chat einfügen lassen** — wenn ein Signing-Key/Secret gebraucht wird (z.B. Apple Sign-in-Key, App Store Connect API Key), Simon bitten den Dateipfad zu nennen (z.B. Desktop), lokal per Bash/Node einlesen und verarbeiten (z.B. JWT signieren), nur das Ergebnis zurückgeben — nie den Rohinhalt im Gespräch anzeigen oder anzeigen lassen.
 - **Über 150 Personen bereits auf der Warteliste für den App-Store-Release** (Stand 27.07.2026) — echter Nutzerdruck hinter der Deadline, nicht nur Simons persönliches Ziel.
+
+---
+
+## Letzte Session (02.09.2026) — Version C gebaut, nach main gemerged, alle 47 Screens durchgesehen
+
+Das in `project_redesign_two_modes_concept` (Claude-Memory) beschlossene **Konzept C ist umgesetzt und live**. Branch `redesign/version-c` → `main`, Merge-Commit „redesign(C): Zwei Modi, ein Weg", 96 Dateien, +8.892/−6.123. Danach folgte ein vollständiger Durchgang durch alle 47 Screens mit laufenden Korrekturen.
+
+**Wichtig zur Reichweite:** `main` deployt über Vercel, und der Wrapper lädt dieselbe Adresse — jeder Push erreicht die installierte App-Store-App beim nächsten Öffnen, ohne Review. Swift-Änderungen dagegen **nicht**, siehe „Wartet auf einen nativen Build" weiter unten.
+
+### Architektur
+
+- **Modusfarbe als umschaltbares Token** (`--grad-mode`, `--color-accent`, `--color-on-accent`; Klasse `.mode-klausur` auf `<main>` bzw. dem Mobil-Wrapper). Jeder Screen trägt automatisch die Farbe seiner Situation; die Navigation liegt bewusst außerhalb, damit sie beide Modi zeigt.
+- **Bausteinsatz** in `src/components/ui/`: `Stage` (mit `tone`), `ListGroup`/`ListRow`, `Tag`, `Metric`/`MetricRow`, `Progress`, `EmptyState`/`WorkingState`, `Dialog`, `Banner`, `PlanenBar`, `Icon`, `ZurueckZeile`.
+- **Neue Module:** `lib/appMode.ts` (Modus + `elternPfad`), `lib/xp.ts` (Ränge/Etappen), `lib/afb.ts`, `lib/gradeTone.ts`, `lib/geraet.ts` (`IST_TELEFON`), `lib/onboarding.ts`, `data/bundeslaender.ts`, `data/tips.ts`.
+- **Gelöscht:** `CoinIcon.tsx`, `CoinToast.tsx`, `ProfilErscheinungsbildScreen.tsx`.
+
+### Simons Regeln aus dieser Session (dauerhaft gültig)
+
+- **Zurück bedeutet eine Stelle den Weg hinauf, nie zum zuletzt gesehenen Screen.** Der Weg hat zwei Wurzeln: Unterricht und Klausurenmodus. `elternPfad()` in `lib/appMode.ts` ist die einzige Stelle; **kein `navigate(-1)`** (49 Stellen umgestellt).
+- **Zurück-Wege tragen immer die volle Schriftfarbe** — hell schwarz, dunkel weiß. Keine Akzent- oder Grautöne. (Es waren vier Farben im Umlauf, die auffälligste im `Header`.)
+- **Lila- und Mint-Flächen tragen die Landing-Page-Verläufe**, Schrift darauf immer weiß. Kein Schwarz auf Lila oder Mint. Grün/Rot nur als Signal auf neutraler Fläche.
+- **Farbige Schrift gibt es nicht** — weiß oder schwarz nach Kontrast.
+- **Keine Emojis als Bedienzeichen.** Bewusste Ausnahme von Simon: die Streak-Flamme 🔥, weil die gezeichnete Form bei 15 px zum Klecks wurde.
+- **Auf Druck werden Navigation, Profil- und Planen-Knopf etwas größer statt kleiner** (`.press-grow`). Gegen die übliche Konvention, Simons ausdrückliche Wahl; er probiert es aus. Die zwei Werte zum Umschwenken stehen als Kommentar bei der Regel in `index.css`.
+- **Screens hängen nicht aneinander:** Wer in einem heruntergescrollt hat, beginnt im nächsten oben — **ohne sichtbare Bewegung**.
+- **Vor Umsetzung fragen**, wenn mehrere Wege denkbar sind (er wollte z. B. drei Vorschläge zur Streak-Pille, bevor gebaut wird).
+
+### Echte Fehler, die der Durchgang fand
+
+| Fund | Ursache |
+|---|---|
+| **126 Farbangaben taten nichts** | `rgba(var(--x), n)` — die Token sind Zahlentripel ohne Kommas, der Browser verwarf die ganze Angabe. Betraf die Fläche der Seitenleiste, `.nav-active`, sämtliche getönten Kästen und Schatten in 23 Dateien. |
+| **Klausurenmodus stürzte ab** | `appStats` aus dem Speicher wurde nicht Feld für Feld mit den Vorgaben aufgefüllt; fehlte `examScores`, warf `LernvorschlagWidget`. Jetzt `mitVorgaben()` an 15 Lesestellen. |
+| **Drei Screens blieben leer** | `AnimatePresence mode="wait"` bzw. `initial: opacity 0` — Sichtbarkeit hing daran, dass eine Animation ihr Ende meldet. Betraf Screenwechsel, Onboarding (kam nicht über Schritt 1 hinaus) und die Demo. Alle drei jetzt CSS-Animationen **ohne** `animation-fill-mode`. |
+| **Onboarding-Screens rüttelten** | `dvh` ist die *dynamische* Fensterhöhe und ändert sich, während die Browserleiste ein- und ausfährt — in einer scrollenden Seite entsteht eine Schaukel. Jetzt `svh`. Die drei übrigen `dvh`-Stellen bleiben: dort scrollt die Seite selbst nicht. |
+| **Nachlaufende Wischbewegung** | Nach dem Loslassen gleitet die Seite weiter und überschrieb `scrollTo(0)`. Jetzt wird das Scrollen kurz gesperrt (`recenterScreen(false)`). |
+| **Weiß auf hellem Mint = 1,92:1** | `--color-accent` im Klausurenmodus auf `#059669` (3,77:1); helles `#34D399` nur noch als Fläche ohne Schrift. |
+| **Jahresansicht unlesbar** | Tageszahlen auf 5 px, Wochentage auf 4 px bei 30 % Deckkraft. |
+| **Knopf hinter der unteren Leiste** | Acht Screens hatten unten nur 40 px Platz; die Leiste ist rund 80 px hoch. Der letzte Knopf war nicht nur verdeckt, sondern unerreichbar. Jetzt 112 px. |
+| **Sackgassen** | Karteikarten- und Lernzettel-Generator boten alle Fächer an, auch die ohne Material — jedes führte in einen leeren zweiten Schritt. |
+| **Kartensätze ohne Namen** | Selbst getippte Sätze hängen an keiner Notiz und hießen alle „Notiz". |
+| **Eigene Fächer waren Bürger zweiter Klasse** | ~40 Stellen schlugen Fächer direkt in `SUBJECT_INFO` nach, das eigene Fächer nicht kennt — für Studierende, die nur eigene Fächer haben, betraf das fast jede Anzeige (statt des Namens erschien die Kennung). Jetzt ein Verzeichnis in `subjectInfo.ts`: `registerCustomFaecher()` meldet die Liste an, `subjectInfo(id)` beantwortet eigene wie feste Fächer. |
+
+### Wartet auf einen nativen Build (nicht über Vercel erreichbar)
+
+Die eingereichte App stammt vom **27.07.2026**. Zwei Swift-Änderungen liegen seitdem im Repo und fehlen ihr:
+
+1. **`scrollView.bounces = false`** (`BridgeViewController.swift`, Commit `7c87e50`, 01.08.2026) — ohne sie federt der WebView am oberen Rand, der Inhalt rutscht sichtbar nach unten. Simon meldete das am 02.09.; seine Beobachtung „nur ab etwa fünf Fächern" ist der Beweis dafür, denn ein WebView federt senkrecht nur bei scrollbarer Seite. **Die CSS-Sperre `overscroll-behavior: none` reicht auf iOS nicht.**
+2. **Bounce-Farbverlauf** (29.07.2026).
+
+Bei einer Meldung zu einem dieser zwei Effekte **nicht nach einer Web-Umgehung suchen** — die Behebung liegt im Code und wartet nur auf den Upload.
+
+### Nie geprüft
+
+Die Probeklausur-Screens *während* einer laufenden Klausur und die Blurting-Auswertung — beides bräuchte einen echten KI-Durchlauf. Und der Schreibblock mit Stift: Handballen-Ablage, Zwei-Finger-Navigation und Zoom-Schreibfeld entscheiden sich am iPad, nicht im Browser. Das wäre der erste Punkt beim nächsten Gerätetest.
 
 ---
 
