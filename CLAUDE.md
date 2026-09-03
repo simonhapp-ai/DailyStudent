@@ -69,11 +69,11 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99%, App von Apple genehmigt, **Beta-Modus aktiv** (Stand: 31.07.2026)
+## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99%, App von Apple genehmigt, **Beta beendet, Pro live** (Stand: 03.09.2026)
 
 **App-Store-Kontext:** Die App wurde von Apple genehmigt — Status in App Store Connect ist **„Pending Developer Release"** (fertig geprüft, aber noch nicht öffentlich; Simon entscheidet selbst wann er auf „Release" klickt). Eingereicht wurde am 27.07.2026, vor dem ursprünglichen Ziel-Datum 02.08.2026 (danach ist Simon in Kanada, nur mit Handy erreichbar, kein Laptop). Track B (App-Politur) ist fertig, Track A (Capacitor-Wrapper + Apple IAP via RevenueCat + Sign in with Apple) ist vollständig gebaut und der eingereichte Build genehmigt. Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`. **Wichtig, nicht verwechseln:** Das ist der kurzfristige Wrapper-Ansatz — komplett getrennt von Simons langfristiger Vision eines echten nativen SwiftUI-Rewrites OHNE Deadline, siehe neue Sektion „Zukunftsvision" weiter unten.
 
-**🔶 Beta-Modus ist seit 31.07.2026 aktiv** (Simons Urlaub, App real herunterladbar, 150+ Warteliste) — Pro-Käufe sind komplett pausiert und drei Probeklausur-Modi sind auf Eis, ferngesteuert über die `app_config`-Tabelle in Supabase, ohne Code-Deploy umschaltbar. **Vollständige Datei-für-Datei-Referenz, was genau pausiert ist und wie es zurückgesetzt wird: Abschnitt „🔶 Beta-Modus — vollständige Referenz" direkt unter der Paywall-Tabelle weiter unten.** Lies das zuerst, bevor du an Probeklausur/Lernplan/Lernzettel/Pro-Kauf-Code arbeitest — die Paywall-Tabelle unten beschreibt den NORMALZUSTAND, der Beta-Abschnitt beschreibt was gerade tatsächlich läuft.
+**✅ Beta ist beendet (03.09.2026).** Alle Beta-Locks/-Banner und die gesamte `app_config`-Infrastruktur (`AppConfig`-Context, Supabase-Tabelle-Lesen, `BetaPausedScreen`, `api/gemini.ts` Mode-2-Pause) sind aus dem Code entfernt. Es gilt wieder die **normale Paywall-Tabelle unten** — sie beschreibt jetzt den echten Ist-Zustand. Zusätzlich: **Premium-KI (Claude Sonnet) für Pro** — Lernzettel + Probeklausur-Material laufen für Pro-Nutzer über Claude (50 Lernzettel / 25 Klausur-Materialien pro Kalendermonat, danach nahtlos Gemini), steuerbar über den Pro-Schalter `profile.claude_enabled` (Default an, im Profil + in den Generatoren). Aufgaben-Generierung + Korrektur laufen für alle über Gemini. Details: Sessions „02.–03.09.2026" weiter unten + `feedback_confirm_decisions`. `PRO_TEST_ALLOWLIST` (Simons 2 Emails) zählt jetzt app-weit als Pro (Client + Server).
 
 ### Phase 2 — 100% funktioniert (echte KI, kein Mock):
 - Onboarding Gate (Name, Klasse, Schulform, Bundesland, Fächer, Klausurtermin, Stundenplan-Scan)
@@ -177,76 +177,31 @@ Smart Notes
 - **Lernzettel löschen + swipebare Markieren/Löschen-Aktionen, wie Apple Notizen (25.07.2026)** ✅ — Bibliothek (`LernzettelScreen.tsx`) hatte keine Lösch-Möglichkeit und wurde unübersichtlich. Zwei Ergänzungen: (1) Detail-Ansicht bekommt einen "Lernzettel löschen"-Button ganz unten, mit `window.confirm()`-Bestätigung (gleiches Muster wie `LernplanDetailScreen`s Löschen-Button). (2) Jede Zeile in der Bibliotheksliste ist neu nach links wischbar — eigene `LernzettelRow`-Komponente (lokal in `LernzettelScreen.tsx`), `framer-motion` `drag="x"` mit `dragConstraints`/`dragElastic`, legt beim Wischen zwei fest positionierte Aktionen dahinter frei: gelber Stern ("Markieren", `#FFD60A`) und roter Papierkorb ("Löschen", `#FF3B30`, sofort ohne Bestätigungsdialog — die Wisch-Geste selbst ist bereits der bewusste zweite Schritt). `onTap` (nicht natives `onClick`) unterscheidet zuverlässig Tap-zum-Öffnen von Swipe-Geste; ein `openRowId`-State im Screen sorgt dafür, dass Wischen einer neuen Zeile die vorherige automatisch wieder schließt (wie in Apple Notizen). Markierte Lernzettel sortieren sich an den Anfang der Liste und bekommen ein kleines gelbes Stern-Badge neben dem Titel — sonst wäre "Markieren" folgenlos. **Erste swipebare Listenzeile im gesamten Repo** — bei Bedarf an anderer Stelle (z. B. Notizen, Karteikarten-Decks) als Vorbild wiederverwendbar, siehe Architektur-Entscheidungen.
   - Neues Feld `Lernzettel.highlighted?: boolean`, neue Funktionen `deleteLernzettel()`/`toggleLernzettelHighlight()` in `UserContext.tsx` (Pattern wie `deleteSavedProbeklausur`/`deleteLernplan`: lokalen State filtern, `saveStorage({...loadStorage(), ...})` direkt statt `persist()`, dann `deleteLernzettelFromDB()` fire-and-forget). `deleteLernzettel()` räumt zusätzlich die begleitende `UserNote` (`deleteNotesFromDB`) und alle `idb:`-Refs in `Lernzettel.images` über `deleteAttachment()` auf — bewusst NICHT über `deleteAttachmentsForNotes()`, das nur `UserNote.attachments` kennt, nicht das separate `Lernzettel.images`-Feld. Neue Migration `015_lernzettel_highlighted.sql` (`lernzettel.highlighted` Spalte) — **Anwendungs-Status unklar, siehe DB-Schema-Sektion, mit Simon abklären.**
 
-### Paywall-Strategie (Stand 10.06.2026):
+### Paywall-Strategie (Stand 03.09.2026 — Beta beendet, das ist der echte Ist-Zustand):
 
 | Feature | Free | Pro |
 |---------|------|-----|
 | Smart Notes (OCR + Analyse) | ✅ unbegrenzt | ✅ |
 | Karteikarten generieren | ✅ unbegrenzt | ✅ |
 | Blurting | ✅ unbegrenzt | ✅ |
-| Lernzettel | 1/Tag | ✅ unbegrenzt |
+| Lernzettel | 1/Tag (Gemini) | ✅ unbegrenzt · **Claude** (50/Monat, dann Gemini) |
 | Probeklausur — Vollständige (Mode 2) | 1/Tag | ✅ unbegrenzt |
-| Probeklausur — AFB Trainer (Mode 1) | ❌ ProModal | ✅ |
-| Probeklausur — Materialklausur (Mode 3) | ❌ ProModal | ✅ |
-| Probeklausur — Ohne Material (Mode 4) | ❌ ProModal | ✅ |
-| KI-Korrektur (alle PK-Modi) | ❌ Lock-Card | ✅ |
-| Lernplan Einzel | ✅ | ✅ |
+| Probeklausur — AFB Trainer (Mode 1) | ❌ `ProModeGate` | ✅ |
+| Probeklausur — Materialklausur (Mode 3) | ❌ `ProModeGate` | ✅ |
+| Probeklausur — Ohne Material (Mode 4) | ❌ `ProModeGate` | ✅ |
+| KI-Korrektur (alle PK-Modi) | ❌ Lock-Card | ✅ (immer Gemini) |
+| Probeklausur-**Material** (Schaltpläne/SVG/Tabellen) | einfach (Gemini) | **Claude** wenn Schalter an (25/Monat, dann Gemini) |
+| Lernplan Einzel | ✅ (3/Tag) | ✅ |
 | Lernplan Vollständig | ❌ ProModal | ✅ |
 | Lernplan Abitur | ❌ ProModal | ✅ |
 
-**Paywall-Pattern:** Kein Blur. Free-User sehen eine klare Lock-Card mit konkreten Feature-Bullets. Klick öffnet `ProModal` als Bottom Sheet von unten mit Stripe-Checkout.  
-**ProModal:** `src/components/ui/ProModal.tsx` — `feature` Prop steuert Headline + Bullets. Stripe-Checkout direkt im Modal.
+**Paywall-Pattern:** Kein Blur. Free-User sehen eine klare Lock-Card / `ProModeGate` (Vollbild). Klick öffnet `ProModal` als Bottom Sheet mit Stripe-/RevenueCat-Checkout.
+**ProModal:** `src/components/ui/ProModal.tsx` — `feature` Prop steuert Headline + Bullets. Ist der Nutzer bereits Pro, rendert es `null` (nie ein Checkout für Pro). Headline-Framing ist „Zugriff auf die Premium-KI-Modelle"; der 50/25-Monatshinweis steht bewusst weit unten (nach Preis + Buttons).
+**ProModeGate:** `src/components/ui/ProModeGate.tsx` — Vollbild-Pro-Sperre für die drei Pro-only Probeklausur-Modi, als früher Return in Mode1/3/4 (`if (!isPro && phase === 'setup')`), fängt auch Direkt-URL/Resume. Ersetzt das gelöschte `BetaPausedScreen.tsx`.
 
-### 🔶 Beta-Modus — vollständige Referenz (aktiv seit 31.07.2026, siehe Sessions „31.07.2026" weiter unten für die volle Entstehungsgeschichte)
+**Premium-KI-Schalter (`profile.claude_enabled`, Default an):** global im Profil → Allgemein + inline in Lernzettel-/Probeklausur-Generator. Aus = alles über Gemini. `resolveEngine()` in `src/lib/studyEngine.ts` respektiert `claudePref`; nur `false` schaltet Claude ab. Kontingent monatlich (Migration `021_claude_monthly_quota.sql`): `claude_lernzettel` 50, `claude_probeklausur` 25 — serverseitig durchgesetzt in `api/claude.ts`, bei Erreichen lautloser Gemini-Fallback. Korrektur läuft für ALLE über Gemini (`correctExam` hat keinen Engine-Parameter).
 
-**Warum:** Simon ist im Urlaub, nur Handy erreichbar, kein Laptop. Zwei Sorgen: (1) kein Support möglich, falls ein zahlender Nutzer ein Problem hat; (2) KI-Token-Kosten bei mehreren gleichzeitigen Nutzern (App ist jetzt real herunterladbar, 150+ Warteliste). Nichts wurde entfernt — jede Änderung ist ein bedingtes Überspringen des alten Codes, gesteuert über ein einziges Set von Flags. Alter Code + alte UI bleiben vollständig erhalten und laufen automatisch wieder normal, sobald die Flags zurückgesetzt werden.
-
-**Steuerzentrale: Supabase-Tabelle `app_config`** (Migration `017_beta_mode_config.sql`, ✅ angewendet), 1 Zeile (`id=1`), öffentlich lesbar, nur über Supabase Table Editor beschreibbar (funktioniert vom Handy-Browser, kein Deploy nötig). Client lädt sie einmalig beim App-Start in `UserContext.tsx` → `appConfig` (Context-Wert, fail-open auf „alles normal", falls Fetch fehlschlägt oder die Zeile fehlt).
-
-**Aktueller Werte-Stand (Beta AN):**
-
-| Spalte | Beta-Wert | Normal-Wert (Default der Spalte) |
-|---|---|---|
-| `pro_purchases_enabled` | `false` | `true` |
-| `probeklausur_afb_trainer_free` | `true` | `false` |
-| `probeklausur_mode2_enabled` | `false` | `true` |
-| `probeklausur_mode3_enabled` | `false` | `true` |
-| `probeklausur_mode4_enabled` | `false` | `true` |
-
-**So zurücksetzen (kein Deploy, kein Code):** Handy-Browser → `supabase.com` einloggen → Projekt öffnen → „Table Editor" → Tabelle `app_config` → die eine Zeile antippen → alle 5 Werte auf die „Normal-Wert"-Spalte oben umstellen → speichern. Wirkt sofort beim nächsten App-Start eines Nutzers.
-
-**Datei-für-Datei, was während Beta pausiert/geöffnet ist:**
-
-| Datei | Funktion/Stelle | Was passiert während Beta |
-|---|---|---|
-| `src/context/UserContext.tsx` | `AppConfig`-Interface, `appConfig`-State + Fetch-Effect | Lädt `app_config` einmalig, stellt es app-weit über `useUser().appConfig` bereit |
-| `src/components/ui/ProModal.tsx` | `handleCheckout()` / gesamte Modal-Ansicht | Zeigt statt Preis-Toggle/Stripe-Checkout eine „Pro startet nach der Beta"-Ansicht + „Für Rabatt vormerken"-Button (schreibt `profiles.pro_waitlist_interested=true`). **Zentraler Hebel — alle 9 ProModal-Trigger im Code laufen hierüber.** |
-| `src/screens/ProfilScreen.tsx` | `handleUpgrade()` | Früher Return zur ProModal-Beta-Ansicht statt Stripe/RevenueCat-Aufruf |
-| `src/screens/ProfilScreen.tsx` | Pro-Upgrade-Banner (oben im Profil) | Zeigt Beta-Karte („Pro startet nach der Beta" + Vormerken-Button) statt Preis-Karte |
-| `src/screens/ProbeklausurMenuScreen.tsx` | `handleModeClick()` | Mode 1 navigiert frei (kein Pro-Check); Mode 2/3/4 öffnen ProModal statt zu navigieren |
-| `src/screens/ProbeklausurMenuScreen.tsx` | Karten-Badges | Mode 1: „Kostenlos in der Beta" · Mode 2–4: „🕒 Bald wieder da" (statt „✦ Pro") |
-| `src/screens/ProbeklausurMode1Screen.tsx` | `correctionUnlocked` | `isPro \|\| probeklausurAfbTrainerFree` — KI-Korrektur für alle offen |
-| `src/screens/ProbeklausurMode2Screen.tsx` | früher Return vor Haupt-`return` | Zeigt `<BetaPausedScreen title="Vollständige Klausur">` — Screen komplett unerreichbar, auch per Direkt-URL/Resume |
-| `src/screens/ProbeklausurMode3Screen.tsx` | früher Return vor Haupt-`return` | `<BetaPausedScreen title="Materialklausur">` |
-| `src/screens/ProbeklausurMode4Screen.tsx` | früher Return vor Haupt-`return` | `<BetaPausedScreen title="Ohne Material">` |
-| `src/components/ui/BetaPausedScreen.tsx` | (neue Datei) | Full-Screen-Fallback-Komponente, von den 3 Screens oben genutzt |
-| `api/gemini.ts` | `isProbeklausurMode2Paused()` | Serverseitiger Block für Bucket `probeklausur_full` (= Mode 2 Generierung) — einziger Modus mit eigenem Bucket, daher sauber blockbar. **Mode 1/3/4 teilen sich `probeklausur_other` — dort nur clientseitige Absicherung, bewusste Lücke, siehe Session-Log 31.07.2026.** |
-| `src/screens/LernzettelScreen.tsx` | „Pro Lernzettel"-Vorschau-Badges + CTA | „✦ PRO" → „Vorschau", „Pro freischalten"-Button → „Für Update vormerken" (neutrale Farbe statt Gold) |
-| `src/screens/LernzettelGeneratorScreen.tsx` | `handleGenerate()`, neuer `todayLernzettelCount`-Check | **Neu gebaut** (existierte vorher gar nicht im Code): 1/Tag-Deckel für alle, wenn `!appConfig.proPurchasesEnabled` |
-| `src/screens/LernplanKonfiguratorScreen.tsx` | `handleNext()`, `proActive` | Vollständig/Abitur-Gate prüft zusätzlich `appConfig.proPurchasesEnabled` — blockt auch Trial-/Dev-Mode-Pro |
-| `src/screens/LernplanKonfiguratorScreen.tsx` | `StepPlanType`, Badge | „✦ Pro" → „🕒 Bald verfügbar" auf Vollständig-/Abitur-Karten |
-| `src/screens/LernplanDetailScreen.tsx` | `SessionCard`-Aufruf, `isPro`-Prop | `isPro={isPro && appConfig.proPurchasesEnabled}` — Pro-Aktivitäts-Tag/Lock konsistent |
-| `src/screens/ProfilCoinsScreen.tsx` | `handleRedeemDiscount()` | Verweigert früh, wenn Käufe pausiert — **schützt Coins vor sinnlosem Ausgeben** (echter Bug sonst) |
-| `src/screens/ProfilCoinsScreen.tsx` | Rabatt-Widget (15%/30%) | Preistext → „Wartet auf dich — Pro startet nach der Beta", Button → „Coins sind sicher"-Hinweis |
-| `supabase/migrations/017_beta_mode_config.sql` | — | Legt `app_config` + `profiles.pro_waitlist_interested` an. ✅ Angewendet. |
-
-**Bewusst NICHT verändert / weiterhin voll aktiv:**
-- Smart Notes (inkl. Foto-Scan), Karteikarten, Blurting, Keyword-Erklärung — komplett unberührt
-- Lernplan Einzel — bleibt frei nutzbar (bestehender 3/Tag-Free-Deckel unverändert)
-- Statistiken/Insights, Streak/Coins-System, Streak-Freeze-Kauf (Coins, kein echtes Geld) — unberührt
-- Referral-Widget (UI) — bleibt sichtbar, zeigt keinen Preis; der tatsächliche Trial-Bypass für Lernplan/Lernzettel ist aber oben geschlossen
-- `DesktopSidebar.tsx`/`ProfilScreen.tsx` kleine „✦ Pro"-Badges neben dem eigenen Namen — reine Status-Anzeige für Nutzer, die bereits Pro haben, kein Kauf-Pitch
-- `LandingScreen.tsx` (öffentliche Marketing-Seite `/landing`) — ihr Pricing-Button führt nur zu `/dashboard`/`/unterricht`, kein echter Checkout
+**Beta beendet (03.09.2026) — was entfernt wurde:** die gesamte `app_config`-Infrastruktur (`AppConfig`-Interface + Context + Supabase-Fetch in `UserContext.tsx`, `effectiveAppConfig`), `BetaPausedScreen.tsx`, `ProModal`s „Pro startet nach der Beta"-Ansicht + Waitlist-Button, `api/gemini.ts`s `isProbeklausurMode2Paused()`, alle „Kostenlos in der Beta" / „Bald wieder da" / „✦ Pro → 🕒 Bald verfügbar"-Badges, die Beta-Karten im ProfilScreen + der Footer-„· Beta"-Zusatz, der Beta-Tag im OnboardingScreen. Migration `017_beta_mode_config.sql` bleibt als Datei (Historie); die `app_config`-Tabelle + `profiles.pro_waitlist_interested`-Spalte in Supabase sind jetzt tot (nichts liest sie mehr) — können bleiben oder per optionaler Migration gedroppt werden. `PRO_TEST_ALLOWLIST` (Simons 2 Emails) ist jetzt in `effectiveIsPro` gefaltet → app-weit Pro (Client), deckt sich mit `api/claude.ts`/`api/gemini.ts` serverseitig.
 
 ### Known Issues (Stand: 25.07.2026):
 
