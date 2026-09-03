@@ -31,6 +31,10 @@ export const CLAUDE_BUCKET_LIMITS: Record<ClaudeBucket, number> = {
 interface ClaudeOpts {
   maxTokens?: number
   effort?: 'low' | 'medium'
+  /** Default 'disabled' — für strukturierte JSON-Generierung braucht Sonnet 5 kein
+   *  Reasoning, und Thinking treibt die Zeit über Vercels 60-s-Limit. Nur die
+   *  Korrektur nutzt 'adaptive'. */
+  thinking?: 'adaptive' | 'disabled'
   temperature?: number
   trial?: boolean
 }
@@ -54,7 +58,7 @@ export async function claudeFetch(
     max_tokens: opts.maxTokens ?? 8000,
     system: [{ type: 'text', text: systemPrompt, cache_control: { type: 'ephemeral' } }],
     messages: [{ role: 'user', content: userPrompt }],
-    thinking: { type: 'adaptive' },
+    thinking: { type: opts.thinking ?? 'disabled' },
     output_config: { effort: opts.effort ?? 'low' },
   }
 

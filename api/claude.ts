@@ -27,6 +27,11 @@ const PRICE = { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 }
 const MONTHLY_CAP_EUR = 20
 const TRIAL_STOP_EUR = 15   // ab hier keine neuen Gratis-Kostproben mehr (Pro hat Vorrang)
 
+// Vercel Hobby killt Functions bei 60 s. Wir brechen den Anthropic-Call vorher
+// selbst ab und fallen sauber auf Gemini zurück, statt in den Plattform-Kill zu
+// laufen. Der 10-s-Puffer ist fürs Kosten-Logging danach.
+const ANTHROPIC_TIMEOUT_MS = 50_000
+
 // Gleiche Liste wie PRO_TEST_ALLOWLIST in src/context/UserContext.tsx.
 const PRO_TEST_ALLOWLIST = ['simon.happ@gmx.de', 'simonhapp161@gmail.com']
 
@@ -138,6 +143,8 @@ async function handler(request: Request): Promise<Response> {
 
   // ── Anthropic-Call ───────────────────────────────────────────────────────
   console.log('[claude] calling anthropic', { bucket, isPro, wantsTrial, month_spend })
+  const ac = new AbortController()
+  const timer = setTimeout(() => ac.abort(), ANTHROPIC_TIMEOUT_MS)
   let anthRes: Response
   try {
     anthRes = await fetch('https://api.anthropic.com/v1/messages', {
@@ -148,10 +155,14 @@ async function handler(request: Request): Promise<Response> {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload.body),
+      signal: ac.signal,
     })
   } catch (e) {
+    clearTimeout(timer)
+    if ((e as { name?: string })?.name === 'AbortError') return fallback('anthropic timeout (>50s)')
     return errBody(502, `Claude nicht erreichbar: ${String(e)}`)
   }
+  clearTimeout(timer)
   const data = await anthRes.json() as {
     content?: { type: string; text?: string }[]
     usage?: { input_tokens?: number; output_tokens?: number; cache_read_input_tokens?: number; cache_creation_input_tokens?: number }

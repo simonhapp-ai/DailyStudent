@@ -6,8 +6,11 @@ import { safeJsonParse } from './jsonRepair'
 import { claudeFetch, ClaudeFallbackError, type ClaudeBucket, type EngineOpts } from './claude'
 
 // Baut die `claude`-Option für examFetch aus den Engine-Optionen des Aufrufers.
+// Thinking nur bei der Korrektur ('medium') — sonst läuft Sonnet 5 über Vercels 60-s-Limit.
 function claudeOpt(o: EngineOpts | undefined, bucket: ClaudeBucket, maxTokens: number, effort: 'low' | 'medium' = 'low') {
-  return o?.engine === 'claude' ? { bucket, maxTokens, effort, trial: o.trial === true } : null
+  return o?.engine === 'claude'
+    ? { bucket, maxTokens, effort, thinking: (effort === 'medium' ? 'adaptive' : 'disabled') as 'adaptive' | 'disabled', trial: o.trial === true }
+    : null
 }
 
 interface GeminiProxyResult {
@@ -211,12 +214,12 @@ async function examFetch(
   userPrompt: string,
   bucket: AiBucket,
   temperature = 0.6,
-  claude?: { bucket: ClaudeBucket; maxTokens?: number; effort?: 'low' | 'medium'; trial?: boolean } | null,
+  claude?: { bucket: ClaudeBucket; maxTokens?: number; effort?: 'low' | 'medium'; thinking?: 'adaptive' | 'disabled'; trial?: boolean } | null,
 ): Promise<unknown> {
   if (claude) {
     try {
       return await claudeFetch(systemPrompt, userPrompt, claude.bucket, {
-        maxTokens: claude.maxTokens, effort: claude.effort, temperature, trial: claude.trial,
+        maxTokens: claude.maxTokens, effort: claude.effort, thinking: claude.thinking, temperature, trial: claude.trial,
       })
     } catch (e) {
       if (!(e instanceof ClaudeFallbackError)) throw e
