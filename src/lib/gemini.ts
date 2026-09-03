@@ -474,7 +474,9 @@ export async function generateExamMaterials(
       EXAM_MATERIAL_SYSTEM,
       `Fach: ${subject} | Thema: ${topic}${kcBlock}\n\nErzeuge die Materialien als JSON.`,
       'claude_probeklausur',
-      { model: 'sonnet', maxTokens: 4000, thinking: 'disabled', effort: 'low', temperature: 0.5, trial: opts.trial === true },
+      // 8000: ein beschriftetes Schema-SVG allein sind ~2k Tokens, dazu 1–2 weitere
+      // Materialien + content-Text — 4000 lief mitten im JSON aus ("expected }").
+      { model: 'sonnet', maxTokens: 8000, thinking: 'disabled', effort: 'low', temperature: 0.5, trial: opts.trial === true },
     ) as { materials?: unknown }
     const list = Array.isArray(raw.materials) ? raw.materials : []
     const mats = list

@@ -1,11 +1,11 @@
 /**
- * JSON.parse mit Reparatur für die zwei häufigsten KI-Fehler:
+ * JSON.parse mit Reparatur für die drei häufigsten KI-Fehler:
  *  A) LaTeX-Backslashes (\vec, \lim, \frac …) einfach statt doppelt escaped.
- *  B) Antwort mitten im String abgeschnitten (Token-Limit) → "Unterminated string".
+ *  B) Antwort mitten drin abgeschnitten (Token-Limit) → "Unterminated string" / "expected }".
+ *  C) kaputter Token kurz vor dem Ende → Rückwärts wegschneiden bis der Rest parst.
  *
- * Reihenfolge: erst normal parsen (mit $…$-Backslash-Reparatur), dann Escapes global
- * reparieren, zuletzt eine abgeschnittene Antwort notdürftig schließen — lieber ein
- * unvollständiger Lernzettel als ein harter Fehler.
+ * Vier Versuche, billigster/sauberster zuerst. Bei allem, was auch danach nicht
+ * parst, fliegt der Fehler nach oben (der Aufrufer fällt dann auf Gemini zurück).
  */
 
 /** Verdoppelt jeden Backslash, der kein gültiges JSON-Escape einleitet. Lässt
@@ -37,10 +37,8 @@ function repairMathSpans(raw: string): string {
   )
 }
 
-/** Eine abgeschnittene JSON-Antwort so weit schließen, dass sie parst: offenen
- *  String beenden, offene {}/[] in umgekehrter Reihenfolge schließen. Das letzte
- *  Feld bleibt dann evtl. unvollständig, aber der Rest ist nutzbar. */
-function closeTruncatedJson(s: string): string {
+/** Offenen String beenden + offene {}/[] in umgekehrter Reihenfolge schließen. */
+function completeBrackets(s: string): string {
   const stack: string[] = []
   let inStr = false
   let esc = false
@@ -57,17 +55,29 @@ function closeTruncatedJson(s: string): string {
     else if (c === '}' || c === ']') stack.pop()
   }
   let out = s
-  if (esc) out = out.slice(0, -1)        // einzelner Backslash am Ende → weg
+  if (esc) out = out.slice(0, -1)             // einzelner Backslash am Ende → weg
   if (inStr) out += '"'
-  // hängendes ',' oder ':' vor dem Schließen entfernen
-  out = out.replace(/[,\s]+$/, '')
-  if (/[:]\s*$/.test(out)) out += 'null'
+  if (/:\s*$/.test(out)) out += 'null'        // "key": ohne Wert → null
+  out = out.replace(/[,\s]+$/, '')            // hängendes ',' vor dem Schließen weg
   for (let i = stack.length - 1; i >= 0; i--) out += stack[i] === '{' ? '}' : ']'
   return out
 }
 
+/** Abgeschnittene Antwort schließen; wenn das nicht parst, vom Ende her in
+ *  1-Zeichen-Schritten wegschneiden und neu schließen, bis es parst (max 500). */
+function closeTruncatedJson(s: string): string {
+  for (let cut = 0; cut <= 500 && cut < s.length; cut++) {
+    const candidate = completeBrackets(s.slice(0, s.length - cut))
+    try { JSON.parse(candidate); return candidate } catch { /* weiter schneiden */ }
+  }
+  return completeBrackets(s) // letzter Versuch — wirft dann upstream
+}
+
 export function safeJsonParse(raw: string): unknown {
-  try { return JSON.parse(repairMathSpans(raw)) } catch { /* weiter */ }
-  try { return JSON.parse(repairEscapes(raw)) } catch { /* weiter */ }
-  return JSON.parse(closeTruncatedJson(repairEscapes(raw)))
+  const mathFixed = repairMathSpans(raw)
+  try { return JSON.parse(mathFixed) } catch { /* weiter */ }
+  try { return JSON.parse(closeTruncatedJson(mathFixed)) } catch { /* weiter */ }
+  const aggressive = repairEscapes(raw)
+  try { return JSON.parse(aggressive) } catch { /* weiter */ }
+  return JSON.parse(closeTruncatedJson(aggressive))
 }

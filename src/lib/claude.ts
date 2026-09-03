@@ -95,10 +95,19 @@ export async function claudeFetch(
 
   const data = env.data as { content?: { type: string; text?: string }[]; stop_reason?: string }
   if (data.stop_reason === 'max_tokens') {
-    throw new Error('Die Antwort wurde abgeschnitten — bitte erneut versuchen.')
+    // abgeschnitten → nicht dem Nutzer zeigen, sondern still über Gemini weiter
+    console.warn('[claude] stop_reason=max_tokens, Fallback auf Gemini')
+    throw new ClaudeFallbackError()
   }
   const text = (data.content ?? []).find((b) => b.type === 'text')?.text ?? ''
   const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
   if (!cleaned) throw new ClaudeFallbackError()
-  return safeJsonParse(cleaned)
+  try {
+    return safeJsonParse(cleaned)
+  } catch (e) {
+    // Claude hat geantwortet, aber das JSON ist auch nach Reparatur kaputt →
+    // still auf Gemini zurückfallen statt dem Nutzer einen Parser-Fehler zeigen.
+    console.warn('[claude] JSON nicht parsebar, Fallback auf Gemini:', (e as Error).message)
+    throw new ClaudeFallbackError()
+  }
 }
