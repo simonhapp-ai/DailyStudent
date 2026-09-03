@@ -303,6 +303,20 @@ function attrValueOk(value: string): boolean {
   return !/url\(\s*['"]?(?!#)/i.test(value) && !/javascript:/i.test(value)
 }
 
+// Theme-Sicherheit: feste Farben im Modell-SVG (fill/stroke/stop-color) auf
+// currentColor zurückbiegen — sonst z. B. fill="black" im Dunkelmodus unsichtbar.
+// Eine kleine Palette theme-neutraler Akzente bleibt erlaubt (roter Kraftpfeil o. ä.).
+const SAFE_COLORS = new Set([
+  'none', 'currentcolor', 'transparent', 'inherit',
+  '#5ac8fa', '#facc15', '#c084fc', '#34d399', '#ff453a', '#ff9f0a', '#30d158',
+])
+function normalizeColor(value: string): string {
+  const t = value.trim().toLowerCase()
+  if (SAFE_COLORS.has(t) || t.startsWith('url(#')) return value
+  return 'currentColor'
+}
+const COLOR_ATTRS = new Set(['fill', 'stroke', 'stop-color'])
+
 function sanitizeSvg(markup: string): string | null {
   if (typeof markup !== 'string' || markup.length > 20000) return null
   let doc: Document
@@ -321,7 +335,11 @@ function sanitizeSvg(markup: string): string | null {
       const name = attr.name.toLowerCase()
       const bad = name.startsWith('on') || name === 'style' || name === 'href'
         || name.endsWith(':href') || !SVG_ATTRS.has(name) || !attrValueOk(attr.value)
-      if (bad) el.removeAttribute(attr.name)
+      if (bad) { el.removeAttribute(attr.name); continue }
+      if (COLOR_ATTRS.has(name)) {
+        const norm = normalizeColor(attr.value)
+        if (norm !== attr.value) el.setAttribute(attr.name, norm)
+      }
     }
     for (const child of [...el.children]) {
       if (!walk(child)) child.remove()
