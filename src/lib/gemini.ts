@@ -2,6 +2,7 @@ import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTas
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 import type { AiBucket } from './aiRateLimit'
 import { getAuthHeader } from './authHeader'
+import { safeJsonParse } from './jsonRepair'
 import { claudeFetch, ClaudeFallbackError, type ClaudeBucket, type EngineOpts } from './claude'
 
 // Baut die `claude`-Option für examFetch aus den Engine-Optionen des Aufrufers.
@@ -242,7 +243,7 @@ async function examFetch(
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
   const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
   if (!cleaned) throw new Error('Gemini hat keine Antwort zurückgegeben')
-  return JSON.parse(cleaned)
+  return safeJsonParse(cleaned)
 }
 
 // Geteilt zwischen Prüfungs- und Lernzettel-Generierung, damit beide dasselbe
@@ -289,7 +290,7 @@ MATERIALREGELN (Naturwissenschaften & Mathematik):
 - Messwerte → "kind":"table" (≥6 Zeilen, Einheiten in den Headern, erkennbarer Trend)
 - Verläufe/Messreihen/Funktionsgraphen → "kind":"chart" (Zahlen, nicht Text)
 - Versuchsaufbau, Kräftediagramm, Schaltplan → "kind":"svg"
-- Formeln als LaTeX: $…$ inline, $$…$$ als Block
+- Formeln NUR in Unicode (x², xⁿ, √, π, ∫, Σ, ·, ≈, →, Δ, ≤, ≥, ∞) — KEIN LaTeX, KEINE Backslashes
 
 MATERIALREGELN (Geistes- & Sprachwissenschaften):
 - Sachtext/Zeitungsartikel: ca. 250–350 Wörter → "kind":"text"
@@ -301,7 +302,7 @@ FACHSPEZIFISCH:
 Bio: I=Schemata/Prozesse; II=Materialauswertung+Fachwissen; III=Hypothesen/Ethik
 Physik: I=Begriffe/Schaltpläne; II=Messwerte auswerten/Gleichungen herleiten; III=Hypothesen
 Chemie: I=Reaktionsgleichungen/Strukturformeln; II=Experiment auswerten; III=Hypothesen/Bewertung
-Mathe: I=Standardverfahren ohne GTR, Operatoren nennen/angeben/berechnen/skizzieren; II=Sachaufgabe mit GTR, Operatoren begründen/überprüfen/beschreiben; III=Verallgemeinern/Beweisen ohne Rechnung, Operatoren beweisen/diskutieren/interpretieren. Formeln als LaTeX ($…$).
+Mathe: I=Standardverfahren ohne GTR, Operatoren nennen/angeben/berechnen/skizzieren; II=Sachaufgabe mit GTR, Operatoren begründen/überprüfen/beschreiben; III=Verallgemeinern/Beweisen ohne Rechnung, Operatoren beweisen/diskutieren/interpretieren. Formeln in Unicode, KEIN LaTeX.
 Deutsch: I=Wiedergabe/Beschreibung; II=Analyse/Interpretation des Textes; III=Erörterung/Stellungnahme. Material=Literarischer Text oder Sachtext ca. 300 Wörter.
 Englisch: Aufgaben auf ENGLISCH. I=Comprehension; II=Analysis; III=Comment. Material=English text ca. 300 words.
 Französisch/Spanisch/Latein: Aufgaben in Zielsprache. Material=Authentischer Originaltext.
@@ -992,7 +993,7 @@ Erstelle den vollständigen Plan für ALLE ${input.planDurationDays} Tage ab ${i
   const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
   if (!cleaned) throw new Error('Gemini hat keinen Lernplan zurückgegeben.')
 
-  const raw = JSON.parse(cleaned) as {
+  const raw = safeJsonParse(cleaned) as {
     title?: string
     summary?: string
     days?: LernplanDay[]

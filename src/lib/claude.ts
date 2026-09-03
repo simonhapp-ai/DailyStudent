@@ -1,4 +1,5 @@
 import { getAuthHeader } from './authHeader'
+import { safeJsonParse } from './jsonRepair'
 
 // Client-Seite der Claude-Schiene. Ruft ausschließlich den serverseitigen Proxy
 // /api/claude — der Anthropic-Key liegt nie im Client (wie bei Gemini/Groq).
@@ -88,5 +89,5 @@ export async function claudeFetch(
   const text = (data.content ?? []).find((b) => b.type === 'text')?.text ?? ''
   const cleaned = text.replace(/^```json\s*/i, '').replace(/\s*```\s*$/, '').trim()
   if (!cleaned) throw new ClaudeFallbackError()
-  return JSON.parse(cleaned)
+  return safeJsonParse(cleaned)
 }
