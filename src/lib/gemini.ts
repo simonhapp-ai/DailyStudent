@@ -1,4 +1,4 @@
-import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, TaskCorrection, LernplanDay, LernplanExam, LernplanGeneratorInput, LernzettelModus } from '../types'
+import type { GeneratedSmartNote, GeneratedExam, ExamCorrection, ProbeklausurTask, ProbeklausurMaterial, MaterialTable, MaterialChart, MaterialCitation, LernzettelFigure, TaskCorrection, LernplanDay, LernplanExam, LernplanGeneratorInput, LernzettelModus } from '../types'
 import { buildKcPromptContext, type KcSubjectData } from '../data/kcLoader'
 import { supabase } from './supabase'
 import type { AiBucket } from './aiRateLimit'
@@ -225,6 +225,24 @@ async function examFetch(systemPrompt: string, userPrompt: string, bucket: AiBuc
   return JSON.parse(cleaned)
 }
 
+// Geteilt zwischen Prüfungs- und Lernzettel-Generierung, damit beide dasselbe
+// strukturierte Material-Schema erzeugen. Bei einem späteren Claude-Port bleibt
+// dieser String 1:1.
+export const MATERIAL_FORMAT_SPEC = `MATERIALFORMAT — jedes Material trägt "id", "title", "type" (Legacy-Label) und "kind". "kind" steuert die Darstellung:
+
+- "kind":"text" — Fließtext/Sachtext/Beschreibung. Feld: "content" (String).
+- "kind":"table" — Datentabelle. Felder: "content" (kurze Text-Wiedergabe) UND "table":{"headers":["t [s]","s [m]"],"rows":[["0","0"],["0,2","0,20"]]}. Messreihen ≥6 Zeilen, Einheiten in die Header.
+- "kind":"chart" — Diagramm als ZAHLEN, nicht als Bild. Feld: "chart":{"type":"line"|"bar"|"scatter"|"function","xLabel":"…","yLabel":"…","xUnit":"…","yUnit":"…","series":[{"label":"Messreihe","points":[{"x":0,"y":0},{"x":1,"y":9.8}]}],"functions":[{"label":"v(t)=g·t","expr":"9.81*x","domain":[0,5]}]}. "series" ODER "functions" (mind. eines). "expr"-Grammatik: Variable nur x, Operatoren + - * / ^ ( ), Funktionen sin cos tan sqrt abs exp ln log, Konstanten pi e, Dezimalpunkt (KEIN Komma), sonst nichts. Zusätzlich "content" mit Achsen + Wertepaaren als Text.
+- "kind":"svg" — schematische Zeichnung (Versuchsaufbau, Kräftediagramm, beschriftetes Koordinatensystem). Feld: "svg":"<svg viewBox='0 0 320 220'>…</svg>". NUR diese Tags: svg g path line polyline polygon rect circle ellipse text tspan defs marker linearGradient radialGradient stop. KEIN script/foreignObject/image, kein style- oder on…-Attribut. stroke='currentColor'. Achsen/Teile mit <text> beschriften. Zusätzlich "content" mit einer Text-Beschreibung.
+- "kind":"source" — Originalquelle für Quellenarbeit. Felder: "content" (Originaltext/Auszug, 3–6 Sätze) UND "citation":{"author":"…","work":"…","year":"…","publisher":"…","pages":"…"}.
+
+HARTREGEL: "content" ist bei JEDEM Material gefüllt — bei table/chart/svg mit einer treuen Text-Wiedergabe, weil die Korrektur nur "content" liest.
+
+BEISPIELE:
+{"id":"M1","title":"Fallversuch — Messwerte","type":"tabelle","kind":"table","content":"t[s]: 0;0,2;0,4;0,6;0,8;1,0 — s[m]: 0;0,20;0,78;1,76;3,14;4,90","table":{"headers":["t [s]","s [m]"],"rows":[["0","0"],["0,2","0,20"],["0,4","0,78"],["0,6","1,76"],["0,8","3,14"],["1,0","4,90"]]}}
+{"id":"M2","title":"v-t-Diagramm","type":"diagramm","kind":"chart","content":"Ursprungsgerade, Steigung 9,81 m/s². Messpunkte (0|0),(0,4|3,92),(0,8|7,85).","chart":{"type":"function","xLabel":"Zeit","yLabel":"Geschwindigkeit","xUnit":"s","yUnit":"m/s","functions":[{"label":"v(t)=9,81·t","expr":"9.81*x","domain":[0,1]}],"series":[{"label":"Messung","points":[{"x":0,"y":0},{"x":0.4,"y":3.92},{"x":0.8,"y":7.85}]}]}}
+{"id":"M1","title":"Auszug aus der Rede","type":"text","kind":"source","content":"Ich habe einen Traum, dass eines Tages … (4 Sätze Originalzitat).","citation":{"author":"Martin Luther King","work":"I Have a Dream","year":"1963","publisher":"Rede, Washington D.C."}}`
+
 const GENERATION_SYSTEM = `Du bist ein Abiturklausur-Generator für Niedersachsen. Erstelle exakt dem deutschen Abitur entsprechende Aufgaben.
 
 AUFGABENFORMAT:
@@ -248,23 +266,22 @@ Operatoren (Mathematik): beweisen, beurteilen, diskutieren, interpretieren, vera
 Optional Material. Eigenständiges Urteil oder mathematischer Beweis gefordert.
 
 MATERIALREGELN (Naturwissenschaften & Mathematik):
-- Datentabelle: ≥6 Messpunkte, realistische Werte mit Einheiten, erkennbarer Trend
-- Diagramm: Als Text beschrieben, Achsenbeschriftung+Einheiten, Zahlenwerte
-- Versuchsaufbau: Bauteile mit Messwerten, klare Schritte
-- Formeln: nur Unicode (x², √, π, ∫, ·, ≈, →, Δ) — KEIN LaTeX
+- Messwerte → "kind":"table" (≥6 Zeilen, Einheiten in den Headern, erkennbarer Trend)
+- Verläufe/Messreihen/Funktionsgraphen → "kind":"chart" (Zahlen, nicht Text)
+- Versuchsaufbau, Kräftediagramm, Schaltplan → "kind":"svg"
+- Formeln als LaTeX: $…$ inline, $$…$$ als Block
 
 MATERIALREGELN (Geistes- & Sprachwissenschaften):
-- Sachtext/Zeitungsartikel: ca. 250–350 Wörter, klar strukturiert, fachlich relevant
-- Literarischer Text: Textauszug mit Autor und Jahreszahl, ggf. Textsortenhinweis
-- Politische Rede / Philosophischer Text: direktes Zitat oder Paratext, klar abgegrenzt
-- Statistik: einfache Tabelle mit Prozentwerten oder Fallzahlen, Quelle angeben
+- Sachtext/Zeitungsartikel: ca. 250–350 Wörter → "kind":"text"
+- Originalquelle / literarischer Text / Rede / Zitat → "kind":"source" mit "citation"
+- Statistik mit Prozentwerten/Fallzahlen → "kind":"table"
 - KEINE naturwissenschaftlichen Messreihen oder Laborversuchsbeschreibungen
 
 FACHSPEZIFISCH:
 Bio: I=Schemata/Prozesse; II=Materialauswertung+Fachwissen; III=Hypothesen/Ethik
 Physik: I=Begriffe/Schaltpläne; II=Messwerte auswerten/Gleichungen herleiten; III=Hypothesen
 Chemie: I=Reaktionsgleichungen/Strukturformeln; II=Experiment auswerten; III=Hypothesen/Bewertung
-Mathe: I=Standardverfahren ohne GTR, Operatoren nennen/angeben/berechnen/skizzieren; II=Sachaufgabe mit GTR, Operatoren begründen/überprüfen/beschreiben; III=Verallgemeinern/Beweisen ohne Rechnung, Operatoren beweisen/diskutieren/interpretieren. Formeln in Unicode.
+Mathe: I=Standardverfahren ohne GTR, Operatoren nennen/angeben/berechnen/skizzieren; II=Sachaufgabe mit GTR, Operatoren begründen/überprüfen/beschreiben; III=Verallgemeinern/Beweisen ohne Rechnung, Operatoren beweisen/diskutieren/interpretieren. Formeln als LaTeX ($…$).
 Deutsch: I=Wiedergabe/Beschreibung; II=Analyse/Interpretation des Textes; III=Erörterung/Stellungnahme. Material=Literarischer Text oder Sachtext ca. 300 Wörter.
 Englisch: Aufgaben auf ENGLISCH. I=Comprehension; II=Analysis; III=Comment. Material=English text ca. 300 words.
 Französisch/Spanisch/Latein: Aufgaben in Zielsprache. Material=Authentischer Originaltext.
@@ -272,23 +289,102 @@ Geschichte: I=Ereignisse/Begriffe; II=Quelle auswerten; III=These erörtern. Mat
 Politik: I=Sachkenntnis; II=Quelle/Daten auswerten; III=Politisches Urteil. Material=Zeitungsartikel oder Statistik.
 Philosophie/Religion/Ethik: I=Position darstellen; II=Vergleichen/Analysieren; III=Ethische Erörterung. Material=Philosophischer Text oder Zitat.
 
-Jedes Material in mind. 1 Aufgabe referenziert. Antworte ausschließlich mit validem JSON.`
+Jedes Material in mind. 1 Aufgabe referenziert.
+
+${MATERIAL_FORMAT_SPEC}
+
+Antworte ausschließlich mit validem JSON.`
 
 interface RawExamJSON {
-  materials: { id: string; title: string; type: string; content: string }[]
+  materials: Array<Record<string, unknown>>
   tasks: { id: string; label: string; afb: string; operator: string; text: string; be: number; materialRefs: string[] }[]
   totalBE: number
 }
 
+// Chart-Sub-Objekt vom Modell absichern: type whitelisten, Zahlen coercen,
+// Serien/Punkte deckeln, expr als String belassen (Auswertung erst im Renderer).
+function sanitizeChart(raw: unknown): MaterialChart | undefined {
+  if (!raw || typeof raw !== 'object') return undefined
+  const c = raw as Record<string, unknown>
+  const type = ['line', 'bar', 'scatter', 'function'].includes(String(c.type)) ? (c.type as MaterialChart['type']) : 'line'
+  const series = Array.isArray(c.series)
+    ? (c.series as unknown[]).slice(0, 4).map((s) => {
+        const so = (s ?? {}) as Record<string, unknown>
+        return {
+          label: String(so.label ?? ''),
+          points: Array.isArray(so.points)
+            ? (so.points as unknown[]).slice(0, 60).map((p) => {
+                const po = (p ?? {}) as Record<string, unknown>
+                const x = typeof po.x === 'number' ? po.x : (typeof po.x === 'string' ? po.x : Number(po.x) || 0)
+                return { x, y: Number(po.y) || 0 }
+              })
+            : [],
+        }
+      })
+    : undefined
+  const functions = Array.isArray(c.functions)
+    ? (c.functions as unknown[]).slice(0, 4).map((f) => {
+        const fo = (f ?? {}) as Record<string, unknown>
+        const dom = Array.isArray(fo.domain) && fo.domain.length === 2
+          ? [Number(fo.domain[0]) || 0, Number(fo.domain[1]) || 0] as [number, number]
+          : undefined
+        return { label: String(fo.label ?? ''), expr: String(fo.expr ?? ''), domain: dom }
+      })
+    : undefined
+  if ((!series || series.length === 0) && (!functions || functions.length === 0)) return undefined
+  return {
+    type,
+    title: c.title ? String(c.title) : undefined,
+    xLabel: c.xLabel ? String(c.xLabel) : undefined,
+    yLabel: c.yLabel ? String(c.yLabel) : undefined,
+    xUnit: c.xUnit ? String(c.xUnit) : undefined,
+    yUnit: c.yUnit ? String(c.yUnit) : undefined,
+    series, functions,
+  }
+}
+
+function sanitizeTable(raw: unknown): MaterialTable | undefined {
+  if (!raw || typeof raw !== 'object') return undefined
+  const t = raw as Record<string, unknown>
+  const headers = Array.isArray(t.headers) ? (t.headers as unknown[]).slice(0, 12).map(String) : []
+  const rows = Array.isArray(t.rows)
+    ? (t.rows as unknown[]).slice(0, 40).map((r) => (Array.isArray(r) ? (r as unknown[]).slice(0, 12).map(String) : []))
+    : []
+  if (headers.length === 0 && rows.length === 0) return undefined
+  return { headers, rows, caption: t.caption ? String(t.caption) : undefined }
+}
+
+function sanitizeCitation(raw: unknown): MaterialCitation | undefined {
+  if (!raw || typeof raw !== 'object') return undefined
+  const c = raw as Record<string, unknown>
+  const pick = (k: string) => (c[k] != null ? String(c[k]) : undefined)
+  const out: MaterialCitation = {
+    author: pick('author'), work: pick('work'), year: pick('year'),
+    publisher: pick('publisher'), url: pick('url'), pages: pick('pages'),
+  }
+  return Object.values(out).some(Boolean) ? out : undefined
+}
+
 function parseExam(raw: unknown, subject: string, subjectId: string, topic: string, mode: 1 | 2 | 3 | 4): GeneratedExam {
   const j = raw as RawExamJSON
-  const materials: ProbeklausurMaterial[] = (j.materials ?? []).map((m) => ({
-    id: String(m.id),
-    title: String(m.title ?? ''),
-    type: (['tabelle', 'diagramm', 'versuchsaufbau', 'text', 'sequenz'].includes(m.type)
-      ? m.type : 'text') as ProbeklausurMaterial['type'],
-    content: String(m.content ?? ''),
-  }))
+  const materials: ProbeklausurMaterial[] = (j.materials ?? []).map((m) => {
+    const type = (['tabelle', 'diagramm', 'versuchsaufbau', 'text', 'sequenz'].includes(String(m.type))
+      ? m.type : 'text') as ProbeklausurMaterial['type']
+    const kind = (['text', 'table', 'chart', 'svg', 'source', 'image'].includes(String(m.kind))
+      ? m.kind : undefined) as ProbeklausurMaterial['kind']
+    const svg = typeof m.svg === 'string' && m.svg.length < 20000 ? m.svg : undefined
+    return {
+      id: String(m.id),
+      title: String(m.title ?? ''),
+      type,
+      kind,
+      content: String(m.content ?? ''),
+      table: sanitizeTable(m.table),
+      chart: sanitizeChart(m.chart),
+      svg,
+      citation: sanitizeCitation(m.citation),
+    }
+  })
   const tasks: ProbeklausurTask[] = (j.tasks ?? []).map((t) => ({
     id: String(t.id),
     label: String(t.label ?? t.id),
@@ -333,11 +429,13 @@ export async function generateMode1Exam(subject: string, subjectId: string, topi
 
   // AFB II/III MÜSSEN ein Material tragen — sonst verweist der Aufgabentext auf
   // „das Material", das im leeren Skelett dann fehlt. Ab AFB II wird das Skelett
-  // deshalb befüllt (Typ fachabhängig).
-  const materialType = isMath || isHumanities ? 'text' : 'tabelle'
-  const materialsSkeleton = afb === 'I'
-    ? '[]'
-    : `[{"id":"M1","title":"...","type":"${materialType}","content":"..."}]`
+  // deshalb befüllt (kind fachabhängig).
+  const matSkeletonObj = isMath
+    ? `{"id":"M1","title":"...","type":"text","kind":"text","content":"..."}`
+    : isHumanities
+      ? `{"id":"M1","title":"...","type":"text","kind":"source","content":"...","citation":{"author":"...","year":"..."}}`
+      : `{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}}`
+  const materialsSkeleton = afb === 'I' ? '[]' : `[${matSkeletonObj}]`
   const materialRefsSkeleton = afb === 'I' ? '[]' : '["M1"]'
 
   const raw = await examFetch(GENERATION_SYSTEM,
@@ -350,10 +448,10 @@ JSON: {"materials":${materialsSkeleton},"tasks":[{"id":"t1","label":"1","afb":"$
 
 export async function generateMode2Exam(subject: string, subjectId: string, topic: string, kcData?: KcSubjectData): Promise<GeneratedExam> {
   const fachHinweis: Record<string, string> = {
-    biologie: '1 Komplex, Teilaufgaben 1.1–1.4, ~35 BE, 2 Materialien (M1+M2).',
-    physik: '1 Komplex, Teilaufgaben 1.1–1.5, ~50 BE, M1=Versuchsaufbau+Messdaten, M2=Diagramm.',
-    mathematik: 'TEIL A: Kurzaufgaben A1–A5 ohne GTR je 4 BE. TEIL B: Sachaufgaben B1.1–B2.x mit GTR. ~60 BE.',
-    religion: '1 Komplex, 4–6 Aufgaben Trichter I→II→III, ~50 BE.',
+    biologie: '1 Komplex, Teilaufgaben 1.1–1.4, ~35 BE. M1="kind":"table" (Messdaten) oder "kind":"text", M2="kind":"chart" oder "kind":"svg" (Schema).',
+    physik: '1 Komplex, Teilaufgaben 1.1–1.5, ~50 BE. M1="kind":"svg" (Versuchsaufbau), M2="kind":"chart" (Messreihe als Zahlen).',
+    mathematik: 'TEIL A: Kurzaufgaben A1–A5 ohne GTR je 4 BE. TEIL B: Sachaufgaben B1.1–B2.x mit GTR. ~60 BE. Material optional als "kind":"chart" oder "kind":"table".',
+    religion: '1 Komplex, 4–6 Aufgaben Trichter I→II→III, ~50 BE. Material "kind":"source" (Zitat/Text).',
   }
   const hinweis = fachHinweis[subjectId] ?? '1 Komplex, 3–5 Teilaufgaben, AFB I→II→III, 2–3 Materialien, ~45 BE.'
   const kcBlock = kcData ? `\nKC-Kontext:\n${buildKcPromptContext(kcData, 'oberstufe')}\n` : ''
@@ -361,7 +459,7 @@ export async function generateMode2Exam(subject: string, subjectId: string, topi
   const raw = await examFetch(GENERATION_SYSTEM,
     `Fach: ${subject} | Thema: ${topic} | Struktur: ${hinweis}${kcBlock}
 
-JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","content":"..."},{"id":"M2","title":"...","type":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
+JSON: {"materials":[{"id":"M1","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}},{"id":"M2","title":"...","type":"text","kind":"text","content":"..."}],"tasks":[{"id":"t1","label":"1.1","afb":"I","operator":"...","text":"...","be":8,"materialRefs":[]},{"id":"t2","label":"1.2","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M1"]},{"id":"t3","label":"1.3","afb":"II","operator":"...","text":"...","be":10,"materialRefs":["M2"]},{"id":"t4","label":"1.4","afb":"III","operator":"...","text":"...","be":10,"materialRefs":["M2"]}],"totalBE":38}`,
     'probeklausur_full', 0.55)
   return parseExam(raw, subject, subjectId, topic, 2)
 }
@@ -376,8 +474,11 @@ export async function generateMode3Exam(subject: string, subjectId: string, topi
   ].includes(subjectId)
 
   const materialSpec = isHumanities
-    ? `M1=Authentischer Fachtext (ca. 250–350 Wörter, Sachtext/Zeitungsartikel/Quelle/Zitat/Literaturtext — je nach Fach), M2=optional (Statistik, zweiter Textauszug oder entfällt).`
-    : `M1=Kontexttext oder Versuchsaufbau, M2=Daten (Messdaten-Tabelle oder Diagramm mit ≥6 Werten), M3=optional.`
+    ? `M1="kind":"source" — authentischer Fachtext/Zitat (ca. 250–350 Wörter) mit "citation". M2=optional "kind":"table" (Statistik) oder zweiter "kind":"source".`
+    : `M1="kind":"text" (Kontext) oder "kind":"svg" (Versuchsaufbau). M2="kind":"table" oder "kind":"chart" (≥6 Werte). M3=optional.`
+  const m1Skeleton = isHumanities
+    ? `{"id":"M1","title":"...","type":"text","kind":"source","content":"...","citation":{"author":"...","work":"...","year":"..."}}`
+    : `{"id":"M1","title":"...","type":"text","kind":"text","content":"..."},{"id":"M2","title":"...","type":"tabelle","kind":"table","content":"...","table":{"headers":["...","..."],"rows":[["...","..."]]}}`
 
   const taskSpec = isHumanities
     ? `Aufg.1 AFB I 6–8 BE: Textinhalt wiedergeben / Fachwissen darstellen (kein Materialbezug).
@@ -392,7 +493,7 @@ Aufg.3 AFB III 8–10 BE: Über Material hinaus (Hypothese, Bewertung, Stellungn
 Materialien: ${materialSpec}
 ${taskSpec}
 
-JSON: {"materials":[{"id":"M1","title":"...","type":"text","content":"..."}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
+JSON: {"materials":[${m1Skeleton}],"tasks":[{"id":"t1","label":"1","afb":"I","operator":"Beschreiben","text":"...","be":6,"materialRefs":[]},{"id":"t2","label":"2","afb":"II","operator":"Auswerten","text":"...","be":12,"materialRefs":["M1"]},{"id":"t3","label":"3","afb":"III","operator":"Erörtern","text":"...","be":10,"materialRefs":["M1"]}],"totalBE":28}`,
     'probeklausur_other')
   return parseExam(raw, subject, subjectId, topic, 3)
 }
@@ -424,7 +525,34 @@ NOTENPUNKTE 0–15:
 
 gradeLabel: "Sehr gut" | "Gut" | "Befriedigend" | "Ausreichend" | "Mangelhaft" | "Ungenügend"
 Bei leerer Antwort: scoreNP=0, errors=[], gaps=["Keine Antwort gegeben."], formulationHelp=[].
+
+Materialien können Tabellen, Diagramm-Daten, schematische Zeichnungen oder Quellen mit Zitat sein — unten jeweils als Text wiedergegeben. Prüfe Antworten auch gegen die konkreten Zahlen/Werte im Material: falsch abgelesene Messwerte, falsch bestimmte Steigungen/Trends, Fehlinterpretation der Quelle → gehören unter "errors". Schülerantworten dürfen $…$ / x² / x^2 gemischt verwenden — als gleichwertig behandeln.
 Antworte ausschließlich mit validem JSON.`
+
+// Materialien für den Korrektur-Prompt in Text gießen — content allein ist bei
+// table/chart/svg lossy, das Modell muss die echten Werte sehen.
+function materialToPromptText(m: ProbeklausurMaterial): string {
+  const head = `${m.id} — ${m.title}`
+  if (m.kind === 'table' && m.table) {
+    const { headers, rows } = m.table
+    const sep = headers.length ? `\n${headers.join(' | ')}\n${headers.map(() => '---').join(' | ')}` : ''
+    return `${head} (Tabelle):${sep}\n${rows.map((r) => r.join(' | ')).join('\n')}`
+  }
+  if (m.kind === 'chart' && m.chart) {
+    const c = m.chart
+    const axes = `x=${c.xLabel ?? '?'}${c.xUnit ? `/${c.xUnit}` : ''}, y=${c.yLabel ?? '?'}${c.yUnit ? `/${c.yUnit}` : ''}`
+    const series = (c.series ?? []).map((s) => `${s.label}: ${s.points.map((p) => `(${p.x}|${p.y})`).join(', ')}`).join('\n')
+    const fns = (c.functions ?? []).map((f) => `${f.label}: y = ${f.expr}${f.domain ? ` auf [${f.domain[0]},${f.domain[1]}]` : ''}`).join('\n')
+    return `${head} (Diagramm ${c.type}, ${axes}):\n${[series, fns].filter(Boolean).join('\n')}\n${m.content}`.trim()
+  }
+  if (m.kind === 'source') {
+    const c = m.citation
+    const cit = c ? ` [Quelle: ${[c.author, c.work, c.year].filter(Boolean).join(', ')}]` : ''
+    return `${head} (Quelle)${cit}:\n${m.content}`
+  }
+  // svg / text / image / undefined → content (das Modell wurde angewiesen, es zu füllen)
+  return `${head}:\n${m.content || '[Zeichnung ohne Textbeschreibung]'}`
+}
 
 function npToGradeLabel(np: number): string {
   if (np >= 13) return 'Sehr gut'
@@ -436,7 +564,7 @@ function npToGradeLabel(np: number): string {
 }
 
 export async function correctExam(exam: GeneratedExam, answers: Record<string, string>): Promise<ExamCorrection> {
-  const materialsBlock = exam.materials.map((m) => `${m.id} — ${m.title}:\n${m.content}`).join('\n\n')
+  const materialsBlock = exam.materials.map(materialToPromptText).join('\n\n')
   const tasksBlock = exam.tasks.map((t) => {
     const answer = (answers[t.id] ?? '').trim()
     return `Aufgabe ${t.label} (AFB ${t.afb}, ${t.be} BE): ${t.text}\nAntwort: ${answer || '[keine Antwort]'}`
@@ -497,6 +625,25 @@ export interface LernzettelOutput {
   keywords: string[]
   examTopics: string[]
   images: LernzettelImagePrompt[]
+  figures: LernzettelFigure[]
+}
+
+function sanitizeFigures(raw: unknown): LernzettelFigure[] {
+  if (!Array.isArray(raw)) return []
+  return (raw as unknown[]).slice(0, 4).map((f) => {
+    const fo = (f ?? {}) as Record<string, unknown>
+    const kind = ['table', 'chart', 'svg'].includes(String(fo.kind)) ? (fo.kind as LernzettelFigure['kind']) : 'table'
+    const svg = typeof fo.svg === 'string' && fo.svg.length < 20000 ? fo.svg : undefined
+    return {
+      kind,
+      afterHeading: fo.afterHeading ? String(fo.afterHeading) : undefined,
+      title: fo.title ? String(fo.title) : undefined,
+      table: sanitizeTable(fo.table),
+      chart: sanitizeChart(fo.chart),
+      svg,
+      alt: fo.alt ? String(fo.alt) : undefined,
+    }
+  }).filter((f) => f.table || f.chart || f.svg)
 }
 
 const LERNZETTEL_SYSTEM = `Du bist ein erfahrener Fachlehrer, der für deutsche Gymnasiasten (Klasse 10–13, Oberstufe) Lernzettel erstellt — so gründlich und durchdacht, wie es ein guter Lehrer für die eigene Klasse tun würde. Antworte ausschließlich auf Deutsch.
@@ -518,13 +665,15 @@ TIEFE:
 - Bei mathematischen/naturwissenschaftlichen Themen: Herleitungen zeigen, nicht nur Endformeln nennen, wo sinnvoll auch ein Rechenbeispiel einbauen.
 - Bei Textfächern/Gesellschaftswissenschaften: Zusammenhänge, Ursachen/Wirkungen, unterschiedliche Positionen wo fachlich relevant.
 
-BILDER (optional, sehr sparsam):
-- Nur wenn eine Visualisierung wirklich zusätzliches Verständnis bringt (z. B. ein Diagramm, ein Aufbau, ein Kreislauf, eine räumliche Struktur) — bei rein textlichen/abstrakten Themen "images": [] lassen.
-- Maximal 2 Einträge: [{"afterHeading":"Exakter Text einer ##/### Überschrift aus content","prompt":"präzise Bildbeschreibung für einen Bildgenerator, auf Deutsch oder Englisch — klar und sachlich wie ein Schulbuch-Diagramm, kein Foto-Realismus nötig","alt":"kurze Alt-Text-Beschreibung"}]
-- "afterHeading" muss wortwörtlich einer Überschrift aus content entsprechen, sonst kann das Bild nicht platziert werden.
+VISUALS (optional, sehr sparsam):
+- "figures": client-gerenderte Abbildungen aus Daten (Tabelle / Diagramm / schematisches SVG) — bevorzugt, weil scharf und kostenfrei. Max. 2 Einträge. Jeder Eintrag: {"kind":"table"|"chart"|"svg","afterHeading":"Exakter Text einer ##/### Überschrift aus content","title":"...","alt":"kurze Beschreibung", …je nach kind das passende Feld (table / chart / svg)}. Format exakt wie im MATERIALFORMAT unten.
+- "images": [] IMMER leer lassen (der Rasterbild-Generator ist derzeit nicht verfügbar).
+- "afterHeading" muss wortwörtlich einer Überschrift aus content entsprechen, sonst kann die Abbildung nicht platziert werden. Bei rein textlichen/abstrakten Themen "figures": [] lassen.
+
+${MATERIAL_FORMAT_SPEC}
 
 Antworte NUR mit validem JSON:
-{"title":"...","content":"...","keywords":["..."],"examTopics":["..."],"images":[]}`
+{"title":"...","content":"...","keywords":["..."],"examTopics":["..."],"images":[],"figures":[]}`
 
 const LERNZETTEL_MODUS_PROMPTS: Record<LernzettelModus, string> = {
   faktisch: `MODUS: Faktisch-präzise. Ziel: Der Schüler soll Textbausteine direkt in einer Klausur verwenden können. Jeder Fachbegriff wird vollständig und fachlich korrekt definiert, mit exakter Terminologie — auf dem Niveau, das ein Prüfer erwartet. Sprachlich anspruchsvoll und druckreif formuliert, keine umgangssprachlichen Vereinfachungen. Wo es mehrere gängige Definitionen gibt, die prüfungsrelevanteste wählen und kurz begründen.`,
@@ -564,6 +713,7 @@ Erstelle den vollständigen Lernzettel als JSON gemäß der Vorgaben aus der Sys
     keywords?: string[]
     examTopics?: string[]
     images?: { afterHeading?: string; prompt?: string; alt?: string }[]
+    figures?: unknown
   }
 
   return {
@@ -578,6 +728,7 @@ Erstelle den vollständigen Lernzettel als JSON gemäß der Vorgaben aus der Sys
           alt: i.alt ?? '',
         }))
       : [],
+    figures: sanitizeFigures(raw.figures),
   }
 }
 

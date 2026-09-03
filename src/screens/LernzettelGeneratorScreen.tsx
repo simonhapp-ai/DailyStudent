@@ -168,6 +168,7 @@ export function LernzettelGeneratorScreen() {
         keywords: output.keywords,
         examTopics: output.examTopics,
         images,
+        figures: output.figures.length > 0 ? output.figures : undefined,
         generatedAt: new Date().toISOString(),
         userNoteId: `lz-note-${selectedSubjectId}-${now}`,
         folderId: `folder-lernzettel-${selectedSubjectId}`,

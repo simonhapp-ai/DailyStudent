@@ -264,7 +264,7 @@ export function LernzettelScreen() {
 
           {/* Content */}
           <div className="bg-surface border border-border/60 rounded-card p-5 shadow-card-adaptive">
-            <RichText text={activeLz.content} images={activeLz.images} />
+            <RichText text={activeLz.content} images={activeLz.images} figures={activeLz.figures} />
           </div>
 
           {/* Schlüsselbegriffe */}

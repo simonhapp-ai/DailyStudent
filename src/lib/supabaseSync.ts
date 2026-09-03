@@ -155,7 +155,7 @@ export async function retrySyncQueue(userId: string): Promise<{ success: number;
             id: p.lz.id, user_id: userId, subject_id: p.lz.subjectId, subject_name: p.lz.subjectName,
             title: p.lz.title, modus: p.lz.modus, selected_topics: p.lz.selectedTopics, source_note_ids: p.lz.sourceNoteIds,
             content: p.lz.content, keywords: p.lz.keywords, exam_topics: p.lz.examTopics,
-            images: p.lz.images ?? null, highlighted: p.lz.highlighted ?? false,
+            images: p.lz.images ?? null, figures: p.lz.figures ?? null, highlighted: p.lz.highlighted ?? false,
             user_note_id: p.lz.userNoteId, folder_id: p.lz.folderId, generated_at: p.lz.generatedAt,
           })
           break
@@ -317,6 +317,7 @@ function mapLernzettel(r: Row): Lernzettel {
     keywords: r.keywords ?? [],
     examTopics: r.exam_topics ?? [],
     images: r.images ?? undefined,
+    figures: r.figures ?? undefined,
     highlighted: r.highlighted ?? false,
     generatedAt: r.generated_at,
     userNoteId: r.user_note_id,
@@ -842,6 +843,7 @@ export async function syncLernzettel(userId: string, lz: Lernzettel): Promise<vo
       keywords: lz.keywords,
       exam_topics: lz.examTopics,
       images: lz.images ?? null,
+      figures: lz.figures ?? null,
       highlighted: lz.highlighted ?? false,
       user_note_id: lz.userNoteId,
       folder_id: lz.folderId,
