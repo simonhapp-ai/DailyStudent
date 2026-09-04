@@ -69,9 +69,9 @@ Smart Notes
 
 ---
 
-## Aktueller Stand — Phase 2 komplett, Phase 3 zu ~99%, App von Apple genehmigt, **Beta beendet, Pro live** (Stand: 03.09.2026)
+## Aktueller Stand — App LIVE im App Store, Beta beendet, Pro + Premium-KI live (Stand: 03.09.2026)
 
-**App-Store-Kontext:** Die App wurde von Apple genehmigt — Status in App Store Connect ist **„Pending Developer Release"** (fertig geprüft, aber noch nicht öffentlich; Simon entscheidet selbst wann er auf „Release" klickt). Eingereicht wurde am 27.07.2026, vor dem ursprünglichen Ziel-Datum 02.08.2026 (danach ist Simon in Kanada, nur mit Handy erreichbar, kein Laptop). Track B (App-Politur) ist fertig, Track A (Capacitor-Wrapper + Apple IAP via RevenueCat + Sign in with Apple) ist vollständig gebaut und der eingereichte Build genehmigt. Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`. **Wichtig, nicht verwechseln:** Das ist der kurzfristige Wrapper-Ansatz — komplett getrennt von Simons langfristiger Vision eines echten nativen SwiftUI-Rewrites OHNE Deadline, siehe neue Sektion „Zukunftsvision" weiter unten.
+**App-Store-Kontext:** Die App ist **öffentlich im App Store** (Simon hat „Release" gedrückt — vorher „Pending Developer Release" nach Apple-Genehmigung). Ursprünglich eingereicht 27.07.2026. Track B (App-Politur) + Track A (Capacitor-Wrapper + Apple IAP via RevenueCat + Sign in with Apple) sind fertig und live. Volle Sequenzierung + Architekturentscheidungen für Track A liegen in Claudes Memory unter `project-app-store-launch-plan`. **Wichtig, nicht verwechseln:** Das ist der Wrapper-Ansatz — getrennt von Simons langfristiger Vision eines echten nativen SwiftUI-Rewrites OHNE Deadline, siehe Sektion „Zukunftsvision" weiter unten. Da `server.url` auf Produktion zeigt, erreicht jeder `main`-Push die installierte App beim nächsten Öffnen (kein Review) — außer Swift-Änderungen (`ios/`), die brauchen weiterhin einen Xcode-Archive + Upload. Zwei Swift-Fixes warten noch, siehe `project_native_build_pending` in Claudes Memory.
 
 **✅ Beta ist beendet (03.09.2026).** Alle Beta-Locks/-Banner und die gesamte `app_config`-Infrastruktur (`AppConfig`-Context, Supabase-Tabelle-Lesen, `BetaPausedScreen`, `api/gemini.ts` Mode-2-Pause) sind aus dem Code entfernt. Es gilt wieder die **normale Paywall-Tabelle unten** — sie beschreibt jetzt den echten Ist-Zustand. Zusätzlich: **Premium-KI (Claude Sonnet) für Pro** — Lernzettel + Probeklausur-Material laufen für Pro-Nutzer über Claude (50 Lernzettel / 25 Klausur-Materialien pro Kalendermonat, danach nahtlos Gemini), steuerbar über den Pro-Schalter `profile.claude_enabled` (Default an, im Profil + in den Generatoren). Aufgaben-Generierung + Korrektur laufen für alle über Gemini. Details: Sessions „02.–03.09.2026" weiter unten + `feedback_confirm_decisions`. `PRO_TEST_ALLOWLIST` (Simons 2 Emails) zählt jetzt app-weit als Pro (Client + Server).
 
@@ -728,6 +728,54 @@ Simon entschied sich (27.07.2026): aktuellen Wrapper für die 02.08.-Deadline ei
 - **Simon hinterfragt technische Behauptungen aktiv und erwartet ehrliche, unaufgeregte Korrektur ohne Beschönigung** — explizit gewünscht: „no hallucinations". Schätzt direkte, faktenbasierte Einordnung von Aufwand/Risiko/Kosten (z.B. Apple-IAP-Kommission, realistischer Zeitaufwand für einen nativen Rewrite) höher ein als vorauseilende Zustimmung zu seinen eigenen Ideen — siehe 26.–27.07.2026-Diskussion über Wrapper- vs. natives-Rewrite-Strategie in „Zukunftsvision" weiter unten.
 - **Sensible Daten (private Keys, `.p8`-Dateien) nie in den Chat einfügen lassen** — wenn ein Signing-Key/Secret gebraucht wird (z.B. Apple Sign-in-Key, App Store Connect API Key), Simon bitten den Dateipfad zu nennen (z.B. Desktop), lokal per Bash/Node einlesen und verarbeiten (z.B. JWT signieren), nur das Ergebnis zurückgeben — nie den Rohinhalt im Gespräch anzeigen oder anzeigen lassen.
 - **Über 150 Personen bereits auf der Warteliste für den App-Store-Release** (Stand 27.07.2026) — echter Nutzerdruck hinter der Deadline, nicht nur Simons persönliches Ziel.
+
+---
+
+## Letzte Session (03.09.2026) — App live, Beta beendet, Premium-KI (Claude) für Pro, SVG-/Diagramm-Fixes, Lernzettel→Probeklausur-Kontext
+
+Große Session. Reihenfolge der Commits auf `main`: `90ac765` (JSON-Repair + Wait-Hinweis + toter Erklärbilder-Regler) → `51fe0d1` (Claude-Tageslimit zählte Fehlversuche) → `ecc0bd2` („Unterminated string" — Token-Limit + Repair) → `6c3300b` (Premium-KI-Schalter + Claude-Klausurmaterial + Monatskontingent) → `427baa2` („expected }" — Repair + stiller Fallback) → `b08349e` (Lernzettel kürzer + Abbildung mittig) → `9552c36` (Lernzettel→Probeklausur-Kontext) → `522da41` (SVG-Renderer + -Generierung) → `286f169` (SVG erzwingt Theme-Farben) → `d62783d` (**Beta beendet**) → `254f6c9` (CLAUDE.md).
+
+### Premium-KI (Claude Sonnet 5) für Pro — die „Schienenschaltung" ist live
+- **Lernzettel:** Pro → Claude, Free → Gemini. **Klausurmaterial:** neue `generateExamMaterials()` (Claude) zeichnet für Pro die schematischen `kind:"svg"`-Materialien (Schaltplan, Versuchsaufbau, Kräftediagramm) — das, was Gemini Flash schlecht macht; danach stellt **immer Gemini** die Aufgaben dazu (`givenMaterialsHint` + `parseExam(…, presetMaterials)`). Charts/Tabellen/Funktionsplots bleiben Gemini + eigener Renderer. Jeder Fehlschlag / Nicht-Pro / DEV → `null` → reiner Gemini-Pfad, nichts bricht.
+- **Korrektur läuft für ALLE über Gemini** — `correctExam()` hat keinen Engine-Parameter mehr (Simons Entscheidung: Lerneffekt kommt aus dem Denken, Gemini greift klare Fehler ohnehin ab).
+- **Pro-Schalter `profile.claude_enabled`** (Default an): global im Profil → Allgemein (`PremiumKiRow`) + inline `PremiumKiToggle` in Lernzettel-/Probeklausur-Generator (Mode 1/2/3). `resolveEngine({ isPro, claudeTrialUsed, claudePref })` in `src/lib/studyEngine.ts` — nur `claudePref === false` schaltet Claude ab. Round-trip über `updateProfile` → `syncProfile`/`mapProfile` (`claude_enabled`-Spalte, Migration 021).
+- **Kontingent monatlich** (Migration `021_claude_monthly_quota.sql`, ✅ von Simon angewendet — ersetzt 020, self-contained): `claude_lernzettel` **50/Kalendermonat**, `claude_probeklausur` **25/Monat**. `check_claude_limit` ist jetzt ein reiner READ + `SUM(count)` über den Monat; `bump_claude_usage` zählt erst NACH einem erfolgreichen, abgerechneten Anthropic-Call hoch (vorher zählte jeder Aufruf inkl. Timeout/JSON-Fehler → Simons Testphase hatte das Tageskontingent verbrannt). Allowlist umgeht das Limit komplett (`api/claude.ts`).
+- **`api/claude.ts`:** `maxDuration: 300` (Fluid Compute auf Hobby), Selbst-Timeout 240 s. `claudeFetch` (`src/lib/claude.ts`) wirft bei `stop_reason=max_tokens` ODER unparsebarem JSON `ClaudeFallbackError` statt eines harten Fehlers → `examFetch` fällt still auf Gemini zurück, der Nutzer sieht nie einen Parser-Fehler.
+- **Claude-Token-Budgets:** Lernzettel `maxTokens: 14000`, Klausurmaterial `8000`, Gemini `examFetch` `maxOutputTokens: 24000` (war 8192 — ein voller Lernzettel + figures + ~600 Gemini-„thought"-Tokens lief mittendrin aus).
+
+### `src/lib/jsonRepair.ts` — 4-stufige Reparatur (mehrere echte Bugs bei Simons Tests)
+`repairMathSpans` (nur in `$…$` aggressiv, Prosa-`\n` bleibt) → `closeTruncatedJson` (schneidet vom Ende her Zeichen für Zeichen weg + schließt Klammern neu, bis es parst; fängt „Unterminated string" UND „expected }") → `repairEscapes` (global, Links-nach-rechts-Walk, verdoppelt `\v \e \frac \vec` … ohne korrekt escaptes `\\` kaputtzumachen — das war der `\v`-Fehler) → nochmal mit Truncation. Genutzt in `examFetch`, `claudeFetch`, `generateLernplan`.
+
+### SVG-Diagramme — Renderer + Generierung
+- `FigureSvg.tsx` `sanitizeSvg`: Marker-/Pfeilspitzen-Attribute (`markerWidth`/`refX`/`orient` …) waren nicht in der Allowlist → Pfeile bei Schaltplänen kaputt. Jetzt drin. viewBox-Casing normalisiert / aus width/height abgeleitet. Nach dem Filtern leeres SVG → `null` → Text-Fallback (`SafeSvg`/`MaterialFigure`/`ExamMaterialCard` zeigen `content` statt leerem Kasten). Attributwerte gegen externe `url()` geprüft.
+- **Theme-Farben erzwungen:** jede feste Farbe in `fill`/`stroke`/`stop-color` wird auf `currentColor` zurückgebogen (`fill="black"` war im Dunkelmodus unsichtbar). Kleine Palette theme-neutraler Akzente (`#5AC8FA #FACC15 #C084FC #34D399 #FF453A #FF9F0A #30D158`) bleibt erlaubt.
+- `sanitizeChart`: deutsches Dezimalkomma (`"0,4"`, `"9,81*x"`) → Punkt normalisiert; vorher blieben Komma-Werte Strings → Punkte/Kurven nicht geplottet.
+- Prompt (`MATERIAL_FORMAT_SPEC`): harte SVG-Regeln (feste viewBox 0 0 320 220, Koordinaten im Rahmen, nur `currentColor`, `font-size` auf jedem `<text>`, ein Standard-Pfeil-Marker, 6–18 Elemente „Prinzipskizze") + ein konkretes SVG-Beispiel (Reihenschaltung) — vorher gab es keins.
+
+### Lernzettel → Probeklausur: Fach + Thema + Inhalt werden übernommen
+`ProbeklausurPrefill` (jetzt einmal in `types/index.ts`, war 3× dupliziert) um `lernzettelId` + `contextText` erweitert. Der „Probeklausur erstellen"-Knopf im Lernzettel gibt Fach, Thema (Titel als Fallback), sourceNoteIds und die ersten 4000 Zeichen Lernzettel-Inhalt mit. Alle 4 Mode-Screens lesen jetzt `prefill` (Mode 3/4 taten das nicht), füllen Fach/Thema vor, zeigen „Aus deinem Lernzettel"-Banner. `generateMode1-4Exam` + `generateExamMaterials` bekommen `contextText` → neuer `examContextBlock` im Prompt („INHALTLICHE BASIS … greife Begriffe/Schwerpunkte daraus auf").
+
+### Lernzettel: kürzer + Abbildung mittig
+Ziel-Länge `1500–2500` → **`1200–1800` Wörter** (Simon: soll nicht überwältigen), dichter formuliert. Prompt fordert jetzt mindestens eine `figure` im mittleren Drittel des content (nicht die erste Überschrift, nicht „## Klausurrelevanz"). Diagramme selbst unverändert.
+
+### Beta beendet — kompletter Rückbau (Commit `d62783d`)
+- **Entfernt:** `AppConfig`-Interface + Context + Supabase-`app_config`-Fetch + `effectiveAppConfig` (`UserContext.tsx`), `BetaPausedScreen.tsx`, `ProModal`s „Pro startet nach der Beta"-Ansicht + Waitlist-Button + `pro_waitlist_interested`-Schreiben, `api/gemini.ts`s `isProbeklausurMode2Paused()` + lokale `PRO_TEST_ALLOWLIST`, alle Beta-Badges („Kostenlos in der Beta" / „Bald wieder da" / „🕒 Bald verfügbar"), die Beta-Karten im ProfilScreen + Footer-„· Beta", der Beta-Tag im OnboardingScreen.
+- **Neu:** `src/components/ui/ProModeGate.tsx` — Vollbild-Pro-Sperre für AFB-Trainer / Materialklausur / Ohne-Material (früher Return `if (!isPro && phase === 'setup')` in Mode 1/3/4, fängt Direkt-URL/Resume), mit „Pro freischalten"-CTA → ProModal.
+- **Normale Paywall wieder aktiv** (siehe Tabelle oben): Mode 1/3/4 + KI-Korrektur + Lernplan Vollständig/Abitur = Pro; Vollständige Klausur + Lernzettel = 1/Tag frei; Lernplan Einzel = 3/Tag frei. `ProbeklausurMenuScreen.handleModeClick` wieder simpel: `if (!isPro && mode.id !== 2) setShowProModal(true)`.
+- **ProModal neu geframt:** Headline „Zugriff auf die Premium-KI-Modelle", Bullets betonen Claude für Lernzettel/Klausurmaterial; der 50/25-Monatshinweis steht bewusst weit unten (nach Preis + Buttons). Rendert `null` für Pro-Nutzer (nie ein Checkout für Pro). ProfilScreen-Karte → „Premium-KI freischalten" mit Claude-Bullets + 50/25-Hinweis.
+- **`PRO_TEST_ALLOWLIST`** (Simons 2 Emails) ist jetzt in `effectiveIsPro` gefaltet → app-weit Pro (Client), deckt sich mit Server (`api/claude.ts`/`api/gemini.ts`).
+- **Tot in Supabase, aber gelassen:** Tabelle `app_config`, Spalte `profiles.pro_waitlist_interested` — nichts liest sie mehr. Migration `017_beta_mode_config.sql` bleibt als Datei (Historie). Können per optionaler Aufräum-Migration gedroppt werden.
+
+### Marketing / Datenbank-Stand (kein Code)
+- **`early_access_emails`** (Migration `008_early_access.sql`) — die ~100 Landing-Page-Leads (`id`, `email`, `created_at`; RLS: jeder darf INSERT, nur service-role/Table-Editor darf lesen). Das ist die Mailingliste für die Launch-Ankündigung. Simon exportiert als CSV im Supabase Table Editor → Bulk-Mailer (Brevo empfohlen, EU, Gratis-Tier 300/Tag, Abmelde-Link automatisch) → senden. Gmail-BCC vermeiden (kein GDPR-Abmeldelink, Spam-Risiko bei 100 Empfängern).
+- **`profiles.pro_waitlist_interested`** — Beta-Ära-Daten (wer „vormerken" tippte). Nichts schreibt das mehr. Einmalig exportierbar als „warm zu Pro"-Liste (join mit `auth.users` für die Email), wächst aber nicht.
+- **Post-Beta gibt es KEINE automatische „interessiert an Pro aber nicht gekauft"-Erfassung.** Bewusste Lücke — Pro ist jetzt kaufbar. Falls ein Re-Marketing-Signal gewünscht: kleines Feature (ProModal-Öffnungen tracken oder „Erinnere mich" am „Später"-Knopf) — nicht gebaut, nicht nötig für Launch.
+
+### Offen / nächste Schritte
+- Simon verschickt die Launch-Mail an `early_access_emails` (Tutorial in dieser Session gegeben).
+- Optionale Aufräum-Migration `022`: `DROP TABLE app_config; ALTER TABLE profiles DROP COLUMN pro_waitlist_interested;` — nur wenn Simon die Beta-Ära-Daten nicht mehr braucht.
+- QA-Pass auf den ganzen Premium-KI-Flow am echten Gerät (Pro-Kauf → Claude-Lernzettel → Kontingent → Fallback), SVG-Rendering in beiden Themes, Lernzettel→Probeklausur-Übergabe.
+- Die zwei ausstehenden Swift-Fixes (`project_native_build_pending`) brauchen weiterhin einen Xcode-Archive.
 
 ---
 
