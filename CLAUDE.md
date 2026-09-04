@@ -766,16 +766,19 @@ Ziel-Länge `1500–2500` → **`1200–1800` Wörter** (Simon: soll nicht über
 - **`PRO_TEST_ALLOWLIST`** (Simons 2 Emails) ist jetzt in `effectiveIsPro` gefaltet → app-weit Pro (Client), deckt sich mit Server (`api/claude.ts`/`api/gemini.ts`).
 - **Tot in Supabase, aber gelassen:** Tabelle `app_config`, Spalte `profiles.pro_waitlist_interested` — nichts liest sie mehr. Migration `017_beta_mode_config.sql` bleibt als Datei (Historie). Können per optionaler Aufräum-Migration gedroppt werden.
 
-### Marketing / Datenbank-Stand (kein Code)
-- **`early_access_emails`** (Migration `008_early_access.sql`) — die ~100 Landing-Page-Leads (`id`, `email`, `created_at`; RLS: jeder darf INSERT, nur service-role/Table-Editor darf lesen). Das ist die Mailingliste für die Launch-Ankündigung. Simon exportiert als CSV im Supabase Table Editor → Bulk-Mailer (Brevo empfohlen, EU, Gratis-Tier 300/Tag, Abmelde-Link automatisch) → senden. Gmail-BCC vermeiden (kein GDPR-Abmeldelink, Spam-Risiko bei 100 Empfängern).
-- **`profiles.pro_waitlist_interested`** — Beta-Ära-Daten (wer „vormerken" tippte). Nichts schreibt das mehr. Einmalig exportierbar als „warm zu Pro"-Liste (join mit `auth.users` für die Email), wächst aber nicht.
+### Marketing / Launch-Mails (kein Code — läuft am 03.09.2026)
+Simon verschickt am Launch-Tag zwei Mails über **Brevo** (EU, Gratis-Tier 300/Tag, Abmelde-Link automatisch — Gmail-BCC ist raus wegen fehlendem GDPR-Abmeldelink + Spam-Risiko):
+- **Early-Access-Liste** — Tabelle `early_access_emails` (Migration `008`, `id`/`email`/`created_at`, RLS: jeder INSERT, nur Table-Editor liest). Rohliste **100 Adressen**. Bereinigt auf **87** (−7 die auch auf der Pro-Warteliste stehen, −2 Wegwerf-Domains `lnovic.com`/`rapplo.com`, −4 Zweitadressen derselben Personen). Betreff „DailyStudent ist da — dein Early-Access-Zugang", Vorschautext „Kostenlos im App Store — plus 20 % auf Pro, weil du früh dabei warst", CTA App-Store-Link + `dailystudent.de`.
+- **Pro-Warteliste** — `profiles.pro_waitlist_interested = true`, per SQL-Editor-Query mit Join auf `auth.users` exportiert (`select u.email … from public.profiles p join auth.users u on u.id = p.id where p.pro_waitlist_interested = true`). **29 Adressen** (Simon selbst rausgenommen), davon 6 `@privaterelay.appleid.com` (bouncen wahrscheinlich, `dailystudent.de` ist nicht bei Apple für E-Mail-Kommunikation registriert). Das sind die wärmsten Leads (Kaufabsicht in der Beta) — eigene Mail: „Du hattest dich für den Pro-Rabatt vorgemerkt — hier ist er". **Rabatt = der bestehende `DS20`-Coupon** (20 %, `duration: once`), wird bei jedem Web-Checkout automatisch angewendet (`ProModal` hängt ihn an), kein Code nötig. Nativ: 1 Woche gratis (Apple erlaubt kein Coupon-Stapeln auf IAP).
+- **`pro_waitlist_interested` NICHT droppen** (Simons ausdrückliche Ansage — wichtige Warm-Lead-Daten, auch wenn sie nicht mehr wachsen). Nur die **`app_config`-Tabelle** ist wirklich tot und darf per optionaler Migration `022` weg (`DROP TABLE app_config;` — die Spalte `pro_waitlist_interested` bleibt).
 - **Post-Beta gibt es KEINE automatische „interessiert an Pro aber nicht gekauft"-Erfassung.** Bewusste Lücke — Pro ist jetzt kaufbar. Falls ein Re-Marketing-Signal gewünscht: kleines Feature (ProModal-Öffnungen tracken oder „Erinnere mich" am „Später"-Knopf) — nicht gebaut, nicht nötig für Launch.
 
 ### Offen / nächste Schritte
-- Simon verschickt die Launch-Mail an `early_access_emails` (Tutorial in dieser Session gegeben).
-- Optionale Aufräum-Migration `022`: `DROP TABLE app_config; ALTER TABLE profiles DROP COLUMN pro_waitlist_interested;` — nur wenn Simon die Beta-Ära-Daten nicht mehr braucht.
+- Launch-Mails raus (läuft) → danach Öffnungs-/Klickraten in Brevo prüfen, ggf. Follow-up an „nicht geöffnet".
+- Optionale Aufräum-Migration `022`: `DROP TABLE app_config;` — nur die Tabelle, NICHT `profiles.pro_waitlist_interested`.
 - QA-Pass auf den ganzen Premium-KI-Flow am echten Gerät (Pro-Kauf → Claude-Lernzettel → Kontingent → Fallback), SVG-Rendering in beiden Themes, Lernzettel→Probeklausur-Übergabe.
 - Die zwei ausstehenden Swift-Fixes (`project_native_build_pending`) brauchen weiterhin einen Xcode-Archive.
+- Beobachten: reale Claude-Kosten in `api/claude.ts`-Logs (`[claude tokens]`) + `ai_spend`-Tabelle gegen den 20-€-Monatsdeckel — Deckel anheben sobald zahlende Abos das tragen.
 
 ---
 
