@@ -38,7 +38,14 @@ export function ProfilAccountScreen() {
   }
 
   const handleManageSubscription = async () => {
-    if (subscriptionSource === 'apple') {
+    // Apple's subscription screen if: the row explicitly says Apple, OR we're in
+    // the native app and the source is unknown (purchase whose webhook predates
+    // the subscriptions row, allowlisted Pro, restore-only). A native user who
+    // subscribed via Stripe on the web (source === 'stripe') still gets the
+    // Stripe portal.
+    const useAppleScreen =
+      subscriptionSource === 'apple' || (isNative && subscriptionSource !== 'stripe')
+    if (useAppleScreen) {
       const url = 'itms-apps://apps.apple.com/account/subscriptions'
       if (isNative) await Browser.open({ url })
       else window.location.href = url
