@@ -139,7 +139,9 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
       const result = await purchasePlan(plan === 'annual' ? 'yearly' : 'monthly')
       setLoading(false)
       if (result.success) {
-        markNativePro(result.hasEntitlement ?? true)
+        // Success alone is enough — the entitlement can lag a few seconds in
+        // sandbox, so don't gate the UI switch on result.hasEntitlement.
+        markNativePro(true)
         onClose()
       } else if (!result.cancelled) {
         setError(result.error ?? 'Kauf fehlgeschlagen. Bitte versuche es erneut.')

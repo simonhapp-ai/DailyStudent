@@ -409,7 +409,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
       if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session?.user) {
         const userId = session.user.id
-        void initRevenueCat(userId, setNativeEntitlementActive)
+        // Latch on only: a stale "no active entitlement" from RevenueCat's
+        // update listener during sandbox propagation lag must never knock a
+        // just-completed purchase back off. Downgrades (expiry/refund) come
+        // from the authoritative `subscriptions` load on the next app start.
+        void initRevenueCat(userId, (active) => {
+          if (active) setNativeEntitlementActive(true)
+        })
         // Skip if we already loaded data for this user (e.g. background token refresh)
         if (loadedForUserId.current === userId) return
         loadedForUserId.current = userId
@@ -698,7 +704,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // and picked up on the next load; this is purely the instant on-device hint,
   // deliberately not routed through setIsPro (which would set isDevMode).
   const markNativePro = (active: boolean) => {
-    setNativeEntitlementActive(active)
+    // Latch on — see the initRevenueCat comment above. Never downgrades here.
+    setNativeEntitlementActive((prev) => prev || active)
   }
 
   const loadKcData = useCallback(async (targetProfile?: UserProfile) => {

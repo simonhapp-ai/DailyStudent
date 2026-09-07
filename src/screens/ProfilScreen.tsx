@@ -176,7 +176,9 @@ export function ProfilScreen() {
       const result = await purchasePlan(plan)
       setCheckoutLoading(null)
       if (result.success) {
-        markNativePro(result.hasEntitlement ?? true)
+        // A successful, non-cancelled purchase IS the signal — the entitlement
+        // can lag a few seconds in sandbox, so don't gate on result.hasEntitlement.
+        markNativePro(true)
         setPaymentToast('success')
         setTimeout(() => setPaymentToast(null), 6000)
       } else if (!result.cancelled) {
