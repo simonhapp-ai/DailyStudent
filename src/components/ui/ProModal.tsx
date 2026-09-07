@@ -100,7 +100,7 @@ interface ProModalProps {
 }
 
 export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }: ProModalProps) {
-  const { isPro } = useUser()
+  const { isPro, markNativePro } = useUser()
   const [plan, setPlan] = useState<'annual' | 'monthly'>('annual')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -139,6 +139,7 @@ export function ProModal({ feature, isOpen, onClose, couponId, discountPercent }
       const result = await purchasePlan(plan === 'annual' ? 'yearly' : 'monthly')
       setLoading(false)
       if (result.success) {
+        markNativePro(result.hasEntitlement ?? true)
         onClose()
       } else if (!result.cancelled) {
         setError(result.error ?? 'Kauf fehlgeschlagen. Bitte versuche es erneut.')

@@ -25,3 +25,11 @@ entrypoint = "./functions/create-checkout-session/index.ts"
 enabled = true
 verify_jwt = false
 entrypoint = "./functions/stripe-webhook/index.ts"
+
+# RevenueCat posts its own shared-secret Authorization header, not a Supabase
+# JWT — verify_jwt must be false or the platform rejects every webhook call
+# before the handler runs (same as stripe-webhook).
+[functions.revenuecat-webhook]
+enabled = true
+verify_jwt = false
+entrypoint = "./functions/revenuecat-webhook/index.ts"

@@ -1,8 +1,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// Placeholders — replace with the real App Store Connect product identifiers
-// once Simon creates the IAP products (see CLAUDE.md Track A plan, Phase 5).
-const YEARLY_PRODUCT_IDS = ['dailystudent_pro_yearly']
+// Real App Store Connect product identifiers (see CLAUDE.md Track A / RevenueCat
+// product catalog). Anything not in this list is treated as the monthly plan.
+const YEARLY_PRODUCT_IDS = ['com.dailystudent.app.pro.yearly']
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -18,11 +18,21 @@ Deno.serve(async (req) => {
 
   // RevenueCat sends a shared secret in the Authorization header (configured
   // in the RevenueCat dashboard's webhook settings) — not HMAC-signed like
-  // Stripe, so a simple constant-time-ish string compare is RevenueCat's own
-  // documented scheme.
-  const expectedAuth = Deno.env.get('REVENUECAT_WEBHOOK_AUTH_HEADER')
-  const gotAuth = req.headers.get('Authorization')
+  // Stripe, so a plain string compare is RevenueCat's own documented scheme.
+  // Trim both sides + tolerate a "Bearer " prefix: the Supabase secrets UI
+  // and RevenueCat's field both tend to introduce stray whitespace/newlines
+  // on paste, which was silently causing 401s.
+  const norm = (v: string | null | undefined) =>
+    (v ?? '').trim().replace(/^Bearer\s+/i, '')
+  const expectedAuth = norm(Deno.env.get('REVENUECAT_WEBHOOK_AUTH_HEADER'))
+  const gotAuth = norm(req.headers.get('Authorization'))
   if (!expectedAuth || gotAuth !== expectedAuth) {
+    console.error('[rcwh] auth mismatch', {
+      hasSecret: expectedAuth.length > 0,
+      secretLen: expectedAuth.length,
+      gotLen: gotAuth.length,
+      firstMatch: expectedAuth.slice(0, 4) === gotAuth.slice(0, 4),
+    })
     return new Response('Unauthorized', { status: 401, headers: CORS_HEADERS })
   }
 

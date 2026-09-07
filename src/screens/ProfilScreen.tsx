@@ -134,7 +134,7 @@ function RangRing({ xp }: { xp: number }) {
 export function ProfilScreen() {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const { profile, theme, setTheme, isPro, setIsPro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt } = useUser()
+  const { profile, theme, setTheme, isPro, setIsPro, markNativePro, appStats, userNotes, authUser, updateProfile, referralCode, referralCount, trialEndsAt } = useUser()
   const [checkoutLoading, setCheckoutLoading] = useState<'monthly' | 'yearly' | null>(null)
   const [paymentToast, setPaymentToast] = useState<'success' | 'error' | null>(null)
   const [paymentErrorMessage, setPaymentErrorMessage] = useState<string | null>(null)
@@ -176,6 +176,7 @@ export function ProfilScreen() {
       const result = await purchasePlan(plan)
       setCheckoutLoading(null)
       if (result.success) {
+        markNativePro(result.hasEntitlement ?? true)
         setPaymentToast('success')
         setTimeout(() => setPaymentToast(null), 6000)
       } else if (!result.cancelled) {

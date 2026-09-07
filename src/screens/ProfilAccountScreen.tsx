@@ -11,7 +11,7 @@ const isNative = Capacitor.isNativePlatform()
 
 export function ProfilAccountScreen() {
   const navigate = useNavigate()
-  const { authUser, signOut, isPro, subscriptionSource } = useUser()
+  const { authUser, signOut, isPro, subscriptionSource, markNativePro } = useUser()
 
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleteInput, setDeleteInput] = useState('')
@@ -30,6 +30,7 @@ export function ProfilAccountScreen() {
     if (!result.success) {
       setRestoreMessage({ text: result.error ?? 'Wiederherstellen fehlgeschlagen. Bitte versuche es erneut.', isError: true })
     } else if (result.hasEntitlement) {
+      markNativePro(true)
       setRestoreMessage({ text: 'Käufe wiederhergestellt — dein Pro-Zugang ist aktiv.', isError: false })
     } else {
       setRestoreMessage({ text: 'Keine früheren Käufe für diese Apple-ID gefunden.', isError: false })

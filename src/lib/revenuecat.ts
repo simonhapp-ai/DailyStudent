@@ -15,13 +15,45 @@ let configured = false
 // round-trip into Supabase (the webhook write remains the durable,
 // cross-device source of truth; this is purely a local, non-persisted hint).
 export async function initRevenueCat(userId: string, onEntitlementChange?: (active: boolean) => void) {
-  if (!Capacitor.isNativePlatform() || configured || !REVENUECAT_API_KEY_IOS) return
-  await Purchases.configure({ apiKey: REVENUECAT_API_KEY_IOS, appUserID: userId })
-  configured = true
+  if (!Capacitor.isNativePlatform() || !REVENUECAT_API_KEY_IOS) return
+
+  if (!configured) {
+    await Purchases.configure({ apiKey: REVENUECAT_API_KEY_IOS, appUserID: userId })
+    configured = true
+    if (onEntitlementChange) {
+      await Purchases.addCustomerInfoUpdateListener((info) => {
+        onEntitlementChange(Object.keys(info.entitlements.active).length > 0)
+      })
+    }
+  }
+
+  // Seed the current entitlement on every call (cold start, token refresh,
+  // re-login). The update listener above only fires on *changes*, so without
+  // this a user who bought Pro on a previous launch — or whose purchase never
+  // reached `subscriptions` because the webhook was misconfigured — would stay
+  // non-Pro forever. getCustomerInfo() reads RevenueCat's on-device cache, so
+  // it also covers the offline-relaunch case.
   if (onEntitlementChange) {
-    await Purchases.addCustomerInfoUpdateListener((info) => {
-      onEntitlementChange(Object.keys(info.entitlements.active).length > 0)
-    })
+    try {
+      const { customerInfo } = await Purchases.getCustomerInfo()
+      onEntitlementChange(Object.keys(customerInfo.entitlements.active).length > 0)
+    } catch {
+      // StoreKit unavailable / offline first launch — the webhook-backed
+      // `subscriptions` row stays the fallback source of truth on next load.
+    }
+  }
+}
+
+// Manual entitlement re-check — call sites use this right after a purchase or
+// restore to drive the app's Pro state directly, instead of relying on the
+// CustomerInfo update listener (which is not reliably delivered on iOS).
+export async function refreshEntitlement(): Promise<boolean> {
+  if (!Capacitor.isNativePlatform() || !configured) return false
+  try {
+    const { customerInfo } = await Purchases.getCustomerInfo()
+    return Object.keys(customerInfo.entitlements.active).length > 0
+  } catch {
+    return false
   }
 }
 
@@ -71,15 +103,17 @@ export async function restorePurchases(): Promise<{ success: boolean; hasEntitle
   }
 }
 
-export async function purchasePlan(plan: 'monthly' | 'yearly'): Promise<{ success: boolean; cancelled?: boolean; error?: string }> {
+export async function purchasePlan(plan: 'monthly' | 'yearly'): Promise<{ success: boolean; cancelled?: boolean; hasEntitlement?: boolean; error?: string }> {
   try {
     const offerings = await Purchases.getOfferings()
     const wantType = plan === 'yearly' ? PACKAGE_TYPE.ANNUAL : PACKAGE_TYPE.MONTHLY
     const pkg = offerings.current?.availablePackages.find((p) => p.packageType === wantType)
     if (!pkg) return { success: false, error: 'Kein passendes Abo in RevenueCat gefunden.' }
 
-    await Purchases.purchasePackage({ aPackage: pkg })
-    return { success: true }
+    // purchasePackage returns the fresh CustomerInfo — the authoritative signal
+    // that the entitlement is now active, no update listener needed.
+    const { customerInfo } = await Purchases.purchasePackage({ aPackage: pkg })
+    return { success: true, hasEntitlement: Object.keys(customerInfo.entitlements.active).length > 0 }
   } catch (err) {
     const rcErr = err as { userCancelled?: boolean; message?: string }
     if (rcErr.userCancelled) return { success: false, cancelled: true }

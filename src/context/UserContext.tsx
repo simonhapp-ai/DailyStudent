@@ -172,6 +172,9 @@ interface UserContextValue {
   setTheme: (t: AppTheme) => void
   isPro: boolean
   setIsPro: (v: boolean) => void
+  /** Pro aus einem nativen Apple/RevenueCat-Kauf: schaltet den Pro-Modus sofort
+   *  in dieser Sitzung frei, ohne `isPro`/`profile.isDevMode` zu berühren. */
+  markNativePro: (active: boolean) => void
   /** 1x lebenslange Gratis-Kostprobe der Claude-Engine bereits verbraucht? (Server-Wahrheit) */
   claudeTrialUsed: boolean
   completeOnboarding: (profile: UserProfile, prebuiltFolders?: UserFolder[]) => void
@@ -688,6 +691,14 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setProfile(devProfile)
     saveStorage({ ...loadStorage(), isPro: v, profile: devProfile ?? undefined })
     if (authUser && devProfile) void syncProfile(authUser.id, devProfile, theme, v)
+  }
+
+  // Native purchase / restore succeeded — flip the in-session Pro signal now.
+  // The durable record is written to `subscriptions` by the RevenueCat webhook
+  // and picked up on the next load; this is purely the instant on-device hint,
+  // deliberately not routed through setIsPro (which would set isDevMode).
+  const markNativePro = (active: boolean) => {
+    setNativeEntitlementActive(active)
   }
 
   const loadKcData = useCallback(async (targetProfile?: UserProfile) => {
@@ -1364,6 +1375,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
         setTheme,
         isPro: effectiveIsPro,
         setIsPro,
+        markNativePro,
         claudeTrialUsed,
         completeOnboarding,
         updateProfile,
