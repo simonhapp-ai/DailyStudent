@@ -124,9 +124,14 @@ function getNextLessonDate(subjectId: string, stundenplan: { slots: { day: numbe
 // Eigener Schluessel, nicht Teil von lernapp_v1: Der Entwurf ist ein
 // Zwischenstand, keine gespeicherte Notiz, und soll das Schema der App nicht
 // anfassen. Er wird geloescht, sobald die Notiz gespeichert oder geleert wird.
+//
+// `path` bindet den Entwurf an GENAU den Neue-Notiz-Einstieg, an dem er
+// entstand (Fach + Ordner stecken im Pfad). Ein Entwurf aus einem anderen
+// Ordner hat mit einer neuen Notiz woanders nichts zu tun und darf dort nicht
+// wiederhergestellt werden.
 const DRAFT_KEY = 'lernapp_note_draft_v1'
 
-interface NoteDraft { title: string; blocks: NoteBlock[]; savedAt: number }
+interface NoteDraft { path: string; title: string; blocks: NoteBlock[]; savedAt: number }
 
 function blockHasContent(b: NoteBlock): boolean {
   if (b.type === 'text') return (b as TextBlock).content.trim().length > 0
@@ -178,23 +183,39 @@ export function NoteCreateScreen() {
 
   const [title, setTitle] = useState(subjectFromUrl ? `${subjectFromUrl.name}: ` : '')
 
+  // Sobald die Notiz einmal wirklich gespeichert wurde, darf hier nichts mehr
+  // als Entwurf zurueckgeschrieben werden — sonst taucht der bereits im Ordner
+  // liegende Inhalt beim naechsten „Neue Notiz" wieder auf.
+  const committedRef = useRef(false)
+
   const [blocks, setBlocks] = useState<NoteBlock[]>(() => {
-    // Angefangene Notiz wiederherstellen. Bis hierher ging alles verloren,
-    // sobald man versehentlich woanders hin tippte oder die App verliess —
-    // ohne Warnung, ohne Zwischenstand.
+    // Angefangene Notiz wiederherstellen — aber nur, wenn der Entwurf aus GENAU
+    // diesem Einstieg stammt (gleicher Pfad = gleiches Fach + gleicher Ordner).
+    // Bis hierher ging alles verloren, sobald man versehentlich woanders hin
+    // tippte oder die App verliess; gleichzeitig blutete ein Entwurf in jeden
+    // anderen Ordner hinein, mit dem er nichts zu tun hatte.
     const draft = loadDraft()
-    if (draft?.blocks?.length) return draft.blocks
+    if (draft?.blocks?.length && draft.path === location.pathname) return draft.blocks
     return [makeTextBlock('text-0'), makePhotoBlock('photo-0'), makeDrawingBlock('drawing-0')]
   })
+
+  // Der Entwurf ist erledigt — gespeichert ODER bewusst verworfen. Loeschen und
+  // die verzoegerte Auto-Sicherung stilllegen, damit ein noch ausstehender Timer
+  // ihn nicht neu schreibt und er beim naechsten „Neue Notiz" wieder auftaucht.
+  const stopDrafting = () => {
+    committedRef.current = true
+    clearDraft()
+  }
 
   // Entwurf sichern, sobald sich etwas aendert — verzoegert, damit nicht bei
   // jedem Tastendruck geschrieben wird.
   useEffect(() => {
+    if (committedRef.current) return
     const hasContent = title.trim().length > 0 || blocks.some(blockHasContent)
     if (!hasContent) { clearDraft(); return }
-    const id = setTimeout(() => saveDraft({ title, blocks, savedAt: Date.now() }), 600)
+    const id = setTimeout(() => saveDraft({ path: location.pathname, title, blocks, savedAt: Date.now() }), 600)
     return () => clearTimeout(id)
-  }, [title, blocks])
+  }, [title, blocks, location.pathname])
 
   // Beim Schliessen des Fensters warnen, solange etwas Ungespeichertes dasteht.
   useEffect(() => {
@@ -577,7 +598,7 @@ export function NoteCreateScreen() {
     blocks.some(b => (b.type === 'text' || b.type === 'photo' || b.type === 'drawing') && b.aiResult !== null)
 
   const doSave = (subjectId: string, resolvedFolderId: string, generatedNote?: GeneratedSmartNote) => {
-    clearDraft()
+    stopDrafting()
     const note = buildNote(subjectId, resolvedFolderId)
     saveNote(note, generatedNote ?? buildGeneratedNote())
     setShowSaveModal(false)
@@ -688,6 +709,7 @@ export function NoteCreateScreen() {
 
   const acceptSuggestion = () => {
     if (!suggestion) return
+    stopDrafting()
     const note = buildNote(suggestion.subjectId, undefined)
     saveNote(note, buildGeneratedNote())
     setShowNoSubjectModal(false)
@@ -696,6 +718,7 @@ export function NoteCreateScreen() {
   }
 
   const saveToOhneFach = () => {
+    stopDrafting()
     const note = buildNote(undefined, 'folder-no-subject')
     saveToOhneFachFolder(note, buildGeneratedNote())
     setShowNoSubjectModal(false)
@@ -1904,6 +1927,7 @@ export function NoteCreateScreen() {
               <button
                 onClick={() => {
                   setShowCancelConfirm(false)
+                  stopDrafting()
                   navigate('/unterricht', { replace: true })
                 }}
                 className="w-full h-12 rounded-pill border text-sm font-semibold transition-all hover:bg-danger/5 active:scale-95"
