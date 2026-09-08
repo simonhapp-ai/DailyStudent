@@ -505,6 +505,16 @@ export function DrawingCanvas({
   const editingColorIdxRef = useRef(0)
   const canvasSizeRef = useRef({ w: 0, h: 0 })
 
+  // Zeichnen — heisser Pfad. Zwei Dinge machten den Strich auf 120-Hz-Stiften
+  // (iPad + Apple Pencil) ruckelig:
+  //   1. getBoundingClientRect() bei JEDER Zeigerprobe erzwang ein Layout.
+  //   2. getStroke() + Neuzeichnen liefen einmal pro Ereignis statt pro Bild.
+  // Deshalb: die Lage der Flaeche einmal beim Aufsetzen merken, alle
+  // Zwischenproben eines Ereignisses (getCoalescedEvents) einsammeln und das
+  // Neuzeichnen ueber requestAnimationFrame buendeln.
+  const drawRectRef = useRef<{ left: number; top: number; scale: number; wb: boolean } | null>(null)
+  const drawRafRef  = useRef<number | null>(null)
+
   // View transform (zoom + pan)
   const viewTransformRef = useRef({ scale: 1, tx: 12, ty: 12 })
   const [viewTransform, setViewTransform] = useState({ scale: 1, tx: 12, ty: 12 })
@@ -1084,6 +1094,44 @@ export function DrawingCanvas({
     ]
   }
 
+  /** Lage der aktiven Zeichenflaeche einmal beim Aufsetzen merken — nicht pro Probe. */
+  const cacheDrawRect = (target: HTMLElement) => {
+    const r = target.getBoundingClientRect()
+    drawRectRef.current = drawSurfaceRef.current === 'wb'
+      ? { left: r.left, top: r.top, scale: WB_ZOOM, wb: true }
+      : { left: r.left, top: r.top, scale: viewTransformRef.current.scale, wb: false }
+  }
+
+  /** Wie getXY, aber aus rohen Bildschirmkoordinaten + gemerktem Rechteck —
+   *  fuer die vielen Zwischenproben eines 120-Hz-Stifts pro Move-Ereignis. */
+  const sampleToXY = (clientX: number, clientY: number, pressure: number): number[] => {
+    const c = drawRectRef.current
+    if (!c) return [clientX, clientY, pressure || 0.5]
+    if (c.wb) {
+      const w = wbRef.current
+      return [w.x + (clientX - c.left) / WB_ZOOM, w.y + (clientY - c.top) / WB_ZOOM, pressure || 0.5]
+    }
+    return [(clientX - c.left) / c.scale, (clientY - c.top) / c.scale, pressure || 0.5]
+  }
+
+  /** Malt den laufenden Strich hoechstens einmal pro Bild neu. */
+  const scheduleActiveStrokePaint = () => {
+    if (drawRafRef.current != null) return
+    drawRafRef.current = requestAnimationFrame(() => {
+      drawRafRef.current = null
+      const act = activeRef.current
+      if (!act || act.tool === 'eraser') return
+      if (wbRef.current.on) redrawWriteBox()
+      const fg = fgCanvasRef.current; if (!fg) return
+      const ctx = fg.getContext('2d'); if (!ctx) return
+      const { w, h } = getCSS()
+      ctx.clearRect(0, 0, w, h)
+      paintStroke(ctx, act.points, act.tool, act.colorHex, act.size, act.penType)
+    })
+  }
+
+  useEffect(() => () => { if (drawRafRef.current != null) cancelAnimationFrame(drawRafRef.current) }, [])
+
   /** Zeichnet den Streifen neu — Bestand plus, falls vorhanden, den laufenden Strich. */
   const redrawWriteBox = useCallback(() => {
     const c = wbCanvasRef.current
@@ -1296,6 +1344,7 @@ export function DrawingCanvas({
     activePointerIdsRef.current.add(e.pointerId)
     if (isPinchingRef.current || activePointerIdsRef.current.size > 1) { activeRef.current = null; return }
     e.currentTarget.setPointerCapture(e.pointerId)
+    cacheDrawRect(e.currentTarget)
     const drawTool: Exclude<Tool, 'select' | 'geometry' | 'lasso'> =
       tool === 'geometry' ? 'pen' : tool as Exclude<Tool, 'select' | 'geometry' | 'lasso'>
     activeRef.current = {
@@ -1383,7 +1432,15 @@ export function DrawingCanvas({
     if (isPinchingRef.current || activePointerIdsRef.current.size > 1) return
     if (penIsActiveRef.current && e.pointerType === 'touch') return
 
-    activeRef.current.points.push(getXY(e))
+    // Alle Zwischenproben dieses Ereignisses erfassen — ein 120-Hz-Stift liefert
+    // pro Move mehrere. Ohne sie hat der Strich sichtbare Ecken.
+    const ne = e.nativeEvent as PointerEvent
+    const coalesced = typeof ne.getCoalescedEvents === 'function' ? ne.getCoalescedEvents() : null
+    if (coalesced && coalesced.length) {
+      for (const s of coalesced) activeRef.current.points.push(sampleToXY(s.clientX, s.clientY, s.pressure))
+    } else {
+      activeRef.current.points.push(sampleToXY(ne.clientX, ne.clientY, ne.pressure))
+    }
 
     if (activeRef.current.tool === 'eraser') {
       const sk = skCanvasRef.current; if (!sk) return
@@ -1395,13 +1452,8 @@ export function DrawingCanvas({
       return
     }
 
-    if (wbRef.current.on) redrawWriteBox()
-
-    const fg = fgCanvasRef.current; if (!fg) return
-    const ctx = fg.getContext('2d'); if (!ctx) return
-    const { w, h } = getCSS()
-    ctx.clearRect(0, 0, w, h)
-    paintStroke(ctx, activeRef.current.points, activeRef.current.tool, activeRef.current.colorHex, activeRef.current.size, activeRef.current.penType)
+    // Neuzeichnen gebuendelt pro Bild statt pro Ereignis.
+    scheduleActiveStrokePaint()
   }
 
   /** Rueckt den Ausschnitt nach rechts; am Zeilenende in die naechste Zeile. */
@@ -1425,6 +1477,8 @@ export function DrawingCanvas({
   const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (e.pointerType === 'pen') penIsActiveRef.current = false
     activePointerIdsRef.current.delete(e.pointerId)
+    // Ausstehendes Bild verwerfen — der endgueltige Strich wird unten fest gemalt.
+    if (drawRafRef.current != null) { cancelAnimationFrame(drawRafRef.current); drawRafRef.current = null }
     // Clear long-press timer
     if (longPressTimerRef.current) { clearTimeout(longPressTimerRef.current); longPressTimerRef.current = null }
     longPressStartRef.current = null
@@ -2091,12 +2145,12 @@ export function DrawingCanvas({
           }}
         >
 
-        {/* Back */}
+        {/* Back — sitzt auf der Modusfläche (var(--grad-mode)); Schrift und
+            Symbole darauf sind immer weiß, nie ein Grau- oder Akzentton. */}
         {isFullscreen && onBack && (
           <button
             onClick={onBack}
-            className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
-            style={{ color: 'rgb(var(--color-text-secondary))' }}
+            className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 text-white"
             title="Zurück"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
@@ -2109,10 +2163,8 @@ export function DrawingCanvas({
         <button
           ref={settingsBtnRef}
           onClick={() => { setShowSettings(v => !v); if (showSettings) setShowBgPicker(false) }}
-          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0"
-          style={showSettings
-            ? { background: 'rgba(124,58,237,0.12)', color: '#7C3AED' }
-            : { color: 'rgb(var(--color-text-muted))' }}
+          className="flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 text-white"
+          style={showSettings ? { background: 'rgba(255,255,255,0.18)' } : undefined}
           title="Einstellungen"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -2121,13 +2173,13 @@ export function DrawingCanvas({
         </button>
 
         {/* Undo / Redo */}
-        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Rückgängig">
+        <button onClick={handleUndo} disabled={!canUndo} className={`flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 text-white ${!canUndo ? 'opacity-25 cursor-not-allowed' : ''}`} title="Rückgängig">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
             <path d="M3 7v6h6" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
-        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} style={{ color: 'rgb(var(--color-text-secondary))' }} title="Wiederholen">
+        <button onClick={handleRedo} disabled={!canRedo} className={`flex items-center justify-center w-11 h-11 rounded-btn transition-all press-sm shrink-0 text-white ${!canRedo ? 'opacity-25 cursor-not-allowed' : ''}`} title="Wiederholen">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
             <path d="M21 7v6h-6" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3l3 2.7" strokeLinecap="round" strokeLinejoin="round" />

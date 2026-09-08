@@ -1708,9 +1708,11 @@ export function NoteCreateScreen() {
       )}
 
       {/* SCROLLABLE ZONE */}
-      {/* Eine Notiz ist Text — ueber die volle Breite eines Schreibtischs
-          liest sie sich nicht. Gleiche Lesebreite wie die fertige Smart Note. */}
-      <div className="flex-1 overflow-y-auto lg:px-6 lg:max-w-[920px] lg:w-full">
+      {/* Auf dem iPad (Hoch- wie Querformat) füllen die Felder die ganze Breite —
+          vorher pinnte lg:max-w-[920px] die Spalte links fest und ließ rechts
+          einen ungenutzten grauen Streifen. Erst am echten Schreibtisch (xl)
+          wird die Lesebreite begrenzt, dann aber mittig statt einseitig. */}
+      <div className="flex-1 overflow-y-auto w-full xl:px-6 xl:mx-auto xl:max-w-[920px]">
 
         {/* Title */}
         <input
