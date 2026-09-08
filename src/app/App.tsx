@@ -171,13 +171,15 @@ function CookieBannerGate({ onConsent }: { onConsent: (analytics: boolean) => vo
 }
 
 function FixedBadges() {
+  // Die Streak-Pille steht in der Desktop-/iPad-Ansicht in der Kopfzeile des
+  // Unterrichts-Screens neben dem Profil-Knopf. Hier als festes Overlay lag sie
+  // ein zweites Mal auf dem Schirm — entfernt, nur die ReferralPill bleibt.
   return (
     <div
       className="fixed z-40 flex items-center gap-2"
       style={{ top: 'max(14px, calc(env(safe-area-inset-top, 0px) + 10px))', right: '16px' }}
     >
       <ReferralPill />
-      <StreakBadge inline />
     </div>
   )
 }
