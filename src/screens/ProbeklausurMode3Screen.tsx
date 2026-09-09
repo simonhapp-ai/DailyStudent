@@ -9,7 +9,7 @@ import { useUser } from '../context/UserContext'
 import { Icon, type IconName } from '../components/ui/Icon'
 import { ProModal } from '../components/ui/ProModal'
 import { subjects, topics } from '../data/mockData'
-import { getTopicPlaceholder } from '../data/subjectInfo'
+import { getTopicPlaceholder, subjectInfo } from '../data/subjectInfo'
 import { generateMode3Exam, correctExam } from '../lib/gemini';
 import { resolveEngine } from '../lib/studyEngine'
 import { BottomSheet } from '../components/ui/BottomSheet'
@@ -118,8 +118,10 @@ export function ProbeklausurMode3Screen() {
   const examEngine = resolveEngine({ isPro, claudeTrialUsed, claudePref })
   const usesClaude = examEngine.engine === 'claude'
 
-  const userSubjects = subjects.filter((s) => profile?.faecher?.includes(s.id))
-  const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6)
+  // Eigene Fächer einschließen: subjectInfo() liefert Standard- wie Eigenfächer.
+  // Der alte Abgleich gegen die mockData-Liste ließ eigene Fächer hier verschwinden.
+  const userSubjects = (profile?.faecher ?? []).map((id) => ({ id, name: subjectInfo(id).name }))
+  const displaySubjects = userSubjects.length > 0 ? userSubjects : subjects.slice(0, 6).map((s) => ({ id: s.id, name: s.name }))
 
   const [phase, setPhase] = useState<Phase>(resume ? 'exam' : 'setup')
   const [subjectId, setSubjectId] = useState(resume?.subjectId ?? prefill?.subjectId ?? displaySubjects[0]?.id ?? '')
@@ -131,7 +133,7 @@ export function ProbeklausurMode3Screen() {
   const [showExitWarning, setShowExitWarning] = useState(false)
   const [showProModal, setShowProModal] = useState(false)
 
-  const selectedSubject = subjects.find((s) => s.id === subjectId)
+  const selectedSubject = subjectId ? { id: subjectId, name: subjectInfo(subjectId).name } : undefined
   const subjectTopics = topics.filter((t) => t.subjectId === subjectId).slice(0, 6)
 
   async function handleGenerate() {

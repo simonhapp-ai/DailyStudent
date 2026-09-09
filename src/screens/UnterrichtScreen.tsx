@@ -4,7 +4,7 @@ import { useUser } from '../context/UserContext'
 import { BottomSheet } from '../components/ui/BottomSheet'
 import { analyzeFileToSmartNote, suggestImportDestination, GEMINI_BATCH_DELAY_MS, type ImportDestination } from '../lib/gemini'
 import type { UserFolder, UserNote } from '../types'
-import { subjects, halfYears } from '../data/mockData'
+import { halfYears } from '../data/mockData'
 import type { HalfYear } from '../types'
 import { SubjectIcon, QuickNotesIcon } from '../components/ui/SubjectIcon'
 import { Icon } from '../components/ui/Icon'
@@ -12,7 +12,7 @@ import { Stage } from '../components/ui/Stage'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
 import { currentSlot, nextSlot, todaysSlots } from '../lib/appMode'
-import { resolveSubjectInfo, sortSubjectsByGroup } from '../data/subjectInfo'
+import { resolveSubjectInfo, sortSubjectsByGroup, subjectInfo } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
 import { bundeslandName } from '../data/bundeslaender'
 import type { StundenplanSlot } from '../types'
@@ -293,15 +293,11 @@ export function UnterrichtScreen() {
   // Nach Fachgruppe sortiert: Fächer derselben Farbe stehen beieinander, statt
   // sich über die Liste zu verteilen. Vier zusammenhängende Farbblöcke lesen
   // sich ruhiger als eine gesprenkelte Liste.
+  // subjectInfo() kennt Standard- UND Eigenfächer. Der frühere Abgleich gegen
+  // die mockData-Liste ließ eigene Fächer und die dort fehlenden Standardfächer
+  // (Japanisch, Russisch, Ethik …) komplett aus dem Fachbaum verschwinden.
   const profileSubjects: { id: string; name: string }[] = sortSubjectsByGroup(profile?.faecher ?? [])
-    .map((id) => {
-      const std = subjects.find((s) => s.id === id)
-      if (std) return { id: std.id, name: std.name }
-      const custom = profile?.customFaecher?.find((cf) => cf.id === id)
-      if (custom) return { id: custom.id, name: custom.name }
-      return null
-    })
-    .filter((s): s is { id: string; name: string } => s !== null)
+    .map((id) => ({ id, name: subjectInfo(id).name }))
 
   const toggleSubject = (id: string) => {
     setExpandedSubjects((prev) => {
@@ -611,9 +607,7 @@ export function UnterrichtScreen() {
           {addFolderFor && (
             <div className="flex items-center gap-1.5 flex-wrap mb-4">
               <span className="px-2.5 py-1 rounded-chip text-[11px] font-semibold btn-mode">
-                {subjects.find((s) => s.id === addFolderFor)?.name
-                  ?? profile?.customFaecher?.find((cf) => cf.id === addFolderFor)?.name
-                  ?? addFolderFor}
+                {subjectInfo(addFolderFor).name || addFolderFor}
               </span>
             </div>
           )}

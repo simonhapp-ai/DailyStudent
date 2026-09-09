@@ -5,7 +5,8 @@ import { Icon, type IconName } from '../components/ui/Icon'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
 import { evaluateBlurting } from '../lib/groq'
-import { subjects, topics } from '../data/mockData'
+import { topics } from '../data/mockData'
+import { subjectInfo } from '../data/subjectInfo'
 import { SubjectIcon } from '../components/ui/SubjectIcon'
 import { Dialog } from '../components/ui/Dialog'
 import type { GeneratedSmartNote } from '../types'
@@ -172,12 +173,14 @@ export function BlurtingScreen() {
 
   // ── Data ─────────────────────────────────────────────────────────────────
 
-  const profileSubjects: SubjectChip[] = (profile?.faecher ?? [])
-    .map((id) => subjects.find((s) => s.id === id))
-    .filter((s): s is (typeof subjects)[number] => s !== undefined)
-    .map((s) => ({ id: s.id, name: s.name, color: s.color, icon: s.icon }))
+  // subjectInfo() beantwortet Standard- wie Eigenfächer. Vorher filterte der
+  // Abgleich gegen die feste mockData-Liste alle eigenen Fächer heraus — man
+  // konnte für sie kein Blurting starten.
+  const profileSubjects: SubjectChip[] = (profile?.faecher ?? []).map((id) => ({ id, ...subjectInfo(id) }))
 
-  const selectedSubject = subjects.find((s) => s.id === selectedSubjectId) ?? null
+  const selectedSubject: SubjectChip | null = selectedSubjectId
+    ? { id: selectedSubjectId, ...subjectInfo(selectedSubjectId) }
+    : null
 
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const upcomingExams = (profile?.klausurtermine ?? [])
@@ -186,20 +189,19 @@ export function BlurtingScreen() {
     .slice(0, 4)
 
   function getNoteCount(subjectId: string): number {
-    const subj = subjects.find((s) => s.id === subjectId)
-    const genCount = subj
-      ? Object.values(generatedNotes).filter((n) => n.subjectName.toLowerCase() === subj.name.toLowerCase()).length
-      : 0
+    const subjName = subjectInfo(subjectId).name
+    const genCount = Object.values(generatedNotes)
+      .filter((n) => n.subjectName.toLowerCase() === subjName.toLowerCase()).length
     const userCount = userNotes.filter((n) => n.subjectId === subjectId && n.content.trim().length > 20).length
     return genCount + userCount
   }
 
   function getNotesForSubject(subjectId: string): NotePickItem[] {
-    const subj = subjects.find((s) => s.id === subjectId)
+    const subjName = subjectInfo(subjectId).name
     const items: NotePickItem[] = []
-    if (subj) {
+    if (subjName) {
       Object.entries(generatedNotes)
-        .filter(([, n]) => n.subjectName.toLowerCase() === subj.name.toLowerCase())
+        .filter(([, n]) => n.subjectName.toLowerCase() === subjName.toLowerCase())
         .forEach(([key, n]) => {
           items.push({
             id: key,
@@ -448,13 +450,12 @@ export function BlurtingScreen() {
                 <div className="space-y-2.5">
                   {upcomingExams.map((exam) => {
                     const days = daysUntil(exam.date)
-                    const subj = subjects.find((s) => s.id === exam.subjectId)
                     const suggTopics = getNoteCount(exam.subjectId) === 0 ? getTopicsForSubject(exam.subjectId) : []
                     return (
                       <ExamSuggestionCard
                         key={`${exam.subjectId}-${exam.date}`}
                         subjectId={exam.subjectId}
-                        subjectName={subj?.name ?? exam.subjectId}
+                        subjectName={subjectInfo(exam.subjectId).name || exam.subjectId}
                         examTopic={exam.topic}
                         daysLeft={days}
                         noteCount={getNoteCount(exam.subjectId)}

@@ -10,7 +10,8 @@ import { RichText } from '../components/ui/RichText'
 import { Icon } from '../components/ui/Icon'
 import type { CanvasPageData } from '../components/ui/DrawingCanvas'
 import { useUser } from '../context/UserContext'
-import { subjects, halfYears } from '../data/mockData'
+import { halfYears } from '../data/mockData'
+import { subjectInfo } from '../data/subjectInfo'
 import type { GeneratedSmartNote, UserNote } from '../types'
 import DocumentCropTool from '../components/ui/DocumentCropTool'
 import { drawingBlockTransfer } from '../lib/drawingBlockTransfer'
@@ -171,7 +172,11 @@ export function NoteCreateScreen() {
       : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
     return `note-${uid}`
   })
-  const subjectFromUrl = id ? subjects.find((s) => s.id === id) : null
+  // subjectInfo() statt der festen mockData-Liste: Die kennt weder eigene Fächer
+  // noch alle Standardfächer (Japanisch, Russisch … fehlen dort). Vorher fiel
+  // jedes nicht gelistete Fach hier auf null zurück — Kopf ohne Icon, kein
+  // Titel-Präfix, und in der Fachauswahl unten tauchte es gar nicht erst auf.
+  const subjectFromUrl = id ? { id, ...subjectInfo(id) } : null
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>(id ?? '')
   const [showSaveModal, setShowSaveModal] = useState(false)
   const [selectedFolderId, setSelectedFolderId] = useState<string>(folderId ?? '')
@@ -179,7 +184,7 @@ export function NoteCreateScreen() {
   const [smartNoteLoading, setSmartNoteLoading] = useState(false)
   const [smartNoteError, setSmartNoteError] = useState('')
   const [pendingSave, setPendingSave] = useState<{ subjectId: string; folderId: string } | null>(null)
-  const subject = subjects.find((s) => s.id === selectedSubjectId) ?? null
+  const subject = selectedSubjectId ? { id: selectedSubjectId, ...subjectInfo(selectedSubjectId) } : null
 
   const [title, setTitle] = useState(subjectFromUrl ? `${subjectFromUrl.name}: ` : '')
 
@@ -300,9 +305,11 @@ export function NoteCreateScreen() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.key])
 
-  const profileSubjects = (profile?.faecher ?? [])
-    .map((sid) => subjects.find((s) => s.id === sid))
-    .filter((s): s is NonNullable<typeof s> => s !== undefined)
+  // Jedes Fach des Profils, eigene eingeschlossen — subjectInfo() beantwortet
+  // Standard- wie Eigenfächer. Vorher schnitt der Abgleich gegen die mockData-
+  // Liste alle eigenen Fächer (und die dort fehlenden Standardfächer) weg, sodass
+  // man für sie keine Notiz anlegen konnte.
+  const profileSubjects = (profile?.faecher ?? []).map((sid) => ({ id: sid, ...subjectInfo(sid) }))
 
   // ── Block helpers ────────────────────────────────────────────────────────
 
