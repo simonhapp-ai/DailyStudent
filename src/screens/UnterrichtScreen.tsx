@@ -9,8 +9,10 @@ import type { HalfYear } from '../types'
 import { SubjectIcon, QuickNotesIcon } from '../components/ui/SubjectIcon'
 import { Icon } from '../components/ui/Icon'
 import { Stage } from '../components/ui/Stage'
+import { Banner } from '../components/ui/Banner'
 import { ListGroup, ListRow } from '../components/ui/ListGroup'
 import { EmptyState } from '../components/ui/EmptyState'
+import { hasLocalOnlyAttachments, transferNoteAttachmentsToCloud } from '../lib/noteStorage'
 import { currentSlot, nextSlot, todaysSlots } from '../lib/appMode'
 import { resolveSubjectInfo, sortSubjectsByGroup, subjectInfo } from '../data/subjectInfo'
 import { countNotesInFolderTree } from '../lib/folders'
@@ -22,8 +24,47 @@ const grossAnfang = (w: string) => w.charAt(0).toUpperCase() + w.slice(1)
 
 export function UnterrichtScreen() {
   const navigate = useNavigate()
-  const { profile, userNotes, userFolders, addFolder, renameFolder, deleteFolder, saveNote, saveToOhneFachFolder, completedHomeworkIds, standaloneHomework } = useUser()
+  const { profile, userNotes, userFolders, addFolder, renameFolder, deleteFolder, saveNote, saveToOhneFachFolder, updateUserNote, authUser, completedHomeworkIds, standaloneHomework } = useUser()
   const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set())
+
+  // Fotos in Notizen liegen zuerst nur als idb:-Ref in der WebView-IndexedDB.
+  // WebKit räumt die für eine entfernte Herkunft nach ~7 Tagen ab — Notizen, die
+  // niemand öffnet, verlieren dann ihre Bilder. Dieser Banner zieht die Rettung
+  // (transferNoteAttachmentsToCloud) für alle betroffenen Notizen auf einmal.
+  const notesWithLocalAttachments = userNotes.filter(hasLocalOnlyAttachments)
+  const [backupPhase, setBackupPhase] = useState<'idle' | 'running'>('idle')
+  const [backupCurrent, setBackupCurrent] = useState(0)
+  const [backupTotal, setBackupTotal] = useState(0)
+  const [backupResult, setBackupResult] = useState<{ ok: number; failed: number } | null>(null)
+
+  const runBackup = async () => {
+    if (!authUser || backupPhase === 'running') return
+    const targets = userNotes.filter(hasLocalOnlyAttachments)
+    if (targets.length === 0) return
+    setBackupResult(null)
+    setBackupTotal(targets.length)
+    setBackupCurrent(0)
+    setBackupPhase('running')
+    let ok = 0
+    let failed = 0
+    for (let i = 0; i < targets.length; i++) {
+      setBackupCurrent(i + 1)
+      try {
+        const updated = await transferNoteAttachmentsToCloud(authUser.id, targets[i])
+        if (updated && !hasLocalOnlyAttachments(updated)) {
+          updateUserNote(updated)
+          ok++
+        } else {
+          if (updated) updateUserNote(updated)
+          failed++
+        }
+      } catch {
+        failed++
+      }
+    }
+    setBackupPhase('idle')
+    setBackupResult({ ok, failed })
+  }
 
   // Laufende und nächste Stunde aus dem Stundenplan — Grundlage der Bühne.
   const laufendeStunde = currentSlot(profile?.stundenplan?.slots)
@@ -388,6 +429,30 @@ export function UnterrichtScreen() {
         </div>
       ) : (
         <div className="px-4 mt-5 space-y-3">
+
+          {/* ── Sicherungs-Banner: Fotos, die nur lokal liegen ─────
+              Bleibt so lange stehen, wie es betroffene Notizen gibt — kein
+              Wegklicken, der Zustand ist die Bedingung. */}
+          {notesWithLocalAttachments.length > 0 && (
+            <Banner
+              tone="warning"
+              action={
+                <button
+                  onClick={() => void runBackup()}
+                  disabled={backupPhase === 'running'}
+                  className="shrink-0 px-3 py-1.5 rounded-btn text-xs font-semibold press-sm btn-mode hover:opacity-90 disabled:opacity-50"
+                >
+                  Jetzt sichern
+                </button>
+              }
+            >
+              {backupPhase === 'running'
+                ? `${backupCurrent} von ${backupTotal} …`
+                : backupResult
+                  ? `${backupResult.ok} von ${backupResult.ok + backupResult.failed} gesichert — bei ${backupResult.failed} Notizen sind die Bilder nicht mehr auf dem Gerät.`
+                  : `${notesWithLocalAttachments.length} Notizen haben Fotos, die nur auf diesem Gerät liegen. iOS löscht diesen Speicher nach etwa einer Woche.`}
+            </Banner>
+          )}
 
           {/* ── Bühne: die laufende Stunde ─────────────────────────
               Nach Regel 1 erscheint sie nur, wenn es gerade etwas Zeitkritisches
