@@ -579,6 +579,14 @@ export function ProfilScreen() {
             <ThemeRow theme={theme} onPick={setTheme} />
             {authUser && <NavRow label="Account" onClick={() => navigate('/profil/account')} />}
           </ListGroup>
+
+          {/* Rein informativ — kein Knopf, nicht wegklickbar. */}
+          <div className="bg-surface rounded-card border border-border/60 shadow-card-adaptive p-4 mt-3">
+            <p className="text-[15px] font-semibold text-text-primary">Die nächste Version</p>
+            <p className="text-[13px] text-text-secondary leading-snug mt-1">
+              DailyStudent wird eine eigenständige App und braucht dann iOS 26.5 oder neuer. Deine Notizen, Fotos und Noten wandern vollständig mit.
+            </p>
+          </div>
         </div>
 
         {/* ── Einstellungen ──────────────────────────────────────── */}
