@@ -25,7 +25,7 @@ function generateReferralCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
   return Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
 }
-import { localizeNoteAttachments, deleteAttachmentsForNotes, deleteAttachment, migrateLegacyNoteAttachments } from '../lib/noteStorage'
+import { localizeNoteAttachments, deleteAttachmentsForNotes, deleteAttachment, migrateLegacyNoteAttachments, transferNoteAttachmentsToCloud, healNoteAttachments } from '../lib/noteStorage'
 import { initRevenueCat, logOutRevenueCat } from '../lib/revenuecat'
 import { collectFolderAndDescendants } from '../lib/folders'
 import { onboardingErzwungen, onboardingFreigeben } from '../lib/onboarding'
@@ -498,6 +498,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
                   saveStorage({ ...loadStorage(), userNotes: legacyMigration.notes })
                   for (const note of legacyMigration.changed) void syncNote(userId, note)
                 }
+                // Upload any note images still held only on-device — WebKit wipes
+                // the WebView's IndexedDB after ~7 days, so idb:-only images vanish.
+                void healNoteAttachments(userId, legacyMigration ? legacyMigration.notes : (s.userNotes ?? [])).then((healed) => {
+                  if (!healed.length) return
+                  const cur = loadStorage().userNotes ?? []
+                  const next = cur.map((n) => healed.find((h) => h.id === n.id) ?? n)
+                  setUserNotes(next)
+                  saveStorage({ ...loadStorage(), userNotes: next })
+                  for (const h of healed) void syncNote(userId, h)
+                })
               }
             } else {
               // Full load: download all 14 tables and stamp the cache timestamp
@@ -559,6 +569,16 @@ export function UserProvider({ children }: { children: ReactNode }) {
                   saveStorage({ ...loadStorage(), userNotes: legacyMigration.notes })
                   for (const note of legacyMigration.changed) void syncNote(userId, note)
                 }
+                // Upload any note images still held only on-device — WebKit wipes
+                // the WebView's IndexedDB after ~7 days, so idb:-only images vanish.
+                void healNoteAttachments(userId, legacyMigration ? legacyMigration.notes : supabaseData.userNotes).then((healed) => {
+                  if (!healed.length) return
+                  const cur = loadStorage().userNotes ?? []
+                  const next = cur.map((n) => healed.find((h) => h.id === n.id) ?? n)
+                  setUserNotes(next)
+                  saveStorage({ ...loadStorage(), userNotes: next })
+                  for (const h of healed) void syncNote(userId, h)
+                })
               } else if (cacheIsOwn && s.profile && s.profile.faecher?.length) {
                 // Supabase empty, localStorage has THIS user's onboarded data → migrate once
                 await migrateToSupabase(userId, {
@@ -843,12 +863,37 @@ export function UserProvider({ children }: { children: ReactNode }) {
     if (authUser) void syncSmartNote(authUser.id, lessonId, note)
   }
 
+  // After a note is saved, push its images to Storage. Notes localize to tiny
+  // idb: refs synchronously (fast, offline-safe), but on iOS the WebView's
+  // IndexedDB gets wiped by WebKit's ~7-day storage cap — an idb:-only image is
+  // gone within days. Uploading a cloud: copy is what actually keeps it; runs in
+  // the background and re-syncs the note once the refs are rewritten. The short
+  // delay lets localizeNoteAttachments' background IndexedDB writes land first;
+  // if they somehow haven't, the next load's heal pass picks it up.
+  const persistNoteImages = (note: UserNote) => {
+    if (!authUser) return
+    const uid = authUser.id
+    setTimeout(() => {
+      void transferNoteAttachmentsToCloud(uid, note)
+        .then((cloudNote) => {
+          if (!cloudNote) return
+          const cur = loadStorage().userNotes ?? []
+          const next = cur.map((n) => (n.id === cloudNote.id ? cloudNote : n))
+          setUserNotes(next)
+          saveStorage({ ...loadStorage(), userNotes: next })
+          void syncNote(uid, cloudNote)
+        })
+        .catch(() => { /* stays local, retried on the next load */ })
+    }, 800)
+  }
+
   const addUserNote = (rawNote: UserNote) => {
     const note = localizeNoteAttachments(rawNote)
     const updated = [...userNotes, note]
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
     if (authUser) void syncNote(authUser.id, note)
+    persistNoteImages(note)
   }
 
   const saveNote = (rawNote: UserNote, generated?: GeneratedSmartNote) => {
@@ -864,6 +909,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       void syncNote(authUser.id, note)
       if (generated) void syncSmartNote(authUser.id, note.id, generated)
     }
+    persistNoteImages(note)
   }
 
   const updateUserNote = (rawNote: UserNote) => {
@@ -872,6 +918,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUserNotes(updated)
     persist(profile, personalEntries, generatedNotes, updated, userFolders)
     if (authUser) void syncNote(authUser.id, note)
+    persistNoteImages(note)
   }
 
   const deleteUserNote = (noteId: string) => {
@@ -911,6 +958,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       void syncNote(authUser.id, note)
       if (generated) void syncSmartNote(authUser.id, note.id, generated)
     }
+    persistNoteImages(note)
   }
 
   const addKlausurtermin = (termin: KlausurTermin) => {

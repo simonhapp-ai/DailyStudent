@@ -96,6 +96,55 @@ function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([bytes], { type: mime })
 }
 
+const MAX_IMAGE_DIM = 2000
+const JPEG_QUALITY = 0.8
+
+/**
+ * Shrinks an oversized raster image data: URL before it goes into IndexedDB and
+ * Storage. Phone camera captures arrive at full sensor resolution and several
+ * MB — wasteful for a "look at it again later" attachment and slow to upload on
+ * mobile data. PNGs (drawing exports, screenshots) are resized but kept
+ * lossless; other raster formats are re-encoded as JPEG on white. SVG, GIF and
+ * anything that doesn't decode as an image pass through untouched. Never
+ * throws — returns the input unchanged on any failure or if it can't beat it.
+ */
+export function downscaleDataUrl(dataUrl: string): Promise<string> {
+  return new Promise((resolve) => {
+    const mime = /^data:([^;,]+)/.exec(dataUrl)?.[1] ?? ''
+    if (!mime.startsWith('image/') || mime === 'image/svg+xml' || mime === 'image/gif') {
+      resolve(dataUrl)
+      return
+    }
+    const img = new Image()
+    img.onload = () => {
+      try {
+        const scale = Math.min(1, MAX_IMAGE_DIM / Math.max(img.width, img.height))
+        const isPng = mime === 'image/png'
+        if (scale === 1 && isPng) { resolve(dataUrl); return }
+        const w = Math.max(1, Math.round(img.width * scale))
+        const h = Math.max(1, Math.round(img.height * scale))
+        const canvas = document.createElement('canvas')
+        canvas.width = w
+        canvas.height = h
+        const ctx = canvas.getContext('2d')
+        if (!ctx) { resolve(dataUrl); return }
+        if (!isPng) {
+          ctx.fillStyle = '#FFFFFF'
+          ctx.fillRect(0, 0, w, h)
+        }
+        ctx.drawImage(img, 0, 0, w, h)
+        const out = isPng ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', JPEG_QUALITY)
+        resolve(out && out.length < dataUrl.length ? out : dataUrl)
+      } catch {
+        resolve(dataUrl)
+      }
+    }
+    img.onerror = () => resolve(dataUrl)
+    img.src = dataUrl
+  })
+}
+
+
 /** Stores a raw data: URL (e.g. a generated image) in IndexedDB and returns its idb:<uuid> ref. */
 export async function saveLocalAsset(dataUrl: string): Promise<string> {
   const id = crypto.randomUUID()
@@ -214,41 +263,97 @@ export function hasLocalOnlyAttachments(note: UserNote): boolean {
   return collectManagedRefs(note).some(isLocalRef)
 }
 
+function collectPendingRefs(note: UserNote): string[] {
+  return [...(note.attachments ?? []), ...(note.drawingAttachments ?? [])]
+    .filter((r) => r.startsWith('data:') || isLocalRef(r))
+}
+
 /**
- * Uploads this note's local-only (idb:) attachments to the user's Storage bucket so
- * they become available on other devices. Already-uploaded (cloud:) and legacy data:
- * entries are left untouched. Returns null if there was nothing local to upload.
+ * Makes this note's images durable. Every attachment still held only as inline
+ * base64 (data:) or device-local IndexedDB (idb:) is downscaled, cached locally
+ * at its smaller size, and uploaded to the user's Storage bucket, leaving a
+ * cloud:<uuid>:<path> ref that resolves on any device. Already-uploaded (cloud:)
+ * refs are untouched. Returns the rewritten note, or null when there was nothing
+ * to make durable.
+ *
+ * This is what stops note images from vanishing: on iOS the WebView's IndexedDB
+ * for the remote origin is wiped by WebKit's ~7-day script-writable-storage cap,
+ * so an idb:-only image disappears within days of being taken. Called
+ * automatically on every note save and again on load, to heal notes that were
+ * saved before this ran (as long as their local bytes are still around).
  */
 export async function transferNoteAttachmentsToCloud(userId: string, note: UserNote): Promise<UserNote | null> {
-  const refMap = new Map<string, string>()
+  if (collectPendingRefs(note).length === 0) return null
 
-  const upload = async (ref: string): Promise<string> => {
-    if (!isLocalRef(ref)) return ref
-    const cached = refMap.get(ref)
+  const done = new Map<string, string>()
+
+  const toCloud = async (ref: string): Promise<string> => {
+    if (isCloudRef(ref) || (!ref.startsWith('data:') && !isLocalRef(ref))) return ref
+    const cached = done.get(ref)
     if (cached) return cached
-    const id = ref.slice(IDB_PREFIX.length)
-    const dataUrl = await getRecord(id)
-    if (!dataUrl) return ref
-    const blob = dataUrlToBlob(dataUrl)
+
+    const wasLocal = isLocalRef(ref)
+    const id = wasLocal ? ref.slice(IDB_PREFIX.length) : crypto.randomUUID()
+    let dataUrl = wasLocal ? await getRecord(id).catch(() => undefined) : ref
+    if (!dataUrl) return ref // bytes gone locally, or the localize write hasn't
+                             // landed yet — either way, retry on the next load
+
+    const smaller = await downscaleDataUrl(dataUrl)
+    if (smaller !== dataUrl) dataUrl = smaller
+
+    // Fall back to a local ref only if the bytes are actually safe locally — never
+    // drop a data: URL for an idb: ref that points at nothing.
+    let cachedLocally = wasLocal
+    try { await putRecord(id, dataUrl); cachedLocally = true } catch { /* best-effort */ }
+    const localFallback = () => (cachedLocally ? `${IDB_PREFIX}${id}` : ref)
+
     const path = `${userId}/${note.id}/${id}`
-    const { error } = await supabase.storage.from(BUCKET).upload(path, blob, {
-      contentType: blob.type,
-      upsert: true,
-    })
-    if (error) return ref
-    const newRef = `${CLOUD_PREFIX}${id}:${path}`
-    refMap.set(ref, newRef)
-    return newRef
+    try {
+      const blob = dataUrlToBlob(dataUrl)
+      const { error } = await supabase.storage.from(BUCKET).upload(path, blob, {
+        contentType: blob.type,
+        upsert: true,
+      })
+      if (error) return localFallback() // keep it local, retried on the next load
+    } catch {
+      return localFallback()
+    }
+
+    const cloudRef = `${CLOUD_PREFIX}${id}:${path}`
+    done.set(ref, cloudRef)
+    return cloudRef
   }
 
-  if (!hasLocalOnlyAttachments(note)) return null
-
-  const attachments = note.attachments ? await Promise.all(note.attachments.map(upload)) : undefined
+  const attachments = note.attachments ? await Promise.all(note.attachments.map(toCloud)) : undefined
   const drawingAttachments = note.drawingAttachments
-    ? await Promise.all(note.drawingAttachments.map(upload))
+    ? await Promise.all(note.drawingAttachments.map(toCloud))
     : undefined
 
+  const same = (a?: string[], b?: string[]) =>
+    (a?.length ?? 0) === (b?.length ?? 0) && (a ?? []).every((v, i) => v === b?.[i])
+  if (same(attachments, note.attachments) && same(drawingAttachments, note.drawingAttachments)) return null
+
   return { ...note, attachments, drawingAttachments }
+}
+
+/**
+ * Backfill for note images that predate cloud auto-upload, or whose upload
+ * failed earlier: uploads every still-local attachment and returns the notes
+ * that changed. Capped so one load never fans out into hundreds of uploads —
+ * the rest heal on the next load. A no-op once everything is already cloud:.
+ */
+export async function healNoteAttachments(userId: string, notes: UserNote[], limit = 25): Promise<UserNote[]> {
+  const stale = notes.filter((n) => collectPendingRefs(n).length > 0).slice(0, limit)
+  const healed: UserNote[] = []
+  for (const n of stale) {
+    try {
+      const c = await transferNoteAttachmentsToCloud(userId, n)
+      if (c) healed.push(c)
+    } catch {
+      // move on to the next note
+    }
+  }
+  return healed
 }
 
 /** Resolves a list of refs/legacy data: URLs to displayable srcs. Falls back to the raw ref until resolved. */

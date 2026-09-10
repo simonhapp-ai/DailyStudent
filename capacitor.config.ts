@@ -15,6 +15,16 @@ const config: CapacitorConfig = {
   },
   ios: {
     contentInset: 'automatic',
+    // Pairs with WKAppBoundDomains in ios/App/App/Info.plist: marks this origin
+    // as app-bound so its WebKit storage (IndexedDB / localStorage / Cache) is
+    // exempt from the ~7-day ITP eviction that was silently wiping locally
+    // cached note images a few days after they were taken. Side effect: the
+    // main WebView can no longer navigate to domains outside that list — OAuth
+    // (@capacitor/browser) and native IAP are unaffected, but verify native
+    // Google/Apple sign-in on device after shipping this. Takes effect only in
+    // a fresh Xcode archive, never via the Vercel-served bundle. `npm run
+    // cap:dev` live-reload would need `localhost` added to WKAppBoundDomains.
+    limitsNavigationsToAppBoundDomains: true,
   },
   plugins: {
     // Kept visible until src/main.tsx explicitly hides it once React has

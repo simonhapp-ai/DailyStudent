@@ -26,6 +26,11 @@
 	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>WKAppBoundDomains</key>
+	<array>
+		<string>dailystudent.de</string>
+		<string>www.dailystudent.de</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>DailyStudent benötigt Zugriff auf die Kamera, um Fotos von Unterrichtsmaterial und dem Stundenplan aufzunehmen.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
