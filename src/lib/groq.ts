@@ -16,7 +16,14 @@ async function getAuthHeader(): Promise<Record<string, string>> {
 const VISION_MODEL = 'qwen/qwen3.6-27b'
 const TEXT_MODEL = 'openai/gpt-oss-120b'
 
-async function resizeImage(dataUrl: string, maxWidth = 1536): Promise<{ base64: string; mimeType: 'image/jpeg' }> {
+// maxWidth was 1536 / q0.88 under llama-4-scout. qwen3.6-27b (Preview) tiles
+// images at dynamic resolution and tokenises them several times more expensively,
+// against a much lower free-tier TPM ceiling — a 1536px photo now trips Groq's
+// 413 "request too large". For a vision model the token cost tracks pixel/tile
+// count, not JPEG quality, so 1024px is the real lever here; quality is only
+// nudged down for payload size. 1024 is about the floor for reliable OCR of
+// dense handwriting — the Stundenplan grid passes a higher value explicitly.
+async function resizeImage(dataUrl: string, maxWidth = 1024): Promise<{ base64: string; mimeType: 'image/jpeg' }> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => {
@@ -27,7 +34,7 @@ async function resizeImage(dataUrl: string, maxWidth = 1536): Promise<{ base64: 
       const ctx = canvas.getContext('2d')
       if (!ctx) { reject(new Error('Canvas nicht verfügbar')); return }
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
-      resolve({ base64: canvas.toDataURL('image/jpeg', 0.88).split(',')[1], mimeType: 'image/jpeg' })
+      resolve({ base64: canvas.toDataURL('image/jpeg', 0.8).split(',')[1], mimeType: 'image/jpeg' })
     }
     img.onerror = () => reject(new Error('Bild konnte nicht geladen werden'))
     img.src = dataUrl
@@ -702,7 +709,9 @@ export async function parseStundenplanFromImage(
     })
   }
 
-  const { base64, mimeType } = await resizeImage(dataUrl, 1920)
+  // Timetable grids need more detail than plain OCR, so above the 1024 default —
+  // but 1920 (the old value) blows qwen3.6-27b's free-tier token ceiling.
+  const { base64, mimeType } = await resizeImage(dataUrl, 1280)
   const combinedSubjects = allSubjects
     ? [...faecher, ...allSubjects.filter((s) => !faecher.find((f) => f.id === s.id))]
     : faecher
