@@ -126,6 +126,7 @@ export async function retrySyncQueue(userId: string): Promise<{ success: number;
           await supabase.from('user_notes').upsert({
             id: p.note.id, user_id: userId, subject_id: p.note.subjectId ?? null, folder_id: p.note.folderId ?? null,
             title: p.note.title, content: p.note.content, attachments: p.note.attachments ?? [],
+            drawing_attachments: p.note.drawingAttachments ?? [],
             pdf_attachments: p.note.pdfAttachments ?? [], homework_items: p.note.homeworkItems ?? [],
             qa: p.note.qa ?? [], created_at: p.note.createdAt,
           })
@@ -272,6 +273,7 @@ function mapNote(r: Row): UserNote {
     title: r.title,
     content: r.content,
     attachments: r.attachments,
+    drawingAttachments: r.drawing_attachments,
     pdfAttachments: r.pdf_attachments,
     homeworkItems: r.homework_items,
     qa: r.qa,
@@ -757,6 +759,7 @@ export async function syncNote(userId: string, note: UserNote): Promise<void> {
       title: note.title,
       content: note.content,
       attachments: note.attachments ?? [],
+      drawing_attachments: note.drawingAttachments ?? [],
       pdf_attachments: note.pdfAttachments ?? [],
       homework_items: note.homeworkItems ?? [],
       qa: note.qa ?? [],
@@ -777,6 +780,7 @@ export async function syncNotesBatch(userId: string, notes: UserNote[]): Promise
       title: note.title,
       content: note.content,
       attachments: note.attachments ?? [],
+      drawing_attachments: note.drawingAttachments ?? [],
       pdf_attachments: note.pdfAttachments ?? [],
       homework_items: note.homeworkItems ?? [],
       qa: note.qa ?? [],
