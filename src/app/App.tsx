@@ -27,6 +27,7 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { error: string |
 import { BottomNav } from '../components/ui/BottomNav'
 import { DesktopSidebar, DesktopSidebarWide } from '../components/ui/DesktopSidebar'
 import { SyncErrorBanner } from '../components/ui/SyncErrorBanner'
+import { UmstiegHinweis } from '../components/ui/UmstiegHinweis'
 import { XpToast } from '../components/ui/XpToast'
 import { AttachmentToast } from '../components/ui/AttachmentToast'
 import { StreakBadge } from '../components/ui/StreakBadge'
@@ -469,6 +470,11 @@ export function App() {
         <ThemeApplier />
         <BrowserRouter>
           <Layout consentGiven={consentGiven} onConsentGiven={handleConsent} />
+          {/* Über `Layout`, nicht darin: Layout kehrt für Landing, Anmeldung,
+              Onboarding und Zwei-Faktor früh zurück — und genau dort landet
+              jemand, dessen Speicher gerade abgeräumt wurde. Der Hinweis
+              gehört an die Stelle, die immer gerendert wird. */}
+          <UmstiegHinweis />
           {!consentGiven && <CookieBannerGate onConsent={handleConsent} />}
         </BrowserRouter>
         {analyticsOn && <Analytics />}
