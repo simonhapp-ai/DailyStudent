@@ -9,11 +9,14 @@ async function getAuthHeader(): Promise<Record<string, string>> {
 }
 
 // meta-llama/llama-4-scout-17b-16e-instruct was retired 2026-07-17; llama-3.3-70b-versatile is
-// deprecated, shutting down 2026-08-16. qwen/qwen3.6-27b is the only vision-capable model left
-// on Groq's free tier (Preview status on Groq's side, not a stability compromise chosen here).
+// deprecated, shutting down 2026-08-16. qwen/qwen3.6-27b was retired without notice (2026-09-17,
+// Preview models are exempt from Groq's deprecation-notice process) — qwen/qwen3.8-27b is its
+// successor, also Preview, also vision-capable. Free tier caps it at 1000 output tokens/minute
+// and Groq enforces that ceiling PRE-FLIGHT (a 429 before the image is even looked at), so every
+// vision call site below must stay under ~800 max_tokens — see groqFetch's OTPM comment.
 // openai/gpt-oss-120b is free-tier and one of the few Groq models with guaranteed strict JSON
 // mode, which matters since several callers below use response_format: { type: 'json_object' }.
-const VISION_MODEL = 'qwen/qwen3.6-27b'
+const VISION_MODEL = 'qwen/qwen3.8-27b'
 const TEXT_MODEL = 'openai/gpt-oss-120b'
 
 // maxWidth was 1536 / q0.88 under llama-4-scout. qwen3.6-27b (Preview) tiles
@@ -42,7 +45,7 @@ async function resizeImage(dataUrl: string, maxWidth = 1024): Promise<{ base64: 
 }
 
 interface GroqResponse {
-  choices: { message: { content: string } }[]
+  choices: { message: { content: string }; finish_reason?: string }[]
 }
 
 function parseRetryAfterMs(errorText: string): number {
@@ -50,6 +53,11 @@ function parseRetryAfterMs(errorText: string): number {
   return match ? Math.ceil(parseFloat(match[1]) * 1000) + 500 : 5000
 }
 
+// Free-tier OTPM (output tokens per minute) ceiling for qwen/qwen3.8-27b is 1000, checked by
+// Groq BEFORE the request runs — it rejects on requested max_tokens alone, not actual usage, so
+// two vision calls with max_tokens > ~800 within the same minute both fail with a pre-flight 429
+// (retrying doesn't help, the request itself is over budget). Every vision max_tokens below must
+// stay under that ceiling.
 async function groqFetch(body: Record<string, unknown>, bucket: AiBucket): Promise<string> {
   // Both new models are reasoning models by default — unlike llama-3.3-70b, they spend hidden
   // "thinking" tokens before producing real output, which silently truncated/emptied every call
@@ -101,6 +109,12 @@ async function groqFetch(body: Record<string, unknown>, bucket: AiBucket): Promi
   }
 
   if (!data?.choices?.[0]?.message?.content) throw new Error('Unerwartete Antwort von Groq')
+  // finish_reason 'length' means max_tokens ran out mid-answer — a token-budget problem, not a
+  // photo-quality one. Surfacing it distinctly stops callers from telling the user to re-check
+  // their photo when the real fix is a smaller/simpler response.
+  if (data.choices[0].finish_reason === 'length') {
+    throw new Error('Antwort abgeschnitten (Token-Limit erreicht) — bitte erneut versuchen')
+  }
   return data.choices[0].message.content
 }
 
@@ -108,7 +122,7 @@ export async function extractTopicsFromImage(dataUrl: string): Promise<string[]>
   const { base64, mimeType } = await resizeImage(dataUrl)
   const text = await groqFetch({
     model: VISION_MODEL,
-    max_tokens: 1024,
+    max_tokens: 800,
     temperature: 0.1,
     messages: [{
       role: 'user',
@@ -135,7 +149,7 @@ export async function extractTextFromImage(dataUrl: string): Promise<string> {
 
   return groqFetch({
     model: VISION_MODEL,
-    max_tokens: 1024,
+    max_tokens: 800,
     temperature: 0.1,
     messages: [{
       role: 'user',
@@ -664,11 +678,67 @@ function matchSubjectId(
     )
     if (byPfx) return byPfx.id
   }
-  return null
+  // Real Oberstufe plans stack subject + teacher initials in one cell as two lines the model
+  // reads as one string, e.g. "en51 EBE" or "SP ROL" — subject+course-number, then teacher
+  // initials. Cut at the first whitespace, drop digits (course numbers like "ma8"/"DE2"/"ge4"),
+  // and re-run the same lookup rules once more — but only accept a single, unambiguous result.
+  // Guessing wrong here is worse than leaving the slot unmatched.
+  return matchSubjectIdLoose(detected, faecher)
 }
 
+function matchSubjectIdLoose(
+  detected: string,
+  faecher: { id: string; name: string }[],
+): string | null {
+  const firstToken = detected.trim().split(/\s+/)[0] ?? ''
+  const lower = firstToken.replace(/\d+/g, '').toLowerCase()
+  if (!lower) return null
+
+  const candidates = new Set<string>()
+
+  const byExact = faecher.find((s) => s.id === lower || s.name.toLowerCase() === lower)
+  if (byExact) candidates.add(byExact.id)
+
+  const aliasId = SUBJECT_ALIASES[lower]
+  if (aliasId && faecher.find((s) => s.id === aliasId)) candidates.add(aliasId)
+
+  for (const [alias, id] of Object.entries(SUBJECT_ALIASES)) {
+    if (lower.startsWith(alias) && faecher.find((s) => s.id === id)) candidates.add(id)
+  }
+
+  for (const s of faecher) {
+    if (lower.includes(s.name.toLowerCase()) || s.name.toLowerCase().includes(lower)) candidates.add(s.id)
+  }
+
+  if (lower.length >= 3) {
+    for (const s of faecher) {
+      if (
+        s.name.toLowerCase().startsWith(lower.slice(0, 3)) ||
+        lower.startsWith(s.name.toLowerCase().slice(0, 3))
+      ) candidates.add(s.id)
+    }
+  }
+
+  return candidates.size === 1 ? [...candidates][0] : null
+}
+
+// The model may return either the compact [day, startTime, endTime, subject] tuple we now ask
+// for (about a third the tokens of the object form — needed to fit a full 5×8 timetable under
+// the 800 max_tokens vision ceiling) or the older object form, if it ignores the prompt.
+type StundenplanRawSlot =
+  | { day: number; startTime: string; endTime?: string; subject: string }
+  | [number, string, string?, string?]
+
 interface StundenplanRawJSON {
-  slots: Array<{ day: number; startTime: string; endTime?: string; subject: string }>
+  slots: StundenplanRawSlot[]
+}
+
+function normalizeRawSlot(slot: StundenplanRawSlot): { day: unknown; startTime: unknown; endTime?: unknown; subject: unknown } {
+  if (Array.isArray(slot)) {
+    const [day, startTime, endTime, subject] = slot
+    return { day, startTime, endTime, subject }
+  }
+  return slot
 }
 
 // Sentinel the model uses to mark an internal gap (Freistunde) between two
@@ -720,7 +790,7 @@ export async function parseStundenplanFromImage(
 
   const raw = await groqFetch({
     model: VISION_MODEL,
-    max_tokens: 1500,
+    max_tokens: 800,
     temperature: 0.1,
     messages: [
       {
@@ -733,21 +803,21 @@ export async function parseStundenplanFromImage(
 
 Bekannte Schulfächer: ${subjectList}
 
-Antworte NUR mit diesem JSON (kein anderer Text):
+Antworte NUR mit diesem JSON (kein anderer Text). Jede Stunde ist ein Array [Tag, Beginn, Ende, Fach] — das hält die Antwort kurz genug:
 {
   "slots": [
-    { "day": 0, "startTime": "08:00", "endTime": "08:45", "subject": "Mathematik" },
-    { "day": 0, "startTime": "09:30", "endTime": "10:15", "subject": "FREISTUNDE" }
+    [0, "08:00", "08:45", "Mathematik"],
+    [0, "09:30", "10:15", "FREISTUNDE"]
   ]
 }
 
 Regeln:
-- day: 0=Montag, 1=Dienstag, 2=Mittwoch, 3=Donnerstag, 4=Freitag
-- startTime / endTime im Format "HH:MM" — fehlt Endzeit: startTime + 45 Min schätzen
-- subject: Fachname genau wie abgedruckt (Abkürzungen übernehmen, z.B. "Ma", "Bio")
-- Freistunde erkennen: Liegt zwischen zwei Unterrichtsstunden am selben Tag eine Lücke (leere Zelle/Freistunde/Pause länger als eine normale Pause), UND folgt danach am selben Tag noch mindestens eine weitere reguläre Stunde, füge dafür einen eigenen Slot mit "subject": "FREISTUNDE" ein (mit der echten Start-/Endzeit der Lücke)
-- KEINE Freistunde einfügen, wenn danach keine weitere Stunde mehr folgt — das ist einfach Schulschluss, kein Slot nötig
-- normale kurze Pausen zwischen direkt aufeinanderfolgenden Stunden (5–15 Min) NICHT als Freistunde aufnehmen, nur echte Springstunden/Lücken`,
+- Tag: 0=Montag, 1=Dienstag, 2=Mittwoch, 3=Donnerstag, 4=Freitag
+- Beginn/Ende im Format "HH:MM" — fehlt eine Endzeit: Beginn + 45 Min schätzen
+- Fach: NUR das Fachkürzel, ohne Lehrerkürzel, ohne Raumnummer. In der Zelle stehen oft zwei Zeilen untereinander, z.B. "en51" über "EBE" oder "SP" über "ROL" — nimm NUR die erste Zeile (das Fach), die zweite Zeile ist das Lehrerkürzel und gehört NICHT ins Fach-Feld
+- Freistunde erkennen: Eine LEERE Zelle, über der UND unter der am selben Tag eine belegte Zelle steht, ist eine Freistunde — dafür einen Eintrag mit "FREISTUNDE" als Fach (mit der echten Start-/Endzeit der Lücke)
+- Leere Zellen VOR der ersten und NACH der letzten belegten Stunde eines Tages sind Schulanfang bzw. Schulschluss — dafür KEINEN Eintrag machen
+- Kurze Pausen zwischen direkt aufeinanderfolgenden Stunden (5–15 Min) sind KEINE Freistunde, nicht aufnehmen`,
           },
         ],
       },
@@ -763,19 +833,21 @@ Regeln:
   const seen = new Set<string>()
   const result: StundenplanSlot[] = []
 
-  for (const slot of parsed.slots) {
+  for (const rawSlot of parsed.slots) {
+    const slot = normalizeRawSlot(rawSlot)
     if (typeof slot.day !== 'number' || slot.day < 0 || slot.day > 4) continue
-    if (!slot.startTime || !/^\d{1,2}:\d{2}$/.test(slot.startTime)) continue
+    if (typeof slot.startTime !== 'string' || !/^\d{1,2}:\d{2}$/.test(slot.startTime)) continue
 
     // Normalise to HH:MM
     const startTime = slot.startTime.padStart(5, '0')
     const endTime =
-      slot.endTime && /^\d{1,2}:\d{2}$/.test(slot.endTime)
+      typeof slot.endTime === 'string' && /^\d{1,2}:\d{2}$/.test(slot.endTime)
         ? slot.endTime.padStart(5, '0')
         : calcEndTime(startTime)
 
-    const isFreistunde = (slot.subject ?? '').trim().toUpperCase() === FREISTUNDE_SENTINEL
-    const matchedId = isFreistunde ? null : matchSubjectId(slot.subject ?? '', combinedSubjects)
+    const subject = typeof slot.subject === 'string' ? slot.subject : ''
+    const isFreistunde = subject.trim().toUpperCase() === FREISTUNDE_SENTINEL
+    const matchedId = isFreistunde ? null : matchSubjectId(subject, combinedSubjects)
     if (!isFreistunde && !matchedId) continue
     const subjectId = matchedId ?? ''
 
